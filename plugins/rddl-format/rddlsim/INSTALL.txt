@@ -1,0 +1,208 @@
+RDDLSim -- A simulator for the relational dynamic influence diagram
+           language (RDDL).
+
+Copyright (C) 2010, Scott Sanner (ssanner@gmail.com) and
+                    Sungwook Yoon (sungwook.yoon@gmail.com)
+
+
+Basic RDDLSim Installation and Invocation
+=========================================
+
+rddlsim/ provides the following subdirectories:
+
+    src     All source code (.java files)
+    bin     All binaries (.class files)
+    lib     All 3rd party libraries (.jar files)
+    files   All supplementary files (.rddl files, etc.)
+    cclient A sample C++ client for the rddlsim server
+
+Always ensure that all .jar files in lib/ are included in your
+CLASSPATH for both Java compilation and at Java runtime.  For
+a quick way to compile the code from a terminal, you can try:
+
+    compile     For Windows/Cygwin and UNIX/Linux systems
+    compile.bat For the Windows CMD prompt
+
+For running RDDLSim from a terminal, we provide two scripts
+
+    run     For Windows/Cygwin and UNIX/Linux systems
+    run.bat For the Windows CMD prompt
+
+In both cases, run these scripts from the **rddlsim/**
+directory with the class name as an argument, e.g.
+
+    Windows/Cygwin and UNIX/Linux: ./run rddl.sim.Simulator
+    Windows CMD prompt:            .\run.bat rddl.sim.Simulator
+
+You can pass up to 10 arguments to these scripts as required.
+
+We highly recommend that you use Eclipse for Java development:
+
+    http://www.eclipse.org/downloads/
+
+In Eclipse the CLASSPATH libraries can be set via 
+
+    Project -> Properties -> Java Build Path -> Libraries Tab
+
+
+Basic RDDLSim Usage
+===================
+
+We currently provide the following rddlsim command line utilities:
+
+    Validating RDDL Syntax and Translating RDDL to LISP-like Prefix Format: 
+
+        rddl.parser.parser filename [-prefix-output]
+        
+        (e.g., files/rddl/test/sysadmin.rddl for filename)
+        
+        The output should be syntactically equivalent to the input.  The optional
+        "-prefix-output" flag is useful for exporting RDDL expressions (cpfs, reward, 
+        state-action-constraints) in prefix format for easier prefix parsing (in
+        case you are writing your own RDDL parser in another language).
+
+    Translating Restricted RDDL Syntax to PPDDL / SPUDD / Symbolic Perseus Format:
+	
+        rddl.translate.RDDL2Format rddl-file-or-directory output-directory file-format
+        
+        Popular currently supported file formats are 'spudd_sperseus' and 'ppddl'.
+        
+        Also supported is a RDDL prefix translator for a file or directory: 
+        
+        rddl.translate.RDDL2Prefix rddl-file-or-directory output-directory
+
+    Running the RDDL Simulator Standalone:
+
+        rddl.sim.Simulator RDDL-file policy-class-name instance-name [state-viz-class-name]
+        
+        (n.b., rddl.viz.GenericScreenDisplay is default for state-viz-class-name)
+
+    Visualizing the RDDL DBN:
+
+        rddl.viz.RDDL2Graph RDDL-file instance-name
+        
+        (n.b., requires GraphViz, installation details at end of this file)
+
+    Running the RDDL Server and Client: [command line parameters subject to change]
+    
+        rddl.competition.Server RDDL-file [port-number] [num-trials] [random-seed] [state-viz-class-name]
+        rddl.competition.Client RDDL-file host-name client-name policy-class-name [port-number]
+        
+        n.b., (1) default port number is 2323
+	      (2) policy-class-name:
+        	  ...best example with comments: rddl.policy.SPerseusSPUDDPolicy 
+		  ...otherwise, any policy class name which derives from rddl.Policy
+        	  ...for *your* client, just provide a policy derived from rddl.Policy
+        
+	Examples (run from rddlsim directory, ./run for UNIX/Cygwin, run.bat for Windows):
+
+		**Client/Server examples**
+
+		./run rddl.competition.Server files/final_comp/rddl/
+		./run rddl.competition.Client files/final_comp/rddl localhost MyClientName rddl.policy.SPerseusSPUDDPolicy 2323 123456 sysadmin_inst_mdp__10
+		./run rddl.competition.Client files/final_comp/rddl localhost MyClientName rddl.policy.SPerseusSPUDDPolicy 2323 123456 sysadmin_inst_pomdp__10
+
+                Note: see directory rddlsim/cclient for instructions
+                on how to build and run a C++ client.
+
+		**Parser and translation examples**
+
+		./run rddl.parser.parser files/rddl/test/sysadmin.rddl 
+		./run rddl.parser.parser files/rddl/test/game_of_life.rddl 
+
+                Note: if you're building a parser for another language
+                use the following option to output RDDL expressions in
+                prefix format (rather than the current infix format):
+                
+		./run rddl.parser.parser files/rddl/test/sysadmin.rddl -prefix-output
+		
+				Or do the prefix translations for an entire directory:				
+
+		./run rddl.translate.RDDL2Prefix files/final_comp/rddl files/final_comp/rddl_prefix
+		
+				Translate to (PO-)PPDDL / SPUDD / Symbolic Perseus:
+	
+		./run rddl.translate.RDDL2Format files/final_comp/rddl files/final_comp/spudd_sperseus spudd_sperseus
+		./run rddl.translate.RDDL2Format files/final_comp/rddl files/final_comp/ppddl ppddl
+
+		**Simulator examples**
+	
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy elevators_inst_mdp__9 rddl.viz.ElevatorDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy game_of_life_inst_mdp__10 rddl.viz.GameOfLifeScreenDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy sysadmin_inst_pomdp__10 rddl.viz.SysAdminScreenDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy traffic_inst_mdp__10 rddl.viz.TrafficDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy crossing_traffic_inst_mdp__10 rddl.viz.CrossingTrafficDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy navigation_inst_mdp__10 rddl.viz.NavigationDisplay
+		./run rddl.sim.Simulator files/final_comp/rddl rddl.policy.RandomBoolPolicy navigation_inst_pomdp__10 rddl.viz.NavigationDisplay
+
+		./run rddl.sim.Simulator files/rddl/test/TrfModel.rddl rddl.policy.RandomEnumPolicy is_grid rddl.viz.TrfDisplay
+
+		**RDDL DBN / Influence Diagram Visualization**
+
+		./run rddl.viz.RDDL2Graph files/rddl/test/dbn_prop.rddl inst_dbn
+		./run rddl.viz.RDDL2Graph files/rddl/test/dbn_types_interm_po.rddl inst_dbn
+		./run rddl.viz.RDDL2Graph files/rddl/test/game_of_life.rddl is1
+
+
+GraphViz RDDL Visualization
+===========================
+
+Although not required to run the basic RDDL simulator facilities, some
+additional GraphViz visualization tools are provided.  
+
+To enable Java Graphviz visualization:
+
+- Download and install GraphViz on your system:
+ 
+  http://www.graphviz.org/
+
+- Make sure "dot" and "neato" (including ".exe" if running on Windows)
+  are in your PATH, i.e., you can execute them from any home directory
+
+Run graph.Graph.main() and verify that a cleanly formatted Java window
+displaying a graph appears.
+
+Run rddl.viz.RDDL2Graph.main() to convert RDDL files to interactively
+view DBNs for RDDL instances in a Java viewer and export GraphViz 
+graph specifications for publication. 
+
+
+Modifying the RDDL Language
+===========================
+
+The following lexical pattern, grammar files, and Makefile are provided 
+in rddlsim/src/rddl/parser/
+
+    rddl.lex  The lexical pattern specification for use with JLex.
+    rddl.cup  The parser rules specification and internal representation
+              generation code for use with JavaCUP.
+    Makefile  Makefile with rules for generating lexer and parser.
+    
+Note the versions of JLex and JavaCUP that we are using are *not* the
+most recent versions available on the web and hence we have bundled
+jlex.jar and java_cup.jar in the lib/ directory for use with compiling
+these files and runtime execution.
+
+If you make modifications to the language (not recommended if you are
+competing in IPPC-2011) you can recompile the parser by first
+uncommenting the following line in Makefile
+
+    SEP = : 
+
+*if* you are on a UNIX/Linux system (*otherwise* changing nothing if you
+are on Windows/Cygwin) and then invoking the following commands from
+the **rddlsim/src/rddl/parser/** directory:
+
+    make lex
+
+followed by
+
+    make parser
+
+You may have to change the number of expected production conflict
+errors for the parser in the Makefile if your modifications are
+substantial.  See the parser rule in the Makefile for this parameter.
+
+These commands only produce the Java files in the 
+rddlsim/src/rddl/parser/ directory, they must be compiled
+by javac (this is usually automatic if you are using Eclipse).

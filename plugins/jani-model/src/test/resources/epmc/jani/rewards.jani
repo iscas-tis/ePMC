@@ -1,0 +1,64 @@
+{
+	"jani-version": 1,
+	"name": "rewards",
+	"type" : "mdp",
+	"rewards" : [
+		{
+			"name" : "reward"
+		}
+	],
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.2},
+							"location" : "asdf",
+							"rewards" : [
+								{
+									"ref" : "reward",
+									"value" : 2
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.8},
+							"location" : "asdf",
+							"rewards" : [
+								{
+									"ref" : "reward",
+									"value" : 2
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "asdf",
+					"destinations" : [
+						{
+							"location" : "asdf",
+							"rewards" : [
+								{
+									"ref" : "reward",
+									"value" : 2
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {"composition": "leaf", "automaton": "asdf"}
+}

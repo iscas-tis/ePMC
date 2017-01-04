@@ -1,0 +1,329 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>epmc.propertysolver.coalition</groupId>
+  <artifactId>epmc-propertysolver-coalition</artifactId>
+  <version>0</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>initialize</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${project.basedir}/../../native.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>clean</id>
+            <phase>clean</phase>
+            <configuration>
+              <target>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="test_classpath" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                <property name="outputDirectory" value="${project.build.directory}/classes"/>
+                <property name="CC_native" value="${CC_native}"/>
+                <property name="CPP_native" value="${CPP_native}"/>
+                <property name="STRIP_native" value="${STRIP_native}"/>
+                <property name="CC_DARWIN" value="${CC_DARWIN}"/>
+                <property name="CPP_DARWIN" value="${CPP_DARWIN}"/>
+                <property name="STRIP_DARWIN" value="${STRIP_DARWIN}"/>
+                <property name="CC_LINUX_X86" value="${CC_LINUX_X86}"/>
+                <property name="CPP_LINUX_X86" value="${CPP_LINUX_X86}"/>
+                <property name="STRIP_LINUX_X86" value="${STRIP_LINUX_X86}"/>
+                <property name="CC_LINUX_X86_64" value="${CC_LINUX_X86_64}"/>
+                <property name="CPP_LINUX_X86_64" value="${CPP_LINUX_X86_64}"/>
+                <property name="STRIP_LINUX_X86_64" value="${STRIP_LINUX_X86_64}"/>
+                <property name="CC_WINDOWS_X86" value="${CC_WINDOWS_X86}"/>
+                <property name="CPP_WINDOWS_X86" value="${CPP_WINDOWS_X86}"/>
+                <property name="STRIP_WINDOWS_X86" value="${STRIP_WINDOWS_X86}"/>
+                <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
+                <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
+                <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
+                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
+                  <target name="clean"/>
+                </ant>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build</id>
+            <phase>compile</phase>
+            <configuration>
+              <target>
+                <property name="outputDirectory" value="${project.build.directory}/classes"/>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="test_classpath" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                <property name="CC_native" value="${CC_native}"/>
+                <property name="CPP_native" value="${CPP_native}"/>
+                <property name="STRIP_native" value="${STRIP_native}"/>
+                <property name="CC_DARWIN" value="${CC_DARWIN}"/>
+                <property name="CPP_DARWIN" value="${CPP_DARWIN}"/>
+                <property name="STRIP_DARWIN" value="${STRIP_DARWIN}"/>
+                <property name="CC_LINUX_X86" value="${CC_LINUX_X86}"/>
+                <property name="CPP_LINUX_X86" value="${CPP_LINUX_X86}"/>
+                <property name="STRIP_LINUX_X86" value="${STRIP_LINUX_X86}"/>
+                <property name="CC_LINUX_X86_64" value="${CC_LINUX_X86_64}"/>
+                <property name="CPP_LINUX_X86_64" value="${CPP_LINUX_X86_64}"/>
+                <property name="STRIP_LINUX_X86_64" value="${STRIP_LINUX_X86_64}"/>
+                <property name="CC_WINDOWS_X86" value="${CC_WINDOWS_X86}"/>
+                <property name="CPP_WINDOWS_X86" value="${CPP_WINDOWS_X86}"/>
+                <property name="STRIP_WINDOWS_X86" value="${STRIP_WINDOWS_X86}"/>
+                <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
+                <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
+                <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
+                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
+                  <target name="build"/>
+                </ant>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+	<dependencies>
+	  <dependency>
+	    <groupId>ant-contrib</groupId>
+	    <artifactId>ant-contrib</artifactId>
+	    <version>1.0b3</version>
+	    <exclusions>
+	      <exclusion>
+		<groupId>ant</groupId>
+		<artifactId>ant</artifactId>
+	      </exclusion>
+	    </exclusions>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.ant</groupId>
+	    <artifactId>ant-nodeps</artifactId>
+	    <version>1.8.1</version>
+	  </dependency>
+	</dependencies>
+      </plugin>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.12.4</version>
+	<configuration>
+	  <skipTests>true</skipTests>
+	</configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
+	<executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+		<source>${project.basedir}/../../main/src/test/java/</source>
+		<source>${project.basedir}/../jani-model/src/test/java/</source>
+		<source>${project.basedir}/../graph/src/test/java/</source>
+              </sources>
+            </configuration>
+          </execution>
+	</executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <version>2.6</version>
+        <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+	    <archive>
+	      <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+            </archive>
+          </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.wvengen</groupId>
+        <artifactId>proguard-maven-plugin</artifactId>
+        <version>2.0.8</version>
+        <executions>
+          <execution>
+            <id>proguard</id>
+            <phase>package</phase>
+            <goals>
+              <goal>proguard</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+        <keepclassmembers extends="java.lang.Enum">
+                <method name="getEnumConstants"/>
+            </keepclassmembers>
+        <proguardVersion>5.2</proguardVersion> 
+          <injar>${project.build.finalName}.jar</injar>
+          <outjar>${project.build.finalName}-distribution.jar</outjar>
+          <options>
+	    <option>-dontshrink</option>
+	    <option>-dontoptimize</option>
+	    <option>-dontpreverify</option>
+            <option>-optimizationpasses 3</option>
+	    <option>-dontobfuscate</option>
+          <option>-keepattributes Exceptions</option>
+          <option>-keep,allowobfuscation class * implements epmc.modelchecker.Model {
+          }</option>
+          <option>-keep,allowobfuscation class * implements epmc.plugin.** {
+          }</option>
+          <option>-keep,allowobfuscation class * implements epmc.value.Operator {
+          }</option>
+          <option>-keepclassmembers class * implements java.io.Serializable {
+          static final long serialVersionUID;
+            &lt;fields&gt;;
+            private void writeObject(java.io.ObjectOutputStream);
+            private void readObject(java.io.ObjectInputStream);
+            java.lang.Object writeReplace();
+            java.lang.Object readResolve();
+          }</option>
+          <option>-keep interface *</option>
+          <option>-optimizationpasses 3</option>
+          </options>
+          <libs>
+            <lib>${java.home}/lib/rt.jar</lib>
+            <lib>${java.home}/lib/jsse.jar</lib>
+          </libs>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.proguard</groupId>
+            <artifactId>proguard-base</artifactId>
+            <version>5.2</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>                 
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    <groupId>epmc</groupId>
+    <artifactId>epmc</artifactId>
+    <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../main/target/epmc-0-distribution.jar</systemPath>
+    </dependency>
+    <dependency>
+    <groupId>epmc</groupId>
+    <artifactId>epmc-graphsolver-iterative</artifactId>
+    <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../graphsolver-iterative/target/epmc-graphsolver-iterative-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.automata</groupId>
+      <artifactId>epmc-automata</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../automata/target/epmc-automata-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.graphsolver</groupId>
+      <artifactId>epmc-graphsolver</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../graphsolver/target/epmc-graphsolver-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.qmc</groupId>
+      <artifactId>epmc-qmc</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../jani-model/target/epmc-jani-model-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.expression.standard</groupId>
+      <artifactId>epmc-expression-basic</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../expression-basic/target/epmc-expression-basic-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.algorithm</groupId>
+      <artifactId>epmc-algorithm</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../algorithm/target/epmc-algorithm-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.graph</groupId>
+      <artifactId>epmc-graph</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../graph/target/epmc-graph-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.dd</groupId>
+      <artifactId>epmc-dd</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../dd/target/epmc-dd-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.value.standard</groupId>
+      <artifactId>epmc-value-basic</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../value-basic/target/epmc-value-basic-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.dd</groupId>
+      <artifactId>epmc-dd</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../dd/target/epmc-dd-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.util</groupId>
+      <artifactId>epmc-util</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../util/target/epmc-util-0.jar</systemPath>
+    </dependency>
+  </dependencies>
+</project>

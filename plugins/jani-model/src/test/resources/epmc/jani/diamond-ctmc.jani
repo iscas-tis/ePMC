@@ -1,0 +1,56 @@
+{
+	"jani-version": 1,
+	"name": "diamond-ctmc",
+	"type" : "ctmc",
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				},
+				{
+					"name" : "fdsa"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"rate" : {"exp":1},
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "fdsa",
+					"rate" : {"exp":1},
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : []
+						}
+					]
+				}
+			]
+		}
+	],
+	"system" : {
+		"composition" : "parallel",
+		"elements" : [
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			},
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			}
+		],
+		"alphabet" : []
+	},
+	"properties" : []
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="lib" path="lib/grappa1_4.jar"/>
+	<classpathentry kind="lib" path="lib/java_cup.jar"/>
+	<classpathentry kind="lib" path="lib/jlex.jar"/>
+	<classpathentry kind="lib" path="lib/rddl.jar"/>
+	<classpathentry kind="lib" path="lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="rddlsim/lib/grappa1_4.jar"/>
+	<classpathentry kind="lib" path="rddlsim/lib/java_cup.jar"/>
+	<classpathentry kind="lib" path="rddlsim/lib/jlex.jar"/>
+	<classpathentry kind="lib" path="rddlsim/lib/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="rddlsim/lib/xml-apis.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc"/>
+	<classpathentry kind="lib" path="/iscasmc/lib/trove-141006211716.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-expression-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-graph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-value-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-jani-model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-tests"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

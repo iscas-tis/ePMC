@@ -1,0 +1,21 @@
+////////////////////////////////////////////////////////////////////
+//
+// Robot Navigation
+//
+// Author: Scott Sanner (ssanner [at] gmail.com)
+//
+// In a grid, a robot (R) must get to a goal (G).  Every cell offers
+// the robot a (different) chance of disappearing.  The robot needs
+// to choose a path which gets it to the goal most reliably within
+// the finite horizon time.
+//
+// ***********************
+// *  0   0   0   0   R  * 
+// * .1  .3  .5  .7  .9  *
+// * .1  .3  .5  .7  .9  * 
+// * .1  .3  .5  .7  .9  *
+// * .1  .3  .5  .7  .9  *
+// *  0   0   0   0   G  * 
+// ***********************
+//
+////////////////////////////////////////////////////////////////////

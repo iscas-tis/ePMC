@@ -1,0 +1,207 @@
+{
+	"jani-version": 1,
+	"name": "dice-global",
+	"type" : "dtmc",
+	"variables" : [
+			{
+			"name" : "d",
+			"type" : {
+				"kind": "bounded",
+				"base": "int",
+				"lower-bound" : 0,
+				"upper-bound" : 6
+			}
+		}
+	],
+	"initial-states" : {
+		"exp" : {
+			"op" : "=",
+			"args" : [
+				"d",
+				0
+			]
+		}
+	},
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "s0"
+				},
+				{
+					"name" : "s1"
+				},
+				{
+					"name" : "s2"
+				},
+				{
+					"name" : "s3"
+				},
+				{
+					"name" : "s4"
+				},
+				{
+					"name" : "s5"
+				},
+				{
+					"name" : "s6"
+				},
+				{
+					"name" : "s7"
+				}
+			],
+			"initial-locations" : ["s0"],
+			"edges" : [
+				{
+					"location" : "s0",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s1",
+							"assignments" : []
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s2",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "s1",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s3",
+							"assignments" : []
+						},
+												{
+							"probability" : {"exp":0.5},
+							"location" : "s4",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "s2",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s5",
+							"assignments" : []
+						},
+												{
+							"probability" : {"exp":0.5},
+							"location" : "s6",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "s3",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s1",
+							"assignments" : []
+						},
+												{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s4",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 2
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 3
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s5",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 4
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 5
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s6",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s2",
+							"assignments" : []
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 6
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s7",
+					"destinations" : [
+						{
+							"probability" : {"exp":1},
+							"location" : "s7",
+							"assignments" : []
+						}
+					]
+				}
+				
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {"composition": "leaf", "automaton": "asdf"}
+}

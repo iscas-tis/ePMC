@@ -1,0 +1,626 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */
+options
+{
+  JDK_VERSION = "1.8";
+  LOOKAHEAD = 1;
+  STATIC = false;
+}
+PARSER_BEGIN(HOAFormatParser)
+package epmc.automaton;
+import java.io.*;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import epmc.expression.Expression;
+import epmc.expression.ExpressionIdentifier;
+import epmc.expression.ExpressionLiteral;
+import epmc.expression.ExpressionOperator;
+import epmc.expression.ContextExpression;
+import epmc.propertysolverltlfg.automaton.AcceptanceType;
+import epmc.propertysolverltlfg.automaton.AcceptanceLabel;
+import epmc.propertysolverltlfg.automaton.AcceptanceCondition;
+import epmc.util.BitSet;
+import epmc.util.BitSetUnboundedLongArray;
+import epmc.propertysolverltlfg.automaton.HOAUser;
+import epmc.error.EPMCException;
+import epmc.propertysolverltlfg.automaton.HOAParser;
+import epmc.value.OperatorNot;
+import epmc.value.OperatorOr;
+
+// parser for Rabin automaton of HOAFormat,
+// possibly also suitable for Buechi automaton
+// It should not contain comments in HOA format file
+public class HOAFormatParser implements HOAParser
+{
+
+  public static void main(String []args) throws Exception
+  {
+
+    String file = args[0];
+    InputStream reader = new FileInputStream(new File(file));
+    HOAFormatParser parser = new HOAFormatParser(reader);
+    //parser.parse();
+  }
+  private int numOfStates = 0;
+  private HOAUser user = null;
+  private ContextExpression context = null;
+  private Map<Integer, String> num2Aps = new HashMap();
+  public void parse(ContextExpression context, HOAUser user) 
+  {
+    this.user = user;
+    this.context = context;
+    this.num2Aps.clear();
+    try    { 		parseAutomaton();
+    }catch(ParseException e)    { 		e.printStackTrace();
+    }
+  }
+
+  private static Expression and(Expression a, Expression b) {
+      return a.getContext().newOperator(AND, a, b);
+  }
+
+    private static Expression not(Expression expression) {
+    	return new ExpressionOperator.Builder()
+        	.setContext(expression.getContext())
+        	.setOperator(OperatorNot.IDENTIFIER)
+        	.setOperands(expression)
+        	.build();
+    }
+
+    private static Expression or(Expression a, Expression b) {
+        return new ExpressionOperator.Builder()
+            .setContext(a.getContext())
+            .setOperator(OperatorOr.IDENTIFIER)
+            .setOperands(a, b)
+            .build();
+    }
+}
+
+PARSER_END(HOAFormatParser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < HOA : "HOA:">
+| < TOOL : "tool:">
+| < NAME : "name:">
+| < PROPERTIES : "properties:" >
+| < STATES : "States:" >
+| < START : "Start:" >
+| < ACCNAME : "acc-name:" >
+| < ACCEPTANCE : "Acceptance:" >
+| < AP : "AP:" >
+| < BODY : "--BODY--" >
+| < STATE : "State:" >
+| < END : "--END--" >
+//| < INF : "Inf" >
+//| < FIN : "Fin" >
+| < LBRACKET : "[" >
+| < RBRACKET : "]" >
+| < LPAR : "(" >
+| < RPAR : ")" >
+| < LCURL : "{" >
+| < RCURL : "}" >
+| < SEMICOLON : ";" >
+| < COLON : ":" >
+| < COMMA : "," >
+| < AND : "&" >
+| < OR : "|" >
+| < NOT : "!" >
+| < TRUE : "t" >
+| < FALSE : "f" >
+/*| < QUOTE : "\"" >*/
+| < QUOTESTR : "\"" (("\\" ~[]) | ~["\\","\""] )* "\""> // "\"[^\"]*\"" ? NO \ and "
+| < IDENTIFIER : [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","-","_","0"-"9" ] )* >
+| < INT : (["1"-"9"](["0"-"9"])*)|("0") >
+}
+
+private void parseAutomaton() :
+{
+}
+{
+   parseHeader()
+   <BODY>
+   {
+     user.parseStart();
+   }
+   parseBody()
+   <END>
+   {
+     user.parseEnd();
+   }
+}
+private void parseHeader():
+{
+}
+{
+  parseHOA()
+  (parseHOAItems())*
+}
+private void parseHOA():
+{
+  Token version;
+}
+{
+	<HOA>
+    version = <IDENTIFIER>
+	{
+	  user.setHOAVer(version.toString());
+	}
+}
+private void parseHOAItems():
+{
+}
+{
+  parseItemTool()
+| parseItemName()
+| parseItemProp()
+| parseItemStates()
+| parseItemStart()
+| parseItemACCName()
+| parseItemAcceptance()
+| parseItemAPs()
+}
+private void parseItemTool():
+{
+  Token name, version;
+  String sName, sVer = null;
+}
+{
+  <TOOL>
+//  <QUOTE>
+  name = <QUOTESTR>
+  {
+    sName = name.image;
+    sName = sName.substring(1, sName.length()-1);
+  }
+//  <QUOTE>
+  (
+//    <QUOTE>
+   version = <QUOTESTR>
+   {
+     sVer = version.image;
+     sVer = sVer.substring(1, sVer.length()-1);
+   }  
+  )?
+  {
+    user.setTool(sName, sVer);  }
+}
+private void parseItemName():
+{
+  Token name;
+  String s;
+}
+{
+  <NAME>
+//  <QUOTE>
+  name = <QUOTESTR>
+  {
+    s = name.image;
+    s = s.substring(1, s.length()-1);
+  }
+  {
+    user.setAutName(s);  }
+//  <QUOTE>
+}
+private void parseItemProp():
+{
+  Token property;
+  List<String> props = new LinkedList<String>();
+}
+{
+  <PROPERTIES>
+  (
+    property = <IDENTIFIER>
+    {
+      props.add(property.toString());
+    }
+  )*
+  {
+    user.addProperties(props);
+  }
+}
+private void parseItemStates():
+{
+  Token stateNumStr;
+  int stateNum;
+}
+{
+  <STATES>
+  stateNumStr = <INT>
+  {
+    stateNum = Integer.parseInt(stateNumStr.toString());
+    numOfStates = stateNum;
+    try {
+		user.setNumOfStates(stateNum);
+	} catch (EPMCException e)	{
+		e.printStackTrace();
+	}
+  }
+}
+private void parseItemStart():
+{
+  Token startStateStr;
+  int startState;
+  List<Integer> stateList = new LinkedList();
+}
+{
+  <START>
+  startStateStr = <INT>
+  {
+    startState = Integer.parseInt(startStateStr.toString());
+    stateList.add(startState);
+  }
+  (
+    <AND>
+    startStateStr = <INT>
+    {
+      startState = Integer.parseInt(startStateStr.toString());
+      stateList.add(startState);
+    }
+  )*
+  {
+    user.setStartStates(stateList);  }
+}
+private void parseItemACCName():
+{
+  Token accName, numStr;
+  int number;
+  String sName;
+  List<Integer> accNums = new LinkedList();
+}
+{
+  <ACCNAME>
+  accName = <IDENTIFIER>
+  {
+    sName = accName.toString();
+  }
+  (
+    numStr = <INT>
+    {
+      number = Integer.parseInt(numStr.toString());
+      accNums.add(number);
+    }
+  )*
+  {
+    user.setAccName(sName, accNums);
+  }
+}
+private void parseItemAcceptance():
+{
+  Token numOfAccStr;
+  int numOfAcc;
+  List<AcceptanceCondition> accs ;
+}
+{
+  <ACCEPTANCE>
+  numOfAccStr = <INT>
+  {
+    numOfAcc = Integer.parseInt(numOfAccStr.toString());
+  }
+  accs = parseAccDisjunction()
+  {
+    user.setAcceptances(numOfAcc, accs);
+  }
+}
+private List<AcceptanceCondition> parseAccDisjunction():
+{
+  List<AcceptanceCondition> accs = new LinkedList();
+  AcceptanceCondition acc ;
+}
+{
+  acc = parseAccConjunction()
+  {
+    accs.add(acc);  }
+  (
+    <OR>
+    acc = parseAccConjunction()
+    {
+      accs.add(acc);    }
+  )*
+  {
+    return accs;  }
+}
+
+private AcceptanceCondition parseAccConjunction():
+{
+  AcceptanceLabel fin = new AcceptanceLabel(false);
+  List<AcceptanceLabel> infs = new ArrayList();
+}
+{
+  parseAccAtom(fin, infs)
+  (
+    <AND>
+    parseAccAtom(fin, infs)
+  )*
+  {
+    if(fin.isFalse()) fin = null;
+    return new AcceptanceCondition(fin, infs);  }
+}
+private void parseAccAtom(AcceptanceLabel fin, List<AcceptanceLabel> infs):
+{
+  AcceptanceLabel inf;
+}
+{
+  (
+    <TRUE>
+    {
+      inf = new AcceptanceLabel(true);
+      infs.add(inf);
+    }
+  | <FALSE>
+    {
+      inf = new AcceptanceLabel(false);
+      infs.add(inf);
+    }
+  | inf = parseAccAtomInt()
+    {
+      if(inf.getType() == AcceptanceType.FIN)      {
+        fin.setType(AcceptanceType.FIN);
+        fin.setStateSet(inf.getStateSet());
+        fin.setFlag(inf.isNegated());      }else      {
+        infs.add(inf);      }    }
+  |
+  <LPAR>
+  {
+    user.abort();  }
+  parseAccDisjunction()
+  <RPAR>
+  )
+}
+private AcceptanceLabel parseAccAtomInt():
+{
+  Token stateType,labelNumStr;
+  int labelNum;
+  AcceptanceType type;
+  boolean isNegated = false;
+}
+{
+    stateType = <IDENTIFIER>
+  {
+    if(stateType.toString().equals("Fin")) type = AcceptanceType.FIN;
+    else type = AcceptanceType.INF;
+  }
+  <LPAR>
+  (
+    <NOT>
+    {
+      isNegated = true;
+    }
+  )?
+  labelNumStr = <INT>
+  {
+    labelNum = Integer.parseInt(labelNumStr.toString());
+  }
+  <RPAR>
+  {
+    return new AcceptanceLabel(type, labelNum, isNegated);  }}
+
+private void parseItemAPs():
+{
+  Token apStr, numOfApStr;
+  int numOfAps, counter;
+  List<String> aps;
+  String s;
+}
+{
+  <AP>
+  numOfApStr = <INT>
+  {
+    numOfAps = Integer.parseInt(numOfApStr.toString());
+    counter = 0;
+    aps = new ArrayList<String>(numOfAps);
+  }
+  (
+//    <QUOTE>
+    apStr = <QUOTESTR>
+//    <QUOTE>
+    {
+      s = apStr.image;
+      if(counter > numOfAps) user.abort();
+      s = s.substring(1, s.length()-1);
+      num2Aps.put(counter, s);
+      counter ++;
+      aps.add(s);
+    }
+  )*
+  {
+    user.setAps(numOfAps, aps);
+  }
+}
+private void parseBody():
+{
+}
+{
+  parseState()
+  (
+    parseState()
+  )*
+}
+private void parseState():
+{
+}
+{
+  {
+     user.startOfState();  }
+  parseStateHeader()
+  (
+    parseEdge()
+  )*
+  {
+    try    {
+      user.endOfState();    }catch(EPMCException e)    {
+      e.printStackTrace();    }
+    
+  }
+}
+private void parseStateHeader():
+{
+  Token stateIdStr, labStr;
+  int stateId;
+  String s = null;
+  Expression expr = null;
+  BitSet signature = null;
+}
+{
+  <STATE>
+  (
+    expr = parseExpr()
+  )?
+  stateIdStr = <INT>
+  {
+    stateId = Integer.parseInt(stateIdStr.toString());
+  }
+  (
+    labStr = <QUOTESTR>
+    {
+        s = labStr.image;
+    	s = s.substring(1, s.length()-1);
+    }
+  )?
+  (
+    signature = parseAccLabel()
+  )?
+  {
+    user.setCurrState(stateId, expr, s, signature);
+  }
+}
+private BitSet parseAccLabel():
+{
+  BitSet acc = new BitSetUnboundedLongArray(numOfStates);
+  Token accNumStr;
+  int accNum ;
+}
+{
+  <LCURL>
+  (
+    accNumStr = <INT>
+    {
+      accNum = Integer.parseInt(accNumStr.toString());
+      acc.set(accNum);
+    }
+  )*
+  <RCURL>
+  {
+    return acc;
+  }
+}
+private void parseEdge():
+{
+  Token succStr;
+  int succ;
+  Expression expr = null;
+  BitSet signature = null;
+}
+{
+  (
+    expr = parseExpr()
+  )?
+  succStr = <INT>
+  {
+    succ = Integer.parseInt(succStr.toString());
+  }
+  (
+    signature = parseAccLabel()
+  )?
+  {
+    user.addEdge(succ, expr, signature);
+  }
+}
+private Expression parseExpr():
+{
+  Expression label ;
+}
+{
+  <LBRACKET>
+  label = parseExprDisjunction()
+  <RBRACKET>
+  {
+    return label;  }
+}
+private Expression parseExprConjunction():
+{
+  Expression left, right;
+}
+{
+  left = parseExprAtom()
+  (
+    <AND>
+    right = parseExprAtom()
+    {
+      left = and(left, right);    }
+  )*
+  {
+    return left;  }
+}
+private Expression parseExprDisjunction():
+{
+  Expression left, right;
+}
+{
+   left = parseExprConjunction()
+  (
+    <OR>
+    right = parseExprConjunction()
+    {
+      left = or(left, right);
+    }
+  )*
+  {
+    return left;  }
+}
+private Expression parseExprAtom():
+{
+  Token atomNumStr;
+  String s;
+  int atomNum;
+  Expression label;
+}
+{
+(  
+  atomNumStr = <INT>
+  {
+    atomNum = Integer.parseInt(atomNumStr.toString());
+    s = num2Aps.get(atomNum);
+    label = new ExpressionIdentifier.Builder()
+    	.setContext(context)
+    	.setName(s)
+    	.build();
+  }
+| <NOT>
+  label = parseExprAtom()
+  {
+    label = not(label);
+  }
+| <TRUE>
+  {
+    label = new ExpressionLiteral.Builder()
+    	.setContext(context)
+    	.setValue(true)
+    	.build();
+  }
+| <FALSE>
+  {
+    label = new ExpressionLiteral.Builder()
+    	.setContext(context)
+    	.setValue(false)
+    	.build();
+  }
+| <LPAR>
+  label = parseExprDisjunction()
+  <RPAR>
+)
+{
+  return label;}
+}

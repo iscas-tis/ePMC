@@ -1,0 +1,8 @@
+dtmc
+
+module main
+   s: [0..2];
+
+  [a] (s=0) -> 0.5: (s'=1) + 0.5 : (s'=2);
+
+endmodule

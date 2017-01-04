@@ -1,0 +1,98 @@
+smg
+
+const int size;
+const int n_bullets;
+const double p_hit_1_tile;
+
+const int min_x = 0;
+const int min_y = 0;
+const int max_x = size-1;
+const int max_y = size-1;
+
+const int init_x1 = 0;
+const int init_y1 = 0;
+
+const int init_x2 = max_x;
+const int init_y2 = max_y;
+
+player player1
+  [robot1]
+endplayer
+
+player player2
+  [robot2]
+endplayer
+
+module robot1
+  x1 : [min_x..max_x] init init_x1;
+  y1 : [min_y..max_y] init init_y1;
+
+  //robot1 has been hit; it is immobilized now
+  [robot1] !robot1alive -> true;
+  
+  //robot1 may decide to move 1 tile ahead
+  [robot1] robot1alive -> (x1'=min(max_x,x1+1, x1+1=x2&y1=y2 ? x1 : max_x));
+  [robot1] robot1alive -> (y1'=min(max_y,y1+1, x1=x2&y1+1=y2 ? y1 : max_y));
+  [robot1] robot1alive -> (x1'=max(min_x,x1-1, x1-1=x2&y1=y2 ? x1 : min_x));
+  [robot1] robot1alive -> (y1'=max(min_y,y1-1, x1=x2&y1-1=y2 ? y1 : min_y));
+
+  //robot1 may decide to move 2 tiles ahead
+  [robot1] robot1alive -> 0.5 : (x1'=min(max_x, x1+1, x1+1=x2&y1=y2 ? x1 : max_x))
+                        + 0.5 : (x1'=min(max_x, x1+2, x1+1=x2&y1=y2 ? x1 : max_x, x1+2=x2&y1=y2 ? x1+1 : max_x));
+  [robot1] robot1alive -> 0.5 : (y1'=min(max_y, y1+1, x1=x2&y1+1=y2 ? y1 : max_y))
+                        + 0.5 : (y1'=min(max_y, y1+2, x1=x2&y1+1=y2 ? y1 : max_y, x1=x2&y1+2=y2 ? y1+1 : max_y));
+  [robot1] robot1alive -> 0.5 : (x1'=max(min_x, x1-1, x1-1=x2&y1=y2 ? x1 : min_x))
+                        + 0.5 : (x1'=max(min_x, x1-2, x1-1=x2&y1=y2 ? x1 : min_x, x1-2=x2&y1=y2 ? x1-1 : min_x));
+  [robot1] robot1alive -> 0.5 : (y1'=max(min_y, y1-1, x1=x2&y1-1=y2 ? y1 : min_y))
+                        + 0.5 : (y1'=max(min_y, y1-2, x1=x2&y1-1=y2 ? y1 : min_y, x1=x2&y1-2=y2 ? y1-1 : min_y));
+endmodule
+
+module robot2
+  robot1alive : bool init true;
+
+  //the -1 is needed to permit to have no bullets at all, i.e., n_bullets = 0. 
+  //PRISM complains if the interval is [0..0]...
+  bullets2 : [-1..n_bullets] init n_bullets;
+  x2 : [min_x..max_x] init init_x2;
+  y2 : [min_y..max_y] init init_y2;
+
+  //robot2 may decide to shoot to robot1, if there are still bullets available
+  [robot2] bullets2 > 0 -> p_hit : (robot1alive'=false) & (bullets2'=bullets2-1) 
+                        + (1 - p_hit) : (bullets2'=bullets2-1);
+  
+  //robot2 may decide to move 1 tile ahead
+  [robot2] true -> (x2'=min(max_x,x2+1, x2+1=x1&y2=y1 ? x2 : max_x));
+  [robot2] true -> (y2'=min(max_y,y2+1, x2=x1&y2+1=y1 ? y2 : max_y));
+  [robot2] true -> (x2'=max(min_x,x2-1, x2-1=x1&y2=y1 ? x2 : min_x));
+  [robot2] true -> (y2'=max(min_y,y2-1, x2=x1&y2-1=y1 ? y2 : min_y));
+
+  //robot2 may decide to move 2 tiles ahead
+  [robot2] true -> 0.5 : (x2'=min(max_x, x2+1, x2+1=x1&y2=y1 ? x2 : max_x))
+                 + 0.5 : (x2'=min(max_x, x2+2, x2+1=x1&y2=y1 ? x2 : max_x, x2+2=x1&y2=y1 ? x2+1 : max_x));
+  [robot2] true -> 0.5 : (y2'=min(max_y, y2+1, x2=x1&y2+1=y1 ? y2 : max_y))
+                 + 0.5 : (y2'=min(max_y, y2+2, x2=x1&y2+1=y1 ? y2 : max_y, x2=x1&y2+2=y1 ? y2+1 : max_y));
+  [robot2] true -> 0.5 : (x2'=max(min_x, x2-1, x2-1=x1&y2=y1 ? x2 : min_x))
+                 + 0.5 : (x2'=max(min_x, x2-2, x2-1=x1&y2=y1 ? x2 : min_x, x2-2=x1&y2=y1 ? x2-1 : min_x));
+  [robot2] true -> 0.5 : (y2'=max(min_y, y2-1, x2=x1&y2-1=y1 ? y2 : min_y))
+                 + 0.5 : (y2'=max(min_y, y2-2, x2=x1&y2-1=y1 ? y2 : min_y, x2=x1&y2-2=y1 ? y2-1 : min_y));
+endmodule
+
+module scheduler
+  c : [1..2] init 1;
+
+  [robot1] c=1 -> (c'=2);
+  [robot2] c=2 -> (c'=1);
+endmodule
+
+formula p_hit_dir = (y2 = y1) & (x2 < x1) ? pow(p_hit_1_tile, x1 - x2)
+                : ((x2 = x1) & (y2 > y1) ? pow(p_hit_1_tile, y2 - y1)
+                  : ((y2 = y1) & (x2 > x1) ? pow(p_hit_1_tile, x2 - x1)
+                    : ((x2 = x1) & (y2 < y1) ? pow(p_hit_1_tile, y1 - y2)
+                      : 0))); 
+
+formula p_hit = pow(p_hit_1_tile, pow((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2), 0.5)); 
+
+label "z1" = (x1=min_x | x1=min_x+1 | x1=min_x+2 | x1=min_x+3) & (y1=max_y | y1=max_y-1 | y1=max_y-2 | y1=max_y-3);
+label "z2" = (x1=max_x | x1=max_x-1 | x1=max_x-2 | x1=max_x-3) & (y1=max_y | y1=max_y-1 | y1=max_y-2 | y1=max_y-3);
+label "z3" = (x1=min_x | x1=min_x+1 | x1=min_x+2 | x1=min_x+3) & (y1=min_y | y1=min_y+1 | y1=min_y+2 | y1=min_y+3);
+label "z4" = (x1=max_x | x1=max_x-1 | x1=max_x-2 | x1=max_x-3) & (y1=min_y | y1=min_y+1 | y1=min_y+2 | y1=min_y+3);

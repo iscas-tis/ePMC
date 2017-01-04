@@ -1,0 +1,8 @@
+package epmc.constraintsolver.options;
+
+public enum OptionsConstraintsolver {
+	OPTIONS_CONSTRAINTSOLVER,
+	CONSTRAINTSOLVER_CATEGORY,
+	CONSTRAINTSOLVER_SOLVER,
+	CONSTRAINTSOLVER_SOLVER_CLASS
+}

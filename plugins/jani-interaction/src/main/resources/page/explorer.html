@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="us">
+<head>
+	<meta charset="utf-8">
+	<title>Model Explorer</title>
+  <link rel="icon" href="./images/favicon.ico" type="image/x-icon" /> 
+	<link href="css/lib/jquery-ui.css" rel="stylesheet">	
+	<link href="css/lib/jquery.terminal.css" rel="stylesheet">	
+	<link href="css/explorer/terminal.css" rel="stylesheet">	
+  <link href="css/explorer/explorer.css" rel="stylesheet">
+  <link href="css/common.css" rel="stylesheet">
+  <!--<link href="./plugins/janigraph/model.css" rel="stylesheet">
+  <link href="./plugins/janigraph/colorpicker/dhtmlxcolorpicker.css" rel="stylesheet">-->
+  <link href="./plugins/janivisualeditor/visualeditor.css" rel="stylesheet">
+  <link href="./plugins/alloy-3.0.1/build/aui-css/css/bootstrap.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="container">
+  <table width="100%" align="left"><tbody>
+    <tr>
+      <td width="20%"><h2 class="demoHeaders" style="float: left">EPMC Demo</h2></td>
+      <td>
+        <span style="float: left">
+          <b>Test Operations&nbsp;</b>
+          <!--<button id="button">Test WebSocket</button>
+          <button id="button" onclick="init('prop-grapheditor');">Test Graph Panel</button>
+          <button id="button" onclick="opentab('/', 'test_model.mdp');">Test Open Model</button>-->
+          <button id="button" onclick="$('#term_dialog').dialog('open');">Test Terminal</button>
+        </span>
+        <span style="float: right; padding-right: 20px;" id='loginstatus'>
+          Logined as <a href='#'><b>localhost</b></a>, <a href='#'>Log Out</a>
+        </span>
+      </td>
+    </tr>
+  </table>      
+  <table width="100%"><tbody>
+  <tr>    
+    <td id="main-cell" width="60%">
+      <div id="main-tabs">
+		    <ul>
+			    <li><a href="#tabs-modellist" id="btn-modellist">Model List</a></li>
+		    </ul>
+		    <div id="tabs-modellist">
+		      <table width="100%" align="left">
+		        <thead>
+		          <th class="center">Model Name</th>
+		          <th class="center">Last Updated</th>
+		          <th class="center">Model Type</th>
+		          <th class="center">Operation</th>
+		        </thead>
+		        <tbody id="tbody-modellist" class="mono" style="font-size: 1.3em;">
+		          <tr class="folderline">
+		            <td class="caption"><a href='#'>../</a></td><td></td><td></td><td><td>
+		          </tr>
+		          <tr class="folderline">
+		            <td class="caption"><span class="ui-icon ui-icon-folder-collapsed" style="float:left;"></span><a href="#">Project</a></td>
+		            <td class="center">2015-11-11 08:00:00</td>
+		            <td class="center">[FOLDER]</td>
+		            <td class="center"><td>
+		          </tr>   		 
+		          <tr class="modelline">
+		            <td class="caption"><a href="#">test_model.mdp</a></td>
+		            <td class="center">2015-11-11 08:00:00</td>
+		            <td class="center">mdp</td>
+		            <td class="center"><td>
+		          </tr>
+		          <tr class="modelline">
+		            <td class="caption"><a href="#">dice.jani</a></td>
+		            <td class="center">2016-05-04 08:00:00</td>
+		            <td class="center">mdp</td>
+		            <td class="center"><td>
+		          </tr>
+		        </tbody>
+		      </table>
+		    </div>
+	    </div>      
+    </td>
+    <td id="attr-cell" style="display: none;">
+	    <!-- Tabs -->	    
+	    <div id="attr-tabs">
+		    <ul>
+			    <li><a href="#tabs-prop">Properties</a></li>
+			    <li><a href="#tabs-result">Tasks</a></li>
+			    <li id='btn-visualeditor'><a href="#tabs-visual-editor">Visual Editor</a></li>
+		    </ul>
+		    <div id="tabs-prop">
+          <div id='table-prop-div'>
+            <table id='table-prop'>
+              <!--<thead>
+                <th align="left">Properties</th>
+                <th>Oprs</th>
+              </thead>-->
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+          <div id='prop-editor' style='display:none;'>
+          </div>
+          <div id='prop-grapheditor' style='background-color: #EEE;'>
+          </div>
+		    </div>
+		    <div id="tabs-result">
+		      <table width="100%">
+		        <thead>
+		          <th>Task ID</th>
+		          <th>Model</th>
+		          <th>Result</th>
+		        </thead>
+		        <tbody id="tbody-tasklist">
+		        </tbody>
+		      </table>
+		    </div>
+		    <div id="tabs-visual-editor" style="padding:10px 0 10px 0;">
+		      <table id="myDiagramContainer" width="100%">
+		        <tr>
+            <td><div id="diagramBuilder" width=100></div></td>
+            <td><div id="flow chart editor" style="height:200px;"></div></td>
+            </tr>
+          </table>
+		    </div>
+	    </div>
+   </td>
+  </tr>
+  </tbody></table>
+
+<div id="dialog" title="Message">
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+</div>
+
+<div id="term_dialog" title="Terminal">
+    <div style='width: 98%; height: 95%;' id='terminal'></div>
+</div>
+
+
+<!-- these are 3rd-party libraries, should be contained in most of the pages -->
+<script src="js/lib/jquery.js"></script>
+<script src="js/lib/jquery-ui.js"></script>
+<script src="js/lib/Base64.js"></script>
+<script src="js/lib/jquery.terminal-min.js"></script>
+<script src="plugins/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="./plugins/janigraph/colorpicker/dhtmlxcommon.js" type="text/javascript" charset="utf-8"></script>
+<script src="./plugins/janigraph/colorpicker/dhtmlxcolorpicker.js" type="text/javascript" charset="utf-8"></script>
+<script src="./plugins/janigraph/model.js" type="text/javascript" charset="utf-8"></script>-->
+
+<script src="./plugins/alloy-3.0.1/build/aui/aui.js"></script>
+<script src="./plugins/janivisualeditor/escodegen.browser.min.js"></script>
+<script src="./plugins/janivisualeditor/esprima.js"></script>
+<script src="./plugins/janivisualeditor/visualeditor.js"></script>
+
+<!-- these are our own libraries -->
+<script src="js/common.js"></script>
+<script src="js/explorer/common.js"></script>
+<script src="js/explorer/explorer.js"></script>
+<script src="js/explorer/terminal.js"></script>
+<script src="js/websocket/common.js"></script>
+<script src="js/websocket/jani-interaction.js"></script>
+
+
+</body>
+</html>

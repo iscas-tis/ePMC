@@ -1,0 +1,140 @@
+# HG changeset patch
+# Parent fc6b2959d9d3d139c7e9355143de24ff2a4638c8
+diff --git a/core/Solver.cc b/core/Solver.cc
+--- a/core/Solver.cc
++++ b/core/Solver.cc
+@@ -90,6 +90,7 @@
+   , order_heap         (VarOrderLt(activity))
+   , progress_estimate  (0)
+   , remove_satisfied   (true)
++  , next_var           (0)
+ 
+     // Resource constraints:
+     //
+@@ -113,22 +114,52 @@
+ //
+ Var Solver::newVar(bool sign, bool dvar)
+ {
+-    int v = nVars();
++    Var v;
++    if (free_vars.size() > 0){
++        v = free_vars.last();
++        free_vars.pop();
++    }else
++        v = next_var++;
++    
+     watches  .init(mkLit(v, false));
+     watches  .init(mkLit(v, true ));
+-    assigns  .push(l_Undef);
+-    vardata  .push(mkVarData(CRef_Undef, 0));
++
++#define M_SETVAR(arr, v, val) do {              \
++        if (arr.size() > v) {                   \
++            arr[v] = val;                       \
++        } else {                                \
++            assert(arr.size() == v);            \
++            arr.push(val);                      \
++        }                                       \
++    } while(0)
++        
++    M_SETVAR(assigns, v, l_Undef);
++    M_SETVAR(vardata, v, mkVarData(CRef_Undef, 0));
+     //activity .push(0);
+-    activity .push(rnd_init_act ? drand(random_seed) * 0.00001 : 0);
+-    seen     .push(0);
+-    polarity .push(sign);
+-    decision .push();
++    M_SETVAR(activity, v, rnd_init_act ? drand(random_seed) * 0.00001 : 0);
++    M_SETVAR(seen, v, 0);
++    M_SETVAR(polarity, v, sign);
++    M_SETVAR(decision, v, 0);
++
++#undef M_SETVAR
++    
+     trail    .capacity(v+1);
+     setDecisionVar(v, dvar);
+     return v;
+ }
+ 
+ 
++// Note: at the moment, only unassigned variable will be released (this is to avoid duplicate
++// releases of the same variable).
++void Solver::releaseVar(Lit l)
++{
++    if (value(l) == l_Undef){
++        addClause(l);
++        released_vars.push(var(l));
++    }
++}
++
++
+ bool Solver::addClause_(vec<Lit>& ps)
+ {
+     assert(decisionLevel() == 0);
+@@ -586,8 +617,32 @@
+ 
+     // Remove satisfied clauses:
+     removeSatisfied(learnts);
+-    if (remove_satisfied)        // Can be turned off.
++    if (remove_satisfied){        // Can be turned off.
+         removeSatisfied(clauses);
++
++        // TODO: what todo in if 'remove_satisfied' is false?
++
++        // Remove all released variables from the trail:
++        for (int i = 0; i < released_vars.size(); i++){
++            assert(seen[released_vars[i]] == 0);
++            seen[released_vars[i]] = 1;
++        }
++
++        int i, j;
++        for (i = j = 0; i < trail.size(); i++)
++            if (seen[var(trail[i])] == 0)
++                trail[j++] = trail[i];
++        trail.shrink(i - j);
++        //printf("trail.size()= %d, qhead = %d\n", trail.size(), qhead);
++        qhead = trail.size();
++
++        for (int i = 0; i < released_vars.size(); i++)
++            seen[released_vars[i]] = 0;
++
++        // Released variables are now ready to be reused:
++        append(released_vars, free_vars);
++        released_vars.clear();
++    }
+     checkGarbage();
+     rebuildOrderHeap();
+ 
+diff --git a/core/Solver.h b/core/Solver.h
+--- a/core/Solver.h
++++ b/core/Solver.h
+@@ -44,6 +44,7 @@
+     // Problem specification:
+     //
+     Var     newVar    (bool polarity = true, bool dvar = true); // Add a new variable with parameters specifying variable mode.
++    void    releaseVar(Lit l);                                  // Make literal true and promise to never refer to variable again.
+ 
+     bool    addClause (const vec<Lit>& ps);                     // Add a clause to the solver. 
+     bool    addEmptyClause();                                   // Add the empty clause, making the solver contradictory.
+@@ -190,8 +191,12 @@
+     double              progress_estimate;// Set by 'search()'.
+     bool                remove_satisfied; // Indicates whether possibly inefficient linear scan for satisfied clauses should be performed in 'simplify'.
+ 
++    Var                 next_var;         // Next variable to be created.
+     ClauseAllocator     ca;
+ 
++    vec<Var>            released_vars;
++    vec<Var>            free_vars;
++    
+     // Temporaries (to reduce allocation overhead). Each variable is prefixed by the method in which it is
+     // used, exept 'seen' wich is used in several places.
+     //
+@@ -325,7 +330,7 @@
+ inline int      Solver::nAssigns      ()      const   { return trail.size(); }
+ inline int      Solver::nClauses      ()      const   { return clauses.size(); }
+ inline int      Solver::nLearnts      ()      const   { return learnts.size(); }
+-inline int      Solver::nVars         ()      const   { return vardata.size(); }
++inline int      Solver::nVars         ()      const   { return next_var; }
+ inline int      Solver::nFreeVars     ()      const   { return (int)dec_vars - (trail_lim.size() == 0 ? trail.size() : trail_lim[0]); }
+ inline void     Solver::setPolarity   (Var v, bool b) { polarity[v] = b; }
+ inline void     Solver::setDecisionVar(Var v, bool b) 

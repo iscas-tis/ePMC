@@ -1,0 +1,41 @@
+mdp
+
+const int N=2;
+const int B = 1;
+
+const double success = 0.95;
+const double failure = 1 - success;
+
+const int b0Init = 1;
+
+const int noAction = 0;
+const int dropB1 = noAction + 1;
+const int actN = dropB1;
+
+const int control = 0;
+const int move = control + 1;
+const int action = move + 1;
+
+module robot
+	running : bool init true;
+	mode : [control .. action] init control;
+	robotAt : [0 .. N-1] init 0;
+	carryBox : [-1 .. B-1] init -1;
+	box0At : [-1 .. N-1] init b0Init;
+	act : [noAction..actN] init noAction;
+
+	[chooseToMove] running & (mode = control) -> 1 : (mode' = move) & (act' = noAction);
+	[chooseToAct] running & (mode = control) & (box0At != robotAt & carryBox >= 0) -> 1 : (mode' = action) & (act' = noAction);
+	[chooseToAct] running & (mode = control) & (box0At = robotAt) & carryBox = -1 -> 1 : (mode' = action) & (act' = noAction);
+	[moveLongCW] running & (mode = move) -> 
+			  0.05 : (robotAt' = mod(robotAt + 3, N)) & (mode' = control) & (act' = noAction) 
+			+ 0.10 : (robotAt' = mod(robotAt + 4, N)) & (mode' = control) & (act' = noAction)
+			+ 0.70 : (robotAt' = mod(robotAt + 5, N)) & (mode' = control) & (act' = noAction)
+			+ 0.10 : (robotAt' = mod(robotAt + 6, N)) & (mode' = control) & (act' = noAction)
+			+ 0.05 : (robotAt' = mod(robotAt + 7, N)) & (mode' = control) & (act' = noAction);
+	[movePreciseCW] running & (mode = move) -> 1 : (robotAt' = mod(robotAt + 1, N)) & (mode' = control) & (act' = noAction);
+	[pickUpB0] running & (mode = action) & (robotAt = box0At) & (carryBox = -1) -> success : (carryBox' = 0) & (box0At' = -1) & (mode' = control) & (act' = noAction) + failure : (mode' = control) & (act' = noAction); 
+	[dropB0] running & (mode = action) & (carryBox = 0) -> success : (carryBox' = -1) & (box0At' = robotAt) & (mode' = control) & (act' = noAction) + failure : (mode' = control) & (act' = noAction); 
+	[stop] true -> (running' = false);
+endmodule
+

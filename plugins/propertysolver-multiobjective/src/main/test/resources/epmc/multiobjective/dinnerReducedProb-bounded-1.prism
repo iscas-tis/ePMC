@@ -1,0 +1,93 @@
+mdp
+
+
+const int stepN;
+
+const int home = 0;
+const int italianRestaurant = home + 1;
+const int pizzaPlace = italianRestaurant + 1;
+const int groceryStore = pizzaPlace + 1;
+
+const int noAction = 0;
+
+const int eatPizza = noAction + 1;
+
+const int actN = eatPizza;
+
+module dinner
+	running : bool init true;
+	place : [home..groceryStore] init home;
+	sated : bool init false;
+	readyToEatPizza : bool init false;
+	hasIngredientsForPizza : bool init false;
+	kitchenClean : bool init true;
+	act : [noAction..actN] init noAction;
+	step : [0..stepN] init 0;
+
+	[driveHomeItalianRestaurant] running & (step < stepN) & (place = home) -> 
+					0.95 : (step' = step + 1) & (place' = italianRestaurant) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveHomePizzaPlace] running & (step < stepN) & (place = home) -> 
+					0.95 : (step' = step + 1) & (place' = pizzaPlace) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveHomeGroceryStore] running & (step < stepN) & (place = home) -> 
+					0.95 : (step' = step + 1) & (place' = groceryStore) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveItalianRestaurantHome] running & (step < stepN) & (place = italianRestaurant) -> 
+					0.95 : (step' = step + 1) & (place' = home) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveItalianRestaurantPizzaPlace] running & (step < stepN) & (place = italianRestaurant) -> 
+					0.95 : (step' = step + 1) & (place' = pizzaPlace) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveItalianRestaurantGroceryStore] running & (step < stepN) & (place = italianRestaurant) -> 
+					0.95 : (step' = step + 1) & (place' = groceryStore) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[drivePizzaPlaceHome] running & (step < stepN) & (place = pizzaPlace) -> 
+					0.95 : (step' = step + 1) & (place' = home) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[drivePizzaPlaceItalianRestaurant] running & (step < stepN) & (place = pizzaPlace) -> 
+					0.95 : (step' = step + 1) & (place' = italianRestaurant) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[drivePizzaPlaceGroceryStore] running & (step < stepN) & (place = pizzaPlace) -> 
+					0.95 : (step' = step + 1) & (place' = groceryStore) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveGroceryStoreHome] running & (step < stepN) & (place = groceryStore) -> 
+					0.95 : (step' = step + 1) & (place' = home) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveGroceryStoreItalianRestaurant] running & (step < stepN) & (place = groceryStore) -> 
+					0.95 : (step' = step + 1) & (place' = italianRestaurant) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[driveGroceryStorePizzaPlace] running & (step < stepN) & (place = groceryStore) -> 
+					0.95 : (step' = step + 1) & (place' = pizzaPlace) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+
+	[eatPizza] running & (step < stepN) & readyToEatPizza -> 
+					0.95 : (step' = step + 1) & (sated' = true) & (readyToEatPizza' = false) & (act' = eatPizza) + 
+					0.05 : (step' = step + 1) & (readyToEatPizza' = false) & (act' = eatPizza);
+
+	[orderPizza] running & (step < stepN) & (place = italianRestaurant | place = pizzaPlace) -> 
+					0.95 : (step' = step + 1) & (readyToEatPizza' = true) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+	[orderTakeoutPizza] running & (step < stepN) & (place = home) -> 
+					0.95 : (step' = step + 1) & (readyToEatPizza' = true) & (act' = noAction) +
+					0.05 : (step' = step + 1) & (act' = noAction);
+
+	[buyIngredientsForPizza] running & (step < stepN) & (place = groceryStore) -> 
+					0.95 : (step' = step + 1) & (hasIngredientsForPizza' = true) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+
+	[cookPizza] running & (step < stepN) & (place = home) & (hasIngredientsForPizza) -> 
+					0.95 : (step' = step + 1) & (readyToEatPizza'= true) & (hasIngredientsForPizza' = false) & (kitchenClean' = false) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (hasIngredientsForPizza' = false) & (kitchenClean' = false) & (act' = noAction);
+
+	[cleanDishes] running & (step < stepN) & (place = home) -> 
+					0.95 : (step' = step + 1) & (kitchenClean' = true) & (act' = noAction) + 
+					0.05 : (step' = step + 1) & (act' = noAction);
+
+	[stop] true -> (running' = false);
+endmodule
+
+
+
+
+

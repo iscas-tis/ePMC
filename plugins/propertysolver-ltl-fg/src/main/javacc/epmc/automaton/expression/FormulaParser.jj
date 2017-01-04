@@ -1,0 +1,193 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  JDK_VERSION = "1.8";
+  LOOKAHEAD = 1;
+  STATIC = false;}
+PARSER_BEGIN(FormulaParser)package epmc.automaton.expression;
+
+import epmc.expression.Expression;
+import epmc.expression.ExpressionIdentifier;
+import epmc.expression.ExpressionIdentifierStandard;
+import epmc.expression.ExpressionLiteral;
+import epmc.expression.ExpressionOperator;
+import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.TimeBound;
+import epmc.expression.ContextExpression;
+import epmc.value.OperatorAnd;
+import epmc.value.OperatorNot;
+import epmc.value.OperatorOr;
+
+public class FormulaParser{
+  private ContextExpression context = null;
+  public Expression parse(ContextExpression context)  {
+    this.context = context;
+    Expression label = null;
+    try {
+		label = parseExpr();
+	} catch (ParseException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	return label;
+  }
+  private static Expression and(Expression a, Expression b) {
+    return new ExpressionOperator.Builder()
+    	.setContext(a.getContext())
+    	.setOperator(OperatorAnd.IDENTIFIER)
+    	.setOperands(a, b)
+    	.build();
+  }
+
+    private static Expression not(Expression expression) {
+    	return new ExpressionOperator.Builder()
+        	.setContext(expression.getContext())
+        	.setOperator(OperatorNot.IDENTIFIER)
+        	.setOperands(expression)
+        	.build();
+    }
+
+    private static Expression or(Expression a, Expression b) {
+        return new ExpressionOperator.Builder()
+            .setContext(a.getContext())
+            .setOperator(OperatorOr.IDENTIFIER)
+            .setOperands(a, b)
+            .build();
+    }
+
+    private static ExpressionTemporal newGlobally(Expression operand) {
+        return new ExpressionTemporal
+                (operand.getContext(), operand, TemporalType.GLOBALLY, new TimeBound.Builder()
+                        .setContext(operand.getContext())
+                        .build(), null);
+    }
+
+    private static ExpressionTemporal newFinally(Expression inner) {
+        return new ExpressionTemporal
+                (inner.getContext(), inner, TemporalType.FINALLY,
+                        new TimeBound.Builder()
+                        .setContext(inner.getContext())
+                        .build(), null);
+    }}PARSER_END(FormulaParser)SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+  < FINALLY : "F" >
+| < GLOBALLY : "G" >
+| < UNTIL : "U" >
+| < NEXT : "X" >
+| < TRUE : "true" >
+| < FALSE : "false" >
+| < LPAR : "(" >
+| < RPAR : ")" >
+| < AND : "&" >
+| < OR : "|" >
+| < NOT : "!" >
+/*| < QUOTE : "\"" >*/
+| < IDENTIFIER : [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","-","_","0"-"9" ] )* >
+| < INT : (["1"-"9"](["0"-"9"])*)|("0") >
+}
+
+private Expression parseExpr():
+{
+  Expression label ;
+}
+{
+  label = parseExprDisjunction()
+  {
+    return label;
+  }
+}
+private Expression parseExprConjunction():
+{
+  Expression left, right;
+}
+{
+  left = parseExprAtom()
+  (
+    <AND>
+    right = parseExprAtom()
+    {
+      left = and(left, right);
+    }
+  )*
+  {
+    return left;
+  }
+}
+private Expression parseExprDisjunction():
+{
+  Expression left, right;
+}
+{
+   left = parseExprConjunction()
+  (
+    <OR>
+    right = parseExprConjunction()
+    {
+      left = or(left, right);
+    }
+  )*
+  {
+    return left;
+  }
+}
+private Expression parseExprAtom():
+{
+  Token atomStr;
+  String s;
+  Expression label;
+}
+{
+(  
+  atomStr = <IDENTIFIER>
+  {
+    s = atomStr.image;
+    label = new ExpressionIdentifierStandard.Builder()
+    	.setContext(context)
+    	.setName(s)
+    	.build();
+  }
+| <NOT>
+  label = parseExprAtom()
+  {
+    label = not(label);
+  }
+| <FINALLY>
+  label = parseExprAtom()
+  {
+    return newFinally(label);  }
+| <GLOBALLY>
+  label = parseExprAtom()
+  {
+    return newGlobally(label);
+  }
+| <TRUE>
+  {
+    label = new ExpressionLiteral.Builder()
+    	.setContext(context)
+    	.setValue(true)
+    	.build();
+  }
+| <FALSE>
+  {
+    label = new ExpressionLiteral.Builder()
+    	.setContext(context)
+    	.setValue(false)
+    	.build();
+  }
+| <LPAR>
+  label = parseExprDisjunction()
+  <RPAR>
+)
+{
+  return label;
+}
+}
+
