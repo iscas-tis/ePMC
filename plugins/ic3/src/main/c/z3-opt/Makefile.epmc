@@ -1,0 +1,19 @@
+BUILD_DIR ?= build
+Z3LIB     ?= libz3.$(DYN_EXT) 
+
+.PHONY : distclean
+.PHONY : build
+
+all: build
+
+distclean:
+	rm -r $(BUILD_DIR)
+	cd ../
+build:
+	./configure
+	python scripts/mk_make.py 
+	cd $(BUILD_DIR);\
+	make; \
+	$(STRIP) -x $(Z3LIB); \
+	mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
+	cp  $(Z3LIB) $(CLASSDIR)/$(OSDIRPART)/; \

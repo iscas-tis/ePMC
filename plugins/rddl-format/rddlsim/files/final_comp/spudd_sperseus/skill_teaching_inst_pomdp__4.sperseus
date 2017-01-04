@@ -1,0 +1,5304 @@
+// Automatically produced by rddl.translate.RDDL2Format
+// SPUDD / Symbolic Perseus Format for 'skill_teaching_pomdp.skill_teaching_inst_pomdp__4'
+
+(variables 
+	(proficiencyHigh__s0 true false)
+	(proficiencyHigh__s1 true false)
+	(proficiencyHigh__s2 true false)
+	(proficiencyHigh__s3 true false)
+	(hintedRight__s0 true false)
+	(hintedRight__s1 true false)
+	(hintedRight__s2 true false)
+	(hintedRight__s3 true false)
+	(updateTurn__s0 true false)
+	(updateTurn__s1 true false)
+	(updateTurn__s2 true false)
+	(updateTurn__s3 true false)
+	(answeredRight__s0 true false)
+	(answeredRight__s1 true false)
+	(answeredRight__s2 true false)
+	(answeredRight__s3 true false)
+	(fpos__s0 true false)
+	(fpos__s1 true false)
+	(fpos__s2 true false)
+	(fpos__s3 true false)
+	(proficiencyMed__s0 true false)
+	(proficiencyMed__s1 true false)
+	(proficiencyMed__s2 true false)
+	(proficiencyMed__s3 true false)
+	(hintDelayVar__s0 true false)
+	(hintDelayVar__s1 true false)
+	(hintDelayVar__s2 true false)
+	(hintDelayVar__s3 true false)
+)
+
+(observations 
+	(updateTurnObs__s0 true false)
+	(updateTurnObs__s1 true false)
+	(updateTurnObs__s2 true false)
+	(updateTurnObs__s3 true false)
+	(answeredRightObs__s0 true false)
+	(answeredRightObs__s1 true false)
+	(answeredRightObs__s2 true false)
+	(answeredRightObs__s3 true false)
+)
+
+init [*
+	(proficiencyHigh__s0 (true (0.0)) (false (1.0)))
+	(proficiencyHigh__s1 (true (0.0)) (false (1.0)))
+	(proficiencyHigh__s2 (true (0.0)) (false (1.0)))
+	(proficiencyHigh__s3 (true (0.0)) (false (1.0)))
+	(hintedRight__s0 (true (0.0)) (false (1.0)))
+	(hintedRight__s1 (true (0.0)) (false (1.0)))
+	(hintedRight__s2 (true (0.0)) (false (1.0)))
+	(hintedRight__s3 (true (0.0)) (false (1.0)))
+	(updateTurn__s0 (true (0.0)) (false (1.0)))
+	(updateTurn__s1 (true (0.0)) (false (1.0)))
+	(updateTurn__s2 (true (0.0)) (false (1.0)))
+	(updateTurn__s3 (true (0.0)) (false (1.0)))
+	(answeredRight__s0 (true (0.0)) (false (1.0)))
+	(answeredRight__s1 (true (0.0)) (false (1.0)))
+	(answeredRight__s2 (true (0.0)) (false (1.0)))
+	(answeredRight__s3 (true (0.0)) (false (1.0)))
+	(fpos__s0 (true (0.0)) (false (1.0)))
+	(fpos__s1 (true (0.0)) (false (1.0)))
+	(fpos__s2 (true (0.0)) (false (1.0)))
+	(fpos__s3 (true (0.0)) (false (1.0)))
+	(proficiencyMed__s0 (true (0.0)) (false (1.0)))
+	(proficiencyMed__s1 (true (0.0)) (false (1.0)))
+	(proficiencyMed__s2 (true (0.0)) (false (1.0)))
+	(proficiencyMed__s3 (true (0.0)) (false (1.0)))
+	(hintDelayVar__s0 (true (0.0)) (false (1.0)))
+	(hintDelayVar__s1 (true (0.0)) (false (1.0)))
+	(hintDelayVar__s2 (true (0.0)) (false (1.0)))
+	(hintDelayVar__s3 (true (0.0)) (false (1.0)))
+]
+
+action askProb__s0
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0 
+			(true (updateTurn__s0' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s0' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s2 
+						(true (answeredRight__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3 
+							(true (answeredRight__s0' 
+								(true (0.0))
+								(false (1.0))))
+							(false (answeredRight__s0' 
+								(true (0.9416222))
+								(false (0.058377800000000035))))))))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s2 
+						(true (answeredRight__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3 
+							(true (answeredRight__s0' 
+								(true (0.0))
+								(false (1.0))))
+							(false (proficiencyMed__s0 
+								(true (answeredRight__s0' 
+									(true (0.7698133))
+									(false (0.23018669999999997))))
+								(false (answeredRight__s0' 
+									(true (0.7029459))
+									(false (0.2970541)))))))))))))))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(updateTurn__s0 
+			(true (fpos__s0' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (fpos__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (fpos__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (fpos__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (fpos__s0' 
+							(true (0.01))
+							(false (0.99)))))))))))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action askProb__s1
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s0 
+			(true (updateTurn__s1' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s0 
+				(true (answeredRight__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s2 
+						(true (answeredRight__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3 
+							(true (answeredRight__s1' 
+								(true (0.0))
+								(false (1.0))))
+							(false (answeredRight__s1' 
+								(true (0.9574803))
+								(false (0.04251970000000005))))))))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s2 
+						(true (answeredRight__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3 
+							(true (answeredRight__s1' 
+								(true (0.0))
+								(false (1.0))))
+							(false (proficiencyMed__s1 
+								(true (answeredRight__s1' 
+									(true (0.6899236))
+									(false (0.31007640000000003))))
+								(false (answeredRight__s1' 
+									(true (0.53415537))
+									(false (0.46584463)))))))))))))))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(updateTurn__s0 
+			(true (fpos__s1' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (fpos__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (fpos__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (fpos__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (fpos__s1' 
+							(true (0.1280355))
+							(false (0.8719645)))))))))))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action askProb__s2
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s0 
+			(true (updateTurn__s2' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s2' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(proficiencyHigh__s0 
+			(true (proficiencyHigh__s1 
+				(true (proficiencyHigh__s2 
+					(true (updateTurn__s0 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s2 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (updateTurn__s3 
+									(true (answeredRight__s2' 
+										(true (0.0))
+										(false (1.0))))
+									(false (answeredRight__s2' 
+										(true (0.96305656))
+										(false (0.03694344000000005))))))))))))
+					(false (updateTurn__s0 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s2 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (updateTurn__s3 
+									(true (answeredRight__s2' 
+										(true (0.0))
+										(false (1.0))))
+									(false (proficiencyMed__s2 
+										(true (answeredRight__s2' 
+											(true (0.7538905))
+											(false (0.24610949999999998))))
+										(false (answeredRight__s2' 
+											(true (0.52170634))
+											(false (0.47829365999999995))))))))))))))))
+				(false (proficiencyHigh__s2 
+					(true (updateTurn__s0 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s2 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (updateTurn__s3 
+									(true (answeredRight__s2' 
+										(true (0.0))
+										(false (1.0))))
+									(false (answeredRight__s2' 
+										(true (0.96305656))
+										(false (0.03694344000000005))))))))))))
+					(false (updateTurn__s0 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s2 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (updateTurn__s3 
+									(true (answeredRight__s2' 
+										(true (0.0))
+										(false (1.0))))
+									(false (proficiencyMed__s2 
+										(true (answeredRight__s2' 
+											(true (0.6585059762001038))
+											(false (0.34149402379989624))))
+										(false (answeredRight__s2' 
+											(true (0.41684534549713137))
+											(false (0.5831546545028686))))))))))))))))))
+			(false (proficiencyHigh__s2 
+				(true (updateTurn__s0 
+					(true (answeredRight__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (answeredRight__s2' 
+									(true (0.96305656))
+									(false (0.03694344000000005))))))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (proficiencyMed__s2 
+									(true (answeredRight__s2' 
+										(true (0.6585059762001038))
+										(false (0.34149402379989624))))
+									(false (answeredRight__s2' 
+										(true (0.41684534549713137))
+										(false (0.5831546545028686)))))))))))))))))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(updateTurn__s0 
+			(true (fpos__s2' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (fpos__s2' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (fpos__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (fpos__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (fpos__s2' 
+							(true (0.100059845))
+							(false (0.899940155)))))))))))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action askProb__s3
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s0 
+			(true (updateTurn__s3' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s3' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(proficiencyHigh__s2 
+			(true (proficiencyHigh__s3 
+				(true (updateTurn__s0 
+					(true (answeredRight__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s3' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s3' 
+									(true (0.0))
+									(false (1.0))))
+								(false (answeredRight__s3' 
+									(true (0.920164))
+									(false (0.07983600000000002))))))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s3' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s3' 
+									(true (0.0))
+									(false (1.0))))
+								(false (proficiencyMed__s3 
+									(true (answeredRight__s3' 
+										(true (0.7822459))
+										(false (0.21775409999999995))))
+									(false (answeredRight__s3' 
+										(true (0.73760873))
+										(false (0.26239126999999995))))))))))))))))
+			(false (proficiencyHigh__s3 
+				(true (updateTurn__s0 
+					(true (answeredRight__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s3' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s3' 
+									(true (0.0))
+									(false (1.0))))
+								(false (answeredRight__s3' 
+									(true (0.920164))
+									(false (0.07983600000000002))))))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (answeredRight__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (answeredRight__s3' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (answeredRight__s3' 
+									(true (0.0))
+									(false (1.0))))
+								(false (proficiencyMed__s3 
+									(true (answeredRight__s3' 
+										(true (0.7670911073684692))
+										(false (0.2329088926315308))))
+									(false (answeredRight__s3' 
+										(true (0.6395694792270661))
+										(false (0.3604305207729339)))))))))))))))))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(updateTurn__s0 
+			(true (fpos__s3' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (fpos__s3' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (fpos__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (fpos__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (fpos__s3' 
+							(true (0.102336586))
+							(false (0.897663414)))))))))))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action giveHint__s0
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(updateTurn__s0 
+			(true (hintedRight__s0' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintedRight__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintedRight__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintedRight__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintedRight__s0' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0 
+			(true (updateTurn__s0' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s0' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(updateTurn__s0 
+			(true (hintDelayVar__s0' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintDelayVar__s0' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintDelayVar__s0' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintDelayVar__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintDelayVar__s0' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action giveHint__s1
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(updateTurn__s0 
+			(true (hintedRight__s1' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintedRight__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintedRight__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintedRight__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintedRight__s1' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s0 
+			(true (updateTurn__s1' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s1' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(updateTurn__s0 
+			(true (hintDelayVar__s1' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintDelayVar__s1' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintDelayVar__s1' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintDelayVar__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintDelayVar__s1' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action giveHint__s2
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(proficiencyHigh__s0 
+			(true (proficiencyHigh__s1 
+				(true (updateTurn__s0 
+					(true (hintedRight__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s1 
+						(true (hintedRight__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2 
+							(true (hintedRight__s2' 
+								(true (0.0))
+								(false (1.0))))
+							(false (updateTurn__s3 
+								(true (hintedRight__s2' 
+									(true (0.0))
+									(false (1.0))))
+								(false (hintedRight__s2' 
+									(true (1.0))
+									(false (0.0))))))))))))
+				(false (hintedRight__s2' 
+					(true (0.0))
+					(false (1.0))))))
+			(false (hintedRight__s2' 
+				(true (0.0))
+				(false (1.0)))))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s0 
+			(true (updateTurn__s2' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s2' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s2' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(updateTurn__s0 
+			(true (hintDelayVar__s2' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintDelayVar__s2' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintDelayVar__s2' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintDelayVar__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintDelayVar__s2' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action giveHint__s3
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(proficiencyHigh__s2 
+			(true (updateTurn__s0 
+				(true (hintedRight__s3' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s1 
+					(true (hintedRight__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s2 
+						(true (hintedRight__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3 
+							(true (hintedRight__s3' 
+								(true (0.0))
+								(false (1.0))))
+							(false (hintedRight__s3' 
+								(true (1.0))
+								(false (0.0))))))))))))
+			(false (hintedRight__s3' 
+				(true (0.0))
+				(false (1.0)))))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s0 
+			(true (updateTurn__s3' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (updateTurn__s3' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (updateTurn__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (updateTurn__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (updateTurn__s3' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(updateTurn__s0 
+			(true (hintDelayVar__s3' 
+				(true (0.0))
+				(false (1.0))))
+			(false (updateTurn__s1 
+				(true (hintDelayVar__s3' 
+					(true (0.0))
+					(false (1.0))))
+				(false (updateTurn__s2 
+					(true (hintDelayVar__s3' 
+						(true (0.0))
+						(false (1.0))))
+					(false (updateTurn__s3 
+						(true (hintDelayVar__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (hintDelayVar__s3' 
+							(true (1.0))
+							(false (0.0)))))))))))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+action noop
+	proficiencyHigh__s0
+		(proficiencyHigh__s0 
+			(true (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (proficiencyHigh__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s0 
+						(true (proficiencyHigh__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s0' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s0 
+				(true (answeredRight__s0 
+					(true (fpos__s0 
+						(true (proficiencyHigh__s0' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s0 
+							(true (proficiencyHigh__s0' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s0' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s0' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s1
+		(proficiencyHigh__s1 
+			(true (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (proficiencyHigh__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s1 
+						(true (proficiencyHigh__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s1' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s1 
+				(true (answeredRight__s1 
+					(true (fpos__s1 
+						(true (proficiencyHigh__s1' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s1 
+							(true (proficiencyHigh__s1' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s1' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s1' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s2
+		(proficiencyHigh__s2 
+			(true (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (proficiencyHigh__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s2 
+						(true (proficiencyHigh__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s2' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s2 
+				(true (answeredRight__s2 
+					(true (fpos__s2 
+						(true (proficiencyHigh__s2' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s2 
+							(true (proficiencyHigh__s2' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s2' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s2' 
+					(true (0.0))
+					(false (1.0)))))))
+	proficiencyHigh__s3
+		(proficiencyHigh__s3 
+			(true (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (proficiencyHigh__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (hintDelayVar__s3 
+						(true (proficiencyHigh__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (proficiencyHigh__s3' 
+					(true (1.0))
+					(false (0.0))))))
+			(false (updateTurn__s3 
+				(true (answeredRight__s3 
+					(true (fpos__s3 
+						(true (proficiencyHigh__s3' 
+							(true (0.0))
+							(false (1.0))))
+						(false (proficiencyMed__s3 
+							(true (proficiencyHigh__s3' 
+								(true (1.0))
+								(false (0.0))))
+							(false (proficiencyHigh__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyHigh__s3' 
+						(true (0.0))
+						(false (1.0))))))
+				(false (proficiencyHigh__s3' 
+					(true (0.0))
+					(false (1.0)))))))
+	hintedRight__s0
+		(hintedRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s1
+		(hintedRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s2
+		(hintedRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintedRight__s3
+		(hintedRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s0
+		(updateTurn__s0' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s1
+		(updateTurn__s1' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s2
+		(updateTurn__s2' 
+			(true (0.0))
+			(false (1.0)))
+	updateTurn__s3
+		(updateTurn__s3' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s0
+		(answeredRight__s0' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s1
+		(answeredRight__s1' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s2
+		(answeredRight__s2' 
+			(true (0.0))
+			(false (1.0)))
+	answeredRight__s3
+		(answeredRight__s3' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s0
+		(fpos__s0' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s1
+		(fpos__s1' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s2
+		(fpos__s2' 
+			(true (0.0))
+			(false (1.0)))
+	fpos__s3
+		(fpos__s3' 
+			(true (0.0))
+			(false (1.0)))
+	proficiencyMed__s0
+		(proficiencyHigh__s0 
+			(true (proficiencyMed__s0' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s0 
+				(true (updateTurn__s0 
+					(true (proficiencyMed__s0' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s0 
+					(true (answeredRight__s0 
+						(true (fpos__s0 
+							(true (proficiencyMed__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s0 
+							(true (hintDelayVar__s0 
+								(true (proficiencyMed__s0' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s0' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s0' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s0 
+						(true (proficiencyMed__s0' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s0' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s1
+		(proficiencyHigh__s1 
+			(true (proficiencyMed__s1' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s1 
+				(true (updateTurn__s1 
+					(true (proficiencyMed__s1' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s1 
+					(true (answeredRight__s1 
+						(true (fpos__s1 
+							(true (proficiencyMed__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s1 
+							(true (hintDelayVar__s1 
+								(true (proficiencyMed__s1' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s1' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s1' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s1 
+						(true (proficiencyMed__s1' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s1' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s2
+		(proficiencyHigh__s2 
+			(true (proficiencyMed__s2' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s2 
+				(true (updateTurn__s2 
+					(true (proficiencyMed__s2' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s2 
+					(true (answeredRight__s2 
+						(true (fpos__s2 
+							(true (proficiencyMed__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s2 
+							(true (hintDelayVar__s2 
+								(true (proficiencyMed__s2' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s2' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s2' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s2 
+						(true (proficiencyMed__s2' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s2' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	proficiencyMed__s3
+		(proficiencyHigh__s3 
+			(true (proficiencyMed__s3' 
+				(true (1.0))
+				(false (0.0))))
+			(false (hintedRight__s3 
+				(true (updateTurn__s3 
+					(true (proficiencyMed__s3' 
+						(true (1.0))
+						(false (0.0))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0))))))))
+				(false (updateTurn__s3 
+					(true (answeredRight__s3 
+						(true (fpos__s3 
+							(true (proficiencyMed__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (1.0))
+								(false (0.0))))))
+						(false (proficiencyMed__s3 
+							(true (hintDelayVar__s3 
+								(true (proficiencyMed__s3' 
+									(true (1.0))
+									(false (0.0))))
+								(false (proficiencyMed__s3' 
+									(true (0.0))
+									(false (1.0))))))
+							(false (proficiencyMed__s3' 
+								(true (0.0))
+								(false (1.0))))))))
+					(false (proficiencyMed__s3 
+						(true (proficiencyMed__s3' 
+							(true (1.0))
+							(false (0.0))))
+						(false (proficiencyMed__s3' 
+							(true (0.0))
+							(false (1.0)))))))))))
+	hintDelayVar__s0
+		(hintDelayVar__s0' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s1
+		(hintDelayVar__s1' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s2
+		(hintDelayVar__s2' 
+			(true (0.0))
+			(false (1.0)))
+	hintDelayVar__s3
+		(hintDelayVar__s3' 
+			(true (0.0))
+			(false (1.0)))
+	observe 
+		updateTurnObs__s0
+			(updateTurn__s0' 
+				(true (updateTurnObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s1
+			(updateTurn__s1' 
+				(true (updateTurnObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s2
+			(updateTurn__s2' 
+				(true (updateTurnObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		updateTurnObs__s3
+			(updateTurn__s3' 
+				(true (updateTurnObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (updateTurnObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s0
+			(answeredRight__s0' 
+				(true (answeredRightObs__s0' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s0' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s1
+			(answeredRight__s1' 
+				(true (answeredRightObs__s1' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s1' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s2
+			(answeredRight__s2' 
+				(true (answeredRightObs__s2' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s2' 
+					(true (0.0))
+					(false (1.0)))))
+		answeredRightObs__s3
+			(answeredRight__s3' 
+				(true (answeredRightObs__s3' 
+					(true (1.0))
+					(false (0.0))))
+				(false (answeredRightObs__s3' 
+					(true (0.0))
+					(false (1.0)))))
+	endobserve
+	cost [+ 
+		(proficiencyHigh__s0 
+			(true (-1.4267184))
+			(false (0.0)))
+		(proficiencyHigh__s1 
+			(true (-1.3916073))
+			(false (0.0)))
+		(proficiencyHigh__s2 
+			(true (-2.3499568))
+			(false (0.0)))
+		(proficiencyHigh__s3 
+			(true (-3.05222))
+			(false (0.0)))
+		(proficiencyMed__s0 
+			(true (0.0))
+			(false (1.4267184)))
+		(proficiencyMed__s1 
+			(true (0.0))
+			(false (1.3916073)))
+		(proficiencyMed__s2 
+			(true (0.0))
+			(false (2.3499568)))
+		(proficiencyMed__s3 
+			(true (0.0))
+			(false (3.05222)))
+	]
+endaction
+
+reward
+	(0.0)
+
+discount 1.0
+horizon 40

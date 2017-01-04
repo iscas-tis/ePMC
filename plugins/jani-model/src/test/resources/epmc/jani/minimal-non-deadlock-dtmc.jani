@@ -1,0 +1,28 @@
+{
+	"jani-version": 1,
+	"name": "minimal-non-deadlock-dtmc",
+	"type" : "dtmc",
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"destinations" : [
+						{
+							"location" : "asdf"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {"composition": "leaf", "automaton": "asdf"}
+}

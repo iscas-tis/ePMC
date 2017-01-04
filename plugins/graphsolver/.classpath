@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-expression-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-algorithm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-graph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-dd"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-value-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-util"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

@@ -1,0 +1,39 @@
+{
+	"jani-version": 1,
+	"name": "two-states-cycle-dtmc",
+	"type" : "dtmc",
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				},
+								{
+					"name" : "fdsa"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"destinations" : [
+						{
+							"location" : "fdsa"
+						}
+					]
+				},
+				{
+					"location" : "fdsa",
+					"destinations" : [
+						{
+							"location" : "asdf"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {"composition": "leaf", "automaton": "asdf"}
+}

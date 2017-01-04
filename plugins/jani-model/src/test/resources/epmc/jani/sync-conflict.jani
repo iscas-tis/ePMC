@@ -1,0 +1,86 @@
+{
+	"jani-version": 1,
+	"name": "sync-conflict",
+	"type" : "mdp",
+	"actions" : [
+		{
+			"name" : "sync-step"
+		},
+		{
+			"name" : "sync-loop"
+		}		
+	],
+	"variables" : [
+		{
+			"name" : "asdf",
+			"type" : "bool"
+		}
+	],
+	"initial-states" : {
+		"exp" : {
+			"op" : "=",
+			"args" : [
+				"asdf",
+				false
+			]
+		}
+	},
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				},
+				{
+					"name" : "fdsa"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"action" : "sync-step",
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : [
+								{
+									"ref" : "asdf",
+									"value" : true
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "fdsa",
+					"action" : "sync-loop",
+					"destinations" : [
+						{
+							"location" : "fdsa"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {
+		"composition" : "parallel",
+		"elements" : [
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			},
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			}
+		],
+		"alphabet" : [
+			"sync-step",
+			"sync-loop"
+		]
+	}
+}

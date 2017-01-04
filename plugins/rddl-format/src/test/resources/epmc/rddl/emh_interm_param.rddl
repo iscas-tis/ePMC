@@ -1,0 +1,41 @@
+domain emh_interm_param {  	
+	requirements = { reward-deterministic, intermediate-nodes };
+
+	types {
+		pos : object;
+	};
+      	
+	pvariables {
+		N(pos) : { non-fluent,  bool, default = false };
+		s(pos,pos) : { state-fluent,  bool, default = false };
+		i(pos) : { interm-fluent,  bool, level = 1 };
+	};
+  
+	cpfs {
+		i'(?x) = N(?x);
+		s'(?x,?y) = i(?x) ^ i(?y) ;
+	};
+	reward = 1;
+}
+
+non-fluents emh_nf {
+	domain = emh_interm_param;
+	
+	objects { 
+		pos : {x1,x2};
+	};
+	
+	non-fluents {
+			N(x1) = true;
+	};
+}
+
+instance inst_emh_interm_param {
+	domain = emh_interm_param;
+	
+	non-fluents = emh_nf;
+  
+	max-nondef-actions = 1;
+	horizon  = 20;
+	discount = 0.9;
+}

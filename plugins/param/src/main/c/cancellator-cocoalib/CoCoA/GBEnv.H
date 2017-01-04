@@ -1,0 +1,177 @@
+#ifndef CoCoA_GBEnv_H
+#define CoCoA_GBEnv_H
+
+//   Copyright (c)  2010  Anna Bigatti, Massimo Caboara
+
+//   This file is part of the source of CoCoALib, the CoCoA Library.
+
+//   CoCoALib is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+
+//   CoCoALib is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details.
+
+//   You should have received a copy of the GNU General Public License
+//   along with CoCoALib.  If not, see <http://www.gnu.org/licenses/>.
+
+
+#include "CoCoA/DivMask.H"
+#include "CoCoA/FreeModule.H"
+#include "CoCoA/RingHom.H"
+#include "CoCoA/SparsePolyRing.H"
+#include "CoCoA/SugarDegree.H"
+#include "CoCoA/TmpGTypes.H"
+
+//#include<list>
+// using std::list; // for GPolyList; GPolyPtrList;
+//#include<vector>
+// using std::vector; // for GPolyPtrVector;
+
+namespace CoCoA
+{
+
+  namespace CoeffEncoding
+  {
+    enum type {Field, FrFldOfGCDDomain};
+  }
+
+// Two utilities for GRingInfo ctors
+
+  RingHom CreateNewP2OldPRingHom(const SparsePolyRing& theNewSPR,
+                                 const SparsePolyRing& theOldSPR);
+
+  RingHom CreateOldP2NewPRingHom(const SparsePolyRing& theNewSPR,
+                                 const SparsePolyRing& theOldSPR);
+
+//-- class GRingInfo --------------------------------------------------*/
+
+
+// Add fields for GradingIndex,ModulevarIndex.
+
+long ModuleVarIndex(const SparsePolyRing&);
+
+enum ComputationInputAndGradingType
+{AllGraded,AllAffine,AffineInputWithGradedRing,SaturatingAlg,SaturatingAlgNoDRL};
+
+
+
+class GRingInfo
+{
+
+public:
+  GRingInfo(const SparsePolyRing& theNewSPR,
+            const bool HomogeneousInput,
+	    const bool SaturatingAlgorithm,
+            const DivMaskRule&);       // when you have polynomials only ie GB
+  GRingInfo(const SparsePolyRing& theNewSPR,
+            const SparsePolyRing& theOldSPR,
+            const FreeModule& theFM,
+            const FreeModule& theOutputFM,
+            const bool HomogeneousInput,
+ 	    const bool SaturatingAlgorithm,
+            const DivMaskRule&);       // when you have modules from theFM
+  GRingInfo(const SparsePolyRing& theNewSPR,
+            const SparsePolyRing& theOldSPR,
+            const FreeModule& theOutputFM,
+            const bool HomogeneousInput,
+ 	    const bool SaturatingAlgorithm,
+            const DivMaskRule&);      // when you have module op on polynomials result vectorlist
+  GRingInfo(const SparsePolyRing& theNewSPR,
+            const SparsePolyRing& theOldSPR,
+            const bool HomogeneousInput,
+ 	    const bool SaturatingAlgorithm,
+            const DivMaskRule&);      // when you have module op on polynomials result polylist
+  ~GRingInfo(){};
+  void myCtorAux(const SparsePolyRing& theNewSPR,
+                 const bool HomogeneousInput,
+                 const bool SaturatingAlgorithm); ///< some assignments in common to all kind of GRingInfo
+
+  const SparsePolyRing& myNewSPR()const{return myNewSPRValue;};
+  const SparsePolyRing& myOldSPR()const{return myOldSPRValue;};
+  const FreeModule myFreeModule()const{return myFreeModuleValue;};
+  const FreeModule myOutputFreeModule()const{return myOutputFreeModuleValue;};
+  const RingHom& myNewP2OldP()const{return myNewP2OldPValue;};
+  const RingHom& myOldP2NewP()const{return myOldP2NewPValue;};
+  const DivMaskRule& myDivMaskRule() const{return myDivMaskRuleValue;}
+  const PPMonoid& myPPM() const {return myPPMValue;}
+  CoeffEncoding::type myCoeffRingType() const { return myCoeffRingTypeValue; }
+  void mySetCoeffRingType(CoeffEncoding::type CT); ///< Field or FrFldOfGCDDomain
+  long myComponent(const long i)const{return myMaxComponentIndex-i;}; //Complement to myMaxComponentIndex
+  long myComponent(ConstRefPPMonoidElem T)const;///< the real component of a PP
+  long myPhonyComponent(ConstRefPPMonoidElem T)const;///< the phony component of a PP
+  bool operator==(const GRingInfo&)const;
+  ///< Are equal myNewSPRValue and myDivMaskRuleValue only
+  friend bool AreCompatible(const GRingInfo&,const GRingInfo&);
+  friend std::ostream& operator<<(std::ostream& out, const GRingInfo& theGRI);
+  bool AmIModule()const{return AmIModuleValue;};
+
+  const RingElem& myE()const{return indet(myNewSPR(),ModuleVarIndex(myNewSPR()));};
+  std::vector<RingElem> myEY()const{return myEYValue;};
+  std::vector<RingElem> myY()const;
+  SugarDegree myNewSugar(ConstRefRingElem f) const;
+  RingElem myY(long i)const{return indet(myNewSPR(),i+NumIndets(myNewSPRValue)-1-GradingDim(myNewSPRValue));};
+  RingElem myY(const degree& the_d)const;
+  ConstRefRingElem myEY(long i)const{return myEYValue[i];};
+  RingElem myE(long i)const{return power(myE(),myComponent(i));};
+  //  bool amIGraded()const{return myEYValue.empty();};
+  bool IsMyGradingPosPlus()const{return myGradingPosPlusValue;};
+  void MySetComputationInputAndGradingType(const ComputationInputAndGradingType CIAGT)
+        {myInputAndGradingValue=CIAGT;};
+  //void SetMyGradingPosPlus(bool b){myGradingPosPlusValue=b;};
+  ComputationInputAndGradingType myInputAndGrading()const{return myInputAndGradingValue;};
+  friend ComputationInputAndGradingType  DetermineComputationType(long GrDim,
+                                                                  const bool IsHomog,
+								  const bool IsSatAlg);
+  bool DetermineIfMyGradingIsPosPlus(const SparsePolyRing&);
+
+private:
+  const SparsePolyRing myNewSPRValue;///< embedding info
+  const SparsePolyRing myOldSPRValue;
+  const PPMonoid myPPMValue;  ///< the monoid for storing LPP's and lcm's for divisibility tests
+  const FreeModule myFreeModuleValue;
+  const FreeModule myOutputFreeModuleValue;
+  RingHom myNewP2OldPValue;///< completely defined by myNewSPR,myOldSPRValue
+  RingHom myOldP2NewPValue;
+  const DivMaskRule myDivMaskRuleValue;
+  const bool AmIModuleValue;
+  static const long myMaxComponentIndex=10000;
+  std::vector<RingElem> myEYValue;
+  CoeffEncoding::type myCoeffRingTypeValue;
+  ComputationInputAndGradingType myInputAndGradingValue;
+  bool myGradingPosPlusValue;
+
+// FM and the two ring hom. Do we want a separate Module2RingEmbedding class?
+//myReductionRule
+//myLPPMonoid (?)
+
+};// end class GRingInfo
+
+
+
+}
+
+
+
+
+// RCS header/log on the next few lines
+// $Header: /Volumes/Home_1/cocoa/cvs-repository/CoCoALib-0.99/include/CoCoA/GBEnv.H,v 1.4 2012/10/16 09:47:19 abbott Exp $
+// $Log: GBEnv.H,v $
+// Revision 1.4  2012/10/16 09:47:19  abbott
+// Corrected return type of  GRingInfo::myE  to  const RingElem&
+//
+// Revision 1.3  2011/03/11 16:49:25  bigatti
+// -- changed  unsigned int  -->  long
+//
+// Revision 1.2  2011/03/10 16:39:35  abbott
+// Replaced (very many) size_t by long in function interfaces (for rings,
+// PPMonoids and modules).  Also replaced most size_t inside fn defns.
+//
+// Revision 1.1  2010/03/23 14:40:55  bigatti
+// -- first import
+//
+
+#endif

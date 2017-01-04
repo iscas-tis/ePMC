@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/resources"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/javacc"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/iscasmc/lib/trove-141006211716.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-jani-model"/>
+	<classpathentry kind="lib" path="/iscasmc/lib/javax.json-1.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-expression-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-graph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-dd"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-value-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-prism-format"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iscasmc-tests"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

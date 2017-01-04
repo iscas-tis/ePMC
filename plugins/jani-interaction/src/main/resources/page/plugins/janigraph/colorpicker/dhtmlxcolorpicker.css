@@ -1,0 +1,1043 @@
+/**
+*		Default skin start
+*/
+.dhtmlxcolorpicker{
+	background:#E6E5E5;
+	color: #000;
+    opacity: 1;
+}
+
+.dhtmlxcolorpicker .cs_ContentTable{
+	margin:8px;
+}
+.dhtmlxcolorpicker .cs_SelectorDiv {
+	border:1px solid gray;
+	overflow:hidden;
+	position:relative;
+	width:256px;
+	height:256px;
+}
+
+.dhtmlxcolorpicker .cs_SelectorDiv_Mini {
+	border:1px solid gray;
+	overflow:hidden;
+	position:relative;
+	width:210px;
+	height:120px;
+}
+.dhtmlxcolorpicker .cs_SelectorVer{
+	position:absolute;
+	width:1px;
+	height:100%;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker .cs_SelectorHor{
+	position:absolute;
+	width:100%;
+	height:1px;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker .cs_LumSelect {
+	border:1px solid gray;
+	margin-left:13px;
+	margin-right:10px;
+	position:relative;
+	width:15px;	
+}
+
+.dhtmlxcolorpicker .cs_LumSelect_Mini {
+	border:1px solid gray;
+	margin-left:6px;
+	position:relative;
+	width:12px;	
+}
+
+.dhtmlxcolorpicker .cs_LumSelectLine{
+	position:absolute;
+	width:100%;
+	height:1px;
+	overflow:hidden;
+	background-color:white;
+}
+.dhtmlxcolorpicker .cs_LumSelectArrow {
+	position:absolute;
+	background:url('imgs/slide.gif') no-repeat;
+	width:13px;
+	height:9px;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker .cs_LumElement {
+	width:100%;
+	height:4px;
+	border:0px;
+	overflow:hidden;
+}
+
+.dhtmlxcolorpicker .cs_ColorArea {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;	
+}
+
+.dhtmlxcolorpicker .cs_ColorArea_Mini {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;
+}
+
+.dhtmlxcolorpicker .cs_ColorArea TD {
+	text-align:right;
+	height:25px;
+
+}
+
+.dhtmlxcolorpicker .cs_ColorArea_Mini TD {
+	text-align:right;
+	height:18px;	
+}
+
+.dhtmlxcolorpicker .cs_EndColor {
+	width:72px;
+	height:69px;
+	border:1px solid gray;
+}
+
+.dhtmlxcolorpicker .cs_EndColor_Mini {
+  	width:100px;
+  	height:30px;
+	border:1px solid gray;  	
+	
+}
+
+.dhtmlxcolorpicker .cs_Hex {
+	font-family:Arial;  
+	Font-size: 12px;  
+  	width:55px;
+}
+
+.dhtmlxcolorpicker .cs_Hex_Mini,
+.dhtmlxcolorpicker .cs_Hex_MiniX {
+	font-family:Arial;  
+	Font-size: 10px;  
+	height:15px;	
+  	width:45px;
+	margin:0px;
+	padding:0px;  	
+}
+
+.dhtmlxcolorpicker .cs_Hex_MiniX {
+	height:11px;
+}
+
+.dhtmlxcolorpicker .cs_Input {
+	width:26px;
+    font-family:Arial;
+	Font-size: 12px;
+	text-align:right;
+}
+
+.dhtmlxcolorpicker .cs_Input_Mini, 
+.dhtmlxcolorpicker .cs_Input_MiniX {
+	width:22px;
+	height:15px;
+    font-family:Arial;
+	Font-size: 10px;
+	margin:0px;
+	padding:0px;
+	text-align:right;
+}
+
+.dhtmlxcolorpicker .cs_Input_MiniX {
+	height:11px;
+}
+
+.commonInputStyle,
+.dhtmlxcolorpicker .cs_CustomColorAdd,
+.dhtmlxcolorpicker .cs_CustomColorAdd_Hover,
+.dhtmlxcolorpicker .cs_ButtonOk,
+.dhtmlxcolorpicker .cs_ButtonOk_Hover,
+.dhtmlxcolorpicker .cs_ButtonCancel,
+.dhtmlxcolorpicker .cs_ButtonCancel_Hover,
+.dhtmlxcolorpicker .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker .cs_CustomColorAdd_Mini_Hover{
+  	border:1px outset white;
+  	background:#d4cfc9;
+  	height:22px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColorAdd,
+.dhtmlxcolorpicker .cs_CustomColorAdd_Hover{
+	width:145px;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:8px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker .cs_CustomColorAdd_Mini_Hover{
+	width:100%;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColors{
+  	margin-top:8px;
+	width:76px;
+	height:38px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColors_Mini{
+	width:100%;
+	height:18px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColor{
+	float:left;
+	width:14px;
+	height:14px;
+	border:1px solid gray;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker .cs_CustomColor_Mini{
+	float:left;
+	width:18px;
+	height:18px;
+	border:1px solid gray;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker .cs_ButtonOk,
+.dhtmlxcolorpicker .cs_ButtonOk_Hover{
+  margin-top:3px;
+  margin-right:6px;  	
+  float:right;
+	width:70px;
+  font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker .cs_ButtonCancel,
+.dhtmlxcolorpicker .cs_ButtonCancel_Hover{
+  margin-top:3px;
+  margin-right:7px; 	    
+	width:70px;
+	float:right;
+   font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker .cs_colorInput{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+.dhtmlxcolorpicker .cs_colorBox{
+	position:absolute;
+	top:0px;
+	left:0px;
+	border:1px solid black;
+}
+.dhtmlxcolorpicker .cs_ButtonsPanel{
+  height:37px;
+	background: url('imgs/cp_buttons_panel.gif');
+}
+/* Default skin end */
+
+/**
+*		dhx_black skin start
+*/
+.dhtmlxcolorpicker_dhx_black{
+	background:#000;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ContentTable{
+	margin:8px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_SelectorDiv {
+	border:1px solid gray;
+	overflow:hidden;
+	position:relative;
+	width:256px;
+	height:256px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_SelectorDiv_Mini {
+	border:1px solid gray;
+	overflow:hidden;
+	position:relative;
+	width:210px;
+	height:120px;
+}
+.dhtmlxcolorpicker_dhx_black .cs_SelectorVer{
+	position:absolute;
+	width:1px;
+	height:100%;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_black .cs_SelectorHor{
+	position:absolute;
+	width:100%;
+	height:1px;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_black .cs_LumSelect {
+	border:1px solid gray;
+	margin-left:13px;
+	margin-right:10px;
+	position:relative;
+	width:15px;	
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_LumSelect_Mini {
+	border:1px solid gray;
+	margin-left:6px;
+	position:relative;
+	width:12px;	
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_LumSelectLine{
+	position:absolute;
+	width:100%;
+	height:1px;
+	overflow:hidden;
+	background-color:white;
+}
+.dhtmlxcolorpicker_dhx_black .cs_LumSelectArrow {
+	position:absolute;
+	background:url('imgs/__dhxCP_skin_Black/slide.gif') no-repeat;
+	width:13px;
+	height:9px;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_black .cs_LumElement {
+	width:100%;
+	height:4px;
+	border:0px;
+	font-size:0px;
+	overflow:hidden;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ColorArea {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;	
+	color:#ffffff;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ColorArea_Mini {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;
+	color:#ffffff;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ColorArea TD {
+ 	text-align:right;
+	height:25px;
+
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ColorArea_Mini TD {
+	text-align:right;
+	height:18px;	
+	
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_EndColor {
+	width:72px;
+	height:69px;
+	border:1px solid gray;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_EndColor_Mini {
+  	width:100px;
+  	height:30px;
+	border:1px solid gray;  	
+	
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Hex {
+	font-family:Arial;  
+	Font-size: 12px;  
+  	width:55px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Hex_Mini,
+.dhtmlxcolorpicker_dhx_black .cs_Hex_MiniX {
+	font-family:Arial;  
+	Font-size: 10px;  
+	height:15px;	
+  	width:45px;
+	margin:0px;
+	padding:0px;  	
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Hex_MiniX {
+	height:11px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Input {
+	width:26px;
+    font-family:Arial;
+	Font-size: 12px;
+	text-align:right;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Input_Mini, 
+.dhtmlxcolorpicker_dhx_black .cs_Input_MiniX {
+	width:22px;
+	height:15px;
+    font-family:Arial;
+	Font-size: 10px;
+	margin:0px;
+	padding:0px;
+	text-align:right;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_Input_MiniX {
+	height:11px;
+}
+
+.commonInputStyle,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Hover,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonOk,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonOk_Hover,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonCancel,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonCancel_Hover,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Mini_Hover{
+  	border:1px outset white;
+  	background:#d4cfc9;
+  	height:22px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Hover{
+	width:145px;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:8px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker_dhx_black .cs_CustomColorAdd_Mini_Hover{
+	width:100%;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColors{
+  	margin-top:8px;
+	width:76px;
+	height:38px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColors_Mini{
+	width:100%;
+	height:18px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColor{
+	float:left;
+	width:14px;
+	height:14px;
+	border:1px solid gray;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_CustomColor_Mini{
+	float:left;
+	width:18px;
+	height:18px;
+	border:1px solid gray;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_black .cs_ButtonOk,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonOk_Hover{
+  	margin-top:3px;
+  	margin-right:6px;  	
+  	float:right;
+	width:70px;
+    font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker_dhx_black .cs_ButtonCancel,
+.dhtmlxcolorpicker_dhx_black .cs_ButtonCancel_Hover{
+  	margin-top:3px;
+  	margin-right:7px; 	    
+	width:70px;
+	float:right;
+    font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker_dhx_black .cs_colorInput{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+.dhtmlxcolorpicker_dhx_black .cs_colorBox{
+	position:absolute;
+	top:0px;
+	left:0px;
+	border:1px solid black;
+}
+.dhtmlxcolorpicker_dhx_black .cs_ButtonsPanel{
+  height:37px;
+	background:url('imgs/__dhxCP_skin_Black/cp_buttons_panel.png');
+}
+/* end dhx_black */
+
+/**
+*		dhx_blue skin start
+*/
+.dhtmlxcolorpicker_dhx_blue{
+	background:#d3e2e5;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ContentTable{
+  margin:8px;
+	
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_SelectorDiv {
+	border:1px solid gray;
+	overflow:hidden;
+	position:relative;
+	width:256px;
+	height:256px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_SelectorDiv_Mini {
+	border:1px solid #adc6cb;
+	overflow:hidden;
+	position:relative;
+	width:210px;
+	height:120px;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_SelectorVer{
+	position:absolute;
+	width:1px;
+	height:100%;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_SelectorHor{
+	position:absolute;
+	width:100%;
+	height:1px;
+	background-color:white;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_LumSelect {
+	border:1px solid gray;
+	margin-left:13px;
+	margin-right:10px;
+	position:relative;
+	width:15px;	
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_LumSelect_Mini {
+	border:1px solid #adc6cb;
+	margin-left:6px;
+	position:relative;
+	width:12px;	
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_LumSelectLine{
+	position:absolute;
+	width:100%;
+	height:1px;
+	overflow:hidden;
+	background-color:white;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_LumSelectArrow {
+	position:absolute;
+	background:url('imgs/__dhxCP_skin_Blue/slide.gif') no-repeat;
+	width:13px;
+	height:9px;
+	overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_LumElement {
+	width:100%;
+	height:4px;
+	border:0px;
+	font-size:0px;
+	overflow:hidden;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ColorArea {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;	
+	color:#02609e;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ColorArea_Mini {
+	font-family:Arial;
+	font-size:12px;  
+	width:100%;
+	color:#02609e;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ColorArea TD {
+ 	text-align:right;
+	height:25px;
+
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ColorArea_Mini TD {
+	text-align:right;
+	height:18px;	
+	
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_EndColor {
+	width:72px;
+	height:69px;
+	border:1px solid gray;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_EndColor_Mini {
+  	width:100px;
+  	height:30px;
+	border:1px solid #adc6cb;  	
+	
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Hex {
+	font-family:Arial;  
+	Font-size: 12px;  
+  	width:55px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Hex_Mini,
+.dhtmlxcolorpicker_dhx_blue .cs_Hex_MiniX {
+	font-family:Arial;  
+	Font-size: 10px;  
+	height:15px;	
+  	width:45px;
+	margin:0px;
+	padding:0px;  	
+	border:1px solid #adc6cb;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Hex_MiniX {
+	height:11px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Input {
+	width:26px;
+    font-family:Arial;
+	Font-size: 12px;
+	text-align:right;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Input_Mini, 
+.dhtmlxcolorpicker_dhx_blue .cs_Input_MiniX {
+	width:22px;
+	height:15px;
+  font-family:Arial;
+	Font-size: 10px;
+	margin:0px;
+	padding:0px;
+	text-align:right;
+	border:1px solid #adc6cb;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_Input_MiniX {
+	height:11px;
+}
+
+.commonInputStyle,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Hover,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonOk,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonOk_Hover,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonCancel,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonCancel_Hover,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Mini_Hover{
+  	border:1px outset white;
+  	background:#d4cfc9;
+  	height:22px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Hover{
+	width:145px;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:8px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColorAdd_Mini_Hover{
+	width:100%;
+    font-family:Arial;
+	Font-size: 12px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColors{
+  	margin-top:8px;
+	width:76px;
+	height:38px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColors_Mini{
+	width:100%;
+	height:18px;
+	margin-top:6px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColor{
+	float:left;
+	width:14px;
+	height:14px;
+	border:1px solid #adc6cb;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_CustomColor_Mini{
+	float:left;
+	width:18px;
+	height:18px;
+	border:1px solid #adc6cb;
+	overflow:hidden;
+	cursor:pointer;
+	
+	margin-bottom:3px;
+	margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonOk,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonOk_Hover{
+  	margin-top:3px;
+  	margin-right:6px;  	
+  	float:right;
+	width:70px;
+    font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonCancel,
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonCancel_Hover{
+  margin-top:3px;
+  margin-right:7px; 	    
+	width:70px;
+	float:right;
+  font-family:Arial;
+	Font-size: 12px;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_colorInput{
+	position:absolute;
+	top:0px;
+	left:0px;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_colorBox{
+	position:absolute;
+	top:0px;
+	left:0px;
+	border:1px solid blue;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_ButtonsPanel{
+  height:37px;
+	background:url('imgs/__dhxCP_skin_Blue/cp_buttons_panel.png');
+}
+/* end dhx_blue */
+
+/**
+*    dhx_skyblue skin start
+*/
+.dhtmlxcolorpicker_dhx_skyblue{
+  background: url('imgs/__dhxCP_skin_SkyBlue/bg_head.gif') repeat-x #c3d4eb;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ContentTable{
+  margin: 20px 8px 0;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_SelectorDiv {
+  border:1px solid #fff;
+  overflow:hidden;
+  position:relative;
+  width:256px;
+  height:256px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_SelectorDiv_Mini {
+  border:1px solid #fff;
+  overflow:hidden;
+  position:relative;
+  width:210px;
+  height:120px;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_SelectorVer{
+  position:absolute;
+  width:1px;
+  height:100%;
+  background-color:white;
+  overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_SelectorHor{
+  position:absolute;
+  width:100%;
+  height:1px;
+  background-color:white;
+  overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_LumSelect {
+  border:1px solid #fff;
+  margin-left:13px;
+  margin-right:10px;
+  position:relative;
+  width:15px;  
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_LumSelect_Mini {
+  border:1px solid #fff;
+  margin-left:6px;
+  position:relative;
+  width:12px;  
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_LumSelectLine{
+  position:absolute;
+  width:100%;
+  height:1px;
+  overflow:hidden;
+  background-color:white;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_LumSelectArrow {
+  position:absolute;
+  background:url('imgs/__dhxCP_skin_SkyBlue/slide.gif') no-repeat;
+  width:13px;
+  height:9px;
+  overflow:hidden;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_LumElement {
+  width:100%;
+  height:4px;
+  border:0px;
+  font-size:0px;
+  overflow:hidden;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ColorArea {
+  font-family:Arial;
+  font-size:12px;  
+  width:100%;  
+  color:#02609e;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ColorArea_Mini {
+  font-family:Arial;
+  font-size:12px;  
+  width:100%;
+  color:#02609e;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ColorArea TD {
+   text-align:right;
+  height:25px;
+
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ColorArea_Mini TD {
+  text-align:right;
+  height:18px;  
+  
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_EndColor {
+  width:72px;
+  height:69px;
+  border:1px solid #fff;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_EndColor_Mini {
+    width:100px;
+    height:30px;
+  border:1px solid #fff;    
+  
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Hex {
+  font-family:Arial;  
+  Font-size: 12px;  
+    width:55px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Hex_Mini,
+.dhtmlxcolorpicker_dhx_skyblue .cs_Hex_MiniX {
+  font-family:Arial;  
+  Font-size: 10px;  
+  height:15px;  
+    width:45px;
+  margin:0px;
+  padding:0px;    
+  border:1px solid #fff;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Hex_MiniX {
+  height:11px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Input {
+  width:26px;
+    font-family:Arial;
+  Font-size: 12px;
+  text-align:right;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Input_Mini, 
+.dhtmlxcolorpicker_dhx_skyblue .cs_Input_MiniX {
+  width:22px;
+  height:15px;
+  font-family:Arial;
+  font-size: 10px;
+  margin:0px;
+  padding:0px;
+  text-align:right;
+  border:1px solid #fff;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_Input_MiniX {
+  height:11px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColorAdd{
+  width:145px;
+  font-family:Arial;
+  font-size: 12px;
+  margin-top:8px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColorAdd_Mini,
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColorAdd_Mini_Hover{
+  background: url('imgs/__dhxCP_skin_SkyBlue/but_add.gif');
+  border:0;
+  width:100%;
+  height:21px;
+  font-family:Tahoma;
+  font-size: 11px;
+  margin-top:6px;
+  padding-left:20px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColorAdd_Mini_Hover{
+  background-position: left bottom;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColors{
+    margin-top:8px;
+  width:76px;
+  height:38px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColors_Mini{
+  width:100%;
+  height:18px;
+  margin-top:6px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColor{
+  float:left;
+  width:14px;
+  height:14px;
+  border:1px solid #fff;
+  overflow:hidden;
+  cursor:pointer;
+  
+  margin-bottom:3px;
+  margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_CustomColor_Mini{
+  float:left;
+  width:18px;
+  height:18px;
+  border:1px solid #a4bed4;
+  overflow:hidden;
+  cursor:pointer;
+  
+  margin-bottom:3px;
+  margin-right:3px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonOk,
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonOk_Hover{
+  background: url('imgs/__dhxCP_skin_SkyBlue/but_select.gif');
+  border:0;
+  margin: 3px 6px 0 0;
+  padding-left:17px;
+  float:right;
+  width:70px;
+  font-family:Tahoma;
+  font-size: 11px;
+  height:21px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonOk_Hover{
+  background-position: left bottom;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonCancel,
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonCancel_Hover{
+  background: url('imgs/__dhxCP_skin_SkyBlue/but_cancel.gif');
+  border:0;
+  margin: 3px 7px 0 0;
+  padding-left:17px;
+  width:72px;
+  float:right;
+  font-family:Tahoma;
+  font-size: 11px;
+  height:21px;
+}
+
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonCancel_Hover{
+  background-position: left bottom;  
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_colorInput{
+  position:absolute;
+  top:0px;
+  left:0px;
+}
+.dhtmlxcolorpicker_dhx_blue .cs_colorBox{
+  position:absolute;
+  top:0px;
+  left:0px;
+  border:1px solid blue;
+}
+.dhtmlxcolorpicker_dhx_skyblue .cs_ButtonsPanel{
+  margin-bottom:8px;
+}
+/* end dhx_skyblue */

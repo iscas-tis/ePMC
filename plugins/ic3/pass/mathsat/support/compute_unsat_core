@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# compute_unsat_core: this script is used to invoke an external propositional
+# unsat core extractor, to compute an unsat core for an SMT formula as
+# described in the SAT'07 paper
+#
+# author: Alberto Griggio <alberto.griggio@disi.unitn.it>
+#
+
+# $2 is the input file, $1 the output file
+
+# As an example, we just invoke picosat (http://fmv.jku.at/picosat/)
+picosat -c $1 $2
+if [ $? -eq 20 ]; then
+    exit 0 # SAT solvers exit with 20 if the problem is unsat, but we must
+           # exit with 0
+else
+    exit $?
+fi

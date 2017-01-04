@@ -1,0 +1,1063 @@
+/* parse.y
+
+   Bison reports a shift/reduce conflict because of if/else.
+   However, the correct parser is produced, and that is what
+   counts.
+*/
+
+/*
+ TODO for EMH: Substitute labels in reward structure!
+*/
+
+
+/* some C necessities */
+%{
+#define PRISERROR_VERBOSE
+
+#include "util/Util.h"
+#include "util/Error.h"
+#include "AST.h"
+#include "PRISMParser.h"
+using namespace AST;
+using namespace boost;
+
+// function forward declarations
+extern int PRISMlex();
+void PRISMerror (const char *s);
+
+void PRISMerror (const std::string& s);
+void PRISMwarning( const std::string& s );
+
+namespace PRISM {
+
+int line_number = 1;
+Alternative* alternative = 0;
+Command* command = 0;
+Module* module = 0;
+
+Substitution formulas;
+
+Exprs predicates;
+Exprs properties;
+Exprs invariants;
+
+Variables global_vars;
+
+shared_ptr<Expr> initial;
+StateRewards state_rewards;
+TransitionRewards transition_rewards;
+
+
+struct Subst {
+
+	Substitution expr_subst;
+	ActionSubstitution action_subst;
+	Subst() {}
+	Subst(Substitution& e, ActionSubstitution& a) : expr_subst(e), action_subst(a) {}
+	void clear() { expr_subst.clear(); action_subst.clear(); } 
+} subst;
+
+struct Instantiation {
+	std::string name;
+	std::string original;
+	Subst subst;
+	
+	Instantiation(const std::string& n, const std::string& o, const Subst& s) :
+		name(n), original(o), subst(s) {}
+};
+
+/*
+  Due to formula and const, we need to do delayed instantiation,
+  i.e. first read <<const>> and <<formula>> and then do the actual instantiation.
+*/
+class ModuleManager {
+public:
+	ModuleManager(Substitution& f, Substitution& c) : formulas(f), constants(c) {}
+	
+	void addModule(Module* m) {
+		assert(m);
+		boost::shared_ptr<Module> mptr(m);
+		modules.insert(std::pair<std::string,boost::shared_ptr<Module> >(m->name, mptr));
+	} 
+
+	typedef std::vector<Instantiation> Instantiations;  
+	
+	void addInstantiation(const Instantiation& instantiation) {
+		instantiations.push_back(instantiation);
+	}
+	
+	void addModules(Model& model) {
+		// substitute formulas into original
+		Apply(formulas,modules);
+		
+		// instantiate modules using original modules
+		instantiateModules(instantiations,modules);
+		// postcondition: the instantiated modules end up in modules
+		
+		// substitute constants into original and instantiated modules
+		Apply(constants,modules);
+		// postcondition: result ends up in modules
+		
+		// put the modules into the model
+		for (Modules::const_iterator i (modules.begin ());
+		 i != modules.end (); ++i)
+      		{
+			model.addModule(i->second);
+	      	}
+	}
+
+	void clear() {
+		modules.clear();
+		instantiations.clear();
+	}
+
+private:
+	Substitution& formulas;
+	Substitution& constants;
+	Instantiations instantiations;
+	
+	Module* instantiate(const Instantiation& inst) {
+	
+		// (1) lookup the module to substitute into
+		Modules::const_iterator it(modules.find(inst.original));
+		if(it==modules.end())
+			PRISMerror("Module "+ inst.original + " not found");
+			
+		Module* instantiated_module(it->second.get());
+
+		// (2) invoke instantiation code with substition vector
+		std::string instance_module_name(inst.name);
+		Module* instance( 
+			new Module(instance_module_name, 
+			   instantiated_module, 
+			   inst.subst.expr_subst,
+			   inst.subst.action_subst));
+	
+		if(!instance) 
+			PRISMerror("Module "+ instance_module_name + " could not be created");
+		return instance;
+	}
+
+	void Apply(const Substitution& s, Modules& modules) {
+	  Modules new_modules;
+	  for (Modules::const_iterator i (modules.begin ());
+		 i != modules.end (); ++i)
+	      {
+        	std::string key(i->first);
+	      	boost::shared_ptr<Module> mptr(new Module(key,i->second.get(),s));
+		new_modules.insert(std::pair<std::string,boost::shared_ptr<Module> >(key, mptr));
+	      }
+	  modules = new_modules;
+	}
+	
+	void instantiateModules(const Instantiations& instantiations, Modules& modules) {
+		for(Instantiations::const_iterator it = instantiations.begin();it!=instantiations.end();++it) {
+			const Instantiation& inst(*it);
+			boost::shared_ptr<Module> mptr(instantiate(inst));
+			modules.insert(std::pair<std::string,boost::shared_ptr<Module> >(inst.name, mptr));
+		}
+	}
+
+	
+
+	Modules modules;
+};
+
+ModuleManager module_manager(formulas,constants);
+
+}
+
+
+using namespace PRISM; 
+
+
+namespace util {
+extern std::string floatToString(float);
+extern std::string intToString(int);
+}
+
+%}
+
+%union {
+
+  Expr *node;
+  std::vector<Expr> *vec;
+
+  Alternative* a;
+  Type* type;
+  int int_const;
+  double float_const;
+  struct { long long value; unsigned size;} bv_const;
+
+  char* string_const;
+  bool b;
+  
+  Expr* prop;
+
+  ModelType model_type;
+  Kind kind;
+};
+
+/* correspondence between lexer tokens and parser entities */
+%token BOGY
+%token LE_OP GE_OP EQ_OP NE_OP
+%token MIN_OP MAX_OP
+%token LEFT_OP RIGHT_OP
+%token INPUT
+%token TRUE FALSE
+%token INTEGER BOOL LONG FLOAT DOUBLE BV
+%token SHARP NEWLINE // line directives
+//temporal operators
+%token UNTIL NEXT
+%token PROB PROBMAX PROBMIN STEADY STEADYMAX STEADYMIN FINALLY CUMULATIVE
+
+
+
+%token MODULE
+%token ENDMODULE
+%token CONSTANT
+%token GLOBAL
+%token PARAM
+
+%token STOCH NONDET PROBAB
+%token DISTR_PLUS
+
+%token PRIMED
+%token ASSIGN
+%token DISTR
+
+%token BLOCK
+%token VAR
+%token INIT
+%token ENDINIT
+%token INVAR
+%token ENDINVAR
+%token PRED
+%token DOTS
+%token LABEL
+%token QUOTE
+
+%token <node> FORMULA_INSTANCE
+%token <int_const> INT_CONSTANT
+%token <float_const> FLOAT_CONSTANT
+%token <b> BOOL_CONSTANT;
+%token <bv_const> BV_CONSTANT
+
+
+
+%token <string_const> IDENTIFIER 
+%token <node> FORMULA // syntactic substitution
+
+%type <node> numeric_constant
+%type <node> expression primary_expression postfix_expression unary_expression
+%type <node> cast_expression multiplicative_expression additive_expression relational_expression
+%type <node> equality_expression logical_and_expression logical_or_expression conditional_expression
+%type <node> default_init opt_default_init
+
+%type <kind> relational_op;
+
+%type <model_type> opt_model_type
+%type <b> opt_global
+
+%token <string_const> STRING_LITERAL
+
+%token REWARDS ENDREWARDS
+%token REW I_REW REWMAX REWMIN
+
+%type <string_const> action
+
+%type <type> type
+
+
+%type <kind> quant
+%type <node> property pathproperty property_or_expression unary_property logical_and_property logical_or_property
+
+%start model
+%%
+
+numeric_constant
+      : INT_CONSTANT
+      {
+	$$ =  new Expr($1);
+      }
+      | FLOAT_CONSTANT
+      {
+	$$ = new Expr($1);
+      }
+      ;
+
+primary_expression
+      : IDENTIFIER
+      { 
+	 $$ = new Expr($1);
+	 free($1);
+      }
+      | QUOTE IDENTIFIER QUOTE
+      { 
+	 $$ = new Expr($2);
+	 free($2);
+      }
+      | FORMULA_INSTANCE
+      | QUOTE FORMULA_INSTANCE QUOTE
+      { $$ = $2; }
+      | numeric_constant
+      | TRUE 
+      {
+         $$ = new Expr(true);
+      }
+      | FALSE 
+      {
+         $$ = new Expr(false);
+      }
+      | '(' expression ')'
+        {
+          $$ = $2;
+        }
+      ;
+
+postfix_expression
+      : primary_expression
+      | postfix_expression '[' INT_CONSTANT ']'
+        {
+          $$ = new Expr(Apply,$1,new Expr($3));
+        }
+      | postfix_expression '[' INT_CONSTANT ',' INT_CONSTANT ']'
+	{
+          $$ = new Expr(Apply,$1,new Expr($3), new Expr($5));
+	}
+      | MAX_OP '(' expression ',' expression ')'
+	{
+		$$ = new Expr(Max, $3, $5);
+	}
+      | MIN_OP '(' expression ',' expression ')'
+	{
+		$$ = new Expr(Min, $3, $5);
+	}
+      ;
+
+unary_expression
+      : postfix_expression
+      | '+' postfix_expression
+        { 
+          $$ = $2;
+        }
+      | '-' postfix_expression
+        {
+		$$ = new Expr(Uminus,$2);
+	}
+      | '!' postfix_expression
+        {
+		$$ = new Expr(Not,$2);
+	}
+      ;
+
+cast_expression
+      : unary_expression
+      | '(' type ')' unary_expression
+        { 
+          $$ = $4;
+          delete $2;
+        }
+      ;
+
+multiplicative_expression
+      : cast_expression
+      | multiplicative_expression '*' cast_expression {
+		$$ = new Expr(Mult, $1, $3);
+      }
+      | multiplicative_expression '/' cast_expression {
+		$$ = new Expr(Div, $1, $3);
+      }
+      | multiplicative_expression '%' cast_expression {
+        $$ = new Expr(Mod, $1, $3);
+      }
+      ;
+
+additive_expression
+      : multiplicative_expression
+      | additive_expression '+' multiplicative_expression {
+		$$ = new Expr(Plus, $1, $3);
+        }
+      | additive_expression '-' multiplicative_expression {
+		$$ = new Expr(Minus, $1, $3);
+        }
+      ;
+
+relational_op
+    : '>' { $$ = Gt; }
+    | '<' { $$ = Lt; }
+    | LE_OP { $$ = Le; }
+    | GE_OP { $$ = Ge; }
+    ;
+	
+relational_expression
+      : additive_expression
+      | relational_expression relational_op additive_expression {
+		$$ = new Expr($2, $1, $3);
+	  }  
+	  ;
+
+equality_expression
+      : relational_expression
+      | equality_expression '=' relational_expression {
+      	$$ = new Expr(Eq, $1, $3);
+	}
+      | equality_expression NE_OP relational_expression {
+		$$ = new Expr(Neq, $1, $3);
+	}
+      ;
+
+logical_and_expression
+      : equality_expression
+      | logical_and_expression '&' equality_expression
+        { 
+		$$ = new Expr(And, $1, $3);
+        }
+      ;
+
+logical_or_expression
+      : logical_and_expression
+      | logical_or_expression '|' logical_and_expression
+        { 
+		$$ = new Expr(Or, $1, $3);
+        }
+      ;
+
+conditional_expression
+      : logical_or_expression
+      | logical_or_expression '?' expression ':' conditional_expression
+        { 
+		$$ = new Expr(Ite, $1, $3, $5);
+        }
+      ;
+
+expression
+      : conditional_expression
+      ;
+
+
+single_assignment
+      : '{' postfix_expression PRIMED '=' expression '}'
+      {
+      	assert(alternative);
+        alternative->update.Assign($2,$5);
+      }
+      ;
+
+
+single_assignments
+      : single_assignments '&' single_assignment
+      | single_assignment
+      ;
+
+update
+      : single_assignments
+      | TRUE 
+      ;
+
+prob_assignment
+      : expression ':' update
+      { 		
+      	assert(alternative);
+      	alternative->setWeight($1); }
+      | update {        
+      	assert(alternative);
+		alternative->setWeight(new Expr(1.0));
+      }
+      ;
+
+
+
+prob_assignment_list
+      : prob_assignment_list DISTR_PLUS 
+        {
+        assert(command);
+        alternative = new Alternative(); command->addAlternative(alternative); }
+        prob_assignment
+      | DISTR 
+      { assert(command);
+      	alternative = new Alternative(); command->addAlternative(alternative); }
+      prob_assignment 
+      ;
+
+distribution
+      : prob_assignment_list
+      ;
+
+action
+	: '[' ']' { $$ = 0; }
+	| '[' IDENTIFIER ']' { $$ = $2; }
+
+command
+      : action
+      {
+        std::string action($1 ? $1 : "");
+        if ($1) {
+          free($1);
+        }
+        command = new Command(action);
+        assert(module); 
+        module->addCommand(command);
+        if(action!="") PRISMParser::astModel.actions.insert(action);
+      } 
+      expression distribution ';'
+      {
+        assert(command);
+        command->setGuard($3);
+      }
+      ;
+
+command_list
+      : 
+      | command_list command
+      ;
+
+init
+  : INIT expression ENDINIT
+  {
+    assert($2);
+    shared_ptr<Expr> eptr(new Expr($2,constants));
+    delete $2;
+    initial = eptr ;
+  }
+  ;
+
+trans
+  : command_list
+  ;
+
+
+opt_type
+  : 
+  | type { delete $1; }
+  ;
+
+default_init 
+  : INIT expression
+  { $$ = $2; }
+
+opt_default_init
+  : 
+  { $$ = 0; }
+  | default_init
+  ;
+
+
+type
+  : INTEGER
+    { $$ = new Type(1); }
+  | FLOAT 
+    { $$ = new Type(1.0); }
+  | DOUBLE
+    { $$ = new Type(1.0); }
+  | BOOL
+    { $$ = new Type(true); }
+  |'[' expression DOTS expression ']'
+    { $$ = new Type($2,$4); }
+  | BV '[' expression ']' 
+    { 
+	Expr size_expr = *$3;
+	int width;
+	if(size_expr.kind == Int) {
+		width = size_expr.getInt();
+	} else PRISMerror("ill-specified size of bit vector type  bitvector" + size_expr.toString());
+	
+    }
+  ;
+
+opt_global
+	: { $$ = false; }
+	| GLOBAL { $$ = true; }
+    ;
+
+var_decl
+  : 
+  opt_global IDENTIFIER ':' type opt_default_init ';'
+  {
+	std::string name ($2);
+	free($2);
+
+	Variable* vptr(new Variable(name,$4,$5));
+	if($1) {
+		global_vars.insert(std::pair<std::string, boost::shared_ptr<Variable> > (name, shared_ptr<Variable> (vptr) ));
+	} else {
+		if(!module) {
+			yyerror("Global variable \"" + name + "\" must be declared \"global\"\n");
+		}
+		module->addVariable(vptr);
+	}
+  } 
+  ;
+
+const_decl
+ : CONSTANT opt_type IDENTIFIER '=' expression ';'
+  {
+  	assert($5);
+  	assert($3);
+  	shared_ptr<Expr> se(new Expr($5,constants));
+    delete $5;
+
+	constants.insert(std::pair<std::string, boost::shared_ptr<Expr> > ($3 , se));
+	free($3);
+  }
+  | PARAM type IDENTIFIER ';'
+  {
+	Variable* vptr (new Variable($3,$2));
+	vptr->is_parameter = true;
+	free($3);
+	PRISMParser::astModel.addVariable(vptr);
+  }
+  | FORMULA IDENTIFIER '=' expression ';'
+  {
+  	assert($2);
+  	assert($4);
+  	shared_ptr<Expr> eptr($4);
+	formulas.insert(std::pair<std::string, boost::shared_ptr<Expr> > ($2,eptr)) ;
+	free($2);
+  }
+  ;
+  
+var_decl_list
+  : 
+  | var_decl_list var_decl
+  ;
+
+pred
+   : PRED pred_list ';'
+   ;
+
+pred_list
+   : predicate
+   | pred_list ',' predicate
+   ;
+
+predicate
+	: expression
+	{ 
+		shared_ptr<Expr> eptr($1);
+		predicates.push_back( eptr );
+	}
+	
+
+subst
+    : IDENTIFIER '=' expression { // action label
+    	assert($3);
+    	shared_ptr<Expr> eptr($3);
+		subst.expr_subst[$1] = eptr;
+		
+		std::string original_action($1);
+        free($1);
+		if(PRISMParser::astModel.actions.count(original_action)>0) {
+			std::string action_name($3->getIdentifier());
+			subst.action_subst[original_action] = action_name;
+			PRISMParser::astModel.actions.insert(action_name);
+		}	
+	}
+	;
+
+
+// this rule adds entries to the lhs and rhs vectors
+subst_list 
+       : subst_list ',' subst
+       | subst
+       ;
+
+module
+  : // declare new module
+  MODULE IDENTIFIER
+  {
+	module = new Module($2);
+	module_manager.addModule(module);
+	free($2);
+  }
+  var_decl_list trans ENDMODULE
+  {
+	module = 0;
+  }
+  | // declare new module by instantiating existing one
+  MODULE IDENTIFIER '=' IDENTIFIER { 
+	// initialize the subst_list vector
+	subst.clear();
+  } '[' subst_list ']' {
+	// (1) lookup the module to substitute into
+	std::string module_name ($2);
+	free($2);
+	std::string instantiated_module_name ($4);
+	free($4);
+
+	// schedule instantiation
+	Instantiation inst (module_name,instantiated_module_name,subst); 
+
+	module_manager.addInstantiation(inst);	
+
+	  }
+  ENDMODULE
+  ;
+  
+rewards
+  : REWARDS rewardlist ENDREWARDS
+  ;
+
+rewardlist
+  : reward
+  | rewardlist reward
+  ;
+
+reward
+  : expression ':' expression ';'
+    {
+      shared_ptr<Expr> eptr1($1), eptr2($3);
+      state_rewards.push_back(StateReward(eptr1, eptr2));
+    }
+    | '[' ']' expression ':' expression ';'
+    {
+      shared_ptr<Expr> eptr1($3), eptr2($5);
+      PRISMParser::astModel.transition_rewards.push_back( TransitionReward ( "", StateReward(eptr1,eptr2)));
+    }
+    | '[' IDENTIFIER ']' expression ':' expression ';'
+    {
+      std::string label($2);
+      shared_ptr<Expr> eptr1($4), eptr2($6);
+      transition_rewards.push_back( TransitionReward ( label, StateReward(eptr1,eptr2)));
+      free($2);
+    }
+  ;
+
+invariant
+  : INVAR expression ';'
+  { 
+  	shared_ptr<Expr> iptr($2);
+    invariants.push_back(iptr);
+  }
+  ;
+
+opt_model_type
+  : { $$ = Unspecified; }
+  | PROBAB { $$ = DTMC; }
+  | STOCH  { $$ = CTMC; }
+  | NONDET { $$ = MDP; }
+  ;
+
+decl
+  : var_decl
+  | const_decl
+  | module
+  | init
+  | rewards
+  | invariant
+  | pred
+  | prop
+  ;
+
+decl_list
+  : decl_list decl
+  | decl
+  ;
+
+model
+  :   opt_model_type decl_list {
+        if (Unspecified != $1) {
+	  PRISMParser::astModel.model_type = $1;
+	}
+
+	/*! TODO:
+		1) replace constants in formulas
+		2) replace formulas in formulas
+		3) unite constants and formulas in one substitution
+		4) apply this substitution to everything that follows
+	 */
+
+	for(Variables::const_iterator i = global_vars.begin(); i!= global_vars.end(); ++i) {
+		shared_ptr<Variable> vptr(i->second);
+		PRISMParser::astModel.addVariable(new Variable(vptr.get(),constants));
+	}
+
+	module_manager.addModules(PRISMParser::astModel);
+	module_manager.clear();	
+
+	for(Exprs::const_iterator i=predicates.begin();i!=predicates.end();++i) {
+		shared_ptr<Expr> eptr(new Expr(i->get(),constants));
+		PRISMParser::astModel.predicates.push_back(eptr);
+	}
+	predicates.clear();
+	
+	for(Exprs::const_iterator i=invariants.begin();i!=invariants.end();++i) {
+		shared_ptr<Expr> eptr(new Expr(i->get(),constants));
+		PRISMParser::astModel.invariants.push_back(eptr);
+	}
+	invariants.clear();
+	
+	// rewards
+	for(StateRewards::const_iterator i=state_rewards.begin();i!=state_rewards.end();++i) {
+		StateReward sr(shared_ptr<Expr>(new Expr(i->first.get(),constants)),
+		               shared_ptr<Expr>(new Expr(i->second.get(),constants)));
+		
+		PRISMParser::astModel.state_rewards.push_back(sr);
+	}
+	state_rewards.clear();
+
+	for(TransitionRewards::const_iterator i=transition_rewards.begin();i!=transition_rewards.end();++i) {
+		StateReward sr(shared_ptr<Expr>(new Expr(i->second.first.get(),constants)),
+		               shared_ptr<Expr>(new Expr(i->second.second.get(),constants)));
+		TransitionReward tr(i->first,sr);
+		
+		PRISMParser::astModel.transition_rewards.push_back(tr);
+	}
+	transition_rewards.clear();
+	
+	if(initial.get())
+	PRISMParser::astModel.setInitial(new Expr(initial.get(),constants));
+	
+
+	Substitution subst;
+	
+
+  	for(Exprs::const_iterator i=properties.begin();i!=properties.end();++i) {
+		PRISMParser::astModel.properties.push_back(shared_ptr<Expr>(new Expr(i->get(),formulas)));
+	}
+	properties.clear();
+  }
+  ;
+
+// properties
+
+label 
+  : LABEL QUOTE IDENTIFIER QUOTE '=' expression ';'
+  {
+  	assert($3);
+  	assert($6);
+	boost::shared_ptr<Expr> eptr($6);
+	formulas.insert(std::pair<std::string, boost::shared_ptr<Expr> >($3,eptr));
+	free($3);
+  }
+  ;
+
+
+
+quant
+  : PROBMAX { $$ = Pmax; }
+  | PROBMIN { $$ = Pmin; }
+  | PROB    { $$ = P;    }
+  ;
+
+prop
+  : property {
+  		shared_ptr<Expr> pptr(new Expr($1,constants));
+        delete $1;
+		properties.push_back(pptr);
+    }
+   | label
+    ;
+
+property_or_expression
+  : expression
+  | logical_or_property
+  ;
+
+unary_property
+   : property
+   | '(' logical_or_property ')' {
+	$$ = $2;
+   }
+   | '!' property {
+	$$ = new Expr(PropNot, $2);
+   }
+   ;
+
+
+logical_and_property 
+   : unary_property
+   | logical_and_property '&' unary_property {
+	$$ = new Expr(PropAnd, $1,$3);
+   }
+   ;
+
+logical_or_property
+   : logical_and_property
+   | logical_or_property '|' logical_and_property {
+	$$ = new Expr(PropOr, $1,$3);
+   }
+   ;
+
+
+property 
+  : quant GE_OP numeric_constant '[' pathproperty ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr($1, new Expr(Ge,new Expr("p"),new Expr(probability)),$5);
+  }
+  | quant '>'  numeric_constant '[' pathproperty ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+  	$$ = new Expr($1, new Expr(Gt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | quant LE_OP numeric_constant '[' pathproperty ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr($1, new Expr(Le,new Expr("p"),new Expr(probability)),$5); 
+  }
+  | quant '<'  numeric_constant '[' pathproperty ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr($1, new Expr(Lt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | quant '=' '?' '[' pathproperty ']' {
+	$$ = new Expr($1, new Expr(true), $5);
+  }
+  | quant '=' numeric_constant '[' pathproperty ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr($1, new Expr(Eq,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADY GE_OP numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(Steady, new Expr(Ge,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADY '>'  numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+  	$$ = new Expr(Steady, new Expr(Gt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADY LE_OP numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(Steady, new Expr(Le,new Expr("p"),new Expr(probability)),$5); 
+  }
+  | STEADY '<'  numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(Steady, new Expr(Lt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADY '=' '?' '[' property_or_expression ']' {
+	$$ = new Expr(Steady, new Expr(true), $5);
+  }
+  | STEADY '=' numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(Steady, new Expr(Eq,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMAX GE_OP numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMax, new Expr(Ge,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMAX '>'  numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+  	$$ = new Expr(SteadyMax, new Expr(Gt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMAX LE_OP numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMax, new Expr(Le,new Expr("p"),new Expr(probability)),$5); 
+  }
+  | STEADYMAX '<'  numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMax, new Expr(Lt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMAX '=' '?' '[' property_or_expression ']' {
+	$$ = new Expr(SteadyMax, new Expr(true), $5);
+  }
+  | STEADYMAX '=' numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMax, new Expr(Eq,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMIN GE_OP numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMin, new Expr(Ge,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMIN '>'  numeric_constant '[' property_or_expression ']' {
+        double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+  	$$ = new Expr(SteadyMin, new Expr(Gt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMIN LE_OP numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMin, new Expr(Le,new Expr("p"),new Expr(probability)),$5); 
+  }
+  | STEADYMIN '<'  numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMin, new Expr(Lt,new Expr("p"),new Expr(probability)),$5);
+  }
+  | STEADYMIN '=' '?' '[' property_or_expression ']' {
+	$$ = new Expr(SteadyMin, new Expr(true), $5);
+  }
+  | STEADYMIN '=' numeric_constant '[' property_or_expression ']' {
+	double probability ($3->isDouble() ? $3->getDouble() : $3->getInt());
+	$$ = new Expr(SteadyMin, new Expr(Eq,new Expr("p"),new Expr(probability)),$5);
+  }
+  | REW '=' '?' '[' FINALLY expression ']' {
+	$$ = new Expr(ReachabilityReward,$6);
+  }
+  | REW '=' '?' '[' CUMULATIVE LE_OP numeric_constant ']' {
+	double reward ($7->isDouble() ? $7->getDouble() : $7->getInt());
+	$$ = new Expr(CumulativeReward,new Expr(reward));
+  }
+  | REW '=' '?' '[' I_REW '=' numeric_constant ']' {
+	double reward ($7->isDouble() ? $7->getDouble() : $7->getInt());
+
+	$$ = new Expr(InstantaneousReward, new Expr(reward));
+  }
+  | REW '=' '?' '[' STEADY ']' {
+  	$$ = new Expr(SteadyStateReward, new Expr(true));
+  }
+  | REWMAX '=' '?' '[' STEADY ']' {
+	$$ = new Expr(SteadyStateRewardMax, new Expr(true));
+  }
+  | REWMIN '=' '?' '[' STEADY ']' {
+	$$ = new Expr(SteadyStateRewardMin, new Expr(true));
+  }
+  // TODO remove this HACK for David Spieler as soon as possible
+  | '*' '(' expression ')' {
+        $$ = $3;
+  }
+  ;
+
+pathproperty
+  : property_or_expression UNTIL GE_OP numeric_constant property_or_expression {
+	$$ = new Expr(Until, $1,$5, $4, new Expr());
+  }
+  | property_or_expression UNTIL LE_OP numeric_constant property_or_expression {
+	$$ = new Expr(Until, $1,$5, new Expr(),$4);
+  }
+  | property_or_expression UNTIL '[' numeric_constant ',' numeric_constant ']' property_or_expression {
+	$$ = new Expr(Until, $1,$8, $4,$6);
+  }
+  | property_or_expression UNTIL property_or_expression {
+	$$ = new Expr(Until,$1,$3);
+  }
+  | FINALLY property_or_expression {
+  	$$ = new Expr(Until,new Expr(true),$2);
+  }
+  | NEXT property_or_expression {
+	$$ = new Expr(Next,$2);
+  }
+  | NEXT GE_OP numeric_constant property_or_expression {
+	$$ = new Expr(Next,$4, $3, new Expr());
+  }
+  | NEXT LE_OP numeric_constant property_or_expression {
+	$$ = new Expr(Next,$4, new Expr(),$3);
+  }
+  | NEXT '[' numeric_constant ',' numeric_constant ']' property_or_expression {
+	$$ = new Expr(Next,$7, $3,$5);
+  }
+  ;
+
+%%
+
+using namespace util;
+
+extern char PRISMtext[];
+extern int PRISM::line_number;
+extern std::string file_name;
+extern int column;
+
+void PRISMerror(const char *s)
+{
+	throw util::ParseError("PRISMParser: file: "+ file_name + " @line "+intToString(line_number) + " " + s);
+}
+
+
+void PRISMerror(char *s)
+{
+	throw util::ParseError("PRISMParser: file: "+ file_name + " @line "+intToString(line_number) + " " + s);
+}
+
+void PRISMerror(const std::string& s) {
+	throw util::ParseError("PRISMParser: file: "+ file_name + " @line "+intToString(line_number) + " " + s);
+}
+
+
+
+void PRISMwarning( const std::string& s ) {
+  std::cerr << "warning: " << line_number << " " << s << std::endl;
+}
+
+

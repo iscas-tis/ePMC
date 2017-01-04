@@ -1,0 +1,31 @@
+#!/bin/bash
+. ../auxiliary.sh
+
+assemble_begin unambiguous-parametric
+prepare_plugin util
+prepare_plugin value-basic
+prepare_plugin dd
+prepare_plugin expression-basic
+prepare_plugin graph
+prepare_plugin algorithm
+prepare_plugin ic3
+prepare_plugin param
+prepare_plugin unambiguous
+prepare_plugin graphsolver
+#prepare_plugin graphsolver-lp
+prepare_plugin graphsolver-iterative
+prepare_plugin automata
+prepare_plugin jani-model
+prepare_plugin timedautomata
+prepare_plugin prism-format
+prepare_plugin command-help
+prepare_plugin command-lump
+prepare_plugin command-check
+prepare_plugin propertysolver-propositional
+prepare_plugin propertysolver-operator
+prepare_plugin propertysolver-pctl
+prepare_plugin constraintsolver
+prepare_plugin constraintsolver-isat3
+prepare_plugin constraintsolver-smt-lib
+prepare_plugin imdp
+assemble_end unambiguous-parametric

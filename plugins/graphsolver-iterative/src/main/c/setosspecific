@@ -1,0 +1,16 @@
+# Mac OS X part
+ifeq ($(OSDIRPART),darwin)
+	XCFLAGS := $(DARWIN_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),linux-x86)
+	XCFLAGS := $(LINUX_X86_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),linux-x86-64)
+	XCFLAGS := $(LINUX_X86_64_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),win32-x86)
+	XCFLAGS := $(WINDOWS_X86_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),win32-x86-64)
+	XCFLAGS := $(WINDOWS_X86_64_XCFLAGS)
+endif

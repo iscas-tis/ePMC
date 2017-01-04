@@ -1,0 +1,41 @@
+domain emh_parametric {
+	requirements = { reward-deterministic };
+
+	types {
+		pos : object;
+	};
+
+	pvariables {
+		N(pos) : { non-fluent,  bool, default = false };
+		s(pos,pos) : { state-fluent,  bool, default = false };
+	};
+
+	cpfs {
+		s'(?x,?y) = N(?x) ^ N(?y) ;
+	};
+	reward = 1;
+}
+
+non-fluents emh_parametric_nonfluents {
+	domain = emh_parametric;
+
+	objects { 
+		pos : {p1,p2};
+	};
+	
+	non-fluents {
+			N(p2) = true;
+	};
+}
+
+instance emh_parametric_instance {
+	domain = emh_parametric;
+
+	non-fluents = emh_parametric_nonfluents;
+	init-state {
+		s(p2,p1) = false;
+	};
+	max-nondef-actions = 1;
+	horizon  = 20;
+	discount = 0.9;
+}
