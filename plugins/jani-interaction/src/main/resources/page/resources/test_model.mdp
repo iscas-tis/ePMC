@@ -1,0 +1,21 @@
+ctmc
+
+const double lambda = 1.0; // one of 1.0, 2.0, 3.0, 4.0, 5.0, 6.0
+const double gamma = 3.0;
+const double mu = 100.0;
+
+const int n = 200;
+
+module three_valued_abstraction
+  // places  p1: [0..n] init 0; // idle
+  p2: [0..n] init 3; // busy
+  p3: [0..n] init 0; // queue
+
+  // transitions
+  [] (p1>0) & (p2 lambda : (p1'=p1-1) & (p2'=p2+1);
+  [] (p2>0) & (p1 gamma : (p1'=p1+1) & (p2'=p2-1);
+  [] (p1>0) & (p3>0) & (p2 mu : (p1'=p1-1) & (p2'=p2+1) & (p3'=p3-1);
+  [] (p2>=3) & (p3 lambda : (p3'=p3+1);
+
+endmodule
+

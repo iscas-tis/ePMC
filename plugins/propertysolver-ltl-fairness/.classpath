@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-propertysolver-operator"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-propertysolver-propositional"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graphsolver"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-algorithm"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graph"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-tests"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

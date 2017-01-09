@@ -1,0 +1,36 @@
+Note by Ernst Moritz Hahn: This version of CacBDD is based on
+http://www.kailesu.net/CacBDD/CacBDD.zip
+
+However, it was modified according to the following mail (14/07/2015):
+
+Dear Ernst,
+
+About CacBDD sources
+ the condition "if(toph = v)" shoud be changed as "if(toph == v)". 
+Also in the same function 
+DD  XManager::IteRecur(DD f, DD g, DD h)
+.
+ The following lines is problematic:
+   
+ int index;
+    DD fv, fnv, gv, gnv, hv, hnv;
+    if(topf < v){
+        v = Min(topf, v);// v = top_var(F,G,H)
+        index = topf;
+        fv = nodes[ADDR(f)].Then;
+        fnv= nodes[ADDR(f)].Else;
+    }
+    else{ fv = fnv = f;}
+
+The if condition (topf < v) should be 
+(topf <= v).
+
+Therefore, please do some changes when using CacBDD.  
+
+Thank you for finding a bug of CacBDD  
+
+Best regards,
+
+--Kaile
+
+

@@ -1,0 +1,94 @@
+ICFLAGS	= -g -O3 -fvisibility=hidden
+
+#DDDEBUG = -DDD_DEBUG -DDD_VERBOSE -DDD_STATS -DDD_CACHE_PROFILE -DDD_UNIQUE_PROFILE -DDD_COUNT
+DDDEBUG	=
+
+MTRDEBUG =
+
+LDFLAGS	=
+
+PURE =
+
+EXE =
+
+MFLAG   = -DMNEMOSYNE
+MNEMLIB	= ../mnemosyne/libmnem.a
+
+DDWDIR	= .
+IDIR	= $(DDWDIR)/include
+INCLUDE = -I$(IDIR)
+
+BDIRS	= cudd mtr st util epd
+DIRS    = $(BDIRS)
+
+#------------------------------------------------------------------------
+
+.PHONY : build
+.PHONY : build_all
+.PHONY : testcudd
+.PHONY : testmtr
+.PHONY : all
+.PHONY : clean
+.PHONY : distclean
+
+LIB_NAME=cudd
+
+# OS specific flags for CUDD
+DARWIN_XCFLAGS=-DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC
+LINUX_X86_XCFLAGS=-m32 -malign-double -DHAVE_IEEE_754 -DBSD -static -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
+LINUX_X86_64_XCFLAGS=-m64 -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
+WINDOWS_X86_XCFLAGS=-UUNIX -DHAVE_IEEE_754 -DSIZEOF_VOID_P=4 -DSIZEOF_LONG=4 -DSIZEOF_INT=4 -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
+WINDOWS_X86_64_XCFLAGS=-UUNIX -DHAVE_IEEE_754 -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=4 -DSIZEOF_INT=4 -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
+
+include ../setosspecific
+
+LIB_THERE:=$(CLASSDIR)/$(OSDIRPART)/$(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+build:
+ifeq ("$(wildcard $(LIB_THERE))","")
+	sh ./setup.sh
+	@for dir in $(DIRS); do \
+		(cd $$dir; \
+		echo Making $$dir ...; \
+		make CC=$(CC) RANLIB=$(RANLIB) MFLAG= MNEMLIB= ICFLAGS="$(ICFLAGS)" XCFLAGS="$(XCFLAGS)" DDDEBUG="$(DDDEBUG)" MTRDEBUG="$(MTRDEBUG)" LDFLAGS="$(LDFLAGS)" PURE="$(PURE)" EXE="$(EXE)" )\
+	done; \
+    $(CC) $(XCFLAGS) -shared cudd/*.o mtr/*.o st/*.o util/*.o epd/*.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT); \
+    $(STRIP) -x $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) ; \
+    mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
+    cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \
+    rm $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT);
+endif
+
+build_all:
+	make distclean
+	make build FOR_OS=Darwin_x86_64 CLASSDIR=$(CLASSDIR)
+	make distclean
+	make build FOR_OS=Linux_i686 CLASSDIR=$(CLASSDIR)
+	make distclean
+	make build FOR_OS=Linux_x86_64 CLASSDIR=$(CLASSDIR)
+	make distclean
+	make build FOR_OS=Windows_i686 CLASSDIR=$(CLASSDIR)
+	make distclean
+	make build FOR_OS=Windows_x86_64 CLASSDIR=$(CLASSDIR)
+
+all:
+	sh ./setup.sh
+	@for dir in $(DIRS); do \
+		(cd $$dir; \
+		echo Making all in $$dir ...; \
+		make CC=$(CC) RANLIB=$(RANLIB) MFLAG= MNEMLIB= ICFLAGS="$(ICFLAGS)" XCFLAGS="$(XCFLAGS)" DDDEBUG="$(DDDEBUG)" MTRDEBUG="$(MTRDEBUG)" LDFLAGS="$(LDFLAGS)" PURE="$(PURE)" EXE="$(EXE)" all )\
+	done
+
+clean:
+	@for dir in $(DIRS); do	\
+	    (cd $$dir;	\
+	     echo Cleaning $$dir ...; \
+	     make -s clean	) \
+	done
+
+distclean:
+	@for dir in mnemosyne $(DIRS); do	\
+	    (cd $$dir;	\
+	     echo Cleaning $$dir ...; \
+	     make -s EXE="$(EXE)" distclean	) \
+	done
+	sh ./shutdown.sh

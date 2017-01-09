@@ -1,0 +1,57 @@
+.PHONY : build
+.PHONY : build_all
+.PHONY : clean
+
+LIB_NAME=utils
+
+# specific flags for native utils library
+DARWIN_XCFLAGS=-g -O3 -Wno-deprecated -fvisibility=hidden
+LINUX_X86_XCFLAGS=-g -O3 -Wno-deprecated -static -static-libgcc -static-libstdc++ -m32 -Wl,-soname,$(LIB_NAME) -fvisibility=hidden
+LINUX_X86_64_XCFLAGS=-g -O3 -Wno-deprecated -fPIC -static-libgcc -static-libstdc++ -m64 -Wl,-soname,$(LIB_NAME) -fvisibility=hidden
+WINDOWS_X86_XCFLAGS=-g -O3 -Wno-deprecated -static-libgcc -static-libstdc++ -Wl,-soname,$(LIB_NAME) -fvisibility=hidden
+WINDOWS_X86_64_XCFLAGS=-g -O3 -Wno-deprecated -static-libgcc -static-libstdc++ -Wl,-soname,$(LIB_NAME) -fvisibility=hidden
+
+ifneq ($(wildcard ../setosspecific),)
+include ../setosspecific
+else
+ifneq ($(wildcard ../../setosspecific),)
+include ../../setosspecific
+endif
+endif
+
+OBJECTS := $(patsubst %.c,%.o,$(wildcard *.c))
+
+HEADERS := $(wildcard *.h)
+
+.c.o: $(OBJECTS) $(HEADERS)
+	$(CC) -c  $< -o $@ $(XCFLAGS) -std=gnu99 -I.
+
+LIB_THERE:=$(CLASSDIR)/$(OSDIRPART)/$(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+ifeq ("$(wildcard $(LIB_THERE))","")
+build: $(OBJECTS) $(HEADERS)
+	$(CC) $(XCFLAGS) -shared *.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+	mkdir -p $(CLASSDIR)/$(OSDIRPART)
+	$(STRIP) -x $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+	cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)
+	rm $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+endif
+
+build_all:
+	make -f Makefile.epmc clean
+	make -f Makefile.epmc build FOR_OS=Darwin_x86_64 CLASSDIR=$(CLASSDIR)
+	make -f Makefile.epmc clean
+	make -f Makefile.epmc build FOR_OS=Linux_i686 CLASSDIR=$(CLASSDIR)
+	make -f Makefile.epmc clean
+	make -f Makefile.epmc build FOR_OS=Linux_x86_64 CLASSDIR=$(CLASSDIR)
+	make -f Makefile.epmc clean
+	make -f Makefile.epmc build FOR_OS=Windows_i686 CLASSDIR=$(CLASSDIR)
+	make -f Makefile.epmc clean
+	make -f Makefile.epmc build FOR_OS=Windows_x86_64 CLASSDIR=$(CLASSDIR)
+
+clean:
+	rm -f *.o
+	rm -f $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
+
+distclean:
+	rm -f *.o
+	rm -f $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)

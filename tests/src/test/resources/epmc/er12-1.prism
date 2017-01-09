@@ -1,0 +1,102 @@
+dtmc
+
+formula  p0= (x6=1?0.92:0+x7=1?0.03:0+x9=1?0.09:0)*0.3*0.47;
+formula  p1=(x2=1?0.07:0+x9=1?0.09:0)*0.3*0.38;
+formula  p2=(x1=1?0.16:0+x5=1?0.03:0+x6=1?0.46:0+x11=1?0.74:0)*0.3*0.69;
+formula  p3=(x5=1?0.27:0+x8=1?0.08:0+x6=1?0.16:0)*0.3*0.32;
+formula  p4=(x0=1?0.67:0)*0.3*0.68;
+formula  p5=(x0=1?0.22:0+x2=1?0.26:0+x3=1?0.46:0+x7=1?0.14:0)*0.3*0.35;
+formula  p6=(x2=1?0.09:0+x11=1?0.27:0)*0.3*0.76;
+formula  p7=(x0=1?0.04:0+x2=1?0.02:0)*0.3*0.06;
+formula  p8=(x3=1?0.02:0)*0.3*0.27;
+formula  p9=(x1=1?0.07:0)*0.3*0.03;
+formula  p10=(x10=1?0.1:0)*0.3*0.51;
+formula  p11=(x2=1?0.67:0+x6=1?0.21:0)*0.3*0.35;
+
+const int x2=1;
+const int x9=1;
+const double p=0.8;
+
+module process0
+   x0 : [0..2] ;
+   [step] (x0=0) -> 1-p0: (x0'=0) + p0 : (x0'=1);
+   [step] (x0=2) -> 1-p*p0: (x0'=x0) + p*p0 : (x0'=1);
+   [step] (x0=1) -> (x0'=x0) ;
+endmodule 
+
+module process1	
+   x1 : [0..2] ;
+   [step] (x1=0) -> 1-p1: (x1'=0) + p1 : (x1'=1);
+   [step] (x1=2) -> 1-p*p1: (x1'=x1) + p*p1 : (x1'=1);
+   [step] (x1=1) -> (x1'=x1) ;
+endmodule
+
+
+module process3
+   x3 : [0..2] ;
+   [step] (x3=0)-> 1-p*p3 : (x3'=0) + p*p3 : (x3'=1);
+   [step] (x3=2) -> 1-p3 : (x3'=x3) + p3 : (x3'=1);
+   [step] (x3=1) ->  (x3'=x3) ;
+endmodule
+
+module process4 
+   x4 : [0..2] ; 
+   [step] (x4=2) -> 1-p*p4 : (x4'=0) + p*p4 : (x4'=1);
+   [step] (x4=0) -> 1- p4 : (x4'=x4) + p4 : (x4'=1) ;
+   [step] (x4=1) ->  (x4'=x4) ;
+endmodule
+
+module process5
+   x5 : [0..2] ;
+   [step] (x5=2) ->1-p*p5 :(x5'=x5) + p*p5 : (x5'=1); 
+   [step] (x5=0) ->1-p5 :(x5'=x5) + p5 : (x5'=1); 
+   [step] (x5=1) ->  (x5'=x5); 
+endmodule
+
+module process6
+   x6 : [0..2] ;
+   [step] (x6=0) ->1-p6 :(x6'=x6) + p6 : (x6'=1); 
+   [step] (x6=2) ->1-p*p6 :(x6'=x6) + p*p6 : (x6'=1); 
+   [step] (x6=1) -> (x6'=x6); 
+endmodule
+
+module process7
+   x7 : [0..2] ;
+   [step] (x7=0) -> 1-p7: (x7'=0) + p7 : (x7'=1);
+   [step] (x7=2) -> 1-p*p7: (x7'=x7) + p*p7 : (x7'=1);
+   [step] (x7=1) -> (x7'=x7) ;
+endmodule 
+
+module process8
+   x8 : [0..2] ;
+   [step] (x8=0) -> 1-p8: (x8'=x8) + p8 : (x8'=1);
+   [step] (x8=2) -> 1-p*p8: (x8'=x8) + p*p8 : (x8'=1);
+   [step] (x8=1) -> (x8'=x8) ;
+endmodule
+
+module process10
+   x10 : [0..2] ;
+   [step] (x10=0) -> 1-p10 : (x10'=x10) + p10 : (x10'=1);
+   [step] (x10=2) -> 1-p*p10:(x10'=x10) + p*p10:(x10'=1);
+   [step] (x10=1) -> (x10'=x10) ;
+endmodule
+
+module process11
+   x11 : [0..2] ;
+   [step] (x11=0)->1- p11 : (x11'=x11) + p11 : (x11'=1) ;
+   [step] (x11=2)->1- p*p11 : (x11'=x11) + p*p11 : (x11'=1) ;
+   [step] (x11=1) -> (x11'=x11) ;
+endmodule
+
+init
+num_token=3&num_notoken=7
+endinit
+
+
+
+formula num_affected = (x0=1?1:0)+(x1=1?1:0)+(x2=1?1:0)+(x3=1?1:0)+(x4=1?1:0)+(x5=1?1:0)+(x6=1?1:0)+(x7=1?1:0)+
+(x8=1?1:0)+(x9=1?1:0)+(x10=1?1:0)+(x11=1?1:0);
+formula num_notoken=(x0=0?1:0)+(x1=0?1:0)+(x3=0?1:0)+(x4=0?1:0)+(x5=0?1:0)+(x6=0?1:0)+(x7=0?1:0)+
+(x8=0?1:0)+(x10=0?1:0)+(x11=0?1:0);
+formula num_token=(x0=2?1:0)+(x1=2?1:0)+(x3=2?1:0)+(x4=2?1:0)+(x5=2?1:0)+(x6=2?1:0)+(x7=2?1:0)+
+(x8=2?1:0)+(x10=2?1:0)+(x11=2?1:0);

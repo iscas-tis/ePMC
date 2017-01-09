@@ -1,0 +1,189 @@
+<project xmlns:ac="antlib:net.sf.antcontrib">
+	<property name="CC_DARWIN" value="/usr/bin/gcc" />
+	<property name="CPP_DARWIN" value="/usr/bin/g++" />
+	<property name="STRIP_DARWIN" value="/usr/bin/strip" />
+	<property name="CC_LINUX_X86" value="/usr/bin/gcc" />
+	<property name="CPP_LINUX_X86" value="/usr/bin/g++" />
+	<property name="STRIP_LINUX_X86" value="/usr/bin/strip" />
+	<property name="CC_LINUX_X86_64" value="/usr/bin/gcc" />
+	<property name="CPP_LINUX_X86_64" value="/usr/bin/g++" />
+	<property name="STRIP_LINUX_X86_64" value="/usr/bin/strip" />
+	<property name="CC_WINDOWS_X86" value="/usr/bin/gcc" />
+	<property name="CPP_WINDOWS_X86" value="/usr/bin/g++" />
+	<property name="STRIP_WINDOWS_X86" value="/usr/bin/strip" />
+	<property name="CC_WINDOWS_X86_64" value="/usr/bin/gcc" />
+	<property name="CPP_WINDOWS_X86_64" value="/usr/bin/g++" />
+	<property name="STRIP_WINDOWS_X86_64" value="/usr/bin/strip" />
+
+	<target name="clean">
+		<ac:for param="dir">
+			<path>
+				<dirset id="dist.contents" dir="." includes="*" />
+			</path>
+			<sequential>
+				<exec executable="make" dir="@{dir}">
+					<arg value="-f" />
+					<arg value="Makefile.epmc" />
+					<arg value="distclean" />
+				</exec>
+			</sequential>
+		</ac:for>
+	</target>
+	<target name="build">
+		<!--
+
+# find out OS in case it is not set
+ifeq ($(FOR_OS),)
+	ifneq ($(OS),Windows_NT)
+		OS := $(shell uname -s)_$(shell uname -m)
+	endif
+	ORIG_OS := $(OS)
+else
+	ORIG_OS := $(OS)
+	OS := $(FOR_OS)
+endif
+
+-ifeq ($(OS),Darwin_x86_64)
++ifeq ($(OS),darwin)
+
+-ifeq ($(OS),Linux_i686)
++ifeq ($(OS),linux-x86)
+
+-ifeq ($(OS),Linux_x86_64)
++ifeq ($(OS),linux-x86-64)
+
+-ifeq ($(OS),Windows_i686)
++ifeq ($(OS),win32-x86)
+
+-ifeq ($(OS),Windows_x86_64)
++ifeq ($(OS),win32-x86-64)
+
+
+-->
+
+		<condition property="buildfor.set" else="false">
+			<isset property="buildfor" />
+		</condition>
+		<ac:if>
+			<ac:equals arg1="${buildfor.set}" arg2="false" />
+			<then>
+				<ac:if>
+					<ac:and>
+						<ac:equals arg1="${os.name}" arg2="Mac OS X" />
+						<ac:equals arg1="${os.arch}" arg2="x86_64" />
+					</ac:and>
+					<then>
+						<ac:var name="buildfor" value="darwin" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:and>
+						<ac:equals arg1="${os.name}" arg2="Linux" />
+						<ac:contains string="x86_64,amd64" substring="${os.arch}" />
+					</ac:and>
+					<then>
+						<ac:var name="buildfor" value="linux-x86-64" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:and>
+						<ac:equals arg1="${os.name}" arg2="Linux" />
+						<ac:contains string="x86,i386" substring="${os.arch}" />
+					</ac:and>
+					<then>
+						<ac:var name="buildfor" value="linux-x86" />
+					</then>
+				</ac:if>
+			</then>
+		</ac:if>
+
+		<echo message="OS Name is:         ${os.name}" />
+		<echo message="OS Architecture is: ${os.arch}" />
+		<echo message="OS Version is:      ${os.version}" />
+		<echo message="buildfor is:        ${buildfor}" />
+
+		<ac:var name="configurations" value="" />
+		<ac:for param="build" list="${buildfor}">
+			<sequential>
+				<ac:if>
+					<ac:equals arg1="darwin" arg2="@{build}" />
+					<then>
+						<ac:var name="configurations" value="${configurations};darwin,${CC_DARWIN},${CPP_DARWIN},${STRIP_DARWIN},lib,dylib" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:equals arg1="linux-x86" arg2="@{build}" />
+					<then>
+						<ac:var name="configurations" value="${configurations};linux-x86,${CC_LINUX_X86},${CPP_LINUX_X86},${STRIP_LINUX_X86},lib,so" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:equals arg1="linux-x86-64" arg2="@{build}" />
+					<then>
+						<ac:var name="configurations" value="${configurations};linux-x86-64,${CC_LINUX_X86_64},${CPP_LINUX_X86_64},${STRIP_LINUX_X86_64},lib,so" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:equals arg1="win32-x86" arg2="@{build}" />
+					<then>
+						<ac:var name="configurations" value="${configurations};win32-x86,${CC_WINDOWS_X86},${CPP_WINDOWS_X86},${STRIP_WINDOWS_X86},,dll" />
+					</then>
+				</ac:if>
+				<ac:if>
+					<ac:equals arg1="win32-x86-64" arg2="@{build}" />
+					<then>
+						<ac:var name="configurations" value="${configurations};win32-x86-64,${CC_WINDOWS_X86_64},${CPP_WINDOWS_X86_64},${STRIP_WINDOWS_X86_64},,dll" />
+					</then>
+				</ac:if>
+			</sequential>
+		</ac:for>
+		<ac:for param="dir">
+			<path>
+				<dirset id="dist.contents" dir="." includes="*" />
+			</path>
+			<sequential>
+				<ac:for param="compiler" list="${configurations}" delimiter=";">
+					<sequential>
+						<ac:var name="osdir" unset="true" />
+						<ac:propertyregex property="osdir" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\1" />
+						<ac:var name="cc" unset="true" />
+						<ac:propertyregex property="cc" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\2" />
+						<ac:var name="cpp" unset="true" />
+						<ac:propertyregex property="cpp" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\3" />
+						<ac:var name="strip" unset="true" />
+						<ac:propertyregex property="strip" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\4" />
+						<ac:var name="dyn_prefix" unset="true" />
+						<ac:propertyregex property="dyn_prefix" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\5" />
+						<ac:var name="dyn_ext" unset="true" />
+						<ac:propertyregex property="dyn_ext" input="@{compiler}" regexp="(.*),(.*),(.*),(.*),(.*),(.*)" select="\6" />
+						<echo>${cc} ${cpp} @{dir}</echo>
+						<exec executable="make" dir="@{dir}">
+							<arg value="-f" />
+							<arg value="Makefile.epmc" />
+							<arg value="distclean" />
+							<arg value="CC=${cc}" />
+							<arg value="CPP=${cpp}" />
+							<arg value="STRIP=${strip}" />
+							<arg value="OSDIRPART=${osdir}" />
+							<arg value="DYN_PREFIX=${dyn_prefix}" />
+							<arg value="DYN_EXT=${dyn_ext}" />
+							<arg value="CLASSDIR=${outputDirectory}" />
+						</exec>
+						<exec executable="make" dir="@{dir}">
+							<arg value="-f" />
+							<arg value="Makefile.epmc" />
+							<arg value="build" />
+							<arg value="CC=${cc}" />
+							<arg value="CPP=${cpp}" />
+							<arg value="STRIP=${strip}" />
+							<arg value="OSDIRPART=${osdir}" />
+							<arg value="DYN_PREFIX=${dyn_prefix}" />
+							<arg value="DYN_EXT=${dyn_ext}"/>
+							<arg value="CLASSDIR=${outputDirectory}"/>
+						</exec>
+					</sequential>
+				</ac:for>
+			</sequential>
+		</ac:for>
+	</target>
+</project>

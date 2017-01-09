@@ -1,0 +1,12 @@
+.PHONY : distclean
+.PHONY : build
+
+distclean:
+	cd src ; \
+	make -f Makefile.epmc distclean CC=$(CC) CPP=$(CPP) OSDIRPART=$(OSDIRPART) DYN_PREFIX=$(DYN_PREFIX) DYN_EXT=$(DYN_EXT) CLASSDIR=$(CLASSDIR) STRIP=$(STRIP); \
+	cd ..
+
+build:
+	cd src ; \
+	make -f Makefile.epmc build CC=$(CC) CPP=$(CPP) OSDIRPART=$(OSDIRPART) DYN_PREFIX=$(DYN_PREFIX) DYN_EXT=$(DYN_EXT) CLASSDIR=$(CLASSDIR) STRIP=$(STRIP) ; \
+	cd ..

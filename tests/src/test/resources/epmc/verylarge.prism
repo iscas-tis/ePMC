@@ -1,0 +1,9 @@
+dtmc
+
+const int N = 2147483647;
+
+module verylarge
+    p : [0..N] init 0;
+    [] p < N -> (p'=p+1);
+    [] p = N -> true;
+endmodule

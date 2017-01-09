@@ -1,0 +1,89 @@
+ctmc
+
+const int M;
+const int S_=5000;
+const int N=100000;
+
+module google
+  M_up : [0..1] init 1;
+  M_hard_down : [0..1] init 0;
+  M_soft_down : [0..1] init 0;
+
+  R_present : [0..3] init 3;
+  R_lost : [0..3] init 0;
+
+  C_up : [0..M] init M;
+  C_soft_down : [0..M] init 0;
+  C_hard_down : [0..M] init 0;
+
+  [m_fail_m_soft] (M_up=1) -> 0.0005 * 0.95 : (M_up'=0) & (M_soft_down'=1);
+
+  [m_fail_m_hard] (M_up=1) -> 0.0005 * 0.05 : (M_up'=0) & (M_hard_down'=1);
+
+  [m_soft_repair] (M_soft_down=1) -> M_soft_down * 12 : (M_soft_down'=0) & (M_up'=1);
+
+  [m_hard_repair] (M_hard_down=1) -> 6 : (M_hard_down'=0) & (M_up'=1);
+
+  [replicate] (M_up=1) & (R_lost>0) & (R_present<3) & (C_up>R_present) & (C_up*S_>=(R_present+1)*N)
+    -> ((R_present > 0) ? 20 : 2) :
+  (R_lost'=R_lost-1) & (R_present'=R_present+1);                   
+
+  [c_fail_destroy_c_soft] (C_up>0) & (R_present>0) & (R_lost<3) & (C_soft_down<M)
+    -> 0.05 * (R_present / C_up) * 0.95 :
+  (C_up'=C_up-1) & (C_soft_down'=C_soft_down+1) & (R_present'=R_present-1) & (R_lost'=R_lost+1);
+
+  [c_fail_keep_c_soft] (C_up>0) & (C_soft_down<M) & (C_up-1>=R_present)
+    -> 0.05 * (1 - (R_present / C_up)) * 0.95 :
+  (C_up'=C_up-1) & (C_soft_down'=C_soft_down+1);
+
+  [c_fail_destroy_c_hard] (C_up>0) & (R_present>0) & (R_lost<3) & (C_hard_down<M)
+    ->  0.05 * (R_present / C_up) * 0.05 :
+  (C_up'=C_up-1) & (C_hard_down'=C_hard_down+1) & (R_present'=R_present-1) & (R_lost'=R_lost+1);
+
+  [c_fail_keep_c_hard] (C_up>0) & (C_hard_down<M) & (C_up-1>=R_present)
+    -> 0.05 * (1 - (R_present / C_up)) * 0.05 :
+  (C_up'=C_up-1) & (C_hard_down'=C_hard_down+1);
+
+  [c_soft_repair] (C_soft_down>0) & (C_up<M)
+  -> C_soft_down * 12 : (C_soft_down'=C_soft_down-1) & (C_up'=C_up+1);
+
+  [c_hard_repair] (C_hard_down>0) & (C_up<M)
+  -> 1.0 : (C_hard_down'=C_hard_down-1) & (C_up'=C_up+1);
+endmodule
+
+formula master_software_failure   = (M_soft_down = 1);
+formula c_light_software_failure  = ((C_soft_down > M / 4) & (C_soft_down <= M / 2)  & (C_hard_down = 0));
+formula c_medium_software_failure = ((C_soft_down > M / 2) & (C_soft_down <= 0.75*M) & (C_hard_down = 0));
+formula c_severe_software_failure = ((C_soft_down > 0.75*M)                          & (C_hard_down = 0));
+label "light_software_disaster"  = (master_software_failure & c_light_software_failure);
+label "medium_software_disaster" = (master_software_failure & c_medium_software_failure);
+label "severe_software_disaster" = (master_software_failure & c_severe_software_failure);
+
+formula master_hardware_failure   = (M_hard_down = 1);
+formula c_light_hardware_failure  = ((C_hard_down > M / 4) & (C_hard_down <= M / 2)  & (C_soft_down = 0));
+formula c_medium_hardware_failure = ((C_hard_down > M / 2) & (C_hard_down <= 0.75*M) & (C_soft_down = 0));
+formula c_severe_hardware_failure = ((C_hard_down > 0.75*M)                          & (C_soft_down = 0));
+label "light_hardware_disaster"  = (master_hardware_failure & c_light_hardware_failure);
+label "medium_hardware_disaster" = (master_hardware_failure & c_medium_hardware_failure);
+label "severe_hardware_disaster" = (master_hardware_failure & c_severe_hardware_failure);
+
+formula master_working = (M_up = 1);
+formula at_least_1_replica = (R_present>=1);
+formula at_least_2_replica = (R_present>=2);
+formula at_least_3_replica = (R_present>=3);
+label "service_level_1" = (master_working & at_least_1_replica);
+label "service_level_2" = (master_working & at_least_2_replica);
+label "service_level_3" = (master_working & at_least_3_replica);
+
+rewards "failures"
+  [m_fail_m_soft] true : 1;
+  [m_fail_m_hard] true : 1;
+  [c_fail_destroy_c_soft] true : 1;
+  [c_fail_keep_c_soft] true : 1;
+  [c_fail_destroy_c_hard] true : 1;
+  [c_fail_keep_c_hard] true : 1;
+endrewards
+
+rewards "chunkup"
+  true : C_up;
+endrewards

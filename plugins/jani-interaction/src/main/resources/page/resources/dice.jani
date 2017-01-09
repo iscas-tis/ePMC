@@ -1,0 +1,381 @@
+{
+  "locations" : [
+    {
+      "name" : "s0",
+      "x": 100,
+      "y": 100
+    },
+    {
+      "name" : "s1",
+      "x": 100,
+      "y": 200
+    },
+    {
+      "name" : "s2",
+      "x": 100,
+      "y": 300
+    },
+    {
+      "name" : "s3",
+      "x": 100,
+      "y": 400
+    },
+    {
+      "name" : "s4",
+      "x": 200,
+      "y": 100
+    },
+    {
+      "name" : "s5",
+      "x": 200,
+      "y": 200
+    },
+    {
+      "name" : "s6",
+      "x": 200,
+      "y": 300
+    },
+    {
+      "name" : "s7",
+      "x": 200,
+      "y": 400
+    }
+  ],
+  "edges" : [
+    {
+      "location" : "s0",
+      "action": "act",
+      "x": 150,
+      "y": 150,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : {
+        "op": "and",
+        "args": [
+          true,
+          {
+            "op": "or",
+            "args": [false, false]
+          }               
+        ]
+      },
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15], 
+          "probability" : {
+            "op": "+",
+            "args": [0.5, "x"]
+          },
+          "location" : "s1",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s2",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s1",
+      "x": 150,
+      "y": 250,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15], 
+          "probability" : 0.5,
+          "location" : "s3",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s4",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s2",
+      "x": 150,
+      "y": 350,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s5",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s6",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s3",
+      "x": 250,
+      "y": 150,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s1",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 1
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s4",
+      "x": 250,
+      "y": 250,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,5],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 2
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,60],
+          "targetXY": [5,60],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 3
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s5",
+      "x": 250,
+      "y": 350,
+      "sourceXY": [60,5],
+      "targetXY": [5,5],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,5],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 4
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,60],
+          "targetXY": [5,60],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 5
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s6",
+      "x": 350,
+      "y": 150,
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s2",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        },
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 0.5,
+          "location" : "s7",
+          "assignments" : [
+            {
+              "ref" : "d",
+              "value" : 6
+            },
+            {
+              "ref" : "thrownSix",
+              "value" : true
+            },
+            {
+              "ref" : "terminated",
+              "value" : true
+            }
+          ],
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "location" : "s7",
+      "sourceXY": [5,5],
+      "targetXY": [5,15],
+      "guard" : true,
+      "destinations" : [
+        {
+          "sourceXY": [60,5],
+          "targetXY": [5,15],
+          "probability" : 1,
+          "location" : "s7",
+          "rewards" : [
+            {
+              "ref" : "step",
+              "value" : 1
+            }
+          ]
+        }
+      ]
+    } 
+  ]
+}
