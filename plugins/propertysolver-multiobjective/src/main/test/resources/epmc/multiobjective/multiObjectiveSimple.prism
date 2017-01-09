@@ -1,7 +1,0 @@
-mdp
-
-module multiObjectiveSimple
-  x : [0..2];
-  [] (x<2) -> (x'=x+1);
-  [] true -> true;
-endmodule

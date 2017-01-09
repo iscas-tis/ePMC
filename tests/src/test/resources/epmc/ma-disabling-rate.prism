@@ -1,9 +1,0 @@
-ma
-
-module main
-  s : [0..2];
-  []     (s=0) -> (s'=1);  
-  [rate] (s=0) -> (s'=1);
-  [rate] (s=1) -> (s'=2);
-  []     (s=2) -> (s'=2);
-endmodule
