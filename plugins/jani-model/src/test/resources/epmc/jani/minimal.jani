@@ -1,0 +1,19 @@
+{
+	"jani-version": 1,
+	"name": "minimal",
+	"type" : "mdp",
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : []
+		}
+	],
+	"properties" : [],
+	"system" : {"composition": "leaf", "automaton": "asdf"}
+}

@@ -1,0 +1,54 @@
+{
+	"jani-version": 1,
+	"name": "diamond-mdp",
+	"type" : "mdp",
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				},
+				{
+					"name" : "fdsa"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "fdsa",
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : []
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {
+		"composition" : "parallel",
+		"elements" : [
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			},
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			}
+		],
+		"alphabet" : []
+	}
+}

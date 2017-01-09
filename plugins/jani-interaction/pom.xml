@@ -1,0 +1,179 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>epmc.jani.interaction</groupId>
+  <artifactId>epmc-jani-interaction</artifactId>
+  <version>0</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.test.skip>true</maven.test.skip>
+  </properties>
+  <build>
+    <plugins>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.12.4</version>
+	<configuration>
+	  <skipTests>true</skipTests>
+	</configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
+	<executions>
+          <execution>
+            <id>add-test-source</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+		<source>${project.basedir}/../../main/src/test/java/</source>
+            </sources>
+          </configuration>
+          </execution>
+	</executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <version>2.6</version>
+        <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+	    <archive>
+	      <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+            </archive>
+          </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.wvengen</groupId>
+        <artifactId>proguard-maven-plugin</artifactId>
+        <version>2.0.8</version>
+        <executions>
+          <execution>
+            <id>proguard</id>
+            <phase>package</phase>
+            <goals>
+              <goal>proguard</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <keepclassmembers extends="java.lang.Enum">
+            <method name="getEnumConstants"/>
+          </keepclassmembers>
+          <proguardVersion>5.2</proguardVersion> 
+          <injar>${project.build.finalName}.jar</injar>
+          <outjar>${project.build.finalName}-distribution.jar</outjar>
+          <options>
+            <option>-dontobfuscate</option>
+	    <option>-dontshrink</option>
+	    <option>-dontoptimize</option>
+	    <option>-dontpreverify</option>
+            <option>-keepattributes Exceptions</option>
+          <option>-keep,allowobfuscation class * implements epmc.modelchecker.Model {
+          }</option>
+          <option>-keep,allowobfuscation class * implements epmc.plugin.** {
+          }</option>
+          <option>-keep,allowobfuscation class * implements epmc.value.Operator {
+          }</option>
+          <option>-keepclassmembers class * implements java.io.Serializable {
+          static final long serialVersionUID;
+            &lt;fields&gt;;
+            private void writeObject(java.io.ObjectOutputStream);
+            private void readObject(java.io.ObjectInputStream);
+            java.lang.Object writeReplace();
+            java.lang.Object readResolve();
+          }</option>
+          <option>-keep interface *</option>
+          
+          <option>-dontwarn javax.**</option>
+	  <option>-dontwarn org.ibex.nestedvm.**</option>
+	  <option>-dontwarn org.sqlite.**</option>
+          <option>-keep class javax.**</option>
+          <option>-dontwarn org.junit.**</option>
+          <option>-keep class org.junit.**</option>
+          <option>-dontwarn epmc.modelchecker.**</option>
+          <option>-keep class epmc.modelchecker.**</option>
+          <option>-optimizationpasses 3</option>
+          </options>
+          <libs>
+            <lib>${java.home}/lib/rt.jar</lib>
+            <lib>${java.home}/lib/jsse.jar</lib>
+	    <lib>${java.home}/lib/jce.jar</lib>
+	    <lib>${java.home}/lib/ext/jfxrt.jar</lib>
+	  </libs>
+	  <assembly>
+            <inclusions>
+	      <inclusion>
+		<groupId>sqlite</groupId>
+		<artifactId>sqlite</artifactId>
+	      </inclusion>
+            </inclusions>
+	  </assembly>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>net.sf.proguard</groupId>
+            <artifactId>proguard-base</artifactId>
+            <version>5.2</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
+      </plugin>                 
+    </plugins>
+  </build>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+    <groupId>epmc</groupId>
+    <artifactId>epmc</artifactId>
+    <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../main/target/epmc-0-distribution.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>sqlite</groupId>
+      <artifactId>sqlite</artifactId>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/lib/sqlite-jdbc-3.8.11.2.jar</systemPath>
+      <version>3.8.11.2</version>
+    </dependency>
+     <dependency>
+      <groupId>epmc.expression.standard</groupId>
+      <artifactId>epmc-expression-basic</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../expression-basic/target/epmc-expression-basic-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.value.standard</groupId>
+      <artifactId>epmc-value-basic</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../value-basic/target/epmc-value-basic-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.util</groupId>
+      <artifactId>epmc-util</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../util/target/epmc-util-0.jar</systemPath>
+    </dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,363 @@
+{
+	"jani-version": 1,
+	"name": "dice",
+	"type" : "dtmc",
+	"variables" : [
+		{
+			"name": "thrownSix",
+			"type": "bool"
+		},
+		{
+			"name": "terminated",
+			"type": "bool"
+		}
+	],
+	"initial-states" : {
+		"exp" : {
+			"op" : "∧",
+			"args" : [
+				{
+					"op" : "=",
+					"args" : [
+						"thrownSix",
+						false
+					]
+				},
+				{
+					"op" : "=",
+					"args" : [
+						"terminated",
+						false
+					]
+				}
+			]
+		}
+	},
+	"rewards" : [
+		{
+			"name" : "step"
+		}
+	],
+	"properties" : [
+		{
+			"name" : "ProbThrowSix",
+			"reach" : "thrownSix",
+			"type": "probability-max-query"
+		},
+		{
+			"name" : "StepsUntilReach",
+			"reach" : "terminated",
+			"reward": "step",
+			"type": "expected-reachability-reward-max-query"
+		}
+	],
+	"automata" : [
+		{
+			"name" : "dice",
+			"variables" : [
+				{
+					"name" : "d",
+					"type" : {
+						"kind": "bounded",
+						"base": "int",
+						"lower-bound" : 0,
+						"upper-bound" : 6
+					}
+				}
+			],
+			"initial-states" : {
+				"exp" : {
+					"op" : "=",
+					"args" : [
+						"d",
+						0
+					]
+				}
+			},
+			"locations" : [
+				{
+					"name" : "s0"
+				},
+				{
+					"name" : "s1"
+				},
+				{
+					"name" : "s2"
+				},
+				{
+					"name" : "s3"
+				},
+				{
+					"name" : "s4"
+				},
+				{
+					"name" : "s5"
+				},
+				{
+					"name" : "s6"
+				},
+				{
+					"name" : "s7"
+				}
+			],
+			"initial-locations" : ["s0"],
+			"edges" : [
+				{
+					"location" : "s0",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s1",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s2",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s1",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s3",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s4",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s2",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s5",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+												{
+							"probability" : {"exp":0.5},
+							"location" : "s6",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s3",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s1",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 1
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s4",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 2
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 3
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s5",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 4
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 5
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s6",
+					"destinations" : [
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s2",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						},
+						{
+							"probability" : {"exp":0.5},
+							"location" : "s7",
+							"assignments" : [
+								{
+									"ref" : "d",
+									"value" : 6
+								},
+								{
+									"ref" : "thrownSix",
+									"value" : true
+								},
+								{
+									"ref" : "terminated",
+									"value" : true
+								}
+							],
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				},
+				{
+					"location" : "s7",
+					"destinations" : [
+						{
+							"location" : "s7",
+							"rewards" : [
+								{
+									"ref" : "step",
+									"value" : 1
+								}
+							]
+						}
+					]
+				}
+				
+			]
+		}
+	],
+	"system" : {"composition": "leaf", "automaton": "dice"}
+}

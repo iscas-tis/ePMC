@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: 1.7.0_51 (Oracle Corporation)
+EPMC-Plugin: true
+Plugin-Name: algorithm
+Plugin-Dependencies: util value-basic expression-basic graph dd

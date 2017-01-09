@@ -1,0 +1,66 @@
+{
+	"jani-version": 1,
+	"name": "sync-dtmc",
+	"type" : "dtmc",
+	"actions" : [
+		{
+			"name" : "sync-step"
+		},
+		{
+			"name" : "sync-loop"
+		}		
+	],
+	"automata" : [
+		{
+			"name" : "asdf",
+			"locations" : [
+				{
+					"name" : "asdf"
+				},
+				{
+					"name" : "fdsa"
+				}
+			],
+			"initial-locations" : ["asdf"],
+			"edges" : [
+				{
+					"location" : "asdf",
+					"action" : "sync-step",
+					"destinations" : [
+						{
+							"location" : "fdsa",
+							"assignments" : []
+						}
+					]
+				},
+				{
+					"location" : "fdsa",
+					"action" : "sync-loop",
+					"destinations" : [
+						{
+							"location" : "fdsa"
+						}
+					]
+				}
+			]
+		}
+	],
+	"properties" : [],
+	"system" : {
+		"composition" : "parallel",
+		"elements" : [
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			},
+			{
+				"composition": "leaf",
+				"automaton": "asdf"
+			}
+		],
+		"alphabet" : [
+			"sync-step",
+			"sync-loop"
+		]
+	}
+}
