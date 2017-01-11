@@ -32,6 +32,7 @@ import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.OptionsGraphsolver;
@@ -49,14 +50,9 @@ import static epmc.graph.TestHelperGraph.*;
 
 public final class TestHelperLump {
     public static GraphExplicit computeQuotient(Options options, String modelFile,
-            String property) {
+    		String property) {
         Set<Object> nodeProperties = new HashSet<>();
         nodeProperties.add(CommonProperties.STATE);
-        return computeQuotient(options, modelFile, nodeProperties, property);
-    }
-
-    public static GraphExplicit computeQuotient(Options options, String modelFile,
-            Set<Object> nodeProperties, String property) {
         try {
             Model model = TestHelper.loadModel(options, modelFile);
             assert model != null;
@@ -66,7 +62,7 @@ public final class TestHelperLump {
             RawProperty raw = model.getPropertyList().getRawProperties().iterator().next();
             Expression expr = model.getPropertyList().getParsedProperty(raw);
             Set<Expression> atomics = collectAPs(expr);
-            nodeProperties.addAll(atomics);
+            nodeProperties.addAll(UtilExpressionStandard.collectIdentifiers(expr));
             GraphExplicit graph = exploreToGraph(model, nodeProperties);
             int[] partition = UtilLump.partitionByAPs(graph, atomics);
             GraphSolverObjectiveExplicitLump objective = new GraphSolverObjectiveExplicitLump();
