@@ -55,8 +55,8 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
 
     ValueInterval(TypeInterval type) {
-        this(type, UtilValue.clone(TypeReal.get(type.getContext()).getNegInf()),
-        		UtilValue.clone(TypeReal.get(type.getContext()).getPosInf()));
+        this(type, UtilValue.clone(TypeReal.get(type.getContext()).getZero()),
+        		UtilValue.clone(TypeReal.get(type.getContext()).getZero()));
     }
 
     @Override
