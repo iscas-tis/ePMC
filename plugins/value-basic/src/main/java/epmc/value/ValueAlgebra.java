@@ -99,7 +99,7 @@ public interface ValueAlgebra extends Value {
             } else if (isLt(other)) {
                 return -1;
             } else {
-                assert isGt(other);
+                assert isGt(other) : this + " " + other;
                 return 1;
             }
         } catch (EPMCException e) {
