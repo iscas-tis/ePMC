@@ -219,10 +219,8 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert !closed;
         assert type != null;
         assert TypeReal.isReal(type) || TypeInteger.isInteger(type);
-        assert lower != null;
-        assert ValueReal.isReal(lower) || ValueInteger.isInteger(lower) || ValueBoolean.isBoolean(lower);
-        assert upper != null;
-        assert ValueReal.isReal(upper) || ValueInteger.isInteger(upper) || ValueBoolean.isBoolean(upper);
+        assert lower == null || ValueReal.isReal(lower) || ValueInteger.isInteger(lower) || ValueBoolean.isBoolean(lower);
+        assert upper == null || ValueReal.isReal(upper) || ValueInteger.isInteger(upper) || ValueBoolean.isBoolean(upper);
         LpSolve.set_add_rowmode(lp, FALSE);
         LpSolve.add_columnex(lp, 0, new double[0], new int[0]);
         int variable = numVariables;
@@ -231,7 +229,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         } else if (TypeBoolean.isBoolean(type)) {
             LpSolve.set_binary(lp, variable, TRUE);
         }
-        LpSolve.set_bounds(lp, variable + 1, ValueNumber.asNumber(lower).getDouble(), ValueNumber.asNumber(upper).getDouble());
+        if (lower != null && upper != null) {
+        	LpSolve.set_bounds(lp, variable + 1, ValueNumber.asNumber(lower).getDouble(), ValueNumber.asNumber(upper).getDouble());
+        }
         if (name != null) {
             LpSolve.set_col_name(lp, variable + 1, name);
         }
@@ -376,7 +376,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         case TIMEOUT: case PROCFAIL: case PROCBREAK: case NOFEASFOUND:
             return ConstraintSolverResult.UNKNOWN;
         default:
-            assert false;
+            assert false : result;
         }
         return null;
     }
