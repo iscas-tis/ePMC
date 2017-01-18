@@ -8,6 +8,105 @@
   </properties>
   <build>
     <plugins>
+          <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>clean</id>
+            <phase>clean</phase>
+            <configuration>
+              <target>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="test_classpath" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                <property name="outputDirectory" value="${project.build.directory}/classes"/>
+                <property name="CC_native" value="${CC_native}"/>
+                <property name="CPP_native" value="${CPP_native}"/>
+                <property name="STRIP_native" value="${STRIP_native}"/>
+                <property name="CC_DARWIN" value="${CC_DARWIN}"/>
+                <property name="CPP_DARWIN" value="${CPP_DARWIN}"/>
+                <property name="STRIP_DARWIN" value="${STRIP_DARWIN}"/>
+                <property name="CC_LINUX_X86" value="${CC_LINUX_X86}"/>
+                <property name="CPP_LINUX_X86" value="${CPP_LINUX_X86}"/>
+                <property name="STRIP_LINUX_X86" value="${STRIP_LINUX_X86}"/>
+                <property name="CC_LINUX_X86_64" value="${CC_LINUX_X86_64}"/>
+                <property name="CPP_LINUX_X86_64" value="${CPP_LINUX_X86_64}"/>
+                <property name="STRIP_LINUX_X86_64" value="${STRIP_LINUX_X86_64}"/>
+                <property name="CC_WINDOWS_X86" value="${CC_WINDOWS_X86}"/>
+                <property name="CPP_WINDOWS_X86" value="${CPP_WINDOWS_X86}"/>
+                <property name="STRIP_WINDOWS_X86" value="${STRIP_WINDOWS_X86}"/>
+                <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
+                <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
+                <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
+                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
+                  <target name="clean"/>
+                </ant>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>build</id>
+            <phase>compile</phase>
+            <configuration>
+              <target>
+                <property name="outputDirectory" value="${project.build.directory}/classes"/>
+                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                <property name="test_classpath" refid="maven.test.classpath"/>
+                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                <property name="CC_native" value="${CC_native}"/>
+                <property name="CPP_native" value="${CPP_native}"/>
+                <property name="STRIP_native" value="${STRIP_native}"/>
+                <property name="CC_DARWIN" value="${CC_DARWIN}"/>
+                <property name="CPP_DARWIN" value="${CPP_DARWIN}"/>
+                <property name="STRIP_DARWIN" value="${STRIP_DARWIN}"/>
+                <property name="CC_LINUX_X86" value="${CC_LINUX_X86}"/>
+                <property name="CPP_LINUX_X86" value="${CPP_LINUX_X86}"/>
+                <property name="STRIP_LINUX_X86" value="${STRIP_LINUX_X86}"/>
+                <property name="CC_LINUX_X86_64" value="${CC_LINUX_X86_64}"/>
+                <property name="CPP_LINUX_X86_64" value="${CPP_LINUX_X86_64}"/>
+                <property name="STRIP_LINUX_X86_64" value="${STRIP_LINUX_X86_64}"/>
+                <property name="CC_WINDOWS_X86" value="${CC_WINDOWS_X86}"/>
+                <property name="CPP_WINDOWS_X86" value="${CPP_WINDOWS_X86}"/>
+                <property name="STRIP_WINDOWS_X86" value="${STRIP_WINDOWS_X86}"/>
+                <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
+                <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
+                <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
+                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
+                  <target name="build"/>
+                </ant>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+	<dependencies>
+	  <dependency>
+	    <groupId>ant-contrib</groupId>
+	    <artifactId>ant-contrib</artifactId>
+	    <version>1.0b3</version>
+	    <exclusions>
+	      <exclusion>
+		<groupId>ant</groupId>
+		<artifactId>ant</artifactId>
+	      </exclusion>
+	    </exclusions>
+	  </dependency>
+	  <dependency>
+	    <groupId>org.apache.ant</groupId>
+	    <artifactId>ant-nodeps</artifactId>
+	    <version>1.8.1</version>
+	  </dependency>
+	</dependencies>
+      </plugin>
     <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-surefire-plugin</artifactId>
