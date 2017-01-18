@@ -1,52 +1,25 @@
 <project>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>epmc.prism</groupId>
-  <artifactId>epmc-prism-format</artifactId>
+  <groupId>epmc.lumper.explicit-signature</groupId>
+  <artifactId>epmc-lumper-explicit-signature</artifactId>
   <version>0</version>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
     <plugins>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-surefire-plugin</artifactId>
-      <version>2.12.4</version>
-      <configuration>
-	<skipTests>true</skipTests>
-      </configuration>
+      <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.12.4</version>
+	<configuration>
+	  <skipTests>true</skipTests>
+	</configuration>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
         <version>1.9.1</version>
-        <executions>
-          <execution>
-            <id>add-source</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>add-source</goal>
-            </goals>
-            <configuration>
-              <sources>
-                <source>${project.basedir}/src/gui/java</source>
-              </sources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>javacc-maven-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>javacc</id>
-            <goals>
-              <goal>javacc</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -88,8 +61,8 @@
           <injar>${project.build.finalName}.jar</injar>
           <outjar>${project.build.finalName}-distribution.jar</outjar>
           <options>
-	    <!-- find out why it does not work if obfuscation used -->
-	    <option>-dontobfuscate</option>
+          <option>-dontobfuscate</option>
+	    <!-- TOOD -->
 	    <option>-dontoptimize</option>
           <option>-keepattributes Exceptions</option>
           <option>-keep,allowobfuscation class * implements epmc.modelchecker.Model {
@@ -106,9 +79,6 @@
             java.lang.Object writeReplace();
             java.lang.Object readResolve();
           }</option>
-          <option>-keepclassmembers class epmc.prism.model.convert.PRISM2JANIConverter {
-            public static void setRewardPrefix(java.lang.String);
-          }</option>
           <option>-keep interface *</option>
           <option>-optimizationpasses 3</option>
           </options>
@@ -116,10 +86,6 @@
             <lib>${java.home}/lib/rt.jar</lib>
             <lib>${java.home}/lib/jsse.jar</lib>
           </libs>
-          <assembly>
-            <inclusions>
-            </inclusions>
-       </assembly>
         </configuration>
         <dependencies>
           <dependency>
@@ -147,11 +113,11 @@
       <systemPath>${project.basedir}/../../main/target/epmc-0-distribution.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>epmc.jani</groupId>
-      <artifactId>epmc-jani-model</artifactId>
+      <groupId>epmc.graphsolver</groupId>
+      <artifactId>epmc-graphsolver</artifactId>
       <version>0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../jani-model/target/epmc-jani-model-0.jar</systemPath>
+      <systemPath>${project.basedir}/../graphsolver/target/epmc-graphsolver-0.jar</systemPath>
     </dependency>
      <dependency>
       <groupId>epmc.expression.standard</groupId>
@@ -168,13 +134,6 @@
       <systemPath>${project.basedir}/../graph/target/epmc-graph-0.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>epmc.dd</groupId>
-      <artifactId>epmc-dd</artifactId>
-      <version>0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/../dd/target/epmc-dd-0.jar</systemPath>
-    </dependency>
-    <dependency>
       <groupId>epmc.value.standard</groupId>
       <artifactId>epmc-value-basic</artifactId>
       <version>0</version>
@@ -189,13 +148,4 @@
       <systemPath>${project.basedir}/../util/target/epmc-util-0.jar</systemPath>
     </dependency>
   </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>javacc-maven-plugin</artifactId>
-        <version>2.6</version>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>
