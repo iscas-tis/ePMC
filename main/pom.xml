@@ -10,9 +10,9 @@
   <version>0</version>
   <scm>
     <connection>scm:svn:http://124.16.137.63/svn/iscasmc/tool</connection>
-    <developerConnection>scm:svn:http://124.16.137.63/svn/iscasmc/tool</developerConnection>
+    <developerConnection>scm:git:https://github.com/liyi-david/ePMC.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://124.16.137.63/svn/iscasmc/tool</url>
+    <url>https://github.com/liyi-david/ePMC.git</url>
   </scm>
   <build>
     <plugins>
@@ -84,9 +84,6 @@
                 <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
                 <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
                 <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
-                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
-                  <target name="clean"/>
-                </ant>
               </target>
             </configuration>
             <goals>
@@ -121,9 +118,6 @@
                 <property name="CC_WINDOWS_X86_64" value="${CC_WINDOWS_X86_64}"/>
                 <property name="CPP_WINDOWS_X86_64" value="${CPP_WINDOWS_X86_64}"/>
                 <property name="STRIP_WINDOWS_X86_64" value="${STRIP_WINDOWS_X86_64}"/>
-                <ant antfile="${basedir}/src/main/c/build.xml" dir="${basedir}/src/main/c/">
-                  <target name="build"/>
-                </ant>
               </target>
             </configuration>
             <goals>

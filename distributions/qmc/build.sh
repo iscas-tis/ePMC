@@ -13,7 +13,6 @@ prepare_plugin command-check
 prepare_plugin command-explore
 prepare_plugin command-help
 prepare_plugin jani-model
-prepare_plugin timedautomata
 prepare_plugin prism-format
 prepare_plugin qmc
 prepare_plugin propertysolver-propositional
