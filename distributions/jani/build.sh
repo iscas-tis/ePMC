@@ -22,6 +22,5 @@ prepare_plugin dd-cudd-mtbdd
 prepare_plugin graphsolver-iterative
 prepare_plugin specialise-smg
 prepare_plugin jani-model
-prepare_plugin timedautomata
 prepare_plugin jani-interaction
 assemble_end jani

@@ -12,7 +12,6 @@ prepare_plugin graphsolver
 prepare_plugin mpfr
 prepare_plugin automata
 prepare_plugin jani-model
-prepare_plugin timedautomata
 prepare_plugin prism-format
 prepare_plugin command-check
 prepare_plugin command-explore
