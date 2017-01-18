@@ -42,7 +42,7 @@ public class AfterOptionsCreationJDD implements AfterOptionsCreation {
     public void process(Options options) throws EPMCException {
         assert options != null;
         Category category = options.addCategory()
-        		.setBundleName(OptionsDDJDD.DD_JDD_CATEGORY)
+        		.setBundleName(OptionsDDJDD.OPTIONS_DD_JDD)
         		.setIdentifier(OptionsDDJDD.DD_JDD_CATEGORY)
         		.setParent(OptionsDD.DD_CATEGORY)
         		.build();
