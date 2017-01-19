@@ -1,0 +1,11 @@
+# ignore all backup files
+*~
+*.bak
+
+# ignore all "target" directories created by Maven
+target/
+
+# ignore all generated libraries .dylib .so .o .a files
+*.[oa]
+*.so
+*.dylib
