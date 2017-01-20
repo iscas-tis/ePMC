@@ -117,10 +117,10 @@ public class CommandTaskLump implements CommandTask {
             expression = expressionQuantifier.getQuantified();
         	ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
             if (isUntil(expression)) {
-            	stateLabels.add(expressionTemporal.getOperand1());
-            	stateLabels.add(expressionTemporal.getOperand2());
+            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
+            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand2()));
             } else if (isFinally(expression)) {
-            	stateLabels.add(expressionTemporal.getOperand1());            	
+            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
             }
         }
         nodeProperties.addAll(stateLabels);
