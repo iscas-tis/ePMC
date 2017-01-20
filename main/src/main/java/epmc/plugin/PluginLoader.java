@@ -474,8 +474,11 @@ final class PluginLoader {
     private static Path preparePathForReadingManifest(Path path) throws EPMCException {
         assert path != null;
         if (!Files.isDirectory(path)) {
-            try (FileSystem system = FileSystems.newFileSystem(path,
-                        PluginLoader.class.getClassLoader())) {
+            try {
+            	// TODO leads to resource leak;
+            	// however, cannot return path of already closed file system
+            	FileSystem system = FileSystems.newFileSystem(path,
+                        PluginLoader.class.getClassLoader());
                 Iterator<Path> iterator = system.getRootDirectories().iterator();
                 assert iterator.hasNext();
                 path = iterator.next();
