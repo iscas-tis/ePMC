@@ -24,7 +24,7 @@ import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class TypeInterval implements TypeWeightTransition, TypeAlgebra {
+public final class TypeInterval implements TypeWeightTransition, TypeWeight {
 	public static boolean isInterval(Type type) {
 		return type instanceof TypeInterval;
 	}
@@ -41,6 +41,7 @@ public final class TypeInterval implements TypeWeightTransition, TypeAlgebra {
     private final ValueInterval one;
     private final ValueInterval zero;
     private final ValueInterval posInf;
+    private final ValueInterval negInf;
 
     public static TypeInterval get(ContextValue context) {
         assert context != null;
@@ -60,6 +61,7 @@ public final class TypeInterval implements TypeWeightTransition, TypeAlgebra {
         one = new ValueInterval(this, typeReal.getOne(), typeReal.getOne());
         zero = new ValueInterval(this, typeReal.getZero(), typeReal.getZero());
         posInf = new ValueInterval(this, typeReal.getPosInf(), typeReal.getPosInf());
+        negInf = new ValueInterval(this, typeReal.getNegInf(), typeReal.getNegInf());
     }
     
     @Override
@@ -152,4 +154,9 @@ public final class TypeInterval implements TypeWeightTransition, TypeAlgebra {
     public TypeArrayInterval getTypeArray() {
         return context.makeUnique(new TypeArrayInterval(this));
     }
+
+	@Override
+	public ValueAlgebra getNegInf() {
+		return negInf;
+	}
 }
