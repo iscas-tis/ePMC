@@ -95,8 +95,8 @@ public final class LogCommandLine implements Log {
             assert param != null;
         }
         long time = watch.getTime();
+        System.out.print(translateTimeStamp(time));
         if (translate) {
-            System.out.print(translateTimeStamp(time));
             Locale locale = this.options.getLocale();
             formatter.applyPattern(message.getMessage(locale));
             System.out.println(formatter.format(parameters));
