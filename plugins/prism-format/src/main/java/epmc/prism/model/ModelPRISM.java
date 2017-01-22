@@ -1233,7 +1233,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         if (value instanceof ExpressionCoalition) {
         	ExpressionCoalition valueCoalition = (ExpressionCoalition) value;
-            checkExpressionCompatible(valueCoalition.getQuantifier(), log);
+            checkExpressionCompatible(valueCoalition.getInner(), log);
         } else if (!(value instanceof ExpressionReward)) {
             for (Expression child : value.getChildren()) {
                 checkExpressionCompatible(child, log);
