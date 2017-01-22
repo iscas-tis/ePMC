@@ -28,8 +28,6 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class EdgePropertyRestricted implements EdgeProperty {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
 	private final GraphExplicitRestricted graph;
 	private final EdgeProperty original;
 	private final BitSet restriction;

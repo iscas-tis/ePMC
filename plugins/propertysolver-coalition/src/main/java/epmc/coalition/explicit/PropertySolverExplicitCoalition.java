@@ -104,9 +104,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     @Override
 	public void setProperty(Expression property) {
 		this.property = property;
-		if (property instanceof ExpressionCoalition) {
-			this.propertyCoalition = (ExpressionCoalition) property;
-		}
+		this.propertyCoalition = ExpressionCoalition.asCoalition(property);
 	}
 
 	@Override
@@ -126,10 +124,10 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
 	        return false;
 	    }
-	    if (!(property instanceof ExpressionCoalition)) {
+	    if (!ExpressionCoalition.isCoalition(property)) {
 	        return false;
 	    }
-	    ExpressionQuantifier quantifier = propertyCoalition.getQuantifier();
+	    ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
 	    Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
 	    StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
 	    for (Expression inner : inners) {
@@ -153,9 +151,9 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
 //    	required.add(CommonProperties.NODE_EXPLORER);
-        ExpressionQuantifier quantifier = propertyCoalition.getQuantifier();
+        ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
 	    Expression path = quantifier.getQuantified();
-	    if (UtilCoalition.isDirTypeMin(quantifier)) {
+	    if (UtilCoalition.isDirTypeMin(propertyCoalition)) {
 	    	path = not(path);
 	    }
         Set<Expression> inners = UtilCoalition.collectLTLInner(path);
@@ -184,10 +182,10 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	public StateMap solve() throws EPMCException {
 		assert property != null;
 		assert forStates != null;
-	    ExpressionQuantifier quant = propertyCoalition.getQuantifier();
+	    ExpressionQuantifier quant = UtilCoalition.getQuantifier(propertyCoalition);
 		getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
 	    Expression path = quant.getQuantified();
-	    if (UtilCoalition.isDirTypeMin(quant)) {
+	    if (UtilCoalition.isDirTypeMin(propertyCoalition)) {
 	    	path = not(path);
 	    }
 	    Set<Expression> inners = UtilCoalition.collectLTLInner(path);

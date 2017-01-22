@@ -121,6 +121,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 		if (system.isState()) {
 			int numSuccessors = system.getNumSuccessors();
 			for (int succNr = 0; succNr < numSuccessors; succNr++) {
+				// TODO CHECK
 				int action = actions.getInt(succNr);
 				int actionPlayer = actionToPlayer[action];
 				if (actionPlayer == -1) {

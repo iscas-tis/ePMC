@@ -8,7 +8,6 @@
 	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-model"/>
 	<classpathentry kind="lib" path="/epmc/lib/javax.json-1.0.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/epmc-timedautomata"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd"/>

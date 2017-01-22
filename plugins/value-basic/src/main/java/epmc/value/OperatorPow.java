@@ -55,6 +55,18 @@ public final class OperatorPow implements Operator {
     public Type resultType(Type... types) {
         assert types != null;
         assert types.length == 2 : types.length;
+        boolean allInteger = true;
+        for (Type type : types) {
+        	allInteger &= TypeInteger.isInteger(type);
+        }
+        if (allInteger) {
+        	return TypeInteger.get(getContext());
+        }
+        for (int i = 0; i < types.length; i++) {
+        	if (TypeInteger.isInteger(types[i])) {
+        		types[i] = TypeReal.get(getContext());
+        	}
+        }
         Type upper = UtilValue.upper(types);
         if (upper == null) {
             return null;

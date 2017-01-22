@@ -32,7 +32,7 @@ import epmc.value.Type;
 public final class ExpressionCoalition implements Expression {
     public final static class Builder {
         private Positional positional;
-        private ExpressionQuantifier quantifier;
+        private Expression quantifier;
         private List<Expression> players;
 
         public Builder setPositional(Positional positional) {
@@ -45,11 +45,11 @@ public final class ExpressionCoalition implements Expression {
         }
         
         public Builder setQuantifier(Expression quantifier) {
-            this.quantifier = (ExpressionQuantifier) quantifier;
+            this.quantifier = quantifier;
             return this;
         }
         
-        private ExpressionQuantifier getQuantifier() {
+        private Expression getQuantifier() {
             return quantifier;
         }
         
@@ -63,7 +63,7 @@ public final class ExpressionCoalition implements Expression {
         }
         
         public Builder setChildren(List<Expression> children) {
-            this.quantifier = (ExpressionQuantifier) children.get(0);
+            this.quantifier = children.get(0);
             this.players = new ArrayList<>(children.size() - 1);
             this.players.addAll(children.subList(1, children.size()));
             return this;
@@ -73,8 +73,21 @@ public final class ExpressionCoalition implements Expression {
             return new ExpressionCoalition(this);
         }
     }
+
+    public static boolean isCoalition(Expression expression) {
+    	return expression instanceof ExpressionCoalition;
+    }
+
+    public static ExpressionCoalition asCoalition(Expression expression) {
+    	if (!isCoalition(expression)) {
+    		return null;
+    	} else {
+    		return (ExpressionCoalition) expression;
+    	}
+    }
+    
     private final Positional positional;
-    private final ExpressionQuantifier quantifier;
+    private final Expression quantifier;
     private final List<Expression> players;
     
     private ExpressionCoalition(Builder builder) {
@@ -91,7 +104,7 @@ public final class ExpressionCoalition implements Expression {
         this.players = new ArrayList<>(builder.getPlayers());
     }
 
-    public ExpressionQuantifier getQuantifier() {
+    public Expression getInner() {
         return quantifier;
     }
     
@@ -105,6 +118,8 @@ public final class ExpressionCoalition implements Expression {
     
     @Override
     public Expression replaceChildren(List<Expression> children) {
+//    	System.out.println("A " + this);
+  //  	System.out.println("B " + children);
         return new Builder().setPositional(positional)
                 .setChildren(children).build();
     }
@@ -115,7 +130,7 @@ public final class ExpressionCoalition implements Expression {
     	if (type != null) {
     		return type;
     	}
-    	return getQuantifier().getType(expressionToType);
+    	return getInner().getType(expressionToType);
     }
     
     @Override
@@ -145,11 +160,11 @@ public final class ExpressionCoalition implements Expression {
             playerNumber++;
         }
         builder.append(">> ");
-        builder.append(getQuantifier());
+        builder.append(getInner());
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
         }
-        builder.append(getQuantifier());
+        builder.append(getInner());
         return builder.toString();
     }
 

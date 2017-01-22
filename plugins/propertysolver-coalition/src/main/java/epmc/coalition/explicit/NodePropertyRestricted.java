@@ -27,8 +27,6 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class NodePropertyRestricted implements NodeProperty {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
 	private final GraphExplicitRestricted graph;
 	private final NodeProperty original;
 
