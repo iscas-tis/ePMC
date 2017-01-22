@@ -174,6 +174,9 @@ public final class UtilExpressionStandard {
         return result;
     }
     
+    /**
+     * Private constructor to prevent instantiation of this class.
+     */
     private UtilExpressionStandard() {
     }
 }

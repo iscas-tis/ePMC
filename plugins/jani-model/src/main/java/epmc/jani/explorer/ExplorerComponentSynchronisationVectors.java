@@ -43,6 +43,8 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
+// TODO compute labels in all cases
+
 /**
  * Explorer for synchronisation vectors.
  * 
@@ -229,6 +231,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 					remaining /= numAutSucc;
 					successor.setSet(automaton.getSuccessorNode(autSucc));
 				}
+				label.set(numSuccessors, vectorResult[vecNr]);
 				numSuccessors++;
 			}
 		}

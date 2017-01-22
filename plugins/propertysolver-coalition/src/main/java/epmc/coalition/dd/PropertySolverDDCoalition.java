@@ -118,10 +118,10 @@ public class PropertySolverDDCoalition implements PropertySolver {
     	if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
     		return false;
     	}
-    	if (!(property instanceof ExpressionCoalition)) {
+    	if (!ExpressionCoalition.isCoalition(property)) {
     		return false;
     	}
-    	ExpressionQuantifier quantifier = propertyCoalition.getQuantifier();
+    	ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
     	Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
     	StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
     	for (Expression inner : inners) {
@@ -145,7 +145,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 	public Set<Object> getRequiredNodeProperties() throws EPMCException {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
-        ExpressionQuantifier quantifier = propertyCoalition.getQuantifier();
+        ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
         Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
         for (Expression inner : inners) {
@@ -172,8 +172,8 @@ public class PropertySolverDDCoalition implements PropertySolver {
     	assert states != null;
         StateSetDD forStates = (StateSetDD) states;
 		getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
-        ExpressionQuantifier quantifier = propertyCoalition.getQuantifier();
-        ExpressionCoalition propertyCoalition = (ExpressionCoalition) property;
+        ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
+        ExpressionCoalition propertyCoalition = ExpressionCoalition.asCoalition(property);
         this.playerList = propertyCoalition.getPlayers();
         Expression path = quantifier.getQuantified();
 	    if (UtilCoalition.isDirTypeMin(quantifier)) {

@@ -24,6 +24,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.error.EPMCException;
+import epmc.main.options.OptionsEPMC;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
@@ -98,6 +99,7 @@ public final class QuantitativeTest {
     public void robotQuantitativeTest() throws EPMCException {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-9;
+      options.set("prism-flatten", false);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
 //        options.set(TestHelper.it, value);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);

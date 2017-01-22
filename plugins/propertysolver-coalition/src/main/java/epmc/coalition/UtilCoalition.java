@@ -27,13 +27,19 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
+import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionCoalition;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
-import epmc.value.Value;
+import epmc.value.OperatorEq;
+import epmc.value.OperatorGe;
+import epmc.value.OperatorGt;
+import epmc.value.OperatorLe;
+import epmc.value.OperatorLt;
+import epmc.value.OperatorNe;
 import epmc.value.ValueAlgebra;
 
 // TODO documentation
@@ -62,8 +68,8 @@ public final class UtilCoalition {
 				result.addAll(collectLTLInner(inner));
 			}
 			return result;
-		} else if (expression instanceof ExpressionOperator) {
-			ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+		} else if (ExpressionOperator.isOperator(expression)) {
+			ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
 			Set<Expression> result = new LinkedHashSet<>();
 			for (Expression inner : expressionOperator.getOperands()) {
 				result.addAll(collectLTLInner(inner));
@@ -84,11 +90,10 @@ public final class UtilCoalition {
 	 */
     public static DirType computeQuantifierDirType(Expression expression) {
         assert expression != null;
-        assert expression instanceof ExpressionQuantifier : expression;
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = getQuantifier(expression);
         DirType dirType = expressionQuantifier.getDirType();
         if (dirType == DirType.NONE) {
-            switch (expressionQuantifier.getCompareType()) {
+            switch (getCompareType(expression)) {
             case IS: case EQ: case NE:
                 break;
             case GT: case GE:
@@ -104,7 +109,7 @@ public final class UtilCoalition {
 
         return dirType;
     }
-
+    
     public static boolean isDirTypeMin(Expression expression) {
         assert expression != null;
         return computeQuantifierDirType(expression) == DirType.MIN;
@@ -112,78 +117,151 @@ public final class UtilCoalition {
 
     public static boolean isTrivialTrue(ExpressionCoalition property) {
     	assert property != null;
-	    ExpressionQuantifier quant = property.getQuantifier();
-	    Expression compareToExpr = quant.getCompare();
-	    assert ExpressionLiteral.isLiteral(compareToExpr);
-	    ValueAlgebra compareTo = ValueAlgebra.asAlgebra(getValue(compareToExpr));
-	    return isQuantGe(quant) && compareTo.isZero()
-	    		|| isQuantLe(quant) && compareTo.isOne();
+	    ValueAlgebra compareTo = getValue(property);
+	    return isQuantGe(property) && compareTo.isZero()
+	    		|| isQuantLe(property) && compareTo.isOne();
     }
 
     public static boolean isTrivialFalse(ExpressionCoalition property) {
     	assert property != null;
-	    ExpressionQuantifier quant = property.getQuantifier();
-	    Expression compareToExpr = quant.getCompare();
-	    assert ExpressionLiteral.isLiteral(compareToExpr);
-	    ValueAlgebra compareTo = ValueAlgebra.asAlgebra(getValue(compareToExpr));
-	    return isQuantLt(quant) && compareTo.isZero()
-	    		|| isQuantGt(quant) && compareTo.isOne();
+	    ValueAlgebra compareTo = getValue(property);
+	    return isQuantLt(property) && compareTo.isZero()
+	    		|| isQuantGt(property) && compareTo.isOne();
     }
 
     public static boolean isStrictEven(ExpressionCoalition property) {
     	assert property != null;
-	    ExpressionQuantifier quant = property.getQuantifier();
-	    return !isQuantGt(quant) && !isQuantLt(quant);
+	    return !isQuantGt(property) && !isQuantLt(property);
     }
 
     public static boolean isQualitative(ExpressionCoalition property) {
     	assert property != null;
-	    ExpressionQuantifier quant = property.getQuantifier();
-	    Expression compareToExpr = quant.getCompare();
-	    assert ExpressionLiteral.isLiteral(compareToExpr);
-	    ValueAlgebra compareTo = ValueAlgebra.asAlgebra(getValue(compareToExpr));
-	    return compareTo.isZero() || compareTo.isOne();    	
+	    ValueAlgebra compareTo = getValue(property);
+	    return compareTo != null && (compareTo.isZero() || compareTo.isOne());
     }
     
     private static boolean isQuantLe(Expression expression) {
-    	if (!(expression instanceof ExpressionQuantifier)) {
+    	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+    	if (expressionQuantifier == null) {
     		return false;
     	}
-    	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
     	return expressionQuantifier.getCompareType().isLe();
     }
 
     private static boolean isQuantGe(Expression expression) {
-    	if (!(expression instanceof ExpressionQuantifier)) {
-    		return false;
-    	}
-    	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-    	return expressionQuantifier.getCompareType().isGe();
+    	assert expression != null;
+    	return getCompareType(expression).isGe();
     }
 
     private static boolean isQuantGt(Expression expression) {
-    	if (!(expression instanceof ExpressionQuantifier)) {
-    		return false;
-    	}
-    	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-    	return expressionQuantifier.getCompareType().isGt();
+    	assert expression != null;
+    	return getCompareType(expression).isGt();
     }
     
     private static boolean isQuantLt(Expression expression) {
-    	if (!(expression instanceof ExpressionQuantifier)) {
-    		return false;
-    	}
-    	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-    	return expressionQuantifier.getCompareType().isLt();
+    	assert expression != null;
+    	return getCompareType(expression).isLt();
     }
 
-    private static Value getValue(Expression expression) {
+    private static ValueAlgebra getValue(Expression expression) {
         assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return expressionLiteral.getValue();
+        ExpressionLiteral expressionLiteral = getLiteral(expression);
+        return ValueAlgebra.asAlgebra(expressionLiteral.getValue());
+    }
+    
+    public static ExpressionQuantifier getQuantifier(Expression expression) {
+    	assert expression != null;
+    	ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+    	if (expressionCoalition != null) {
+    		return getQuantifier(expressionCoalition.getInner());
+    	}
+    	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+    	if (expressionQuantifier != null) {
+    		return expressionQuantifier;
+    	}
+    	ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+    	if (expressionOperator != null) {
+    		return getQuantifier(expressionOperator);
+    	}
+    	throw new RuntimeException(expression.toString());
+    }
+    
+    public static ExpressionQuantifier getQuantifier(ExpressionOperator expression) {
+    	assert expression != null;
+    	assert expression.getOperands().size() == 2;
+    	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression.getOperand1());
+    	if (expressionQuantifier == null) {
+    		expressionQuantifier = ExpressionQuantifier.asQuantifier(expression.getOperand2());
+    	}
+    	assert expressionQuantifier != null;
+    	return expressionQuantifier;
+    }
+    
+    public static ExpressionLiteral getLiteral(Expression expression) {
+    	assert expression != null;
+    	ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+    	if (expressionCoalition != null) {
+    		return getLiteral(expressionCoalition.getInner());
+    	}
+    	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+    	if (expressionQuantifier != null) {
+    		return ExpressionLiteral.asLiteral(expressionQuantifier.getCompare());
+    	}
+    	ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+    	if (expressionOperator != null) {
+    		return getLiteral(expressionOperator);
+    	}
+    	throw new RuntimeException(expression.toString());
     }
 
+    public static ExpressionLiteral getLiteral(ExpressionOperator expression) {
+    	assert expression != null;
+    	assert expression.getOperands().size() == 2;
+    	ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression.getOperand1());
+    	if (expressionLiteral == null) {
+    		expressionLiteral = ExpressionLiteral.asLiteral(expression.getOperand2());
+    	}
+    	assert expressionLiteral != null;
+    	return expressionLiteral;
+    }
+    
+    public static CmpType getCompareType(Expression expression) {
+    	assert expression != null;
+    	ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+    	if (expressionCoalition != null) {
+    		return getCompareType(expressionCoalition.getInner());
+    	}
+    	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+    	if (expressionQuantifier != null) {
+    		return expressionQuantifier.getCompareType();
+    	}
+    	ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+    	if (expressionOperator != null) {
+    		return getCompareType(expressionOperator);
+    	}
+    	throw new RuntimeException(expression.toString());
+    }
+
+    public static CmpType getCompareType(ExpressionOperator expression) {
+    	assert expression != null;
+    	boolean invert = ExpressionQuantifier.isQuantifier(expression.getOperand2());
+    	switch (expression.getOperator().getIdentifier()) {
+    	case OperatorEq.IDENTIFIER:
+    		return CmpType.EQ;
+    	case OperatorNe.IDENTIFIER:
+    		return CmpType.NE;
+    	case OperatorLt.IDENTIFIER:
+    		return invert ? CmpType.GT : CmpType.LT;
+    	case OperatorGt.IDENTIFIER:
+    		return invert ? CmpType.LT : CmpType.GT;
+    	case OperatorLe.IDENTIFIER:
+    		return invert ? CmpType.GE : CmpType.LE;
+    	case OperatorGe.IDENTIFIER:
+    		return invert ? CmpType.LE : CmpType.GE;
+    	}
+    	throw new RuntimeException(expression.toString());
+    }
+    
 	/**
 	 * Private constructor to prevent instantiation of this class.
 	 */

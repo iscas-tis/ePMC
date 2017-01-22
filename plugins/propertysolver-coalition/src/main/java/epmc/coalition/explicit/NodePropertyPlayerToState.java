@@ -30,8 +30,6 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 final class NodePropertyPlayerToState implements NodeProperty {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
 	private final GraphExplicit graph;
 	private final NodeProperty playerProperty;
 	private final ValueBoolean value;
