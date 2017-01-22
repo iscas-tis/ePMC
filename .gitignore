@@ -9,3 +9,4 @@ target/
 *.[oa]
 *.so
 *.dylib
+/.DS_Store
