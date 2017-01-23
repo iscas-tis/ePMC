@@ -101,6 +101,7 @@ final class MultiObjectiveUtils {
             Expression quantified = propOp1.getQuantified();
             if (!(quantified instanceof ExpressionReward)) {
                 Expression minQ = new ExpressionQuantifier.Builder()
+                		.setContext(contextValue)
                 		.setDirType(DirType.MIN)
                 		.setCmpType(CmpType.IS)
                 		.setQuantified(quantified)

@@ -443,6 +443,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     				.setRightOpen(false)
     				.build();
     		property = new ExpressionQuantifier.Builder()
+    				.setContext(getContextValue())
     				.setCmpType(propertyQuantifier.getCompareType())
     				.setCompare(propertyQuantifier.getCompare())
     				.setCondition(propertyQuantifier.getCondition())

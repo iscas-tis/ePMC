@@ -104,6 +104,7 @@ final class PropertyNormaliser {
                 newQuantifiersQualitative.add(objective);
             } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
+                		.setContext(contextValue)
                 		.setDirType(DirType.MAX)
                 		.setCmpType(CmpType.IS)
                 		.setQuantified(not(expressionToType.getContextValue(), quantified))
