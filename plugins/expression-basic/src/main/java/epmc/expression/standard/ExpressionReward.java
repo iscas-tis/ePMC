@@ -147,7 +147,7 @@ public final class ExpressionReward implements Expression {
     	assert builder != null;
         assert builder.getRewardType() != null;
         assert builder.getReward() != null;
-        assert builder.getReachSet() != null;
+//        assert builder.getReachSet() != null;
         assert builder.getContext() != null;
         this.positional = builder.getPositional();
         this.type = builder.getRewardType();
