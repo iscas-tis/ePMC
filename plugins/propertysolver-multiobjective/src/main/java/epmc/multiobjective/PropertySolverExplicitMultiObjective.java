@@ -99,7 +99,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
 	        Set<Expression> inners = UtilLTL.collectLTLInner(objectiveQuantifier.getQuantified());
 	        for (Expression inner : inners) {
-	            modelChecker.ensureCanHandle(inner, allStates);
+	        	// TODO
+	        	//	            modelChecker.ensureCanHandle(inner, allStates);
 	        }
 	    }
 	    if (allStates != null) {

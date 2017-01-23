@@ -179,7 +179,7 @@ final class PropertyNormaliser {
 	}
 	
 	private ContextValue getContextValue() {
-		return subtractNumericalFrom.getType().getContext();
+		return expressionToType.getContextValue();
 	}
 	
 	private ValueAlgebra newValueWeight() {
