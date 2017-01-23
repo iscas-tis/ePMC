@@ -92,7 +92,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
                 ByteBuffer stateBounds, ByteBuffer nondetBounds,
                 ByteBuffer targets, ByteBuffer weights, ByteBuffer values);
         
-        private final static String NATIVE_LIBRARY_NAME = "valueiteration";
+        private final static String NATIVE_LIBRARY_NAME = "valueiterationcoalition";
         private final static boolean LOADED =
                 JNATools.registerLibrary(IterationNative.class, NATIVE_LIBRARY_NAME);
         
