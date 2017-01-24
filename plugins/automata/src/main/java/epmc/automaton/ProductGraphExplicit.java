@@ -486,7 +486,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         expressionProps = new NodeProperty[expressions.length];
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
             expressionProps[exprNr] = builder.getModel().getNodeProperty(expressions[exprNr]);
-            assert expressionProps[exprNr] != null : expressions[exprNr];
+            assert expressionProps[exprNr] != null : expressions[exprNr] + " " + expressions[exprNr].getClass();
         }
         this.isModelPropState = builder.getModel().getNodeProperty(CommonProperties.STATE);
         if (builder.getNextAutomatonState() == null) {

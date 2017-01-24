@@ -223,7 +223,7 @@ public final class GraphBuilderExplorer {
                         graphNodeProperties[nodePropNr].set(explorerNodeProperties[nodePropNr].get());
                     }
                     int numISuccessors = explorer.getNumSuccessors();
-                    graphAlter.prepareNondet(numISuccessors);            
+                    graphAlter.prepareNondet(numISuccessors);
                     for (int interSuccNr = 0; interSuccNr < numISuccessors; interSuccNr++ ){
                         for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
                             graphEdgePropertiesAlter[nodePropNr].setForNonDet(explorerEdgeProperties[nodePropNr].get(interSuccNr), interSuccNr);

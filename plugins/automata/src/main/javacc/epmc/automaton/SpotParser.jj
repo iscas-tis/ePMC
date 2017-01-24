@@ -190,6 +190,7 @@ String Identifiers() :
       | literal = <NOT> { result += literal.toString(); }
       | literal = <LPARENTH> { result += literal.toString(); }
       | literal = <RPARENTH> { result += literal.toString(); }
+      | literal = <NUM_INT> { result += literal.toString(); }
     )*
     <QUOTE>
   { return result; }

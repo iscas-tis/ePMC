@@ -250,7 +250,8 @@ public final class ExplorerJANI implements Explorer {
 			if (!usedTransientValues.contains(transientValue.getIdentifier())) {
 				continue;
 			}
-			transientValuesVariables[trvNr] = stateVariables.addVariable(transientValue.getIdentifier(), transientValue.getType().toType(), false);
+			transientValuesVariables[trvNr] = stateVariables.getVariableNumber(transientValue.getIdentifier());
+//			transientValuesVariables[trvNr] = stateVariables.addVariable(transientValue.getIdentifier(), transientValue.getType().toType(), false);
 			trvNr++;
 		}
 
@@ -354,6 +355,14 @@ public final class ExplorerJANI implements Explorer {
 			successor.set(nodeJANI);
 			successor.unmark();
 		}
+		/*
+		System.out.println("AAAAA");
+		System.out.println(queriedNode);
+		System.out.println("BBBBB");
+		for (int succ = 0; succ < getNumSuccessors(); succ++) {
+			System.out.println(getSuccessorNode(succ));
+		}
+		*/
 	}
 
 	public boolean isFixDeadlocks() {
