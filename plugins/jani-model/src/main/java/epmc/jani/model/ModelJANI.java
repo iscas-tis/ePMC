@@ -564,13 +564,10 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	
 	@Override
 	public Properties getPropertyList() {
-		Properties props;
+		JANIProperties props;
 		if (properties == null) {
-			try {
-				props = new PropertiesImpl(context);
-			} catch (EPMCException e) {
-			    throw new RuntimeException(e);
-			}
+			props = new JANIProperties();
+			props.setModel(this);
 		} else {
 			props = properties;
 		}
