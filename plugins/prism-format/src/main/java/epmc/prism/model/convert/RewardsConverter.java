@@ -125,6 +125,7 @@ final class RewardsConverter {
     	Variables rewards = buildRewards();
     	addRewards(rewards);
     	Automaton rewardAutomaton = computeRewardAutomaton();
+    	System.out.println(rewardAutomaton);
 		Automata automata = modelJANI.getAutomata();
     	automata.addAutomaton(rewardAutomaton);
     	composeRewardAutomatonWithSystem(rewardAutomaton);
@@ -199,6 +200,7 @@ final class RewardsConverter {
 			rewardSetRateIfAppropriate(edge);
 			Assignments assignments = new Assignments();
 			computeEdgeRewardAssignments(action, assignments);
+			destination.setAssignments(assignments);
 			destinations.addDestination(destination);
 			if (assignments.size() > 0) {
 				edges.addEdge(edge);
