@@ -184,6 +184,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	    for (Expression objective : propertyMultiObjective.getOperands()) {
 	    	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
 	        Expression quantified = objectiveQuantifier.getQuantified();
+	        if (quantified instanceof ExpressionReward) {
+	        	continue;
+	        }
 	        Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
 	        for (Expression inner : inners) {
 	            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
@@ -231,7 +234,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 			throws EPMCException {
         ValueArray resultValues;
         if (numerical) {
-            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
+//            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
             resultValues = newValueArrayWeight(forStates.size());
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);

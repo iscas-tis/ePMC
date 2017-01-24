@@ -87,7 +87,6 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.Properties;
-import epmc.modelchecker.PropertiesImpl;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.util.Util;

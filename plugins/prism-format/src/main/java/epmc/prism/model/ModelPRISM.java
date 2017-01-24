@@ -77,7 +77,6 @@ import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Log;
-import epmc.modelchecker.PropertiesImpl;
 import epmc.modelchecker.RawProperty;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -733,7 +732,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
     
     private void createProperties() throws EPMCException {
-        properties = new PropertiesImpl(context);
+        properties = new PropertiesImpl(this);
         for (Entry<Expression,Expression> entry : formulas.getConstants().entrySet()) {
         	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             String name = key.getName();

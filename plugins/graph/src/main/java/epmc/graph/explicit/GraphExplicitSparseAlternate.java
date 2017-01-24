@@ -130,27 +130,24 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
     }
 
-    public abstract class EdgePropertySparseNondet implements EdgeProperty {
+    public interface EdgePropertySparseNondet extends EdgeProperty {
 
-        public EdgePropertySparseNondetOnlyNondet asSparseNondetOnlyNondet() {
+        default EdgePropertySparseNondetOnlyNondet asSparseNondetOnlyNondet() {
             return (EdgePropertySparseNondetOnlyNondet) this;
         }
         
-        @Override
-        public void set(Value value, int successor) {
-            // TODO Auto-generated method stub
-            
-        }
+        public void setForState(Value value, int succNr);
 
-        abstract public void setForState(Value value, int succNr);
-
-        abstract public void setForNonDet(Value value, int interSuccNr);
-    }    
+        public void setForNonDet(Value value, int interSuccNr);
+    }
     
-    public final class EdgePropertySparseNondetGeneral extends EdgePropertySparseNondet {
+    public final class EdgePropertySparseNondetGeneral implements EdgePropertySparseNondet {
         private final GraphExplicit graph;
         private final Value value;
         private final ValueArray content;
+        private final ValueArray contentND;
+		private int nextND;
+		private int nextS;
 
         EdgePropertySparseNondetGeneral(GraphExplicitSparseAlternate graph, Type type) {
             assert graph != null;
@@ -160,30 +157,35 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             TypeArray typeArray = forNative
                     ? TypeHasNativeArray.getTypeNativeArray(type)
                     : type.getTypeArray();
-            this.content = UtilValue.newArray(typeArray, numNondet + numProb);
-        }
-        
-        private int getEntryNumber(int successor) {
-            if (currentNode < numStates) {
-                return stateBounds.getInt(currentNode) + successor;
-            } else {
-                return nondetBounds.getInt(currentNode - numStates) + successor + numNondet;
-            }
+            this.content = UtilValue.newArray(typeArray, 1);
+            this.contentND = UtilValue.newArray(typeArray, 1);
         }
         
         @Override
         public Value get(int successor) {
-            int entryNr = getEntryNumber(successor);
-            ensureSize(content, entryNr + 1);
-            content.get(value, entryNr);
+            if (currentNode < numStates) {
+            	int entryNr = stateBounds.getInt(currentNode) + successor;
+                ensureSize(content, entryNr + 1);
+            	content.get(value, entryNr);
+            } else {
+            	int entryNr = nondetBounds.getInt(currentNode - numStates) + successor;
+                ensureSize(contentND, entryNr + 1);
+            	contentND.get(value, entryNr);
+            }
             return value;
         }
 
         @Override
         public void set(Value value, int successor) {
-            int entryNr = getEntryNumber(successor);
-            ensureSize(content, entryNr + 1);
-            content.set(value, entryNr);
+        	if (currentNode < numStates) {
+                int entryNr = stateBounds.getInt(currentNode) + successor;
+                ensureSize(content, entryNr + 1);
+                content.set(value, entryNr);
+        	} else {
+                int entryNr = nondetBounds.getInt(currentNode - numStates) + successor;
+                ensureSize(contentND, entryNr + 1);
+                contentND.set(value, entryNr);
+        	}
         }
 
         @Override
@@ -202,18 +204,22 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
         @Override
         public void setForState(Value value, int succNr) {
-            set(value, succNr);
+            ensureSize(content, nextS + 1);
+            content.set(value, nextS);
+            nextS++;
         }
 
         @Override
         public void setForNonDet(Value value, int interSuccNr) {
-            // TODO Auto-generated method stub
-            
+//            System.out.println("SN  " + currentNode + " " + interSuccNr + " " + entryNr + " " + value);
+            ensureSize(contentND, nextND + 1);
+            contentND.set(value, nextND);
+            nextND++;
         }
         
     }
 
-    private final class EdgePropertySparseNondetOnlyState extends EdgePropertySparseNondet {
+    private final class EdgePropertySparseNondetOnlyState implements EdgePropertySparseNondet {
         private final GraphExplicit graph;
         private final Value value;
         private final ValueArray content;
@@ -268,7 +274,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
     }
 
-    public final class EdgePropertySparseNondetOnlyNondet extends EdgePropertySparseNondet {
+    public final class EdgePropertySparseNondetOnlyNondet implements EdgePropertySparseNondet {
         private final GraphExplicit graph;
         private final Value value;
         private final ValueArray content;
@@ -627,7 +633,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     
     private void ensureSize(ValueArray array, int newSize) {
         if (fixedMode) {
-            return;
+//            return;
         }
         int size = array.size();
         if (newSize <= size) {

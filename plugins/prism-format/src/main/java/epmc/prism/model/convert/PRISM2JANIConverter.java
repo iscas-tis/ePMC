@@ -77,7 +77,6 @@ import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.modelchecker.Properties;
-import epmc.modelchecker.PropertiesImpl;
 import epmc.modelchecker.RawProperty;
 import epmc.options.Options;
 import epmc.prism.model.Alternative;
@@ -86,6 +85,7 @@ import epmc.prism.model.Formulas;
 import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.Module;
 import epmc.prism.model.ModuleCommands;
+import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
 import epmc.util.Util;
 import epmc.value.ContextValue;
@@ -272,7 +272,7 @@ public final class PRISM2JANIConverter {
 		Properties oldProperties = modelPRISM.getPropertyList();
 		Map<Expression,RawProperty> newProperties = new LinkedHashMap<>();
 		for (RawProperty raw : oldProperties.getRawProperties()) {
-			Expression property = useNamedRewardsOnly(oldProperties.getParsedProperty(raw));
+			Expression property = useNamedRewardsOnly(modelPRISM, oldProperties.getParsedProperty(raw));
 			property = replaceSpecialIdentifiers(property);
 			property = useQuantitativePropertiesOnly(property);
 			List<Expression> wrapped = wrapWithFilter(property);
@@ -354,22 +354,28 @@ public final class PRISM2JANIConverter {
      * @param expression the expression to convert
      * @return an equivalent expression using only named reward structures
      */
-	private Expression useNamedRewardsOnly(Expression expression) throws EPMCException {
+	public static Expression useNamedRewardsOnly(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
+		assert expression != null;
 		List<Expression> oldChildren = expression.getChildren();
 		List<Expression> newChildren = new ArrayList<>(oldChildren.size());
 		if (expression instanceof ExpressionReward) {
 	        RewardStructure reward = modelPRISM.getReward(((ExpressionReward) expression).getReward());
+	        String name;
+	        if (reward == null) {
+	        	name = "";
+	        } else {
+	        	name = reward.getName();
+	        }
 	        newChildren.add(new ExpressionIdentifierStandard.Builder()
-	        		.setName(prefixRewardName(reward.getName()))
+	        		.setName(prefixRewardName(name))
 	        		.build());
-	        newChildren.add(useNamedRewardsOnly(oldChildren.get(1)));
+	        newChildren.add(useNamedRewardsOnly(modelPRISM, oldChildren.get(1)));
 	        newChildren.add(oldChildren.get(2));
 	        newChildren.add(oldChildren.get(3));
-	        
 	        return expression.replaceChildren(newChildren);
 		} else {
 			for (Expression child:oldChildren) {
-				newChildren.add(useNamedRewardsOnly(child));
+				newChildren.add(useNamedRewardsOnly(modelPRISM, child));
 			}
 			return expression.replaceChildren(newChildren);
 		}

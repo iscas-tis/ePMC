@@ -27,7 +27,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.main.options.UtilOptionsEPMC;
-import epmc.modelchecker.PropertiesImpl;
 import epmc.modelchecker.RawProperties;
 import epmc.modelchecker.RawProperty;
 import epmc.modelchecker.TestHelper;
@@ -43,12 +42,12 @@ public class LTLTest {
         ContextValue context = new ContextValue(options);
         options.set(TestHelper.CONTEXT_VALUE, context);
         
-        PropertiesImpl pList = new PropertiesImpl(context);
-        pList.parseProperties(props);
+//        PropertiesImpl pList = new PropertiesImpl(context);
+  //      pList.parseProperties(props);
         Expression expression = null;
         
         for (RawProperty prop : props.getProperties()) {
-            expression = pList.getParsedProperty(prop);
+           // expression = pList.getParsedProperty(prop);
             System.out.println(expression);
             ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             Expression opera = expressionQuantifier.getQuantified();

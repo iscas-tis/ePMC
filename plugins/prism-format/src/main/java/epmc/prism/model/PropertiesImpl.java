@@ -18,7 +18,7 @@
 
 *****************************************************************************/
 
-package epmc.modelchecker;
+package epmc.prism.model;
 
 import static epmc.error.UtilError.ensure;
 
@@ -48,24 +48,25 @@ import epmc.modelchecker.error.ProblemsModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
+import epmc.prism.model.convert.PRISM2JANIConverter;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 
 // TODO constants should not be stored here, but in a separate place in model
 
 public final class PropertiesImpl implements Properties {
-    private final ContextValue context;
     private final Map<RawProperty,Expression> properties = new LinkedHashMap<>();
     private final Set<String> names = new LinkedHashSet<>();
     private final Map<String,Expression> constants = new LinkedHashMap<>();
     private final Map<String,Type> constantTypes = new LinkedHashMap<>();
     private final Map<String,Expression> formulas = new LinkedHashMap<>();
     private final Map<String,Expression> labels = new LinkedHashMap<>();
+	private final ModelPRISM model;
     
-    public PropertiesImpl(ContextValue context) throws EPMCException {
-        assert context != null;
+    public PropertiesImpl(ModelPRISM model) throws EPMCException {
+        assert model != null;
+        this.model = model;
         // TODO check duplicates
-        this.context = context;
     }
 
     @Override
@@ -77,7 +78,7 @@ public final class PropertiesImpl implements Properties {
     
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = context.getOptions();
+        Options options = getContextValue().getOptions();
         Property property = UtilOptions.getInstance(options,
                 OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -87,7 +88,7 @@ public final class PropertiesImpl implements Properties {
     }
     
     public void parseProperties(RawProperties rawProperties) throws EPMCException {
-        Options options = context.getOptions();
+        Options options = getContextValue().getOptions();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
             optionsConsts = new LinkedHashMap<>();
@@ -97,7 +98,8 @@ public final class PropertiesImpl implements Properties {
             if (definition == null) {
                 continue;
             }
-            Expression parsed = UtilModelChecker.parseExpression(context, definition);
+            Expression parsed = UtilModelChecker.parseExpression(getContextValue(), definition);
+            parsed = PRISM2JANIConverter.useNamedRewardsOnly(model, parsed);
             properties.put(prop, parsed);
         }
         for (Entry<String,String> entry : rawProperties.getConstants().entrySet()) {
@@ -108,14 +110,14 @@ public final class PropertiesImpl implements Properties {
             }
             Expression expr = null;
             if (definition != null && definition instanceof String) {
-                expr = UtilModelChecker.parseExpression(context, ((String) definition));
+                expr = UtilModelChecker.parseExpression(getContextValue(), ((String) definition));
             } else if (definition != null && definition instanceof Expression) {
                 expr = (Expression) definition;
             } else if (definition != null) {
                 assert false : definition;
             }
             constants.put(name, expr);
-            Type type = UtilModelChecker.parseType(context, rawProperties.getConstantType(name));
+            Type type = UtilModelChecker.parseType(getContextValue(), rawProperties.getConstantType(name));
             assert type != null;
             constantTypes.put(name, type);
         }
@@ -124,7 +126,7 @@ public final class PropertiesImpl implements Properties {
             String definition = entry.getValue();
             Expression expr = null;
             if (definition != null) {
-                expr = UtilModelChecker.parseExpression(context, definition);
+                expr = UtilModelChecker.parseExpression(getContextValue(), definition);
             }
             labels.put(name, expr);
         }
@@ -456,5 +458,9 @@ public final class PropertiesImpl implements Properties {
     @Override
     public List<RawProperty> getRawProperties() {
         return Collections.list(Collections.enumeration(properties.keySet()));
+    }
+    
+    private ContextValue getContextValue() {
+    	return model.getContextValue();
     }
 }

@@ -66,6 +66,7 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
+import epmc.value.TypeAlgebra;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
@@ -131,8 +132,12 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
-            expressionsSet.addAll(inners);
+            if (quantified instanceof ExpressionReward) {
+            	// TODO
+            } else {
+            	Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
+            	expressionsSet.addAll(inners);
+            }
         }
         Expression[] expressions = expressionsSet.toArray(new Expression[expressionsSet.size()]);
         List<Automaton> automata = new ArrayList<>();
@@ -197,6 +202,8 @@ final class ProductBuilder {
     	GraphExplicit prodWrapper = builder.getInputGraph();
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
         EdgeProperty[] transRewards = new EdgeProperty[property.getOperands().size()];
+        EdgeProperty weights = prodWrapper.getEdgeProperty(CommonProperties.WEIGHT);
+        Value weight = weights.getType().newValue();
         int propNr = 0;
         Value zero = TypeWeight.get(getContextValue()).getZero();
         for (Expression objective : property.getOperands()) {
@@ -251,9 +258,15 @@ final class ProductBuilder {
                 stateReward.set(stateRewardProp.get());
                 EdgeProperty edgeRewardProp = transRewards[obj];
                 for (int succNr = 0; succNr < numSucc; succNr++) {
+                	// TODO HACK
+                	int old = prodWrapper.getQueriedNode();
                     transReward.set(stateReward);
                     transReward.add(transReward, edgeRewardProp.get(succNr));
+                    int succ = prodWrapper.getSuccessorNode(succNr);
+                    prodWrapper.queryNode(succ);
+                    transReward.add(transReward, edgeRewardProp.get(0));
                     result.setReward(transReward, succNr, obj);
+                    prodWrapper.queryNode(old);
                 }
             }
             result.finishState();
