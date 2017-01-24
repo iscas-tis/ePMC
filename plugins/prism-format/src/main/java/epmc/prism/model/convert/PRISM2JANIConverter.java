@@ -89,9 +89,8 @@ import epmc.prism.model.ModuleCommands;
 import epmc.prism.model.RewardStructure;
 import epmc.util.Util;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorLt;
 import epmc.value.OperatorSubtract;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
@@ -335,7 +334,7 @@ public final class PRISM2JANIConverter {
                         .setStates(ExpressionInitial.getExpressionInitial())
                         .build());
 			} else {
-				//it is not a quantitative quantifier, so it should be a boolean operator
+				// it is not a quantitative quantifier, so it should be a boolean operator
                 list.add(new ExpressionFilter.Builder()
                         .setFilterType(FilterType.FORALL)
                         .setProp(expression)
@@ -386,150 +385,32 @@ public final class PRISM2JANIConverter {
      * @return an equivalent expression using only quantitative properties
      */
 	private Expression useQuantitativePropertiesOnly(Expression expression) {
-		if ((expression instanceof ExpressionQuantifier)
-				&& !((ExpressionQuantifier) expression).getCompareType().isIs()) {
-			ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-	        Expression qExp;
-	        Expression rewritten;
-	        switch(expressionQuantifier.getCompareType()) {
-	        case GE:
-	        	switch (expressionQuantifier.getDirType()) {
-	        	case NONE:
-	        		if (SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
-	        			qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	        					.setDirType(DirType.MIN)
-	        					.setCmpType(CmpType.IS)
-	        					.setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	        					.build();
-	        		} else {
-                        qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-                                .setDirType(expressionQuantifier.getDirType())
-                                .setCmpType(CmpType.IS)
-                                .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                                .build();	        			
-	        		}
-	        		break;
-        		default:
-                    qExp = new ExpressionQuantifier.Builder()
-        					.setContext(getContextValue())
-                    	.setDirType(expressionQuantifier.getDirType())
-                    	.setCmpType(CmpType.IS)
-                    	.setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                    	.build();                       
-			        break;
-	        	}
-	            rewritten = new ExpressionOperator.Builder()
-	            		.setOperator(getContextValue().getOperator(OperatorLe.IDENTIFIER))
-	            		.setOperands(useQuantitativePropertiesOnly(expressionQuantifier.getCompare()), qExp)
-	            		.build();
-	            break;
-	        case GT:
-	        	switch (expressionQuantifier.getDirType()) {
-	        	case NONE:
-	        		if (SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
-	                    qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	                            .setDirType(DirType.MIN)
-	                            .setCmpType(CmpType.IS)
-	                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	                            .build();                       
-	        		} else {
-                        qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-                                .setDirType(expressionQuantifier.getDirType())
-                                .setCmpType(CmpType.IS)
-                                .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                                .build();                       
-	        		}
-	        		break;
-        		default:
-                    qExp = new ExpressionQuantifier.Builder()
-        					.setContext(getContextValue())
-                            .setDirType(expressionQuantifier.getDirType())
-                            .setCmpType(CmpType.IS)
-                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                            .build();
-			        break;
-	        	}
-	            rewritten = new ExpressionOperator.Builder()
-	            		.setOperator(getContextValue().getOperator(OperatorLt.IDENTIFIER))
-	            		.setOperands(useQuantitativePropertiesOnly(expressionQuantifier.getCompare()), qExp)
-	            		.build();
-	            break;
-	        case LE:
-	        	switch (expressionQuantifier.getDirType()) {
-	        	case NONE:
-	        		if (SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
-	                    qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	                            .setDirType(DirType.MAX)
-	                            .setCmpType(CmpType.IS)
-	                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	                            .build();
-
-	        		} else {
-	                    qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	                            .setDirType(expressionQuantifier.getDirType())
-	                            .setCmpType(CmpType.IS)
-	                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	                            .build();
-	        		}
-	        		break;
-        		default:
-                    qExp = new ExpressionQuantifier.Builder()
-        					.setContext(getContextValue())
-                            .setDirType(expressionQuantifier.getDirType())
-                            .setCmpType(CmpType.IS)
-                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                            .build();
-			        break;
-	        	}
-	            rewritten = new ExpressionOperator.Builder()
-	            		.setOperator(getContextValue().getOperator(OperatorLe.IDENTIFIER))
-	            		.setOperands(qExp, useQuantitativePropertiesOnly(expressionQuantifier.getCompare()))
-	            		.build();
-	            break;
-	        case LT:
-	        	switch (expressionQuantifier.getDirType()) {
-	        	case NONE:
-	        		if (SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
-	                    qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	                            .setDirType(DirType.MAX)
-	                            .setCmpType(CmpType.IS)
-	                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	                            .build();
-	        		} else {
-	                    qExp = new ExpressionQuantifier.Builder()
-	        					.setContext(getContextValue())
-	                            .setDirType(expressionQuantifier.getDirType())
-	                            .setCmpType(CmpType.IS)
-	                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-	                            .build();
-	        		}
-	        		break;
-        		default:
-                    qExp = new ExpressionQuantifier.Builder()
-        					.setContext(getContextValue())
-                            .setDirType(expressionQuantifier.getDirType())
-                            .setCmpType(CmpType.IS)
-                            .setQuantified(useQuantitativePropertiesOnly(expressionQuantifier.getQuantified()))
-                            .build();
-			        break;
-	        	}
-	            rewritten = new ExpressionOperator.Builder()
-	            		.setOperator(getContextValue().getOperator(OperatorLt.IDENTIFIER))
-	            		.setOperands(qExp, useQuantitativePropertiesOnly(expressionQuantifier.getCompare()))
-	            		.build();
-	            break;
-	        default:
-	        	//this should never happen...
-	            rewritten = expression;
-	        }
-	        return rewritten;
+		assert expression != null;
+		ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+		if ((expressionQuantifier != null)
+				&& !expressionQuantifier.getCompareType().isIs()) {
+    		CmpType cmpType = expressionQuantifier.getCompareType();
+	        DirType dirType = expressionQuantifier.getDirType();
+	        Expression quantified = useQuantitativePropertiesOnly(expressionQuantifier.getQuantified());
+	        Operator operator = cmpType.asExOpType(getContextValue());
+        	if (dirType.equals(DirType.NONE)
+        			&& SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
+        		if (cmpType.equals(CmpType.GE) || cmpType.equals(CmpType.GT)) {
+        			dirType = DirType.MIN;
+        		} else if (cmpType.equals(CmpType.LE) || cmpType.equals(CmpType.LT)) {
+        			dirType = DirType.MAX;        			
+        		}
+        	}
+        	Expression qExp = new ExpressionQuantifier.Builder()
+					.setContext(getContextValue())
+					.setDirType(dirType)
+					.setCmpType(CmpType.IS)
+					.setQuantified(quantified)
+					.build();
+            return new ExpressionOperator.Builder()
+            		.setOperator(operator)
+            		.setOperands(qExp, useQuantitativePropertiesOnly(expressionQuantifier.getCompare()))
+            		.build();
 		} else {
 			List<Expression> oldChildren = expression.getChildren();
 			List<Expression> newChildren = new ArrayList<>(oldChildren.size());
