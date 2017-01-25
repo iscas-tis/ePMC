@@ -144,6 +144,7 @@ final class PropertyNormaliser {
                 		.setValue(evaluateValue(newCompare))
                 		.build();
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
+                		.setContext(getContextValue())
                 		.setDirType(DirType.NONE)
                 		.setCmpType(CmpType.GE)
                 		.setQuantified(quantified)
@@ -151,6 +152,7 @@ final class PropertyNormaliser {
                 		.setCondition(objectiveQuantifier.getCondition())
                 		.build();
                 newQuantifiersQualitative.add(newQuantifier);
+                invert.add(newQuantifier);
             }
         }
         List<Expression> newQuantifiers = new ArrayList<>();
