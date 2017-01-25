@@ -125,7 +125,6 @@ final class RewardsConverter {
     	Variables rewards = buildRewards();
     	addRewards(rewards);
     	Automaton rewardAutomaton = computeRewardAutomaton();
-    	System.out.println(rewardAutomaton);
 		Automata automata = modelJANI.getAutomata();
     	automata.addAutomaton(rewardAutomaton);
     	composeRewardAutomatonWithSystem(rewardAutomaton);
