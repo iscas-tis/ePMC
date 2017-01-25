@@ -73,6 +73,8 @@ import epmc.value.ValueReal;
 
 // TODO divide into Java and C based parts
 
+// TODO reward-based stuff should be moved to rewards plugin
+
 public final class GraphSolverIterative implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative";
     
@@ -464,7 +466,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            dtmcUnboundedCumulativeJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
+        	dtmcUnboundedCumulativeJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMarkovNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
             dtmcUnboundedCumulativeJacobiNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
@@ -474,7 +476,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
             mdpUnboundedCumulativeJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedCumulativeJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
+        	mdpUnboundedCumulativeJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
             mdpUnboundedCumulativeGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {

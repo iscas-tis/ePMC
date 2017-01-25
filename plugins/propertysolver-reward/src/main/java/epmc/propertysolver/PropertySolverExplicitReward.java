@@ -41,6 +41,7 @@ import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.Semantics;
+import epmc.graph.SemanticsIMDP;
 import epmc.graph.SemanticsMDP;
 import epmc.graph.SemanticsMarkovChain;
 import epmc.graph.StateMap;
@@ -201,7 +202,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             
             if (SemanticsMarkovChain.isMarkovChain(semantics)) {
             	cumulRewards = UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
-            } else if (SemanticsMDP.isMDP(semantics)) {
+            } else if (SemanticsMDP.isMDP(semantics) || SemanticsIMDP.isIMDP(semantics)) {
                 int numNondet = graph.getNumNodes() - graph.computeNumStates();
                 cumulRewards = UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numNondet);
             } else {
@@ -223,22 +224,35 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                 Value nodeRew = stateReward.get();
                 Player player = playerProp.getEnum();
                 EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-                if (!SemanticsMDP.isMDP(semantics)) {
+                if (!SemanticsMDP.isMDP(semantics) && !SemanticsIMDP.isIMDP(semantics)) {
                     acc.set(nodeRew);                        
                 }
                 for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                    if (SemanticsMDP.isMDP(semantics)) {
+                    if (SemanticsMDP.isMDP(semantics) || SemanticsIMDP.isIMDP(semantics)) {
                         acc.set(nodeRew);                        
                     }
                     Value succWeight = weight.get(succNr);
-                    Value transRew = transReward.get(succNr);
+                    ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(succNr));
                     if (player == Player.STOCHASTIC) {
-                        acc2.multiply(succWeight, transRew);
-                        acc.add(acc, acc2);
+                    	// TODO hack for imdps
+  //                      acc2.multiply(succWeight, transRew);
+//                        acc.add(acc, acc2);
+                    	if (!transRew.isZero()) {
+//                    		System.out.println(transRew);
+                    	}
+//                        acc.set(transRew);
+  //                      System.out.println(transRew + " " + acc);
                     } else {
                         acc.add(acc, transRew);
+                    	int old = graph.getQueriedNode();
+                    	int succ = graph.getSuccessorNode(succNr);
+                    	graph.queryNode(succ);
+                    	ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(0));
+                    	acc.add(acc2, r);
+                    	graph.queryNode(old);
                     }
-                    if (SemanticsMDP.isMDP(semantics) && player == Player.ONE) {
+                    if ((SemanticsMDP.isMDP(semantics) || SemanticsIMDP.isIMDP(semantics))
+                    		&& player == Player.ONE) {
                         cumulRewards.set(acc, cumulRewIdx);
                         cumulRewIdx++;
                     }
