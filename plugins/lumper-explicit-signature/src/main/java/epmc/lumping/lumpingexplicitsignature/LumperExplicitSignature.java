@@ -547,7 +547,11 @@ final class LumperExplicitSignature implements LumperExplicit {
     private int[] computeInitialPartition() throws EPMCException {
     	if (this.objective instanceof GraphSolverObjectiveExplicitLump) {
     		GraphSolverObjectiveExplicitLump objectiveLump = (GraphSolverObjectiveExplicitLump) objective;
-    		return objectiveLump.getPartition();
+    		int[] result = new int[objectiveLump.size()];
+    		for (int i = 0; i < result.length; i++) {
+    			result[i] = objectiveLump.getBlock(i);
+    		}
+    		return result;
     	} else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
     		GraphSolverObjectiveExplicitUnboundedReachability objectiveReach = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
     		int numStates = objectiveReach.getGraph().computeNumStates();

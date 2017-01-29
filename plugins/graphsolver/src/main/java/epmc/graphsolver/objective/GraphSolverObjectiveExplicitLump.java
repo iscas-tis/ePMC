@@ -20,12 +20,25 @@
 
 package epmc.graphsolver.objective;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import epmc.error.EPMCException;
+import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
+import epmc.graph.explicit.NodeProperty;
+import epmc.graph.explicit.NodePropertyExpression;
 import epmc.value.ValueArray;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 public final class GraphSolverObjectiveExplicitLump implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
-    private int[] partition;
+	private List<Expression> atomics;
+	private NodeProperty[] nodeProperties;
+	private TIntIntMap blockToNumberInt;
+	private int numStates;
 
     @Override
     public void setGraph(GraphExplicit graph) {
@@ -46,11 +59,64 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
         return null;
     }
     
-    public void setPartition(int[] partition) {
-        this.partition = partition;
+	public void setAtomics(Collection<Expression> atomics) {
+		assert atomics != null;
+		for (Expression expression : atomics) {
+			assert expression != null;
+		}
+		this.atomics = new ArrayList<Expression>(atomics);
+	}
+	
+	public void prepare() throws EPMCException {
+		this.nodeProperties = computeAtomNodeProperties(graph, atomics);
+		this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
+		int numStates = graph.computeNumStates();
+		for (int state = 0; state < numStates; state++) {
+			graph.queryNode(state);
+			int block = 0;
+			int marker = 1;
+			for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
+				if (nodeProperties[atomicNr].getBoolean()) {
+					block |= marker;
+				}
+				marker <<= 1;
+			}
+	        int number = blockToNumberInt.get(block);
+	        if (number == -1) {
+	        	number = blockToNumberInt.size();
+	        	blockToNumberInt.put(block, number);
+	        }
+		}
+		this.numStates = numStates;
+	}	
+    
+    public int getBlock(int state) throws EPMCException {
+        graph.queryNode(state);
+        int block = 0;
+        int marker = 1;
+        for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
+            if (nodeProperties[atomicNr].getBoolean()) {
+                block |= marker;
+            }
+            marker <<= 1;
+        }
+        return blockToNumberInt.get(block);
     }
     
-    public int[] getPartition() {
-        return partition;
+    public int size() {
+    	return numStates;
+    }
+
+    private static NodeProperty[] computeAtomNodeProperties(GraphExplicit graph,
+            Collection<Expression> atomics) throws EPMCException {
+        List<NodeProperty> result = new ArrayList<>();
+        for (Expression atomic : atomics) {
+            if (graph.getNodeProperty(atomic) != null) {
+                result.add(graph.getNodeProperty(atomic));
+            } else {
+                result.add(new NodePropertyExpression(graph, atomic));
+            }
+        }
+        return result.toArray(new NodeProperty[0]);
     }
 }

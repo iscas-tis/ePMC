@@ -64,10 +64,7 @@ public final class TestHelperLump {
             Set<Expression> atomics = collectAPs(expr);
             nodeProperties.addAll(UtilExpressionStandard.collectIdentifiers(expr));
             GraphExplicit graph = exploreToGraph(model, nodeProperties);
-            int[] partition = UtilLump.partitionByAPs(graph, atomics);
-            GraphSolverObjectiveExplicitLump objective = new GraphSolverObjectiveExplicitLump();
-            objective.setGraph(graph);
-            objective.setPartition(partition);
+            GraphSolverObjectiveExplicitLump objective = UtilLump.partitionByAPsObjective(graph, atomics);
             for (Class<? extends LumperExplicit> clazz : lumpersExplicit.values()) {
                 LumperExplicit instance = Util.getInstance(clazz);
                 instance.setOriginal(objective);
