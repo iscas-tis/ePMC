@@ -44,6 +44,7 @@ import epmc.propertysolver.PropertySolverExplicitReward;
 import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
+import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeWeight;
@@ -122,6 +123,9 @@ final class MultiObjectiveUtils {
                 }
                 numMinValue = newValueWeight(contextValue);
                 solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
+//                System.out.println(numMinValue);
+                // TODO hack
+                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
             } else {
                 assert false;
             }
