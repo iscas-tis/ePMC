@@ -1,3 +1,7 @@
 /SpotParser.java
 /SpotParserConstants.java
 /SpotParserTokenManager.java
+/ParseException.java
+/SimpleCharStream.java
+/Token.java
+/TokenMgrError.java
