@@ -9,6 +9,6 @@ STRIP_native=/usr/bin/strip
       
 #buildfor=darwin,linux-x86,linux-x86-64,win32-x86,win32-x86-64
 buildfor=linux-x86
-CC_DARWIN=/usr/bin/gcc
-CPP_DARWIN=/usr/bin/g++
-STRIP_DARWIN=/usr/bin/strip
+CC_LINUX_X86=/usr/bin/gcc
+CPP_LINUX_X86=/usr/bin/g++
+STRIP_LINUX_X86=/usr/bin/strip
