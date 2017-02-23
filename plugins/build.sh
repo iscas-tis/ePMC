@@ -1,6 +1,12 @@
 #!/bin/bash
 
 excludes="cuda propertysolver-ltl-fairness propertysolver-ltl-fg"
+platform=$(uname -s)
+echocmd="echo"
+
+if [ "$platform" == "Linux" ]; then
+    echocmd="echo -e"
+fi
 
 rm -fr $(find . -name target)
 
@@ -21,7 +27,7 @@ function build_plugin {
 }
 
 for directory in $(ls); do
-    directory=$(echo $directory| tr -d '\r\n' )
+    directory=$($echocmd $directory| tr -d '\r\n' )
     excluded=0
     for exclude in $excludes; do
 	if [ "$exclude" == "$directory" ] 
@@ -60,7 +66,7 @@ for directory in $(ls); do
     fi
 done
 
-ordered=$(echo $toSort | tsort)
+ordered=$($echocmd $toSort | tsort)
 
 for a in $ordered; do
     reordered="$a $reordered"
