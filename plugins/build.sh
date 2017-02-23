@@ -21,7 +21,7 @@ function build_plugin {
 }
 
 for directory in $(ls); do
-    directory=$(echo -n $directory| tr -d '\r\n' )
+    directory=$(echo $directory| tr -d '\r\n' )
     excluded=0
     for exclude in $excludes; do
 	if [ "$exclude" == "$directory" ] 
@@ -44,7 +44,7 @@ for directory in $(ls); do
     fi
     manifest=$(cat "$directory/src/main/resources/META-INF/MANIFEST.MF")
     pluginName=$(echo "$manifest" | grep "Plugin-Name" | sed 's/Plugin-Name: //')
-    pluginName=$(echo -n $pluginName | tr -d '\r\n' )
+    pluginName=$(echo $pluginName | tr -d '\r\n' )
     if [ "$pluginName" = "" ]; then
 	continue
     fi
@@ -59,7 +59,9 @@ for directory in $(ls); do
 	toSort="$toSort\n$pluginName $pluginName"
     fi
 done
-ordered=$(echo -e $toSort | tsort)
+
+ordered=$(echo $toSort | tsort)
+
 for a in $ordered; do
     reordered="$a $reordered"
 done

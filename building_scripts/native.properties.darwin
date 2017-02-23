@@ -1,0 +1,14 @@
+make_param=build # build_all
+# http://crossgcc.rts-software.org/doku.php?id=compiling_for_linux
+# http://mingw-w64.sourceforge.net/download.php -->
+CC_native=/usr/bin/gcc
+CPP_native=/usr/bin/g++
+STRIP_native=/usr/bin/strip
+# CC_DARWIN=x86_64-apple-darwin13-cc
+# CPP_DARWIN=x86_64-apple-darwin13-c++
+      
+#buildfor=darwin,linux-x86,linux-x86-64,win32-x86,win32-x86-64
+buildfor=darwin
+CC_DARWIN=/usr/bin/gcc
+CPP_DARWIN=/usr/bin/g++
+STRIP_DARWIN=/usr/bin/strip
