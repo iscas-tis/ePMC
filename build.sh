@@ -16,7 +16,7 @@ case $platform in
     Linux)
         # check if the system is 32-bits or 64-bits
         bits=$(getconf LONG_BIT)
-        cp $ROOT/native.properties.Linux.$bits $ROOT/native.properties
+        cp $ROOT/building_scripts/native.properties.Linux.$bits $ROOT/native.properties
     ;;
 esac
 
