@@ -26,7 +26,7 @@ mvn package
 
 # build plugins
 cd $ROOT/plugins
-sh build.sh
+bash build.sh
 
 # build distributions
 if [ "$1" == "" ]; then
@@ -36,7 +36,7 @@ else
 fi
 
 cd $ROOT/distributions/$dist
-sh build.sh
+bash build.sh
 cp epmc-$dist.jar $ROOT/
 cd $ROOT
 
