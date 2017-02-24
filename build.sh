@@ -18,6 +18,9 @@ case $platform in
         bits=$(getconf LONG_BIT)
         cp $ROOT/building_scripts/native.properties.Linux.$bits $ROOT/native.properties
     ;;
+    *)
+        # TODO currently the script only support 64 bits windows system
+        cp $ROOT/building_scripts/native.properties.Windows.64 $ROOT/native.properties
 esac
 
 # build core package
@@ -42,7 +45,8 @@ cd $ROOT
 
 echo "ePMC distribution <$dist> has been packaged successfully!"
 echo "the target jar file is located in $ROOT/epmc-$dist.jar"
-echo "start your ePMC trip with the following line:\n"
+echo "start your ePMC trip with the following line:"
+echo ""
 echo "    java -jar epmc-$dist.jar help"
-echo "\n"
+echo ""
 echo "enjoy!"
