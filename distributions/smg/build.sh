@@ -9,7 +9,6 @@ prepare_plugin expression-basic
 prepare_plugin graph
 prepare_plugin algorithm
 prepare_plugin graphsolver
-prepare_plugin mpfr
 prepare_plugin automata
 prepare_plugin jani-model
 prepare_plugin prism-format

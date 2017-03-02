@@ -11,5 +11,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-algorithm"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd-cudd"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd-cudd-mtbdd"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-model"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-format"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
