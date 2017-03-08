@@ -109,9 +109,8 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
     		if (modelChecker.getModel() instanceof ModelJANIConverter) {
             	ModelJANIConverter model = (ModelJANIConverter) modelChecker.getModel();
             	log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION, modelName);
-            	ModelJANI jani = model.toJANI(true);
+            	ModelJANI jani = model.toJANI(true, modelName);
             	log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, modelName);
-            	jani.setName(modelName);
             	log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, janiFilename);
             	try (PrintWriter out = new PrintWriter(janiFile)) {
             	    out.println(UtilModelParser.prettyString(jani));
