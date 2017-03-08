@@ -123,7 +123,7 @@ public final class ConvertTestConfiguration {
 		result.put(ConvertTestStatistics.TIME_LOAD_PRISM, timeLoadPRISM.getTime());
 		result.setPRISMModel(modelPRISM);
 		StopWatch timeConvertJANI = new StopWatch(true);
-		ModelJANI modelJANI = modelPRISM.toJANI(false);
+		ModelJANI modelJANI = modelPRISM.toJANI(false, null);
 		result.put(ConvertTestStatistics.TIME_CONVERT_JANI, timeConvertJANI.getTime());
 		result.setJaniModel(modelJANI);
 		StopWatch timeCloneJANI = new StopWatch(true);

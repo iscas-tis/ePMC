@@ -111,8 +111,6 @@ public final class PRISM2JANIConverter {
 	final static String LOCATION_NAME = "location";
 	/** Empty string. */
 	final static String EMPTY = "";
-	/** String to use as model name for model created. */
-	private final static String MODEL_NAME = "Converted from PRISM by EPMC";
 	/** Name of silent identifier. */
 	private final static String TAU = "τ";
 	/** JANI version to which the converter converts. */
@@ -136,6 +134,8 @@ public final class PRISM2JANIConverter {
 	private final ModelJANI modelJANI;
 	/** Tau action replacing silent action. */
 	private Action tauAction;
+	
+	private String JANIModelName;
 
 	/**
 	 * Construct new converter for given PRISM model.
@@ -143,13 +143,14 @@ public final class PRISM2JANIConverter {
 	 * 
 	 * @param modelPRISM PRISM model to convert
 	 */
-	public PRISM2JANIConverter(ModelPRISM modelPRISM) {
+	public PRISM2JANIConverter(ModelPRISM modelPRISM, String JANIModelName) {
 		assert modelPRISM != null;
 		this.modelPRISM = modelPRISM;
     	modelJANI = new ModelJANI();
 		this.tauAction = new Action();
 		tauAction.setModel(modelJANI);
 		tauAction.setName(TAU);
+		this.JANIModelName = JANIModelName;
 	}
 	
 	/**
@@ -161,7 +162,7 @@ public final class PRISM2JANIConverter {
 	public ModelJANI convert(boolean forExporting) throws EPMCException {
     	modelJANI.setContext(getContextValue());
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
-    	modelJANI.setName(MODEL_NAME);
+    	modelJANI.setName(JANIModelName);
     	modelJANI.setVersion(JANI_VERSION);
     	
     	convertExtensions();
@@ -281,10 +282,10 @@ public final class PRISM2JANIConverter {
 				property = useQuantitativePropertiesOnly(property);
 				List<Expression> wrapped = wrapWithFilter(property);
 				if (wrapped.size() == 1) {
-					properties.addProperty(raw.getName(), property, null);
+					properties.addProperty(raw.getName(), property, raw.getDefinition());
 				} else if (wrapped.size() == 2) {
-					properties.addProperty(raw.getName(), wrapped.get(0), null);
-					properties.addProperty(raw.getName(), wrapped.get(1), null);
+					properties.addProperty(raw.getName(), wrapped.get(0), raw.getDefinition());
+					properties.addProperty(raw.getName(), wrapped.get(1), raw.getDefinition());
 				} else {
 					assert false;
 				}
