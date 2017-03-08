@@ -155,9 +155,10 @@ public final class PRISM2JANIConverter {
 	/**
 	 * Convert PRISM model to JANI format.
 	 * 
+	 * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
 	 * @throws EPMCException thrown in case of problems
 	 */
-	public ModelJANI convert() throws EPMCException {
+	public ModelJANI convert(boolean forExporting) throws EPMCException {
     	modelJANI.setContext(getContextValue());
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
     	modelJANI.setName(MODEL_NAME);
@@ -174,10 +175,10 @@ public final class PRISM2JANIConverter {
     	modelJANI.setAutomata(computeAutomata(actions, globalVariables));
 
     	convertSystem();
-		convertRewards();
+		convertRewards(forExporting);
 		convertPlayers();
     	
-    	modelJANI.setProperties(buildProperties());
+    	modelJANI.setProperties(buildProperties(forExporting));
 
     	return modelJANI;
 	}
@@ -218,12 +219,12 @@ public final class PRISM2JANIConverter {
 		systemConverter.convert();
 	}
 
-	private void convertRewards() throws EPMCException {
+	private void convertRewards(boolean forExporting) throws EPMCException {
     	RewardsConverter rewardsConverter = new RewardsConverter();
     	rewardsConverter.setJANIModel(modelJANI);
     	rewardsConverter.setPRISMModel(modelPRISM);
     	rewardsConverter.setTauAction(tauAction);
-    	rewardsConverter.attachRewards();
+    	rewardsConverter.attachRewards(forExporting);
 	}
 
 	private Constants buildConstants() {
@@ -264,30 +265,31 @@ public final class PRISM2JANIConverter {
 		return janiConstants;
 	}
 
-	private JANIProperties buildProperties() throws EPMCException {
+	private JANIProperties buildProperties(boolean forExporting) throws EPMCException {
 		JANIProperties properties = new JANIProperties();
 		properties.setModel(modelJANI);
 		//TODO: get the right valid identifiers
 		properties.setValidIdentifiers(Collections.emptyMap()); 
 		Properties oldProperties = modelPRISM.getPropertyList();
-		Map<Expression,RawProperty> newProperties = new LinkedHashMap<>();
 		for (RawProperty raw : oldProperties.getRawProperties()) {
-			Expression property = useNamedRewardsOnly(modelPRISM, oldProperties.getParsedProperty(raw));
+			Expression property = oldProperties.getParsedProperty(raw);; 
+			if (forExporting) { 
+				property = useNamedRewardsOnly(modelPRISM, property);
+			}
 			property = replaceSpecialIdentifiers(property);
-			property = useQuantitativePropertiesOnly(property);
-			List<Expression> wrapped = wrapWithFilter(property);
-			if (wrapped.size() == 1) {
-				newProperties.put(wrapped.get(0), raw);
-				properties.addProperty(raw.getName(), property, null);
-			} else if (wrapped.size() == 2) {
-				RawProperty raw1 = raw.clone();
-				RawProperty raw2 = raw.clone();
-				raw1.setName(null);
-				raw2.setName(null);
-				properties.addProperty(null, wrapped.get(0), null);
-				properties.addProperty(null, wrapped.get(1), null);
+			if (forExporting) {
+				property = useQuantitativePropertiesOnly(property);
+				List<Expression> wrapped = wrapWithFilter(property);
+				if (wrapped.size() == 1) {
+					properties.addProperty(raw.getName(), property, null);
+				} else if (wrapped.size() == 2) {
+					properties.addProperty(raw.getName(), wrapped.get(0), null);
+					properties.addProperty(raw.getName(), wrapped.get(1), null);
+				} else {
+					assert false;
+				}
 			} else {
-				assert false;
+				properties.addProperty(raw.getName(), property, null);
 			}
 		}
 		return properties;

@@ -838,7 +838,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         		.setName(INIT)
         		.build(), TypeBoolean.get(context));
 		if (engine instanceof EngineExplorer) {
-			ModelJANI jani = toJANI();
+			ModelJANI jani = toJANI(false);
 			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
 		} else {
 			return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
@@ -1300,9 +1300,9 @@ public final class ModelPRISM implements ModelJANIConverter {
 	}
 	
 	@Override
-	public ModelJANI toJANI() throws EPMCException {
+	public ModelJANI toJANI(boolean forExporting) throws EPMCException {
 		PRISM2JANIConverter converter = new PRISM2JANIConverter(this);
-		return converter.convert();
+		return converter.convert(forExporting);
 	}
 	
 	public List<PlayerDefinition> getPlayers() {

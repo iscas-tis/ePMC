@@ -100,7 +100,7 @@ final class RewardsConverter {
 		this.tauAction = tauAction;
 	}
 	
-	void attachRewards() throws EPMCException {
+	void attachRewards(boolean forExporting) throws EPMCException {
 		assert modelJANI != null;
 		assert modelPRISM != null;
 		assert tauAction != null;
@@ -108,10 +108,10 @@ final class RewardsConverter {
 		RewardMethod rewardMethod = getOptions().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
 		switch (rewardMethod) {
 		case INTEGRATE:
-			attachRewardsIntegrate();
+			attachRewardsIntegrate(forExporting);
 			break;
 		case EXTERNAL:
-			attachRewardsExternal();
+			attachRewardsExternal(forExporting);
 			break;
 		case NONE:
 			break;
@@ -121,8 +121,8 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewardsExternal() throws EPMCException {
-    	Variables rewards = buildRewards();
+	private void attachRewardsExternal(boolean forExporting) throws EPMCException {
+    	Variables rewards = buildRewards(forExporting);
     	addRewards(rewards);
     	Automaton rewardAutomaton = computeRewardAutomaton();
 		Automata automata = modelJANI.getAutomata();
@@ -141,14 +141,17 @@ final class RewardsConverter {
     	}
 	}
 
-	private Variables buildRewards() throws EPMCException {
+	private Variables buildRewards(boolean forExporting) throws EPMCException {
 		Variables rewards = new Variables();
 		rewards.setModel(modelJANI);
 		JANITypeReal rewardType = new JANITypeReal();
 		rewardType.setContextValue(getContextValue());
 		rewardType.setModel(modelJANI);
 		for (RewardStructure reward : modelPRISM.getRewards()) {
-			String name = PRISM2JANIConverter.prefixRewardName(reward.getName());
+			String name = reward.getName();
+			if (forExporting) {
+				name = PRISM2JANIConverter.prefixRewardName(reward.getName());
+			}
 			Variable variable = new Variable();
 			variable.setModel(modelJANI);
 			variable.setName(name);
@@ -347,8 +350,8 @@ final class RewardsConverter {
 		}
 	}
 
-	private void attachRewardsIntegrate() throws EPMCException {
-    	Variables rewards = buildRewards();
+	private void attachRewardsIntegrate(boolean forExporting) throws EPMCException {
+    	Variables rewards = buildRewards(forExporting);
     	addRewards(rewards);
 		Actions actions = modelJANI.getActions();
 		for (Action action : actions) {

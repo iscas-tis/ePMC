@@ -497,6 +497,19 @@ public final class TestHelper {
         return result;
     }
     
+    public static Map<String,Value> computeResultsMapDefinition(Model model) {
+        ModelCheckerResults mcr = computeResults(model);
+        Map<String,Value> result = new LinkedHashMap<>();
+        for (RawProperty property : mcr.getProperties()) {
+            if (mcr.get(property) instanceof Value) {
+                result.put(property.getDefinition(), (Value) mcr.get(property));
+            } else if (mcr.get(property) instanceof Exception) {
+                throw new RuntimeException((Exception) mcr.get(property));
+            }
+        }
+        return result;
+    }
+    
     public static Value computeResult(Options options, String modelFile,
             String property) {
         assert options != null;

@@ -36,8 +36,9 @@ public interface ModelJANIConverter extends Model {
 	 * An exception might be thrown in case the concrete model instance uses
 	 * features which cannot be converted to a JANI model (at present).
 	 * 
+	 * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
 	 * @return JANI representation of model
 	 * @throws EPMCException thrown in case of problems
 	 */
-	ModelJANI toJANI() throws EPMCException;
+	ModelJANI toJANI(boolean forExporting) throws EPMCException;
 }
