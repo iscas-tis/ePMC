@@ -50,7 +50,7 @@ import epmc.util.UtilJSON;
  */
 public final class JANIProperties implements JANINode, Properties {
 	/** String used for naming unnamed properties as DEFAULT_NAME_num */
-	private final static String DEFAULT_NAME = "Property_%s_%d";
+	private final static String DEFAULT_NAME = "Property_%d";
 
 	/** Model to which the properties belong. */
 	private ModelJANI model;
@@ -111,7 +111,7 @@ public final class JANIProperties implements JANINode, Properties {
 		if (name == null) {
 			int propertyNumber = 0;
 			do {
-				name = String.format(DEFAULT_NAME, model.getName(), propertyNumber);
+				name = String.format(DEFAULT_NAME, propertyNumber);
 				propertyNumber++;
 			} while (properties.containsKey(name));
 		}

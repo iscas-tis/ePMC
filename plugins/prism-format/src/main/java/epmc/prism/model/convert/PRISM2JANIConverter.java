@@ -135,22 +135,19 @@ public final class PRISM2JANIConverter {
 	/** Tau action replacing silent action. */
 	private Action tauAction;
 	
-	private String JANIModelName;
-
 	/**
 	 * Construct new converter for given PRISM model.
 	 * The model must not be {@code null}.
 	 * 
 	 * @param modelPRISM PRISM model to convert
 	 */
-	public PRISM2JANIConverter(ModelPRISM modelPRISM, String JANIModelName) {
+	public PRISM2JANIConverter(ModelPRISM modelPRISM) {
 		assert modelPRISM != null;
 		this.modelPRISM = modelPRISM;
     	modelJANI = new ModelJANI();
 		this.tauAction = new Action();
 		tauAction.setModel(modelJANI);
 		tauAction.setName(TAU);
-		this.JANIModelName = JANIModelName;
 	}
 	
 	/**
@@ -162,7 +159,6 @@ public final class PRISM2JANIConverter {
 	public ModelJANI convert(boolean forExporting) throws EPMCException {
     	modelJANI.setContext(getContextValue());
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
-    	modelJANI.setName(JANIModelName);
     	modelJANI.setVersion(JANI_VERSION);
     	
     	convertExtensions();

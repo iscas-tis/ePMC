@@ -223,7 +223,8 @@ public final class ExportPRISMToJaniModels {
     		prism = (ModelJANIConverter) TestHelper.loadModel(options, prismFilename, propertyFilename);
     	}
        	System.out.println("Converting");       
-    	ModelJANI jani = prism.toJANI(true, modelName);
+    	ModelJANI jani = prism.toJANI(true);
+    	jani.setName(modelName);
     	System.out.println("Generating JSON");
     	JsonValue json = jani.generate();
     	System.out.println("Writing");
