@@ -185,16 +185,19 @@ public final class ExpressionReward implements Expression {
     
     @Override
     public Expression replaceChildren(List<Expression> children) {
-        // TODO works for now, not sure whether best way
-        // purpose is to prevent labels being replaced
-        Expression structure = getReward().getExpression();
-        if (structure instanceof ExpressionIdentifier
-        		&& ((ExpressionIdentifierStandard) structure).getName().startsWith(QUOT)) {
-            List<Expression> oldChildren = children.subList(1, children.size());
-            children = new ArrayList<>(children.size());
-            children.add(structure);
-            children.addAll(oldChildren);
-        }
+//        // TODO works for now, not sure whether best way
+//        // purpose is to prevent labels being replaced
+//        Expression structure = getReward().getExpression();
+//        if (structure instanceof ExpressionIdentifier
+//        		&& ((ExpressionIdentifierStandard) structure).getName().startsWith(QUOT)) {
+//            List<Expression> oldChildren = children.subList(1, children.size());
+//            children = new ArrayList<>(children.size());
+//            children.add(structure);
+//            children.addAll(oldChildren);
+//        }
+//    	The above part has been commented out since reward labels have to be relabelled 
+//    	on exporting to JANI while they should not be relabelled for internal use; this 
+//    	is now considered inside PRISM2JANIConverter
         return new ExpressionReward.Builder()
         		.setContext(context)
         		.setRewardType(type)
