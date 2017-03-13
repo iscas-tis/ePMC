@@ -65,7 +65,8 @@ public final class Destination implements JANINode {
 	/** Assignments performed by this destination. */
 	private Assignments assignments;
 	/** Observable assignments performed by this destination. */
-	private Assignments observableAssignments;
+//	AT: there are no transient/observable assignment in the JANI specification
+//	private Assignments observableAssignments;
 	/** Valid identifiers used during parsing. */
 	private Map<String, JANIIdentifier> identifiers;
 	/** Model to which this destination belongs. */
