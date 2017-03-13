@@ -16,5 +16,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-format"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-model"/>
 	<classpathentry kind="lib" path="/epmc/lib/javax.json-1.0.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graphsolver-iterative"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

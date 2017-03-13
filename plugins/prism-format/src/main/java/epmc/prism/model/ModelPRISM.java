@@ -1301,8 +1301,8 @@ public final class ModelPRISM implements ModelJANIConverter {
 	
 	@Override
 	public ModelJANI toJANI(boolean forExporting) throws EPMCException {
-		PRISM2JANIConverter converter = new PRISM2JANIConverter(this);
-		return converter.convert(forExporting);
+		PRISM2JANIConverter converter = new PRISM2JANIConverter(this, forExporting);
+		return converter.convert();
 	}
 	
 	public List<PlayerDefinition> getPlayers() {

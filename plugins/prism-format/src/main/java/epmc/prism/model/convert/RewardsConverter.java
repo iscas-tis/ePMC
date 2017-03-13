@@ -87,7 +87,13 @@ final class RewardsConverter {
 	private ModelJANI modelJANI;
 	/** Action used as silent action. */
 	private Action tauAction;
-
+	/** Rewards have to be renamed for exporting but not for internal use; this variable controls the way rewards are managed*/
+	private boolean forExporting;
+	
+	void setForExporting(boolean forExporting) {
+		this.forExporting = forExporting;
+	}
+	
 	void setPRISMModel(ModelPRISM modelPrism) {
 		this.modelPRISM = modelPrism;
 	}
@@ -100,7 +106,7 @@ final class RewardsConverter {
 		this.tauAction = tauAction;
 	}
 	
-	void attachRewards(boolean forExporting) throws EPMCException {
+	void attachRewards() throws EPMCException {
 		assert modelJANI != null;
 		assert modelPRISM != null;
 		assert tauAction != null;
@@ -108,10 +114,10 @@ final class RewardsConverter {
 		RewardMethod rewardMethod = getOptions().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
 		switch (rewardMethod) {
 		case INTEGRATE:
-			attachRewardsIntegrate(forExporting);
+			attachRewardsIntegrate();
 			break;
 		case EXTERNAL:
-			attachRewardsExternal(forExporting);
+			attachRewardsExternal();
 			break;
 		case NONE:
 			break;
@@ -121,8 +127,8 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewardsExternal(boolean forExporting) throws EPMCException {
-    	Variables rewards = buildRewards(forExporting);
+	private void attachRewardsExternal() throws EPMCException {
+    	Variables rewards = buildRewards();
     	addRewards(rewards);
     	Automaton rewardAutomaton = computeRewardAutomaton();
 		Automata automata = modelJANI.getAutomata();
@@ -131,17 +137,18 @@ final class RewardsConverter {
 	}
 	
 	private void addRewards(Variables rewards) {
-    	if (modelJANI.getGlobalVariables() == null) {
-    		Variables globalVariables = new Variables();
+		Variables globalVariables = modelJANI.getGlobalVariables();
+    	if (globalVariables == null) {
+    		globalVariables = new Variables();
     		globalVariables.setModel(modelJANI);
     		modelJANI.setGlobalVariables(globalVariables);
     	}
     	for (Variable variable : rewards) {
-    		modelJANI.getGlobalVariables().addVariable(variable);
+    		globalVariables.addVariable(variable);
     	}
 	}
 
-	private Variables buildRewards(boolean forExporting) throws EPMCException {
+	private Variables buildRewards() throws EPMCException {
 		Variables rewards = new Variables();
 		rewards.setModel(modelJANI);
 		JANITypeReal rewardType = new JANITypeReal();
@@ -230,7 +237,11 @@ final class RewardsConverter {
 		assignments.setModel(modelJANI);
 		List<RewardStructure> rewardStructures = modelPRISM.getRewards();
 		for (RewardStructure structure : rewardStructures) {
-			Variable variable = rewards.get(PRISM2JANIConverter.prefixRewardName(structure.getName()));
+			String rewardName = structure.getName(); 
+			if (forExporting) {
+				rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
+			}
+			Variable variable = rewards.get(rewardName);
 			Expression assignedToVariable = null;
 			for (TransitionReward transitionReward : structure.getTransitionRewards()) {
 				String label = transitionReward.getLabel();
@@ -274,7 +285,11 @@ final class RewardsConverter {
 					&& ValueAlgebra.asAlgebra(((ExpressionLiteral) stateRewards).getValue()).isZero()) {
 				continue;
 			}
-			Variable rewardVariable = rewards.get(PRISM2JANIConverter.prefixRewardName(structure.getName()));
+			String rewardName = structure.getName();
+			if (forExporting) {
+				rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
+			}
+			Variable rewardVariable = rewards.get(rewardName);
 			AssignmentSimple locationRewardAssignment = new AssignmentSimple();
 			locationRewardAssignment.setModel(modelJANI);
 			locationRewardAssignment.setRef(rewardVariable);
@@ -350,8 +365,8 @@ final class RewardsConverter {
 		}
 	}
 
-	private void attachRewardsIntegrate(boolean forExporting) throws EPMCException {
-    	Variables rewards = buildRewards(forExporting);
+	private void attachRewardsIntegrate() throws EPMCException {
+    	Variables rewards = buildRewards();
     	addRewards(rewards);
 		Actions actions = modelJANI.getActions();
 		for (Action action : actions) {

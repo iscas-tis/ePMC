@@ -135,19 +135,22 @@ public final class PRISM2JANIConverter {
 	/** Tau action replacing silent action. */
 	private Action tauAction;
 	
+	private boolean forExporting;
+	
 	/**
 	 * Construct new converter for given PRISM model.
 	 * The model must not be {@code null}.
 	 * 
 	 * @param modelPRISM PRISM model to convert
 	 */
-	public PRISM2JANIConverter(ModelPRISM modelPRISM) {
+	public PRISM2JANIConverter(ModelPRISM modelPRISM, boolean forExporting) {
 		assert modelPRISM != null;
 		this.modelPRISM = modelPRISM;
     	modelJANI = new ModelJANI();
 		this.tauAction = new Action();
 		tauAction.setModel(modelJANI);
 		tauAction.setName(TAU);
+		this.forExporting = forExporting;
 	}
 	
 	/**
@@ -156,7 +159,7 @@ public final class PRISM2JANIConverter {
 	 * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
 	 * @throws EPMCException thrown in case of problems
 	 */
-	public ModelJANI convert(boolean forExporting) throws EPMCException {
+	public ModelJANI convert() throws EPMCException {
     	modelJANI.setContext(getContextValue());
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
     	modelJANI.setVersion(JANI_VERSION);
@@ -172,10 +175,10 @@ public final class PRISM2JANIConverter {
     	modelJANI.setAutomata(computeAutomata(actions, globalVariables));
 
     	convertSystem();
-		convertRewards(forExporting);
+		convertRewards();
 		convertPlayers();
     	
-    	modelJANI.setProperties(buildProperties(forExporting));
+    	modelJANI.setProperties(buildProperties());
 
     	return modelJANI;
 	}
@@ -216,12 +219,13 @@ public final class PRISM2JANIConverter {
 		systemConverter.convert();
 	}
 
-	private void convertRewards(boolean forExporting) throws EPMCException {
+	private void convertRewards() throws EPMCException {
     	RewardsConverter rewardsConverter = new RewardsConverter();
     	rewardsConverter.setJANIModel(modelJANI);
     	rewardsConverter.setPRISMModel(modelPRISM);
     	rewardsConverter.setTauAction(tauAction);
-    	rewardsConverter.attachRewards(forExporting);
+    	rewardsConverter.setForExporting(forExporting);
+    	rewardsConverter.attachRewards();
 	}
 
 	private Constants buildConstants() {
@@ -262,7 +266,7 @@ public final class PRISM2JANIConverter {
 		return janiConstants;
 	}
 
-	private JANIProperties buildProperties(boolean forExporting) throws EPMCException {
+	private JANIProperties buildProperties() throws EPMCException {
 		JANIProperties properties = new JANIProperties();
 		properties.setModel(modelJANI);
 		//TODO: get the right valid identifiers
@@ -486,6 +490,7 @@ public final class PRISM2JANIConverter {
 		variable.setIdentifier(identifier);
 		variable.setAutomaton(null);
 		variable.setType(type);
+		variable.setInitial(varInit);
 		return variable;
 	}
 
