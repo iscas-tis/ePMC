@@ -22,10 +22,10 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 
-final class RewardSpecificationImpl implements RewardSpecification {
+public final class RewardSpecificationImpl implements RewardSpecification {
     private final Expression expression;
     
-    RewardSpecificationImpl(Expression expression) {
+    public RewardSpecificationImpl(Expression expression) {
         this.expression = expression;
     }
     

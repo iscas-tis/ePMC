@@ -1361,9 +1361,7 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 	Expression cond = ExpressionLiteral.getTrue(contextVal);
 	DirType dirType;
 	CmpType cmpType;
-	Expression rewardStructure = new ExpressionIdentifierStandard.Builder()
-        		.setName("")
-        		.build();
+	Expression rewardStructure = ExpressionLiteral.getTrue(contextVal);
 	OldSchoolFilter filter = null;
 	Token oper;
 }
