@@ -275,7 +275,7 @@ public final class PRISM2JANIConverter {
 		for (RawProperty raw : oldProperties.getRawProperties()) {
 			Expression property = oldProperties.getParsedProperty(raw);; 
 			if (forExporting) { 
-				property = usePrefixedNamedRewardsOnly(modelPRISM, property);
+				property = useOnlyPrefixedNamedRewards(modelPRISM, property);
 			}
 			property = replaceSpecialIdentifiers(property);
 			if (forExporting) {
@@ -349,15 +349,15 @@ public final class PRISM2JANIConverter {
 	}
 	
     /**
-     * Transform the expression so to use only named reward structures.
+     * Transform the expression so to use only prefixed named reward structures.
      * 
      * Properties can refer to reward structures by name, number, or nothing (defaulting to the first reward structure).
-     * By calling this method, the obtained {@link Expression} refers to reward structures by name only.
+     * By calling this method, the obtained {@link Expression} refers to reward structures by name only, with the name being prefixed by {@link #REWARD_PREFIX}.
      * 
      * @param expression the expression to convert
      * @return an equivalent expression using only named reward structures
      */
-	private static Expression usePrefixedNamedRewardsOnly(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
+	private Expression useOnlyPrefixedNamedRewards(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
 		assert expression != null;
 		List<Expression> oldChildren = expression.getChildren();
 		List<Expression> newChildren = new ArrayList<>(oldChildren.size());
@@ -372,13 +372,13 @@ public final class PRISM2JANIConverter {
 	        newChildren.add(new ExpressionIdentifierStandard.Builder()
 	        		.setName(prefixRewardName(name))
 	        		.build());
-	        newChildren.add(usePrefixedNamedRewardsOnly(modelPRISM, oldChildren.get(1)));
+	        newChildren.add(useOnlyPrefixedNamedRewards(modelPRISM, oldChildren.get(1)));
 	        newChildren.add(oldChildren.get(2));
 	        newChildren.add(oldChildren.get(3));
 	        return expression.replaceChildren(newChildren);
 		} else {
 			for (Expression child:oldChildren) {
-				newChildren.add(usePrefixedNamedRewardsOnly(modelPRISM, child));
+				newChildren.add(useOnlyPrefixedNamedRewards(modelPRISM, child));
 			}
 			return expression.replaceChildren(newChildren);
 		}
@@ -393,7 +393,7 @@ public final class PRISM2JANIConverter {
      * @param expression the expression to convert
      * @return an equivalent expression using only named reward structures
      */
-	public static Expression fixRewards(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
+	public static Expression useOnlyNamedRewards(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
 		assert expression != null;
 		List<Expression> oldChildren = expression.getChildren();
 		List<Expression> newChildren = new ArrayList<>(oldChildren.size());
@@ -408,13 +408,13 @@ public final class PRISM2JANIConverter {
 	        newChildren.add(new ExpressionIdentifierStandard.Builder()
 	        		.setName(name)
 	        		.build());
-	        newChildren.add(fixRewards(modelPRISM, oldChildren.get(1)));
+	        newChildren.add(useOnlyNamedRewards(modelPRISM, oldChildren.get(1)));
 	        newChildren.add(oldChildren.get(2));
 	        newChildren.add(oldChildren.get(3));
 	        return expression.replaceChildren(newChildren);
 		} else {
 			for (Expression child:oldChildren) {
-				newChildren.add(fixRewards(modelPRISM, child));
+				newChildren.add(useOnlyNamedRewards(modelPRISM, child));
 			}
 			return expression.replaceChildren(newChildren);
 		}
