@@ -120,8 +120,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
 		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        required.add(((ExpressionReward) (propertyQuantifier.getQuantified())).getReward());
         ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
+        required.add(quantifiedReward.getReward());
         RewardType rewardType = quantifiedReward.getRewardType();
         if (rewardType.isReachability()) {
         	required.addAll(modelChecker.getRequiredNodeProperties(quantifiedReward.getRewardReachSet(), forStates));
