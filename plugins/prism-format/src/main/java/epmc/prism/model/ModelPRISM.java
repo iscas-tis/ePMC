@@ -52,6 +52,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.RewardSpecification;
+import epmc.expression.standard.RewardSpecificationImpl;
 import epmc.expression.standard.SMGPlayer;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -823,6 +824,9 @@ public final class ModelPRISM implements ModelJANIConverter {
 	public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
 			Set<Object> edgeProperties) throws EPMCException {
         Map<Expression,JANIType>  allVariables = new HashMap<>();
+		graphProperties = fixProperties(graphProperties);
+		nodeProperties = fixProperties(nodeProperties);
+		edgeProperties = fixProperties(edgeProperties);
         allVariables.putAll(globalVariables);
         for (Module module : this.modules) {
             allVariables.putAll(module.getVariables());
@@ -844,6 +848,24 @@ public final class ModelPRISM implements ModelJANIConverter {
 			return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
 		}
     }
+	
+	private Set<Object> fixProperties(Set<Object> properties) throws EPMCException {
+		Set<Object> fixed = new LinkedHashSet<>(properties.size());
+		for (Object property : properties) {
+			if (property instanceof RewardSpecification) {
+				RewardSpecification rewardSpecification = (RewardSpecification) property;
+				RewardStructure rewardStructure = getReward(rewardSpecification);
+				ExpressionIdentifier rewardName = new ExpressionIdentifierStandard.Builder()
+					.setName(rewardStructure.getName())
+					.build();
+				RewardSpecification fixedRewardSpecification = new RewardSpecificationImpl(rewardName);				
+				fixed.add(fixedRewardSpecification);
+			} else {
+				fixed.add(property);
+			}
+		}
+		return fixed;
+	}
 
 	private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
 			Set<Object> edgeProperties) throws EPMCException {

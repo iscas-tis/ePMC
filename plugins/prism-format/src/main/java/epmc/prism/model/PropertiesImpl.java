@@ -99,8 +99,7 @@ public final class PropertiesImpl implements Properties {
                 continue;
             }
             Expression parsed = UtilModelChecker.parseExpression(getContextValue(), definition);
-//            This should be disabled, otherwise there are inconsistencies with the prefix appended in front to the reward name
-//            parsed = PRISM2JANIConverter.useNamedRewardsOnly(model, parsed);
+            parsed = PRISM2JANIConverter.fixRewards(model, parsed);
             properties.put(prop, parsed);
         }
         for (Entry<String,String> entry : rawProperties.getConstants().entrySet()) {
