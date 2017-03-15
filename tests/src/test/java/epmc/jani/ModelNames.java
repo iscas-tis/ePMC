@@ -32,9 +32,13 @@ public final class ModelNames {
 	public final static String JANI_EXTENSION = ".jani";
 	
 	public static String getJANIFilenameFromPRISMFilename(String prismFilename) {
+		return getJANIFilenameFromPRISMFilename(prismFilename, "");
+	}
+	
+	public static String getJANIFilenameFromPRISMFilename(String prismFilename, String prefix) {
 		String janiFilename = new File(prismFilename).getName();
 		janiFilename = janiFilename.substring(0, janiFilename.lastIndexOf('.'));
-		janiFilename = JANI_EXPORT_DIR + janiFilename + JANI_EXTENSION;
+		janiFilename = JANI_EXPORT_DIR + prefix + janiFilename + JANI_EXTENSION;
 		return janiFilename;
 	}
 
