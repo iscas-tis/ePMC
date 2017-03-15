@@ -10,3 +10,8 @@ target/
 *.so
 *.dylib
 /.DS_Store
+
+
+# IntelliJ IDEA
+*.[ei]ml
+.idea/*
