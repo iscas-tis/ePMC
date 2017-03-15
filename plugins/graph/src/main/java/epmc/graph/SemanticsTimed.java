@@ -22,19 +22,13 @@ package epmc.graph;
 
 import epmc.graph.Semantics;
 
-/**
- * Semantics type for stochastic timed automata (STAs).
- */
-public enum SemanticsSTA implements SemanticsNonDet, SemanticsStochastic, SemanticsTimed {
-	/** Singleton element. */
-	STA;
-	
+public interface SemanticsTimed extends Semantics {
     /**
-     * Checks whether this is a stochastic timed automaton (STA).
+     * Checks whether this is a timed semantics type.
      * 
-     * @return whether this is a stochastic timed automaton (STA)
+     * @return whether this is a timed semantics type
      */
-	public static boolean isSTA(Semantics semantics) {
-		return semantics instanceof SemanticsSTA;
+	static boolean isTimed(Semantics semantics) {
+		return semantics instanceof SemanticsTimed;
 	}
 }
