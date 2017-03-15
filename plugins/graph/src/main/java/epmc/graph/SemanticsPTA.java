@@ -25,7 +25,7 @@ import epmc.graph.Semantics;
 /**
  * Semantics type for probabilistic timed automata (PTAs).
  */
-public enum SemanticsPTA implements SemanticsNonDet, SemanticsStochastic {
+public enum SemanticsPTA implements SemanticsNonDet, SemanticsStochastic, SemanticsTimed {
 	/** Singleton element. */
 	PTA;
 	

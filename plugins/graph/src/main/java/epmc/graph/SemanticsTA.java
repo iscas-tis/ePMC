@@ -25,7 +25,7 @@ import epmc.graph.Semantics;
 /**
  * Semantics type for timed automata (TAs).
  */
-public enum SemanticsTA implements SemanticsNonDet {
+public enum SemanticsTA implements SemanticsNonDet, SemanticsTimed {
 	/** Singleton element. */
 	TA;
 	

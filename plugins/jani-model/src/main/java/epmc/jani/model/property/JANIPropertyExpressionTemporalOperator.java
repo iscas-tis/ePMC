@@ -45,6 +45,9 @@ import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.SemanticsContinuousTime;
 import epmc.graph.SemanticsDiscreteTime;
+import epmc.graph.SemanticsPTA;
+import epmc.graph.SemanticsSTA;
+import epmc.graph.SemanticsTimed;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
@@ -272,6 +275,9 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			}
 			if (SemanticsDiscreteTime.isDiscreteTime(model.getSemantics())) {
 				stepBounds = interval;
+			}
+			if (SemanticsTimed.isTimed(model.getSemantics())) {
+				timeBounds = interval;
 			}
 		}
 		if (expression instanceof ExpressionReward) {
