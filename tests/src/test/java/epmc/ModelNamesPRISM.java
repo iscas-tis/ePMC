@@ -23,7 +23,7 @@ package epmc;
 public final class ModelNamesPRISM {
     private final static String PREFIX = System.getProperty("user.home") + "/prism-examples/";
 //    private final static String PREFIX = "/Users/emhahn/prism-4.2.1-src/examples/";
-    private final static String PREFIX_PTA = PREFIX + "/pta/";
+    private final static String PREFIX_PTA = PREFIX + "pta/";
 
     private final static String PREFIX_HP = "/Users/emhahn/prism-models-homepage/";
 
@@ -159,11 +159,19 @@ public final class ModelNamesPRISM {
     public final static String WALKERS_RING_LL_MODEL = PREFIX_HP + "walkers_ringLL.sm";
     
     public final static String PTA_CSMA_ABST_MODEL = PREFIX_PTA + "csma/abst/csma.nm";
+    public final static String PTA_CSMA_ABST_PROPERTY = PREFIX_PTA + "csma/abst/deadline.pctl";
     public final static String PTA_CSMA_FULL_MODEL = PREFIX_PTA + "csma/full/csma.nm";
+    public final static String PTA_CSMA_FULL_PROPERTY = PREFIX_PTA + "csma/full/collisions.pctl";
     public final static String PTA_FIREWIRE_ABST_MODEL = PREFIX_PTA + "firewire/abst/firewire.nm";
+    public final static String PTA_FIREWIRE_ABST_PROPERTY = PREFIX_PTA + "firewire/abst/deadline-max.pctl";
     public final static String PTA_FIREWIRE_IMPL_MODEL = PREFIX_PTA + "firewire/impl/firewire.nm";
+    public final static String PTA_FIREWIRE_IMPL_PROPERTY = PREFIX_PTA + "firewire/impl/deadline.pctl";
     public final static String PTA_REPUDIATION_HONEST_MODEL = PREFIX_PTA + "repudiation/honest/repudiation.nm";
+    public final static String PTA_REPUDIATION_HONEST_PROPERTY = PREFIX_PTA + "repudiation/honest/deadline.pctl";
     public final static String PTA_REPUDIATION_MALICIOUS_MODEL = PREFIX_PTA + "repudiation/malicious/repudiation.nm";
+    public final static String PTA_REPUDIATION_MALICIOUS_PROPERTY = PREFIX_PTA + "repudiation/malicious/deadline.pctl";
     public final static String PTA_SIMPLE_MODEL = PREFIX_PTA + "simple/formats09.nm";
+    public final static String PTA_SIMPLE_PROPERTY = PREFIX_PTA + "simple/formats09.pctl";
     public final static String PTA_ZEROCONF_MODEL = PREFIX_PTA + "zeroconf/zeroconf.nm";
+    public final static String PTA_ZEROCONF_PROPERTY = PREFIX_PTA + "zeroconf/deadline.pctl";
 }
