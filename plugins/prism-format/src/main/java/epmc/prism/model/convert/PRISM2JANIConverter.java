@@ -147,6 +147,7 @@ public final class PRISM2JANIConverter {
 		assert modelPRISM != null;
 		this.modelPRISM = modelPRISM;
     	modelJANI = new ModelJANI();
+    	modelJANI.setName(modelPRISM.getIdentifier());
 		this.tauAction = new Action();
 		tauAction.setModel(modelJANI);
 		tauAction.setName(TAU);
