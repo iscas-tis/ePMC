@@ -303,6 +303,7 @@ public final class PCTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
 
         result = computeResult(options, ER12_1, "P=?[G<=10 num_affected<=4]");
+        // TODO make parse again
         assertEquals("[0.8533520129860975,0.8940213623509145]", result, 1E-8);
         close(options);
     }
