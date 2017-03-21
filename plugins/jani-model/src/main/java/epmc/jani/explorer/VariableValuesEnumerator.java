@@ -65,6 +65,7 @@ import epmc.value.ValueRange;
  * @author Ernst Moritz Hahn
  */
 public final class VariableValuesEnumerator {
+	public final static String SPACE = " ";
 	/**
 	 * Enum to specify how to obtain the different values.
 	 * This enum only decides how values are obtained if no short cuts are
@@ -180,7 +181,7 @@ public final class VariableValuesEnumerator {
 			ExpressionOperator expressionOperator = (ExpressionOperator) expression;
 			Map<Variable,Value> left = computeSimpleRestricted(expressionOperator.getOperand1());
 			Map<Variable,Value> right = computeSimpleRestricted(expressionOperator.getOperand2());
-			assert Collections.disjoint(left.keySet(), right.keySet()); // TODO
+			assert Collections.disjoint(left.keySet(), right.keySet()) : left.keySet() + SPACE + right.keySet(); // TODO
 			Map<Variable,Value> result = new LinkedHashMap<>();
 			result.putAll(left);
 			result.putAll(right);
