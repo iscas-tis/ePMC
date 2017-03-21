@@ -222,8 +222,12 @@ public final class Variable implements JANINode, JANIIdentifier {
 	}
 	
 	public void setInitial(Expression expression) throws EPMCException {
-		ExpressionParser parser = new ExpressionParser(model, Collections.emptyMap(), false);
-		initialValue = parser.matchExpression(model, expression);
+		if (expression == null) {
+			initialValue = null;
+		} else {
+			ExpressionParser parser = new ExpressionParser(model, Collections.emptyMap(), false);
+			initialValue = parser.matchExpression(model, expression);
+		}
 	}
 	
 	public boolean isInitialValueDefined() {
