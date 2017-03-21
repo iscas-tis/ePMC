@@ -62,13 +62,13 @@ import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorNot;
-import epmc.value.Type;
-import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
+import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
-import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
+import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
@@ -185,7 +185,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    ExpressionQuantifier quant = UtilCoalition.getQuantifier(propertyCoalition);
 		getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
 	    Expression path = quant.getQuantified();
-	    if (UtilCoalition.isDirTypeMin(propertyCoalition)) {
+	    boolean isMin = UtilCoalition.isDirTypeMin(propertyCoalition);
+	    if (isMin) {
 	    	path = not(path);
 	    }
 	    Set<Expression> inners = UtilCoalition.collectLTLInner(path);
@@ -249,7 +250,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	        SolverQuantitative solver = new SolverQuantitativeSchewe();
 	        solver.setGame(game);
 	        QuantitativeResult res = solver.solve();
-	    	result = toOrig(game, init, res.getProbabilities());
+	    	result = toOrig(game, init, res.getProbabilities(), isMin);
 	    }
 	    
 	    return result;
@@ -314,7 +315,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    }
 	    
 	    NodeProperty isState = product.getNodeProperty(CommonProperties.STATE);
-	    Type playerType = TypeEnum.get(getContextValue(), Player.class);
+	    TypeEnum playerType = TypeEnum.get(getContextValue(), Player.class);
 	    NodeProperty playerProp = wrapper.addSettableNodeProperty(CommonProperties.PLAYER, playerType);
 	    NodeProperty labels = wrapper.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
 	    boolean hasInfPrio = false;
@@ -393,7 +394,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		assert forStates != null;
 		assert solverResult != null;
 		TypeBoolean typeBoolean = TypeBoolean.get(getContextValue());
-		Value entry = typeBoolean.newValue();
+		ValueBoolean entry = typeBoolean.newValue();
 	//        BitSet nodes = game.getInitialNodes();
 	//        NodeProperty nodeAutomaton = game.getNodeProperty(CommonProperties.NODE_MODEL);
 		ValueArray resultValues = UtilValue.newArray(TypeBoolean.get(getContextValue())
@@ -419,22 +420,27 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	 * 
 	 * @param forStates model states for which results are needed
 	 * @param solverResult result from solver to be mapped back
+	 * @param isMin 
 	 * @return result map for states of original model
 	 * @throws EPMCException thrown in case of problems
 	 */
-	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, ValueArray solverResult) throws EPMCException {
+	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, ValueArrayAlgebra solverResult, boolean isMin) throws EPMCException {
 		assert forStates != null;
 		assert solverResult != null;
 	//        BitSet nodes = game.getInitialNodes();
 	//        NodeProperty nodeAutomaton = game.getNodeProperty(CommonProperties.NODE_MODEL);
 		ValueArray resultValues = UtilValue.newArray(solverResult.getType(), forStates.size());
 	        // TODO check!
-		Value entry = TypeArray.asArray(solverResult.getType()).getEntryType().newValue();
+		ValueAlgebra entry = solverResult.getType().getEntryType().newValue();
+		ValueAlgebra one = TypeWeight.get(getContextValue()).getOne();
 		for (int i = 0; i < forStates.size(); i++) {
 			int node = forStates.getExplicitIthState(i);
 			game.queryNode(node);
 			//int modelState = nodeAutomaton.getInt();
 			solverResult.get(entry, node);
+			if (isMin) {
+				entry.subtract(one, entry);
+			}
 			resultValues.set(entry, i);
 		}
 		StateMap result = UtilGraph.newStateMap(forStates, resultValues);
