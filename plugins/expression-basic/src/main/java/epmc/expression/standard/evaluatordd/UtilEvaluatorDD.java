@@ -284,27 +284,6 @@ public final class UtilEvaluatorDD {
         return result;
     }
 
-    public static DD applyVectorSingleDD(ContextValue context, List<DD> vector, Expression expression,
-            Map<Expression, VariableDD> variables) throws EPMCException {
-        assert expression != null;
-        if (vector != null) {
-            return null;
-        }
-        List<EvaluatorDD> inner = new ArrayList<>();
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        for (Expression op : expressionOperator.getOperands()) {
-            EvaluatorDD evaluator = newEvaluator(context, op, variables);
-            inner.add(evaluator);
-        }
-        ContextDD contextDD = ContextDD.get(context);
-        DD[] dds = new DD[expressionOperator.getOperands().size()];
-        DD result = contextDD.apply(expressionOperator.getOperator(), dds);
-        for (EvaluatorDD op : inner) {
-            op.close();
-        }
-        return result;
-    }
-
     public static boolean close(boolean closed, DD dd, List<DD> vector) {
         if (closed) {
             return true;

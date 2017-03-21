@@ -65,7 +65,6 @@ public final class EvaluatorDDOperatorVectorSub implements EvaluatorDD {
     @Override
     public void build() throws EPMCException {
         vector = UtilEvaluatorDD.applyVector(context, expression, variables, getContextDD()::twoCplSubtract);
-        dd = UtilEvaluatorDD.applyVectorSingleDD(context, vector, expression, variables);
     }
 
     @Override

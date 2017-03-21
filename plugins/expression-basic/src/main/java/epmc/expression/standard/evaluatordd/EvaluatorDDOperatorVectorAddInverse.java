@@ -65,7 +65,6 @@ public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
     @Override
     public void build() throws EPMCException {
         vector = UtilEvaluatorDD.applyVector(context, expression, variables, getContextDD()::twoCplAddInverse);
-        dd = UtilEvaluatorDD.applyVectorSingleDD(context, vector, expression, variables);
     }
 
     @Override
