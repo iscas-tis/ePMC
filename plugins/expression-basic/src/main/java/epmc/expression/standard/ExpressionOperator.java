@@ -183,7 +183,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         for (int opNr = 0; opNr < opTypes.length; opNr++) {
             Expression child = operands.get(opNr);
             Type childType = child.getType(expressionToType);
-            assert childType != null : this + "    in    " + child + " " + child.getClass();
+            assert childType != null : this + "    in    " + child + " " + child.getClass() + " " + expressionToType;
             opTypes[opNr] = childType;
         }
         result = this.operator.resultType(opTypes);
