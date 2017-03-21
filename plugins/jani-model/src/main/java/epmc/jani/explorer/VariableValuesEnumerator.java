@@ -25,9 +25,11 @@ import static epmc.error.UtilError.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
@@ -181,7 +183,16 @@ public final class VariableValuesEnumerator {
 			ExpressionOperator expressionOperator = (ExpressionOperator) expression;
 			Map<Variable,Value> left = computeSimpleRestricted(expressionOperator.getOperand1());
 			Map<Variable,Value> right = computeSimpleRestricted(expressionOperator.getOperand2());
-			assert Collections.disjoint(left.keySet(), right.keySet()) : left.keySet() + SPACE + right.keySet(); // TODO
+			Set<Variable> common = new HashSet<>();
+			common.addAll(left.keySet());
+			common.retainAll(right.keySet());
+			if (!common.isEmpty()) {
+				for (Variable entry : common) {
+					if (!left.get(entry).isEq(right.get(entry))) {
+						return Collections.emptyMap();
+					}
+				}
+			}
 			Map<Variable,Value> result = new LinkedHashMap<>();
 			result.putAll(left);
 			result.putAll(right);
