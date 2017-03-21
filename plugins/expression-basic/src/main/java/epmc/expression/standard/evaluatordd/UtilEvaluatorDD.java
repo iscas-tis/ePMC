@@ -47,10 +47,12 @@ public final class UtilEvaluatorDD {
     
     private final static class ExpressionToTypeDD implements ExpressionToType {
     	private final ContextValue context;
+		private final Map<Expression, VariableDD> variables;
 
-		private ExpressionToTypeDD(ContextValue context) {
+		private ExpressionToTypeDD(ContextValue context, Map<Expression, VariableDD> variables) {
     		assert context != null;
     		this.context = context;
+    		this.variables = variables;
     	}
 
 		@Override
@@ -61,11 +63,19 @@ public final class UtilEvaluatorDD {
 		@Override
 		public Type getType(Expression expression) throws EPMCException {
 			assert expression != null;
-			return null;
+			if (variables == null) {
+				return null;
+			}
+			VariableDD variable = variables.get(expression);
+			if (variable == null) {
+				return null;
+			}
+			return variable.getType();
 		}
     }
     
     public static EvaluatorDD newEvaluator(ContextValue context, Expression expression, Map<Expression,VariableDD> variables) throws EPMCException {
+    	assert context != null;
         assert expression != null;
         assert variables != null;
         for (Entry<Expression, VariableDD> entry : variables.entrySet()) {
@@ -122,7 +132,8 @@ public final class UtilEvaluatorDD {
         }
         assert vector != null;
         ContextDD contextDD = vector.get(0).getContext();
-        Type type = expression.getType(new ExpressionToTypeDD(contextDD.getContextValue()));
+        Type type = TypeInteger.get(contextDD.getContextValue());
+//        Type type = expression.getType(new ExpressionToTypeDD(contextDD.getContextValue(), null));
         if (type == null || TypeInteger.isInteger(type)) {
             int digVal = 1;
             ValueInteger value = TypeInteger.get(contextDD.getContextValue())
@@ -188,7 +199,7 @@ public final class UtilEvaluatorDD {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         for (Expression operand : expressionOperator.getOperands()) {
-            if (!TypeInteger.isInteger(operand.getType(new ExpressionToTypeDD(context)))) {
+            if (!TypeInteger.isInteger(operand.getType(new ExpressionToTypeDD(context, variables)))) {
                 return false;
             }
         }
@@ -216,7 +227,7 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(context, op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(context)));
+            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(context, variables)));
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")
@@ -247,7 +258,7 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(context, op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(context)));
+            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(context, variables)));
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")
@@ -262,6 +273,7 @@ public final class UtilEvaluatorDD {
             EvaluatorDDOperatorGeneral general = new EvaluatorDDOperatorGeneral();
             general.setExpression(expression);
             general.setVariables(variables);
+            general.setContextValue(context);
             general.build();
             result = general.getDD().clone();
             general.close();
