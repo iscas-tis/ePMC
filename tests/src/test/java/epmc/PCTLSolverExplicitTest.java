@@ -36,6 +36,8 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.value.Value;
+import epmc.value.ValueInterval;
+import static org.junit.Assert.assertTrue;
 
 // TODO just started with setting up tests, will have to add a few more
 
@@ -303,8 +305,10 @@ public final class PCTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
 
         result = computeResult(options, ER12_1, "P=?[G<=10 num_affected<=4]");
-        // TODO make parse again
-        assertEquals("[0.8533520129860975,0.8940213623509145]", result, 1E-8);
+        assertTrue(ValueInterval.isInterval(result));
+        ValueInterval resultInterval = ValueInterval.asInterval(result);
+        assertEquals("0.8533520129860975", resultInterval.getIntervalLower(), 1E-8);
+        assertEquals("0.8940213623509145", resultInterval.getIntervalUpper(), 1E-8);
         close(options);
     }
 
