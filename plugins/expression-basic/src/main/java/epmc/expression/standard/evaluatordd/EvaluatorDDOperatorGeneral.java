@@ -78,6 +78,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
 
     @Override
     public void build() throws EPMCException {
+    	assert context != null;
         Operator operator = expressionOperator.getOperator();
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
