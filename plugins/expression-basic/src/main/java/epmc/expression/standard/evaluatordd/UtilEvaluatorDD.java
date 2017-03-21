@@ -21,6 +21,7 @@
 package epmc.expression.standard.evaluatordd;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -201,6 +202,9 @@ public final class UtilEvaluatorDD {
         for (Expression operand : expressionOperator.getOperands()) {
             if (!TypeInteger.isInteger(operand.getType(new ExpressionToTypeDD(context, variables)))) {
                 return false;
+            }
+            if (!canIntegerVectorOperator(context, operand, operator, variables)) {
+            	return false;
             }
         }
         return true;
