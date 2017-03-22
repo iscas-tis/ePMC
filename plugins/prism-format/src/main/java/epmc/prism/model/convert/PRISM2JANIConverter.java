@@ -23,7 +23,6 @@ package epmc.prism.model.convert;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +33,7 @@ import java.util.Set;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.expression.ExpressionToType;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionFilter;
@@ -87,10 +87,13 @@ import epmc.prism.model.Module;
 import epmc.prism.model.ModuleCommands;
 import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
+import epmc.prism.value.OperatorPRISMPow;
 import epmc.util.Util;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
+import epmc.value.OperatorCeil;
+import epmc.value.OperatorPow;
 import epmc.value.OperatorSubtract;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
@@ -107,6 +110,37 @@ import epmc.value.ValueBoolean;
  * @author Ernst Moritz Hahn
  */
 public final class PRISM2JANIConverter {
+	private final static class ExpressionToTypeJANIConverter implements ExpressionToType {
+		private final ContextValue context;
+		private final Map<Expression,Type> typeMap;
+		
+		private ExpressionToTypeJANIConverter(ContextValue context, Variables variables) {
+			assert context != null;
+			assert variables != null;
+			this.context = context;
+			Map<Expression,Type> typeMap = new HashMap<>();
+			for (Variable variable : variables) {
+				try {
+					typeMap.put(variable.getIdentifier(), variable.getType().toType());
+				} catch (EPMCException e) {
+					// in case type cannot be derived, we just leave it out
+				}
+			}
+			this.typeMap = Collections.unmodifiableMap(typeMap);
+		}
+		
+		@Override
+		public ContextValue getContextValue() {
+			return context;
+		}
+
+		@Override
+		public Type getType(Expression expression) throws EPMCException {
+			return typeMap.get(expression);
+		}
+		
+	}
+	
 	/** name to use for newly generated location variable. */
 	final static String LOCATION_NAME = "location";
 	/** Empty string. */
@@ -115,9 +149,12 @@ public final class PRISM2JANIConverter {
 	private final static String TAU = "τ";
 	/** JANI version to which the converter converts. */
 	private final static int JANI_VERSION = 1;
+	/** Initial states identifier name. */
 	private final static String INIT = "\"init\"";
+	/** Deadlock states identifier name. */
 	private final static String DEADLOCK = "\"deadlock\"";
 	
+	// TODO :-|
 	static String REWARD_PREFIX = "reward_";
 	
 	static String prefixRewardName(String name) {
@@ -136,6 +173,7 @@ public final class PRISM2JANIConverter {
 	private Action tauAction;
 	
 	private boolean forExporting;
+	private ExpressionToTypeJANIConverter expressionToType;
 	
 	/**
 	 * Construct new converter for given PRISM model.
@@ -168,6 +206,7 @@ public final class PRISM2JANIConverter {
     	convertExtensions();
 
 		Variables globalVariables = buildGlobalVariables();
+		this.expressionToType = new ExpressionToTypeJANIConverter(modelJANI.getContextValue(), globalVariables);
     	modelJANI.setGlobalVariables(globalVariables);
     	modelJANI.setModelConstants(buildConstants());
     	Actions actions = computeActions();
@@ -493,7 +532,7 @@ public final class PRISM2JANIConverter {
 
 	/**
 	 * Collect global variables.
-	 * This includes the global variables of the PRISM model. It curently also 
+	 * This includes the global variables of the PRISM model. It currently also 
 	 * includes all local variables of modules, because these are potentially
 	 * read and written by several modules.
 	 * 
@@ -596,14 +635,14 @@ public final class PRISM2JANIConverter {
 			edge.setLocation(location);
 			Guard guard = new Guard();
 			guard.setModel(modelJANI);
-			guard.setExp(command.getGuard());
+			guard.setExp(prism2jani(command.getGuard()));
 			edge.setGuard(guard);
 			Destinations destinations = edge.getDestinations();
 			
 			Expression totalWeight = null;
 			if (SemanticsCTMC.isCTMC(modelPRISM.getSemantics())) {
 				for (Alternative alternative : command.getAlternatives()) {
-					Expression weight = alternative.getWeight();
+					Expression weight = prism2jani(alternative.getWeight());
 					if (totalWeight == null) {
 						totalWeight = weight;
 					} else {
@@ -619,7 +658,7 @@ public final class PRISM2JANIConverter {
 			for (Alternative alternative : command.getAlternatives()) {
 				Destination destination = new Destination();
 				destination.setModel(modelJANI);
-				Expression probability = alternative.getWeight();
+				Expression probability = prism2jani(alternative.getWeight());
 				if (totalWeight != null) {
 					probability = UtilExpressionStandard.opDivide(getContextValue(), probability, totalWeight);
 				}
@@ -655,15 +694,27 @@ public final class PRISM2JANIConverter {
 	 * 
 	 * @param expression expression to be converted
 	 * @return converted expression directly representable in JANI
-	 * @throws EPMCException 
+	 * @throws EPMCException thrown in case of problems
 	 */
-	private Expression prism2jani(Expression expression) throws EPMCException {
-		if (expression instanceof ExpressionOperator 
-				&& ((ExpressionOperator) expression).getOperator()
-				.getIdentifier()
-				.equals(OperatorAddInverse.IDENTIFIER)) {
-			ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-			Expression operand = prism2jani(expressionOperator.getOperand1());
+	Expression prism2jani(Expression expression) throws EPMCException {
+		assert expression != null;
+		if (ExpressionOperator.isOperator(expression)) {
+			return prism2jani(ExpressionOperator.asOperator(expression));
+		} else {
+			List<Expression> newChildren = new ArrayList<>();
+			for (Expression child : expression.getChildren()) {
+				newChildren.add(prism2jani(child));
+			}
+			return expression.replaceChildren(newChildren);
+		}
+	}
+	
+	private Expression prism2jani(ExpressionOperator expression) throws EPMCException {
+		assert expression != null;
+		String operator = expression.getOperator().getIdentifier();
+		switch (operator) {
+		case OperatorAddInverse.IDENTIFIER: {
+			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
 					.setValue(TypeReal.get(getContextValue()).getZero())
 					.build();
@@ -671,12 +722,38 @@ public final class PRISM2JANIConverter {
 					.setOperator(getContextValue().getOperator(OperatorSubtract.IDENTIFIER))
 					.setOperands(zero, operand)
 					.build();
-		} else {
+		}
+		case OperatorPRISMPow.IDENTIFIER: {
+			boolean allInteger = true;
+			for (Expression operand : expression.getOperands()) {
+				allInteger &= TypeInteger.isInteger(operand.getType(expressionToType));
+			}
+			List<Expression> newChildren = new ArrayList<>();
+			for (Expression child : expression.getChildren()) {
+				newChildren.add(prism2jani(child));
+			}
+			Expression result;
+			if (allInteger) {
+				result = new ExpressionOperator.Builder()
+						.setOperands(newChildren)
+						.setOperator(getContextValue().getOperator(OperatorPow.IDENTIFIER))
+						.build();
+				result = new ExpressionOperator.Builder()
+						.setOperands(result)
+						.setOperator(getContextValue().getOperator(OperatorCeil.IDENTIFIER))
+						.build();
+			} else {
+				result = expression.replaceChildren(newChildren);
+			}
+			return result;
+		}
+		default: {
 			List<Expression> newChildren = new ArrayList<>();
 			for (Expression child : expression.getChildren()) {
 				newChildren.add(prism2jani(child));
 			}
 			return expression.replaceChildren(newChildren);
+		}
 		}
 	}
 	

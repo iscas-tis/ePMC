@@ -192,6 +192,7 @@ final class RewardsConverter {
 	}
 
 	private Edges computeRewardAutomatonEdges(Location location) {
+		assert location != null;
 		Edges edges = new Edges();
 		edges.setModel(modelJANI);
 		Actions actions = modelJANI.getActions();

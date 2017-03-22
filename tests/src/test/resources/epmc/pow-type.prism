@@ -1,0 +1,6 @@
+ctmc
+
+module chain
+  s : [0..1];
+  [] true -> pow(5,1)+1 : (s'=pow(1,1));
+endmodule

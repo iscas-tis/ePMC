@@ -32,7 +32,7 @@ import epmc.value.OperatorGe;
 import epmc.value.OperatorGt;
 import epmc.value.OperatorMultiply;
 import epmc.value.OperatorDivide;
-import epmc.value.OperatorPow;
+import epmc.prism.value.OperatorPRISMPow;
 import epmc.value.OperatorMax;
 import epmc.value.OperatorMin;
 import epmc.value.OperatorCeil;
@@ -856,7 +856,7 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 	<LPAR>
 	e = parseExp(parseExp)
 	<RPAR>
-	{ return newOperator(contextVal.getOperator(OperatorPow.IDENTIFIER), e,
+	{ return newOperator(contextVal.getOperator(OperatorPRISMPow.IDENTIFIER), e,
 		new ExpressionLiteral.Builder()
 			.setValue(UtilValue.newValue(TypeReal.get(contextVal), "0.5"))
 			.build()); }
@@ -933,7 +933,7 @@ private Operator functionTwoParams() throws EPMCException :
 {
 	(
 		<POW> 
-		{ return contextVal.getOperator(OperatorPow.IDENTIFIER); }
+		{ return contextVal.getOperator(OperatorPRISMPow.IDENTIFIER); }
 	| 
 		<MOD> 
 		{ return contextVal.getOperator(OperatorMod.IDENTIFIER); }

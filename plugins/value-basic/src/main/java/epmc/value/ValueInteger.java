@@ -338,6 +338,10 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
 	public int ceilInt() throws EPMCException {
 		return value;
 	}
+	
+	public void pow(ValueInteger a, ValueInteger b) {
+		value = (int) Math.pow(a.value, b.value);
+	}
 
 	@Override
 	public void divide(Value operand1, Value operand2) throws EPMCException {

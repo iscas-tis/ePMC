@@ -42,6 +42,8 @@ public final class ModelNamesOwn {
     public final static String MA_SINGLEMODULE_TWORATE = PREFIX + "ma-singlemodule-tworate.prism";
     public final static String MA_TWOMODULES = PREFIX + "ma-twomodules.prism";
     public final static String MA_DISABLING_RATE = PREFIX + "ma-disabling-rate.prism";
+    public final static String POW_TYPE = PREFIX + "pow-type.prism";
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */

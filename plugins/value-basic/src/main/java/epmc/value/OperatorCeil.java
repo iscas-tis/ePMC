@@ -48,13 +48,14 @@ public final class OperatorCeil implements Operator {
 
     @Override
     public void apply(Value result, Value... operands) throws EPMCException {
-        ValueAlgebra.asAlgebra(result).set(ValueReal.asReal(operands[0]).ceilInt());
+        ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).ceilInt());
     }
 
     @Override
     public Type resultType(Type... types) {
         Type result;
-        if (!TypeUnknown.isUnknown(types[0]) && !TypeReal.isReal(types[0])) {
+        if (!TypeUnknown.isUnknown(types[0]) && !(TypeReal.isReal(types[0])
+        		|| TypeInteger.isInteger(types[0]))) {
             return null;
         }
         result = TypeInteger.get(getContext());
