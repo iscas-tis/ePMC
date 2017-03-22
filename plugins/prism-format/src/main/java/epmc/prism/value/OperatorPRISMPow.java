@@ -18,17 +18,30 @@
 
 *****************************************************************************/
 
-package epmc.value;
+package epmc.prism.value;
 
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
+import epmc.value.TypeInteger;
+import epmc.value.TypeReal;
 import epmc.value.Value;
+import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
 
-public final class OperatorPow implements Operator {
+/**
+ * Operator "pow" of PRISM.
+ * This operator is different from the one of the JANI language:
+ * In this version, if both operands are integers, then the result type is an
+ * integer too. In the JANI version however, the result is a real number in
+ * any case.
+ * 
+ * @author Ernst Moritz Hahn
+ */
+public final class OperatorPRISMPow implements Operator {
     private ContextValue context;
-    public final static String IDENTIFIER = "pow";
+    public final static String IDENTIFIER = "pow-prism";
 
     @Override
     public String getIdentifier() {
@@ -47,14 +60,28 @@ public final class OperatorPow implements Operator {
 
     @Override
     public void apply(Value result, Value... operands) throws EPMCException {
-        ValueReal.asReal(result).pow(operands[0], operands[1]);
+    	if (ValueInteger.isInteger(result)) {
+    		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
+    	} else if (ValueReal.isReal(result)) {
+    		ValueReal.asReal(result).pow(operands[0], operands[1]);
+    	} else {
+    		assert false : result.getType();
+    	}
     }
 
     @Override
     public Type resultType(Type... types) {
         assert types != null;
         assert types.length == 2 : types.length;
-        return TypeReal.get(types[0].getContext());
+        boolean allInteger = true;
+        for (Type type : types) {
+        	allInteger &= TypeInteger.isInteger(type);
+        }
+        if (allInteger) {
+        	return TypeInteger.get(types[0].getContext());
+        } else {
+        	return TypeReal.get(types[0].getContext());
+        }
     }
 
     @Override
