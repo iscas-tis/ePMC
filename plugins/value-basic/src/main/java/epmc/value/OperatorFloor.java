@@ -54,7 +54,8 @@ public final class OperatorFloor implements Operator {
     @Override
     public Type resultType(Type... types) {
         Type result;
-        if (!TypeUnknown.isUnknown(types[0]) && !TypeReal.isReal(types[0])) {
+        if (!TypeUnknown.isUnknown(types[0]) && !(TypeReal.isReal(types[0])
+        		|| TypeInteger.isInteger(types[0]))) {
             return null;
         }
         result = TypeInteger.get(getContext());
