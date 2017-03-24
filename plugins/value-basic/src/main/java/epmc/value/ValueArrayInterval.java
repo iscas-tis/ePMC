@@ -26,7 +26,7 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-final class ValueArrayInterval extends ValueArrayAlgebra implements ValueContentDoubleArray {
+public final class ValueArrayInterval extends ValueArrayAlgebra implements ValueContentDoubleArray {
 	private final TypeArrayInterval type;
     private ValueArray content;
 	private boolean immutable;

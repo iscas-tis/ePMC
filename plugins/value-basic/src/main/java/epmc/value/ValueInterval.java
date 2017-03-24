@@ -75,11 +75,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
     
     @Override
-    public ValueInterval clone() {
-        return new ValueInterval(getType(), lower, upper);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ValueInterval)) {
             return false;

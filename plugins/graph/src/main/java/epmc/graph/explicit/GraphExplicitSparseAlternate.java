@@ -527,11 +527,11 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         if (getNodeProperties().contains(property)) {
             return getNodeProperty(property);
         }
-        if (fixedMode && property == CommonProperties.STATE) {
-            nodeProperty = new NodePropertySparseNondetRanged(this, new int[]{numStates, numStates + numNondet}, type);
-        } else {
+//        if (fixedMode && property == CommonProperties.STATE) {
+  //          nodeProperty = new NodePropertySparseNondetRanged(this, new int[]{numStates, numStates + numNondet}, type);
+    //    } else {
             nodeProperty = new NodePropertyGeneral(this, type, forNative);
-        }
+     //   }
         registerNodeProperty(property, nodeProperty);
         return nodeProperty;
     }
