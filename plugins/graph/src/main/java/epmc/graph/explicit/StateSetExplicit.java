@@ -131,4 +131,9 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     public BitSet getStatesExplicit() {
         return statesExplicit;
     }
+    
+    @Override
+    public String toString() {
+    	return statesExplicit.toString();
+    }
 }

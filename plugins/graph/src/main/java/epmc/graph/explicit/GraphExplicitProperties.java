@@ -108,7 +108,7 @@ public final class GraphExplicitProperties implements Serializable {
             throws EPMCException {
         assert property != null;
         assert value != null;
-        assert graphProperties.containsKey(property);
+        assert graphProperties.containsKey(property) : property;
         getGraphProperty(property).set(value);
     }
 

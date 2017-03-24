@@ -66,7 +66,6 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
