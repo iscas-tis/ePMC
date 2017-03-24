@@ -433,6 +433,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
 
         for (Object propName : builder.getNodeProperties()) {
             NodeProperty origProp = builder.getModel().getNodeProperty(propName);
+            assert origProp != null : propName;
             NodeProperty derivedProp = new NodePropertyDerived(this, origProp);
             registerNodeProperty(propName, derivedProp);
         }
