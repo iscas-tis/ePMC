@@ -196,7 +196,6 @@ final class MultiObjectiveUtils {
             objectiveSched.setTransitionRewards(weightedRewards);
             configuration.setObjective(objectiveSched);
             configuration.solve();
-            scheduler = objective.getScheduler();
             iterResult = objective.getResult();
             iterResult.get(initValue, iterInit);
             q.set(initValue, prop);

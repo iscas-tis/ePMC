@@ -131,10 +131,10 @@ final class MultiObjectiveDownClosure {
         problemVariables = new int[dimension];
         for (int dim = 0; dim < dimension; dim++) {
             problemWeights.set(1, dim);
-            problemVariables[dim] = wLpVars[dim];                
+            problemVariables[dim] = wLpVars[dim];
         }
-        problem.addConstraint(problemWeights, problemVariables, ConstraintType.LE, one);
-
+        problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
+        
         if (numerical) {
             problemWeights = newValueArrayWeight(1);
             problemVariables = new int[1];
@@ -166,7 +166,6 @@ final class MultiObjectiveDownClosure {
             result.set(entry, dim);
         }
         problem.close();
-        
         return result;
     }
 
