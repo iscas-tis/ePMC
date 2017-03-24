@@ -44,7 +44,7 @@ import epmc.value.Type;
  * 
  * @author Ernst Moritz Hahn
  */
-final class PropertiesDummy implements Properties {
+public final class PropertiesDummy implements Properties {
     /** Value context used. */
     private ContextValue contextValue;
     /** Set of properties stored. */
@@ -62,7 +62,7 @@ final class PropertiesDummy implements Properties {
      * 
      * @param contextValue value context to use
      */
-    PropertiesDummy(ContextValue contextValue) {
+    public PropertiesDummy(ContextValue contextValue) {
         assert contextValue != null;
         this.contextValue = contextValue;
     }
