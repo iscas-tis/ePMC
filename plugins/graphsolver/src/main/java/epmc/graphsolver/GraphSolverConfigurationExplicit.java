@@ -98,7 +98,7 @@ public final class GraphSolverConfigurationExplicit {
         Collection<String> solvers = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER);
         Map<String,Class<GraphSolverExplicit>> solverClasses = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         graphSolver = Util.getInstance(solverClasses, solvers,
-                e -> {e.setGraphSolverObjective(objective);
+                e -> { e.setGraphSolverObjective(objective);
                 return e.canHandle();
                 });
         ensure(graphSolver != null, ProblemsGraphsolver.GRAPHSOLVER_NO_SOLVER_AVAILABLE);
