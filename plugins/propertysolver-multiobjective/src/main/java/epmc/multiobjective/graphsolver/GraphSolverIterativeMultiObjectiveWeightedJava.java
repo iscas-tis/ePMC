@@ -44,6 +44,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentIntArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
@@ -53,7 +54,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
-    private Value scheduler;
+    private ValueArrayInteger scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 

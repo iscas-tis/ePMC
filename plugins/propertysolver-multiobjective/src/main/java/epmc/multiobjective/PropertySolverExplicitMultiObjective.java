@@ -36,6 +36,8 @@ import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.UtilGraph;
 import epmc.graph.explicit.GraphExplicit;
+import epmc.graph.explicit.GraphExplicitSparseAlternate;
+import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.EngineExplicit;
@@ -51,6 +53,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueArrayInteger;
 import epmc.value.ValueBoolean;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
@@ -212,22 +215,73 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 feasible = true;
                 break;
             }
-            ValueArrayAlgebra q = newValueArrayWeight(numAutomata);
-            MultiObjectiveUtils.iterate(q, weights, iterGraph, combinations);
-            if (MultiObjectiveUtils.compareProductDistance(weights, q, bounds) < 0) {
+            IterationResult iterResult = MultiObjectiveUtils.iterate(weights, iterGraph, combinations);
+            if (MultiObjectiveUtils.compareProductDistance(weights, iterResult.getQ(), bounds) < 0) {
                 feasible = false;
                 break;
             }
-            down.add(q);
+            down.add(iterResult);
             if (numerical) {
                 down.improveNumerical(bounds);
-                if (MultiObjectiveUtils.compareProductDistance(weights, q, bounds) <= 0) {
+                if (MultiObjectiveUtils.compareProductDistance(weights, iterResult.getQ(), bounds) <= 0) {
                     feasible = true;
                     break;
                 }
             }
         } while (true);
+//        computeRandomizedScheduler(product, down, bounds);
         return prepareResult(numerical, feasible, bounds, subtractNumericalFrom);
+	}
+
+	// TODO currently just ad-hoc solution for robot case study
+	private void computeRandomizedScheduler(Product product, MultiObjectiveDownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
+		assert product != null;
+		assert down != null;
+		assert bounds != null;
+    	GraphExplicit modelGraph = modelChecker.getLowLevel();
+    	int numStates = modelGraph.computeNumStates();
+    	int[] decisions = new int[numStates];
+		GraphExplicitSparseAlternate computationGraph = (GraphExplicitSparseAlternate) product.getGraph();
+		int[] stateBounds = computationGraph.getStateBoundsJava();
+		NodeProperty nodeProp = computationGraph.getNodeProperty(CommonProperties.NODE_MODEL);
+		assert nodeProp != null;
+		NodeProperty stateProp = computationGraph.getNodeProperty(CommonProperties.STATE);
+		assert stateProp != null;
+		int numNodes = computationGraph.getNumNodes();
+		
+		ValueArrayAlgebra schedProbs = down.findFeasibleRandomisedScheduler(bounds);
+		ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
+		for (int schedNr = 0; schedNr < down.size(); schedNr++) {
+			schedProbs.get(schedProb, schedNr);
+			ValueArrayInteger sched = down.get(schedNr).getScheduler();
+			if (schedProb.isZero()) {
+				continue;
+			}
+			for (int node = 0; node < numNodes; node++) {
+				computationGraph.queryNode(node);
+				if (!stateProp.getBoolean()) {
+					continue;
+				}
+				int state = nodeProp.getInt();
+				int decision = sched.getInt(node);
+				if (decision == -2) {
+					decision = 0;
+				} else {
+					decision = decision - stateBounds[node];
+				}
+				decisions[state] = decision;
+			}
+			System.out.println("probability: " + schedProb);
+			System.out.println("s 	 a");
+			System.out.println("- 	 -");
+			for (int state = 0; state < numStates; state++) {
+				int decision = decisions[state];
+				System.out.println((state + 1) + " 	 " + (decision + 1));				
+			}
+			System.out.println();
+		}
+		// TODO Auto-generated method stub
+		
 	}
 
 	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom)
