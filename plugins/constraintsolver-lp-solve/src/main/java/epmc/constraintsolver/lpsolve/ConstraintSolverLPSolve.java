@@ -40,13 +40,17 @@ import epmc.util.JNATools;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeArray;
+import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
+import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
@@ -349,13 +353,23 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     public void setDirection(Direction direction) {
         assert !closed;
         assert direction != null;
-        switch (direction) {
+		switch (direction) {
         case MAX:
             LpSolve.set_maxim(this.lp);
             break;
         case MIN:
             LpSolve.set_minim(this.lp);
             break;
+        case FEASIBILITY: {
+            LpSolve.set_maxim(this.lp);
+            TypeArrayAlgebra typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+            ValueArrayAlgebra problemWeights = UtilValue.newArray(typeArray, 1);
+            int[] problemVariables = new int[1];
+            problemWeights.set(1, 0);
+            problemVariables[0] = 0;
+            setObjective(problemWeights, problemVariables);
+            break;
+        }
         default:
             assert false;
             break;

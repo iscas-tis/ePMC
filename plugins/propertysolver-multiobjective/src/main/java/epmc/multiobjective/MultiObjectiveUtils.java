@@ -53,6 +53,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueArrayInteger;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -146,17 +147,16 @@ final class MultiObjectiveUtils {
         return bounds;
     }
 
-    static void iterate(ValueArray q,
-    		ValueArrayAlgebra weights,
+    static IterationResult iterate(ValueArrayAlgebra weights,
             GraphExplicit graph,
             MultiObjectiveIterationRewards rewards)
                     throws EPMCException {
-        assert q != null;
         assert weights != null;
         assert graph != null;
         assert rewards != null;
-        ContextValue contextValue = q.getType().getContext();
         int numAutomata = rewards.getNumObjectives();
+        ValueArrayAlgebra q = newValueArrayWeight(rewards.getContextValue(), numAutomata);
+        ContextValue contextValue = q.getType().getContext();
         int iterInit = graph.getInitialNodes().nextSetBit(0);
         int[] choice = new int[graph.computeNumStates()];
         ValueArrayAlgebra weightedCombinations = combinationsToWeighted(rewards, choice, weights);
@@ -176,7 +176,7 @@ final class MultiObjectiveUtils {
         objective.setTransitionRewards(weightedRewards);
         configuration.setObjective(objective);
         configuration.solve();
-        Value scheduler = objective.getScheduler();
+        ValueArrayInteger scheduler = objective.getScheduler();
         iterResult = objective.getResult();
         Value initValue = newValueWeight(contextValue);
         ValueArrayAlgebra propWeights = newValueArrayWeight(contextValue, numAutomata);
@@ -200,6 +200,7 @@ final class MultiObjectiveUtils {
             iterResult.get(initValue, iterInit);
             q.set(initValue, prop);
         }
+        return new IterationResult(q, scheduler);
     }
 
     static boolean isNumericalQuery(ExpressionMultiObjective property) {
@@ -253,7 +254,6 @@ final class MultiObjectiveUtils {
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
         
-        
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
         ValueArrayAlgebra result = useNative
@@ -263,14 +263,20 @@ final class MultiObjectiveUtils {
         ValueAlgebra entryValue = newValueWeight(contextValue);
         Value weight = newValueWeight(contextValue);
         for (int state = 0; state < numStates; state++) {
-            max.set(0);
+            max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
             for (int entry = 0; entry < numEntries; entry++) {
-                entryValue.set(0);
+                entryValue.set(-10000);
+                boolean alreadySet = false;
                 for (int objective = 0; objective < numObjectives; objective++) {
                     if (combinations.get(state, entry, objective)) {
                         weights.get(weight, objective);
-                        entryValue.add(entryValue, weight);
+                        if (alreadySet) {
+                            entryValue.add(entryValue, weight);                        	
+                        } else {
+                        	entryValue.set(weight);
+                        	alreadySet = true;
+                        }
                     }
                 }
                 if (entryValue.isGt(max)) {

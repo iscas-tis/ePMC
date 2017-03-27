@@ -113,6 +113,7 @@ final class ProductBuilder {
         builder.setInputGraph(prodWrapper);
         builder.addDerivedGraphProperties(prodWrapper.getGraphProperties());
         builder.addDerivedNodeProperty(CommonProperties.STATE);
+        builder.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         builder.addDerivedEdgeProperty(CommonProperties.WEIGHT);
         Options options = getOptions();
         Type typeWeight = TypeWeightTransition.get(getContextValue());
@@ -180,6 +181,7 @@ final class ProductBuilder {
         prodWrapper.addDerivedNodeProperty(CommonProperties.STATE);
         prodWrapper.addDerivedNodeProperty(CommonProperties.PLAYER);
         prodWrapper.addDerivedNodeProperty(CommonProperties.AUTOMATON_LABEL);
+        prodWrapper.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         prodWrapper.addDerivedEdgeProperty(CommonProperties.WEIGHT);
         
         for (Expression objective : property.getOperands()) {

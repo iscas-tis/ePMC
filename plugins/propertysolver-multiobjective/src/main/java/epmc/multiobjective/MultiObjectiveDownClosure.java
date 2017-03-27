@@ -43,7 +43,7 @@ final class MultiObjectiveDownClosure {
     private final ContextValue contextValue;
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
-    private final List<ValueArrayAlgebra> elements = new ArrayList<>();
+    private final List<IterationResult> elements = new ArrayList<>();
     private final static String SMALL_VALUE = "1E-4";
     
     MultiObjectiveDownClosure(ContextValue contextValue, int dimension) {
@@ -56,11 +56,8 @@ final class MultiObjectiveDownClosure {
         contextSolver.requireFeature(Feature.LP);
     }
     
-    void add(ValueArrayAlgebra entry) {
+    void add(IterationResult entry) {
         assert entry != null;
-        assert entry.getType().getContext() == contextValue;
-        assert entry.getNumDimensions() == 1;
-        assert entry.size() == dimension;
         elements.add(entry);
     }
     
@@ -104,7 +101,8 @@ final class MultiObjectiveDownClosure {
         problemVariables[dimension] = vLpVar;
         problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, zero);
         
-        for (ValueArrayAlgebra array : elements) {
+        for (IterationResult element : elements) {
+        	ValueArrayAlgebra array = element.getQ();
             problemWeights = newValueArrayWeight(dimension + 2);
             problemVariables = new int[dimension + 2];
             for (int dim = 0; dim < dimension; dim++) {
@@ -169,7 +167,8 @@ final class MultiObjectiveDownClosure {
         return result;
     }
 
-    private ValueArrayAlgebra findSeparatingEmptyEntries(ValueArrayAlgebra outside,
+    private ValueArrayAlgebra findSeparatingEmptyEntries(
+    		ValueArrayAlgebra outside,
             boolean numerical) throws EPMCException {
         boolean outsideNonZero = false;
         ValueAlgebra entry = newValueWeight();
@@ -239,7 +238,7 @@ final class MultiObjectiveDownClosure {
         problemVariables = new int[elements.size() + 1];
         for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
             problemVariables[elementNr] = wLpVars[elementNr];
-            elements.get(elementNr).get(entry, 0);
+            elements.get(elementNr).getQ().get(entry, 0);
             problemWeights.set(entry, elementNr);
         }
         problemVariables[elements.size()] = dLpVar;
@@ -252,7 +251,7 @@ final class MultiObjectiveDownClosure {
             problemVariables = new int[elements.size()];
             for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
                 problemVariables[elementNr] = wLpVars[elementNr];
-                elements.get(elementNr).get(entry, dim);
+                elements.get(elementNr).getQ().get(entry, dim);
                 problemWeights.set(entry, elementNr);
             }
             current.get(entry, dim);
@@ -268,14 +267,14 @@ final class MultiObjectiveDownClosure {
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, zero);
         }
 
-        // sum equal or smaller to one
+        // sum equal to one
         problemWeights = newValueArrayWeight(elements.size());
         problemVariables = new int[elements.size()];
         for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
             problemWeights.set(1, elementNr);
             problemVariables[elementNr] = wLpVars[elementNr];
         }
-        problem.addConstraint(problemWeights, problemVariables, ConstraintType.LE, one);
+        problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
         
         // maximise first dimension
         problemWeights = newValueArrayWeight(1);
@@ -305,7 +304,71 @@ final class MultiObjectiveDownClosure {
         entry.max(entry, opt);
         current.set(entry, 0);
     }
-    
+
+    public ValueArrayAlgebra findFeasibleRandomisedScheduler(ValueArray current) throws EPMCException {
+        assert current != null;
+        assert current.getType().getContext() == contextValue;
+        assert current.size() == dimension;
+        assert current.getType().getEntryType() == TypeWeight.get(contextValue);
+        Value zero = TypeWeight.get(contextValue).getZero();
+        Value one = TypeWeight.get(contextValue).getOne();
+        ConstraintSolver problem = contextSolver.newProblem();
+
+        int[] wLpVars = new int[elements.size() + 1];
+        for (int i = 0; i < elements.size(); i++) {
+            wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
+        }
+        ValueAlgebra entry = newValueWeight();        
+        ValueArrayAlgebra problemWeights;
+        int[] problemVariables;
+
+        // other dimensions restriction
+        for (int dim = 0; dim < this.dimension; dim++) {
+            problemWeights = newValueArrayWeight(elements.size());
+            problemVariables = new int[elements.size()];
+            for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
+                problemVariables[elementNr] = wLpVars[elementNr];
+                elements.get(elementNr).getQ().get(entry, dim);
+                problemWeights.set(entry, elementNr);
+            }
+            current.get(entry, dim);
+            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
+        }
+
+        // weights nonnegative
+        for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
+            problemWeights = newValueArrayWeight(1);
+            problemVariables = new int[1];
+            problemWeights.set(1, 0);
+            problemVariables[0] = wLpVars[elementNr];
+            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, zero);
+        }
+
+        // sum equal to one
+        problemWeights = newValueArrayWeight(elements.size());
+        problemVariables = new int[elements.size()];
+        for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
+            problemWeights.set(1, elementNr);
+            problemVariables[elementNr] = wLpVars[elementNr];
+        }
+        problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
+        
+        problem.setDirection(Direction.FEASIBILITY);
+        if (!problem.solve().isSat()) {
+            problem.close();
+            return null;
+        }
+        ValueArray solverResult = problem.getResultVariablesValuesSingleType();
+        ValueArrayAlgebra result = newValueArrayWeight(elements.size());
+        for (int dim = 0; dim < elements.size(); dim++) {
+            solverResult.get(entry, wLpVars[dim]);
+            result.set(entry, dim);
+        }
+        problem.close();
+        System.out.println(elements);
+        return result;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -326,5 +389,13 @@ final class MultiObjectiveDownClosure {
     
     private ValueAlgebra newValueWeight() {
     	return TypeWeight.get(getContextValue()).newValue();
+    }
+    
+    IterationResult get(int index) {
+    	return elements.get(index);
+    }
+    
+    int size() {
+    	return elements.size();
     }
 }

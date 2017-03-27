@@ -46,6 +46,7 @@ import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentMemory;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedNative implements GraphSolverExplicit {
@@ -75,7 +76,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private Value scheduler;
+    private ValueArrayInteger scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 

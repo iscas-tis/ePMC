@@ -44,6 +44,7 @@ import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueContentIntArray;
 
@@ -59,7 +60,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private Value scheduler;
+    private ValueArrayInteger scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
