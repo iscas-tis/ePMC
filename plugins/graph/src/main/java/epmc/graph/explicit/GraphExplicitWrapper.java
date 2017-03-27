@@ -79,12 +79,12 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             this.inner = inner;
             for (int node = queriedNodes.nextSetBit(0); node >= 0; node = queriedNodes.nextSetBit(node+1)) {
                 innerGraph.queryNode(node);
-                update();
+                update(node, node);
             }
         }
         
         @Override
-        public Value get() {
+        public Value get(int currentNode) {
             int size = content.getLength(0);
             if (size <= currentNode) {
                 int newSize = size;
@@ -98,7 +98,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
         
         @Override
-        public void set(Value value) {
+        public void set(int currentNode, Value value) {
             assert value != null;
             assert typeEntry.canImport(value.getType()) : typeEntry + " " + value;
             int size = content.getLength(0);
@@ -112,8 +112,8 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             content.set(value, currentNode);
         }
 
-        void update() throws EPMCException {
-            set(inner.get());
+        void update(int currentNode, int innerNode) throws EPMCException {
+        	set(currentNode, inner.get(innerNode));
         }
 
         @Override
@@ -483,7 +483,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
 
             prepareCachedSuccessors(node, numSuccessors);
             for (NodePropertyWrapperDerived property : derivedNodeProps) {
-                property.update();
+                property.update(node, node);
             }
             for (EdgePropertyWrapperDerived property : derivedEdgeProps) {
                 property.update();
@@ -657,16 +657,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         this.properties.clearPredecessors();
     }
 
-    @Override
-    public int getNumPredecessors() {
-        return this.properties.getNumPredecessors(currentNode);
-    }
-
-    @Override
-    public int getPredecessorNode(int predecessorNumber) {
-        return this.properties.getPredecessorNode(currentNode, predecessorNumber);
-    }
-    
     /* functions to efficiently store entries of different types */
     
     public void addDerivedNodeProperties(Iterable<?> properties)

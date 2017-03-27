@@ -202,12 +202,12 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             BitSet oneSet = UtilBitSet.newBitSetUnbounded();
             NodeProperty stateProp = graph.getNodeProperty(CommonProperties.STATE);
             for (int node = allNodes.nextSetBit(0); node >= 0; node = allNodes.nextSetBit(node+1)) {
-                if (!stateProp.getBoolean()) {
+                graph.queryNode(node);
+                if (!stateProp.getBoolean(node)) {
                     continue;
                 }
-                graph.queryNode(node);
                 for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                    evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get();
+                    evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(node);
                 }
                 for (EvaluatorExplicit evaluator : evaluators) {
                 	evaluator.evaluate(evalValues);
@@ -270,9 +270,9 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 sinkSet.clear();
                 for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
                     graph.queryNode(state);
-                    if (isState.getBoolean()) {
+                    if (isState.getBoolean(state)) {
                         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                            evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get();
+                            evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
                         }
                         boolean left = evaluators[0].evaluateBoolean(evalValues);
                         if (!left) {
@@ -350,7 +350,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
             graph.queryNode(state);
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get();
+                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
             }
             boolean innerBoolean = evaluators[0].evaluateBoolean(evalValues);
             values.set(innerBoolean ? one : zero, state);

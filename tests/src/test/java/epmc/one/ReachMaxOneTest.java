@@ -58,14 +58,14 @@ public class ReachMaxOneTest {
         EdgeProperty weights = graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeightTransition.get(contextValue));
         NodeProperty player = graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(contextValue, Player.class));
         graph.queryNode(0);
-        player.set(Player.STOCHASTIC);
+        player.set(0, Player.STOCHASTIC);
         graph.prepareNode(2);
         graph.setSuccessorNode(0, 0);
         weights.set("0.5", 0);
         graph.setSuccessorNode(1, 1);
         weights.set("0.5", 1);
         graph.queryNode(1);
-        player.set(Player.STOCHASTIC);
+        player.set(1, Player.STOCHASTIC);
         graph.prepareNode(2);
         graph.setSuccessorNode(0, 1);
         weights.set("0.5", 0);
@@ -73,7 +73,7 @@ public class ReachMaxOneTest {
         weights.set("0.5", 1);
         graph.queryNode(2);
         graph.prepareNode(0);
-        player.set(Player.STOCHASTIC);
+        player.set(2, Player.STOCHASTIC);
         BitSet targets = UtilBitSet.newBitSetUnbounded();
         targets.set(1);
         ComponentsExplicit components = new ComponentsExplicit();

@@ -47,7 +47,7 @@ public final class ComponentsExplicit {
         for (int node = set.nextSetBit(0); node >= 0; node = set.nextSetBit(node+1)) {
             remaining[node] = 0;
             graph.queryNode(node);
-            Player player = playerProp.getEnum();
+            Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
                 for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
                     int succNode = graph.getSuccessorNode(succNr);
@@ -81,8 +81,8 @@ public final class ComponentsExplicit {
             leavingIndex--;
             int node = leaving[leavingIndex];
             graph.queryNode(node);
-            for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                int pred = graph.getPredecessorNode(predNr);
+            for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                int pred = graph.getProperties().getPredecessorNode(node, predNr);
                 if (set.get(pred)) {
                     remaining[pred]--;
                     if (remaining[pred] == 0) {
@@ -128,14 +128,14 @@ public final class ComponentsExplicit {
             int node = sccStates[nodeNr];
             remaining[node] = 0;
             graph.queryNode(node);
-            if (player.getEnum() == Player.ONE) {
+            if (player.getEnum(node) == Player.ONE) {
                 for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
                     int succ = graph.getSuccessorNode(succNr);
                     if (scc.get(succ)) {
                         remaining[node]++;
                     }
                 }
-            } else if (player.getEnum() == Player.STOCHASTIC) {
+            } else if (player.getEnum(node) == Player.STOCHASTIC) {
                 remaining[node] = 1;
             }
         }
@@ -144,8 +144,8 @@ public final class ComponentsExplicit {
             leavingIndex--;
             int node = leaving[leavingIndex];
             graph.queryNode(node);
-            for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                int pred = graph.getPredecessorNode(predNr);
+            for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                int pred = graph.getProperties().getPredecessorNode(node, predNr);
                 if (scc.get(pred) && existingStates.get(pred)) {
                     remaining[pred]--;
                     if (remaining[pred] == 0) {
@@ -183,9 +183,9 @@ public final class ComponentsExplicit {
         NodeProperty player = graph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < graph.getNumNodes(); node++) {
             graph.queryNode(node);
-            if (player.getEnum() == Player.ONE) {
+            if (player.getEnum(node) == Player.ONE) {
                 remaining[node] = min ? graph.getNumSuccessors() : 1;
-            } else if (player.getEnum() == Player.STOCHASTIC) {
+            } else if (player.getEnum(node) == Player.STOCHASTIC) {
                 remaining[node] = 1;
             } else {
                 assert false;
@@ -204,8 +204,8 @@ public final class ComponentsExplicit {
             newNodes = UtilBitSet.newBitSetUnbounded();
             for (int node = previousNodes.nextSetBit(0); node >= 0; node = previousNodes.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int pred = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     if (!nodes.get(pred)) {
                         continue;
                     }

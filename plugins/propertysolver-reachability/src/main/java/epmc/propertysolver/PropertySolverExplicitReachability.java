@@ -151,7 +151,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
             graph.queryNode(node);
             // collect the truth value of all atomic propositions in this state
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get();
+                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(node);
             }
 
             // check whether current state satisfies a out of F a 

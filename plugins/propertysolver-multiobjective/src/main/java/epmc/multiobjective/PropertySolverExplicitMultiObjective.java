@@ -259,10 +259,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 			}
 			for (int node = 0; node < numNodes; node++) {
 				computationGraph.queryNode(node);
-				if (!stateProp.getBoolean()) {
+				if (!stateProp.getBoolean(node)) {
 					continue;
 				}
-				int state = nodeProp.getInt();
+				int state = nodeProp.getInt(node);
 				int decision = sched.getInt(node);
 				if (decision == -2) {
 					decision = 0;

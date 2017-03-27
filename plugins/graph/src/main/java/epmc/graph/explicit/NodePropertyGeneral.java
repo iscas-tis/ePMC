@@ -94,34 +94,34 @@ public final class NodePropertyGeneral implements NodeProperty {
     }
 
     @Override
-    public Value get() {
-        ensureSize();
-        content.get(value, graph.getQueriedNode());
+    public Value get(int node) {
+        ensureSize(node);
+        content.get(value, node);
         return value;
     }
 
     @Override
-    public void set(Value value) throws EPMCException {
-        ensureSize();
-        content.set(value, graph.getQueriedNode());
+    public void set(int node, Value value) throws EPMCException {
+        ensureSize(node);
+        content.set(value, node);
     }
 
     @Override
-    public void set(Object object) throws EPMCException {
+    public void set(int node, Object object) throws EPMCException {
         assert object != null;
         assert ValueObject.isObject(value);
-        ensureSize();
+        ensureSize(node);
         ValueObject.asObject(value).set(object);
-        content.set(value, graph.getQueriedNode());
+        content.set(value, node);
     }    
 
     @Override
-    public void set(Enum<?> object) throws EPMCException {
+    public void set(int node, Enum<?> object) throws EPMCException {
         assert object != null;
         assert ValueEnum.isEnum(value);
-        ensureSize();
+        ensureSize(node);
         ValueEnum.asEnum(value).set(object);
-        content.set(value, graph.getQueriedNode());
+        content.set(value, node);
     }
 
     @Override
@@ -136,14 +136,13 @@ public final class NodePropertyGeneral implements NodeProperty {
 
     /**
      * Extends the size of the array storing node values, if necessary.
-     * The new size will be at least as large as the
-     * {@link GraphExplicit#getQueriedNode()} + 1, ensuring that a value for
+     * The new size will be at least as large as queriedNode + 1, ensuring that a value for
      * the queried node can be stored or read.
      * This function should be called before any operation reading or storing
      * node values to ensure {@link #content} is large enough.
      */
-    private void ensureSize() {
-        int newSize = graph.getQueriedNode() + 1;
+    private void ensureSize(int queriedNode) {
+        int newSize = queriedNode + 1;
         int size = content.size();
         int oldSize = size;
         if (newSize <= size) {

@@ -65,16 +65,16 @@ public final class NodePropertyExpression implements NodeProperty {
     }
 
     @Override
-    public Value get() throws EPMCException {
+    public Value get(int node) throws EPMCException {
         for (int i = 0; i < variableNodeProperties.length; i++) {
-            values[i] = variableNodeProperties[i].get();
+            values[i] = variableNodeProperties[i].get(node);
         }
         evaluator.evaluate(values);
         return evaluator.getResultValue();
     }
 
     @Override
-    public void set(Value value) throws EPMCException {
+    public void set(int node, Value value) throws EPMCException {
     }
 
     @Override

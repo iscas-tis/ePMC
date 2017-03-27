@@ -83,42 +83,11 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
 
     @Override
     public void set(int node, int decision) {
-        assert assertSet(node, decision);
         content[node] = decision;
     }
 
-    /**
-     * Function asserting correct call to {@link #set(int, int)}.
-     * The method will throw an {@link AssertionError} if the contract of the
-     * {@link #set(int, int)} method is violated and assertions are enabled.
-     * Otherwise, it will return {@code true}.
-     * 
-     * @param node node parameter of {@link #set(int, int)}.
-     * @param decision decision parameter of {@link #set(int, int)}.
-     * @return {@code true} if succeeds
-     */
-    private boolean assertSet(int node, int decision) {
-        assert node >= 0;
-        assert node < content.length;
-        int previousNode = graph.getQueriedNode();
-        try {
-            graph.queryNode(node);
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false;
-        }
-        assert decision >= -1 && decision < graph.getNumSuccessors();
-        try {
-            graph.queryNode(previousNode);
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false;
-        }
-        return true;
-    }
-
     @Override
-    public int get(int node) {
+    public int getDecision(int node) {
         assert node >= 0;
         assert node < content.length;
         return content[node];
@@ -135,15 +104,15 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
     }
 
     @Override
-    public Value get() throws EPMCException {
-        value.set(get(graph.getQueriedNode()));
+    public Value get(int node) throws EPMCException {
+        value.set(get(node));
         return value;
     }
 
     @Override
-    public void set(Value value) throws EPMCException {
+    public void set(int node, Value value) throws EPMCException {
         assert value != null;
-        set(graph.getQueriedNode(), ValueInteger.asInteger(value).getInt());
+        set(node, ValueInteger.asInteger(value).getInt());
     }
 
     @Override

@@ -57,12 +57,12 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public Value get() {
+        public Value get(int node) {
             return constant;
         }
         
         @Override
-        public void set(Value value) throws EPMCException {
+        public void set(int node, Value value) throws EPMCException {
             assert value != null;
         }
 
@@ -97,7 +97,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public Value get() {
+        public Value get(int currentNode) {
             int index = Arrays.binarySearch(ranges, currentNode);
             if (index < 0) {
                 index = -index - 1;
@@ -108,7 +108,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public void set(Value value) throws EPMCException {
+        public void set(int currentNode, Value value) throws EPMCException {
             assert value != null;
             int index = Arrays.binarySearch(ranges, currentNode);
             if (index < 0) {
@@ -463,16 +463,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     @Override
     public void clearPredecessors() {
         this.properties.clearPredecessors();
-    }
-
-    @Override
-    public int getNumPredecessors() {
-        return this.properties.getNumPredecessors(currentNode);
-    }
-
-    @Override
-    public int getPredecessorNode(int number) {
-        return this.properties.getPredecessorNode(currentNode, number);
     }
 
     @Override

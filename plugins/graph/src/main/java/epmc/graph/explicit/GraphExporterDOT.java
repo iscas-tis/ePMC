@@ -39,7 +39,7 @@ public final class GraphExporterDOT {
             out.print("  " + node + " [label=\"");
             int propNr = 0;
             for (Object property : nodeProperties) {
-                Value value = graph.getNodeProperty(property).get();
+                Value value = graph.getNodeProperty(property).get(node);
                 out.print(property + "=" + value);
                 if (propNr < nodeProperties.size() - 1) {
                     out.print(",");

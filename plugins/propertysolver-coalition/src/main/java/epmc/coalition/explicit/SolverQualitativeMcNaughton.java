@@ -95,7 +95,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 		propertyPlayer = game.getNodeProperty(CommonProperties.PLAYER);
 		for (int node = 0; node < numNodes; node++) {
 			game.queryNode(node);
-			Player player = propertyPlayer.getEnum();
+			Player player = propertyPlayer.getEnum(node);
 			if (player == Player.ONE) {
 				playerEvenOrStochastic.set(node);
 			} else if (player == Player.TWO) {
@@ -134,7 +134,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         boolean allOdd = true;
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
             game.queryNode(node);
-            AutomatonParityLabel label = labels.getObject();
+            AutomatonParityLabel label = labels.getObject(node);
             int priority = label.getPriority();
             assert priority >= 0 : priority;
             minPriority = Math.min(minPriority, priority);
@@ -173,7 +173,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         BitSet mapsToMinPriority = UtilBitSet.newBitSetBounded(game.getNumNodes());
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
             game.queryNode(node);
-            AutomatonParityLabel label = labels.getObject();
+            AutomatonParityLabel label = labels.getObject(node);
             mapsToMinPriority.set(node, label.getPriority() == minPriority);
         }
         assert minPriority >= 0 : minPriority;
@@ -199,12 +199,12 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         			SchedulerSimple innerStrategies = wPrimed.getStrategies();
         			for (int node = wPrimedThis.nextSetBit(0); node >= 0; node = wPrimedThis.nextSetBit(node + 1)) {
         				game.queryNode(node);
-        				Player player = this.propertyPlayer.getEnum();
+        				Player player = this.propertyPlayer.getEnum(node);
         				if (computeStrategyP0 && player == Player.ONE
         						|| computeStrategyP1 && player == Player.TWO) {
-        					int decision = innerStrategies.get(node);
+        					int decision = innerStrategies.getDecision(node);
         					assert decision != Scheduler.UNSET;
-        					assert strategies.get(node) == Scheduler.UNSET;
+        					assert strategies.getDecision(node) == Scheduler.UNSET;
         					strategies.set(node, decision);
         				}
         			}
@@ -213,7 +213,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         					continue;
         				}
         				game.queryNode(node);
-        				Player player = this.propertyPlayer.getEnum();
+        				Player player = this.propertyPlayer.getEnum(node);
         				if (!(computeStrategyP0 && player == Player.ONE
         						|| computeStrategyP1 && player == Player.TWO)) {
         					continue;
@@ -221,7 +221,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         				boolean found = false;
             			for (int succ = 0; succ < game.getNumSuccessors(); succ++) {
             				if (p.get(game.getSuccessorNode(succ))) {
-            					assert strategies.get(node) == Scheduler.UNSET;
+            					assert strategies.getDecision(node) == Scheduler.UNSET;
                 				strategies.set(node, succ);
             					found = true;
             					break;
@@ -233,15 +233,15 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         			computeStrategy(strategies, game, mapsToMinPriority, satr, player);
         			for (int node = wThis.nextSetBit(0); node >= 0; node = wThis.nextSetBit(node + 1)) {
         				game.queryNode(node);
-        				Player pl = this.propertyPlayer.getEnum();
-        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.get(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.get(node) != Scheduler.UNSET;
+        				Player pl = this.propertyPlayer.getEnum(node);
+        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
         			}
         			for (int node = wOther.nextSetBit(0); node >= 0; node = wOther.nextSetBit(node + 1)) {
         				game.queryNode(node);
-        				Player pl = this.propertyPlayer.getEnum();
-        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.get(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.get(node) != Scheduler.UNSET;
+        				Player pl = this.propertyPlayer.getEnum(node);
+        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
             		}
         		}
     			return new QualitativeResult(minPriority % 2 == 0 ? wThis : wOther,
@@ -259,12 +259,12 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     			SchedulerSimple innerStrategies = wPrimed.getStrategies();
     			for (int node = wPrimedOther.nextSetBit(0); node >= 0; node = wPrimedOther.nextSetBit(node + 1)) {
     				game.queryNode(node);
-    				Player pl = this.propertyPlayer.getEnum();
+    				Player pl = this.propertyPlayer.getEnum(node);
     				if (computeStrategyP0 && pl == Player.ONE
     						|| computeStrategyP1 && pl == Player.TWO) {
-    					int decision = innerStrategies.get(node);
+    					int decision = innerStrategies.getDecision(node);
     					assert decision != Scheduler.UNSET : node;
-    					assert strategies.get(node) == Scheduler.UNSET;
+    					assert strategies.getDecision(node) == Scheduler.UNSET;
     					strategies.set(node, decision);
     				}
     			}
@@ -296,7 +296,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     		if (computeStrategyP0 && playerEvenOrStochastic.get(node)
     				|| computeStrategyP1 && playerOddOrStochastic.get(node)) {
     			game.queryNode(node);
-				Player player = this.propertyPlayer.getEnum();
+				Player player = this.propertyPlayer.getEnum(node);
 				if (!(computeStrategyP0 && player == Player.ONE
 						|| computeStrategyP1 && player == Player.TWO)) {
 					continue;
@@ -424,8 +424,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int pred = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in
                      * nodes set, because in this case remaining[pred] will be
                      * 0 such that it will not be included in contained. */
@@ -433,10 +433,10 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
                         remaining[pred]--;
                         if (remaining[pred] == 0) {
                             graph.queryNode(pred);
-                            Player player = this.propertyPlayer.getEnum();
+                            Player player = this.propertyPlayer.getEnum(pred);
                             if (computeStrategyP0 && player == Player.ONE
                             		|| computeStrategyP1 && player == Player.TWO) {
-            					assert strategies.get(node) == Scheduler.UNSET;
+            					assert strategies.getDecision(node) == Scheduler.UNSET;
                             	strategies.set(pred, graph.getSuccessorNumber(node));
                             }
                             graph.queryNode(node);
@@ -449,9 +449,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         /* make sure that we indeed computed the strategy correctly */
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
         	game.queryNode(node);
-        	Player player = propertyPlayer.getEnum();
-        	assert !(computeStrategyP0 && player == Player.ONE) || strategies.get(node) != Scheduler.UNSET || target.get(node) : node;
-        	assert !(computeStrategyP1 && player == Player.TWO) || strategies.get(node) != Scheduler.UNSET || target.get(node) : node;
+        	Player player = propertyPlayer.getEnum(node);
+        	assert !(computeStrategyP0 && player == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
+        	assert !(computeStrategyP1 && player == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
         }
     }
 
@@ -494,8 +494,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int pred = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in
                      * nodes set, because in this case remaining[pred] will be
                      * 0 such that it will not be included in contained. */

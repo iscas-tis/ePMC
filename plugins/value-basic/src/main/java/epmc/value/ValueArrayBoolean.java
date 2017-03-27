@@ -72,7 +72,7 @@ final class ValueArrayBoolean extends ValueArray {
         assert value != null;
         assert ValueBoolean.isBoolean(value);
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < getTotalSize() : index + " " + getTotalSize();
         int offset = index >> 6;
         ValueBoolean.asBoolean(value).set((content[offset] & (1L << index)) != 0);
     }    

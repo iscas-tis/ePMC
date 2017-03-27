@@ -59,7 +59,7 @@ public interface NodeProperty {
      * @return value for node queried last
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get() throws EPMCException;
+    Value get(int node) throws EPMCException;
     
     /**
      * Set value for node queried last.
@@ -76,7 +76,7 @@ public interface NodeProperty {
      * @param value value to set for the node
      * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(Value value) throws EPMCException;
+    void set(int node, Value value) throws EPMCException;
 
     /**
      * Obtain type of the values returned by {@link #get()}.
@@ -97,8 +97,8 @@ public interface NodeProperty {
      * @return value of this node as boolean
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default boolean getBoolean() throws EPMCException {
-        Value value = get();
+    default boolean getBoolean(int node) throws EPMCException {
+        Value value = get(node);
         assert ValueBoolean.isBoolean(value);
         return ValueBoolean.asBoolean(value).getBoolean();
     }
@@ -112,8 +112,8 @@ public interface NodeProperty {
      * @return value of this node as integer
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default int getInt() throws EPMCException {
-        Value value = get();
+    default int getInt(int node) throws EPMCException {
+        Value value = get(node);
         assert ValueInteger.isInteger(value);
         return ValueInteger.asInteger(value).getInt();
     }
@@ -127,8 +127,8 @@ public interface NodeProperty {
      * @return value of this node as object
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T> T getObject() throws EPMCException {
-        Value value = get();
+    default <T> T getObject(int node) throws EPMCException {
+        Value value = get(node);
         assert ValueObject.isObject(value) : value + " " + value.getType();
         return ValueObject.asObject(value).getObject();
     }
@@ -142,8 +142,8 @@ public interface NodeProperty {
      * @return value of this node as enum
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T extends Enum<?>> T getEnum() throws EPMCException {
-        Value value = get();
+    default <T extends Enum<?>> T getEnum(int node) throws EPMCException {
+        Value value = get(node);
         assert ValueEnum.isEnum(value);
         return ValueEnum.asEnum(value).getEnum();
     }
@@ -171,7 +171,7 @@ public interface NodeProperty {
      * @param value object value to set for the node
      * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(Object object) throws EPMCException {
+    default void set(int node, Object object) throws EPMCException {
         assert object != null;
         assert false : getClass();
     }    
@@ -190,7 +190,7 @@ public interface NodeProperty {
      * @param value integer value to set for the node
      * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(int value) throws EPMCException {
+    default void set(int node, int value) throws EPMCException {
         assert false : getClass();
     }    
 
@@ -208,7 +208,7 @@ public interface NodeProperty {
      * @param value enum value to set for the node
      * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(Enum<?> object) throws EPMCException {
+    default void set(int node, Enum<?> object) throws EPMCException {
         assert object != null;
         assert false : getClass();
     }

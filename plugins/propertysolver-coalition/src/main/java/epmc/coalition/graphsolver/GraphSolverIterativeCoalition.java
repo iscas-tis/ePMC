@@ -165,7 +165,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         maxEnd = 0;
         for (int node = 0; node < origNumNodes; node++) {
             origGraph.queryNode(node);
-            Player player = playerProp.getEnum();
+            Player player = playerProp.getEnum(node);
             playerEven.set(node, player == Player.ONE);
             maxEnd += player == Player.ONE ? 1 : 0;
             playerOdd.set(node, player == Player.TWO);
@@ -221,7 +221,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     	EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
     	for (int origNode = 0; origNode < origNumNodes; origNode++) {
     		origGraph.queryNode(origNode);
-    		Player player = playerProp.getEnum();
+    		Player player = playerProp.getEnum(origNode);
     		int iterState = builder.inputToOutputNode(origNode);
     		if (iterState == -1) {
     			continue;
@@ -235,7 +235,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     	}
     	for (int origNode = 0; origNode < origNumNodes; origNode++) {
     		origGraph.queryNode(origNode);
-    		Player player = playerProp.getEnum();
+    		Player player = playerProp.getEnum(origNode);
     		if (player == Player.STOCHASTIC) {
     			val.set(0);
     			int numSucc = origGraph.getNumSuccessors();
@@ -531,11 +531,11 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             for (int node = previousNodes.nextSetBit(0); node >= 0;
             		node = previousNodes.nextSetBit(node+1)) {
                 origGraph.queryNode(node);
-                Player player = playerProperty.getEnum();
+                Player player = playerProperty.getEnum(node);
                 /* player even or odd node - predecessors are distributions */
                 if (player == Player.ONE || player == Player.TWO) {
-                    for (int predNr = 0; predNr < origGraph.getNumPredecessors(); predNr++) {
-                        int pred = origGraph.getPredecessorNode(predNr);
+                    for (int predNr = 0; predNr < origGraph.getProperties().getNumPredecessors(node); predNr++) {
+                        int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                         if (!seen.get(pred)) {
                             origGraph.queryNode(pred);
                             strategy.set(pred, origGraph.getSuccessorNumber(node));
@@ -557,8 +557,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
                 		nodeValue.add(nodeValue, weighted);
                 	}
                 	*/
-                    for (int predNr = 0; predNr < origGraph.getNumPredecessors(); predNr++) {
-                        int pred = origGraph.getPredecessorNode(predNr);
+                    for (int predNr = 0; predNr < origGraph.getProperties().getNumPredecessors(node); predNr++) {
+                        int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                     	values.get(predValue, pred);
                     	if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
                             origGraph.queryNode(pred);
@@ -575,7 +575,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         } while (!newNodes.isEmpty());
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
         	origGraph.queryNode(node);
-        	Player player = playerProperty.getEnum();
+        	Player player = playerProperty.getEnum(node);
         	if ((player == Player.ONE || player == Player.TWO)
         			&& !seen.get(node) && !target.get(node)) {
         		values.get(nodeValue, node);
@@ -591,8 +591,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     	NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
         	origGraph.queryNode(node);
-        	Player player = playerProperty.getEnum();
-        	assert player == Player.STOCHASTIC || target.get(node) || strategy.get(node) != Scheduler.UNSET : node;
+        	Player player = playerProperty.getEnum(node);
+        	assert player == Player.STOCHASTIC || target.get(node) || strategy.getDecision(node) != Scheduler.UNSET : node;
         }
 		return true;
 	}

@@ -76,7 +76,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 			int block = 0;
 			int marker = 1;
 			for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
-				if (nodeProperties[atomicNr].getBoolean()) {
+				if (nodeProperties[atomicNr].getBoolean(state)) {
 					block |= marker;
 				}
 				marker <<= 1;
@@ -95,7 +95,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
         int block = 0;
         int marker = 1;
         for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
-            if (nodeProperties[atomicNr].getBoolean()) {
+            if (nodeProperties[atomicNr].getBoolean(state)) {
                 block |= marker;
             }
             marker <<= 1;

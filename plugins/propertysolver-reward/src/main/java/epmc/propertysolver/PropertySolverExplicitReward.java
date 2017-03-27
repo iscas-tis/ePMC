@@ -193,7 +193,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         if (rewardType.isInstantaneous()) {
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
                 graph.queryNode(graphNode);
-                Value reward = stateReward.get();
+                Value reward = stateReward.get(graphNode);
                 values.set(reward, graphNode);
             }
         }
@@ -221,8 +221,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                 }
                 graph.queryNode(graphNode);
                 int numSuccessors = graph.getNumSuccessors();
-                Value nodeRew = stateReward.get();
-                Player player = playerProp.getEnum();
+                Value nodeRew = stateReward.get(graphNode);
+                Player player = playerProp.getEnum(graphNode);
                 EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
                 if (!SemanticsMDP.isMDP(semantics) && !SemanticsIMDP.isIMDP(semantics)) {
                     acc.set(nodeRew);                        
@@ -308,7 +308,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         if (rewardType.isReachability()) {
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
                 graph.queryNode(graphNode);
-                if (statesProp.getBoolean() && reachNotOneSink.get(graphNode)) {
+                if (statesProp.getBoolean(graphNode) && reachNotOneSink.get(graphNode)) {
                     values.set(TypeWeight.get(contextValue).getPosInf(), graphNode);
                 }
             }
@@ -344,7 +344,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         	NodeProperty reachSet = graph.getNodeProperty(propertyReward.getRewardReachSet());
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
                 graph.queryNode(graphNode);
-                if (reachSet.getBoolean()) {
+                if (reachSet.getBoolean(graphNode)) {
                     reachSink.set(graphNode);
                 }
             }

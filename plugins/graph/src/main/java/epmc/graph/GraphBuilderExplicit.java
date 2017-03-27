@@ -192,8 +192,8 @@ public final class GraphBuilderExplicit {
             outputGraph.queryNode(outputNode);
             inputGraph.queryNode(outputToInputNodes.getInt(outputNode));
             for (int propNr = 0; propNr < numProperties; propNr++) {
-                Value value = inputProperties[propNr].get();
-                outputProperties[propNr].set(value);
+                Value value = inputProperties[propNr].get(outputToInputNodes.getInt(outputNode));
+                outputProperties[propNr].set(outputNode, value);
             }
         }
     }
@@ -237,7 +237,7 @@ public final class GraphBuilderExplicit {
             assert stateProp != null;
             for (int inputState = 0; inputState < inputToOutputNodes.getTotalSize(); inputState++) {
                 inputGraph.queryNode(inputState);
-                if (!stateProp.getBoolean()) {
+                if (!stateProp.getBoolean(inputState)) {
                     continue;
                 }
                 if (!sinks.get(inputState)) {
@@ -350,7 +350,7 @@ public final class GraphBuilderExplicit {
             int inputState = outputToInputNodes.getInt(outputState);
             assert inputState >= 0;
             inputGraph.queryNode(inputState);
-            if (!stateProp.getBoolean()) {
+            if (!stateProp.getBoolean(inputState)) {
                 continue;
             }
             if (sinks.get(inputState)) {
@@ -665,7 +665,7 @@ public final class GraphBuilderExplicit {
         int numInputNodes = graph.getNumNodes();
         for (int node = 0; node < numInputNodes; node++) {
             graph.queryNode(node);
-            if (isState.getBoolean()) {
+            if (isState.getBoolean(node)) {
                 states.set(node);
             }
         }
@@ -679,7 +679,7 @@ public final class GraphBuilderExplicit {
         int numNodes = graph.getNumNodes();
         for (int node = 0; node < numNodes; node++) {
             graph.queryNode(node);
-            if (!isState.getBoolean()) {
+            if (!isState.getBoolean(node)) {
                 nonStates.set(node);
             }
         }

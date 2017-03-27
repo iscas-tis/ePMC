@@ -164,7 +164,7 @@ public final class GraphBuilderExplorer {
             Type type = explorer.getNodePropertyType(property);
             assert type != null : property + " " + explorer.getNodeProperty(property);
             explorerNodeProperties[nodePropNr] = explorer.getNodeProperty(property);
-            graphNodeProperties[nodePropNr] = this.graph.addSettableNodeProperty(property, type);
+            graphNodeProperties[nodePropNr] = graph.addSettableNodeProperty(property, type);
             nodePropNr++;
         }
         if (withExplorerNode) {
@@ -205,7 +205,7 @@ public final class GraphBuilderExplorer {
                 graphStoch.prepareNode(numStateSuccessors);
             }
             for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
-                graphNodeProperties[nodePropNr].set(explorerNodeProperties[nodePropNr].get());
+                graphNodeProperties[nodePropNr].set(currentState, explorerNodeProperties[nodePropNr].get());
             }
             if (nondet) {
                 successorNodes = assignSuccessorNodes(successorNodes);
@@ -220,7 +220,7 @@ public final class GraphBuilderExplorer {
                     graphAlter.queryNode(nondetNr);
                     explorer.queryNode(successorNodes[stateSuccNr]);
                     for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
-                        graphNodeProperties[nodePropNr].set(explorerNodeProperties[nodePropNr].get());
+                        graphNodeProperties[nodePropNr].set(nondetNr, explorerNodeProperties[nodePropNr].get());
                     }
                     int numISuccessors = explorer.getNumSuccessors();
                     graphAlter.prepareNondet(numISuccessors);

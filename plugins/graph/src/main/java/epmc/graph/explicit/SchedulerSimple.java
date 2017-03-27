@@ -68,7 +68,7 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
      * @param node node to get decision of
      * @return decision for a given node
      */
-    int get(int node);
+    int getDecision(int node);
     
     @Override
     SchedulerSimple clone();
@@ -83,7 +83,7 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
         assert getGraph() == other.getGraph();
         int numNodes = getGraph().getNumNodes();
         for (int node = 0; node < numNodes; node++) {
-            set(other.get(node));
+            set(node, other.getDecision(node));
         }
     }
     

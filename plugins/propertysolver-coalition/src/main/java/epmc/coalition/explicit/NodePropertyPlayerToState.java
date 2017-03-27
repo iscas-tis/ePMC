@@ -48,14 +48,14 @@ final class NodePropertyPlayerToState implements NodeProperty {
 	}
 
 	@Override
-	public Value get() throws EPMCException {
-		Player player = playerProperty.getEnum();
+	public Value get(int node) throws EPMCException {
+		Player player = playerProperty.getEnum(node);
 		value.set(player == Player.ONE || player == Player.TWO);
 		return value;
 	}
 
 	@Override
-	public void set(Value value) throws EPMCException {
+	public void set(int node, Value value) throws EPMCException {
 		assert value != null;
 		assert false;
 	}

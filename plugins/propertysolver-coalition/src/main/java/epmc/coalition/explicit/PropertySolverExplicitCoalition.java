@@ -337,7 +337,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
             int node = todo.pop();
             wrapper.queryNode(node);
 	        product.queryNode(node);
-	        AutomatonParityLabel label = labels.getObject();
+	        AutomatonParityLabel label = labels.getObject(node);
 	        int priority = label.getPriority();
 	        if (priority == Integer.MAX_VALUE) {
 	        	hasInfPrio = true;
@@ -345,7 +345,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	        	maxPriority = Math.max(maxPriority, priority);
 	        }
 	
-	        playerProp.set(computePlayer(isState, playerNodes));
+	        playerProp.set(node, computePlayer(node, isState, playerNodes));
 	        
             for (int succNr = 0; succNr < wrapper.getNumSuccessors(); succNr++) {
                 int succ = wrapper.getSuccessorNode(succNr);
@@ -366,12 +366,12 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    return wrapper;
 	}
 
-	private Player computePlayer(NodeProperty isState, NodeProperty[] playerNodes) throws EPMCException {
+	private Player computePlayer(int node, NodeProperty isState, NodeProperty[] playerNodes) throws EPMCException {
 		Player player;
-        if (isState.getBoolean()) {
+        if (isState.getBoolean(node)) {
             player = Player.TWO;
             for (NodeProperty playerNode : playerNodes) {
-                if (playerNode.getBoolean()) {
+                if (playerNode.getBoolean(node)) {
                     player = Player.ONE;
                 }
             }

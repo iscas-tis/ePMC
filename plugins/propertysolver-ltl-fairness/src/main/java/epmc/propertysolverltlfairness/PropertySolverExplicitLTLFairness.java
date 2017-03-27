@@ -314,12 +314,12 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 				.nextSetBit(node + 1)) { 
 			graph.queryNode(node);
 			if(globalFormula != null 
-				&&  !checkNode(graph, stateLabels, globalFormula)) {
+				&&  !checkNode(graph, node, stateLabels, globalFormula)) {
 				return false;
 			}
             Iterator<Expression> iterator = finalFormulas.iterator();
             while(iterator.hasNext()) {
-            	if(checkNode(graph, stateLabels, iterator.next())){
+            	if (checkNode(graph, node, stateLabels, iterator.next())){
             		iterator.remove();
             	}
             }
@@ -331,25 +331,25 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	/**
 	 * check node whether its satisfies the given literal formula
 	 */
-	private boolean checkNode(GraphExplicit graph, Set<Expression> labels,
+	private boolean checkNode(GraphExplicit graph, int node, Set<Expression> labels,
 			Expression lit) throws EPMCException {
 		// lit may be combination of labels
         assert lit != null && !(lit instanceof ExpressionTemporal);
 		if (labels.contains(lit)) {
-			return graph.getNodeProperty(lit).getBoolean();
+			return graph.getNodeProperty(lit).getBoolean(node);
 		} else if (lit instanceof ExpressionLiteral){
 			return false;
 		} else {
 			ExpressionOperator expressionOperator = (ExpressionOperator) lit;
 		   switch (expressionOperator.getOperator().getIdentifier()) {
 		   case OperatorNot.IDENTIFIER:
-			   return ! checkNode(graph, labels, expressionOperator.getOperand1());
+			   return ! checkNode(graph, node, labels, expressionOperator.getOperand1());
 		   case OperatorOr.IDENTIFIER:
-			   return checkNode(graph, labels, expressionOperator.getOperand1())
-					   || checkNode(graph, labels, expressionOperator.getOperand2());
+			   return checkNode(graph, node, labels, expressionOperator.getOperand1())
+					   || checkNode(graph, node, labels, expressionOperator.getOperand2());
 		   case OperatorAnd.IDENTIFIER:
-			   return checkNode(graph, labels, expressionOperator.getOperand1())
-			   && checkNode(graph, labels, expressionOperator.getOperand2());
+			   return checkNode(graph, node, labels, expressionOperator.getOperand1())
+			   && checkNode(graph, node, labels, expressionOperator.getOperand2());
 		   default:
 				assert false : "ERROR literal not in labels";   
 		   }

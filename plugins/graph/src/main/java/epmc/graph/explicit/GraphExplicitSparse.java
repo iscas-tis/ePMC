@@ -227,16 +227,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         this.properties.clearPredecessors();
     }
 
-    @Override
-    public int getNumPredecessors() {
-        return this.properties.getNumPredecessors(currentNode);
-    }
-
-    @Override
-    public int getPredecessorNode(int number) {
-        return this.properties.getPredecessorNode(currentNode, number);
-    }
-
     public Value getBounds() {
         return bounds;
     }

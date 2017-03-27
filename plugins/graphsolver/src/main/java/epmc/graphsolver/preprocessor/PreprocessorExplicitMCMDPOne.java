@@ -118,13 +118,13 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
             nextNext.clear();
             for (int node = next.nextSetBit(0); node >= 0; node = next.nextSetBit(node + 1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int predecessor = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int predecessor = graph.getProperties().getPredecessorNode(node, predNr);
                     if (!extendedTarget.get(predecessor)) {
                         continue;
                     }
                     graph.queryNode(predecessor);
-                    if (states.getBoolean() && scheduler.get(predecessor) == -1) {
+                    if (states.getBoolean(predecessor) && scheduler.getDecision(predecessor) == -1) {
                         for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
                             if (graph.getSuccessorNode(succNr) == node) {
                                 scheduler.set(predecessor, succNr);
