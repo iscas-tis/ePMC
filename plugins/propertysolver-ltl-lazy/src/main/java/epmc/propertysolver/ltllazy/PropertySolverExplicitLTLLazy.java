@@ -196,7 +196,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             numComponents++;
             for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                if (isState.getBoolean()) {
+                if (isState.getBoolean(node)) {
                     numECCStates++;
                 }
             }
@@ -410,7 +410,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             }
             for (int node = ecc.nextSetBit(0); node >= 0; node = ecc.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                if (isState.getBoolean()) {
+                if (isState.getBoolean(node)) {
                     numECCStates++;
                 }
             }
@@ -471,7 +471,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = ecc.nextSetBit(0); node >= 0; node = ecc.nextSetBit(node+1)) {
             graph.queryNode(node);
-            AutomatonSubsetLabel label = automatonLabel.getObject();
+            AutomatonSubsetLabel label = automatonLabel.getObject(node);
             labelsFoundLower.or(label.getUnder());
             labelsFoundOver.or(label.getOver());
         }
@@ -498,8 +498,8 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         while (!toCheck.isEmpty()) {
             int pNode = toCheck.nextSetBit(0);
             subsetGraph.queryNode(pNode);
-            int modelState = nodeModel.getInt();
-            AutomatonSubsetState subsetState = nodeAutomaton.getObject();
+            int modelState = nodeModel.getInt(pNode);
+            AutomatonSubsetState subsetState = nodeAutomaton.getObject(pNode);
             BitSet states = subsetState.getStates();
             for (int state = buechi.getNumStates() - 1; state >= 0; state--) {
                 if (!states.get(state)) {
@@ -579,9 +579,9 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         int pNode = ecc.nextSetBit(0);
         subsetGraph.queryNode(pNode);
         NodeProperty modelStateProp = subsetGraph.getNodeProperty(CommonProperties.NODE_MODEL);
-        int modelState = modelStateProp.getInt();
+        int modelState = modelStateProp.getInt(pNode);
         NodeProperty nodeAutomaton = subsetGraph.getNodeProperty(CommonProperties.NODE_AUTOMATON);
-        AutomatonSubsetState subsetState = nodeAutomaton.getObject();
+        AutomatonSubsetState subsetState = nodeAutomaton.getObject(pNode);
         AutomatonBreakpoint breakpoint = new AutomatonBreakpoint.Builder().setBuechi(buechi).setInit(subsetState).build();
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
         		.setModel(graph)
@@ -646,7 +646,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
             graph.queryNode(node);
-            AutomatonBreakpointLabel label = automatonLabel.getObject();
+            AutomatonBreakpointLabel label = automatonLabel.getObject(node);
             if (label.isAccepting()) {
                 accepting = true;                
             } else if (label.isRejecting()) {
@@ -669,7 +669,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
             graph.queryNode(node);
-            AutomatonBreakpointLabel label = automatonLabel.getObject();
+            AutomatonBreakpointLabel label = automatonLabel.getObject(node);
             if (label.isAccepting()) {
                 return ComponentDecision.ACCEPT;
             }
@@ -695,9 +695,9 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         int pNode = scc.nextSetBit(0);
         subsetProd.queryNode(pNode);
         NodeProperty nodeModel = subsetProd.getNodeProperty(CommonProperties.NODE_MODEL);
-        int modelState = nodeModel.getInt();
+        int modelState = nodeModel.getInt(pNode);
         NodeProperty nodeAutomaton = subsetProd.getNodeProperty(CommonProperties.NODE_AUTOMATON);
-        AutomatonSubsetState subsetState = nodeAutomaton.getObject();
+        AutomatonSubsetState subsetState = nodeAutomaton.getObject(pNode);
         AutomatonRabin rabin = UtilAutomaton.newAutomatonRabinSafra(buechi, subsetState.getStates());
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
         		.setModel(graph)
@@ -753,7 +753,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         stable.set(0, rabin.getNumPairs());
         for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
             graph.queryNode(node);
-            AutomatonRabinLabel label = automatonLabel.getObject();
+            AutomatonRabinLabel label = automatonLabel.getObject(node);
             stable.and(label.getStable());
             accepting.or(label.getAccepting());
         }
@@ -774,7 +774,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             BitSet existing = UtilBitSet.newBitSetUnbounded();
             for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                AutomatonRabinLabel rabinLabel = automatonLabel.getObject();
+                AutomatonRabinLabel rabinLabel = automatonLabel.getObject(node);
                 BitSet stable = rabinLabel.getStable();
                 if (stable.get(label)) {
                     existing.set(node);
@@ -786,7 +786,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                 for (int node = leafSCC.nextSetBit(0); node >= 0; node = leafSCC.nextSetBit(node+1)) {
                     if (existing.get(node)) {
                         graph.queryNode(node);
-                        AutomatonRabinLabel rabinLabel = automatonLabel.getObject();
+                        AutomatonRabinLabel rabinLabel = automatonLabel.getObject(node);
                         BitSet accSet = rabinLabel.getAccepting();
                         if (accSet.get(label)) {
                             accepting = true;
@@ -904,8 +904,8 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         NodeProperty nodeAutomaton = leafGraph.getNodeProperty(CommonProperties.NODE_AUTOMATON);
         for (int node = reachOne.nextSetBit(0); node >= 0; node = reachOne.nextSetBit(node+1)) {
             leafGraph.queryNode(node);
-            int modelState = nodeModel.getInt();
-            AutomatonStateBuechi autState = nodeAutomaton.getObject();
+            int modelState = nodeModel.getInt(node);
+            AutomatonStateBuechi autState = nodeAutomaton.getObject(node);
             BitSet states = autState.getStates();
             int subState = subset.getState(states);
             int chkProdNode = prodGraph.combineToNode(modelState, subState);

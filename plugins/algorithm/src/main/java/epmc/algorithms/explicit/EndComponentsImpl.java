@@ -235,7 +235,7 @@ public class EndComponentsImpl implements EndComponents {
             for (int nodeNr = 0; nodeNr < sccSize; nodeNr++) {
                 int node = scc[nodeNr];
                 this.graph.queryNode(node);
-                Player player = playerProp.getEnum();
+                Player player = playerProp.getEnum(node);
                 if (player == Player.STOCHASTIC) {
                     int numSucc = graph.getNumSuccessors();
                     for (int succNr = 0; succNr < numSucc; succNr++) {
@@ -300,7 +300,7 @@ public class EndComponentsImpl implements EndComponents {
             int node = this.scc[nodeNr];
             remaining[node] = 0;
             graph.queryNode(node);
-            if (player.getEnum() == Player.ONE) {
+            if (player.getEnum(node) == Player.ONE) {
                 int numSucc = graph.getNumSuccessors();
                 for (int succNr = 0; succNr < numSucc; succNr++) {
                     int succ = graph.getSuccessorNode(succNr);
@@ -308,7 +308,7 @@ public class EndComponentsImpl implements EndComponents {
                         remaining[node]++;
                     }
                 }
-            } else if (player.getEnum() == Player.STOCHASTIC) {
+            } else if (player.getEnum(node) == Player.STOCHASTIC) {
                 remaining[node] = 1;
             }
         }
@@ -317,8 +317,8 @@ public class EndComponentsImpl implements EndComponents {
             leavingIndex--;
             int node = leaving[leavingIndex];
             graph.queryNode(node);
-            for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                int pred = graph.getPredecessorNode(predNr);
+            for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                int pred = graph.getProperties().getPredecessorNode(node, predNr);
                 if (scc.get(pred) && existingStates.get(pred)) {
                     remaining[pred]--;
                     if (remaining[pred] == 0) {

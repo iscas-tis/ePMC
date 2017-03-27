@@ -256,7 +256,7 @@ final class ProductBuilder {
             for (int obj = 0; obj < numAutomata; obj++) {
                 stateReward.set(zero);
                 NodeProperty stateRewardProp = stateRewards[obj];
-                stateReward.set(stateRewardProp.get());
+                stateReward.set(stateRewardProp.get(state));
                 EdgeProperty edgeRewardProp = transRewards[obj];
                 for (int succNr = 0; succNr < numSucc; succNr++) {
                 	// TODO HACK
@@ -330,7 +330,7 @@ final class ProductBuilder {
                 assert prodWrapper != null;
                 for (int node = 0; node < prodWrapper.getNumNodes(); node++) {
                     prodWrapper.queryNode(node);
-                    AutomatonProductLabel prodLabel = automatonLabel.getObject();
+                    AutomatonProductLabel prodLabel = automatonLabel.getObject(node);
                     AutomatonRabinLabel rabinLabel = (AutomatonRabinLabel) automaton.numberToLabel(prodLabel.get(automatonNr));
                     labelStableBitSet.set(node, rabinLabel.getStable().get(label));
                     labelAcceptingBitSet.set(node, rabinLabel.getAccepting().get(label));

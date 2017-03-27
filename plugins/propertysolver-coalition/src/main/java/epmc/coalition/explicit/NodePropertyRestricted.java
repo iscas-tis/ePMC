@@ -43,12 +43,12 @@ final class NodePropertyRestricted implements NodeProperty {
 	}
 
 	@Override
-	public Value get() throws EPMCException {
-		return original.get();
+	public Value get(int node) throws EPMCException {
+		return original.get(node);
 	}
 
 	@Override
-	public void set(Value value) throws EPMCException {
+	public void set(int node, Value value) throws EPMCException {
 		assert false;
 	}
 

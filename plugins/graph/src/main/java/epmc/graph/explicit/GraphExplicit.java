@@ -129,14 +129,6 @@ public interface GraphExplicit extends LowLevel {
         getProperties().clearPredecessors();
     }
     
-    default int getNumPredecessors() {
-        return getProperties().getNumPredecessors(getQueriedNode());
-    }
-    
-    default int getPredecessorNode(int number) {
-        return getProperties().getPredecessorNode(getQueriedNode(), number);
-    }
-
     default void explore(BitSet start) throws EPMCException {
         getProperties().explore(start);
     }
@@ -235,7 +227,7 @@ public interface GraphExplicit extends LowLevel {
         int numNodes = getNumNodes();
         for (int node = 0; node < numNodes; node++) {
             queryNode(node);
-            if (isState.getBoolean()) {
+            if (isState.getBoolean(node)) {
                 numStates++;
             }
         }

@@ -118,7 +118,7 @@ public final class TestHelperGraph {
             NodeProperty isState = modelGraph.getNodeProperty(CommonProperties.STATE);
             for (int node = 0; node < modelGraph.getNumNodes(); node++) {
                 modelGraph.queryNode(node);
-                if (isState.getBoolean()) {
+                if (isState.getBoolean(node)) {
                     numStates++;
                 }
                 numTransitions += modelGraph.getNumSuccessors();

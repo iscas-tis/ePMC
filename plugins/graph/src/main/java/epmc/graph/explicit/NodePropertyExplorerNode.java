@@ -336,8 +336,8 @@ final class NodePropertyExplorerNode implements NodeProperty {
     }
 
     @Override
-    public Value get() throws EPMCException {
-        int graphNode = graph.getQueriedNode();
+    public Value get(int graphNode) throws EPMCException {
+//        int graphNode = graph.getQueriedNode();
         if (graphNode >= numStates) {
             value.node = -1;
             return value;
@@ -352,8 +352,8 @@ final class NodePropertyExplorerNode implements NodeProperty {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getObject() throws EPMCException {
-        int graphNode = graph.getQueriedNode();
+    public <T> T getObject(int graphNode) throws EPMCException {
+//        int graphNode = graph.getQueriedNode();
         if (graphNode >= numStates) {
             value.node = -1;
             return null;
@@ -367,7 +367,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
     }
 
     @Override
-    public void set(Value value) throws EPMCException {
+    public void set(int node, Value value) throws EPMCException {
         assert value != null;
         assert false;
     }

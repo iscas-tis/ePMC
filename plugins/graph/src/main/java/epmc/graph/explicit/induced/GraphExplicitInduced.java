@@ -68,7 +68,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
     @Override
     public void queryNode(int node) throws EPMCException {
         original.queryNode(node);
-        decision = scheduler.get(node);
+        decision = scheduler.getDecision(node);
     }
 
     @Override

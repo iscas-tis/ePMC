@@ -46,7 +46,7 @@ public final class Statistics {
 		int numFanout = 0;
 		for (int node = 0; node < numNodes; node++) {
 			graph.queryNode(node);
-			if (stateProp.getBoolean()) {
+			if (stateProp.getBoolean(node)) {
 				numStates++;
 			} else {
 				numNondet++;

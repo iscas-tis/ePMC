@@ -96,7 +96,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
         BitSet oddWins = UtilBitSet.newBitSetBounded(game.getNumNodes());
         for (int node = 0; node < numNodes; node++) {
         	game.queryNode(node);
-    		Player player = this.player.getEnum();
+    		Player player = this.player.getEnum(node);
         	if (computeStrategyP0 && player == Player.ONE) {
         		strategies.set(node, computeDecision(node, vectors, vectorSize, previousValue));
         	} else if (computeStrategyP1 && player == Player.TWO) {
@@ -116,7 +116,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		game.queryNode(node);
 		int numSuccessors = game.getNumSuccessors();
 		storeVector(vectors, vectorSize, game.getSuccessorNode(0), previousValue);
-		Player player = this.player.getEnum();
+		Player player = this.player.getEnum(node);
 		int dir = player == Player.ONE ? 1 : -1;
 		int decision = 0;
 		for (int succNr = 1; succNr < numSuccessors; succNr++) {
@@ -136,7 +136,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
         NodeProperty stochasticLabels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
 		for (int node = 0; node < numNodes; node++) {
 			game.queryNode(node);
-            AutomatonParityLabel label = stochasticLabels.getObject();
+            AutomatonParityLabel label = stochasticLabels.getObject(node);
             int priority = label.getPriority();
             maxPriority = Math.max(maxPriority, priority);
 		}
@@ -166,7 +166,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
         int numNodes = game.getNumNodes();
         for (int node = 0; node < numNodes; node++) {
 			game.queryNode(node);
-            AutomatonParityLabel label = labels.getObject();
+            AutomatonParityLabel label = labels.getObject(node);
             int priority = label.getPriority();
             if (priority % 2 == 0) {
             	continue;
@@ -235,9 +235,9 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
     		if (nodeChanged) {
     			numChanged++;
     			game.queryNode(node);
-    			int numPredecessors = game.getNumPredecessors();
+    			int numPredecessors = game.getProperties().getNumPredecessors(node);
     			for (int predNr = 0; predNr < numPredecessors; predNr++) {
-    				int predNode = game.getPredecessorNode(predNr);
+    				int predNode = game.getProperties().getPredecessorNode(node, predNr);
     				if (!candidatesMarkers.get(predNode)) {
     					numCandidates++;
     					candidates.addLast(predNode);
@@ -269,7 +269,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 	 */
 	private boolean liftNode(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int node, int[] previousValue) throws EPMCException {
 		game.queryNode(node);
-        AutomatonParityLabel label = labels.getObject();
+        AutomatonParityLabel label = labels.getObject(node);
         int priority = label.getPriority();
 		int numSuccessors = game.getNumSuccessors();
 		storeVector(vectors, vectorSize, node, previousValue);
@@ -283,7 +283,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		 * Element erreichen)
 	     * der Rest ist gleich: [...]
 	     */
-		Player player = this.player.getEnum();
+		Player player = this.player.getEnum(node);
 		int dir = player == Player.ONE ? 1 : -1;
 		for (int succNr = 1; succNr < numSuccessors; succNr++) {
 			int succNode = game.getSuccessorNode(succNr);

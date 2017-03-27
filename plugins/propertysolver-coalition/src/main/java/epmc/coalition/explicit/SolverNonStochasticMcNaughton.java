@@ -82,7 +82,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
 		NodeProperty propertyPlayer = game.getNodeProperty(CommonProperties.PLAYER);
 		for (int node = 0; node < numNodes; node++) {
 			game.queryNode(node);
-			Player player = propertyPlayer.getEnum();
+			Player player = propertyPlayer.getEnum(node);
 			if (player == Player.ONE) {
 				playerEven.set(node);
 			} else if (player == Player.TWO) {
@@ -118,7 +118,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         boolean allOdd = true;
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
             game.queryNode(node);
-            AutomatonParityLabel label = labels.getObject();
+            AutomatonParityLabel label = labels.getObject(node);
             int priority = label.getPriority();
             assert priority >= 0 : priority;
             minPriority = Math.min(minPriority, priority);
@@ -141,7 +141,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         BitSet mapsToMinPriority = UtilBitSet.newBitSetBounded(game.getNumNodes());
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
             game.queryNode(node);
-            AutomatonParityLabel label = labels.getObject();
+            AutomatonParityLabel label = labels.getObject(node);
             mapsToMinPriority.set(node, label.getPriority() == minPriority);
         }
         assert minPriority >= 0 : minPriority;
@@ -168,7 +168,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         			for (int node = wPrimedThis.nextSetBit(0); node >= 0; node = wPrimedThis.nextSetBit(node + 1)) {
         				if (computeStrategyP0 && playerEven.get(node)
         						|| computeStrategyP1 && playerOdd.get(node)) {
-        					int decision = innerStrategies.get(node);
+        					int decision = innerStrategies.getDecision(node);
         					assert decision != Scheduler.UNSET;
         					strategies.set(node, decision);
         				}
@@ -195,12 +195,12 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         			BitSet player = minPriority % 2 == 0 ? playerEven : playerOdd;
         			computeStrategy(strategies, game, mapsToMinPriority, satr, player);
         			for (int node = wThis.nextSetBit(0); node >= 0; node = wThis.nextSetBit(node + 1)) {
-        				assert !(computeStrategyP0 && playerEven.get(node)) || strategies.get(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && playerOdd.get(node)) || strategies.get(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP0 && playerEven.get(node)) || strategies.getDecision(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP1 && playerOdd.get(node)) || strategies.getDecision(node) != Scheduler.UNSET;
         			}
         			for (int node = wOther.nextSetBit(0); node >= 0; node = wOther.nextSetBit(node + 1)) {
-        				assert !(computeStrategyP0 && playerEven.get(node)) || strategies.get(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && playerOdd.get(node)) || strategies.get(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP0 && playerEven.get(node)) || strategies.getDecision(node) != Scheduler.UNSET;
+        				assert !(computeStrategyP1 && playerOdd.get(node)) || strategies.getDecision(node) != Scheduler.UNSET;
         			}
         		}
     			return new QualitativeResult(minPriority % 2 == 0 ? wThis : wOther,
@@ -219,7 +219,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
     			for (int node = wPrimedOther.nextSetBit(0); node >= 0; node = wPrimedOther.nextSetBit(node + 1)) {
     				if (computeStrategyP0 && playerEven.get(node)
     						|| computeStrategyP1 && playerOdd.get(node)) {
-    					int decision = innerStrategies.get(node);
+    					int decision = innerStrategies.getDecision(node);
     					assert decision != Scheduler.UNSET : node;
     					strategies.set(node, decision);
     				}
@@ -342,8 +342,8 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int pred = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in
                      * nodes set, because in this case remaining[pred] will be
                      * 0 such that it will not be included in contained. */
@@ -364,8 +364,8 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         } while (!newNodes.isEmpty());
         /* make sure that we indeed computed the strategy correctly */
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
-        	assert !(computeStrategyP0 && playerEven.get(node)) || (strategy.get(node) != Scheduler.UNSET || target.get(node)) : node;
-        	assert !(computeStrategyP1 && playerOdd.get(node)) || (strategy.get(node) != Scheduler.UNSET || target.get(node)) : node;
+        	assert !(computeStrategyP0 && playerEven.get(node)) || (strategy.getDecision(node) != Scheduler.UNSET || target.get(node)) : node;
+        	assert !(computeStrategyP1 && playerOdd.get(node)) || (strategy.getDecision(node) != Scheduler.UNSET || target.get(node)) : node;
         }
     }
 
@@ -411,8 +411,8 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
                 graph.queryNode(node);
-                for (int predNr = 0; predNr < graph.getNumPredecessors(); predNr++) {
-                    int pred = graph.getPredecessorNode(predNr);
+                for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
+                    int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in
                      * nodes set, because in this case remaining[pred] will be
                      * 0 such that it will not be included in contained. */

@@ -527,8 +527,8 @@ public final class GraphBuilderDD implements Closeable {
 
             state.set(states.get(nodeNr));
             player.set((!this.nondet || !states.get(nodeNr)) ? Player.STOCHASTIC : Player.ONE);
-            nodePropertyState.set(state);
-            nodePropertyPlayer.set(player);
+            nodePropertyState.set(nodeNr, state);
+            nodePropertyPlayer.set(nodeNr, player);
         }
         log.send(MessagesGraph.CONVERTING_DD_GRAPH_TO_EXPLICIT_DONE, timer.getTimeSeconds());
         GraphBuilderExplicit explicitBuilder = new GraphBuilderExplicit();

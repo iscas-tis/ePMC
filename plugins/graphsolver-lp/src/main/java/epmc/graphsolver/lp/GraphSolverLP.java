@@ -137,8 +137,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             BitSet newPrev = oldPrev.clone();
             for(int node = newPrev.nextSetBit(0); node >= 0 ; node = newPrev.nextSetBit(node + 1)) {
                 graph.queryNode(node);
-                for(int preNr = 0 ; preNr < graph.getNumPredecessors() ; preNr ++) {
-                    int prev = graph.getPredecessorNode(preNr);
+                for(int preNr = 0 ; preNr < graph.getProperties().getNumPredecessors(node) ; preNr ++) {
+                    int prev = graph.getProperties().getPredecessorNode(node, preNr);
                     oldPrev.set(prev);
                 }
             }
@@ -322,9 +322,9 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 numConstrints ++;            
             }
             graph.queryNode(node);
-            if(isState.getBoolean()) {
+            if (isState.getBoolean(node)) {
                 objRow[node] = one;
-            }else {
+            } else {
                 objRow[node] = zero;
             }
             objVars[node] = varIndex;
@@ -349,13 +349,13 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 node = undecided.nextSetBit(node + 1)) {
             graph.queryNode(node);
             int numSuccessors = graph.getNumSuccessors();
-            if(isState.getBoolean()) {
+            if (isState.getBoolean(node)) {
                 for(int succNr = 0 ; succNr < graph.getNumSuccessors() ; succNr ++) {
                     int succ = graph.getSuccessorNode(succNr);
                     /** if it is the first time */
                     lpProblem.addConstraint(new Value[]{one, minusOne}, new int[]{node, succ}, ConstraintType.GE, zero);
                 }
-            }else if(numSuccessors > 0){
+            } else if(numSuccessors > 0){
                 
                 Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
                 int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */

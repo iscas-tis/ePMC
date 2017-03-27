@@ -83,9 +83,9 @@ public final class NodePropertyApply implements NodeProperty {
      * resulting value.
      */
     @Override
-    public Value get() throws EPMCException {
+    public Value get(int node) throws EPMCException {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
-            callOperands[operandNr] = operands[operandNr].get();
+            callOperands[operandNr] = operands[operandNr].get(node);
         }
         operator.apply(value, callOperands);
         return value;
@@ -97,7 +97,7 @@ public final class NodePropertyApply implements NodeProperty {
      * to this function have no effect.
      */
     @Override
-    public void set(Value value) throws EPMCException {
+    public void set(int node, Value value) throws EPMCException {
         assert value != null;
     }
 

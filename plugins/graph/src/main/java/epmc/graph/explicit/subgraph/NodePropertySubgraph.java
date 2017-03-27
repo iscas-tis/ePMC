@@ -43,13 +43,13 @@ public class NodePropertySubgraph implements NodeProperty {
     }
 
     @Override
-    public Value get() throws EPMCException {
-        return inner.get();
+    public Value get(int node) throws EPMCException {
+        return inner.get(graph.subToOrig(node));
     }
 
     @Override
-    public void set(Value value) throws EPMCException {
-        inner.set(value);
+    public void set(int node, Value value) throws EPMCException {
+        inner.set(graph.subToOrig(node), value);
     }
 
     @Override

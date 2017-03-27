@@ -112,7 +112,7 @@ public final class UtilGraph {
         NodeProperty isState = explicit.getNodeProperty(CommonProperties.STATE);
         for (int node = 0; node < explicit.getNumNodes(); node++) {
             explicit.queryNode(node);
-            if (isState.getBoolean()) {
+            if (isState.getBoolean(node)) {
                 statesBs.set(node);
             }
         }
@@ -151,13 +151,13 @@ public final class UtilGraph {
             results.getExplicitIthValue(entry, i);
             int state = results.getExplicitIthState(i);
             lowLevel.queryNode(state);
-            nodeProp.set(entry);
+            nodeProp.set(state, entry);
             int numSuccessors = lowLevel.getNumSuccessors();
             for (int succ = 0; succ < numSuccessors; succ++) {
                 int succNode = lowLevel.getSuccessorNode(succ);
                 lowLevel.queryNode(succNode);
-                if (!stateProperty.getBoolean()) {
-                    nodeProp.set(entry);
+                if (!stateProperty.getBoolean(succNode)) {
+                    nodeProp.set(succNode, entry);
                 }
                 lowLevel.queryNode(state);
             }

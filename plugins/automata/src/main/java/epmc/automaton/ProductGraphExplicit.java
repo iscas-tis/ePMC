@@ -51,7 +51,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     
     @FunctionalInterface
     public interface NextAutomatonState {
-       boolean move() throws EPMCException;
+       boolean move(int node) throws EPMCException;
     }
     
     /**
@@ -209,12 +209,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get() throws EPMCException {
-            return from.get();
+        public Value get(int node) throws EPMCException {
+            return from.get(getModelNode(node));
         }
         
         @Override
-        public void set(Value value) throws EPMCException {
+        public void set(int node, Value value) throws EPMCException {
             assert false;
         }
 
@@ -241,12 +241,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get() {
+        public Value get(int node) {
             return value;
         }
         
         @Override
-        public void set(Value value) throws EPMCException {
+        public void set(int node, Value value) throws EPMCException {
             assert false;
         }
 
@@ -261,19 +261,19 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public void set(Object object) throws EPMCException {
+        public void set(int node, Object object) throws EPMCException {
             assert object != null;
             assert ValueObject.isObject(value);
             assert false;
         }    
         
         @Override
-        public void set(int value) throws EPMCException {
+        public void set(int node, int value) throws EPMCException {
             assert false;
         }    
 
         @Override
-        public void set(Enum<?> object) throws EPMCException {
+        public void set(int node, Enum<?> object) throws EPMCException {
             assert object != null;
             assert false;
         }
@@ -505,6 +505,11 @@ public final class ProductGraphExplicit implements GraphExplicit {
         this.queriedNode = node;
     }
 
+    int getModelNode(int node) {
+        long combined = numberToCombined[node];
+        return combinedToModelNode(combined);
+    }
+    
     private void queryNode(long combined) throws EPMCException {
         int modelNode = combinedToModelNode(combined);
         int propNodeAutomatonValue = combinedToAutomatonNode(combined);
@@ -515,14 +520,14 @@ public final class ProductGraphExplicit implements GraphExplicit {
         automatonState.set(oState); /* set automaton state and get atomic proposition labeling below */
         for (int exprNr = 0; exprNr < expressionProps.length; exprNr++) {
         	assert expressionProps[exprNr] != null;
-            queryArray[exprNr] = expressionProps[exprNr].get();
+            queryArray[exprNr] = expressionProps[exprNr].get(modelNode);
         }
         automaton.queryState(queryArray, propNodeAutomatonValue);
         int numModelSuccessors = model.getNumSuccessors();
         numSuccessors = 0;
         if (automaton.isDeterministic()) {
             propAutomatonValue.set(automaton.numberToLabel(automaton.getSuccessorLabel()));
-        } else if (nextAutomatonState.move()) { /*LY add following code */
+        } else if (nextAutomatonState.move(modelNode)) { /*LY add following code */
             int succNr = 0;
             int numAutomatonSuccessors = automaton.getNumberSuccessors();
             for (int autSuccNr = 0; autSuccNr < numAutomatonSuccessors; autSuccNr++) {
@@ -534,7 +539,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             }
         }
 
-        if (nextAutomatonState.move()) {
+        if (nextAutomatonState.move(modelNode)) {
             if (automaton.isDeterministic()) {
                 int succStateAutomatonNumber = automaton.getSuccessorState();
                 for (int succNr = 0; succNr < numModelSuccessors; succNr++) {
@@ -596,18 +601,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
     @Override
     public void clearPredecessors() {
         assert false;
-    }
-
-    @Override
-    public int getNumPredecessors() {
-        assert false;
-        return 0;
-    }
-
-    @Override
-    public int getPredecessorNode(int number) {
-        assert false;
-        return 0;
     }
 
     public static long combine(int modelState, int automatonState) {

@@ -56,7 +56,7 @@ public final class NodePropertyConstant implements NodeProperty {
      * given by the constructor of this class.
      */
     @Override
-    public Value get() {
+    public Value get(int node) {
         return value;
     }
 
@@ -66,7 +66,7 @@ public final class NodePropertyConstant implements NodeProperty {
      * of the graph.
      */
     @Override
-    public void set(Value value) throws EPMCException {
+    public void set(int node, Value value) throws EPMCException {
         assert value != null;
         assert this.value.getType().canImport(value.getType());
         this.value.set(value);

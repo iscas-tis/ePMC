@@ -148,7 +148,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 			SchedulerSimple result = new SchedulerSimpleArray(game);
 			for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
 				game.queryNode(node);
-				Player player = playerProperty.getEnum();
+				Player player = playerProperty.getEnum(node);
 				if (player != Player.ONE) {
 					continue;
 				}
@@ -161,12 +161,12 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		int numSubGraphNodes = subGraph.getNumNodes();
 		for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
 			subGraph.queryNode(subNode);
-			Player player = playerPropertySubgame.getEnum();
+			Player player = playerPropertySubgame.getEnum(subNode);
 			if (player != Player.ONE) {
 				continue;
 			}
 			int origNode = subGraph.subToOrig(subNode);
-			int subDecision = subPair.getStrategies().get(subNode);
+			int subDecision = subPair.getStrategies().getDecision(subNode);
 			subGraph.queryNode(subNode);
 			int origDecision = subGraph.getOrigSuccNumber(subDecision);
 			assert origDecision != Scheduler.UNSET;
@@ -180,9 +180,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		assert quantiRes.getStrategies() != null;
 		for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
 			subGraph.queryNode(subNode);
-			Player player = playerPropertySubgame.getEnum();
+			Player player = playerPropertySubgame.getEnum(subNode);
 			if (player == Player.ONE && !subPair.getSet0().get(subNode)) {
-				int subDecision = quantiRes.getStrategies().get(subNode);
+				int subDecision = quantiRes.getStrategies().getDecision(subNode);
 				assert subDecision != Scheduler.UNSET : subNode;
 				int origDecision = subGraph.getOrigSuccNumber(subDecision);
 				int origNode = subGraph.subToOrig(subNode);
@@ -203,10 +203,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		SchedulerSimple g = initialise(zeroNodes);
 		for (int origNode = zeroNodes.nextSetBit(0); origNode >= 0; origNode = zeroNodes.nextSetBit(origNode + 1)) {
 			game.queryNode(origNode);
-			Player player = playerProperty.getEnum();
+			Player player = playerProperty.getEnum(origNode);
 			if (player == Player.ONE) {
-				assert g.get(origNode) != Scheduler.UNSET;
-				strategy.set(origNode, g.get(origNode));
+				assert g.getDecision(origNode) != Scheduler.UNSET;
+				strategy.set(origNode, g.getDecision(origNode));
 			}
 		}
 		assert assertStrategy(p, strategy);
@@ -219,11 +219,11 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
 		for (int origNode = p.nextSetBit(0); origNode >= 0; origNode = p.nextSetBit(origNode + 1)) {
 			game.queryNode(origNode);
-			Player player = playerProperty.getEnum();
+			Player player = playerProperty.getEnum(origNode);
 			if (player == Player.ONE) {
-				assert strategy.get(origNode) != Scheduler.UNSET;
+				assert strategy.getDecision(origNode) != Scheduler.UNSET;
 			} else {
-				assert strategy.get(origNode) == Scheduler.UNSET;				
+				assert strategy.getDecision(origNode) == Scheduler.UNSET;				
 			}
 		}
 		return true;
@@ -264,7 +264,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 			values.get(value, node);
 			assert !target.get(node) || value.isOne();
 			graph.queryNode(node);
-			Player player = playerProp.getEnum();
+			Player player = playerProp.getEnum(node);
 			if (player == Player.ONE) {
 				newValue.set(TypeWeight.asWeight(newValue.getType()).getNegInf());
 			} else if (player == Player.TWO) {
@@ -314,7 +314,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 			changed = false;
 			for (int node = 0; node < numNodes; node++) {
 				game.queryNode(node);
-				Player player = playerProperty.getEnum();
+				Player player = playerProperty.getEnum(node);
 				if (player != Player.ONE) {
 					continue;
 				}
@@ -360,13 +360,13 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		        		node = restrictedWon.nextSetBit(node + 1)) {
 					game.queryNode(node);
 					restricted.queryNode(node);
-					Player player = playerProperty.getEnum();
+					Player player = playerProperty.getEnum(node);
 					if (player != Player.ONE) {
 						continue;
 					}
-		        	int restrictedDecision = restrictedResult.getStrategies().get(node);
+		        	int restrictedDecision = restrictedResult.getStrategies().getDecision(node);
 		        	int origDecision = restricted.getOrigSuccNumber(restrictedDecision);
-		        	if (strategies.get(node) != origDecision) {
+		        	if (strategies.getDecision(node) != origDecision) {
 		        		strategies.set(node, origDecision);
 		        		changed = true;
 		        	}
@@ -377,7 +377,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		if (!computeStrategyP0) {
 			for (int node = 0; node < numNodes; node++) {
 				game.queryNode(node);
-				Player player = playerProperty.getEnum();
+				Player player = playerProperty.getEnum(node);
 				if (player == Player.ONE) {
 					strategies.set(node, Scheduler.UNSET);
 				}
@@ -386,9 +386,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		if (computeStrategyP1) {
 			for (int node = 0; node < numNodes; node++) {
 				game.queryNode(node);
-				Player player = playerProperty.getEnum();
+				Player player = playerProperty.getEnum(node);
 				if (player == Player.TWO) {
-					strategies.set(node, evaluatedResult.getStrategies().get(node));
+					strategies.set(node, evaluatedResult.getStrategies().getDecision(node));
 				}
 			}
 		}
@@ -416,7 +416,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	for (int node = 0; node < numNodes; node++) {
     		game.queryNode(node);
     		values.get(value, node);
-    		Player player = playerProperty.getEnum();
+    		Player player = playerProperty.getEnum(node);
     		int numSuccessors = game.getNumSuccessors();
     		for (int succ = 0; succ < numSuccessors; succ++) {
     			int succState = game.getSuccessorNode(succ);
@@ -452,7 +452,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	boolean hasInf = false;
     	for (int node = 0; node < numNodes; node++) {
     		induced.queryNode(node);
-    		AutomatonParityLabel oldLabel = oldLabelProp.getObject();
+    		AutomatonParityLabel oldLabel = oldLabelProp.getObject(node);
     		if (oldLabel.getPriority() == Integer.MAX_VALUE) {
     			hasInf = true;
     		} else {
@@ -469,14 +469,14 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	}
     	for (int node = 0; node < numNodes; node++) {
     		induced.queryNode(node);
-    		AutomatonParityLabel oldLabel = oldLabelProp.getObject();
+    		AutomatonParityLabel oldLabel = oldLabelProp.getObject(node);
     		int prio = oldLabel.getPriority();
     		if (prio == Integer.MAX_VALUE) {
-    			newLabelProp.set(labels[numPrios]);
+    			newLabelProp.set(node, labels[numPrios]);
     		} else {
-    			newLabelProp.set(labels[prio + 1]);
+    			newLabelProp.set(node, labels[prio + 1]);
     		}
-    		Player oldPlayer = oldPlayerProp.getEnum();
+    		Player oldPlayer = oldPlayerProp.getEnum(node);
     		Player newPlayer = null;
     		if (oldPlayer == Player.ONE) {
     			newPlayer = Player.TWO;
@@ -485,7 +485,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     		} else if (oldPlayer == Player.STOCHASTIC) {
     			newPlayer = Player.STOCHASTIC;
     		}
-    		newPlayerProp.set(newPlayer);
+    		newPlayerProp.set(node, newPlayer);
     	}
     	induced.removeNodeProperty(CommonProperties.AUTOMATON_LABEL);
     	induced.removeNodeProperty(CommonProperties.PLAYER);
