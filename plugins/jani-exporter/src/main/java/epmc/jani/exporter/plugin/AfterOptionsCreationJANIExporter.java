@@ -78,15 +78,15 @@ public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreat
         	.setCommandLine().setCategory(category).build();
 
         options.addOption().setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-        	.setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_MODEL_NAME)
-        	.setType(typeString)
-        	.setCommandLine().setCategory(category).build();
+	    	.setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_MODEL_NAME)
+	    	.setType(typeString)
+	    	.setCommandLine().setCategory(category).build();
 
         options.addOption().setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-    	.setIdentifier(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX)
-    	.setType(typeString)
-    	.setDefault("reward_")
-    	.setCommandLine().setCategory(category).build();
+	    	.setIdentifier(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX)
+	    	.setType(typeString)
+	    	.setDefault("reward_")
+	    	.setCommandLine().setCategory(category).build();
 	}
 
 }

@@ -181,6 +181,14 @@ public final class Edge implements JANINode {
 		this.destinations = destinations;
 	}
 	
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+	public String getComment() {
+		return comment;
+	}
+
 	@Override
 	public String toString() {
 		return UtilModelParser.toString(this);
