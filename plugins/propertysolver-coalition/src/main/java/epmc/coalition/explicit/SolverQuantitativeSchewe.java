@@ -281,7 +281,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 				} else if (player == Player.TWO) {
 					newValue.min(newValue, succValue);
 				} else if (player == Player.STOCHASTIC) {
-					weighted.multiply(succValue, weightProp.get(succ));
+					weighted.multiply(succValue, weightProp.get(node, succ));
 					newValue.add(newValue, weighted);
 				}
 			}

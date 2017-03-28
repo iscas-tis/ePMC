@@ -180,7 +180,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
             automaton.queryNode(state);
             DD presVar = presVars.get(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(state, succNr);
                 int succ = automaton.getSuccessorNode(succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD nextOn = nextOns.get(succ);
@@ -224,7 +224,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
             automaton.queryNode(state);
             DD presVar = presVars.get(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labelsProps.getObject(succNr);
+                BuechiTransition trans = labelsProps.getObject(state, succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD notGuardAndPres = guard.andWith(presVar.clone()).notWith();
                 BitSet labeling = trans.getLabeling();
@@ -285,7 +285,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
             DD presVar = presVars.get(state);
             automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labelsProp.getObject(succNr);
+                BuechiTransition trans = labelsProp.getObject(state, succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD guardAndPres = guard.andWith(presVar.clone());
                 BitSet labeling = trans.getLabeling();

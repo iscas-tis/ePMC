@@ -67,14 +67,14 @@ public final class GraphExplicitSparse implements GraphExplicit {
         }
         
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             int entry = bounds.getInt(currentNode) + successor;
             content.get(value, entry);
             return value;
         }
 
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
             int entry = bounds.getInt(currentNode) + successor;
             ensureSize(content, entry + 1);
             content.set(value, entry);

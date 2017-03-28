@@ -435,7 +435,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 predecessors[predecessorsFromTo[succState]] = state;                
                 predecessorsFromTo[succState]++;
                 successors[totalNumSucc] = succState;
-                successorWeights.set(weights.get(succNr), totalNumSucc);
+                successorWeights.set(weights.get(state, succNr), totalNumSucc);
                 totalNumSucc++;
             }
         }

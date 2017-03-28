@@ -58,7 +58,7 @@ public final class GraphExporterDOT {
                 int propNr = 0;
                 for (Object property : edgeProperties) {
                     EdgeProperty prop = graph.getEdgeProperty(property);
-                    Value value = prop.get(succNr);
+                    Value value = prop.get(node, succNr);
                     out.print(property + "=" + value);
                     if (propNr < edgeProperties.size() - 1) {
                         out.print(",");
