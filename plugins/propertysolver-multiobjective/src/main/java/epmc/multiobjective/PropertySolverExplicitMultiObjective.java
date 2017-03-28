@@ -229,7 +229,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 }
             }
         } while (true);
-//        computeRandomizedScheduler(product, down, bounds);
+//        if (feasible) {
+    //    	computeRandomizedScheduler(product, down, bounds);
+  //      }
         return prepareResult(numerical, feasible, bounds, subtractNumericalFrom);
 	}
 
@@ -253,10 +255,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 		ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
 		for (int schedNr = 0; schedNr < down.size(); schedNr++) {
 			schedProbs.get(schedProb, schedNr);
-			ValueArrayInteger sched = down.get(schedNr).getScheduler();
 			if (schedProb.isZero()) {
 				continue;
 			}
+			ValueArrayInteger sched = down.get(schedNr).getScheduler();
 			for (int node = 0; node < numNodes; node++) {
 				computationGraph.queryNode(node);
 				if (!stateProp.getBoolean(node)) {
