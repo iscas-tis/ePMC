@@ -789,6 +789,10 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return janiVersion;
 	}
 	
+	public Metadata getMetadata() {
+		return metadata;
+	}
+	
 	@Override
 	public ModelJANI clone() {
 		ModelJANI clone = new ModelJANI();
