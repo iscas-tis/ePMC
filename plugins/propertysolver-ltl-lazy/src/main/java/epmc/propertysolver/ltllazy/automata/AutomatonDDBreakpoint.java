@@ -243,7 +243,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
             DD presVar = rPresVars.get(state);
             automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(state, succNr);
                 int succ = automaton.getSuccessorNode(succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 BitSet label = trans.getLabeling();
@@ -293,7 +293,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
             DD presVar = presStates.get(state);
             automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(state, succNr);
                 int succ = automaton.getSuccessorNode(succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD nextOn = nextOns.get(succ);

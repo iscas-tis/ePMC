@@ -44,13 +44,18 @@ public class EdgePropertySubgraph implements EdgeProperty {
     }
 
     @Override
-    public Value get(int successor) throws EPMCException {
-        return inner.get(graph.getOrigSuccNumber(successor));
+    public Value get(int node, int successor) throws EPMCException {
+    	int old = graph.getQueriedNode();
+    	graph.queryNode(node);
+        Value res = inner.get(graph.subToOrig(node), graph.getOrigSuccNumber(successor));
+        graph.queryNode(old);
+        return res;
     }
 
     @Override
-    public void set(Value value, int successor) {
-        inner.set(value, graph.getOrigSuccNumber(successor));
+    public void set(int node, int successor, Value value) {
+    	throw new RuntimeException();
+//        inner.set(graph.subToOrig(node), graph.getOrigSuccNumber(successor), value);
     }
 
     @Override

@@ -132,7 +132,7 @@ public class BuechiImpl implements Buechi {
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(node, succNr);
                 Expression guard = trans.getExpression();
                 evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
                 		new ExpressionToTypeBoolean(contextValue, expressions), expressions);
@@ -143,7 +143,7 @@ public class BuechiImpl implements Buechi {
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(node, succNr);
                 ((BuechiTransitionImpl) trans).setResult(ValueBoolean.asBoolean(evaluators[totalSize].getResultValue()));
                 totalSize++;
             }
@@ -168,7 +168,7 @@ public class BuechiImpl implements Buechi {
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(node, succNr);
                 Expression expr = trans.getExpression();
                 boolean isTrue = isTrue(expr);
                 if (isTrue && trans.getLabeling().cardinality() == numLabels) {
@@ -232,7 +232,7 @@ public class BuechiImpl implements Buechi {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(state, succNr);
                 trans.getLabeling().set(0);
             }
         }

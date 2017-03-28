@@ -43,12 +43,12 @@ public final class GraphExplicitModifier {
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    sum.add(sum, weightProp.get(succNr));
+                    sum.add(sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    weight.set(weightProp.get(succNr));
+                    weight.set(weightProp.get(node, succNr));
                     weight.divide(weight, sum);
-                    weightProp.set(weight, succNr);
+                    weightProp.set(node, succNr, weight);
                 }
             }
         }
@@ -72,16 +72,16 @@ public final class GraphExplicitModifier {
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors() - 1; succNr++) {
-                    sum.add(sum, weightProp.get(succNr));
+                    sum.add(sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors() - 1; succNr++) {
-                    weight.set(weightProp.get(succNr));
+                    weight.set(weightProp.get(node, succNr));
                     weight.divide(weight, uniformisationRate);
-                    weightProp.set(weight, succNr);
+                    weightProp.set(node, succNr, weight);
                 }
                 weight.subtract(uniformisationRate, sum);
                 weight.divide(weight, uniformisationRate);
-                weightProp.set(weight, graph.getNumSuccessors() - 1);
+                weightProp.set(node, graph.getNumSuccessors() - 1, weight);
                 graph.setSuccessorNode(graph.getNumSuccessors() - 1, node);
             }
         }
@@ -101,7 +101,7 @@ public final class GraphExplicitModifier {
                 graph.queryNode(inputNode);
                 int numSuccs = graph.getNumSuccessors() - 1;
                 for (int succNr = 0; succNr < numSuccs; succNr++) {
-                    Value rate = weight.get(succNr);
+                    Value rate = weight.get(inputNode, succNr);
                     sumRate.add(sumRate, rate);
                 }
                 result.max(result, sumRate);

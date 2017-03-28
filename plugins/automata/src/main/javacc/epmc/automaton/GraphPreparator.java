@@ -110,7 +110,7 @@ final class GraphPreparator {
 		    	BuechiTransition buchiTransition = new BuechiTransitionImpl(transition.getGuard(), transition.getLabel());
 		    	graph.setSuccessorNode(succNr, transition.getTo());
 		    	transitionValue.set(buchiTransition);
-		    	labelProp.set(transitionValue, succNr);
+		    	labelProp.set(from, succNr, transitionValue);
 		    	succNr++;
 		    }
 	    }

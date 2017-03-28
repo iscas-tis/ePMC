@@ -224,7 +224,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             for(int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
                 int succ = graph.getSuccessorNode(succNr);
                 /** if it is the first time */
-                Value tranProb = weightProp.get(succNr);
+                Value tranProb = weightProp.get(node, succNr);
                 ValueAlgebra prob = typeWeight.newValue();
                 if (visited[succ] == 0) {
                     prob.subtract(zero, tranProb);
@@ -366,7 +366,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 for(int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
                     int succ = graph.getSuccessorNode(succNr);  /* can not occur two times */
                     /** if it is the first time */
-                    Value tranProb = weightProp.get(succNr);
+                    Value tranProb = weightProp.get(node, succNr);
                     ValueAlgebra prob = typeWeight.newValue();
                     prob.subtract(zero, tranProb);
                     row[jIndex] = prob;

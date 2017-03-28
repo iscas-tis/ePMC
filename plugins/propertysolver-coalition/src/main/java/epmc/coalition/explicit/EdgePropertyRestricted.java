@@ -50,14 +50,13 @@ final class EdgePropertyRestricted implements EdgeProperty {
 	}
 
 	@Override
-	public Value get(int successor) throws EPMCException {
-		int queriedNode = graph.getQueriedNode();
+	public Value get(int queriedNode, int successor) throws EPMCException {
 		boolean valid = restriction.get(queriedNode * maxNumSuccessors + successor);
-		return original.get(valid ? successor : substitute[queriedNode]);
+		return original.get(queriedNode, valid ? successor : substitute[queriedNode]);
 	}
 
 	@Override
-	public void set(Value value, int successor) {
+	public void set(int node, int succ, Value value) {
 		assert false;
 	}
 

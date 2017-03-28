@@ -240,7 +240,7 @@ public final class GraphBuilderExplorer {
                     int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(stateSuccNr));
                     graph.setSuccessorNode(stateSuccNr, numberSucc);
                     for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
-                        graphEdgeProperties[nodePropNr].set(explorerEdgeProperties[nodePropNr].get(stateSuccNr), stateSuccNr);
+                        graphEdgeProperties[nodePropNr].set(currentState, stateSuccNr, explorerEdgeProperties[nodePropNr].get(stateSuccNr));
                     }
                     lastNumber = Math.max(numberSucc, lastNumber);
                 }

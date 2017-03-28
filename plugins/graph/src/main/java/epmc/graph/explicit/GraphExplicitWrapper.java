@@ -144,7 +144,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
 
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             int size = content.getLength(0);
@@ -160,7 +160,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
         
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
             assert value != null;
             assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
@@ -177,11 +177,11 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
 
         @Override
-        public void set(String value, int successor) throws EPMCException {
+        public void set(int currentNode, int successor, String value) throws EPMCException {
             assert value != null;
             assert successor >= 0;
             helper.set(value);
-            set(helper, successor);
+            set(currentNode, successor, helper);
         }
 
         @Override
@@ -213,12 +213,12 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             this.inner = inner;
             for (int node = queriedNodes.nextSetBit(0); node >= 0; node = queriedNodes.nextSetBit(node+1)) {
                 innerGraph.queryNode(node);
-                update();
+                update(node);
             }
         }
 
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             int size = content.getLength(0);
@@ -234,7 +234,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
         
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
             assert value != null;
             assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
@@ -255,9 +255,9 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             return typeEntry;
         }
         
-        void update() throws EPMCException {
+        void update(int currentNode) throws EPMCException {
            for (int succ = 0 ; succ < numSuccessors; succ++) {
-               set(inner.get(succ), succ);
+               set(currentNode, succ, inner.get(currentNode, succ));
            }
         }
 
@@ -486,7 +486,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
                 property.update(node, node);
             }
             for (EdgePropertyWrapperDerived property : derivedEdgeProps) {
-                property.update();
+                property.update(node);
             }
             if (cache) {
                 storeNode();

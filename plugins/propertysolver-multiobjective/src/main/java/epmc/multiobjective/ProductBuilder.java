@@ -262,10 +262,10 @@ final class ProductBuilder {
                 	// TODO HACK
                 	int old = prodWrapper.getQueriedNode();
                     transReward.set(stateReward);
-                    transReward.add(transReward, edgeRewardProp.get(succNr));
+                    transReward.add(transReward, edgeRewardProp.get(state, succNr));
                     int succ = prodWrapper.getSuccessorNode(succNr);
                     prodWrapper.queryNode(succ);
-                    transReward.add(transReward, edgeRewardProp.get(0));
+                    transReward.add(transReward, edgeRewardProp.get(succ, 0));
                     result.setReward(transReward, succNr, obj);
                     prodWrapper.queryNode(old);
                 }
