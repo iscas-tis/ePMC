@@ -187,6 +187,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
 		assert model != null;
 		assert validIdentifiers != null;
 		return new ExpressionQuantifier.Builder()
+				.setContext(model.getContextValue())
 				.setDirType(dirType)
 				.setCmpType(CmpType.IS)
 				.setQuantified(new ExpressionSteadyState.Builder()
