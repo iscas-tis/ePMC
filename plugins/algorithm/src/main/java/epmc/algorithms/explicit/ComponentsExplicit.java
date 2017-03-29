@@ -49,8 +49,8 @@ public final class ComponentsExplicit {
             graph.queryNode(node);
             Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succNode = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succNode = graph.getSuccessorNode(node, succNr);
                     if (set.get(succNode)) {
                         remaining[node]++;
                     }
@@ -61,8 +61,8 @@ public final class ComponentsExplicit {
                 }
             } else if (player == Player.STOCHASTIC) {
                 boolean outside = false;
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succNode = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succNode = graph.getSuccessorNode(node, succNr);
                     if (!set.get(succNode)) {
                         outside = false;
                         break;
@@ -129,8 +129,8 @@ public final class ComponentsExplicit {
             remaining[node] = 0;
             graph.queryNode(node);
             if (player.getEnum(node) == Player.ONE) {
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (scc.get(succ)) {
                         remaining[node]++;
                     }
@@ -184,7 +184,7 @@ public final class ComponentsExplicit {
         for (int node = 0; node < graph.getNumNodes(); node++) {
             graph.queryNode(node);
             if (player.getEnum(node) == Player.ONE) {
-                remaining[node] = min ? graph.getNumSuccessors() : 1;
+                remaining[node] = min ? graph.getNumSuccessors(node) : 1;
             } else if (player.getEnum(node) == Player.STOCHASTIC) {
                 remaining[node] = 1;
             } else {

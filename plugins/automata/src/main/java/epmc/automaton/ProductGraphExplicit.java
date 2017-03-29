@@ -330,7 +330,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             if (automaton.isDeterministic()) {
                 return from.get(getModelNode(node), successor);
             } else {
-                return from.get(getModelNode(node), successor % model.getNumSuccessors());                
+                return from.get(getModelNode(node), successor % model.getNumSuccessors(node));                
             }
         }
         
@@ -523,7 +523,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             queryArray[exprNr] = expressionProps[exprNr].get(modelNode);
         }
         automaton.queryState(queryArray, propNodeAutomatonValue);
-        int numModelSuccessors = model.getNumSuccessors();
+        int numModelSuccessors = model.getNumSuccessors(modelNode);
         numSuccessors = 0;
         if (automaton.isDeterministic()) {
             propAutomatonValue.set(automaton.numberToLabel(automaton.getSuccessorLabel()));
@@ -543,7 +543,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             if (automaton.isDeterministic()) {
                 int succStateAutomatonNumber = automaton.getSuccessorState();
                 for (int succNr = 0; succNr < numModelSuccessors; succNr++) {
-                    int succModel = model.getSuccessorNode(succNr);
+                    int succModel = model.getSuccessorNode(modelNode, succNr);
                     addSuccessor(succModel, succStateAutomatonNumber);
                 }
             } else {
@@ -551,14 +551,14 @@ public final class ProductGraphExplicit implements GraphExplicit {
                 for (int autSuccNr = 0; autSuccNr < numAutomatonSuccessors; autSuccNr++) {
                     int succStateAutomatonNumber = automaton.getSuccessorState(autSuccNr);
                     for (int modelSuccNr = 0; modelSuccNr < numModelSuccessors; modelSuccNr++) {
-                        int succModel = model.getSuccessorNode(modelSuccNr);
+                        int succModel = model.getSuccessorNode(modelNode, modelSuccNr);
                         addSuccessor(succModel, succStateAutomatonNumber);
                     }
                 }
             }
         } else {
             for (int succNr = 0; succNr < numModelSuccessors; succNr++) {
-                int succModel = model.getSuccessorNode(succNr);
+                int succModel = model.getSuccessorNode(modelNode, succNr);
                 addSuccessor(succModel, propNodeAutomatonValue);
             }
         }
@@ -580,7 +580,13 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
     
     @Override
-    public int getNumSuccessors() {
+    public int getNumSuccessors(int node) throws EPMCException {
+        assert node >= 0 : node;
+        if (queriedNode != node) {
+        	long combined = numberToCombined[node];
+        	queryNode(combined);
+        	this.queriedNode = node;
+        }
         return numSuccessors;
     }
 
@@ -589,7 +595,13 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
     
     @Override
-    public int getSuccessorNode(int successor) {
+    public int getSuccessorNode(int node, int successor) throws EPMCException {
+        assert node >= 0 : node;
+        if (queriedNode != node) {
+        	long combined = numberToCombined[node];
+        	queryNode(combined);
+        	this.queriedNode = node;
+        }
         return successorNodes[successor];
     }
 

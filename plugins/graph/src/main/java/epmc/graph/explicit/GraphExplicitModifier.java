@@ -42,10 +42,10 @@ public final class GraphExplicitModifier {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     sum.add(sum, weightProp.get(node, succNr));
                 }
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     weight.set(weightProp.get(node, succNr));
                     weight.divide(weight, sum);
                     weightProp.set(node, succNr, weight);
@@ -71,18 +71,18 @@ public final class GraphExplicitModifier {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
-                for (int succNr = 0; succNr < graph.getNumSuccessors() - 1; succNr++) {
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
                     sum.add(sum, weightProp.get(node, succNr));
                 }
-                for (int succNr = 0; succNr < graph.getNumSuccessors() - 1; succNr++) {
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
                     weight.set(weightProp.get(node, succNr));
                     weight.divide(weight, uniformisationRate);
                     weightProp.set(node, succNr, weight);
                 }
                 weight.subtract(uniformisationRate, sum);
                 weight.divide(weight, uniformisationRate);
-                weightProp.set(node, graph.getNumSuccessors() - 1, weight);
-                graph.setSuccessorNode(graph.getNumSuccessors() - 1, node);
+                weightProp.set(node, graph.getNumSuccessors(node) - 1, weight);
+                graph.setSuccessorNode(node, graph.getNumSuccessors(node) - 1, node);
             }
         }
     }
@@ -99,7 +99,7 @@ public final class GraphExplicitModifier {
             if (player == Player.STOCHASTIC) {
                 sumRate.set(0);
                 graph.queryNode(inputNode);
-                int numSuccs = graph.getNumSuccessors() - 1;
+                int numSuccs = graph.getNumSuccessors(inputNode) - 1;
                 for (int succNr = 0; succNr < numSuccs; succNr++) {
                     Value rate = weight.get(inputNode, succNr);
                     sumRate.add(sumRate, rate);

@@ -234,7 +234,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	int numSubGraphNodes = subGraph.getNumNodes();
 		for (int node = 0; node < numSubGraphNodes; node++) {
 			subGraph.queryNode(node);
-			assert subGraph.getNumSuccessors() > 0 : node;
+			assert subGraph.getNumSuccessors(node) > 0 : node;
 		}
 		return true;
 	}
@@ -272,9 +272,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 			} else if (player == Player.STOCHASTIC) {
 				newValue.set(0);				
 			}
-			int numSuccessors = graph.getNumSuccessors();
+			int numSuccessors = graph.getNumSuccessors(node);
 			for (int succ = 0; succ < numSuccessors; succ++) {
-				int succNode = graph.getSuccessorNode(succ);
+				int succNode = graph.getSuccessorNode(node, succ);
 				values.get(succValue, succNode);
 				if (player == Player.ONE) {
 					newValue.max(newValue, succValue);
@@ -318,11 +318,11 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 				if (player != Player.ONE) {
 					continue;
 				}
-				int numSuccessors = game.getNumSuccessors();
+				int numSuccessors = game.getNumSuccessors(node);
 				values.get(value, node);
 				boolean doChange = false;
 				for (int succ = 0; succ < numSuccessors; succ++) {
-					int succNode = game.getSuccessorNode(succ);
+					int succNode = game.getSuccessorNode(node, succ);
 					values.get(succValue, succNode);
 					if (succValue.isGt(value) && !(succValue.distance(value) < compareTolerance)) {
 						doChange = true;
@@ -332,7 +332,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 					continue;
 				}
 				for (int succ = 0; succ < numSuccessors; succ++) {
-					int succNode = game.getSuccessorNode(succ);
+					int succNode = game.getSuccessorNode(node, succ);
 					values.get(succValue, succNode);
 					if (succValue.isGt(value)) {
 						strategies.set(node, succ);
@@ -407,7 +407,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	int numNodes = game.getNumNodes();
     	for (int node = 0; node < numNodes; node++) {
     		game.queryNode(node);
-    		maxNumSuccessors = Math.max(maxNumSuccessors, game.getNumSuccessors());
+    		maxNumSuccessors = Math.max(maxNumSuccessors, game.getNumSuccessors(node));
     	}
     	BitSet result = UtilBitSet.newBitSetBounded(numNodes * maxNumSuccessors);
     	Value value = newValueWeight();
@@ -417,9 +417,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     		game.queryNode(node);
     		values.get(value, node);
     		Player player = playerProperty.getEnum(node);
-    		int numSuccessors = game.getNumSuccessors();
+    		int numSuccessors = game.getNumSuccessors(node);
     		for (int succ = 0; succ < numSuccessors; succ++) {
-    			int succState = game.getSuccessorNode(succ);
+    			int succState = game.getSuccessorNode(node, succ);
     			values.get(succValue, succState);
     			if (player == Player.STOCHASTIC
     					|| player == Player.ONE && succValue.isGe(value)

@@ -204,8 +204,8 @@ public final class AutomatonBreakpoint implements Automaton {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             if (breakpointState.getState(state)) {
                 automaton.queryNode(state);
-                for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                    int succState = automaton.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
+                    int succState = automaton.getSuccessorNode(state, succNr);
                     BuechiTransition trans = labels.getObject(state, succNr);
                     if (trans.guardFulfilled()) {
                         succs.set(succState);
@@ -254,7 +254,7 @@ public final class AutomatonBreakpoint implements Automaton {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             boolean stateSet  = breakpointState.getStates().get(state);
             automaton.queryNode(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
                 entryNr++;

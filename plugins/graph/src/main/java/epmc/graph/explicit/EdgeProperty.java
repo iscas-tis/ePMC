@@ -84,7 +84,7 @@ public interface EdgeProperty  {
      * @param value value to set for the edge
      * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(int node,  int successor, Value value);
+    void set(int node,  int successor, Value value) throws EPMCException;
     
     /**
      * Obtain type of the values returned by {@link #get(int)}.

@@ -500,7 +500,7 @@ public final class GraphBuilderDD implements Closeable {
                 numSuccessors = 1;
             }
             graph.queryNode(nodeNr);
-            graph.prepareNode(numSuccessors);
+            graph.prepareNode(nodeNr, numSuccessors);
             for (int succNr = 0; succNr < thisTargets.size(); succNr++) {
                 int succNode = thisTargets.get(succNr);
                 weight.set(zero);
@@ -512,16 +512,16 @@ public final class GraphBuilderDD implements Closeable {
                         weight.divide(weight, unifRate);
                     }
                 }
-                graph.setSuccessorNode(succNr, succNode);
+                graph.setSuccessorNode(nodeNr, succNr, succNode);
                 edgePropertyWeight.set(nodeNr, succNr, weight);
             }
             if (uniformise) {
-                graph.setSuccessorNode(thisTargets.size(), nodeNr);
+                graph.setSuccessorNode(nodeNr, thisTargets.size(), nodeNr);
                 weight.subtract(unifRate, sum);
                 weight.divide(weight, unifRate);
                 edgePropertyWeight.set(nodeNr, thisTargets.size(), weight);
             } else if (thisTargets.size() == 0) {
-                graph.setSuccessorNode(0, nodeNr);
+                graph.setSuccessorNode(nodeNr, 0, nodeNr);
                 edgePropertyWeight.set(nodeNr, 0, one);
             }
 

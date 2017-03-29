@@ -176,8 +176,8 @@ public final class GraphExplicitProperties implements Serializable {
         while (todo.size() > 0) {
             int node = todo.pop();
             graph.queryNode(node);
-            for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                int succ = graph.getSuccessorNode(succNr);
+            for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                int succ = graph.getSuccessorNode(node, succNr);
                 assert succ >= 0;
                 if (!exploredNodes.get(succ)) {
                     exploredNodes.set(succ);
@@ -197,8 +197,8 @@ public final class GraphExplicitProperties implements Serializable {
         predecessorBounds = new int[numNodes + 1];
         for (int node = 0; node < numNodes; node++) {
             graph.queryNode(node);
-            for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                int succ = graph.getSuccessorNode(succNr);
+            for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                int succ = graph.getSuccessorNode(node, succNr);
                 predecessorBounds[succ + 1]++;
             }
         }
@@ -208,8 +208,8 @@ public final class GraphExplicitProperties implements Serializable {
         predecessorTargets = new int[predecessorBounds[predecessorBounds.length - 1]];
         for (int node = 0; node < numNodes; node++) {
             graph.queryNode(node);
-            for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                int succ = graph.getSuccessorNode(succNr);
+            for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                int succ = graph.getSuccessorNode(node, succNr);
                 predecessorTargets[predecessorBounds[succ]] = node;
                 predecessorBounds[succ]++;
             }
@@ -217,8 +217,8 @@ public final class GraphExplicitProperties implements Serializable {
         Arrays.fill(predecessorBounds, 0);
         for (int node = 0; node < numNodes; node++) {
             graph.queryNode(node);
-            for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                int succ = graph.getSuccessorNode(succNr);
+            for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                int succ = graph.getSuccessorNode(node, succNr);
                 predecessorBounds[succ + 1]++;
             }
         }
@@ -233,8 +233,8 @@ public final class GraphExplicitProperties implements Serializable {
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
                 graph.queryNode(node);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {
                         predecessorBounds[succ + 1]++;
                     }
@@ -248,8 +248,8 @@ public final class GraphExplicitProperties implements Serializable {
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
                 graph.queryNode(node);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {
                         predecessorTargets[predecessorBounds[succ]] = node;
                         predecessorBounds[succ]++;
@@ -261,8 +261,8 @@ public final class GraphExplicitProperties implements Serializable {
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
                 graph.queryNode(node);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {
                         predecessorBounds[succ + 1]++;
                     }

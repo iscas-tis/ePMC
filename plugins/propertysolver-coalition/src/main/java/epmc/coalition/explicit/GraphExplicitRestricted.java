@@ -45,7 +45,7 @@ final class GraphExplicitRestricted implements GraphExplicit {
     	int maxNumSuccessors = 0;
     	for (int node = 0; node < numNodes; node++) {
     		original.queryNode(node);
-    		maxNumSuccessors = Math.max(maxNumSuccessors, original.getNumSuccessors());
+    		maxNumSuccessors = Math.max(maxNumSuccessors, original.getNumSuccessors(node));
     	}
     	this.maxNumSuccessors = maxNumSuccessors;
     	substitute = new int[numNodes];
@@ -93,14 +93,14 @@ final class GraphExplicitRestricted implements GraphExplicit {
 	}
 
 	@Override
-	public int getNumSuccessors() {
-		return original.getNumSuccessors();
+	public int getNumSuccessors(int node) throws EPMCException {
+		return original.getNumSuccessors(node);
 	}
 
 	@Override
-	public int getSuccessorNode(int successor) {
+	public int getSuccessorNode(int queriedNode, int successor) throws EPMCException {
 		boolean valid = this.restriction.get(queriedNode * maxNumSuccessors + successor);
-		return original.getSuccessorNode(valid
+		return original.getSuccessorNode(queriedNode, valid
 				? successor
                 : substitute[queriedNode]);
 	}

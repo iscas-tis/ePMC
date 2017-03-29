@@ -114,13 +114,13 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 
 	private int computeDecision(int node, int[] vectors, int vectorSize, int[] previousValue) throws EPMCException {
 		game.queryNode(node);
-		int numSuccessors = game.getNumSuccessors();
-		storeVector(vectors, vectorSize, game.getSuccessorNode(0), previousValue);
+		int numSuccessors = game.getNumSuccessors(node);
+		storeVector(vectors, vectorSize, game.getSuccessorNode(node, 0), previousValue);
 		Player player = this.player.getEnum(node);
 		int dir = player == Player.ONE ? 1 : -1;
 		int decision = 0;
 		for (int succNr = 1; succNr < numSuccessors; succNr++) {
-			int succNode = game.getSuccessorNode(succNr);
+			int succNode = game.getSuccessorNode(node, succNr);
 			if (compareVectors(vectors, vectorSize, succNode, node) * dir < 0) {
 				storeVector(vectors, vectorSize, succNode, previousValue);
 				setVector(vectors, vectorSize, node, succNode);
@@ -271,9 +271,9 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		game.queryNode(node);
         AutomatonParityLabel label = labels.getObject(node);
         int priority = label.getPriority();
-		int numSuccessors = game.getNumSuccessors();
+		int numSuccessors = game.getNumSuccessors(node);
 		storeVector(vectors, vectorSize, node, previousValue);
-		setVector(vectors, vectorSize, node, game.getSuccessorNode(0));
+		setVector(vectors, vectorSize, node, game.getSuccessorNode(node, 0));
 		/* Für einen Knoten v, der Even gehör:
 	     * nimm den minimalen Wert der Vektoren der nachfolgenden Knoten
 	     * (Even will ja den Wert klein halten)
@@ -286,7 +286,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		Player player = this.player.getEnum(node);
 		int dir = player == Player.ONE ? 1 : -1;
 		for (int succNr = 1; succNr < numSuccessors; succNr++) {
-			int succNode = game.getSuccessorNode(succNr);
+			int succNode = game.getSuccessorNode(node, succNr);
 			if (compareVectors(vectors, vectorSize, succNode, node) * dir < 0) {
 				setVector(vectors, vectorSize, node, succNode);
 			}

@@ -160,9 +160,9 @@ public class EndComponentsImpl implements EndComponents {
     private void tarjan() throws EPMCException {
         while (!hasNext && tjCallStackIndex >= 0) {
             graph.queryNode(tjNode);
-            int numSucc = graph.getNumSuccessors();
+            int numSucc = graph.getNumSuccessors(tjNode);
             if (tjSuccIter < numSucc) {
-                int succNode = graph.getSuccessorNode(tjSuccIter);
+                int succNode = graph.getSuccessorNode(tjNode, tjSuccIter);
                 tjSuccIter++;
                 if (existing.get(succNode)) {
                     if (!tjVisited.get(succNode)) {
@@ -211,12 +211,12 @@ public class EndComponentsImpl implements EndComponents {
             int node = scc[0];
             this.existing.set(scc[0], false);
             this.graph.queryNode(node);
-            if (graph.getNumSuccessors() == 0) {
+            if (graph.getNumSuccessors(node) == 0) {
                 this.hasNext = false;
                 return;
             } else {
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (succ != node) {
                         this.hasNext = false;
                         return;
@@ -237,9 +237,9 @@ public class EndComponentsImpl implements EndComponents {
                 this.graph.queryNode(node);
                 Player player = playerProp.getEnum(node);
                 if (player == Player.STOCHASTIC) {
-                    int numSucc = graph.getNumSuccessors();
+                    int numSucc = graph.getNumSuccessors(node);
                     for (int succNr = 0; succNr < numSucc; succNr++) {
-                        int succ = graph.getSuccessorNode(succNr);
+                        int succ = graph.getSuccessorNode(node, succNr);
                         if (!this.ckInScc.get(succ)) {
                             this.ckLeaving[leavingIndex] = node;
                             leavingIndex++;
@@ -250,9 +250,9 @@ public class EndComponentsImpl implements EndComponents {
                     }
                 } else if (player == Player.ONE) {
                     boolean foundIn = false;
-                    int numSucc = graph.getNumSuccessors();
+                    int numSucc = graph.getNumSuccessors(node);
                     for (int succNr = 0; succNr < numSucc; succNr++) {
-                        int succ = graph.getSuccessorNode(succNr);
+                        int succ = graph.getSuccessorNode(node, succNr);
                         if (this.ckInScc.get(succ)) {
                             foundIn = true;
                         }
@@ -301,9 +301,9 @@ public class EndComponentsImpl implements EndComponents {
             remaining[node] = 0;
             graph.queryNode(node);
             if (player.getEnum(node) == Player.ONE) {
-                int numSucc = graph.getNumSuccessors();
+                int numSucc = graph.getNumSuccessors(node);
                 for (int succNr = 0; succNr < numSucc; succNr++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                    int succ = graph.getSuccessorNode(node, succNr);
                     if (scc.get(succ)) {
                         remaining[node]++;
                     }

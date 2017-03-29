@@ -20,6 +20,7 @@
 
 package epmc.graph.explicit;
 
+import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -53,11 +54,12 @@ public final class EdgePropertyConstant implements EdgeProperty {
      * {@inheritDoc}
      * In this implementation, the value is the same value for all edges,
      * given by the constructor of this class.
+     * @throws EPMCException 
      */
     @Override
-    public Value get(int node, int successor) {
+    public Value get(int node, int successor) throws EPMCException {
         assert successor >= 0;
-        assert successor < graph.getNumSuccessors() : successor;
+        assert successor < graph.getNumSuccessors(node) : successor;
         return value;
     }
 

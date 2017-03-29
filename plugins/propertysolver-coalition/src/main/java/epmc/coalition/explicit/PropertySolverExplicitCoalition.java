@@ -347,8 +347,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	
 	        playerProp.set(node, computePlayer(node, isState, playerNodes));
 	        
-            for (int succNr = 0; succNr < wrapper.getNumSuccessors(); succNr++) {
-                int succ = wrapper.getSuccessorNode(succNr);
+            for (int succNr = 0; succNr < wrapper.getNumSuccessors(node); succNr++) {
+                int succ = wrapper.getSuccessorNode(node, succNr);
                 assert succ >= 0;
                 if (!exploredNodes.get(succ)) {
                     exploredNodes.set(succ);

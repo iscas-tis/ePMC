@@ -104,11 +104,11 @@ final class GraphPreparator {
 	    	Set<Transition> stateTransitions = transitions.get(from);
 	    	int numSuccessors = stateTransitions.size();
 		    graph.queryNode(from);
-		    graph.prepareNode(numSuccessors);
+		    graph.prepareNode(from, numSuccessors);
 		    int succNr = 0;
 		    for (Transition transition : stateTransitions) {
 		    	BuechiTransition buchiTransition = new BuechiTransitionImpl(transition.getGuard(), transition.getLabel());
-		    	graph.setSuccessorNode(succNr, transition.getTo());
+		    	graph.setSuccessorNode(from, succNr, transition.getTo());
 		    	transitionValue.set(buchiTransition);
 		    	labelProp.set(from, succNr, transitionValue);
 		    	succNr++;

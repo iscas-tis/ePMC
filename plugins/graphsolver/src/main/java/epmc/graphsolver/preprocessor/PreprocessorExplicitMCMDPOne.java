@@ -125,8 +125,8 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
                     }
                     graph.queryNode(predecessor);
                     if (states.getBoolean(predecessor) && scheduler.getDecision(predecessor) == -1) {
-                        for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                            if (graph.getSuccessorNode(succNr) == node) {
+                        for (int succNr = 0; succNr < graph.getNumSuccessors(predecessor); succNr++) {
+                            if (graph.getSuccessorNode(predecessor, succNr) == node) {
                                 scheduler.set(predecessor, succNr);
                             }
                         }

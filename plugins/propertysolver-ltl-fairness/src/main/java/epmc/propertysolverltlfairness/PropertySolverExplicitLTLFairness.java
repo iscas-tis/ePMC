@@ -363,8 +363,8 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		for (int node = ecc.nextSetBit(0); node >= 0; node = ecc
 				.nextSetBit(node + 1)) {
 			graph.queryNode(node);
-			for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-				int succ = graph.getSuccessorNode(succNr);
+			for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+				int succ = graph.getSuccessorNode(node, succNr);
 				// all successors must in itself
 				if (!ecc.get(succ)) { 
 					isBSCC = false;

@@ -20,8 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.value.ContextValue;
-
 /**
  * Interface to represent a scheduler.
  * The type of scheduler depends on the subinterface of this class.
@@ -42,11 +40,4 @@ public interface Scheduler {
     GraphExplicit getGraph();
     
     Scheduler clone();
-    
-    
-    /* default methods */
-    
-    default ContextValue getContextValue() {
-        return getGraph().getContextValue();
-    }
 }

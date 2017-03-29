@@ -252,7 +252,7 @@ final class ProductBuilder {
             ValueAlgebra stateReward = newValueWeight();
             ValueAlgebra transReward = newValueWeight();
             iterGraph.queryNode(iterState);
-            int numSucc = iterGraph.getNumSuccessors();
+            int numSucc = iterGraph.getNumSuccessors(iterState);
             for (int obj = 0; obj < numAutomata; obj++) {
                 stateReward.set(zero);
                 NodeProperty stateRewardProp = stateRewards[obj];
@@ -263,7 +263,7 @@ final class ProductBuilder {
                 	int old = prodWrapper.getQueriedNode();
                     transReward.set(stateReward);
                     transReward.add(transReward, edgeRewardProp.get(state, succNr));
-                    int succ = prodWrapper.getSuccessorNode(succNr);
+                    int succ = prodWrapper.getSuccessorNode(old, succNr);
                     prodWrapper.queryNode(succ);
                     transReward.add(transReward, edgeRewardProp.get(succ, 0));
                     result.setReward(transReward, succNr, obj);

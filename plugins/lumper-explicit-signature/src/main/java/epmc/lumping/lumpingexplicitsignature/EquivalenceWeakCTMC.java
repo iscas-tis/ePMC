@@ -280,9 +280,9 @@ public final class EquivalenceWeakCTMC implements Equivalence {
                 quotSuccStatesArr[blockNr] = succRepresentant;
             }
             quotient.queryNode(quotState);
-            quotient.prepareNode(numQuotSucc);
+            quotient.prepareNode(quotState, numQuotSucc);
             for (int i = 0; i < numQuotSucc; i++) {
-                quotient.setSuccessorNode(i, quotSuccStatesArr[i]);
+                quotient.setSuccessorNode(quotState, i, quotSuccStatesArr[i]);
                 quotWeight.set(quotState, i, quotWeightsArr[i]);
             }
             

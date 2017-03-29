@@ -202,7 +202,7 @@ public final class GraphBuilderExplorer {
             if (nondet) {
                 graphAlter.prepareState(numStateSuccessors);
             } else {
-                graphStoch.prepareNode(numStateSuccessors);
+                graphStoch.prepareNode(currentState, numStateSuccessors);
             }
             for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
                 graphNodeProperties[nodePropNr].set(currentState, explorerNodeProperties[nodePropNr].get());
@@ -238,7 +238,7 @@ public final class GraphBuilderExplorer {
             } else {
                 for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
                     int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(stateSuccNr));
-                    graph.setSuccessorNode(stateSuccNr, numberSucc);
+                    graph.setSuccessorNode(currentState, stateSuccNr, numberSucc);
                     for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
                         graphEdgeProperties[nodePropNr].set(currentState, stateSuccNr, explorerEdgeProperties[nodePropNr].get(stateSuccNr));
                     }

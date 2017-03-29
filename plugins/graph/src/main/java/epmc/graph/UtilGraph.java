@@ -152,9 +152,9 @@ public final class UtilGraph {
             int state = results.getExplicitIthState(i);
             lowLevel.queryNode(state);
             nodeProp.set(state, entry);
-            int numSuccessors = lowLevel.getNumSuccessors();
+            int numSuccessors = lowLevel.getNumSuccessors(state);
             for (int succ = 0; succ < numSuccessors; succ++) {
-                int succNode = lowLevel.getSuccessorNode(succ);
+                int succNode = lowLevel.getSuccessorNode(state, succ);
                 lowLevel.queryNode(succNode);
                 if (!stateProperty.getBoolean(succNode)) {
                     nodeProp.set(succNode, entry);

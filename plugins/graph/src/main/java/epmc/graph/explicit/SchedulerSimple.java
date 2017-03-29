@@ -38,9 +38,8 @@ import epmc.value.ContextValue;
 public interface SchedulerSimple extends Scheduler, NodeProperty {
     /**
      * Set the decision for a given node.
-     * The node must be nonnegative and smaller than the value returned by
-     * {@link GraphExplicit#getNumNodes()} of the graph obtained by
-     * {@link #getGraph()}. The decision must be nonnegative or equal to
+     * The node must be nonnegative and smaller than the number of nodes.
+     * The decision must be nonnegative or equal to
      * {@link Scheduler#UNSET}. It must also be smaller than the value obtained
      * by {@link GraphExplicit#getNumSuccessors()} directly after a call to
      * {@link GraphExplicit#queryNode(int)} on the node parameter of this
@@ -55,9 +54,8 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
     
     /**
      * Get decision for a given node.
-     * The node must be nonnegative and smaller than the value returned by
-     * {@link GraphExplicit#getNumNodes()} of the graph obtained by
-     * {@link #getGraph()}. The decision will be nonnegative or equal to
+     * The node must be nonnegative and smaller than the number of nodes.
+     * The decision will be nonnegative or equal to
      * {@link Scheduler#UNSET}. It will also be smaller than the value obtained
      * by {@link GraphExplicit#getNumSuccessors()} directly after a call to
      * {@link GraphExplicit#queryNode(int)} on the node parameter of this
@@ -80,7 +78,6 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
     
     default void set(SchedulerSimple other) throws EPMCException {
         assert other != null;
-        assert getGraph() == other.getGraph();
         int numNodes = getGraph().getNumNodes();
         for (int node = 0; node < numNodes; node++) {
             set(node, other.getDecision(node));
@@ -89,9 +86,6 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
     
     default boolean equals(SchedulerSimple other) throws EPMCException {
         assert other != null;
-        if (getGraph() != other.getGraph()) {
-            return false;
-        }
         int numNodes = getGraph().getNumNodes();
         for (int node = 0; node < numNodes; node++) {
             if (get(node) != other.get(node)) {

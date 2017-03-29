@@ -174,7 +174,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				 * states required is 1, and number of transitions required is
 				 * as in the stochastic game */
 				nextMappedNodeQualitative++;
-				numTotalOut += stochasticGame.getNumSuccessors();
+				numTotalOut += stochasticGame.getNumSuccessors(node);
 			} else if (player == Player.STOCHASTIC) {
 				/* gadget construction - compute number of total nodes for
 				 * replacement and number of new transitions */
@@ -190,7 +190,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				nextMappedNodeQualitative += numThirdLayer;
 				numTotalOut += numThirdLayer;
 				/* for transitions leaving the gadget */
-				numTotalOut += stochasticGame.getNumSuccessors() * numThirdLayer;
+				numTotalOut += stochasticGame.getNumSuccessors(node) * numThirdLayer;
 			} else {
 				assert false;
 			}
@@ -213,17 +213,17 @@ public final class SolverQualitativeGadget implements SolverQualitative {
             	nodePriority = maxPriority;
             }
 			int qualitativeNode = stochasticToQualitative[stochasticNode];
-			int numSuccessors = stochasticGame.getNumSuccessors();
+			int numSuccessors = stochasticGame.getNumSuccessors(stochasticNode);
 			qualitativeGame.queryNode(qualitativeNode);
 			qualitativeLabels.set(qualitativeNode, priorities[nodePriority]);
 			if (player == Player.ONE || player == Player.TWO) {
 				/* simple translation for nonstochatic nodes */
-				qualitativeGame.prepareNode(numSuccessors);
+				qualitativeGame.prepareNode(qualitativeNode, numSuccessors);
 				qualitativePlayer.set(qualitativeNode, player);
 				for (int succNr = 0; succNr < numSuccessors; succNr++) {
-					int stochasticSuccState = stochasticGame.getSuccessorNode(succNr);
+					int stochasticSuccState = stochasticGame.getSuccessorNode(stochasticNode, succNr);
 					int qualitativeSuccState = stochasticToQualitative[stochasticSuccState];
-					qualitativeGame.setSuccessorNode(succNr, qualitativeSuccState);
+					qualitativeGame.setSuccessorNode(qualitativeNode, succNr, qualitativeSuccState);
 				}
 			} else if (player == Player.STOCHASTIC) {
 				/* gadget construction for stochastic nodes */
@@ -236,9 +236,9 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				int numFirstLayer = 1;
 				int secondLayerNode = qualitativeNode + numFirstLayer;
 				int numSecondLayer = (nodePriority + 1) / 2 + 1;
-				qualitativeGame.prepareNode(numSecondLayer);
+				qualitativeGame.prepareNode(qualitativeNode, numSecondLayer);
 				for (int succNr = 0; succNr < numSecondLayer; succNr++) {
-					qualitativeGame.setSuccessorNode(succNr, secondLayerNode);
+					qualitativeGame.setSuccessorNode(qualitativeNode, succNr, secondLayerNode);
 					secondLayerNode++;
 				}
 				/* transitions from second layer to third layer */
@@ -253,18 +253,18 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 					}
 					qualitativeLabels.set(secondLayerNode, priorities[nodePriority]);
 					if (priority > 0 && priority <= nodePriority) {
-						qualitativeGame.prepareNode(2);
+						qualitativeGame.prepareNode(secondLayerNode, 2);
 					} else {
-						qualitativeGame.prepareNode(1);
+						qualitativeGame.prepareNode(secondLayerNode, 1);
 					}
 					int succNr = 0;
 					if (priority > 0) {
-						qualitativeGame.setSuccessorNode(succNr, thirdLayerNode);
+						qualitativeGame.setSuccessorNode(secondLayerNode, succNr, thirdLayerNode);
 						succNr++;
 						thirdLayerNode++;
 					}
 					if (priority <= nodePriority) {
-						qualitativeGame.setSuccessorNode(succNr, thirdLayerNode);
+						qualitativeGame.setSuccessorNode(secondLayerNode, succNr, thirdLayerNode);
 						succNr++;
 						thirdLayerNode++;
 					}
@@ -275,16 +275,16 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				for (int priority = 0; priority <= nodePriority; priority++) {
 					qualitativeGame.queryNode(thirdLayerNode);
 					qualitativeLabels.set(thirdLayerNode, priorities[priority]);
-					qualitativeGame.prepareNode(numSuccessors);
+					qualitativeGame.prepareNode(thirdLayerNode, numSuccessors);
 					if (strictEven ^ priority % 2 == 0) {
 						qualitativePlayer.set(thirdLayerNode, Player.ONE);
 					} else {
 						qualitativePlayer.set(thirdLayerNode, Player.TWO);
 					}
 					for (int succNr = 0; succNr < numSuccessors; succNr++) {
-						int quantativeSuccState = stochasticGame.getSuccessorNode(succNr);
+						int quantativeSuccState = stochasticGame.getSuccessorNode(stochasticNode, succNr);
 						int qualitativeSuccState = stochasticToQualitative[quantativeSuccState];
-						qualitativeGame.setSuccessorNode(succNr, qualitativeSuccState);
+						qualitativeGame.setSuccessorNode(thirdLayerNode, succNr, qualitativeSuccState);
 					}
 					thirdLayerNode++;
 				}

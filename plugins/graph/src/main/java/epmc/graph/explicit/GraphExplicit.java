@@ -85,8 +85,9 @@ public interface GraphExplicit extends LowLevel {
      * Get number of successors of last node queried by {@link #queryNode(int)}.
      * 
      * @return number of successors of node queried last
+     * @throws EPMCException 
      */
-    int getNumSuccessors();
+    int getNumSuccessors(int node) throws EPMCException;
     
     /**
      * Get the successor node with the given number.
@@ -97,8 +98,9 @@ public interface GraphExplicit extends LowLevel {
      * 
      * @param successor successor number
      * @return successor with the given number of the queried node
+     * @throws EPMCException 
      */
-    int getSuccessorNode(int successor);    
+    int getSuccessorNode(int node, int successor) throws EPMCException;    
 
     /**
      * Get the properties of this graph.
@@ -203,11 +205,11 @@ public interface GraphExplicit extends LowLevel {
         return null;
     }
     
-    default void setSuccessorNode(int succNr, int succState) {
+    default void setSuccessorNode(int node, int succNr, int succState) {
         assert false;
     }
     
-    default void prepareNode(int numSuccessors)
+    default void prepareNode(int node, int numSuccessors)
             throws EPMCException {
         assert false;
     }
@@ -313,12 +315,15 @@ public interface GraphExplicit extends LowLevel {
      * 
      * @param node a successor node of the currently queried node
      * @return successor number of this node
+     * @throws EPMCException 
      */
-    default int getSuccessorNumber(int node) {
-        assert node >= 0;
-        assert node < getNumNodes();
-        for (int succNr = 0; succNr < getNumSuccessors(); succNr++) {
-            if (getSuccessorNode(succNr) == node) {
+    default int getSuccessorNumber(int fromNode, int toNode) throws EPMCException {
+        assert fromNode >= 0;
+        assert fromNode < getNumNodes();
+        assert toNode >= 0;
+        assert toNode < getNumNodes();
+        for (int succNr = 0; succNr < getNumSuccessors(fromNode); succNr++) {
+            if (getSuccessorNode(fromNode, succNr) == toNode) {
                 return succNr;
             }
         }
