@@ -61,7 +61,7 @@ public interface EdgeProperty  {
      * @return value for edge with the given number of the node queried last
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get(int successor) throws EPMCException;
+    Value get(int node, int successor) throws EPMCException;
     
     /**
      * Set value for edge of node queried last.
@@ -84,7 +84,7 @@ public interface EdgeProperty  {
      * @param value value to set for the edge
      * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(Value value, int successor);
+    void set(int node,  int successor, Value value);
     
     /**
      * Obtain type of the values returned by {@link #get(int)}.
@@ -107,9 +107,9 @@ public interface EdgeProperty  {
      * @return value of given edge of node as object
      * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T> T getObject(int successor) throws EPMCException {
+    default <T> T getObject(int node, int successor) throws EPMCException {
         assert successor >= 0;
-        Value value = get(successor);
+        Value value = get(node, successor);
         assert ValueObject.isObject(value);
         return ValueObject.asObject(value).getObject();
     }
@@ -127,9 +127,9 @@ public interface EdgeProperty  {
      * @param successor number of successor edge to set value of
      * @throws EPMCException thrown in case of problems during setting
      */
-    default void set(String value, int successor) throws EPMCException {
+    default void set(int node, int successor, String value) throws EPMCException {
         Value tmpValue = getType().newValue();
         tmpValue.set(value);
-        set(tmpValue, successor);
+        set(node, successor, tmpValue);
     }
 }

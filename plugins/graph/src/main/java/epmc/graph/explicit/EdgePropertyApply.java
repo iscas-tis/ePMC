@@ -83,11 +83,11 @@ public final class EdgePropertyApply implements EdgeProperty {
      * resulting value.
      */
     @Override
-    public Value get(int successor) throws EPMCException {
+    public Value get(int node, int successor) throws EPMCException {
         assert successor >= 0;
         assert successor < graph.getNumSuccessors();
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
-            callOperands[operandNr] = operands[operandNr].get(successor);
+            callOperands[operandNr] = operands[operandNr].get(node, successor);
         }
         operator.apply(value, callOperands);
         return value;
@@ -99,10 +99,10 @@ public final class EdgePropertyApply implements EdgeProperty {
      * to this function have no effect.
      */
     @Override
-    public void set(Value value, int successor) {
+    public void set(int node, int succ, Value value) {
         assert value != null;
-        assert successor >= 0;
-        assert successor < graph.getNumNodes();
+        assert succ >= 0;
+        assert succ < graph.getNumNodes();
     }
 
     /**

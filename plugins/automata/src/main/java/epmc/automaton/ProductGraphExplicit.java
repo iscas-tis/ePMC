@@ -292,12 +292,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int succNr) {
+        public Value get(int node, int succNr) {
             return value[succNr];
         }
         
         @Override
-        public void set(Value value, int succNr) {
+        public void set(int node, int succ, Value value) {
             assert false;
         }
 
@@ -324,18 +324,18 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int successor) throws EPMCException {
+        public Value get(int node, int successor) throws EPMCException {
             assert successor >= 0 : successor;
             assert successor < numSuccessors : successor;
             if (automaton.isDeterministic()) {
-                return from.get(successor);
+                return from.get(getModelNode(node), successor);
             } else {
-                return from.get(successor % model.getNumSuccessors());                
+                return from.get(getModelNode(node), successor % model.getNumSuccessors());                
             }
         }
         
         @Override
-        public void set(Value value, int successor) {
+        public void set(int node, int succ, Value value) {
             assert false;
         }
 

@@ -242,7 +242,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
 
     			for (int succ = 0; succ < numSucc; succ++) {
     				outputValues.get(get, origGraph.getSuccessorNode(succ));
-    				weighted.multiply(get, weightProp.get(succ));
+    				weighted.multiply(get, weightProp.get(origNode, succ));
     				val.add(val, weighted);
     			}
     			outputValues.set(val, origNode);
@@ -267,6 +267,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         } else if (isSparseTPGJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
             tpgUnboundedGaussseidelJava(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
         } else if (isSparseTPGNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
+//        	System.out.println(iterGraph);
             tpgUnboundedGaussseidelNative(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
         } else {
             assert false : iterGraph.getClass();

@@ -314,7 +314,7 @@ final class MultiObjectiveDownClosure {
         Value one = TypeWeight.get(contextValue).getOne();
         ConstraintSolver problem = contextSolver.newProblem();
 
-        int[] wLpVars = new int[elements.size() + 1];
+        int[] wLpVars = new int[elements.size()];
         for (int i = 0; i < elements.size(); i++) {
             wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
         }
@@ -322,7 +322,7 @@ final class MultiObjectiveDownClosure {
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
 
-        // other dimensions restriction
+        // dimensions restriction
         for (int dim = 0; dim < this.dimension; dim++) {
             problemWeights = newValueArrayWeight(elements.size());
             problemVariables = new int[elements.size()];
@@ -365,7 +365,8 @@ final class MultiObjectiveDownClosure {
             result.set(entry, dim);
         }
         problem.close();
-        System.out.println(elements);
+        System.out.println("E " + elements);
+        System.out.println("R " + result);
         return result;
     }
 

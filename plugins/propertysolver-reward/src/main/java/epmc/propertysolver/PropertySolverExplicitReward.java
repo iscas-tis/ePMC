@@ -231,8 +231,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                     if (SemanticsMDP.isMDP(semantics) || SemanticsIMDP.isIMDP(semantics)) {
                         acc.set(nodeRew);                        
                     }
-                    Value succWeight = weight.get(succNr);
-                    ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(succNr));
+                    Value succWeight = weight.get(graphNode, succNr);
+                    ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
                     if (player == Player.STOCHASTIC) {
                     	// TODO hack for imdps
   //                      acc2.multiply(succWeight, transRew);
@@ -247,7 +247,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                     	int old = graph.getQueriedNode();
                     	int succ = graph.getSuccessorNode(succNr);
                     	graph.queryNode(succ);
-                    	ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(0));
+                    	ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(succ, 0));
                     	acc.add(acc2, r);
                     	graph.queryNode(old);
                     }

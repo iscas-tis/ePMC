@@ -513,16 +513,16 @@ public final class GraphBuilderDD implements Closeable {
                     }
                 }
                 graph.setSuccessorNode(succNr, succNode);
-                edgePropertyWeight.set(weight, succNr);
+                edgePropertyWeight.set(nodeNr, succNr, weight);
             }
             if (uniformise) {
                 graph.setSuccessorNode(thisTargets.size(), nodeNr);
                 weight.subtract(unifRate, sum);
                 weight.divide(weight, unifRate);
-                edgePropertyWeight.set(weight, thisTargets.size());
+                edgePropertyWeight.set(nodeNr, thisTargets.size(), weight);
             } else if (thisTargets.size() == 0) {
                 graph.setSuccessorNode(0, nodeNr);
-                edgePropertyWeight.set(one, 0);
+                edgePropertyWeight.set(nodeNr, 0, one);
             }
 
             state.set(states.get(nodeNr));
