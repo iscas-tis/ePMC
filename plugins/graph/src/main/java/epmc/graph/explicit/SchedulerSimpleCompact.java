@@ -75,7 +75,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
         int numNodes = graph.getNumNodes();
         int numValues = 0;
         for (int node = 0; node < numNodes; node++) {
-            graph.queryNode(node);
             numValues = Math.max(numValues, graph.getNumSuccessors(node));
         }
         numValues++;

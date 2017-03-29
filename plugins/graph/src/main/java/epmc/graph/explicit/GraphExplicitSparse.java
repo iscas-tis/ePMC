@@ -111,8 +111,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
     private ValueArrayInteger bounds;
     /** Array of successor nodes. */
     private ValueArrayInteger successors;
-    /** Current node queried in the graph. */
-    private int currentNode;
     /** Initial nodes of the graph. */
     private final BitSet initNodes;
     /** Graph, node, and edge properties of the graph. */
@@ -198,12 +196,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         EdgeProperty property = new EdgePropertySparse(this, type);
         registerEdgeProperty(name, property);
         return property;
-    }
-
-    @Override
-    public void queryNode(int node) throws EPMCException {
-        assert node >= 0;
-        this.currentNode = node;
     }
 
     @Override
@@ -316,11 +308,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         return GraphExporterDOT.toString(this);
     }
 
-    @Override
-    public int getQueriedNode() {
-        return currentNode;
-    }
-    
     private void ensureSize(ValueArray array, int newSize) {
         if (fixedMode) {
             return;
@@ -337,7 +324,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
     
     public void clear() {
         assert !fixedMode;
-        currentNode = -1;
         numNodes = 0;
         numTotalOut = 0;
     }

@@ -241,7 +241,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node) {
+        public Value get(int node) throws EPMCException {
+            if (queriedNode != node) {
+            	long combined = numberToCombined[node];
+            	queryNode(combined);
+            	queriedNode = node;
+            }
             return value;
         }
         
@@ -292,7 +297,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node, int succNr) {
+        public Value get(int node, int succNr) throws EPMCException {
+            if (queriedNode != node) {
+            	long combined = numberToCombined[node];
+            	queryNode(combined);
+            	queriedNode = node;
+            }
             return value[succNr];
         }
         
@@ -372,7 +382,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     private final GraphExplicitProperties properties;
     private final boolean manualEnumeration;
     private final NextAutomatonState nextAutomatonState;
-    private int queriedNode;
+    private int queriedNode = -1;
 
     private ProductGraphExplicit(Builder builder) throws EPMCException {
         assert builder != null;
@@ -497,14 +507,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
     }
     
-    @Override
-    public void queryNode(int node) throws EPMCException {
-        assert node >= 0 : node;
-        long combined = numberToCombined[node];
-        queryNode(combined);
-        this.queriedNode = node;
-    }
-
     int getModelNode(int node) {
         long combined = numberToCombined[node];
         return combinedToModelNode(combined);
@@ -515,7 +517,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
         int propNodeAutomatonValue = combinedToAutomatonNode(combined);
         
         propNodeModelValue.set(modelNode);
-        model.queryNode(modelNode);
         Object oState = automaton.numberToState(propNodeAutomatonValue);
         automatonState.set(oState); /* set automaton state and get atomic proposition labeling below */
         for (int exprNr = 0; exprNr < expressionProps.length; exprNr++) {
@@ -738,11 +739,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
     @Override
     public Set<Object> getEdgeProperties() {
         return properties.getEdgeProperties();
-    }
-
-    @Override
-    public int getQueriedNode() {
-        return queriedNode;
     }
 
     @Override

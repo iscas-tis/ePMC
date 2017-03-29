@@ -103,7 +103,6 @@ final class GraphPreparator {
 	    for (int from = 0; from < transitions.size(); from++) {
 	    	Set<Transition> stateTransitions = transitions.get(from);
 	    	int numSuccessors = stateTransitions.size();
-		    graph.queryNode(from);
 		    graph.prepareNode(from, numSuccessors);
 		    int succNr = 0;
 		    for (Transition transition : stateTransitions) {

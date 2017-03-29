@@ -283,7 +283,6 @@ public final class EquivalenceStrong implements Equivalence {
                 blockValue.add(blockValue, weight);
                 quotSuccStatesArr[blockNr] = succRepresentant;
             }
-            quotient.queryNode(quotState);
             quotient.prepareNode(quotState, numQuotSucc);
             for (int i = 0; i < numQuotSucc; i++) {
                 quotient.setSuccessorNode(quotState, i, quotSuccStatesArr[i]);

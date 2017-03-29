@@ -81,7 +81,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
 		playerOdd = UtilBitSet.newBitSetBounded(numNodes);
 		NodeProperty propertyPlayer = game.getNodeProperty(CommonProperties.PLAYER);
 		for (int node = 0; node < numNodes; node++) {
-			game.queryNode(node);
 			Player player = propertyPlayer.getEnum(node);
 			if (player == Player.ONE) {
 				playerEven.set(node);
@@ -117,7 +116,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         boolean allEven = true;
         boolean allOdd = true;
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
-            game.queryNode(node);
             AutomatonParityLabel label = labels.getObject(node);
             int priority = label.getPriority();
             assert priority >= 0 : priority;
@@ -140,7 +138,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         NodeProperty labels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         BitSet mapsToMinPriority = UtilBitSet.newBitSetBounded(game.getNumNodes());
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
-            game.queryNode(node);
             AutomatonParityLabel label = labels.getObject(node);
             mapsToMinPriority.set(node, label.getPriority() == minPriority);
         }
@@ -181,7 +178,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
         						|| computeStrategyP1 && playerOdd.get(node))) {
         					continue;
         				}
-        				game.queryNode(node);
         				boolean found = false;
             			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
             				if (p.get(game.getSuccessorNode(node, succ))) {
@@ -251,7 +247,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
     	for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
     		if (computeStrategyP0 && playerEven.get(node)
     				|| computeStrategyP1 && playerOdd.get(node)) {
-    			game.queryNode(node);
     			boolean found = false;
     			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
     				if (p.get(game.getSuccessorNode(node, succ))) {
@@ -319,7 +314,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             if (exists.get(node)) {
                 remaining[node] = 1;
             } else {
-                graph.queryNode(node);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     int succState = graph.getSuccessorNode(node, succNr);
                     if (nodes.get(succState)) {
@@ -341,7 +335,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             newNodes.clear();
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
-                graph.queryNode(node);
                 for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
                     int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in
@@ -350,12 +343,10 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
                     if (remaining[pred] != 0) {
                         remaining[pred]--;
                         if (remaining[pred] == 0) {
-                            graph.queryNode(pred);
                             if (computeStrategyP0 && playerEven.get(pred)
                             		|| computeStrategyP1 && playerOdd.get(pred)) {
                             	strategy.set(pred, graph.getSuccessorNumber(pred, node));
                             }
-                            graph.queryNode(node);
                             newNodes.set(pred);
                         }
                     }
@@ -383,7 +374,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             if (exists.get(node)) {
                 remaining[node] = 1;
             } else {
-                graph.queryNode(node);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     int succState = graph.getSuccessorNode(node, succNr);
                     if (nodes.get(succState)) {
@@ -410,7 +400,6 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
             newNodes.clear();
             for (int node = previousNodes.nextSetBit(0); node >= 0;
                     node = previousNodes.nextSetBit(node+1)) {
-                graph.queryNode(node);
                 for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
                     int pred = graph.getProperties().getPredecessorNode(node, predNr);
                     /* note that we don't have to check whether predecessor in

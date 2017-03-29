@@ -117,13 +117,11 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
             changed = false;
             nextNext.clear();
             for (int node = next.nextSetBit(0); node >= 0; node = next.nextSetBit(node + 1)) {
-                graph.queryNode(node);
                 for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
                     int predecessor = graph.getProperties().getPredecessorNode(node, predNr);
                     if (!extendedTarget.get(predecessor)) {
                         continue;
                     }
-                    graph.queryNode(predecessor);
                     if (states.getBoolean(predecessor) && scheduler.getDecision(predecessor) == -1) {
                         for (int succNr = 0; succNr < graph.getNumSuccessors(predecessor); succNr++) {
                             if (graph.getSuccessorNode(predecessor, succNr) == node) {
@@ -131,7 +129,6 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
                             }
                         }
                     }
-                    graph.queryNode(node);
                     if (!seen.get(predecessor)) {
                         changed = true;
                         seen.set(predecessor);

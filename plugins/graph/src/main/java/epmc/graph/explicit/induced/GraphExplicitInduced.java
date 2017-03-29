@@ -34,7 +34,6 @@ public final class GraphExplicitInduced implements GraphExplicit {
     private final GraphExplicit original;
     private final SchedulerSimple scheduler;
     private final GraphExplicitProperties properties;
-    private int decision;
 
     public GraphExplicitInduced(GraphExplicit original, SchedulerSimple scheduler) {
         assert original != null;
@@ -66,19 +65,8 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     @Override
-    public void queryNode(int node) throws EPMCException {
-        original.queryNode(node);
-        decision = scheduler.getDecision(node);
-    }
-
-    @Override
-    public int getQueriedNode() {
-        return original.getQueriedNode();
-    }
-
-    @Override
     public int getNumSuccessors(int node) throws EPMCException {
-    	queryNode(node);
+        int decision = scheduler.getDecision(node);
         if (decision == -1) {
             return original.getNumSuccessors(node);
         } else {
@@ -88,7 +76,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
 
     @Override
     public int getSuccessorNode(int node, int successor) throws EPMCException {
-    	queryNode(node);
+        int decision = scheduler.getDecision(node);
         if (decision == -1) {
             return original.getSuccessorNode(node, successor);
         } else {
@@ -101,8 +89,8 @@ public final class GraphExplicitInduced implements GraphExplicit {
         return properties;
     }
 
-    int getDecision() {
-        return decision;
+    int getDecision(int node) {
+    	return scheduler.getDecision(node);
     }
     
     @Override

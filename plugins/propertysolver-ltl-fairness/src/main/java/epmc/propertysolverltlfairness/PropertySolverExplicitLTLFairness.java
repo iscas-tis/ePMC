@@ -312,7 +312,6 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 
 		for (int node = scc.nextSetBit(0); node >= 0; node = scc
 				.nextSetBit(node + 1)) { 
-			graph.queryNode(node);
 			if(globalFormula != null 
 				&&  !checkNode(graph, node, stateLabels, globalFormula)) {
 				return false;
@@ -362,7 +361,6 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		boolean isBSCC = true;
 		for (int node = ecc.nextSetBit(0); node >= 0; node = ecc
 				.nextSetBit(node + 1)) {
-			graph.queryNode(node);
 			for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
 				int succ = graph.getSuccessorNode(node, succNr);
 				// all successors must in itself
@@ -438,7 +436,6 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
         ValueArray resultValues = UtilValue.newArray(typeWeight.getTypeArray(), forStates.size());
         int i = 0;
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
-            prodGraph.queryNode(node);
             iterResult.get(entry, i);
             resultValues.set(entry, i);
             i++;

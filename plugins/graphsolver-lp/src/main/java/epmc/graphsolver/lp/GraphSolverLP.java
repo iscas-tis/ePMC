@@ -136,7 +136,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             reachSome.or(oldPrev);
             BitSet newPrev = oldPrev.clone();
             for(int node = newPrev.nextSetBit(0); node >= 0 ; node = newPrev.nextSetBit(node + 1)) {
-                graph.queryNode(node);
                 for(int preNr = 0 ; preNr < graph.getProperties().getNumPredecessors(node) ; preNr ++) {
                     int prev = graph.getProperties().getPredecessorNode(node, preNr);
                     oldPrev.set(prev);
@@ -208,7 +207,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         for(int node = undecided.nextSetBit(0); 
                 node >= 0 ; 
                 node = undecided.nextSetBit(node + 1)) {
-            graph.queryNode(node);
             int numSuccessors = graph.getNumSuccessors(node);
             Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
             int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
@@ -321,7 +319,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 lpProblem.addConstraint(new Value[]{one}, new int[] {varIndex}, ConstraintType.EQ, zero);
                 numConstrints ++;            
             }
-            graph.queryNode(node);
             if (isState.getBoolean(node)) {
                 objRow[node] = one;
             } else {
@@ -347,7 +344,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         for(int node = undecided.nextSetBit(0); 
                 node >= 0 ; 
                 node = undecided.nextSetBit(node + 1)) {
-            graph.queryNode(node);
             int numSuccessors = graph.getNumSuccessors(node);
             if (isState.getBoolean(node)) {
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr ++) {

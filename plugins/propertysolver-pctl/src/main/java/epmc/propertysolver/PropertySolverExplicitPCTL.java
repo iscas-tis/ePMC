@@ -202,7 +202,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             BitSet oneSet = UtilBitSet.newBitSetUnbounded();
             NodeProperty stateProp = graph.getNodeProperty(CommonProperties.STATE);
             for (int node = allNodes.nextSetBit(0); node >= 0; node = allNodes.nextSetBit(node+1)) {
-                graph.queryNode(node);
                 if (!stateProp.getBoolean(node)) {
                     continue;
                 }
@@ -269,7 +268,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(this.contextValue.getOptions());
                 sinkSet.clear();
                 for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
-                    graph.queryNode(state);
                     if (isState.getBoolean(state)) {
                         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
                             evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
@@ -348,7 +346,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         int iterNumStates = graph.computeNumStates();
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), iterNumStates);
         for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
-            graph.queryNode(state);
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
                 evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
             }
@@ -377,7 +374,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
             for (int state = 0; state < iterNumStates; state++) {
                 sum.set(TypeWeight.get(contextValue).getZero());
-                graph.queryNode(state);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
                     sum.add(sum, succWeight);

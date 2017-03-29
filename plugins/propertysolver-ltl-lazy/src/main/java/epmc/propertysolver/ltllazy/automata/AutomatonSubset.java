@@ -300,7 +300,6 @@ public final class AutomatonSubset implements Automaton {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             if (subsetState.get(node)) {
-                automaton.queryNode(node);
                 for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                     BuechiTransition trans = labels.getObject(node, succNr);
                     if (trans.guardFulfilled()) {
@@ -329,7 +328,6 @@ public final class AutomatonSubset implements Automaton {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             boolean stateSet  = rabinState.getStates().get(node);
-            automaton.queryNode(node);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
