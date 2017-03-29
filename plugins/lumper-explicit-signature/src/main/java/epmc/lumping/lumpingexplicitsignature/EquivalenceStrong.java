@@ -287,7 +287,7 @@ public final class EquivalenceStrong implements Equivalence {
             quotient.prepareNode(numQuotSucc);
             for (int i = 0; i < numQuotSucc; i++) {
                 quotient.setSuccessorNode(i, quotSuccStatesArr[i]);
-                quotWeight.set(quotWeightsArr[i], i);
+                quotWeight.set(quotState, i, quotWeightsArr[i]);
             }
             
             quotState++;

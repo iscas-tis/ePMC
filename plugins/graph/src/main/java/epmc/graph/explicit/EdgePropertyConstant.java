@@ -55,7 +55,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
      * given by the constructor of this class.
      */
     @Override
-    public Value get(int successor) {
+    public Value get(int node, int successor) {
         assert successor >= 0;
         assert successor < graph.getNumSuccessors() : successor;
         return value;
@@ -67,7 +67,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
      * of the graph.
      */
     @Override
-    public void set(Value value, int successor) {
+    public void set(int node, int successor, Value value) {
         assert value != null;
         assert successor >= 0;
         this.value.set(value);

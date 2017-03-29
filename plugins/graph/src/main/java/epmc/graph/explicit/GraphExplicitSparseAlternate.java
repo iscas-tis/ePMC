@@ -162,7 +162,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             if (currentNode < numStates) {
             	int entryNr = stateBounds.getInt(currentNode) + successor;
                 ensureSize(content, entryNr + 1);
@@ -176,7 +176,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
 
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
         	if (currentNode < numStates) {
                 int entryNr = stateBounds.getInt(currentNode) + successor;
                 ensureSize(content, entryNr + 1);
@@ -240,14 +240,14 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             int entryNr = getEntryNumber(successor);
             content.get(value, entryNr);
             return value;
         }
 
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
             int entryNr = getEntryNumber(successor);
             ensureSize(content, entryNr + 1);
             content.set(value, entryNr);
@@ -303,7 +303,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public Value get(int successor) {
+        public Value get(int currentNode, int successor) {
             if (currentNode < numStates) {
                 ValueAlgebra.asAlgebra(value).set(-1);
             } else {
@@ -315,7 +315,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
 
         @Override
-        public void set(Value value, int successor) {
+        public void set(int currentNode, int successor, Value value) {
             if (currentNode < numStates) {
                 
             } else {

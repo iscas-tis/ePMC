@@ -266,7 +266,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
             buechiGraph.queryNode(state);
             int numSuccessors = buechiGraph.getNumSuccessors();
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                BuechiTransition trans = buechiLabels.getObject(succNr);
+                BuechiTransition trans = buechiLabels.getObject(state, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
                 entryNr++;
             }
@@ -331,7 +331,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
             if (scheweState.getStates().get(state)) {
                 buechiGraph.queryNode(state);
                 for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(); succNr++) {
-                    BuechiTransition trans = labels.getObject(succNr);
+                    BuechiTransition trans = labels.getObject(state, succNr);
                     if (trans.guardFulfilled()) {
                         int succ = buechiGraph.getSuccessorNode(succNr);
                         succs.set(succ);
@@ -356,7 +356,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
             if (scheweState.getStates().get(state)) {
                 buechiGraph.queryNode(state);
                 for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(); succNr++) {
-                    BuechiTransition trans = labels.getObject(succNr);
+                    BuechiTransition trans = labels.getObject(state, succNr);
                     BitSet label = trans.getLabeling();
                     int succ = buechiGraph.getSuccessorNode(succNr);
                     if (label.get(scheweState.getAcceptance())

@@ -302,7 +302,7 @@ public final class AutomatonSubset implements Automaton {
             if (subsetState.get(node)) {
                 automaton.queryNode(node);
                 for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                    BuechiTransition trans = labels.getObject(succNr);
+                    BuechiTransition trans = labels.getObject(node, succNr);
                     if (trans.guardFulfilled()) {
                         int succ = automaton.getSuccessorNode(succNr);
                         succs.set(succ);
@@ -331,7 +331,7 @@ public final class AutomatonSubset implements Automaton {
             boolean stateSet  = rabinState.getStates().get(node);
             automaton.queryNode(node);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
-                BuechiTransition trans = labels.getObject(succNr);
+                BuechiTransition trans = labels.getObject(node, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
                 entryNr++;
             }

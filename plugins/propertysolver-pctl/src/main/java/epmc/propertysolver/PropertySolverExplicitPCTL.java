@@ -379,7 +379,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 sum.set(TypeWeight.get(contextValue).getZero());
                 graph.queryNode(state);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    Value succWeight = weight.get(succNr);
+                    Value succWeight = weight.get(state, succNr);
                     sum.add(sum, succWeight);
                 }
                 jump.multiply(leftValue, sum);
