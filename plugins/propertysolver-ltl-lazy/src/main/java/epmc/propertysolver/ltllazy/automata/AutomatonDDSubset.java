@@ -179,9 +179,9 @@ public final class AutomatonDDSubset implements AutomatonDD {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             automaton.queryNode(state);
             DD presVar = presVars.get(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
-                int succ = automaton.getSuccessorNode(succNr);
+                int succ = automaton.getSuccessorNode(state, succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD nextOn = nextOns.get(succ);
                 nextOn = nextOn.orWith(guard.andWith(presVar.clone()));
@@ -223,7 +223,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             automaton.queryNode(state);
             DD presVar = presVars.get(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labelsProps.getObject(state, succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD notGuardAndPres = guard.andWith(presVar.clone()).notWith();
@@ -284,7 +284,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             DD presVar = presVars.get(state);
             automaton.queryNode(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labelsProp.getObject(state, succNr);
                 DD guard = expressionToDD.translate(trans.getExpression());
                 DD guardAndPres = guard.andWith(presVar.clone());

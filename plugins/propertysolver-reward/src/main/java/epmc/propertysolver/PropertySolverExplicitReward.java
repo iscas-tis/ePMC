@@ -220,7 +220,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                     continue;
                 }
                 graph.queryNode(graphNode);
-                int numSuccessors = graph.getNumSuccessors();
+                int numSuccessors = graph.getNumSuccessors(graphNode);
                 Value nodeRew = stateReward.get(graphNode);
                 Player player = playerProp.getEnum(graphNode);
                 EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
@@ -245,7 +245,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                     } else {
                         acc.add(acc, transRew);
                     	int old = graph.getQueriedNode();
-                    	int succ = graph.getSuccessorNode(succNr);
+                    	int succ = graph.getSuccessorNode(old, succNr);
                     	graph.queryNode(succ);
                     	ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(succ, 0));
                     	acc.add(acc2, r);

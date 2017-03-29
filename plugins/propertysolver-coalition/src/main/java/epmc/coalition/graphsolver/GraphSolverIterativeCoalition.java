@@ -238,10 +238,10 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     		Player player = playerProp.getEnum(origNode);
     		if (player == Player.STOCHASTIC) {
     			val.set(0);
-    			int numSucc = origGraph.getNumSuccessors();
+    			int numSucc = origGraph.getNumSuccessors(origNode);
 
     			for (int succ = 0; succ < numSucc; succ++) {
-    				outputValues.get(get, origGraph.getSuccessorNode(succ));
+    				outputValues.get(get, origGraph.getSuccessorNode(origNode, succ));
     				weighted.multiply(get, weightProp.get(origNode, succ));
     				val.add(val, weighted);
     			}
@@ -539,7 +539,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
                         int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                         if (!seen.get(pred)) {
                             origGraph.queryNode(pred);
-                            strategy.set(pred, origGraph.getSuccessorNumber(node));
+                            strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
                             origGraph.queryNode(node);
                             seen.set(pred);
                             newNodes.set(pred);
@@ -563,7 +563,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
                     	values.get(predValue, pred);
                     	if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
                             origGraph.queryNode(pred);
-                            strategy.set(pred, origGraph.getSuccessorNumber(node));
+                            strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
                             origGraph.queryNode(node);
                             seen.set(pred);
                             newNodes.set(pred);

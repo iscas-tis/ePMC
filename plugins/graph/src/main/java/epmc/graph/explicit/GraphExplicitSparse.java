@@ -207,12 +207,12 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
 
     @Override
-    public int getNumSuccessors() {
+    public int getNumSuccessors(int currentNode) {
         return bounds.getInt(currentNode + 1) - bounds.getInt(currentNode);
     }
 
     @Override
-    public int getSuccessorNode(int successor) {
+    public int getSuccessorNode(int currentNode, int successor) {
         int entry = bounds.getInt(currentNode) + successor;
         return successors.getInt(entry);
     }
@@ -252,7 +252,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
     
     @Override
-    public void setSuccessorNode(int succNr, int succNode) {
+    public void setSuccessorNode(int currentNode, int succNr, int succNode) {
         assert succNr >= 0;
         assert succNr < bounds.getInt(currentNode + 1) :
             currentNode + " " + succNr + " " + bounds.getInt(currentNode + 1);
@@ -264,7 +264,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
     
     @Override
-    public void prepareNode(int numSuccessors)
+    public void prepareNode(int currentNode, int numSuccessors)
             throws EPMCException {
         assert numSuccessors >= 0;
         int from = bounds.getInt(currentNode);

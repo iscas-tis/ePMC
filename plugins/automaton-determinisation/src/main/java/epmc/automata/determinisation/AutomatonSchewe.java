@@ -264,7 +264,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
             boolean stateSet  = scheweState.getStates().get(state);
             buechiGraph.queryNode(state);
-            int numSuccessors = buechiGraph.getNumSuccessors();
+            int numSuccessors = buechiGraph.getNumSuccessors(state);
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 BuechiTransition trans = buechiLabels.getObject(state, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
@@ -330,10 +330,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
             if (scheweState.getStates().get(state)) {
                 buechiGraph.queryNode(state);
-                for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(); succNr++) {
+                for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(state); succNr++) {
                     BuechiTransition trans = labels.getObject(state, succNr);
                     if (trans.guardFulfilled()) {
-                        int succ = buechiGraph.getSuccessorNode(succNr);
+                        int succ = buechiGraph.getSuccessorNode(state, succNr);
                         succs.set(succ);
                     }
                 }
@@ -355,10 +355,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
             if (scheweState.getStates().get(state)) {
                 buechiGraph.queryNode(state);
-                for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(); succNr++) {
+                for (int succNr = 0; succNr < buechiGraph.getNumSuccessors(state); succNr++) {
                     BuechiTransition trans = labels.getObject(state, succNr);
                     BitSet label = trans.getLabeling();
-                    int succ = buechiGraph.getSuccessorNode(succNr);
+                    int succ = buechiGraph.getSuccessorNode(state, succNr);
                     if (label.get(scheweState.getAcceptance())
                             && trans.guardFulfilled()) {
                         succs.set(succ);

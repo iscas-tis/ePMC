@@ -56,8 +56,6 @@ final class QuantitativeResult {
 		assert ValueArray.isArray(probabilities);
 		assert TypeWeight.get(probabilities.getType().getContext())
 				.canImport(TypeArray.asArray(probabilities.getType()).getEntryType());
-		assert strategies == null ||
-				probabilities.size() == strategies.getGraph().getNumNodes();
 		this.probabilities = probabilities;
 		this.strategies = strategies;
 	}

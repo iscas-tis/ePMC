@@ -122,7 +122,7 @@ public class BuechiImpl implements Buechi {
         int totalSize = 0;
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
             	totalSize++;
             }
         }
@@ -131,7 +131,7 @@ public class BuechiImpl implements Buechi {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 Expression guard = trans.getExpression();
                 evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
@@ -142,7 +142,7 @@ public class BuechiImpl implements Buechi {
         totalSize = 0;
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 ((BuechiTransitionImpl) trans).setResult(ValueBoolean.asBoolean(evaluators[totalSize].getResultValue()));
                 totalSize++;
@@ -167,7 +167,7 @@ public class BuechiImpl implements Buechi {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             automaton.queryNode(node);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 Expression expr = trans.getExpression();
                 boolean isTrue = isTrue(expr);
@@ -231,7 +231,7 @@ public class BuechiImpl implements Buechi {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             automaton.queryNode(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(); succNr++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
                 trans.getLabeling().set(0);
             }

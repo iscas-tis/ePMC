@@ -209,7 +209,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 node >= 0 ; 
                 node = undecided.nextSetBit(node + 1)) {
             graph.queryNode(node);
-            int numSuccessors = graph.getNumSuccessors();
+            int numSuccessors = graph.getNumSuccessors(node);
             Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
             int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
             row[0] = one;
@@ -222,7 +222,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             int[] visited = new int[graph.getNumNodes()];  /** will be initialized to 0*/
             visited[node] = 1;
             for(int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
-                int succ = graph.getSuccessorNode(succNr);
+                int succ = graph.getSuccessorNode(node, succNr);
                 /** if it is the first time */
                 Value tranProb = weightProp.get(node, succNr);
                 ValueAlgebra prob = typeWeight.newValue();
@@ -348,10 +348,10 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 node >= 0 ; 
                 node = undecided.nextSetBit(node + 1)) {
             graph.queryNode(node);
-            int numSuccessors = graph.getNumSuccessors();
+            int numSuccessors = graph.getNumSuccessors(node);
             if (isState.getBoolean(node)) {
-                for(int succNr = 0 ; succNr < graph.getNumSuccessors() ; succNr ++) {
-                    int succ = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr ++) {
+                    int succ = graph.getSuccessorNode(node, succNr);
                     /** if it is the first time */
                     lpProblem.addConstraint(new Value[]{one, minusOne}, new int[]{node, succ}, ConstraintType.GE, zero);
                 }
@@ -363,8 +363,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 varsIndex[0] = node;                /* directly use this node index */
                 
                 int jIndex = 1;
-                for(int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
-                    int succ = graph.getSuccessorNode(succNr);  /* can not occur two times */
+                for (int succNr = 0; succNr < numSuccessors; succNr ++) {
+                    int succ = graph.getSuccessorNode(node, succNr);  /* can not occur two times */
                     /** if it is the first time */
                     Value tranProb = weightProp.get(node, succNr);
                     ValueAlgebra prob = typeWeight.newValue();

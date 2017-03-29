@@ -86,7 +86,7 @@ public class CommandTaskExplore implements CommandTask {
                 if (isState.getBoolean(node)) {
                     numStates++;
                 }
-                numTransitions += modelGraph.getNumSuccessors();
+                numTransitions += modelGraph.getNumSuccessors(node);
             }
             time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
             log.send(MessagesCommandExplore.EXPLORING_DONE, time);

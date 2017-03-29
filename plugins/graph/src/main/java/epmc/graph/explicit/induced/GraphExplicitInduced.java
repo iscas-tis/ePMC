@@ -77,23 +77,22 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     @Override
-    public int getNumSuccessors() {
+    public int getNumSuccessors(int node) throws EPMCException {
+    	queryNode(node);
         if (decision == -1) {
-            return original.getNumSuccessors();
+            return original.getNumSuccessors(node);
         } else {
             return 1;
         }
     }
 
     @Override
-    public int getSuccessorNode(int successor) {
-        assert successor >= 0 : successor;
-        assert decision == -1 ? successor < original.getNumSuccessors() : successor < 1
-                : successor + " " + decision + " " + original.getNumSuccessors();
+    public int getSuccessorNode(int node, int successor) throws EPMCException {
+    	queryNode(node);
         if (decision == -1) {
-            return original.getSuccessorNode(successor);
+            return original.getSuccessorNode(node, successor);
         } else {
-            return original.getSuccessorNode(decision);
+            return original.getSuccessorNode(node, decision);
         }
     }
 

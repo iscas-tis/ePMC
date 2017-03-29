@@ -85,7 +85,7 @@ public final class EdgePropertyApply implements EdgeProperty {
     @Override
     public Value get(int node, int successor) throws EPMCException {
         assert successor >= 0;
-        assert successor < graph.getNumSuccessors();
+        assert successor < graph.getNumSuccessors(node);
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node, successor);
         }

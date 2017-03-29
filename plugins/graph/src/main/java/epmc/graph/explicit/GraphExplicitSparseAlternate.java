@@ -439,14 +439,24 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
 
     @Override
-    public int getNumSuccessors() {
-        return numSuccessors;
+    public int getNumSuccessors(int node) {
+        assert node >= 0 : node;
+        assert !fixedMode | node < numStates + numNondet : node + " " + numStates + " " + numNondet;
+        if (node < numStates) {
+            int from = stateBounds.getInt(node);
+            int to = stateBounds.getInt(node + 1);
+            return to - from;
+        } else {
+            ensureSize(nondetBounds, node - numStates + 1 + 1);
+            int from = nondetBounds.getInt(node - numStates);
+            int to = nondetBounds.getInt(node - numStates + 1);
+            return to - from;
+        }
     }
 
     @Override
-    public int getSuccessorNode(int successor) {
+    public int getSuccessorNode(int currentNode, int successor) {
         assert successor >= 0;
-        assert successor < numSuccessors;
         if (currentNode < numStates) {
             return stateBounds.getInt(currentNode) + successor + numStates;
         } else {
@@ -466,7 +476,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
 
     @Override
-    public void prepareNode(int numSuccessors) throws EPMCException {
+    public void prepareNode(int currentNode, int numSuccessors) throws EPMCException {
         assert numSuccessors >= 0;
         if (currentNode < numStates) {
             assert lastStatePrepared + 1 == currentNode : lastStatePrepared + " " + currentNode;
@@ -485,7 +495,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
     
     @Override
-    public void setSuccessorNode(int succNr, int succNode) {
+    public void setSuccessorNode(int currentNode, int succNr, int succNode) {
         assert succNr >= 0 : succNr;
         assert succNode >= 0 : succNode;
         if (currentNode < numStates) {

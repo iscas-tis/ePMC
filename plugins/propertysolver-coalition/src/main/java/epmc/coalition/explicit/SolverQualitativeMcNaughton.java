@@ -219,8 +219,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         					continue;
         				}
         				boolean found = false;
-            			for (int succ = 0; succ < game.getNumSuccessors(); succ++) {
-            				if (p.get(game.getSuccessorNode(succ))) {
+            			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
+            				if (p.get(game.getSuccessorNode(node, succ))) {
             					assert strategies.getDecision(node) == Scheduler.UNSET;
                 				strategies.set(node, succ);
             					found = true;
@@ -302,8 +302,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 					continue;
 				}
     			boolean found = false;
-    			for (int succ = 0; succ < game.getNumSuccessors(); succ++) {
-    				if (p.get(game.getSuccessorNode(succ))) {
+    			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
+    				if (p.get(game.getSuccessorNode(node, succ))) {
     	    			result.set(node, succ);
     					found = true;
     					break;
@@ -402,8 +402,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
                 remaining[node] = 1;
             } else {
                 graph.queryNode(node);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succState = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succState = graph.getSuccessorNode(node, succNr);
                     if (nodes.get(succState)) {
                         remaining[node]++;
                     }
@@ -437,7 +437,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
                             if (computeStrategyP0 && player == Player.ONE
                             		|| computeStrategyP1 && player == Player.TWO) {
             					assert strategies.getDecision(node) == Scheduler.UNSET;
-                            	strategies.set(pred, graph.getSuccessorNumber(node));
+                            	strategies.set(pred, graph.getSuccessorNumber(pred, node));
                             }
                             graph.queryNode(node);
                             newNodes.set(pred);
@@ -470,8 +470,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
                 remaining[node] = 1;
             } else {
                 graph.queryNode(node);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
-                    int succState = graph.getSuccessorNode(succNr);
+                for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
+                    int succState = graph.getSuccessorNode(node, succNr);
                     if (nodes.get(succState)) {
                         remaining[node]++;
                     }

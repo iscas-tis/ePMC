@@ -221,7 +221,7 @@ public final class GraphBuilderExplicit {
                 if (!sinks.get(inputNode)) {
                     numStates++;
                     inputGraph.queryNode(inputNode);
-                    numTotalOut += inputGraph.getNumSuccessors();
+                    numTotalOut += inputGraph.getNumSuccessors(inputNode);
                     numTotalOut += uniformise ? 1 : 0;
                 }
             }
@@ -242,13 +242,13 @@ public final class GraphBuilderExplicit {
                 }
                 if (!sinks.get(inputState)) {
                     numStates++;
-                    int numStateSucc = inputGraph.getNumSuccessors();
+                    int numStateSucc = inputGraph.getNumSuccessors(inputState);
                     numTotalNondet += numStateSucc;
                     for (int succNr = 0; succNr < numStateSucc; succNr++) {
                         inputGraph.queryNode(inputState);
-                        int succState = inputGraph.getSuccessorNode(succNr);
+                        int succState = inputGraph.getSuccessorNode(inputState, succNr);
                         inputGraph.queryNode(succState);
-                        int numNdSucc = inputGraph.getNumSuccessors();
+                        int numNdSucc = inputGraph.getNumSuccessors(succState);
                         numTotalProb += numNdSucc;
                     }
                 }
@@ -355,42 +355,42 @@ public final class GraphBuilderExplicit {
             }
             if (sinks.get(inputState)) {
                 outputGraph.queryNode(outputState);
-                outputGraph.prepareNode(1);
-                outputGraph.setSuccessorNode(0, nextNondetNode);
+                outputGraph.prepareNode(outputState, 1);
+                outputGraph.setSuccessorNode(outputState, 0, nextNondetNode);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
                 TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
                 weight.set(outputState, 0, typeWeight.getOne());
                 outputGraph.queryNode(nextNondetNode);
-                outputGraph.prepareNode(1);
-                outputGraph.setSuccessorNode(0, outputState);
+                outputGraph.prepareNode(nextNondetNode, 1);
+                outputGraph.setSuccessorNode(nextNondetNode, 0, outputState);
                 weight.set(nextNondetNode, 0, typeWeight.getOne());
                 nextNondetNode++;
             } else {
-                int numStateSuccessors = inputGraph.getNumSuccessors();
+                int numStateSuccessors = inputGraph.getNumSuccessors(inputState);
                 outputGraph.queryNode(outputState);
-                outputGraph.prepareNode(numStateSuccessors + (uniformise ? 1 : 0));
+                outputGraph.prepareNode(outputState, numStateSuccessors + (uniformise ? 1 : 0));
                 if (uniformise) {
-                    outputGraph.setSuccessorNode(numStateSuccessors, outputState);
+                    outputGraph.setSuccessorNode(outputState, numStateSuccessors, outputState);
                 }
                 for (int nondetNr = 0; nondetNr < numStateSuccessors; nondetNr++) {
                     inputGraph.queryNode(inputState);
                     outputGraph.queryNode(outputState);
-                    int inputNondet = inputGraph.getSuccessorNode(nondetNr);
-                    outputGraph.setSuccessorNode(nondetNr, nextNondetNode);
+                    int inputNondet = inputGraph.getSuccessorNode(inputState, nondetNr);
+                    outputGraph.setSuccessorNode(outputState, nondetNr, nextNondetNode);
                     for (int propNr = 0; propNr < numProperties; propNr++) {
                         EdgeProperty inputProp = inputProperties[propNr];
                         EdgeProperty outputProp = outputProperties[propNr];
                         outputProp.set(outputState, nondetNr, inputProp.get(inputState, nondetNr));
                     }
                     inputGraph.queryNode(inputNondet);
-                    int numNondetSuccessors = inputGraph.getNumSuccessors();
+                    int numNondetSuccessors = inputGraph.getNumSuccessors(inputNondet);
                     outputGraph.queryNode(nextNondetNode);
-                    outputGraph.prepareNode(numNondetSuccessors);
+                    outputGraph.prepareNode(nextNondetNode, numNondetSuccessors);
                     for (int succNr = 0; succNr < numNondetSuccessors; succNr++) {
-                        int inputSucc = inputGraph.getSuccessorNode(succNr);
+                        int inputSucc = inputGraph.getSuccessorNode(inputNondet, succNr);
                         int outputSucc = inputToOutputNodes.getInt(inputSucc);
                         assert outputSucc >= 0 : outputSucc + " " + inputSucc + " " + succNr;
-                        outputGraph.setSuccessorNode(succNr, outputSucc);
+                        outputGraph.setSuccessorNode(nextNondetNode, succNr, outputSucc);
                         for (Object property : edgeProperties) {
                             if (inputGraph.getEdgeProperties().contains(property)) {
                                 EdgeProperty inputProp = inputGraph.getEdgeProperty(property);
@@ -434,22 +434,22 @@ public final class GraphBuilderExplicit {
                 int nextPart = (partNr + 1) % parts.size();
                 int nextPartBegin = partsBegin.get(nextPart);
                 outputGraph.queryNode(outputNode);
-                outputGraph.prepareNode(1);
-                outputGraph.setSuccessorNode(0, nextPartBegin + sinkNr);
+                outputGraph.prepareNode(outputNode, 1);
+                outputGraph.setSuccessorNode(outputNode, 0, nextPartBegin + sinkNr);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
                 TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
                 weight.set(outputNode, 0, typeWeight.getOne());
             } else {
-                int numSuccessors = inputGraph.getNumSuccessors();
+                int numSuccessors = inputGraph.getNumSuccessors(inputNode);
                 outputGraph.queryNode(outputNode);
-                outputGraph.prepareNode(numSuccessors + (uniformise ? 1 : 0));
+                outputGraph.prepareNode(outputNode, numSuccessors + (uniformise ? 1 : 0));
                 if (uniformise) {
-                    outputGraph.setSuccessorNode(numSuccessors, outputNode);
+                    outputGraph.setSuccessorNode(outputNode, numSuccessors, outputNode);
                 }
                 for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                    int inputSuccessor = inputGraph.getSuccessorNode(succNr);
+                    int inputSuccessor = inputGraph.getSuccessorNode(inputNode, succNr);
                     int outputSuccessor = inputToOutputNodes.getInt(inputSuccessor);
-                    outputGraph.setSuccessorNode(succNr, outputSuccessor);
+                    outputGraph.setSuccessorNode(outputNode, succNr, outputSuccessor);
                     for (int propNr = 0; propNr < numProperties; propNr++) {
                         EdgeProperty inputProp = inputProperties[propNr];
                         EdgeProperty outputProp = outputProperties[propNr];
@@ -481,9 +481,9 @@ public final class GraphBuilderExplicit {
                 int nextPartBegin = partsBegin.get(nextPart);
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {
-                int numSuccessors = inputGraph.getNumSuccessors();
+                int numSuccessors = inputGraph.getNumSuccessors(inputNode);
                 for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                    int inputSuccessor = inputGraph.getSuccessorNode(succNr);
+                    int inputSuccessor = inputGraph.getSuccessorNode(inputNode, succNr);
                     int outputSuccessor = inputToOutputNodes.getInt(inputSuccessor);
                     numInEdges.set(numInEdges.getInt(outputSuccessor) + 1, outputSuccessor);
                 }
@@ -492,7 +492,7 @@ public final class GraphBuilderExplicit {
         for (int outputNode = 0; outputNode < numOutputNodes; outputNode++) {
             int numOut = numInEdges.getInt(outputNode);
             outputGraph.queryNode(outputNode);
-            outputGraph.prepareNode(numOut);
+            outputGraph.prepareNode(outputNode, numOut);
         }
         int numInEdgesotalSize = numInEdges.getTotalSize();
         for (int index = 0; index < numInEdgesotalSize; index++) {
@@ -513,9 +513,9 @@ public final class GraphBuilderExplicit {
                 weight.set(nextPartBegin, numInEdges.getInt(nextPartBegin), typeWeight.getOne());
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {
-                int numSuccessors = inputGraph.getNumSuccessors();
+                int numSuccessors = inputGraph.getNumSuccessors(inputNode);
                 for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                    int inputSuccessor = inputGraph.getSuccessorNode(succNr);
+                    int inputSuccessor = inputGraph.getSuccessorNode(inputNode, succNr);
                     int outputSuccessor = inputToOutputNodes.getInt(inputSuccessor);
                     outputGraph.queryNode(outputSuccessor);
                     int outSn = numInEdges.getInt(outputSuccessor);
@@ -527,7 +527,7 @@ public final class GraphBuilderExplicit {
                             outputProp.set(inputNode, outSn, value);
                         }
                     }
-                    outputGraph.setSuccessorNode(outSn, outputNode);
+                    outputGraph.setSuccessorNode(outputSuccessor, outSn, outputNode);
                     numInEdges.set(numInEdges.getInt(outputSuccessor) + 1, outputSuccessor);
                 }
             }

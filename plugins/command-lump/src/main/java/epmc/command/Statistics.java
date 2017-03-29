@@ -50,7 +50,7 @@ public final class Statistics {
 				numStates++;
 			} else {
 				numNondet++;
-				numFanout += graph.getNumSuccessors();
+				numFanout += graph.getNumSuccessors(node);
 			}
 		}
 		this.numStates = numStates;

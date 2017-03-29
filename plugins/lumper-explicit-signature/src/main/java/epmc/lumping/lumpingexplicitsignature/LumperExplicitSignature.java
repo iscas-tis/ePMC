@@ -410,9 +410,9 @@ final class LumperExplicitSignature implements LumperExplicit {
         int totalNumSucc = 0;
         for (int state = 0; state < numStates; state++) {
             original.queryNode(state);
-            int numSucc = original.getNumSuccessors();
+            int numSucc = original.getNumSuccessors(state);
             for (int succNr = 0; succNr < numSucc; succNr++) {
-                int succState = original.getSuccessorNode(succNr);
+                int succState = original.getSuccessorNode(state, succNr);
                 predecessorsFromTo[succState + 1]++;
             }
             totalNumSucc += numSucc;
@@ -429,9 +429,9 @@ final class LumperExplicitSignature implements LumperExplicit {
         EdgeProperty weights = original.getEdgeProperty(CommonProperties.WEIGHT);
         for (int state = 0; state < numStates; state++) {
             original.queryNode(state);
-            int numSucc = original.getNumSuccessors();
+            int numSucc = original.getNumSuccessors(state);
             for (int succNr = 0; succNr < numSucc; succNr++) {
-                int succState = original.getSuccessorNode(succNr);
+                int succState = original.getSuccessorNode(state, succNr);
                 predecessors[predecessorsFromTo[succState]] = state;                
                 predecessorsFromTo[succState]++;
                 successors[totalNumSucc] = succState;

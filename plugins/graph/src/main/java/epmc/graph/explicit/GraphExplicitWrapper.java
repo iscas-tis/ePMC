@@ -473,10 +473,10 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         currentNode = node;
         if (innerGraph != null && (!cache || !queriedNodes.get(node))) {
             innerGraph.queryNode(node);
-            numSuccessors = innerGraph.getNumSuccessors();
+            numSuccessors = innerGraph.getNumSuccessors(node);
             ensureSuccessorsSize();
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                int innerSuccessorNode = innerGraph.getSuccessorNode(succNr);
+                int innerSuccessorNode = innerGraph.getSuccessorNode(node, succNr);
                 assert innerSuccessorNode >= 0;
                 currentSuccessorNodes[succNr] = innerSuccessorNode;
             }
@@ -506,7 +506,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     @Override
-    public void prepareNode(int numSuccessors) throws EPMCException {
+    public void prepareNode(int currentNode, int numSuccessors) throws EPMCException {
         assert innerGraph == null;
         assert numSuccessors >= 0;
         queriedNodes.set(currentNode);
@@ -519,7 +519,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
     
     @Override
-    public void setSuccessorNode(int succNr, int succState) {
+    public void setSuccessorNode(int currentNode, int succNr, int succState) {
         assert succState >= 0;
         currentSuccessorNodes[succNr] = succState;
         int succEntry = getCachedSuccessorEntry(currentNode, succNr);
@@ -631,12 +631,14 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     @Override
-    public int getNumSuccessors() {
+    public int getNumSuccessors(int node) throws EPMCException {
+    	queryNode(node);
         return numSuccessors;
     }
 
     @Override
-    public int getSuccessorNode(int successorNumber) {
+    public int getSuccessorNode(int node, int successorNumber) throws EPMCException {
+    	queryNode(node);
         assert successorNumber < numSuccessors : successorNumber + " " + numSuccessors;
         assert currentSuccessorNodes[successorNumber] >= 0 : currentNode + " " + successorNumber;
         return currentSuccessorNodes[successorNumber];

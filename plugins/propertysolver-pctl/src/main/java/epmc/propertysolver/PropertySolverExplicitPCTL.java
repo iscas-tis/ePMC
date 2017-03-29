@@ -378,7 +378,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             for (int state = 0; state < iterNumStates; state++) {
                 sum.set(TypeWeight.get(contextValue).getZero());
                 graph.queryNode(state);
-                for (int succNr = 0; succNr < graph.getNumSuccessors(); succNr++) {
+                for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
                     sum.add(sum, succWeight);
                 }

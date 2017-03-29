@@ -121,7 +121,7 @@ public final class TestHelperGraph {
                 if (isState.getBoolean(node)) {
                     numStates++;
                 }
-                numTransitions += modelGraph.getNumSuccessors();
+                numTransitions += modelGraph.getNumSuccessors(node);
             }
             time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
             ExploreStatistics exploreStatistics = new ExploreStatistics(modelGraph.getNumNodes(), numStates, numTransitions);
