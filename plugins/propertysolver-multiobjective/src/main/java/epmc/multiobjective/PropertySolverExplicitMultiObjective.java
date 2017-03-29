@@ -260,7 +260,6 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 			}
 			ValueArrayInteger sched = down.get(schedNr).getScheduler();
 			for (int node = 0; node < numNodes; node++) {
-				computationGraph.queryNode(node);
 				if (!stateProp.getBoolean(node)) {
 					continue;
 				}

@@ -38,7 +38,6 @@ public final class GraphExplicitModifier {
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int node = 0; node < graph.getNumNodes(); node++) {
-            graph.queryNode(node);
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
@@ -67,7 +66,6 @@ public final class GraphExplicitModifier {
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int node = 0; node < graph.getNumNodes(); node++) {
-            graph.queryNode(node);
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
                 sum.set(zero);
@@ -98,7 +96,6 @@ public final class GraphExplicitModifier {
             Player player = playerProp.getEnum(inputNode);
             if (player == Player.STOCHASTIC) {
                 sumRate.set(0);
-                graph.queryNode(inputNode);
                 int numSuccs = graph.getNumSuccessors(inputNode) - 1;
                 for (int succNr = 0; succNr < numSuccs; succNr++) {
                     Value rate = weight.get(inputNode, succNr);

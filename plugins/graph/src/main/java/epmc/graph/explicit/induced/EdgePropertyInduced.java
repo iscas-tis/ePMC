@@ -45,18 +45,18 @@ final class EdgePropertyInduced implements EdgeProperty {
     @Override
     public Value get(int currentNode, int successor) throws EPMCException {
         assert successor >= 0;
-        int decision = graph.getDecision();
+        int decision = graph.getDecision(currentNode);
         assert successor < (decision == -1 ? graph.getNumSuccessors(currentNode) : 1);
         return inner.get(currentNode, decision == -1 ? successor : decision);
     }
 
     @Override
-    public void set(int currentNode, int successor, Value value) throws EPMCException {
+    public void set(int node, int successor, Value value) throws EPMCException {
         assert value != null;
         assert successor >= 0;
-        int decision = graph.getDecision();
-        assert successor < (decision == -1 ? graph.getNumSuccessors(currentNode) : 1);
-        inner.set(currentNode, decision == -1 ? successor : decision, value);
+        int decision = graph.getDecision(node);
+        assert successor < (decision == -1 ? graph.getNumSuccessors(node) : 1);
+        inner.set(node, decision == -1 ? successor : decision, value);
     }
 
     @Override

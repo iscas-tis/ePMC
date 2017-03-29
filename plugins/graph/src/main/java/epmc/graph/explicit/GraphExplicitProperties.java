@@ -175,7 +175,6 @@ public final class GraphExplicitProperties implements Serializable {
 
         while (todo.size() > 0) {
             int node = todo.pop();
-            graph.queryNode(node);
             for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 assert succ >= 0;
@@ -196,7 +195,6 @@ public final class GraphExplicitProperties implements Serializable {
         int numNodes = graph.getNumNodes();
         predecessorBounds = new int[numNodes + 1];
         for (int node = 0; node < numNodes; node++) {
-            graph.queryNode(node);
             for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 predecessorBounds[succ + 1]++;
@@ -207,7 +205,6 @@ public final class GraphExplicitProperties implements Serializable {
         }
         predecessorTargets = new int[predecessorBounds[predecessorBounds.length - 1]];
         for (int node = 0; node < numNodes; node++) {
-            graph.queryNode(node);
             for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 predecessorTargets[predecessorBounds[succ]] = node;
@@ -216,7 +213,6 @@ public final class GraphExplicitProperties implements Serializable {
         }
         Arrays.fill(predecessorBounds, 0);
         for (int node = 0; node < numNodes; node++) {
-            graph.queryNode(node);
             for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 predecessorBounds[succ + 1]++;
@@ -232,7 +228,6 @@ public final class GraphExplicitProperties implements Serializable {
         predecessorBounds = new int[states.length() + 1];
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
-                graph.queryNode(node);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {
@@ -247,7 +242,6 @@ public final class GraphExplicitProperties implements Serializable {
         predecessorTargets = new int[predecessorBounds[predecessorBounds.length - 1]];
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
-                graph.queryNode(node);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {
@@ -260,7 +254,6 @@ public final class GraphExplicitProperties implements Serializable {
         Arrays.fill(predecessorBounds, 0);
         for (int node = 0; node < states.length(); node++) {
             if (states.get(node)) {
-                graph.queryNode(node);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     int succ = graph.getSuccessorNode(node, succNr);
                     if (states.get(succ)) {

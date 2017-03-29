@@ -95,8 +95,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         return initialNodes;
     }
 
-    @Override
-    public void queryNode(int node) throws EPMCException {
+    void queryNode(int node) throws EPMCException {
         assert node >= 0;
         assert node < subToOrig.length;
         if (queriedNode == node) {
@@ -104,7 +103,6 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         }
         queriedNode = node;
         int origNode = subToOrig[node];
-        original.queryNode(origNode);
         int numOrigSucc = original.getNumSuccessors(origNode);
         numSuccessors = 0;
         for (int succNr = 0; succNr < numOrigSucc; succNr++) {
@@ -120,11 +118,10 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         }
     }
 
-    @Override
-    public int getQueriedNode() {
-        return queriedNode;
+    int getQueriedNode() {
+    	return queriedNode;
     }
-
+    
     @Override
     public int getNumSuccessors(int node) throws EPMCException {
     	queryNode(node);
@@ -157,7 +154,8 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         return subToOrig[subNode];
     }
     
-    public int getOrigSuccNumber(int succNr) {
+    public int getOrigSuccNumber(int node, int succNr) throws EPMCException {
+    	queryNode(node);
         assert succNr >= 0 : succNr;
         assert succNr < numSuccessors;
         return origSuccNumbers[succNr];

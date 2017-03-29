@@ -192,7 +192,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         ValueArrayAlgebra cumulRewards = null;
         if (rewardType.isInstantaneous()) {
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
-                graph.queryNode(graphNode);
                 Value reward = stateReward.get(graphNode);
                 values.set(reward, graphNode);
             }
@@ -219,7 +218,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
                 if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                     continue;
                 }
-                graph.queryNode(graphNode);
                 int numSuccessors = graph.getNumSuccessors(graphNode);
                 Value nodeRew = stateReward.get(graphNode);
                 Player player = playerProp.getEnum(graphNode);
@@ -244,12 +242,9 @@ public final class PropertySolverExplicitReward implements PropertySolver {
   //                      System.out.println(transRew + " " + acc);
                     } else {
                         acc.add(acc, transRew);
-                    	int old = graph.getQueriedNode();
-                    	int succ = graph.getSuccessorNode(old, succNr);
-                    	graph.queryNode(succ);
+                    	int succ = graph.getSuccessorNode(graphNode, succNr);
                     	ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(succ, 0));
                     	acc.add(acc2, r);
-                    	graph.queryNode(old);
                     }
                     if ((SemanticsMDP.isMDP(semantics) || SemanticsIMDP.isIMDP(semantics))
                     		&& player == Player.ONE) {
@@ -307,7 +302,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         }
         if (rewardType.isReachability()) {
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
-                graph.queryNode(graphNode);
                 if (statesProp.getBoolean(graphNode) && reachNotOneSink.get(graphNode)) {
                     values.set(TypeWeight.get(contextValue).getPosInf(), graphNode);
                 }
@@ -343,7 +337,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         if (rewardType.isReachability()) {
         	NodeProperty reachSet = graph.getNodeProperty(propertyReward.getRewardReachSet());
         	for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
-                graph.queryNode(graphNode);
                 if (reachSet.getBoolean(graphNode)) {
                     reachSink.set(graphNode);
                 }

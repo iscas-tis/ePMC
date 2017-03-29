@@ -335,9 +335,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         // Take care when modifying!
         while (todo.size() > 0) {
             int node = todo.pop();
-            wrapper.queryNode(node);
-	        product.queryNode(node);
 	        AutomatonParityLabel label = labels.getObject(node);
+	        assert label != null : labels;
 	        int priority = label.getPriority();
 	        if (priority == Integer.MAX_VALUE) {
 	        	hasInfPrio = true;
@@ -402,7 +401,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		// TODO check!
 		for (int i = 0; i < forStates.size(); i++) {
 			int node = forStates.getExplicitIthState(i);
-			game.queryNode(node);
 	//            int modelState = nodeAutomaton.getInt();
 			boolean value = solverResult.get(node);
 			entry.set(value
@@ -435,7 +433,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		ValueAlgebra one = TypeWeight.get(getContextValue()).getOne();
 		for (int i = 0; i < forStates.size(); i++) {
 			int node = forStates.getExplicitIthState(i);
-			game.queryNode(node);
 			//int modelState = nodeAutomaton.getInt();
 			solverResult.get(entry, node);
 			if (isMin) {

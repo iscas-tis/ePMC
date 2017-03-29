@@ -499,7 +499,6 @@ public final class GraphBuilderDD implements Closeable {
             } else if (thisTargets.size() == 0) {
                 numSuccessors = 1;
             }
-            graph.queryNode(nodeNr);
             graph.prepareNode(nodeNr, numSuccessors);
             for (int succNr = 0; succNr < thisTargets.size(); succNr++) {
                 int succNode = thisTargets.get(succNr);

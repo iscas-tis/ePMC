@@ -53,6 +53,7 @@ import epmc.value.TypeObject.StorageType;
 public final class GraphExplicitWrapper implements GraphExplicit {
     /** Empty string. */
     private final static String EMPTY = "";
+    private final static String SPACE = " ";
 
     private final static class DummyName {
         @Override
@@ -78,13 +79,13 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             this.helper = typeEntry.newValue();
             this.inner = inner;
             for (int node = queriedNodes.nextSetBit(0); node >= 0; node = queriedNodes.nextSetBit(node+1)) {
-                innerGraph.queryNode(node);
                 update(node, node);
             }
         }
         
         @Override
-        public Value get(int currentNode) {
+        public Value get(int currentNode) throws EPMCException {
+        	queryNode(currentNode);
             int size = content.getLength(0);
             if (size <= currentNode) {
                 int newSize = size;
@@ -144,7 +145,8 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
 
         @Override
-        public Value get(int currentNode, int successor) {
+        public Value get(int currentNode, int successor) throws EPMCException {
+        	queryNode(currentNode);
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             int size = content.getLength(0);
@@ -212,7 +214,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             this.helper = typeEntry.newValue();
             this.inner = inner;
             for (int node = queriedNodes.nextSetBit(0); node >= 0; node = queriedNodes.nextSetBit(node+1)) {
-                innerGraph.queryNode(node);
                 update(node);
             }
         }
@@ -467,13 +468,12 @@ public final class GraphExplicitWrapper implements GraphExplicit {
 //        return sizeType;
     }
 
-    @Override
-    public void queryNode(int node) throws EPMCException {
+    private void queryNode(int node) throws EPMCException {
         assert node >= 0 : node;
         currentNode = node;
         if (innerGraph != null && (!cache || !queriedNodes.get(node))) {
-            innerGraph.queryNode(node);
             numSuccessors = innerGraph.getNumSuccessors(node);
+            assert numSuccessors >= 0;
             ensureSuccessorsSize();
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 int innerSuccessorNode = innerGraph.getSuccessorNode(node, succNr);
@@ -508,6 +508,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     @Override
     public void prepareNode(int currentNode, int numSuccessors) throws EPMCException {
         assert innerGraph == null;
+        queryNode(currentNode);
         assert numSuccessors >= 0;
         queriedNodes.set(currentNode);
         this.numSuccessors = numSuccessors;
@@ -591,6 +592,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     private void prepareCachedSuccessors(int node, int numSuccessors) {
+    	assert numSuccessors >= 0;
         while (otfSuccessorsStart.size() <= node) {
             otfSuccessorsStart.add(-1);
             switch (sizeType) {
@@ -685,11 +687,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     @Override
     public String toString() {
         return GraphExporterDOT.toString(this);
-    }
-
-    @Override
-    public int getQueriedNode() {
-        return currentNode;
     }
 
     @Override

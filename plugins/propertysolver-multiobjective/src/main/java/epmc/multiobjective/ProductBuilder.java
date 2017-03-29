@@ -236,7 +236,6 @@ final class ProductBuilder {
             if (iterState < 0 || iterState >= numStates) {
                 continue;
             }
-            prodWrapper.queryNode(state);
             boolean found = false;
             for (Entry<BitSet, BitSet> entry : resultMap.entrySet()) {
                 BitSet combination = entry.getKey();
@@ -251,7 +250,6 @@ final class ProductBuilder {
             }
             ValueAlgebra stateReward = newValueWeight();
             ValueAlgebra transReward = newValueWeight();
-            iterGraph.queryNode(iterState);
             int numSucc = iterGraph.getNumSuccessors(iterState);
             for (int obj = 0; obj < numAutomata; obj++) {
                 stateReward.set(zero);
@@ -260,14 +258,11 @@ final class ProductBuilder {
                 EdgeProperty edgeRewardProp = transRewards[obj];
                 for (int succNr = 0; succNr < numSucc; succNr++) {
                 	// TODO HACK
-                	int old = prodWrapper.getQueriedNode();
                     transReward.set(stateReward);
                     transReward.add(transReward, edgeRewardProp.get(state, succNr));
-                    int succ = prodWrapper.getSuccessorNode(old, succNr);
-                    prodWrapper.queryNode(succ);
+                    int succ = prodWrapper.getSuccessorNode(state, succNr);
                     transReward.add(transReward, edgeRewardProp.get(succ, 0));
                     result.setReward(transReward, succNr, obj);
-                    prodWrapper.queryNode(old);
                 }
             }
             result.finishState();
@@ -329,7 +324,6 @@ final class ProductBuilder {
                 BitSet labelAcceptingBitSet = UtilBitSet.newBitSetUnbounded();
                 assert prodWrapper != null;
                 for (int node = 0; node < prodWrapper.getNumNodes(); node++) {
-                    prodWrapper.queryNode(node);
                     AutomatonProductLabel prodLabel = automatonLabel.getObject(node);
                     AutomatonRabinLabel rabinLabel = (AutomatonRabinLabel) automaton.numberToLabel(prodLabel.get(automatonNr));
                     labelStableBitSet.set(node, rabinLabel.getStable().get(label));

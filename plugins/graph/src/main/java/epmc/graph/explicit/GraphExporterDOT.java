@@ -35,7 +35,6 @@ public final class GraphExporterDOT {
         Set<Object> nodeProperties = graph.getNodeProperties();
         Set<Object> edgeProperties = graph.getEdgeProperties();
         for (int node = 0; node < graph.getNumNodes(); node++) {
-            graph.queryNode(node);
             out.print("  " + node + " [label=\"");
             int propNr = 0;
             for (Object property : nodeProperties) {
@@ -50,7 +49,6 @@ public final class GraphExporterDOT {
         }
         out.println();
         for (int node = 0; node < graph.getNumNodes(); node++) {
-            graph.queryNode(node);
             int numSucc = graph.getNumSuccessors(node);
             for (int succNr = 0; succNr < numSucc; succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);

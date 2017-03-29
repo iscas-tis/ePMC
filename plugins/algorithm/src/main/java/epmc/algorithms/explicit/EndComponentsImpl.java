@@ -159,7 +159,6 @@ public class EndComponentsImpl implements EndComponents {
 
     private void tarjan() throws EPMCException {
         while (!hasNext && tjCallStackIndex >= 0) {
-            graph.queryNode(tjNode);
             int numSucc = graph.getNumSuccessors(tjNode);
             if (tjSuccIter < numSucc) {
                 int succNode = graph.getSuccessorNode(tjNode, tjSuccIter);
@@ -210,7 +209,6 @@ public class EndComponentsImpl implements EndComponents {
         if (this.sccSize == 1) {
             int node = scc[0];
             this.existing.set(scc[0], false);
-            this.graph.queryNode(node);
             if (graph.getNumSuccessors(node) == 0) {
                 this.hasNext = false;
                 return;
@@ -234,7 +232,6 @@ public class EndComponentsImpl implements EndComponents {
             leavingIndex = 0;
             for (int nodeNr = 0; nodeNr < sccSize; nodeNr++) {
                 int node = scc[nodeNr];
-                this.graph.queryNode(node);
                 Player player = playerProp.getEnum(node);
                 if (player == Player.STOCHASTIC) {
                     int numSucc = graph.getNumSuccessors(node);
@@ -299,7 +296,6 @@ public class EndComponentsImpl implements EndComponents {
         for (int nodeNr = 0; nodeNr < sccSize; nodeNr++) {
             int node = this.scc[nodeNr];
             remaining[node] = 0;
-            graph.queryNode(node);
             if (player.getEnum(node) == Player.ONE) {
                 int numSucc = graph.getNumSuccessors(node);
                 for (int succNr = 0; succNr < numSucc; succNr++) {
@@ -316,7 +312,6 @@ public class EndComponentsImpl implements EndComponents {
         while (leavingIndex != 0) {
             leavingIndex--;
             int node = leaving[leavingIndex];
-            graph.queryNode(node);
             for (int predNr = 0; predNr < graph.getProperties().getNumPredecessors(node); predNr++) {
                 int pred = graph.getProperties().getPredecessorNode(node, predNr);
                 if (scc.get(pred) && existingStates.get(pred)) {

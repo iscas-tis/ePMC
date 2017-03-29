@@ -61,26 +61,7 @@ public interface GraphExplicit extends LowLevel {
      * @return set of initial nodes of this graph
      */
     BitSet getInitialNodes();
-    
-    /**
-     * Query a given node.
-     * The node number must be nonnegative and strictly smaller than the number
-     * of nodes obtained by {@link #getNumNodes()}.
-     * 
-     * @param node node to query
-     * @throws EPMCException thrown in case of problems during the query
-     */
-    void queryNode(int node) throws EPMCException;
-
-    /**
-     * Get the last node queried by {@link #queryNode(int)}.
-     * This method must not be called before the first call to
-     * {@link #queryNode(int)}.
-     * 
-     * @return node queried last
-     */
-    int getQueriedNode();
-    
+        
     /**
      * Get number of successors of last node queried by {@link #queryNode(int)}.
      * 
@@ -228,7 +209,6 @@ public interface GraphExplicit extends LowLevel {
         assert isState != null;
         int numNodes = getNumNodes();
         for (int node = 0; node < numNodes; node++) {
-            queryNode(node);
             if (isState.getBoolean(node)) {
                 numStates++;
             }

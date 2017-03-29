@@ -47,7 +47,7 @@ public class EdgePropertySubgraph implements EdgeProperty {
     public Value get(int node, int successor) throws EPMCException {
     	int old = graph.getQueriedNode();
     	graph.queryNode(node);
-        Value res = inner.get(graph.subToOrig(node), graph.getOrigSuccNumber(successor));
+        Value res = inner.get(graph.subToOrig(node), graph.getOrigSuccNumber(node, successor));
         graph.queryNode(old);
         return res;
     }

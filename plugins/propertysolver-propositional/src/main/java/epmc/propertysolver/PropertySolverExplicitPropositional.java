@@ -94,7 +94,6 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
         int forStateSize = forStates.size();
         for (int stateNr = 0; stateNr < forStateSize; stateNr++) {
             int state = forStatesExplicit.getExplicitIthState(stateNr);
-            graph.queryNode(state);
             for (int idNr = 0; idNr < nodeProperties.length; idNr++) {
             	values[idNr] = nodeProperties[idNr].get(state);
             }

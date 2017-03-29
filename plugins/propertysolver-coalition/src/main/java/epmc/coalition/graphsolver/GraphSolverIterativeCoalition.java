@@ -164,7 +164,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         int origNumNodes = origGraph.getNumNodes();
         maxEnd = 0;
         for (int node = 0; node < origNumNodes; node++) {
-            origGraph.queryNode(node);
             Player player = playerProp.getEnum(node);
             playerEven.set(node, player == Player.ONE);
             maxEnd += player == Player.ONE ? 1 : 0;
@@ -220,7 +219,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     	NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
     	EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
     	for (int origNode = 0; origNode < origNumNodes; origNode++) {
-    		origGraph.queryNode(origNode);
     		Player player = playerProp.getEnum(origNode);
     		int iterState = builder.inputToOutputNode(origNode);
     		if (iterState == -1) {
@@ -234,7 +232,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     				: origNode + " " + val + " " + player + " " + objective.getTarget().get(origNode);
     	}
     	for (int origNode = 0; origNode < origNumNodes; origNode++) {
-    		origGraph.queryNode(origNode);
     		Player player = playerProp.getEnum(origNode);
     		if (player == Player.STOCHASTIC) {
     			val.set(0);
@@ -531,16 +528,13 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             newNodes.clear();
             for (int node = previousNodes.nextSetBit(0); node >= 0;
             		node = previousNodes.nextSetBit(node+1)) {
-                origGraph.queryNode(node);
                 Player player = playerProperty.getEnum(node);
                 /* player even or odd node - predecessors are distributions */
                 if (player == Player.ONE || player == Player.TWO) {
                     for (int predNr = 0; predNr < origGraph.getProperties().getNumPredecessors(node); predNr++) {
                         int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                         if (!seen.get(pred)) {
-                            origGraph.queryNode(pred);
                             strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
-                            origGraph.queryNode(node);
                             seen.set(pred);
                             newNodes.set(pred);
                         }
@@ -562,9 +556,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
                         int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                     	values.get(predValue, pred);
                     	if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
-                            origGraph.queryNode(pred);
                             strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
-                            origGraph.queryNode(node);
                             seen.set(pred);
                             newNodes.set(pred);
                     	}
@@ -575,7 +567,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             }
         } while (!newNodes.isEmpty());
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
-        	origGraph.queryNode(node);
         	Player player = playerProperty.getEnum(node);
         	if ((player == Player.ONE || player == Player.TWO)
         			&& !seen.get(node) && !target.get(node)) {
@@ -591,7 +582,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         /* make sure that we indeed computed the strategy correctly */
     	NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
-        	origGraph.queryNode(node);
         	Player player = playerProperty.getEnum(node);
         	assert player == Player.STOCHASTIC || target.get(node) || strategy.getDecision(node) != Scheduler.UNSET : node;
         }

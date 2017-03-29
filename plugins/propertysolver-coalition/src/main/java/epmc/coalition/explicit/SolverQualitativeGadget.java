@@ -103,7 +103,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
         		: new SchedulerSimpleArray(stochasticGame);
 		NodeProperty propertyPlayer = stochasticGame.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < stochasticToQualitative.length; node++) {
-        	stochasticGame.queryNode(node);
         	int qualiNode = stochasticToQualitative[node];
         	if (qualitativeResult.getSet0().get(qualiNode)) {
         		evenWins.set(node);
@@ -147,7 +146,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 		boolean hasInfPrio = false;
 		int numStochasticGameNodes = stochasticGame.getNumNodes();
 		for (int node = 0; node < numStochasticGameNodes; node++) {
-			stochasticGame.queryNode(node);
             AutomatonParityLabel label = stochasticLabels.getObject(node);
             int priority = label.getPriority();
             if (priority == Integer.MAX_VALUE) {
@@ -161,7 +159,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 		}
 		NodeProperty propertyPlayer = stochasticGame.getNodeProperty(CommonProperties.PLAYER);
 		for (int node = 0; node < numStochasticGameNodes; node++) {
-			stochasticGame.queryNode(node);
 			Player player = propertyPlayer.getEnum(node);
             AutomatonParityLabel label = stochasticLabels.getObject(node);
             int priority = label.getPriority();
@@ -205,7 +202,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
         NodeProperty qualitativeLabels = qualitativeGame.addSettableNodeProperty(CommonProperties.AUTOMATON_LABEL, stochasticLabels.getType());
         NodeProperty qualitativePlayer = qualitativeGame.addSettableNodeProperty(CommonProperties.PLAYER, propertyPlayer.getType());
 		for (int stochasticNode = 0; stochasticNode < numStochasticGameNodes; stochasticNode++) {
-			stochasticGame.queryNode(stochasticNode);
 			Player player = propertyPlayer.getEnum(stochasticNode);
             AutomatonParityLabel stochasticLabel = stochasticLabels.getObject(stochasticNode);
             int nodePriority = stochasticLabel.getPriority();
@@ -214,7 +210,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
             }
 			int qualitativeNode = stochasticToQualitative[stochasticNode];
 			int numSuccessors = stochasticGame.getNumSuccessors(stochasticNode);
-			qualitativeGame.queryNode(qualitativeNode);
 			qualitativeLabels.set(qualitativeNode, priorities[nodePriority]);
 			if (player == Player.ONE || player == Player.TWO) {
 				/* simple translation for nonstochatic nodes */
@@ -245,7 +240,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				secondLayerNode = qualitativeNode + numFirstLayer;
 				int thirdLayerNode = qualitativeNode + numFirstLayer + numSecondLayer;
 				for (int priority = 0; priority <= nodePriority + 1; priority += 2) {
-					qualitativeGame.queryNode(secondLayerNode);
 					if (strictEven) {
 						qualitativePlayer.set(secondLayerNode, Player.ONE);
 					} else {
@@ -273,7 +267,6 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				/* transitions from third layer to other parts */
 				thirdLayerNode = qualitativeNode + numFirstLayer + numSecondLayer;
 				for (int priority = 0; priority <= nodePriority; priority++) {
-					qualitativeGame.queryNode(thirdLayerNode);
 					qualitativeLabels.set(thirdLayerNode, priorities[priority]);
 					qualitativeGame.prepareNode(thirdLayerNode, numSuccessors);
 					if (strictEven ^ priority % 2 == 0) {

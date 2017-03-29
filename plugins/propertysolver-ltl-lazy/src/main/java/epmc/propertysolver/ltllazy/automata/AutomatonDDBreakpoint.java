@@ -241,7 +241,6 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             DD presVar = rPresVars.get(state);
-            automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
                 int succ = automaton.getSuccessorNode(state, succNr);
@@ -291,7 +290,6 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             DD presVar = presStates.get(state);
-            automaton.queryNode(state);
             for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
                 int succ = automaton.getSuccessorNode(state, succNr);

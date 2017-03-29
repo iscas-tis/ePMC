@@ -195,7 +195,6 @@ public final class GraphBuilderExplorer {
         lastState = 0;
         this.currentState = 0;
         while (currentState <= lastNumber) {
-            graph.queryNode(currentState);
             nodeStore.fromNumber(currentNode, currentState);
             explorer.queryNode(currentNode);
             int numStateSuccessors = explorer.getNumSuccessors();
@@ -217,7 +216,6 @@ public final class GraphBuilderExplorer {
                 }
                 nondetNr -= numStateSuccessors;
                 for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
-                    graphAlter.queryNode(nondetNr);
                     explorer.queryNode(successorNodes[stateSuccNr]);
                     for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
                         graphNodeProperties[nodePropNr].set(nondetNr, explorerNodeProperties[nodePropNr].get());

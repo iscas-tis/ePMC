@@ -338,7 +338,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         	} else {
         		int size = 0;
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
-                	origGraph.queryNode(origNode);
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
                         continue;
@@ -348,7 +347,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         		ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
         		Value value = cumulativeStateRewards.getType().getEntryType().newValue();
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
-                	origGraph.queryNode(origNode);
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
                         continue;

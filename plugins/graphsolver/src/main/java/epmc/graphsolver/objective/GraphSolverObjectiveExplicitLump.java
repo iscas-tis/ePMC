@@ -72,7 +72,6 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 		this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
 		int numStates = graph.computeNumStates();
 		for (int state = 0; state < numStates; state++) {
-			graph.queryNode(state);
 			int block = 0;
 			int marker = 1;
 			for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
@@ -91,7 +90,6 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 	}	
     
     public int getBlock(int state) throws EPMCException {
-        graph.queryNode(state);
         int block = 0;
         int marker = 1;
         for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
