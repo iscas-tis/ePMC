@@ -35,8 +35,6 @@ import epmc.jani.model.Assignment;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
-import epmc.options.Options;
-import epmc.util.Util;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeReal;
@@ -133,7 +131,7 @@ public final class DestinationEvaluator {
 	/** Location to which the destination moves. */
 	private final int location;
 	/** Assignments performed by this evaluator. */
-	private final AssignmentEvaluator[] assignments;
+	private final AssignmentsEvaluator assignments;
 	/** Zero real. */
 	private final Value zeroReal;
 	/** Number of location variable in the automaton evaluator belongs to. */
@@ -167,20 +165,14 @@ public final class DestinationEvaluator {
 //			}
 //			numObservables++;
 //		}
-		assignments = new AssignmentEvaluator[destination.getAssignmentsOrEmpty().size() + numObservables];
-		int varNr = 0;
-		for (Assignment entry : destination.getAssignmentsOrEmpty()) {
-			assignments[varNr] = newAssignmentEvaluator(autVarToLocal, variableMap, variables, entry, builder.getExpressionToType());
-			varNr++;
-		}
-//		for (Assignment entry : destination.getObservableAssignmentsOrEmpty()) {
-//			AssignmentEvaluator evaluator = newAssignmentEvaluator(autVarToLocal, variableMap, variables, entry);;
-//			if (evaluator == null) {
-//				continue;
-//			}
-//			assignments[varNr] = evaluator;
-//			varNr++;
-//		}
+		
+		assignments = new AssignmentsEvaluator.Builder()
+				.setAssignments(destination.getAssignmentsOrEmpty())
+				.setAutVarToLocal(autVarToLocal)
+				.setExpressionToType(builder.getExpressionToType())
+				.setVariableMap(variableMap)
+				.setVariables(variables)
+				.build();
 		zeroReal = UtilValue.newValue(TypeReal.get(destination.getModel().getContextValue()), 0);
 	}
 
@@ -199,30 +191,10 @@ public final class DestinationEvaluator {
 	 */
 	void assignTo(NodeJANI fromNode, NodeJANI toNode) throws EPMCException {
 		assert toNode != null;
-		for (int i = 0; i < assignments.length; i++) {
-			assignments[i].apply(fromNode, toNode);
-		}
+		assignments.apply(fromNode, toNode);
 		if (locationVariable != -1) {
 			toNode.setVariable(locationVariable, location);
 		}
 	}
 	
-	private AssignmentEvaluator newAssignmentEvaluator(Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType) throws EPMCException {
-		assert assignment != null;
-		Options options = assignment.getModel().getContextValue().getOptions();
-        Map<String,Class<? extends AssignmentEvaluator.Builder>> assignmentEvaluators = options.get(OptionsJANIExplorer.JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS);
-        for (Class<? extends AssignmentEvaluator.Builder> entry : assignmentEvaluators.values()) {
-        	AssignmentEvaluator.Builder builder = Util.getInstance(entry);
-			builder.setAssignment(assignment)
-				.setVariables(variables)
-				.setVariableMap(variableMap)
-				.setAutVarToLocal(autVarToLocal)
-				.setExpressionToType(expressionToType);
-			if (builder.canHandle()) {
-				return builder.build();
-			}
-        }
-		return null;
-	}
-
 }

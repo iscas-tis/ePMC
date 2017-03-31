@@ -127,6 +127,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	 * source location is stored.
 	 * */
 	private EdgeEvaluator[][] edgeEvaluators;
+	private AssignmentsEvaluator[] locationEvaluators;
+	
 	/** Type for the location set of this automaton. */
 	private TypeLocation typeLocation;
 	/** Type for the edge of a given transition.
@@ -220,6 +222,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	@Override
 	public void buildAfterVariables() throws EPMCException {
 		buildEdgeEvaluators();
+		buildTransientValueEvaluators();
 		prepareSuccessors();
 	}
 	
@@ -335,6 +338,21 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.build();
 			edgeEvaluators[locNr][locationsNumEdges[locNr]] = edgeEvaluator;
 			locationsNumEdges[locNr]++;
+		}
+	}
+	
+	private void buildTransientValueEvaluators() throws EPMCException {
+		locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
+		int index = 0;
+		for (Location location : automaton.getLocations()) {
+			locationEvaluators[index] = new AssignmentsEvaluator.Builder()
+					.setAssignments(location.getTransientValueAssignmentsOrEmpty())
+					.setAutVarToLocal(autVarToLocal)
+					.setExpressionToType(new ExpressionToTypeAutomaton(getContextValue(), this.variableToNumber.keySet()))
+					.setVariableMap(variableToNumber)
+					.setVariables(explorer.getStateVariables().getIdentifiersArray())
+					.build();
+			index++;
 		}
 	}
 
@@ -468,6 +486,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		} else {
 			location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
 		}
+		locationEvaluators[location].apply(node, node);
 		EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
 		int lastAction = 0;
 		actionFromTo[0] = 0;
@@ -512,6 +531,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	private void queryNondetStochastic(NodeJANI node) throws EPMCException {
+		assert node != null;
 		numSuccessors = 0;
 		Value[] nodeValues = node.getValues();
 		int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
@@ -528,6 +548,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			int edgeNr = 0;
 			int lastAction = 0;
 			actionFromTo[0] = 0;
+			node.unmark();
+			locationEvaluators[location].apply(node, node);
 			for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
 				evaluator.setVariableValues(nodeValues);
 				if (evaluator.evaluateGuard()) {
@@ -586,13 +608,14 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 
-	private void queryNondetNonStochastic(NodeJANI nodeAutomaton) throws EPMCException {
+	private void queryNondetNonStochastic(NodeJANI node) throws EPMCException {
 		numSuccessors = 0;
-		Value[] nodeValues = nodeAutomaton.getValues();
+		Value[] nodeValues = node.getValues();
 		int location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
 		EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
 		int lastAction = 0;
 		actionFromTo[0] = 0;
+		locationEvaluators[location].apply(node, node);
 		for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
 			evaluator.setVariableValues(nodeValues);
 			if (evaluator.evaluateGuard()) {
@@ -601,8 +624,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 				DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(0);
 				NodeJANI successor = successors[numSuccessors];
 				successor.unmark();
-				destinationEval.assignTo(nodeAutomaton, successor);
-				successor.setNotSet(nodeAutomaton);
+				destinationEval.assignTo(node, successor);
+				successor.setNotSet(node);
 				if (lastAction != action) {
 					for (int act = lastAction + 1; act <= action; act++) {
 						actionFromTo[act] = numSuccessors;

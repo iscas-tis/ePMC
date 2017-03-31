@@ -26,9 +26,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import epmc.error.EPMCException;
+import epmc.expression.Expression;
+import epmc.expression.ExpressionToType;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
+import epmc.jani.model.Assignment;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.Variable;
+import epmc.options.Options;
+import epmc.util.Util;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
@@ -84,7 +90,7 @@ public final class UtilExplorer {
 			actionNumber++;
 		}
 		return result;
-	}
+	}	
 
 	/**
 	 * Private constructor to prevent instantiation of this class.

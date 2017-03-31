@@ -75,6 +75,33 @@ public final class TestHelperGraph {
         }
         return result;
     }
+    
+    public static GraphExplicit exploreModelGraph(Model model, Set<Object> graphProperties,
+    		Set<Object> nodeProperties, Set<Object> edgeProperties) {
+        GraphExplicit result;
+        assert model != null;
+        try {
+            ModelChecker checker = new ModelChecker(model);
+            result = exploreToGraph(model, graphProperties, nodeProperties, edgeProperties);
+            checker.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    public static GraphExplicit exploreModelGraph(Model model, Set<Object> nodeProperties) {
+        GraphExplicit result;
+        assert model != null;
+        try {
+            ModelChecker checker = new ModelChecker(model);
+            result = exploreToGraph(model, nodeProperties);
+            checker.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
 
     public static GraphExplicit exploreModelGraph(Options options, String modelFile) {
         try {
@@ -184,6 +211,13 @@ public final class TestHelperGraph {
         nodeProperties.add(CommonProperties.STATE);
         Set<Object> edgeProperties = new LinkedHashSet<>();
         edgeProperties.add(CommonProperties.WEIGHT);
+        return exploreToGraph(model, graphProperties, nodeProperties, edgeProperties);
+    }
+
+    public static GraphExplicit exploreToGraph(Model model,
+    		Set<Object> graphProperties,
+    		Set<Object> nodeProperties,
+    		Set<Object> edgeProperties) throws EPMCException {
         GraphExplicit result = (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(),
                 graphProperties, nodeProperties, edgeProperties);
         return result;
