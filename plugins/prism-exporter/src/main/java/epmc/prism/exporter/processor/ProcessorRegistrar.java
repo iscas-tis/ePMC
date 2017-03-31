@@ -66,7 +66,6 @@ import epmc.jani.model.Destination;
 import epmc.jani.model.DestinationProcessor;
 import epmc.jani.model.Destinations;
 import epmc.jani.model.DestinationsProcessor;
-import epmc.jani.model.DummyProcessor;
 import epmc.jani.model.Edge;
 import epmc.jani.model.EdgeProcessor;
 import epmc.jani.model.Edges;
@@ -155,10 +154,6 @@ public class ProcessorRegistrar {
 		JANI2PRISMProcessorStrict processor; 
 		Class<? extends JANI2PRISMProcessorStrict> processorClass = processors.get(JANIComponent.getClass());
 		
-		//TODO: remove this hack since it is only for testing/debugging purposes during development
-		if (processorClass == null) {
-			processorClass = DummyProcessor.class;
-		}
 		ensure(processorClass != null, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
 		processor = Util.getInstance(processorClass);
 		processor.setElement(JANIComponent);
