@@ -308,6 +308,7 @@ public final class ExportJANIToPRISMModels {
     	Options options = ConvertTestConfiguration.prepareJANIOptions(null);
     	options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
     	ModelJANI jani = (ModelJANI) TestHelper.loadModelMulti(options, janiFilename);
+    	
     	JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);
        	System.out.println("Converting");       
     	try (PrintWriter out = new PrintWriter(prismFilename)) {

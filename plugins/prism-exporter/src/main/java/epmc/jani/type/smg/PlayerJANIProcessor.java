@@ -18,55 +18,64 @@
 
 *****************************************************************************/
 
-package epmc.jani.model;
+package epmc.jani.type.smg;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
+import epmc.jani.model.Action;
+import epmc.jani.model.Automaton;
+import epmc.jani.model.ModelJANIProcessor;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
-public class LocationProcessor implements JANI2PRISMProcessorStrict {
+public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 
-	private Location location = null;
-	private String prefix = null;
+	private PlayerJANI player = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
-		assert obj instanceof Location; 
+		assert obj instanceof PlayerJANI; 
 		
-		location = (Location) obj;
-	}
-
-	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		player = (PlayerJANI) obj;
 	}
 
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
-		assert location != null;
+		assert player != null;
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
+		boolean remaining = false;
 
-		if (JANIComponentRegistrar.isTimedModel()) {
-			TimeProgress timeProgress = location.getTimeProgress();
-			if (timeProgress != null) {
-				processor = ProcessorRegistrar.getProcessor(timeProgress);
-				processor.setPrefix(prefix);
-				prism.append(processor.toPRISM().toString()).append("\n");
+		prism.append("player ").append(player.getName());
+		
+		for (Automaton automaton: player.getAutomataOrEmpty()) {
+			if (remaining) {
+				prism.append(", ");
+			} else {
+				remaining = true;
 			}
+			prism.append("\n")
+				 .append(ModelJANIProcessor.INDENT)
+				 .append(automaton.getName());
+		}
+		for (Action action: player.getActionsOrEmpty()) {
+			if (remaining) {
+				prism.append(", ");
+			} else {
+				remaining = true;
+			}
+			prism.append("\n")
+				 .append(ModelJANIProcessor.INDENT)
+				 .append("[")
+				 .append(JANIComponentRegistrar.getActionName(action))
+				 .append("]");
 		}
 		
-		Assignments assignments = location.getTransientValueAssignmentsOrEmpty();
-		for (AssignmentSimple assignment : assignments) {
-			Variable reward = assignment.getRef();
-			Expression expression = assignment.getValue();
-			JANIComponentRegistrar.registerStateRewardExpression(reward, expression);
-		}
-				
+		prism.append("\nendplayer\n");
+		
 		return prism;
 	}
 }

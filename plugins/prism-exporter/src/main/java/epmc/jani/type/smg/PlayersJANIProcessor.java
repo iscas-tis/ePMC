@@ -18,55 +18,37 @@
 
 *****************************************************************************/
 
-package epmc.jani.model;
+package epmc.jani.type.smg;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
-public class LocationProcessor implements JANI2PRISMProcessorStrict {
+public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 
-	private Location location = null;
-	private String prefix = null;
+	private PlayersJANI players = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
-		assert obj instanceof Location; 
+		assert obj instanceof PlayersJANI; 
 		
-		location = (Location) obj;
-	}
-
-	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
+		players = (PlayersJANI) obj;
 	}
 
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
-		assert location != null;
+		assert players != null;
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
 
-		if (JANIComponentRegistrar.isTimedModel()) {
-			TimeProgress timeProgress = location.getTimeProgress();
-			if (timeProgress != null) {
-				processor = ProcessorRegistrar.getProcessor(timeProgress);
-				processor.setPrefix(prefix);
-				prism.append(processor.toPRISM().toString()).append("\n");
-			}
+		for (PlayerJANI player : players) {
+			processor = ProcessorRegistrar.getProcessor(player);
+			prism.append("\n").append(processor.toPRISM().toString());			
 		}
 		
-		Assignments assignments = location.getTransientValueAssignmentsOrEmpty();
-		for (AssignmentSimple assignment : assignments) {
-			Variable reward = assignment.getRef();
-			Expression expression = assignment.getValue();
-			JANIComponentRegistrar.registerStateRewardExpression(reward, expression);
-		}
-				
 		return prism;
 	}
 }

@@ -25,18 +25,35 @@ import static epmc.error.UtilError.ensure;
 import epmc.error.EPMCException;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExtended {
+	
+	private ModelExtensionSMG smg;
 
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		if (!(obj instanceof ModelExtensionSMG)) {
 			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
 		}
+		
+		smg = (ModelExtensionSMG) obj;
 	}
 
 	@Override
-	public StringBuilder toPRISM() {
-		return new StringBuilder(ModelExtensionSMG.IDENTIFIER).append("\n");
+	public StringBuilder toPRISM() throws EPMCException {
+		assert smg != null;
+		
+		StringBuilder prism = new StringBuilder();
+		JANI2PRISMProcessorStrict processor; 
+
+		prism.append(ModelExtensionSMG.IDENTIFIER).append("\n");
+		
+		PlayersJANI players = smg.getPlayers();
+		processor = ProcessorRegistrar.getProcessor(players);
+		prism.append(processor.toPRISM().toString());
+		
+		return prism;
 	}
 }

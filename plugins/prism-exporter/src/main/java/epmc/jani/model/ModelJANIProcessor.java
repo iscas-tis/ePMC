@@ -21,6 +21,7 @@
 package epmc.jani.model;
 
 import epmc.error.EPMCException;
+import epmc.graph.SemanticsTimed;
 import epmc.jani.model.component.Component;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -29,7 +30,7 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 	
 	public static final String INDENT = "\t"; 
-
+	
 	private ModelJANI jani = null;
 	
 	@Override
@@ -38,6 +39,8 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		assert obj instanceof ModelJANI;
 		
 		jani = (ModelJANI) obj;
+
+		JANIComponentRegistrar.setIsTimedModel(SemanticsTimed.isTimed(jani.getSemantics()));
 	}
 
 	@Override
@@ -46,6 +49,28 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
+		
+		// Global variables to be registered
+		for (Variable variable : jani.getGlobalVariables()) {
+			JANIComponentRegistrar.registerVariable(variable);
+		}
+		
+		// Variable assignment to be registered
+		for (Automaton automaton : jani.getAutomata()) {
+			processor = ProcessorRegistrar.getProcessor(automaton);
+			processor.findAssignedVariables();
+			
+		}
+		
+		// Global variables non transient to be registered
+		for (Variable variable : jani.getGlobalVariablesNonTransient()) {
+			JANIComponentRegistrar.registerGlobalVariable(variable);
+		}
+		
+		// Actions to be registered
+		for (Action action : jani.getActionsOrEmpty()) {
+			JANIComponentRegistrar.registerAction(action);
+		}
 		
 		// Metadata
 		Metadata metadata = jani.getMetadata();
@@ -63,28 +88,6 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		Constants constants = jani.getModelConstants();
 		processor = ProcessorRegistrar.getProcessor(constants);
 		prism.append(processor.toPRISM().toString()).append("\n");
-		
-		// Global variables to be registered
-		for (Variable variable : jani.getGlobalVariables()) {
-			JANIComponentRegistrar.registerVariable(variable);
-		}
-		
-		// Variable assignment to be registered
-		for (Automaton automaton : jani.getAutomata()) {
-			processor = ProcessorRegistrar.getProcessor(automaton);
-			processor.findAssignedVariables();
-			
-		}
-		
-		// Global variables non transient
-		for (Variable variable : jani.getGlobalVariablesNonTransient()) {
-			JANIComponentRegistrar.registerGlobalVariable(variable);
-		}
-		
-		// Actions to be registered
-		for (Action action : jani.getActionsOrEmpty()) {
-			JANIComponentRegistrar.registerAction(action);
-		}
 		
 		// Global variables
 		for (Variable variable : JANIComponentRegistrar.getGlobalVariables()) {

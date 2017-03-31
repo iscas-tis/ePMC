@@ -17,5 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-format"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graph"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

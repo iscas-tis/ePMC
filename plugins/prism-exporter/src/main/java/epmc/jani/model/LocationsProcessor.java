@@ -50,7 +50,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 	public StringBuilder toPRISM() throws EPMCException {
 		assert locations != null;
 		
-		if(!locations.getModel().getContextValue().getOptions().getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS)) { 
+		if(!ProcessorRegistrar.getAllowMultipleLocations()) { 
 			// PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
 			ensure(locations.size() == 1, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
 		}
