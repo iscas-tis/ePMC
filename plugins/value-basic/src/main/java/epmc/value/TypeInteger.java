@@ -186,10 +186,10 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
-        if (this.lowerBound != other.lowerBound) {
+        if (!this.lowerBound.equals(other.lowerBound)) {
             return false;
         }
-        if (this.upperBound != other.upperBound) {
+        if (!this.upperBound.equals(other.upperBound)) {
             return false;
         }
         return true;
