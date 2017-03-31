@@ -118,6 +118,10 @@ import epmc.jani.type.mdp.ModelExtensionMDP;
 import epmc.jani.type.mdp.ModelExtensionMDPProcessor;
 import epmc.jani.type.smg.ModelExtensionSMG;
 import epmc.jani.type.smg.ModelExtensionSMGProcessor;
+import epmc.jani.type.smg.PlayerJANI;
+import epmc.jani.type.smg.PlayerJANIProcessor;
+import epmc.jani.type.smg.PlayersJANI;
+import epmc.jani.type.smg.PlayersJANIProcessor;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.util.Util;
 
@@ -130,6 +134,8 @@ import epmc.util.Util;
 public class ProcessorRegistrar {
 	
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> processors = registerProcessors();
+	
+	private static boolean allowMultipleLocations = false;
 	
 	/**
 	 * Add a new processor for a JANI component in the set of known processors.
@@ -174,6 +180,14 @@ public class ProcessorRegistrar {
 		}
 		processors = strictProcessors;
 		
+	}
+	
+	public static void setAllowMultipleLocations(boolean allowMultipleLocations) {
+		ProcessorRegistrar.allowMultipleLocations = allowMultipleLocations;
+	}
+	
+	public static boolean getAllowMultipleLocations() {
+		return allowMultipleLocations;
 	}
 
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> registerProcessors() {
@@ -262,6 +276,10 @@ public class ProcessorRegistrar {
 		//JANI properties
 		processors.put(JANIProperties.class, JANIPropertiesProcessor.class);
 		processors.put(JANIPropertyEntry.class, JANIPropertyEntryProcessor.class);
+		
+		//SMG players
+		processors.put(PlayersJANI.class, PlayersJANIProcessor.class);
+		processors.put(PlayerJANI.class, PlayerJANIProcessor.class);
 		
 		return processors;
 	}

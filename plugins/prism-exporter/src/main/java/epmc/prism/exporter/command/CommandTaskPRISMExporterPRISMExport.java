@@ -73,6 +73,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
 		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_STRICT_PRISM)) {
 			ProcessorRegistrar.useStrictPRISMSyntaxOnly();
 		}
+		ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
 		
 		Log log = options.get(OptionsMessages.LOG);
     	try {

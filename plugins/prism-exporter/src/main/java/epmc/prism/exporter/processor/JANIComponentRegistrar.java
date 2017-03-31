@@ -62,9 +62,19 @@ public class JANIComponentRegistrar {
 	
 	private static Map<Action, String> actionNames = new HashMap<>();
 	
+	private static boolean isTimedModel = false;
+	
 	private static int reward_counter = 0;
 	private static int variable_counter = 0;
 	private static int constant_counter = 0;
+	
+	public static void setIsTimedModel(boolean isTimedModel) {
+		JANIComponentRegistrar.isTimedModel = isTimedModel;
+	}
+	
+	public static boolean isTimedModel() {
+		return isTimedModel;
+	}
 	
 	/**
 	 * Register a constant.
