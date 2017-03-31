@@ -20,6 +20,7 @@
 
 package epmc.jani.model;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,6 +65,10 @@ public final class Metadata implements JANINode {
 			builder.add(entry.getKey(), entry.getValue());
 		}
 		return builder.build();
+	}
+	
+	public Map<String,String> getValues() {
+		return Collections.unmodifiableMap(values);
 	}
 	
 	public void put(String key, String value) {
