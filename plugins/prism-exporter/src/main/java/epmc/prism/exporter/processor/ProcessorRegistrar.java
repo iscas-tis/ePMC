@@ -173,7 +173,7 @@ public class ProcessorRegistrar {
 		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = new HashMap<>();
 		for (Map.Entry<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> entry : processors.entrySet()) {
 			Class<? extends JANI2PRISMProcessorStrict> value = entry.getValue();
-			if (JANI2PRISMProcessorExtended.class.isAssignableFrom(value)) {
+			if (!JANI2PRISMProcessorExtended.class.isAssignableFrom(value)) {
 				strictProcessors.put(entry.getKey(), value);
 			}
 		}
