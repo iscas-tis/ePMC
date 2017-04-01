@@ -21,6 +21,7 @@
 package epmc.value.plugin;
 
 import epmc.error.EPMCException;
+import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
@@ -39,10 +40,18 @@ public final class AfterOptionsCreationValueBasic implements AfterOptionsCreatio
 	public void process(Options options) throws EPMCException {
         assert options != null;
         OptionTypeString typeString = OptionTypeString.getInstance();
+        OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption().setBundleName(OptionsValue.OPTIONS_VALUE)
             .setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT)
             .setType(typeString).setDefault(VALUE_FLOATING_POINT_DEFAULT)
             .setCommandLine().setGui().setWeb().build();
+
+        options.addOption().setBundleName(OptionsValue.OPTIONS_VALUE)
+        	.setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)
+        	.setType(typeBoolean)
+        	.setDefault(false)
+        	.setCommandLine().setGui().setWeb()
+        	.build();
 	}
 
 

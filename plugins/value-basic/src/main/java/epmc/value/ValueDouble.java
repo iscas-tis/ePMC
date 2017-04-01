@@ -23,6 +23,7 @@ package epmc.value;
 import static epmc.error.UtilError.fail;
 
 import epmc.error.EPMCException;
+import epmc.options.Options;
 import epmc.value.Value;
 
 public final class ValueDouble implements ValueReal, ValueTrigonometric {
@@ -116,10 +117,14 @@ public final class ValueDouble implements ValueReal, ValueTrigonometric {
         if (Double.isNaN(value)) {
             return NAN;
         } else {
-            String format = getType().getContext().getOptions()
-                    .getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
-            assert format != null;
-            return String.format(format, value);
+        	Options options = getType().getContext().getOptions();
+        	if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
+        		return String.valueOf(value);
+        	} else {
+	            String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
+	            assert format != null;
+	            return String.format(format, value);
+        	}
         }
     }
     
