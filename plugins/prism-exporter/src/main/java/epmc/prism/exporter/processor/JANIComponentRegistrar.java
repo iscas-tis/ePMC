@@ -258,17 +258,19 @@ public class JANIComponentRegistrar {
 		}
 		
 		Automaton oldAut = variablesAssignedByAutomaton.get(variable);
-		Set<Variable> assignedVariables;
 		if (oldAut == null) {
 			variablesAssignedByAutomaton.put(variable, automaton);
-			assignedVariables = new HashSet<>();
-			automatonAssignsVariables.put(automaton, assignedVariables);
 		} else {
 			ensure(automaton.equals(oldAut), 
 					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
 					"Variable assigned by different components:", 
 					getVariableNameByVariable(variable));
-			assignedVariables = automatonAssignsVariables.get(automaton);
+		}
+		
+		Set<Variable> assignedVariables = automatonAssignsVariables.get(automaton);
+		if (assignedVariables == null) {
+			assignedVariables = new HashSet<>();
+			automatonAssignsVariables.put(automaton, assignedVariables);
 		}
 		assignedVariables.add(variable);
 	}

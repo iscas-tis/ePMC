@@ -33,7 +33,7 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended {
 
 	private ExpressionCoalition coalition = null;
-	
+
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
