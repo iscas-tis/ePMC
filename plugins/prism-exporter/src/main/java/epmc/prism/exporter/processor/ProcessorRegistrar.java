@@ -124,6 +124,7 @@ import epmc.jani.type.smg.PlayersJANI;
 import epmc.jani.type.smg.PlayersJANIProcessor;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.util.Util;
+import epmc.value.ContextValue;
 
 /**
  * Class that is responsible for registering the JANI components and their corresponding JANI2PRISM processors.
@@ -135,11 +136,17 @@ public class ProcessorRegistrar {
 	
 	private static final String UNKNOWN_PROCESSOR = "No converter found for";
 	
+	private static ContextValue contextValue = null;
+	
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
 	
 	private static boolean allowMultipleLocations = false;
 	private static boolean useExtendedSyntax = false;
+	
+	public static void setContextValue(ContextValue contextValue) {
+		ProcessorRegistrar.contextValue = contextValue;
+	}
 	
 	/**
 	 * Add a new processor for a JANI component in the set of known strict processors.
@@ -148,6 +155,8 @@ public class ProcessorRegistrar {
 	 * @param JANI2PRISMProcessor the corresponding processor
 	 */
 	public static void registerStrictProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorStrict> JANI2PRISMProcessor) {
+		assert !JANI2PRISMProcessorExtended.class.isAssignableFrom(JANI2PRISMProcessor);
+		
 		strictProcessors.put(JANIComponent, JANI2PRISMProcessor);
 	}
 	
@@ -171,20 +180,24 @@ public class ProcessorRegistrar {
 	public static JANI2PRISMProcessorStrict getProcessor(Object JANIComponent) throws EPMCException {
 		assert JANIComponent != null;
 		
-		JANI2PRISMProcessorStrict processor; 
+		JANI2PRISMProcessorStrict processor = null;
 		Class<? extends JANI2PRISMProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
-		if (processorClass == null) {
+		if (processorClass != null) {
+			processor = Util.getInstance(processorClass);
+			processor.setContextValue(contextValue);
+			processor.setElement(JANIComponent);
+		} else {
 			processorClass = extendedProcessors.get(JANIComponent.getClass());
 			if (processorClass != null) {
 				processor = Util.getInstance(processorClass);
-				processor.setElement(JANIComponent);				
+				processor.setContextValue(contextValue);
+				processor.setElement(JANIComponent);
 				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, processor.getUnsupportedFeature().toArray());
+			} else {
+				ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
 			}
 		}
 		
-		ensure(processorClass != null, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
-		processor = Util.getInstance(processorClass);
-		processor.setElement(JANIComponent);
 		return processor;
 	}
 	

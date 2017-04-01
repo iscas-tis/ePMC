@@ -24,12 +24,19 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.value.ContextValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 
 	private ExpressionTemporal temporal = null;
+	private ContextValue contextValue = null;
+	
+	@Override
+	public void setContextValue(ContextValue contextValue) {
+		this.contextValue = contextValue;
+	}
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -42,6 +49,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert temporal != null;
+		assert contextValue != null;
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
@@ -51,7 +59,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         case NEXT: case FINALLY: case GLOBALLY: {
             prism.append(type.toString());
             
-            TimeBound timeBound = temporal.getTimeBound(null);
+            TimeBound timeBound = temporal.getTimeBound(contextValue);
     		processor = ProcessorRegistrar.getProcessor(timeBound);
     		prism.append(processor.toPRISM().toString());
     		
@@ -76,7 +84,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
             		if (remaining) {
                         prism.append(type);
                         
-                        TimeBound timeBound = temporal.getTimeBound(null, timeBoundIndex);
+                        TimeBound timeBound = temporal.getTimeBound(contextValue, timeBoundIndex);
                 		processor = ProcessorRegistrar.getProcessor(timeBound);
                 		prism.append(processor.toPRISM().toString());
                 		
