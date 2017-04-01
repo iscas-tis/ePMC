@@ -46,4 +46,13 @@ public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorExte
 		ll.add(ModelExtensionSMG.IDENTIFIER);
 		return ll;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		return false;
+	}	
 }

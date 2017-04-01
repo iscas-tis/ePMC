@@ -34,4 +34,13 @@ public final class ModelExtensionCTMCProcessor implements JANI2PRISMProcessorStr
 	public StringBuilder toPRISM() {
 		return new StringBuilder(ModelExtensionCTMC.IDENTIFIER).append("\n");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		return false;
+	}	
 }

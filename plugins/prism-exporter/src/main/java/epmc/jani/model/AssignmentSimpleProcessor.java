@@ -20,8 +20,11 @@
 
 package epmc.jani.model;
 
+import static epmc.error.UtilError.ensure;
+
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -68,4 +71,28 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 		prism.append(")");
 		return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert assignment != null;
+		
+		Variable ref = assignment.getRef();
+		boolean assignmentUsesTransientVariable = ProcessorRegistrar.getProcessor(assignment.getValue()).usesTransientVariables();
+		
+		ensure(ref.isTransient() || !assignmentUsesTransientVariable, 
+				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+				"non-transient variable is computed from a transient variable", 
+				ref.getName());
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert assignment != null;
+		
+		boolean usesTransient = false;
+		usesTransient |= ProcessorRegistrar.getProcessor(assignment.getRef()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(assignment.getValue()).usesTransientVariables();
+		
+		return usesTransient;
+	}	
 }

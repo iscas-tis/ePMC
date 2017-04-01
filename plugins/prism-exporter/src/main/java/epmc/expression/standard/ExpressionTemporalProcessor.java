@@ -105,7 +105,28 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 		return prism;
 	}
 
-    private static boolean isTrue(Expression expression) {
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert temporal != null;
+		
+		for (Expression child : temporal.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert temporal != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : temporal.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
+
+	private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

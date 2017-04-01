@@ -47,4 +47,18 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 		processor = ProcessorRegistrar.getProcessor(exp);
 		return processor.toPRISM();
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert guard != null;
+		
+		ProcessorRegistrar.getProcessor(guard.getExp()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert guard != null;
+		
+		return ProcessorRegistrar.getProcessor(guard.getExp()).usesTransientVariables();
+	}	
 }

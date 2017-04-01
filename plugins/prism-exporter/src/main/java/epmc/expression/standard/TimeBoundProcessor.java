@@ -81,6 +81,25 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 		return prism;
 	}
 	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert timeBound != null;
+		
+		ProcessorRegistrar.getProcessor(timeBound.getLeft()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(timeBound.getRight()).validateTransientVariables();
+	}
+	
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert timeBound != null;
+		
+		boolean usesTransient = false;
+		usesTransient |= ProcessorRegistrar.getProcessor(timeBound.getLeft()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(timeBound.getRight()).usesTransientVariables();
+		
+		return usesTransient;
+	}	
     private static boolean needBracesForInequation(Expression expr) {
         return (!(expr instanceof ExpressionIdentifierStandard
                 || expr instanceof ExpressionLiteral));

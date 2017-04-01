@@ -57,4 +57,18 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert timeProgress != null;
+		
+		ProcessorRegistrar.getProcessor(timeProgress.getExp()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert timeProgress != null;
+		
+		return ProcessorRegistrar.getProcessor(timeProgress.getExp()).usesTransientVariables();
+	}	
 }

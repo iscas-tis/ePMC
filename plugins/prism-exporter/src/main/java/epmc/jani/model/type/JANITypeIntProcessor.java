@@ -40,4 +40,16 @@ public final class JANITypeIntProcessor implements JANI2PRISMProcessorStrict {
 		
 		return new StringBuilder("int");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert integer != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert integer != null;
+		
+		return false;
+	}	
 }

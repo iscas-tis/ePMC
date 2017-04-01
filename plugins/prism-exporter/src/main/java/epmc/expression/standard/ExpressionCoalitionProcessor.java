@@ -72,6 +72,27 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 	}
 	
 	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert coalition != null;
+		
+		for (Expression child : coalition.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert coalition != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : coalition.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
+	
+	@Override
 	public List<String> getUnsupportedFeature() {
 		LinkedList<String> ll = new LinkedList<>();
 		ll.add(ModelExtensionSMG.IDENTIFIER);

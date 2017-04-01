@@ -21,6 +21,7 @@
 package epmc.jani.model;
 
 import epmc.error.EPMCException;
+import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -94,4 +95,31 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert automaton != null;
+		
+		InitialStates initial = automaton.getInitialStates();
+		if (initial != null) {
+			ProcessorRegistrar.getProcessor(initial).validateTransientVariables();
+		}
+		ProcessorRegistrar.getProcessor(automaton.getLocations()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(automaton.getEdges()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert automaton != null;
+		
+		boolean usesTransient = false;
+		InitialStates initial = automaton.getInitialStates();
+		if (initial != null) {
+			usesTransient |= ProcessorRegistrar.getProcessor(initial).usesTransientVariables();
+		}
+		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getLocations()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getEdges()).usesTransientVariables();
+		
+		return usesTransient;
+	}	
 }

@@ -53,6 +53,7 @@ public class JANIComponentRegistrar {
 	private static Set<Variable> globalVariables = new HashSet<>();
 	
 	private static Map<Variable, String> variableNames = new HashMap<>();
+	private static Map<String, Variable> variableByName = new HashMap<>();
 	private static Map<String, String> variableNameNames = new HashMap<>();
 	private static Map<Variable, Map<Action, Expression>> rewardTransitionExpressions = new HashMap<>();
 	private static Map<Variable, Expression> rewardStateExpressions = new HashMap<>();
@@ -111,6 +112,7 @@ public class JANIComponentRegistrar {
 
 		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Variable declared twice:", variable.getName());
 		if (!variableNames.containsKey(variable)) {
+			variableByName.put(variable.getName(), variable);
 			String name;
 			if (variable.isTransient()) {
 				do {
@@ -146,13 +148,25 @@ public class JANIComponentRegistrar {
 	/**
 	 * Return the unique name for the variable respecting the PRISM syntax
 	 * 
-	 * @param variable the wanted variable
+	 * @param name the wanted name
 	 * @return the associated name or {@code null} if such a variable is unknown
 	 */
 	public static String getVariableNameByName(String name) {
 		assert name != null;
 		
 		return variableNameNames.get(name);
+	}
+	
+	/**
+	 * Return the variable for the given name
+	 * 
+	 * @param name the wanted name
+	 * @return the associated variable or {@code null} if such a name is unknown
+	 */
+	public static Variable getVariableByName(String name) {
+		assert name != null;
+		
+		return variableByName.get(name);
 	}
 	
 	/**

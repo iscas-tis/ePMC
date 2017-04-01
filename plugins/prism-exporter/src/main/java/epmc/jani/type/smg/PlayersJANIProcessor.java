@@ -70,4 +70,26 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 		}
 		return ll;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert players != null;
+		
+		for (PlayerJANI player : players) {
+			ProcessorRegistrar.getProcessor(player).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert players != null;
+		
+		boolean usesTransient = false;
+		
+		for (PlayerJANI player : players) {
+			usesTransient |= ProcessorRegistrar.getProcessor(player).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

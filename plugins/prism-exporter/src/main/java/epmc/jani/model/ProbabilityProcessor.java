@@ -24,58 +24,42 @@ import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
-public class EdgesProcessor implements JANI2PRISMProcessorStrict {
+public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 
-	private Edges edges = null;
-	private String prefix = null;
+	private Probability probability = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
-		assert obj instanceof Edges; 
+		assert obj instanceof Probability; 
 		
-		edges = (Edges) obj;
+		probability = (Probability) obj;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-	
-	@Override
 	public StringBuilder toPRISM() throws EPMCException {
-		assert edges != null;
+		assert probability != null;
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
-		
-		for (Edge edge : edges) {
-			processor = ProcessorRegistrar.getProcessor(edge);
-			processor.setPrefix(prefix);
-			prism.append(processor.toPRISM().toString());
-		}
-		
+
+		processor = ProcessorRegistrar.getProcessor(probability.getExp());
+		prism.append(processor.toPRISM().toString());
+
 		return prism;
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
-		assert edges != null;
+		assert probability != null;
 		
-		for (Edge edge : edges) {
-			ProcessorRegistrar.getProcessor(edge).validateTransientVariables();
-		}
+		ProcessorRegistrar.getProcessor(probability.getExp()).validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
-		assert edges != null;
+		assert probability != null;
 		
-		boolean usesTransient = false;
-		for (Edge edge : edges) {
-			usesTransient |= ProcessorRegistrar.getProcessor(edge).usesTransientVariables();
-		}
-		
-		return usesTransient;
+		return ProcessorRegistrar.getProcessor(probability.getExp()).usesTransientVariables();
 	}	
 }

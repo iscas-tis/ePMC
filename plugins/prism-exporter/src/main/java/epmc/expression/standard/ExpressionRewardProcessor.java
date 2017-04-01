@@ -72,4 +72,25 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 
 		return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert reward != null;
+		
+		for (Expression child : reward.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert reward != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : reward.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

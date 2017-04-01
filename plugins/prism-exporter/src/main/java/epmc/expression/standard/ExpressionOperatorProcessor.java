@@ -286,4 +286,25 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 
         return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert expressionOperator != null;
+		
+		for (Expression child : expressionOperator.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert expressionOperator != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : expressionOperator.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

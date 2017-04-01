@@ -62,4 +62,25 @@ public class AssignmentsProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert assignments != null;
+		
+		for (Assignment assignment : assignments) {
+			ProcessorRegistrar.getProcessor(assignment).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert assignments != null;
+		
+		boolean usesTransient = false;
+		for (Assignment assignment : assignments) {
+			usesTransient |= ProcessorRegistrar.getProcessor(assignment).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

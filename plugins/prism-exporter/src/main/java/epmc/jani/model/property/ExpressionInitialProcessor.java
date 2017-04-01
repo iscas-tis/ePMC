@@ -35,4 +35,13 @@ public class ExpressionInitialProcessor implements JANI2PRISMProcessorStrict {
 	public StringBuilder toPRISM() throws EPMCException {
 		return new StringBuilder("\"init\"");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		return false;
+	}	
 }

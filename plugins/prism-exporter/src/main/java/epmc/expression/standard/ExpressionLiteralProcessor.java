@@ -41,4 +41,16 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 		
 		return new StringBuilder(literal.getValue().toString());
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert literal != null;
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert literal != null;
+		
+		return false;
+	}	
 }

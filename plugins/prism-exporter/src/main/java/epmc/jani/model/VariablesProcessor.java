@@ -65,4 +65,25 @@ public class VariablesProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert variables != null;
+		
+		for (Variable variable : variables) {
+			ProcessorRegistrar.getProcessor(variable).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert variables != null;
+		
+		boolean usesTransient = false;
+		for (Variable variable : variables) {
+			usesTransient |= ProcessorRegistrar.getProcessor(variable).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

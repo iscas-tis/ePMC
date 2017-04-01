@@ -46,4 +46,13 @@ public final class ModelExtensionMAProcessor implements JANI2PRISMProcessorExten
 		ll.add(ModelExtensionMA.IDENTIFIER);
 		return ll;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		return false;
+	}	
 }

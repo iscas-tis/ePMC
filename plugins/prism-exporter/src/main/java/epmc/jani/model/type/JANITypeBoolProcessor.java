@@ -39,4 +39,16 @@ public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
 		
 		return new StringBuilder("bool");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert bool != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert bool != null;
+		
+		return false;
+	}	
 }

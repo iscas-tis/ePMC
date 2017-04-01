@@ -63,4 +63,18 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
 		ll.add(ModelExtensionSMG.IDENTIFIER);
 		return ll;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert smg != null;
+		
+		ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert smg != null;
+		
+		return ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();
+	}	
 }
