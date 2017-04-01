@@ -20,6 +20,9 @@
 
 package epmc.prism.exporter.processor;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import epmc.error.EPMCException;
 
 public interface JANI2PRISMProcessorStrict {
@@ -50,4 +53,7 @@ public interface JANI2PRISMProcessorStrict {
 	default void findAssignedVariables() throws EPMCException {
 	}
 	
+	default List<String> getUnsupportedFeature() {
+		return new LinkedList<>();
+	}
 }

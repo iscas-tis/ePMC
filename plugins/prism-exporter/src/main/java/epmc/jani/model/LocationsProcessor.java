@@ -24,7 +24,6 @@ import static epmc.error.UtilError.ensure;
 
 import epmc.error.EPMCException;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.options.OptionsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -52,7 +51,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 		
 		if(!ProcessorRegistrar.getAllowMultipleLocations()) { 
 			// PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
-			ensure(locations.size() == 1, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+			ensure(locations.size() == 1, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Multiple locations", "");
 		}
 		
 		StringBuilder prism = new StringBuilder();

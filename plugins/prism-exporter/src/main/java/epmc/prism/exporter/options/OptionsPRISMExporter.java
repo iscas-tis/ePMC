@@ -35,7 +35,7 @@ public enum OptionsPRISMExporter {
 	/** Name of the generated PRISM properties file. */
 	PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME,
 	/** Whether to use the extended PRISM syntax. */
-	PRISM_EXPORTER_STRICT_PRISM,
+	PRISM_EXPORTER_EXTENDED_PRISM,
 	/** Whether to allow for multiple locations. */
 	PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS
 	;

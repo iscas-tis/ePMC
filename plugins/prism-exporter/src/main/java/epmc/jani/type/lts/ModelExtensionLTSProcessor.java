@@ -20,23 +20,30 @@
 
 package epmc.jani.type.lts;
 
-import static epmc.error.UtilError.ensure;
+import java.util.LinkedList;
+import java.util.List;
 
 import epmc.error.EPMCException;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
+import epmc.jani.type.smg.ModelExtensionSMG;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 
 public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorExtended {
 
 	@Override
 	public void setElement(Object obj) throws EPMCException {
-		if (!(obj instanceof ModelExtensionLTS)) {
-			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
-		}
+		assert obj instanceof ModelExtensionLTS;
 	}
 
 	@Override
 	public StringBuilder toPRISM() {
 		return new StringBuilder(ModelExtensionLTS.IDENTIFIER).append("\n");
+	}
+	
+	@Override
+	public List<String> getUnsupportedFeature() {
+		LinkedList<String> ll = new LinkedList<>();
+		ll.add("Semantic type");
+		ll.add(ModelExtensionSMG.IDENTIFIER);
+		return ll;
 	}
 }

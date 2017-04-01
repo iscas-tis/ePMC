@@ -20,19 +20,14 @@
 
 package epmc.jani.type.ctmc;
 
-import static epmc.error.UtilError.ensure;
-
 import epmc.error.EPMCException;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class ModelExtensionCTMCProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
 	public void setElement(Object obj) throws EPMCException {
-		if (!(obj instanceof ModelExtensionCTMC)) {
-			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
-		}
+		assert obj instanceof ModelExtensionCTMC;
 	}
 
 	@Override

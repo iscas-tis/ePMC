@@ -70,8 +70,8 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
     @Override
     public void executeInServer() {
 		Options options = modelChecker.getModel().getContextValue().getOptions();
-		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_STRICT_PRISM)) {
-			ProcessorRegistrar.useStrictPRISMSyntaxOnly();
+		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
+			ProcessorRegistrar.useExtendedPRISMSyntax();
 		}
 		ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
 		
@@ -130,7 +130,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
     		} else if (model instanceof ModelJANI) {
     			jani = (ModelJANI) model;
     		} else {
-                ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+                ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Unsupported model", model.getClass().getSimpleName());
     		}
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_CREATION, modelName);
         	JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);

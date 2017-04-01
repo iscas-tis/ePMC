@@ -85,7 +85,7 @@ public class JANIComponentRegistrar {
 	public static void registerConstant(Constant constant) throws EPMCException {
 		assert constant != null;
 
-		ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Constant declared twice:", constant.getName());
 		if (!constantNames.containsKey(constant)) {
 			String name;
 			name = constant.getName();
@@ -109,7 +109,7 @@ public class JANIComponentRegistrar {
 	public static void registerVariable(Variable variable) throws EPMCException {
 		assert variable != null;
 
-		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Variable declared twice:", variable.getName());
 		if (!variableNames.containsKey(variable)) {
 			String name;
 			if (variable.isTransient()) {
@@ -191,9 +191,12 @@ public class JANIComponentRegistrar {
 		assert reward != null;
 		assert action != null;
 		assert expression != null;
-
-		ensure(reward.isTransient(), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
-		ensure(variableNames.containsKey(reward), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		assert reward.isTransient();
+		
+		ensure(variableNames.containsKey(reward), 
+				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+				"Variable used but not declared:", 
+				reward.getName());
 		
 		Map<Action, Expression> mapAE = rewardTransitionExpressions.get(reward);
 		if (mapAE == null) {
@@ -204,7 +207,10 @@ public class JANIComponentRegistrar {
 		if (oldAssgn == null) {
 			mapAE.put(action, expression);
 		} else {
-			ensure(expression.equals(oldAssgn), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+			ensure(expression.equals(oldAssgn), 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+					"Transient variable with different expressions:", 
+					getVariableNameByVariable(reward));
 		}
 	}
 
@@ -218,15 +224,21 @@ public class JANIComponentRegistrar {
 	public static void registerStateRewardExpression(Variable reward, Expression expression) throws EPMCException {
 		assert reward != null;
 		assert expression != null;
+		assert reward.isTransient();
 		
-		ensure(reward.isTransient(), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
-		ensure(variableNames.containsKey(reward), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		ensure(variableNames.containsKey(reward), 
+				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+				"Variable used but not declared:", 
+				reward.getName());
 		
 		Expression oldExp = rewardStateExpressions.get(reward);
 		if (oldExp == null) {
 			rewardStateExpressions.put(reward, expression);
 		} else {
-			ensure(expression.equals(oldExp), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+			ensure(expression.equals(oldExp), 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+					"Transient variable with different expressions:", 
+					getVariableNameByVariable(reward));
 		}
 	}
 	
@@ -252,7 +264,10 @@ public class JANIComponentRegistrar {
 			assignedVariables = new HashSet<>();
 			automatonAssignsVariables.put(automaton, assignedVariables);
 		} else {
-			ensure(automaton.equals(oldAut), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+			ensure(automaton.equals(oldAut), 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+					"Variable assigned by different components:", 
+					getVariableNameByVariable(variable));
 			assignedVariables = automatonAssignsVariables.get(automaton);
 		}
 		assignedVariables.add(variable);
@@ -339,7 +354,7 @@ public class JANIComponentRegistrar {
 	 */
 	public static String getActionName(Action action) throws EPMCException {
 		assert action != null;
-		ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Action used but not declared:", action.getName());
 
 		return actionNames.get(action);
 	}

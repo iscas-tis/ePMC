@@ -48,29 +48,9 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		assert jani != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
+		JANI2PRISMProcessorStrict processor;
 		
-		// Global variables to be registered
-		for (Variable variable : jani.getGlobalVariables()) {
-			JANIComponentRegistrar.registerVariable(variable);
-		}
-		
-		// Variable assignment to be registered
-		for (Automaton automaton : jani.getAutomata()) {
-			processor = ProcessorRegistrar.getProcessor(automaton);
-			processor.findAssignedVariables();
-			
-		}
-		
-		// Global variables non transient to be registered
-		for (Variable variable : jani.getGlobalVariablesNonTransient()) {
-			JANIComponentRegistrar.registerGlobalVariable(variable);
-		}
-		
-		// Actions to be registered
-		for (Action action : jani.getActionsOrEmpty()) {
-			JANIComponentRegistrar.registerAction(action);
-		}
+		initialise();
 		
 		// Metadata
 		Metadata metadata = jani.getMetadata();
@@ -117,5 +97,28 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		prism.append(JANIComponentRegistrar.toPRISMRewards().toString()).append("\n");
 		
 		return prism;
+	}
+	
+	private void initialise() throws EPMCException {
+		
+		// Global variables to be registered
+		for (Variable variable : jani.getGlobalVariables()) {
+			JANIComponentRegistrar.registerVariable(variable);
+		}
+		
+		// Variable assignment to be registered
+		for (Automaton automaton : jani.getAutomata()) {
+			ProcessorRegistrar.getProcessor(automaton).findAssignedVariables();
+		}
+		
+		// Global variables non transient to be registered
+		for (Variable variable : jani.getGlobalVariablesNonTransient()) {
+			JANIComponentRegistrar.registerGlobalVariable(variable);
+		}
+		
+		// Actions to be registered
+		for (Action action : jani.getActionsOrEmpty()) {
+			JANIComponentRegistrar.registerAction(action);
+		}		
 	}
 }
