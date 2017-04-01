@@ -67,4 +67,18 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert constant != null;
+		
+		ProcessorRegistrar.getProcessor(constant.getValue()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert constant != null;
+		
+		return ProcessorRegistrar.getProcessor(constant.getValue()).usesTransientVariables();
+	}	
 }

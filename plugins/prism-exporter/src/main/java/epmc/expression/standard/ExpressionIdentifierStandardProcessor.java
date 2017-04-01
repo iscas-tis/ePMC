@@ -42,4 +42,16 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
 		
 		return new StringBuilder(JANIComponentRegistrar.getVariableNameByName(identifier.getName()));
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert identifier != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert identifier != null;
+
+		return JANIComponentRegistrar.getVariableByName(identifier.getName()).isTransient();
+	}
 }

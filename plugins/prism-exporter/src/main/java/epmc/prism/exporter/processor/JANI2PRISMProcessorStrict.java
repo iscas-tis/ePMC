@@ -52,6 +52,19 @@ public interface JANI2PRISMProcessorStrict {
 	 */
 	default void findAssignedVariables() throws EPMCException {}
 	
+	/**
+	 * Explore the JANI model and check whether the use of transient variables is compatible with PRISM 
+	 * @throws EPMCException if a transient variable is not used in a way not compatible with PRISM 
+	 */
+	void validateTransientVariables() throws EPMCException;
+	
+	/**
+	 * Explore the JANI model and check whether a transient variable is used
+	 * @return whether a transient variable is used
+	 * @throws EPMCException in case of problems in exploring the JANI model
+	 */
+	boolean usesTransientVariables() throws EPMCException;
+	
 	default List<String> getUnsupportedFeature() {
 		return new LinkedList<>();
 	}

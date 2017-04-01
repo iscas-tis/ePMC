@@ -40,4 +40,16 @@ public final class JANITypeRealProcessor implements JANI2PRISMProcessorStrict {
 		
 		return new StringBuilder("double");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert real != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert real != null;
+		
+		return false;
+	}	
 }

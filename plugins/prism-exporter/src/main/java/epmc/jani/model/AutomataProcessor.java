@@ -50,4 +50,25 @@ public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert automata != null;
+		
+		for (Automaton automaton : automata) {
+			ProcessorRegistrar.getProcessor(automaton).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert automata != null;
+		
+		boolean usesTransient = false;
+		for (Automaton automaton : automata) {
+			usesTransient |= ProcessorRegistrar.getProcessor(automaton).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

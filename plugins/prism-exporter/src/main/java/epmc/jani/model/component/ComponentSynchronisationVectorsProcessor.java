@@ -48,4 +48,16 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 
 		return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert syncVectors != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert syncVectors != null;
+
+		return false;
+	}
 }

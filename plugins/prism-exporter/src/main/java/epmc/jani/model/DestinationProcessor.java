@@ -54,16 +54,54 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(prefix);
 		}
 		
-		Expression prob = destination.getProbabilityExpressionOrOne(); 
-		processor = ProcessorRegistrar.getProcessor(prob);
-		prism.append(processor.toPRISM().toString());
-		
-		prism.append(" : ");
+		Probability probability = destination.getProbability();
+		if (probability == null) {
+			if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
+				Expression prob = destination.getProbabilityExpressionOrOne(); 
+				processor = ProcessorRegistrar.getProcessor(prob);
+				prism.append(processor.toPRISM().toString());
+				prism.append(" : ");
+			}
+		} else {
+			processor = ProcessorRegistrar.getProcessor(probability);
+			prism.append(processor.toPRISM().toString());
+			prism.append(" : ");
+		}
 		
 		Assignments assignments = destination.getAssignments();
-		processor = ProcessorRegistrar.getProcessor(assignments);
-		prism.append(processor.toPRISM().toString());
+		if (assignments != null) {
+			processor = ProcessorRegistrar.getProcessor(assignments);
+			prism.append(processor.toPRISM().toString());
+		}
 
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert destination != null;
+		
+		ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne()).validateTransientVariables();
+		
+		Assignments assignments = destination.getAssignments();
+		if (assignments != null) {
+			ProcessorRegistrar.getProcessor(assignments).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert destination != null;
+		
+		boolean usesTransient = false;
+		
+		usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne()).usesTransientVariables();
+		
+		Assignments assignments = destination.getAssignments();
+		if (assignments != null) {
+			usesTransient |= ProcessorRegistrar.getProcessor(assignments).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

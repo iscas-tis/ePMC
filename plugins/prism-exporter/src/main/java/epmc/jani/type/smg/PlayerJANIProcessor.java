@@ -29,6 +29,7 @@ import epmc.jani.model.Automaton;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 
@@ -89,4 +90,26 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 		ll.add(player.getName());
 		return ll;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert player != null;
+		
+		for (Action action: player.getActionsOrEmpty()) {
+			ProcessorRegistrar.getProcessor(action).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert player != null;
+		
+		boolean usesTransient = false;
+		
+		for (Action action: player.getActionsOrEmpty()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(action).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

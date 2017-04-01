@@ -58,4 +58,18 @@ public class InitialStatesProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert initialStates != null;
+		
+		ProcessorRegistrar.getProcessor(initialStates.getExp()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert initialStates != null;
+		
+		return ProcessorRegistrar.getProcessor(initialStates.getExp()).usesTransientVariables();
+	}	
 }

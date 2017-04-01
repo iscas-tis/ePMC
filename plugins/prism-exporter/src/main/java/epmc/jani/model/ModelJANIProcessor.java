@@ -99,6 +99,20 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		return prism;
 	}
 	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert jani != null;
+		
+		ProcessorRegistrar.getProcessor(jani).validateTransientVariables();
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert jani != null;
+		
+		return ProcessorRegistrar.getProcessor(jani).usesTransientVariables();		
+	}
+	
 	private void initialise() throws EPMCException {
 		
 		// Global variables to be registered
@@ -119,6 +133,9 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		// Actions to be registered
 		for (Action action : jani.getActionsOrEmpty()) {
 			JANIComponentRegistrar.registerAction(action);
-		}		
+		}
+		
+		// check for transient variables being used in guards or in assigning values to non-transient variables
+		ProcessorRegistrar.getProcessor(jani.getAutomata()).validateTransientVariables();
 	}
 }

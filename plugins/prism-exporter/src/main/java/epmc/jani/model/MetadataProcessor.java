@@ -49,4 +49,16 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 				
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert metadata != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert metadata != null;
+		
+		return false;
+	}	
 }

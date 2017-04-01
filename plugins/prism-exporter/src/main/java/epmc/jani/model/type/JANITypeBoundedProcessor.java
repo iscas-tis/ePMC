@@ -40,4 +40,16 @@ public final class JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict
 		
 		return new StringBuilder(bounded.toType().toString());
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert bounded != null;
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert bounded != null;
+		
+		return false;
+	}	
 }

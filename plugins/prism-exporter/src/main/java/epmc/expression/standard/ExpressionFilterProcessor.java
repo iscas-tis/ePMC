@@ -60,4 +60,24 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 
 		return prism;
 	}
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert filter != null;
+		
+		for (Expression child : filter.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert filter != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : filter.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

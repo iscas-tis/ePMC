@@ -82,6 +82,10 @@ import epmc.jani.model.Metadata;
 import epmc.jani.model.MetadataProcessor;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIProcessor;
+import epmc.jani.model.Probability;
+import epmc.jani.model.ProbabilityProcessor;
+import epmc.jani.model.Rate;
+import epmc.jani.model.RateProcessor;
 import epmc.jani.model.TimeProgress;
 import epmc.jani.model.TimeProgressProcessor;
 import epmc.jani.model.Variable;
@@ -208,6 +212,10 @@ public class ProcessorRegistrar {
 		useExtendedSyntax = true;
 	}
 	
+	public static boolean getUseExtendedPRISMSyntax() {
+		return useExtendedSyntax;
+	}
+	
 	public static void setAllowMultipleLocations(boolean allowMultipleLocations) {
 		ProcessorRegistrar.allowMultipleLocations = allowMultipleLocations;
 	}
@@ -294,6 +302,10 @@ public class ProcessorRegistrar {
 		processors.put(ExpressionSteadyState.class, ExpressionSteadyStateProcessor.class);
 		processors.put(ExpressionInitial.class, ExpressionInitialProcessor.class);
 		processors.put(ExpressionMultiObjective.class, ExpressionMultiObjectiveProcessor.class);
+		
+		//Probability/rate
+		processors.put(Probability.class, ProbabilityProcessor.class);
+		processors.put(Rate.class, RateProcessor.class);
 		
 		//JANI properties
 		processors.put(JANIProperties.class, JANIPropertiesProcessor.class);

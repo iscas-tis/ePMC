@@ -23,8 +23,8 @@ package epmc.jani.model;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 
@@ -91,4 +91,23 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert edge != null;
+		
+		ProcessorRegistrar.getProcessor(edge.getGuard()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(edge.getDestinations()).validateTransientVariables();
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert edge != null;
+		
+		boolean usesTransient = false;
+		usesTransient |= ProcessorRegistrar.getProcessor(edge.getGuard()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(edge.getDestinations()).usesTransientVariables();
+		
+		return usesTransient;
+	}	
 }

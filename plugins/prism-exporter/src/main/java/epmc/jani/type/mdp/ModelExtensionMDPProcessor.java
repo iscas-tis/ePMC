@@ -34,4 +34,13 @@ public final class ModelExtensionMDPProcessor implements JANI2PRISMProcessorStri
 	public StringBuilder toPRISM() {
 		return new StringBuilder(ModelExtensionMDP.IDENTIFIER).append("\n");
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		return false;
+	}	
 }

@@ -53,4 +53,27 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert properties != null;
+		
+		for (RawProperty raw : properties.getRawProperties()) {
+			Expression property = properties.getParsedProperty(raw);
+			ProcessorRegistrar.getProcessor(property).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert properties != null;
+		
+		boolean usesTransient = false;
+		for (RawProperty raw : properties.getRawProperties()) {
+			Expression property = properties.getParsedProperty(raw);
+			usesTransient |= ProcessorRegistrar.getProcessor(property).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

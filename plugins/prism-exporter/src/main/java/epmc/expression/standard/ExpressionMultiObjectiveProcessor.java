@@ -60,4 +60,24 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 		
 		return prism;
 	}
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert multiObjective != null;
+		
+		for (Expression child : multiObjective.getOperands()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert multiObjective != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : multiObjective.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

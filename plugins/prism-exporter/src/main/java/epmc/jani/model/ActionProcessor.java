@@ -46,4 +46,17 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert action != null;
+	}
+	
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert action != null;
+		
+		return false;
+	}	
 }

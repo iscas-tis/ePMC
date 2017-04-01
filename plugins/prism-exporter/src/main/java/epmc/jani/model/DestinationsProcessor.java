@@ -44,8 +44,8 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 		JANI2PRISMProcessorStrict processor; 
 		
 		boolean remaining = false;
-		for (Destination variable : destinations) {
-			processor = ProcessorRegistrar.getProcessor(variable);
+		for (Destination destination : destinations) {
+			processor = ProcessorRegistrar.getProcessor(destination);
 			if (remaining) {
 				processor.setPrefix(" + ");
 			} else {
@@ -56,4 +56,25 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 		
 		return prism;
 	}
+	
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert destinations != null;
+		
+		for (Destination destination : destinations) {
+			ProcessorRegistrar.getProcessor(destination).validateTransientVariables();
+		}
+	}
+
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert destinations != null;
+		
+		boolean usesTransient = false;
+		for (Destination destination : destinations) {
+			usesTransient |= ProcessorRegistrar.getProcessor(destination).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }

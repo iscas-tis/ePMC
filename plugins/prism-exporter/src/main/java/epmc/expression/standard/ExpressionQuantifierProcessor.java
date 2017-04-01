@@ -76,4 +76,25 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 		
 		return prism;
 	}
+
+	@Override
+	public void validateTransientVariables() throws EPMCException {
+		assert quantifier != null;
+		
+		for (Expression child : quantifier.getChildren()) {
+			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+		}
+	}
+	
+	@Override
+	public boolean usesTransientVariables() throws EPMCException {
+		assert quantifier != null;
+		
+		boolean usesTransient = false;
+		for (Expression child : quantifier.getChildren()) {
+			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+		}
+		
+		return usesTransient;
+	}	
 }
