@@ -45,6 +45,7 @@ import epmc.jani.extensions.trigonometricfunctions.OperatorTan;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.value.OperatorPRISMPow;
 import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
@@ -83,7 +84,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 		assert expressionOperator != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
+		JANI2PRISMProcessorStrict processor;
 		
 		Operator operator = expressionOperator.getOperator();
 		
@@ -157,7 +158,18 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		exp = expressionOperator.getOperand1();
     		processor = ProcessorRegistrar.getProcessor(exp);
     		prism.append(processor.toPRISM().toString());
-            prism.append(",");
+            prism.append(", ");
+    		exp = expressionOperator.getOperand2();
+    		processor = ProcessorRegistrar.getProcessor(exp);
+    		prism.append(processor.toPRISM().toString());
+            prism.append(")");
+            break;
+        case OperatorPRISMPow.IDENTIFIER:
+            prism.append("pow(");
+    		exp = expressionOperator.getOperand1();
+    		processor = ProcessorRegistrar.getProcessor(exp);
+    		prism.append(processor.toPRISM().toString());
+            prism.append(", ");
     		exp = expressionOperator.getOperand2();
     		processor = ProcessorRegistrar.getProcessor(exp);
     		prism.append(processor.toPRISM().toString());
@@ -168,7 +180,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		exp = expressionOperator.getOperand1();
     		processor = ProcessorRegistrar.getProcessor(exp);
     		prism.append(processor.toPRISM().toString());
-            prism.append(",");
+            prism.append(", ");
     		exp = expressionOperator.getOperand2();
     		processor = ProcessorRegistrar.getProcessor(exp);
     		prism.append(processor.toPRISM().toString());
