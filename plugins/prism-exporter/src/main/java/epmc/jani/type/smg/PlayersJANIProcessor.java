@@ -20,6 +20,9 @@
 
 package epmc.jani.type.smg;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
@@ -50,5 +53,21 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 		}
 		
 		return prism;
+	}
+	
+	
+	@Override
+	public List<String> getUnsupportedFeature() {
+		assert players != null;
+		
+		LinkedList<String> ll = new LinkedList<>();
+		if (players.size() > 0) {
+			ll.add("player definition");
+			ll.add(players.get(0).getName());
+		} else {
+			ll.add("");
+			ll.add("");
+		}
+		return ll;
 	}
 }

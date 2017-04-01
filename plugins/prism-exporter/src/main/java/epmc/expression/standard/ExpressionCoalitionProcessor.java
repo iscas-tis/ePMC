@@ -20,8 +20,12 @@
 
 package epmc.expression.standard;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.jani.type.smg.ModelExtensionSMG;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -65,5 +69,13 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 		prism.append(processor.toPRISM().toString());
 
 		return prism;
+	}
+	
+	@Override
+	public List<String> getUnsupportedFeature() {
+		LinkedList<String> ll = new LinkedList<>();
+		ll.add(ModelExtensionSMG.IDENTIFIER);
+		ll.add("coalition");
+		return ll;
 	}
 }

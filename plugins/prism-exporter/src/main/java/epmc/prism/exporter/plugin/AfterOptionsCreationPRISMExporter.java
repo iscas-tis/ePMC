@@ -88,9 +88,9 @@ public final class AfterOptionsCreationPRISMExporter implements AfterOptionsCrea
     		.setCategory(category).build();
 
         options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-	    	.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_STRICT_PRISM)
+	    	.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)
 	    	.setType(typeBoolean)
-	    	.setDefault(true)
+	    	.setDefault(false)
 	    	.setCommandLine()
 	    	.setCategory(category).build();
 

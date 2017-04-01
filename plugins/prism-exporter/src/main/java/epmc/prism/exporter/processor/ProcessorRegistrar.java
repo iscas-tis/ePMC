@@ -133,18 +133,32 @@ import epmc.util.Util;
  */
 public class ProcessorRegistrar {
 	
-	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> processors = registerProcessors();
+	private static final String UNKNOWN_PROCESSOR = "No converter found for";
+	
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
 	
 	private static boolean allowMultipleLocations = false;
+	private static boolean useExtendedSyntax = false;
 	
 	/**
-	 * Add a new processor for a JANI component in the set of known processors.
+	 * Add a new processor for a JANI component in the set of known strict processors.
 	 * 
 	 * @param JANIComponent the JANI component to which associate the processor
 	 * @param JANI2PRISMProcessor the corresponding processor
 	 */
-	public static void registerProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorStrict> JANI2PRISMProcessor) {
-		processors.put(JANIComponent, JANI2PRISMProcessor);
+	public static void registerStrictProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorStrict> JANI2PRISMProcessor) {
+		strictProcessors.put(JANIComponent, JANI2PRISMProcessor);
+	}
+	
+	/**
+	 * Add a new processor for a JANI component in the set of known extended processors.
+	 * 
+	 * @param JANIComponent the JANI component to which associate the processor
+	 * @param JANI2PRISMProcessor the corresponding processor
+	 */
+	public static void registerExtendedProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorExtended> JANI2PRISMProcessor) {
+		extendedProcessors.put(JANIComponent, JANI2PRISMProcessor);
 	}
 	
 	/**
@@ -158,28 +172,27 @@ public class ProcessorRegistrar {
 		assert JANIComponent != null;
 		
 		JANI2PRISMProcessorStrict processor; 
-		Class<? extends JANI2PRISMProcessorStrict> processorClass = processors.get(JANIComponent.getClass());
+		Class<? extends JANI2PRISMProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
+		if (processorClass == null) {
+			processorClass = extendedProcessors.get(JANIComponent.getClass());
+			if (processorClass != null) {
+				processor = Util.getInstance(processorClass);
+				processor.setElement(JANIComponent);				
+				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, processor.getUnsupportedFeature().toArray());
+			}
+		}
 		
-		ensure(processorClass != null, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
+		ensure(processorClass != null, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
 		processor = Util.getInstance(processorClass);
 		processor.setElement(JANIComponent);
 		return processor;
 	}
 	
 	/**
-	 * Discharge all processors that are associated with a JANI component corresponding to a PRISM feature 
-	 * not included in the strict PRISM syntax (such as the players from PRISM-games).
+	 * Allow to use the extended PRISM Syntax
 	 */
-	public static void useStrictPRISMSyntaxOnly() {
-		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = new HashMap<>();
-		for (Map.Entry<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> entry : processors.entrySet()) {
-			Class<? extends JANI2PRISMProcessorStrict> value = entry.getValue();
-			if (!JANI2PRISMProcessorExtended.class.isAssignableFrom(value)) {
-				strictProcessors.put(entry.getKey(), value);
-			}
-		}
-		processors = strictProcessors;
-		
+	public static void useExtendedPRISMSyntax() {
+		useExtendedSyntax = true;
 	}
 	
 	public static void setAllowMultipleLocations(boolean allowMultipleLocations) {
@@ -190,7 +203,7 @@ public class ProcessorRegistrar {
 		return allowMultipleLocations;
 	}
 
-	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> registerProcessors() {
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> registerStrictProcessors() {
 		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> processors = new HashMap<>();
 		
 		//Semantic types
@@ -198,9 +211,6 @@ public class ProcessorRegistrar {
 		processors.put(ModelExtensionCTMDP.class, ModelExtensionCTMDPProcessor.class);
 		processors.put(ModelExtensionDTMC.class, ModelExtensionDTMCProcessor.class);
 		processors.put(ModelExtensionMDP.class, ModelExtensionMDPProcessor.class);
-		processors.put(ModelExtensionLTS.class, ModelExtensionLTSProcessor.class);
-		processors.put(ModelExtensionMA.class, ModelExtensionMAProcessor.class);
-		processors.put(ModelExtensionSMG.class, ModelExtensionSMGProcessor.class);
 		
 		//JANI types
 		processors.put(JANITypeBool.class, JANITypeBoolProcessor.class);
@@ -271,11 +281,24 @@ public class ProcessorRegistrar {
 		processors.put(ExpressionSteadyState.class, ExpressionSteadyStateProcessor.class);
 		processors.put(ExpressionInitial.class, ExpressionInitialProcessor.class);
 		processors.put(ExpressionMultiObjective.class, ExpressionMultiObjectiveProcessor.class);
-		processors.put(ExpressionCoalition.class, ExpressionCoalitionProcessor.class);
 		
 		//JANI properties
 		processors.put(JANIProperties.class, JANIPropertiesProcessor.class);
 		processors.put(JANIPropertyEntry.class, JANIPropertyEntryProcessor.class);
+		
+		return processors;
+	}
+	
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> registerExtendedProcessors() {
+		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> processors = new HashMap<>();
+		
+		//Semantic types
+		processors.put(ModelExtensionLTS.class, ModelExtensionLTSProcessor.class);
+		processors.put(ModelExtensionMA.class, ModelExtensionMAProcessor.class);
+		processors.put(ModelExtensionSMG.class, ModelExtensionSMGProcessor.class);
+		
+		//Expressions
+		processors.put(ExpressionCoalition.class, ExpressionCoalitionProcessor.class);
 		
 		//SMG players
 		processors.put(PlayersJANI.class, PlayersJANIProcessor.class);

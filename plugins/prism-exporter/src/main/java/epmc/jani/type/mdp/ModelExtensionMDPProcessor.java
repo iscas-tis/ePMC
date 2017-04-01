@@ -20,19 +20,14 @@
 
 package epmc.jani.type.mdp;
 
-import static epmc.error.UtilError.ensure;
-
 import epmc.error.EPMCException;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class ModelExtensionMDPProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
 	public void setElement(Object obj) throws EPMCException {
-		if (!(obj instanceof ModelExtensionMDP)) {
-			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE);
-		}
+		assert obj instanceof ModelExtensionMDP;
 	}
 
 	@Override
