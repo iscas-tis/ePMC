@@ -69,6 +69,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
 	
     @Override
     public void executeInServer() {
+    	ProcessorRegistrar.setContextValue(modelChecker.getModel().getContextValue());
 		Options options = modelChecker.getModel().getContextValue().getOptions();
 		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
 			ProcessorRegistrar.useExtendedPRISMSyntax();

@@ -24,17 +24,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.error.EPMCException;
+import epmc.value.ContextValue;
 
 public interface JANI2PRISMProcessorStrict {
 	
-	default void setPrefix(String prefix) {
-	}
-
-	default void setForDefinition(boolean forDefinition) {
-	}
+	default void setContextValue(ContextValue contextValue) {}
 	
-	default void setWithInitialValue(boolean withInitialValue) {
-	}
+	default void setPrefix(String prefix) {}
+
+	default void setForDefinition(boolean forDefinition) {}
+
+	default void setWithInitialValue(boolean withInitialValue) {}
 	
 	void setElement(Object obj) throws EPMCException;
 
@@ -50,8 +50,7 @@ public interface JANI2PRISMProcessorStrict {
 	 * in some edge of the automata labelled with a synchronising action. 
 	 * @throws EPMCException 
 	 */
-	default void findAssignedVariables() throws EPMCException {
-	}
+	default void findAssignedVariables() throws EPMCException {}
 	
 	default List<String> getUnsupportedFeature() {
 		return new LinkedList<>();
