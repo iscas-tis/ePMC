@@ -25,4 +25,5 @@ package epmc.value;
 public enum OptionsValue {
     OPTIONS_VALUE,
     VALUE_FLOATING_POINT_OUTPUT_FORMAT,
+    VALUE_FLOATING_POINT_OUTPUT_NATIVE,
 }
