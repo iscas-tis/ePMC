@@ -29,15 +29,4 @@ package epmc.graph.explicit;
 public interface Scheduler {
     /** Value representing an unset decision. */
     static int UNSET = -1;
-    
-    /* methods to be implemented by implementing classes */
-    
-    /**
-     * Get graph to which this scheduler belongs.
-     * 
-     * @return graph to which this scheduler belongs
-     */
-    GraphExplicit getGraph();
-    
-    Scheduler clone();
 }

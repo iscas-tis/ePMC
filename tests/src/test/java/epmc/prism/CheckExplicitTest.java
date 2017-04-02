@@ -3309,7 +3309,7 @@ public final class CheckExplicitTest {
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 0), WLAN_TIME_BOUNDED_PROPERTY);
         
         Map<String, Value> result = computeResultsMapDefinition(model);
-        model.getContextValue().statistics();
+//        model.getContextValue().statistics();
         assertEquals("0.9090728759765625", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9794130921363831", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
         assertEquals("0.9363574981689453", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
