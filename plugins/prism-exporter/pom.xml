@@ -146,6 +146,13 @@
       <systemPath>${project.basedir}/../prism-format/target/epmc-prism-format-0.jar</systemPath>
     </dependency>
     <dependency>
+      <groupId>epmc.graph</groupId>
+      <artifactId>epmc-graph</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../graph/target/epmc-graph-0.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>epmc.jani</groupId>
       <artifactId>epmc-jani-model</artifactId>
       <version>0</version>
