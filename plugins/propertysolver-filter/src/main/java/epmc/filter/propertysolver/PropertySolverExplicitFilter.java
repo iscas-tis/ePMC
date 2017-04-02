@@ -131,11 +131,11 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
             	propertyFilter.accumulate(resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
-                    if (!ValueAlgebra.asAlgebra(statesEntry).isZero()) {
-                        getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, statesEntry);
+                    if (!ValueAlgebra.asAlgebra(propEntry).isZero()) {
+                        getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
                     }
                 } else if (propertyFilter.isPrintAll()) {
-                    getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, statesEntry);
+                    getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
                 }
             }
             stateNr++;
