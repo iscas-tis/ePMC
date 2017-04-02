@@ -365,8 +365,6 @@ final class MultiObjectiveDownClosure {
             result.set(entry, dim);
         }
         problem.close();
-        System.out.println("E " + elements);
-        System.out.println("R " + result);
         return result;
     }
 
