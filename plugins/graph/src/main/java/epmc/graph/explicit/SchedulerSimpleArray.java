@@ -119,4 +119,9 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
     public Type getType() {
         return value.getType();
     }
+
+	@Override
+	public int size() {
+		return content.length;
+	}
 }

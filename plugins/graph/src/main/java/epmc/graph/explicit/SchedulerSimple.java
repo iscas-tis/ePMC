@@ -21,7 +21,6 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 
 /**
  * Simple scheduler.
@@ -36,6 +35,8 @@ import epmc.value.ContextValue;
  * @author Ernst Moritz Hahn
  */
 public interface SchedulerSimple extends Scheduler, NodeProperty {
+	int size();
+	
     /**
      * Set the decision for a given node.
      * The node must be nonnegative and smaller than the number of nodes.
@@ -68,17 +69,9 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
      */
     int getDecision(int node);
     
-    @Override
-    SchedulerSimple clone();
-
-    @Override
-    default ContextValue getContextValue() {
-        return NodeProperty.super.getContextValue();
-    }
-    
     default void set(SchedulerSimple other) throws EPMCException {
         assert other != null;
-        int numNodes = getGraph().getNumNodes();
+        int numNodes = size();
         for (int node = 0; node < numNodes; node++) {
             set(node, other.getDecision(node));
         }
@@ -86,7 +79,10 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
     
     default boolean equals(SchedulerSimple other) throws EPMCException {
         assert other != null;
-        int numNodes = getGraph().getNumNodes();
+        if (size() != other.size()) {
+        	return false;
+        }
+        int numNodes = size();
         for (int node = 0; node < numNodes; node++) {
             if (get(node) != other.get(node)) {
                 return false;

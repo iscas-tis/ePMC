@@ -56,6 +56,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
     private final long[] content;
     /** Value to get graph property value. */
     private final ValueInteger value;
+	private final int numNodes;
 
     /**
      * Constructs a new space-efficient array-based simple scheduler.
@@ -72,7 +73,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
      */
     private SchedulerSimpleCompact(GraphExplicit graph, long[] content) throws EPMCException {
         this.graph = graph;
-        int numNodes = graph.getNumNodes();
+        numNodes = graph.getNumNodes();
         int numValues = 0;
         for (int node = 0; node < numNodes; node++) {
             numValues = Math.max(numValues, graph.getNumSuccessors(node));
@@ -166,7 +167,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
     
     @Override
     public Value get(int node) throws EPMCException {
-        value.set(get(node));
+        value.set(getDecision(node));
         return value;
     }
 
@@ -180,4 +181,9 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
     public Type getType() {
         return value.getType();
     }
+
+	@Override
+	public int size() {
+		return numNodes;
+	}
 }
