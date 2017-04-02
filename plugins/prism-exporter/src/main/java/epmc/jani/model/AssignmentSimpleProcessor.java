@@ -76,13 +76,10 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 	public void validateTransientVariables() throws EPMCException {
 		assert assignment != null;
 		
-		Variable ref = assignment.getRef();
-		boolean assignmentUsesTransientVariable = ProcessorRegistrar.getProcessor(assignment.getValue()).usesTransientVariables();
-		
-		ensure(ref.isTransient() || !assignmentUsesTransientVariable, 
+		ensure(!ProcessorRegistrar.getProcessor(assignment.getValue()).usesTransientVariables(), 
 				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
 				"non-transient variable is computed from a transient variable", 
-				ref.getName());
+				assignment.getRef().getName());
 	}
 	
 	@Override

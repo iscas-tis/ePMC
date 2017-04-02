@@ -127,6 +127,8 @@ import epmc.jani.type.smg.PlayerJANIProcessor;
 import epmc.jani.type.smg.PlayersJANI;
 import epmc.jani.type.smg.PlayersJANIProcessor;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
+import epmc.time.JANITypeClock;
+import epmc.time.JANITypeClockProcessor;
 import epmc.util.Util;
 import epmc.value.ContextValue;
 
@@ -238,6 +240,7 @@ public class ProcessorRegistrar {
 		processors.put(JANITypeBounded.class, JANITypeBoundedProcessor.class);
 		processors.put(JANITypeInt.class, JANITypeIntProcessor.class);
 		processors.put(JANITypeReal.class, JANITypeRealProcessor.class);
+		processors.put(JANITypeClock.class, JANITypeClockProcessor.class);
 		
 		//JANI metadata
 		processors.put(Metadata.class, MetadataProcessor.class);
