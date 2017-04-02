@@ -47,6 +47,7 @@ import epmc.util.BitSet;
 import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -204,6 +205,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         GraphExplicit iterGraph = product.getGraph();
         MultiObjectiveIterationRewards combinations = product.getRewards();
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
+        ContextValue context = bounds.getType().getContext();
+//        bounds.set(0, 0);
+  //      System.out.println(bounds);
         int numAutomata = product.getNumAutomata();
         MultiObjectiveDownClosure down = new MultiObjectiveDownClosure(getContextValue(), numAutomata);
         ValueArrayAlgebra weights;
