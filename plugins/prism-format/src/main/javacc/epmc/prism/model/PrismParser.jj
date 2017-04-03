@@ -839,6 +839,9 @@ private void parseRewards(List<RewardStructure> rewards) throws EPMCException :
 		{ label = null; }
 		(
 			<LBRACKET>
+			{ label = label = new ExpressionIdentifierStandard.Builder()
+					.setName("")
+					.build(); }
 			( 
 				t = <IDENTIFIER>
 				{ label = new ExpressionIdentifierStandard.Builder()

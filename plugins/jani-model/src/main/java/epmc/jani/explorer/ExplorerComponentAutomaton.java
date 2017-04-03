@@ -276,7 +276,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setScope(this)
 					.build();
 			boolean store = !variable.isTransient();
-			variableToNumber.put(variable, stateVariables.addVariable(identifier, variable.toType(), store));
+			variableToNumber.put(variable, stateVariables.addVariable(identifier, variable.toType(), store, variable.getInitialValueOrNull()));
 			autVarToLocal.put(variable.getIdentifier(), identifier);
 		}
 		for (Variable variable : explorer.getModel().getGlobalVariablesOrEmpty()) {
