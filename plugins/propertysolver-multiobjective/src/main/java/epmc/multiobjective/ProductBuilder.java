@@ -132,7 +132,7 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (quantified instanceof ExpressionReward) {
+            if (ExpressionReward.isReward(quantified)) {
             	// TODO
             } else {
             	Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
