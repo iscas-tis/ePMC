@@ -210,7 +210,7 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (quantified instanceof ExpressionReward) {
+            if (ExpressionReward.isReward(quantified)) {
                 RewardSpecification rewardStructure = ((ExpressionReward) quantified).getReward();
                 stateRewards[propNr] = prodWrapper.getNodeProperty(rewardStructure);
                 transRewards[propNr] = prodWrapper.getEdgeProperty(rewardStructure);
