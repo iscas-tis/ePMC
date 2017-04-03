@@ -44,10 +44,11 @@ public final class NodeJANI implements ExplorerNode {
 	private final Value[] values;
 	private final boolean[] variablesSetMarks;
 	private int numSet;
-	private int[] variablesSet;
-	private boolean[] storeVariables;
+	private final int[] variablesSet;
+	private final boolean[] storeVariables;
 	private final int numBits;
-	private StateVariables stateVariables;
+	private final StateVariables stateVariables;
+	private Value[] initialValues;
 
 	public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) throws EPMCException {
 		assert explorer != null;
@@ -58,6 +59,7 @@ public final class NodeJANI implements ExplorerNode {
 		values = new Value[variables.size()];
 		int numBits = 0;
 		storeVariables = new boolean[variables.size()];
+		initialValues = new Value[variables.size()];
 		for (int varNr = 0; varNr < variables.size(); varNr++) {
 			assert variables.get(varNr) != null : varNr;
 			assert stateVariables.getType(variables.get(varNr)) != null : variables.get(varNr);
@@ -71,6 +73,11 @@ public final class NodeJANI implements ExplorerNode {
 				} else {
 					numBits += ValueNumBitsKnown.getNumBits(values[varNr]);
 				}
+			}
+			if (!storeVariable) {
+				Value initial = stateVariables.getInitial(variables.get(varNr));
+//				assert initial != null : variables.get(varNr);
+				initialValues[varNr] = initial;
 			}
 		}
 		this.numBits = numBits;
@@ -136,6 +143,11 @@ public final class NodeJANI implements ExplorerNode {
 		for (int markNr = 0; markNr < numSet; markNr++) {
 			int varNr = variablesSet[markNr];
 			variablesSetMarks[varNr] = false;
+		}
+		for (int varNr = 0; varNr < storeVariables.length; varNr++) {
+			if (!storeVariables[varNr] && initialValues[varNr] != null) {
+				this.values[varNr].set(initialValues[varNr]);
+			}
 		}
 		numSet = 0;
 	}
@@ -285,7 +297,7 @@ public final class NodeJANI implements ExplorerNode {
 
 	public void setNotSet(NodeJANI nodeAutomaton) {
 		for (int varNr = 0; varNr < values.length; varNr++) {
-			if (!this.variablesSetMarks[varNr]) {
+			if (!variablesSetMarks[varNr]) {
 				values[varNr].set(nodeAutomaton.values[varNr]);
 			}
 		}

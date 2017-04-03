@@ -179,7 +179,7 @@ public final class ExplorerJANI implements Explorer {
 		}
 		for (Variable variable : model.getGlobalVariablesOrEmpty()) {
 			boolean store = !variable.isTransient();
-			stateVariables.addVariable(variable.getIdentifier(), variable.getType().toType(), store);
+			stateVariables.addVariable(variable.getIdentifier(), variable.getType().toType(), store, variable.getInitialValueOrNull());
 		}
 	}
 

@@ -747,6 +747,9 @@ final class PrismParser implements PrismParserConstants {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case LBRACKET:
         jj_consume_token(LBRACKET);
+                          label = label = new ExpressionIdentifierStandard.Builder()
+                                        .setName("")
+                                        .build();
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
         case IDENTIFIER:
           t = jj_consume_token(IDENTIFIER);
@@ -1613,12 +1616,6 @@ final class PrismParser implements PrismParserConstants {
     finally { jj_save(5, xla); }
   }
 
-  private boolean jj_3_4() {
-    if (jj_scan_token(OR)) return true;
-    if (jj_scan_token(LBRACKET)) return true;
-    return false;
-  }
-
   private boolean jj_3_2() {
     if (jj_scan_token(OR)) return true;
     if (jj_scan_token(OR)) return true;
@@ -1641,6 +1638,12 @@ final class PrismParser implements PrismParserConstants {
 
   private boolean jj_3_5() {
     if (jj_scan_token(UPDATE_TRUE)) return true;
+    return false;
+  }
+
+  private boolean jj_3_4() {
+    if (jj_scan_token(OR)) return true;
+    if (jj_scan_token(LBRACKET)) return true;
     return false;
   }
 
