@@ -64,6 +64,7 @@ import epmc.prism.model.StateReward;
 import epmc.prism.model.TransitionReward;
 import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
+import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
@@ -87,7 +88,8 @@ final class RewardsConverter {
 	private ModelJANI modelJANI;
 	/** Action used as silent action. */
 	private Action tauAction;
-	/** Rewards have to be renamed for exporting but not for internal use; this variable controls the way rewards are managed*/
+	/** Rewards have to be renamed for exporting but not for internal use;
+	 * this variable controls the way rewards are managed. */
 	private boolean forExporting;
 	
 	void setForExporting(boolean forExporting) {
@@ -168,6 +170,8 @@ final class RewardsConverter {
 			variable.setIdentifier(identifier);
 			variable.setType(rewardType);
 			variable.setTransient(true);
+			variable.setInitial(new ExpressionLiteral.Builder()
+					.setValue(TypeWeight.get(modelJANI.getContextValue()).getZero()).build());
 			rewards.addVariable(variable);
 		}
 		return rewards;
