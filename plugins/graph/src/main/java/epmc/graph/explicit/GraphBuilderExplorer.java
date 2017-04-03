@@ -152,6 +152,7 @@ public final class GraphBuilderExplorer {
         }
         for (Object property : graphProperties) {
             Type type = explorer.getGraphPropertyType(property);
+            assert type != null;
             this.graph.addSettableGraphProperty(property, type);
             this.graph.setGraphProperty(property, explorer.getGraphProperty(property));
         }
