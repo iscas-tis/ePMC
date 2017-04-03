@@ -47,7 +47,6 @@ import epmc.util.BitSet;
 import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
