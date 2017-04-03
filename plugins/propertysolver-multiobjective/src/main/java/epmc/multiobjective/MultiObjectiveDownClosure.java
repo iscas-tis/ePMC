@@ -310,6 +310,7 @@ final class MultiObjectiveDownClosure {
         assert current.getType().getContext() == contextValue;
         assert current.size() == dimension;
         assert current.getType().getEntryType() == TypeWeight.get(contextValue);
+        assert elements.size() > 0;
         Value zero = TypeWeight.get(contextValue).getZero();
         Value one = TypeWeight.get(contextValue).getOne();
         ConstraintSolver problem = contextSolver.newProblem();
