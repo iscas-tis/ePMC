@@ -45,6 +45,8 @@ public final class PropertyEdgeTransientValue implements PropertyEdge {
 
 	@Override
 	public Value get(int successor) throws EPMCException {
+		assert successor >= 0;
+		assert successor < explorer.getNumSuccessors();
 		return explorer.getSuccessorNode(successor).getValue(varNr);
 	}
 
