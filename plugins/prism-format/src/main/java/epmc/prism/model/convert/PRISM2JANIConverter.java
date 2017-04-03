@@ -219,7 +219,6 @@ public final class PRISM2JANIConverter {
 		convertPlayers();
     	
     	modelJANI.setProperties(buildProperties());
-
     	return modelJANI;
 	}
 
@@ -364,7 +363,7 @@ public final class PRISM2JANIConverter {
 		if (ExpressionFilter.isFilter(expression)) {
 			list.add(expression);
 		} else {
-			if (expression instanceof ExpressionQuantifier
+			if (ExpressionQuantifier.isQuantifier(expression)
 					&& ((ExpressionQuantifier) expression).getCompareType().isIs()) {
 				list.add(new ExpressionFilter.Builder()
 						.setFilterType(FilterType.MIN)
