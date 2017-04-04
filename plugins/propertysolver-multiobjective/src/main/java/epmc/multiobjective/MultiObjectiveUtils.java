@@ -185,22 +185,25 @@ final class MultiObjectiveUtils {
             for (int index = 0; index < propWeightsTotalSize; index++) {
             	propWeights.set(0, index);
             }
+            for (int i = 0; i < iterResult.size(); i++) {
+            	iterResult.set(0, i);
+            }
             propWeights.set(1, prop);
             weightedCombinations = chosenCombinationsToWeighted(rewards, choice, propWeights);
             weightedRewards = rewardsToWeighted(rewards, propWeights);
             GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveSched = new GraphSolverObjectiveExplicitMultiObjectiveScheduled();
             objectiveSched.setGraph(graph);
             // ??
-            iterResult = useNative
-                    ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
-                    : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
+//            iterResult = useNative
+  //                  ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
+    //                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
             objectiveSched.setValues(iterResult);
             objectiveSched.setScheduler(scheduler);
             objectiveSched.setStopStateRewards(weightedCombinations);
             objectiveSched.setTransitionRewards(weightedRewards);
             configuration.setObjective(objectiveSched);
             configuration.solve();
-            iterResult = objective.getResult();
+//            iterResult = objective.getResult();
             iterResult.get(initValue, iterInit);
             q.set(initValue, prop);
         }
