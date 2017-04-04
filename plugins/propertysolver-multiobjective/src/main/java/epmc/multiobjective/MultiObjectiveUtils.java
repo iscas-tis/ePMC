@@ -181,10 +181,6 @@ final class MultiObjectiveUtils {
         Value initValue = newValueWeight(contextValue);
         ValueArrayAlgebra propWeights = newValueArrayWeight(contextValue, numAutomata);
         for (int prop = 0; prop < numAutomata; prop++) {
-        	int iterSize = iterResult.size();
-        	for (int index = 0; index < iterSize; index++) {
-        		iterResult.set(0, index);
-        	}
             int propWeightsTotalSize = propWeights.getTotalSize();
             for (int index = 0; index < propWeightsTotalSize; index++) {
             	propWeights.set(0, index);
@@ -194,6 +190,10 @@ final class MultiObjectiveUtils {
             weightedRewards = rewardsToWeighted(rewards, propWeights);
             GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveSched = new GraphSolverObjectiveExplicitMultiObjectiveScheduled();
             objectiveSched.setGraph(graph);
+            // ??
+            iterResult = useNative
+                    ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
+                    : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
             objectiveSched.setValues(iterResult);
             objectiveSched.setScheduler(scheduler);
             objectiveSched.setStopStateRewards(weightedCombinations);
