@@ -97,7 +97,7 @@ final class MultiObjectiveUtils {
                     throws EPMCException {
         assert property != null;
         ContextValue contextValue = modelChecker.getModel().getContextValue();
-        Value numMinValue = null;
+        ValueAlgebra numMinValue = null;
         if (isNumericalQuery(property)) {
         	ExpressionQuantifier propOp1 = (ExpressionQuantifier) property.getOperand1();
             Expression quantified = propOp1.getQuantified();
@@ -109,7 +109,7 @@ final class MultiObjectiveUtils {
                 		.setQuantified(quantified)
                 		.build();
                 GraphExplicit mcGraph = modelChecker.getLowLevel();
-                numMinValue = modelChecker.check(minQ, mcGraph.newInitialStateSet()).getSomeValue();
+                numMinValue = (ValueAlgebra) modelChecker.check(minQ, mcGraph.newInitialStateSet()).getSomeValue();
             } else if (modelChecker instanceof ModelChecker) {
                 ModelChecker modelCheckerExplicit = modelChecker;
                 // TODO should be replaced by GraphSolver
