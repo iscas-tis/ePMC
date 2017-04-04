@@ -196,6 +196,13 @@ final class MultiObjectiveDownClosure {
                 separating.set(smallValue, 0);
             }
         }
+        // TODO HACK
+        for (int index = 0; index < separating.size(); index++) {
+            separating.set(1,  index);        	
+        }
+        /*
+        separating.set(1,  1);
+        */
         normalise(separating);
         return separating;
     }
