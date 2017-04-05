@@ -81,6 +81,9 @@ final class MultiObjectiveDownClosure {
         Value one = TypeWeight.get(contextValue).getOne();
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
+        ValueAlgebra almostZero = TypeReal.get(contextValue).newValue();
+        // TODO do this in a somewhat nicer way
+        almostZero.set("0.00001");
         for (int i = 0; i < dimension; i++) {
             wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
         }
@@ -122,7 +125,7 @@ final class MultiObjectiveDownClosure {
             problemVariables = new int[1];
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[dim];
-            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, zero);
+            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, almostZero);
         }
         
         problemWeights = newValueArrayWeight(dimension);
