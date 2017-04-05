@@ -85,7 +85,7 @@ final class MultiObjectiveDownClosure {
             wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
         }
         int dLpVar = problem.addVariable("d", TypeWeight.get(contextValue));
-        int vLpVar = problem.addVariable("v", TypeWeight.get(contextValue));
+        int vLpVar = problem.addVariable("v", TypeWeight.get(contextValue), TypeReal.get(contextValue).getNegInf(), TypeReal.get(contextValue).getPosInf());
         
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -150,7 +150,7 @@ final class MultiObjectiveDownClosure {
         problem.setDirection(Direction.MAX);
         if (!problem.solve().isSat()) {
             problem.close();
-            return null;                
+            return null;
         }
         ValueArray solverResult = problem.getResultVariablesValuesSingleType();
         solverResult.get(entry, dLpVar);
