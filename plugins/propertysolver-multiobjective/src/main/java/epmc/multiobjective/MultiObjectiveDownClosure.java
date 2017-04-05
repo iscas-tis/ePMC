@@ -232,13 +232,15 @@ final class MultiObjectiveDownClosure {
         assert current.getType().getEntryType() == TypeWeight.get(contextValue);
         Value zero = TypeWeight.get(contextValue).getZero();
         Value one = TypeWeight.get(contextValue).getOne();
+        Value negInf = TypeWeight.get(contextValue).getNegInf();
+        Value posInf = TypeWeight.get(contextValue).getPosInf();
         ConstraintSolver problem = contextSolver.newProblem();
 
         int[] wLpVars = new int[elements.size() + 1];
         for (int i = 0; i < elements.size(); i++) {
             wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
         }
-        int dLpVar = problem.addVariable("d", TypeWeight.get(contextValue));
+        int dLpVar = problem.addVariable("d", TypeWeight.get(contextValue), negInf, posInf);
         ValueAlgebra entry = newValueWeight();        
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -293,6 +295,7 @@ final class MultiObjectiveDownClosure {
         problemVariables[0] = dLpVar;
         problem.setObjective(problemWeights, problemVariables);
         problem.setDirection(Direction.MAX);
+        System.out.println(problem);
         if (!problem.solve().isSat()) {
             problem.close();
             return;
