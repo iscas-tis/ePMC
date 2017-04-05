@@ -295,7 +295,6 @@ final class MultiObjectiveDownClosure {
         problemVariables[0] = dLpVar;
         problem.setObjective(problemWeights, problemVariables);
         problem.setDirection(Direction.MAX);
-        System.out.println(problem);
         if (!problem.solve().isSat()) {
             problem.close();
             return;
