@@ -126,7 +126,8 @@ final class MultiObjectiveUtils {
                 solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
 //                System.out.println(numMinValue);
                 // TODO hack
-                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
+//                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
+                numMinValue.set(-1000);
             } else {
                 assert false;
             }
