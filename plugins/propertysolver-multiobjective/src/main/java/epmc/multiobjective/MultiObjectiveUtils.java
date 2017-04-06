@@ -123,7 +123,7 @@ final class MultiObjectiveUtils {
                     edgeProp = new EdgePropertyApply(mcGraph, contextValue.getOperator(OperatorAddInverse.IDENTIFIER), edgeProp);
                 }
                 numMinValue = newValueWeight(contextValue);
-                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
+//                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
 //                System.out.println(numMinValue);
                 // TODO hack
 //                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
