@@ -333,10 +333,12 @@ final class MultiObjectiveDownClosure {
         ValueArray solverResult = problem.getResultVariablesValuesSingleType();
         Value opt = problem.getResultObjectiveValue();
         solverResult.get(entry, dLpVar);
+        /*
         if (entry.isZero()) {
             problem.close();
             return;
         }
+        */
         ValueArrayAlgebra result = newValueArrayWeight(dimension);
         for (int dim = 0; dim < dimension; dim++) {
             solverResult.get(entry, wLpVars[dim]);
