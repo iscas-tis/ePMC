@@ -33,7 +33,7 @@ import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit {
+public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
@@ -81,7 +81,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
             }
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
             if (!expressionOperator.getOperator().getIdentifier().equals(OperatorIte.IDENTIFIER)) {
                 return false;
             }
@@ -170,4 +170,16 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     public Value getResultValue() {
         return result;
     }
+
+	@Override
+	public boolean evaluateBoolean(Value... values) throws EPMCException {
+        for (Value variable : values) {
+            assert variable != null;
+        }
+        if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean(values)) {
+        	return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean(values);
+        } else {
+        	return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean(values);
+        }
+	}
 }
