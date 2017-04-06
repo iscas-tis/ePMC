@@ -44,7 +44,7 @@ final class MultiObjectiveDownClosure {
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
     private final List<IterationResult> elements = new ArrayList<>();
-    private final static String SMALL_VALUE = "1E-4";
+    private final static String SMALL_VALUE = "1E-7";
     
     MultiObjectiveDownClosure(ContextValue contextValue, int dimension) {
         assert contextValue != null;
@@ -327,8 +327,6 @@ final class MultiObjectiveDownClosure {
         problem.setObjective(problemWeights, problemVariables);
         problem.setDirection(Direction.MAX);
         if (!problem.solve().isSat()) {
-        	System.out.println("ASDFDSF");
-        	System.out.println(problem);
             problem.close();
             return;
         }
