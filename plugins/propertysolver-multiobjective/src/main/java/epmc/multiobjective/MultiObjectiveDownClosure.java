@@ -73,17 +73,48 @@ final class MultiObjectiveDownClosure {
             return findSeparatingNonEmptyEntries(outside, numerical);
         }
     }
+
+    private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
+    		boolean numerical) throws EPMCException {
+    	assert outside != null;
+        ValueAlgebra zero = TypeWeight.get(contextValue).getZero();
+    	ValueAlgebra lowerBound = TypeWeight.get(contextValue).newValue();
+    	lowerBound.set(zero);
+    	ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
+    	if (unrestrictedResult == null) {
+    		return null;
+    	}
+    	lowerBound.set("1E-8");
+    	ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
+    	if (restrictedResult != null) {
+    		return restrictedResult;
+    	}
+    	ValueAlgebra entry = TypeWeight.get(contextValue).newValue();
+    	ValueAlgebra sum = TypeWeight.get(contextValue).newValue();
+    	for (int i = 0; i < unrestrictedResult.size(); i++) {
+    		unrestrictedResult.get(entry, i);
+    		if (entry.isZero()) {
+    			unrestrictedResult.set(lowerBound, i);
+    			sum.add(sum, lowerBound);
+    		} else {
+    			sum.add(sum, entry);
+    		}
+    	}
+    	for (int i = 0; i < unrestrictedResult.size(); i++) {
+    		unrestrictedResult.get(entry, i);
+    		entry.divide(entry, sum);
+    		unrestrictedResult.set(entry, i);
+    	}
+    	return unrestrictedResult;
+    }
     
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
-            boolean numerical)
+            boolean numerical, Value lowerBound)
             throws EPMCException {
         Value zero = TypeWeight.get(contextValue).getZero();
         Value one = TypeWeight.get(contextValue).getOne();
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
-        ValueAlgebra almostZero = TypeReal.get(contextValue).newValue();
-        // TODO do this in a somewhat nicer way
-        almostZero.set("0.00001");
         for (int i = 0; i < dimension; i++) {
             wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
         }
@@ -125,7 +156,7 @@ final class MultiObjectiveDownClosure {
             problemVariables = new int[1];
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[dim];
-            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, almostZero);
+            problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, lowerBound);
         }
         
         problemWeights = newValueArrayWeight(dimension);
@@ -296,6 +327,8 @@ final class MultiObjectiveDownClosure {
         problem.setObjective(problemWeights, problemVariables);
         problem.setDirection(Direction.MAX);
         if (!problem.solve().isSat()) {
+        	System.out.println("ASDFDSF");
+        	System.out.println(problem);
             problem.close();
             return;
         }
