@@ -133,7 +133,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
     		} else if (model instanceof ModelJANI) {
     			jani = (ModelJANI) model;
     		} else {
-                ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Unsupported model", model.getClass().getSimpleName());
+                ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNSUPPORTED_MODEL, model.getClass().getSimpleName());
     		}
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_CREATION, modelName);
         	JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);

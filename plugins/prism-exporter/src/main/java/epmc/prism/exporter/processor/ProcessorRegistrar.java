@@ -140,8 +140,6 @@ import epmc.value.ContextValue;
  */
 public class ProcessorRegistrar {
 	
-	private static final String UNKNOWN_PROCESSOR = "No converter found for";
-	
 	private static ContextValue contextValue = null;
 	
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
@@ -193,14 +191,15 @@ public class ProcessorRegistrar {
 			processor.setContextValue(contextValue);
 			processor.setElement(JANIComponent);
 		} else {
-			processorClass = extendedProcessors.get(JANIComponent.getClass());
-			if (processorClass != null) {
-				processor = Util.getInstance(processorClass);
+			Class<? extends JANI2PRISMProcessorExtended> extendedProcessorClass = extendedProcessors.get(JANIComponent.getClass());
+			if (extendedProcessorClass != null) {
+				processor = Util.getInstance(extendedProcessorClass);
 				processor.setContextValue(contextValue);
 				processor.setElement(JANIComponent);
-				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, processor.getUnsupportedFeature().toArray());
+				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
+						((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature().toArray());
 			} else {
-				ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
+				ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
 			}
 		}
 		

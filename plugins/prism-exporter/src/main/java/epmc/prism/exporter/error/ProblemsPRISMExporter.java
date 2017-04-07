@@ -36,8 +36,24 @@ public final class ProblemsPRISMExporter {
     /** Unaccessible PRISM file name. */
     public final static Problem PRISM_EXPORTER_UNACCESSIBLE_FILENAME = newProblem("prism-exporter-unaccessible-filename");
     /** The input model can not exported as PRISM model. */ 
-    public final static Problem PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE = newProblem("prism-exporter-unsupported-input-feature");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE = newProblem("prism-exporter-unsupported-feature");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR = newProblem("prism-exporter-unsupported-feature-unknown-operator");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE = newProblem("prism-exporter-unsupported-feature-transient-variable-for-normal-variable");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_MULTIPLE_LOCATIONS = newProblem("prism-exporter-unsupported-feature-multiple-locations");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_AUTOMATON_INPUT_ENABLED = newProblem("prism-exporter-unsupported-feature-automaton-input-enabled");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNSUPPORTED_MODEL = newProblem("prism-exporter-unsupported-feature-unsupported-model");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA = newProblem("prism-exporter-unsupported-feature-variable-defined-assigned-multiple-automata");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS = newProblem("prism-exporter-unsupported-feature-transient-variable-different-expression");
+    /** Errors in the input model*/
+    public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION = newProblem("prism-exporter-error-undefined-used-action");
+    public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_CONSTANT = newProblem("prism-exporter-error-undefined-used-constant");
+    public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE = newProblem("prism-exporter-error-undefined-used-variable");
+    public final static Problem PRISM_EXPORTER_ERROR_CONSTANT_DEFINED_TWICE = newProblem("prism-exporter-error-constant-defined-twice");
+    public final static Problem PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE = newProblem("prism-exporter-error-variable-defined-twice");
+    public final static Problem PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("prism-exporter-error-unknown-processor");
+    public final static Problem PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED = newProblem("prism-exporter-error-extended-syntax-required");
     
+   
     
 	/**
 	 * Create new problem object using plugin resource file.

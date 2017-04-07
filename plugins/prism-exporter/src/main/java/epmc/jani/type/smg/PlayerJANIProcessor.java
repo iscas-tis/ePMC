@@ -27,6 +27,7 @@ import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.ModelJANIProcessor;
+import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -85,9 +86,8 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	public List<String> getUnsupportedFeature() {
 		assert player != null;
 		
-		LinkedList<String> ll = new LinkedList<>();
-		ll.add("player definition");
-		ll.add(player.getName());
+		List<String> ll = new LinkedList<>();
+		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_PLAYER_DEFINITION);
 		return ll;
 	}
 	

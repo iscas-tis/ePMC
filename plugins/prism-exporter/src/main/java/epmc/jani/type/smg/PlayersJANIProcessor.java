@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.error.EPMCException;
+import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -60,14 +61,8 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 	public List<String> getUnsupportedFeature() {
 		assert players != null;
 		
-		LinkedList<String> ll = new LinkedList<>();
-		if (players.size() > 0) {
-			ll.add("player definition");
-			ll.add(players.get(0).getName());
-		} else {
-			ll.add("");
-			ll.add("");
-		}
+		List<String> ll = new LinkedList<>();
+		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_PLAYER_DEFINITION);
 		return ll;
 	}
 	

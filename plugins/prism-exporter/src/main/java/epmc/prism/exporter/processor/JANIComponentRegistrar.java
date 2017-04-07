@@ -86,7 +86,7 @@ public class JANIComponentRegistrar {
 	public static void registerConstant(Constant constant) throws EPMCException {
 		assert constant != null;
 
-		ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Constant declared twice:", constant.getName());
+		ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_CONSTANT_DEFINED_TWICE, constant.getName());
 		if (!constantNames.containsKey(constant)) {
 			String name;
 			name = constant.getName();
@@ -110,7 +110,7 @@ public class JANIComponentRegistrar {
 	public static void registerVariable(Variable variable) throws EPMCException {
 		assert variable != null;
 
-		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Variable declared twice:", variable.getName());
+		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE, variable.getName());
 		if (!variableNames.containsKey(variable)) {
 			variableByName.put(variable.getName(), variable);
 			String name;
@@ -208,8 +208,7 @@ public class JANIComponentRegistrar {
 		assert reward.isTransient();
 		
 		ensure(variableNames.containsKey(reward), 
-				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
-				"Variable used but not declared:", 
+				ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE, 
 				reward.getName());
 		
 		Map<Action, Expression> mapAE = rewardTransitionExpressions.get(reward);
@@ -222,8 +221,7 @@ public class JANIComponentRegistrar {
 			mapAE.put(action, expression);
 		} else {
 			ensure(expression.equals(oldAssgn), 
-					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
-					"Transient variable with different expressions:", 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS, 
 					getVariableNameByVariable(reward));
 		}
 	}
@@ -241,7 +239,7 @@ public class JANIComponentRegistrar {
 		assert reward.isTransient();
 		
 		ensure(variableNames.containsKey(reward), 
-				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
+				ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE, 
 				"Variable used but not declared:", 
 				reward.getName());
 		
@@ -250,8 +248,7 @@ public class JANIComponentRegistrar {
 			rewardStateExpressions.put(reward, expression);
 		} else {
 			ensure(expression.equals(oldExp), 
-					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
-					"Transient variable with different expressions:", 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS, 
 					getVariableNameByVariable(reward));
 		}
 	}
@@ -276,8 +273,7 @@ public class JANIComponentRegistrar {
 			variablesAssignedByAutomaton.put(variable, automaton);
 		} else {
 			ensure(automaton.equals(oldAut), 
-					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
-					"Variable assigned by different components:", 
+					ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA, 
 					getVariableNameByVariable(variable));
 		}
 		
@@ -370,7 +366,7 @@ public class JANIComponentRegistrar {
 	 */
 	public static String getActionName(Action action) throws EPMCException {
 		assert action != null;
-		ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Action used but not declared:", action.getName());
+		ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION, action.getName());
 
 		return actionNames.get(action);
 	}
