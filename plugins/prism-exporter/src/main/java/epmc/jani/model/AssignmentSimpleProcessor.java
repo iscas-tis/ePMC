@@ -77,8 +77,7 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 		assert assignment != null;
 		
 		ensure(!ProcessorRegistrar.getProcessor(assignment.getValue()).usesTransientVariables(), 
-				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, 
-				"non-transient variable is computed from a transient variable", 
+				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE, 
 				assignment.getRef().getName());
 	}
 	

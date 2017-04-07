@@ -235,7 +235,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		case OperatorCos.IDENTIFIER:
     		case OperatorSin.IDENTIFIER:
     		case OperatorTan.IDENTIFIER:
-    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_INPUT_FEATURE, "Unknown operator", operator.getIdentifier());
+    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operator.getIdentifier());
     		default:
     			operatorSymbol = operator.getIdentifier();
     			break;
