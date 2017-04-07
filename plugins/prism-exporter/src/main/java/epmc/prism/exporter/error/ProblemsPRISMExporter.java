@@ -44,6 +44,10 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNSUPPORTED_MODEL = newProblem("prism-exporter-unsupported-feature-unsupported-model");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA = newProblem("prism-exporter-unsupported-feature-variable-defined-assigned-multiple-automata");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS = newProblem("prism-exporter-unsupported-feature-transient-variable-different-expression");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING = newProblem("prism-exporter-unsupported-feature-action-hiding");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_RENAMING = newProblem("prism-exporter-unsupported-feature-action-renaming");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED = newProblem("prism-exporter-unsupported-feature-action-not-synchronized");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION = newProblem("prism-exporter-unsupported-feature-synchronization-on-hidden-action");
     /** Errors in the input model*/
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION = newProblem("prism-exporter-error-undefined-used-action");
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_CONSTANT = newProblem("prism-exporter-error-undefined-used-constant");
