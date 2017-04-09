@@ -39,14 +39,14 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 
-final class MultiObjectiveDownClosure {
+final class DownClosure {
     private final ContextValue contextValue;
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
     private final List<IterationResult> elements = new ArrayList<>();
     private final static String SMALL_VALUE = "1E-7";
     
-    MultiObjectiveDownClosure(ContextValue contextValue, int dimension) {
+    DownClosure(ContextValue contextValue, int dimension) {
         assert contextValue != null;
         assert dimension >= 0;
         this.contextValue = contextValue;

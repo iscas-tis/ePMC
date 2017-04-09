@@ -202,13 +202,13 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	private StateMap mainLoop(Product product, Value subtractNumericalFrom) throws EPMCException {
     	assert product != null;
         GraphExplicit iterGraph = product.getGraph();
-        MultiObjectiveIterationRewards combinations = product.getRewards();
+        IterationRewards combinations = product.getRewards();
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
         ContextValue context = bounds.getType().getContext();
 //        bounds.set(0, 0);
   //      System.out.println(bounds);
         int numAutomata = product.getNumAutomata();
-        MultiObjectiveDownClosure down = new MultiObjectiveDownClosure(getContextValue(), numAutomata);
+        DownClosure down = new DownClosure(getContextValue(), numAutomata);
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
@@ -239,7 +239,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	// TODO currently just ad-hoc solution for robot case study
-	private void computeRandomizedScheduler(Product product, MultiObjectiveDownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
+	private void computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
 		assert product != null;
 		assert down != null;
 		assert bounds != null;

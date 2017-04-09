@@ -123,7 +123,7 @@ final class ProductBuilder {
         builder.setForNative(useNative);
         builder.build();
         GraphExplicit iterGraph = builder.getOutputGraph();
-        MultiObjectiveIterationRewards rewards = computeRewards(builder);
+        IterationRewards rewards = computeRewards(builder);
         return new Product(iterGraph, rewards, numAutomata);
 	}
 	
@@ -198,7 +198,7 @@ final class ProductBuilder {
         return prodWrapper;
 	}
 	
-    private MultiObjectiveIterationRewards computeRewards(GraphBuilderExplicit builder)
+    private IterationRewards computeRewards(GraphBuilderExplicit builder)
     		throws EPMCException {
     	GraphExplicit prodWrapper = builder.getInputGraph();
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
@@ -228,7 +228,7 @@ final class ProductBuilder {
         Map<BitSet,BitSet> resultMap = computeCombinations(builder);
         GraphExplicitSparseAlternate iterGraph = (GraphExplicitSparseAlternate) builder.getOutputGraph();
         
-        MultiObjectiveIterationRewards result = new MultiObjectiveIterationRewards(iterGraph, numAutomata);
+        IterationRewards result = new IterationRewards(iterGraph, numAutomata);
         int numStates = iterGraph.computeNumStates();
         BitSet empty = UtilBitSet.newBitSetUnbounded();
         for (int iterState = 0; iterState < numStates; iterState++) {
