@@ -31,11 +31,15 @@ import epmc.multiobjective.graphsolver.GraphSolverIterativeMultiObjectiveSchedul
 import epmc.multiobjective.graphsolver.GraphSolverIterativeMultiObjectiveWeightedJava;
 import epmc.multiobjective.graphsolver.GraphSolverIterativeMultiObjectiveWeightedJavaDouble;
 import epmc.multiobjective.graphsolver.GraphSolverIterativeMultiObjectiveWeightedNative;
+import epmc.options.Category;
+import epmc.options.OptionTypeRealNonnegative;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationMultiObjective implements AfterOptionsCreation {
 	private final static String IDENTIFIER = "after-options-multi-objective";
+    private final static String MIN_INCREASE = "1E-7";
+    private final static String MIN_NONZERO = "1E-8";
 
 	@Override
 	public String getIdentifier() {
@@ -55,5 +59,23 @@ public final class AfterOptionsCreationMultiObjective implements AfterOptionsCre
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveScheduledJava.IDENTIFIER, GraphSolverIterativeMultiObjectiveScheduledJava.class);
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveScheduledJavaDouble.IDENTIFIER, GraphSolverIterativeMultiObjectiveScheduledJavaDouble.class);
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveScheduledNative.IDENTIFIER, GraphSolverIterativeMultiObjectiveScheduledNative.class);
+        Category category = options.addCategory()
+        		.setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
+        		.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_CATEGORY)
+        		.build();
+        options.addOption().setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
+        	.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE)
+        	.setCategory(category)
+        	.setCommandLine().setGui().setWeb()
+        	.setType(OptionTypeRealNonnegative.getInstance())
+        	.setDefault(MIN_INCREASE)
+        	.build();
+        options.addOption().setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
+        	.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT)
+        	.setCategory(category)
+        	.setCommandLine().setGui().setWeb()
+        	.setType(OptionTypeRealNonnegative.getInstance())
+        	.setDefault(MIN_NONZERO)
+        	.build();
 	}
 }

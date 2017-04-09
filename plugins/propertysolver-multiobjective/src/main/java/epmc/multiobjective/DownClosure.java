@@ -29,6 +29,7 @@ import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.error.EPMCException;
+import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeReal;
@@ -44,7 +45,6 @@ final class DownClosure {
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
     private final List<IterationResult> elements = new ArrayList<>();
-    private final static String SMALL_VALUE = "1E-7";
     
     DownClosure(ContextValue contextValue, int dimension) {
         assert contextValue != null;
@@ -84,7 +84,7 @@ final class DownClosure {
     	if (unrestrictedResult == null) {
     		return null;
     	}
-    	lowerBound.set("1E-8");
+    	lowerBound.set(getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
     	ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
     	if (restrictedResult != null) {
     		return restrictedResult;
@@ -172,7 +172,8 @@ final class DownClosure {
             problemVariables = new int[1];
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[0];
-            entry.set(SMALL_VALUE);
+            String minIncrease = getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
+            entry.set(minIncrease);
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
         }
         
@@ -222,9 +223,10 @@ final class DownClosure {
                 separating.set(1, i);
             }
         }
-        ValueAlgebra smallValue = TypeWeight.get(contextValue).newValue();
-        smallValue.set(SMALL_VALUE);
         if (numerical) {
+            ValueAlgebra smallValue = TypeWeight.get(contextValue).newValue();
+            String minIncrease = getContextValue().getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
+            smallValue.set(minIncrease);
             separating.get(entry, 0);
             if (entry.isZero()) {
                 separating.set(smallValue, 0);
@@ -426,6 +428,10 @@ final class DownClosure {
     private ValueArrayAlgebra newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
         return UtilValue.newArray(typeArray, size);
+    }
+    
+    private Options getOptions() {
+    	return getContextValue().getOptions();
     }
     
     private ContextValue getContextValue() {
