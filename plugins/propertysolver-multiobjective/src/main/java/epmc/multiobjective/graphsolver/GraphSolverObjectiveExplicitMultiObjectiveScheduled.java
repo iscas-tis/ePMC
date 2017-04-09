@@ -28,7 +28,6 @@ import epmc.value.ValueArrayAlgebra;
 
 public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
-    private boolean computeScheduler;
     private boolean min;
     private ValueArrayAlgebra stopStateRewards;
     private Value scheduler;
@@ -36,14 +35,6 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     private ValueArrayAlgebra values;
 	private ValueArrayAlgebra result;
 
-    public void setComputeScheduler(boolean computeScheduler) {
-        this.computeScheduler = computeScheduler;
-    }
-    
-    public boolean isComputeScheduler() {
-        return computeScheduler;
-    }
-    
     void setMin(boolean min) {
         this.min = min;
     }
