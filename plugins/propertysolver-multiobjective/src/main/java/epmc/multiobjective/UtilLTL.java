@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
 
 public final class UtilLTL {
