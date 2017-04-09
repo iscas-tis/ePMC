@@ -144,12 +144,12 @@ public final class CheckExplicitTest {
      * @throws EPMCException thrown in case problem occurs
      */
     private final static Options preparePRISMOptions() throws EPMCException {
-//	    try {
-//			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	    try {
+			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, LogType.TRANSLATE, ModelPRISM.IDENTIFIER);
 //        options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
@@ -172,6 +172,20 @@ public final class CheckExplicitTest {
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
+        
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+    }
+
+    @Test
+    public void testPRISMClusterDTMC3() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism", System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prop");
         
         ModelCheckerResults result = computeResults(model);
         int i = 0;
@@ -301,7 +315,7 @@ public final class CheckExplicitTest {
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=k \"finished\" ]"), 2.0E-8);
         assertEquals("0.0000000000000000", result.get("Pmax=? [ F<=k \"finished\" ]"), 2.0E-8);
         assertEquals("191.99999993151675", result.get("R{\"steps\"}min=? [ F \"finished\" ]"), 2.0E-8);
-        assertEquals("362.99999985769330", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
+        assertEquals("362.99999988911920", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
 
     @Test
@@ -316,13 +330,13 @@ public final class CheckExplicitTest {
         
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
-        assertEquals("0.2943502615405403", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
-        assertEquals("0.2943502601795070", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
-        assertEquals("0.3636446930274845", result.get("Pmax=? [ F \"finished\"&!\"agree\" ]"), 2.0E-8);
+        assertEquals("0.2943502833478910", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
+        assertEquals("0.2943502833478910", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
+        assertEquals("0.3636447199694461", result.get("Pmax=? [ F \"finished\"&!\"agree\" ]"), 2.0E-8);
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=k \"finished\" ]"), 2.0E-8);
         assertEquals("0.0000000000000000", result.get("Pmax=? [ F<=k \"finished\" ]"), 2.0E-8);
-        assertEquals("431.99999984048554", result.get("R{\"steps\"}min=? [ F \"finished\" ]"), 2.0E-8);
-        assertEquals("866.99999965742810", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
+        assertEquals("431.99999989136097", result.get("R{\"steps\"}min=? [ F \"finished\" ]"), 2.0E-8);
+        assertEquals("866.99999972962950", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
     
     //PRISM fails in generating the results
@@ -1318,6 +1332,8 @@ public final class CheckExplicitTest {
         assertEquals("", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    //No support for S yet
+    @Ignore
     @Test
     public void testPRISM_KNACL() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
