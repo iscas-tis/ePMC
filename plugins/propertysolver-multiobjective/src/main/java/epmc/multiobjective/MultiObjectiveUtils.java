@@ -150,7 +150,7 @@ final class MultiObjectiveUtils {
 
     static IterationResult iterate(ValueArrayAlgebra weights,
             GraphExplicit graph,
-            MultiObjectiveIterationRewards rewards)
+            IterationRewards rewards)
                     throws EPMCException {
         assert weights != null;
         assert graph != null;
@@ -223,7 +223,7 @@ final class MultiObjectiveUtils {
 	}
 
 	private static ValueArrayAlgebra rewardsToWeighted(
-            MultiObjectiveIterationRewards rewards, ValueArrayAlgebra weights) throws EPMCException {
+            IterationRewards rewards, ValueArrayAlgebra weights) throws EPMCException {
         assert rewards != null;
         assert weights != null;
         assert weights.size() == rewards.getNumObjectives();
@@ -253,7 +253,7 @@ final class MultiObjectiveUtils {
         return result;
     }
 
-    private static ValueArrayAlgebra combinationsToWeighted(MultiObjectiveIterationRewards combinations,
+    private static ValueArrayAlgebra combinationsToWeighted(IterationRewards combinations,
             int[] choice, ValueArrayAlgebra weights) throws EPMCException {
         assert combinations != null;
         assert weights != null;
@@ -297,7 +297,7 @@ final class MultiObjectiveUtils {
         return result;
     }
 
-    private static ValueArrayAlgebra chosenCombinationsToWeighted(MultiObjectiveIterationRewards combinations,
+    private static ValueArrayAlgebra chosenCombinationsToWeighted(IterationRewards combinations,
             int[] choice, ValueArrayAlgebra weights) throws EPMCException {
         assert combinations != null;
         assert weights != null;

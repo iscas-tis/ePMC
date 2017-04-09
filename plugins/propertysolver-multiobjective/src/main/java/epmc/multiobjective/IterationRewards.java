@@ -33,7 +33,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArrayAlgebra;
 
-final class MultiObjectiveIterationRewards {
+final class IterationRewards {
     private final GraphExplicitSparseAlternate graph;
     private final int numProperties;
     private final BitSet combinations;
@@ -42,7 +42,7 @@ final class MultiObjectiveIterationRewards {
     private int currentState;
     private int currentCombination;
     
-    MultiObjectiveIterationRewards(GraphExplicitSparseAlternate graph, int numProperties) throws EPMCException {
+    IterationRewards(GraphExplicitSparseAlternate graph, int numProperties) throws EPMCException {
         assert graph != null;
         assert numProperties >= 0;
         this.combinations = UtilBitSet.newBitSetUnbounded();

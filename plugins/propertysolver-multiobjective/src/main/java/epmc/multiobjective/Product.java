@@ -24,10 +24,10 @@ import epmc.graph.explicit.GraphExplicit;
 
 final class Product {
 	private final GraphExplicit graph;
-	private final MultiObjectiveIterationRewards rewards;
+	private final IterationRewards rewards;
 	private final int numAutomata;
 	
-	Product(GraphExplicit graph, MultiObjectiveIterationRewards rewards, int numAutomata) {
+	Product(GraphExplicit graph, IterationRewards rewards, int numAutomata) {
 		assert graph != null;
 		assert rewards != null;
 		this.graph = graph;
@@ -39,7 +39,7 @@ final class Product {
 		return graph;
 	}
 	
-	MultiObjectiveIterationRewards getRewards() {
+	IterationRewards getRewards() {
 		return rewards;
 	}
 	
