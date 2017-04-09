@@ -38,6 +38,7 @@ import epmc.graph.UtilGraph;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graph.explicit.NodeProperty;
+import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.EngineExplicit;
@@ -53,7 +54,6 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueArrayInteger;
 import epmc.value.ValueBoolean;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
@@ -247,7 +247,6 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
     	int numStates = modelGraph.computeNumStates();
     	int[] decisions = new int[numStates];
 		GraphExplicitSparseAlternate computationGraph = (GraphExplicitSparseAlternate) product.getGraph();
-		int[] stateBounds = computationGraph.getStateBoundsJava();
 		NodeProperty nodeProp = computationGraph.getNodeProperty(CommonProperties.NODE_MODEL);
 		assert nodeProp != null;
 		NodeProperty stateProp = computationGraph.getNodeProperty(CommonProperties.STATE);
@@ -261,17 +260,15 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 			if (schedProb.isZero()) {
 				continue;
 			}
-			ValueArrayInteger sched = down.get(schedNr).getScheduler();
+			SchedulerSimple sched = (SchedulerSimple) down.get(schedNr).getScheduler();
 			for (int node = 0; node < numNodes; node++) {
 				if (!stateProp.getBoolean(node)) {
 					continue;
 				}
 				int state = nodeProp.getInt(node);
-				int decision = sched.getInt(node);
+				int decision = sched.getDecision(node);
 				if (decision == -2) {
 					decision = 0;
-				} else {
-					decision = decision - stateBounds[node];
 				}
 				decisions[state] = decision;
 			}

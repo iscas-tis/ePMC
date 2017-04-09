@@ -38,14 +38,11 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
-import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueArrayInteger;
-import epmc.value.ValueContentIntArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
@@ -54,7 +51,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
-    private ValueArrayInteger scheduler;
+    private SchedulerSimpleMultiobjectiveJava scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -125,7 +122,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueArrayAlgebra cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
         ValueArrayAlgebra stopStateRewards = objectiveMultiObjectiveWeighted.getStopStateReward();
         ContextValue contextValue = origGraph.getContextValue();
-        scheduler = UtilValue.newArray(TypeInteger.get(contextValue).getTypeArray(), origGraph.computeNumStates());
+        scheduler = new SchedulerSimpleMultiobjectiveJava((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();
         if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
@@ -180,14 +177,14 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, Value scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         ContextValue contextValue = graph.getContextValue();
         TypeWeight typeWeight = TypeWeight.get(contextValue);
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
         ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT)
         		.asSparseNondetOnlyNondet()
@@ -257,14 +254,14 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, Value scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         ContextValue contextValue = graph.getContextValue();
         TypeWeight typeWeight = TypeWeight.get(contextValue);
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
         ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra objWeight = newValueWeight();

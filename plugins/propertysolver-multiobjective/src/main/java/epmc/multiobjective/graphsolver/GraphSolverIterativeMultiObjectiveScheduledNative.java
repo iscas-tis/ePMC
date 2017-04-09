@@ -71,7 +71,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private Value scheduler;
+    private SchedulerSimpleMultiobjectiveNative scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -101,7 +101,10 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
                 && TypeDouble.isDouble(typeWeight))) {
         	return false;
         }
-
+        GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
+        if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveNative)) {
+        	return false;
+        }
         return true;
     }
 
@@ -139,7 +142,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveMultiObjectiveScheduled = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
-        scheduler = objectiveMultiObjectiveScheduled.getScheduler();
+        scheduler = (SchedulerSimpleMultiobjectiveNative) objectiveMultiObjectiveScheduled.getScheduler();
         Value stopStateRewards = objectiveMultiObjectiveScheduled.getStopStateRewards();
         Value cumulativeTransitionRewards = objectiveMultiObjectiveScheduled.getTransitionRewards();
         inputValues = objectiveMultiObjectiveScheduled.getValues();
@@ -179,7 +182,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, Value scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveNative scheduler) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         ByteBuffer stateBounds = graph.getStateBoundsNative();
@@ -188,7 +191,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
         ByteBuffer stopRewardsMem = ValueContentMemory.getMemory(stopRewards);
-        ByteBuffer schedulerMem = ValueContentMemory.getMemory(scheduler);
+        ByteBuffer schedulerMem = scheduler.getDecisions();
         ByteBuffer transRewardsMem = ValueContentMemory.getMemory(transRewards);
 
         int code = IterationNative.double_mdp_multiobjectivescheduled_jacobi(
@@ -203,7 +206,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, Value scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveNative scheduler) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         ByteBuffer stateBounds = graph.getStateBoundsNative();
@@ -212,7 +215,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
         ByteBuffer stopRewardsMem = ValueContentMemory.getMemory(stopRewards);
-        ByteBuffer schedulerMem = ValueContentMemory.getMemory(scheduler);
+        ByteBuffer schedulerMem = scheduler.getDecisions();
         ByteBuffer transRewardsMem = ValueContentMemory.getMemory(transRewards);
 
         int code = IterationNative.double_mdp_multiobjectivescheduled_gaussseidel(relative, tolerance,

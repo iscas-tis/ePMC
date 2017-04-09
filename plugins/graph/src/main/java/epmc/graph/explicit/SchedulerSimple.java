@@ -21,6 +21,8 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
+import epmc.value.Type;
+import epmc.value.TypeInteger;
 
 /**
  * Simple scheduler.
@@ -89,5 +91,10 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
             }
         }
         return true;
+    }
+    
+    @Override
+    default Type getType() {
+    	return TypeInteger.get(getGraph().getContextValue());
     }
 }

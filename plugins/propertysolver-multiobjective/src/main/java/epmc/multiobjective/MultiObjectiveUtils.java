@@ -33,7 +33,7 @@ import epmc.graph.explicit.EdgePropertyApply;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.NodePropertyApply;
-import epmc.graph.explicit.StateSetExplicit;
+import epmc.graph.explicit.Scheduler;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.UtilGraphSolver;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
@@ -44,7 +44,6 @@ import epmc.propertysolver.PropertySolverExplicitReward;
 import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeWeight;
@@ -53,7 +52,6 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueArrayInteger;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -177,7 +175,7 @@ final class MultiObjectiveUtils {
         objective.setTransitionRewards(weightedRewards);
         configuration.setObjective(objective);
         configuration.solve();
-        ValueArrayInteger scheduler = objective.getScheduler();
+        Scheduler scheduler = objective.getScheduler();
         iterResult = objective.getResult();
         Value initValue = newValueWeight(contextValue);
         ValueArrayAlgebra propWeights = newValueArrayWeight(contextValue, numAutomata);

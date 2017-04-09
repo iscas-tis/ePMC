@@ -42,7 +42,6 @@ import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueContentDoubleArray;
-import epmc.value.ValueContentIntArray;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble implements GraphSolverExplicit {
 	@FunctionalInterface
@@ -56,7 +55,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private Value scheduler;
+    private SchedulerSimpleMultiobjectiveJava scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -103,6 +102,10 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         if (options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)) {
         	return false;
         }
+        GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
+        if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
+        	return false;
+        }
 
         return true;
     }
@@ -141,7 +144,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveMultiObjectiveScheduled = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
-        scheduler = objectiveMultiObjectiveScheduled.getScheduler();
+        scheduler = (SchedulerSimpleMultiobjectiveJava) objectiveMultiObjectiveScheduled.getScheduler();
         Value stopStateRewards = objectiveMultiObjectiveScheduled.getStopStateRewards();
         Value cumulativeTransitionRewards = objectiveMultiObjectiveScheduled.getTransitionRewards();
         inputValues = objectiveMultiObjectiveScheduled.getValues();
@@ -167,7 +170,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, Value scheduler) throws EPMCException {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
 		Diff diffOp = getDiff();
 		double[] values = ValueContentDoubleArray.getContent(valuesV);
 		Arrays.fill(values, 0.0);
@@ -176,7 +179,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         double weights[] = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
         		.asSparseNondetOnlyNondet()
         		.getContent());
@@ -219,12 +222,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             GraphExplicitSparseAlternate graph, Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, Value scheduler) throws EPMCException {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
 		Diff diffOp = getDiff();
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         double[] stopRewards = ValueContentDoubleArray.getContent(stopRewardsV);
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);

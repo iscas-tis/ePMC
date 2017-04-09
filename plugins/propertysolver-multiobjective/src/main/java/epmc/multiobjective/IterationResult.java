@@ -1,13 +1,13 @@
 package epmc.multiobjective;
 
+import epmc.graph.explicit.Scheduler;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueArrayInteger;
 
 final class IterationResult {
 	private final ValueArrayAlgebra q;
-	private final ValueArrayInteger scheduler;
+	private final Scheduler scheduler;
 	
-	IterationResult(ValueArrayAlgebra q, ValueArrayInteger scheduler) {
+	IterationResult(ValueArrayAlgebra q, Scheduler scheduler) {
 		assert q != null;
 		assert scheduler != null;
 		this.q = q;
@@ -18,7 +18,7 @@ final class IterationResult {
 		return q;
 	}
 	
-	ValueArrayInteger getScheduler() {
+	Scheduler getScheduler() {
 		return scheduler;
 	}
 	

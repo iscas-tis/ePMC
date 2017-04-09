@@ -39,14 +39,10 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
-import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentDoubleArray;
-import epmc.value.ValueContentIntArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implements GraphSolverExplicit {
 	@FunctionalInterface
@@ -60,7 +56,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private ValueArrayInteger scheduler;
+    private SchedulerSimpleMultiobjectiveJava scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -133,7 +129,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         Value cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
         Value stopStateRewards = objectiveMultiObjectiveWeighted.getStopStateReward();
         ContextValue contextValue = origGraph.getContextValue();
-        scheduler = UtilValue.newArray(TypeInteger.get(contextValue).getTypeArray(), origGraph.computeNumStates());
+        scheduler = new SchedulerSimpleMultiobjectiveJava((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();
         if (iterMethod == IterationMethod.JACOBI) {
@@ -157,7 +153,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
             GraphExplicitSparseAlternate graph, Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, Value scheduler) throws EPMCException {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         double[] stopRewards = ValueContentDoubleArray.getContent(stopRewardsV);
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);
@@ -166,7 +162,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
 		Diff diffOp = getDiff();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
@@ -226,12 +222,12 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
             IterationStopCriterion stopCriterion,
             double tolerance,
             Value valuesV,
-            Value scheduler) throws EPMCException {
+            SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         double[] stopRewards = ValueContentDoubleArray.getContent(stopRewardsV);
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);
