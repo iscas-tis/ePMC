@@ -20,9 +20,6 @@
 
 package epmc.prism.exporter.processor;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 
@@ -64,8 +61,4 @@ public interface JANI2PRISMProcessorStrict {
 	 * @throws EPMCException in case of problems in exploring the JANI model
 	 */
 	boolean usesTransientVariables() throws EPMCException;
-	
-	default List<String> getUnsupportedFeature() {
-		return new LinkedList<>();
-	}
 }

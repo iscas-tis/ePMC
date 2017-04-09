@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.error.EPMCException;
+import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -58,9 +59,8 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
 	
 	@Override
 	public List<String> getUnsupportedFeature() {
-		LinkedList<String> ll = new LinkedList<>();
-		ll.add("Semantic type");
-		ll.add(ModelExtensionSMG.IDENTIFIER);
+		List<String> ll = new LinkedList<>();
+		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_SMG);
 		return ll;
 	}
 	
