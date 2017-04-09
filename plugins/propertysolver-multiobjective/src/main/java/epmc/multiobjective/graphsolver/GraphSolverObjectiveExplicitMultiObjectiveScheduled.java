@@ -21,8 +21,8 @@
 package epmc.multiobjective.graphsolver;
 
 import epmc.graph.explicit.GraphExplicit;
+import epmc.graph.explicit.Scheduler;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
-import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 
@@ -30,7 +30,7 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     private GraphExplicit graph;
     private boolean min;
     private ValueArrayAlgebra stopStateRewards;
-    private Value scheduler;
+    private Scheduler scheduler;
     private ValueArrayAlgebra transitionRewards;
     private ValueArrayAlgebra values;
 	private ValueArrayAlgebra result;
@@ -51,11 +51,11 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
         return stopStateRewards;
     }
 
-    public void setScheduler(Value scheduler) {
+    public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
     
-    public Value getScheduler() {
+    public Scheduler getScheduler() {
         return scheduler;
     }
 

@@ -21,29 +21,20 @@
 package epmc.multiobjective.graphsolver;
 
 import epmc.graph.explicit.GraphExplicit;
+import epmc.graph.explicit.Scheduler;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueArrayInteger;
 
 public final class GraphSolverObjectiveExplicitMultiObjectiveWeighted implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
-    private boolean computeScheduler;
     private boolean min;
     private ValueArrayAlgebra stopStateRewards;
-    private ValueArrayInteger scheduler;
+    private Scheduler scheduler;
     private ValueArrayAlgebra transitionRewards;
     private ValueArrayAlgebra values;
 	private ValueArrayAlgebra result;
 
-    public void setComputeScheduler(boolean computeScheduler) {
-        this.computeScheduler = computeScheduler;
-    }
-    
-    public boolean isComputeScheduler() {
-        return computeScheduler;
-    }
-    
     void setMin(boolean min) {
         this.min = min;
     }
@@ -60,11 +51,11 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveWeighted implements
         return stopStateRewards;
     }
 
-    public void setScheduler(ValueArrayInteger scheduler) {
+    public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
     
-    public ValueArrayInteger getScheduler() {
+    public Scheduler getScheduler() {
         return scheduler;
     }
 

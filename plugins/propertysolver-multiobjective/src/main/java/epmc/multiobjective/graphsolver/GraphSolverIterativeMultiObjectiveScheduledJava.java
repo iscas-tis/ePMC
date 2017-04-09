@@ -41,7 +41,6 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueContentIntArray;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java";
@@ -50,7 +49,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
-    private Value scheduler;
+    private SchedulerSimpleMultiobjectiveJava scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -80,7 +79,10 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
                 && TypeDouble.isDouble(typeWeight)) {
         	return false;
         }
-
+        GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
+        if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
+        	return false;
+        }
         return true;
     }
 
@@ -118,7 +120,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveMultiObjectiveScheduled = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
-        scheduler = objectiveMultiObjectiveScheduled.getScheduler();
+        scheduler = (SchedulerSimpleMultiobjectiveJava) objectiveMultiObjectiveScheduled.getScheduler();
         ValueArrayAlgebra stopStateRewards = objectiveMultiObjectiveScheduled.getStopStateRewards();
         ValueArrayAlgebra cumulativeTransitionRewards = objectiveMultiObjectiveScheduled.getTransitionRewards();
         inputValues = objectiveMultiObjectiveScheduled.getValues();
@@ -174,13 +176,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, Value scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         ContextValue contextValue = graph.getContextValue();
         TypeWeight typeWeight = TypeWeight.get(contextValue);
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
@@ -234,13 +236,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, Value scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         ContextValue contextValue = graph.getContextValue();
         TypeWeight typeWeight = TypeWeight.get(contextValue);
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
+        int[] schedulerJava = scheduler.getDecisions();
         ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
