@@ -65,6 +65,9 @@ public interface PropertySolver {
      * @param forStates states for which the property shall be solved
      */
     void setForStates(StateSet forStates);
+
+    default void setComputeScheduler(boolean computeScheduler) {
+    }
     
     /**
      * Checks whether a property can be decided by this solver.
@@ -82,6 +85,10 @@ public interface PropertySolver {
      */
     boolean canHandle() throws EPMCException;
 
+    default boolean canComputeScheduler() throws EPMCException {
+    	return false;
+    }
+    
     /**
      * Obtain set of identifiers of graph properties required by this solver.
      * 

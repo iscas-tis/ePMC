@@ -20,8 +20,8 @@
 
 package epmc.multiobjective.graphsolver;
 
+import epmc.graph.Scheduler;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.graph.explicit.Scheduler;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;

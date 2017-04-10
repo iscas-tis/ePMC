@@ -18,7 +18,7 @@
 
 *****************************************************************************/
 
-package epmc.graph.explicit;
+package epmc.graph;
 
 /**
  * Interface to represent a scheduler.

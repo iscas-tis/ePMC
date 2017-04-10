@@ -2,8 +2,8 @@ package epmc.multiobjective.graphsolver;
 
 import java.util.Arrays;
 
+import epmc.graph.Scheduler;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
-import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 
 public final class SchedulerSimpleMultiobjectiveJava implements SchedulerSimple {

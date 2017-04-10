@@ -21,6 +21,7 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
+import epmc.graph.Scheduler;
 
 /**
  * Space-efficient implementation of a simple scheduler using Java arrays.

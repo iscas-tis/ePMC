@@ -78,4 +78,8 @@ public interface StateMap extends Closeable, Cloneable {
     }
 
     Value subsumeResult(StateSet initialStates) throws EPMCException;
+    
+    default Scheduler getScheduler() {
+    	return null;
+    }
 }
