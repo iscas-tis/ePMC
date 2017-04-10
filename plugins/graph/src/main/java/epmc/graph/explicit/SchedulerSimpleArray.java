@@ -22,24 +22,16 @@ package epmc.graph.explicit;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
-import epmc.value.Type;
-import epmc.value.TypeInteger;
-import epmc.value.Value;
-import epmc.value.ValueInteger;
-
 /**
  * Implementation of a simple scheduler using Java arrays.
  * 
  * @author Ernst Moritz Hahn
  */
-public final class SchedulerSimpleArray implements SchedulerSimple {
+public final class SchedulerSimpleArray implements SchedulerSimpleSettable {
     /** Graph this scheduler belongs to. */
     private final GraphExplicit graph;
     /** Decisions for the nodes of the graph. */
     private final int[] content;
-    /** Value to get graph property value. */
-    private final ValueInteger value;
 
     /**
      * Constructs a new array-based simple scheduler.
@@ -61,7 +53,6 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
             this.content = new int[graph.getNumNodes()];
             Arrays.fill(this.content, -1);
         }
-        this.value = TypeInteger.get(graph.getContextValue()).newValue();
     }
     
     /**
@@ -76,11 +67,6 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
         this(graph, null);
     }
     
-    @Override
-    public GraphExplicit getGraph() {
-        return graph;
-    }
-
     @Override
     public void set(int node, int decision) {
         content[node] = decision;
@@ -101,23 +87,6 @@ public final class SchedulerSimpleArray implements SchedulerSimple {
     @Override
     public SchedulerSimple clone() {
         return new SchedulerSimpleArray(graph, content.clone());
-    }
-
-    @Override
-    public Value get(int node) throws EPMCException {
-        value.set(get(node));
-        return value;
-    }
-
-    @Override
-    public void set(int node, Value value) throws EPMCException {
-        assert value != null;
-        set(node, ValueInteger.asInteger(value).getInt());
-    }
-
-    @Override
-    public Type getType() {
-        return value.getType();
     }
 
 	@Override

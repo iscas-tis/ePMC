@@ -21,10 +21,6 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
-import epmc.value.Type;
-import epmc.value.TypeInteger;
-import epmc.value.Value;
-import epmc.value.ValueInteger;
 
 /**
  * Space-efficient implementation of a simple scheduler using Java arrays.
@@ -38,7 +34,7 @@ import epmc.value.ValueInteger;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class SchedulerSimpleCompact implements SchedulerSimple {
+public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
     /** String containing opening square brackets. */
     private final static String SQUARE_BRACKETS_OPEN = "[";
     /** String containing closing square brackets. */
@@ -54,8 +50,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
     private int numEntryBits;
     /** Decisions for the nodes of the graph. */
     private final long[] content;
-    /** Value to get graph property value. */
-    private final ValueInteger value;
 	private final int numNodes;
 
     /**
@@ -87,7 +81,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
         } else {
             this.content = new long[numLongs];
         }
-        this.value = TypeInteger.get(graph.getContextValue()).newValue();
     }
     
     /**
@@ -103,11 +96,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
         this(graph, null);
     }
     
-    @Override
-    public GraphExplicit getGraph() {
-        return graph;
-    }
-
     @Override
     public void set(int node, int decision) {
         decision++;
@@ -165,23 +153,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimple {
         }
     }
     
-    @Override
-    public Value get(int node) throws EPMCException {
-        value.set(getDecision(node));
-        return value;
-    }
-
-    @Override
-    public void set(int node, Value value) throws EPMCException {
-        assert value != null;
-        set(node, ValueInteger.asInteger(value).getInt());
-    }
-
-    @Override
-    public Type getType() {
-        return value.getType();
-    }
-
 	@Override
 	public int size() {
 		return numNodes;

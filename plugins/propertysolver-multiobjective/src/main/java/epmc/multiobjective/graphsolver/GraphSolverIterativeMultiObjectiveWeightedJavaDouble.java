@@ -128,7 +128,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objectiveMultiObjectiveWeighted = (GraphSolverObjectiveExplicitMultiObjectiveWeighted) objective;
         Value cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
         Value stopStateRewards = objectiveMultiObjectiveWeighted.getStopStateReward();
-        ContextValue contextValue = origGraph.getContextValue();
         scheduler = new SchedulerSimpleMultiobjectiveJava((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();

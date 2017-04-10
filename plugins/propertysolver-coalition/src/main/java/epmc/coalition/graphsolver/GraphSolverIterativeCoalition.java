@@ -38,6 +38,7 @@ import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
@@ -145,7 +146,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             prepareResultValues();
         	GraphSolverObjectiveExplicitUnboundedReachabilityGame objUB = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) objective;
         	if (objUB.isComputeScheduler()) {
-        		SchedulerSimple strategy = new SchedulerSimpleArray(origGraph);
+        		SchedulerSimpleSettable strategy = new SchedulerSimpleArray(origGraph);
         		computeStrategy(strategy, objUB.getTarget(), outputValues);
         		objUB.setScheduler(strategy);
         	}
@@ -505,7 +506,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         }
     }
 
-    private void computeStrategy(SchedulerSimple strategy,
+    private void computeStrategy(SchedulerSimpleSettable strategy,
             BitSet target, ValueArrayAlgebra values)
                     throws EPMCException {
     	assert strategy != null;

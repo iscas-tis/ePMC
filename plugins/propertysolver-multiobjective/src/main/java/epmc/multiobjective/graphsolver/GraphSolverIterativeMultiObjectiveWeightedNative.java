@@ -38,7 +38,6 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
@@ -143,8 +142,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objectiveMultiObjectiveWeighted = (GraphSolverObjectiveExplicitMultiObjectiveWeighted) objective;
         Value cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
         Value stopStateRewards = objectiveMultiObjectiveWeighted.getStopStateReward();
-        ContextValue contextValue = origGraph.getContextValue();
-        Type typeWeight = TypeWeight.get(origGraph.getContextValue());
         scheduler = new SchedulerSimpleMultiobjectiveNative((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();

@@ -31,6 +31,7 @@ import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.util.BitSet;
@@ -145,7 +146,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
 
         BitSet pPrimed = UtilBitSet.newBitSetBounded(game.getNumNodes());
         BitSet wOther = UtilBitSet.newBitSetBounded(game.getNumNodes());
-		SchedulerSimple strategies = null;
+		SchedulerSimpleSettable strategies = null;
 		if (computeStrategyP0 || computeStrategyP1) {
 			strategies = new SchedulerSimpleArray(game);
 		}
@@ -243,7 +244,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
     	if (!computeStrategyP0 && !computeStrategyP1) {
     		return null;
     	}
-    	SchedulerSimple result = new SchedulerSimpleArray(game);
+    	SchedulerSimpleSettable result = new SchedulerSimpleArray(game);
     	for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
     		if (computeStrategyP0 && playerEven.get(node)
     				|| computeStrategyP1 && playerOdd.get(node)) {
@@ -299,7 +300,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
      * @param exists
      * @throws EPMCException
      */
-    private void computeStrategy(SchedulerSimple strategy, GraphExplicit graph,
+    private void computeStrategy(SchedulerSimpleSettable strategy, GraphExplicit graph,
             BitSet target, BitSet nodes, BitSet exists)
                     throws EPMCException {
     	assert strategy != null;

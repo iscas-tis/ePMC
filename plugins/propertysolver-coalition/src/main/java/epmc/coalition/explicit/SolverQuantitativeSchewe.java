@@ -34,6 +34,7 @@ import epmc.graph.explicit.NodePropertyGeneral;
 import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.graph.explicit.induced.GraphExplicitInduced;
 import epmc.graph.explicit.subgraph.GraphExplicitSubgraph;
 import epmc.graphsolver.UtilGraphSolver;
@@ -116,7 +117,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		StopWatch initialiseTime = new StopWatch(true);
 		initQualitativeSolver = new StopWatch(false);
 		initReach = new StopWatch(false);
-		SchedulerSimple strategies = initialise(nodes);
+		SchedulerSimpleSettable strategies = initialise(nodes);
 		getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_INITIALISE_DONE,
 				initialiseTime.getTimeSeconds(),
 				numInitCalls,
@@ -128,7 +129,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return result;
 	}
 
-	private SchedulerSimple initialise(BitSet p) throws EPMCException {
+	private SchedulerSimpleSettable initialise(BitSet p) throws EPMCException {
 		assert p != null;
 		NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
 		numInitCalls++;
@@ -145,7 +146,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		initQualitativeSolver.stop();
 		unsilenceLog();
 		if (subPair.getSet0().isEmpty()) {
-			SchedulerSimple result = new SchedulerSimpleArray(game);
+			SchedulerSimpleSettable result = new SchedulerSimpleArray(game);
 			for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
 				Player player = playerProperty.getEnum(node);
 				if (player != Player.ONE) {
@@ -155,7 +156,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 			}
 			return result;
 		}
-		SchedulerSimple strategy = new SchedulerSimpleArray(game);
+		SchedulerSimpleSettable strategy = new SchedulerSimpleArray(game);
 		NodeProperty playerPropertySubgame = subGraph.getNodeProperty(CommonProperties.PLAYER);
 		int numSubGraphNodes = subGraph.getNumNodes();
 		for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
@@ -283,7 +284,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return true;
 	}
 
-	private QuantitativeResult improve(SchedulerSimple strategies) throws EPMCException {
+	private QuantitativeResult improve(SchedulerSimpleSettable strategies) throws EPMCException {
 		StopWatch improveTime = new StopWatch(true);
 		StopWatch mdpEvaluateTime = new StopWatch(false);
 		StopWatch qualitativeEvaluationTime = new StopWatch(false);
