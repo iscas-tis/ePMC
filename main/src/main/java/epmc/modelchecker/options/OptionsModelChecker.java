@@ -47,4 +47,6 @@ public enum OptionsModelChecker {
 
     /** Model input type {@link String}. */
     MODEL_INPUT_TYPE,
+    
+    COMPUTE_SCHEDULER,
 }

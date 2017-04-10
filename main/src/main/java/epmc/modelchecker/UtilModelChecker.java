@@ -27,6 +27,7 @@ import java.util.Map;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeConstList;
 import epmc.options.OptionTypeMap;
 import epmc.options.OptionTypeStringListSubset;
@@ -125,6 +126,11 @@ public final class UtilModelChecker {
         options.addOption().setIdentifier(OptionsModelChecker.MODEL_INPUT_TYPE)
             .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
             .setType(modelInputType).setCommandLine().build();
+        
+        options.addOption().setIdentifier(OptionsModelChecker.COMPUTE_SCHEDULER)
+        	.setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        	.setType(OptionTypeBoolean.getInstance())
+        	.setCommandLine().setGui().setWeb().build();
     }
     
     /**

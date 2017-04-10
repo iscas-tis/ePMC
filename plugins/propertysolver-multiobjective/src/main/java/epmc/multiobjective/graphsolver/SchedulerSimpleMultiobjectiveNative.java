@@ -4,8 +4,8 @@ import java.nio.ByteBuffer;
 
 import com.sun.jna.Memory;
 
+import epmc.graph.Scheduler;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
-import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 
 public final class SchedulerSimpleMultiobjectiveNative implements SchedulerSimple {

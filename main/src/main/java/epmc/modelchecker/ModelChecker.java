@@ -35,6 +35,7 @@ import java.util.concurrent.TimeUnit;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.LowLevel;
+import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.messages.OptionsMessages;
@@ -114,6 +115,11 @@ public final class ModelChecker implements Closeable {
         return result;
     }
     
+    public PropertySolver getSolverFor(Expression property, StateSet states)
+            throws EPMCException {
+    	return getSolverFor(property, states, false);
+    }
+
     // TODO currently used my multi objective plugin, but should be private
     /**
      * Obtain solver for given property and state set.
@@ -127,17 +133,27 @@ public final class ModelChecker implements Closeable {
      * @return solver for given property and state set
      * @throws EPMCException
      */
-    public PropertySolver getSolverFor(Expression property, StateSet states)
+    public PropertySolver getSolverFor(Expression property, StateSet states,
+    		boolean computeScheduler)
             throws EPMCException {
         assert property != null;
+        PropertySolver foundWithoutScheduler = null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
             solver.setModelChecker(this);
             solver.setProperty(property);
             solver.setForStates(states);
-            if (solver.canHandle()) {
+            solver.setComputeScheduler(computeScheduler);
+            if (computeScheduler && solver.canHandle() && !solver.canComputeScheduler()) {
+            	foundWithoutScheduler = solver;
+            }
+            if (solver.canHandle() && (!computeScheduler || solver.canComputeScheduler())) {
                 return solver;
             }
+        }
+        if (foundWithoutScheduler != null) {
+        	// TODO log warning
+        	return foundWithoutScheduler;
         }
         fail(ProblemsModelChecker.NO_SOLVER_AVAILABLE, property);
         return null;
@@ -168,9 +184,9 @@ public final class ModelChecker implements Closeable {
             Expression expression = model.getPropertyList().getParsedProperty(property);
             ModelCheckerResult propRes = null;
             try {
-                propRes = new ModelCheckerResult(property, checkProperty(expression));
+            	propRes = checkProperty(property, expression);
             } catch (EPMCException e) {
-                propRes = new ModelCheckerResult(property, e);
+                propRes = new ModelCheckerResult(property, e, null);
             }
             getLog().send(propRes);
         }
@@ -213,19 +229,22 @@ public final class ModelChecker implements Closeable {
      * property.
      * The property parameter must not be {@code null}.
      * 
-     * @param property property to be checked
+     * @param expression property to be checked
      * @return value obtained for the given property
      * @throws EPMCException thrown in case of problems
      */
-    private Value checkProperty(Expression property) throws EPMCException {
-        assert property != null;
+    private ModelCheckerResult checkProperty(RawProperty property, Expression expression) throws EPMCException {
+    	assert property != null;
+        assert expression != null;
         if (lowLevel != null) {
             lowLevel.close();
         }
-        lowLevel = prepareLowLevel(property);
+        lowLevel = prepareLowLevel(expression);
         
-        StateMap result = check(property, lowLevel.newInitialStateSet());
-        return result.subsumeResult(lowLevel.newInitialStateSet());
+        StateMap stateMap = check(expression, lowLevel.newInitialStateSet());
+        Value value = stateMap.subsumeResult(lowLevel.newInitialStateSet());
+        Scheduler scheduler = stateMap.getScheduler();
+        return new ModelCheckerResult(property, value, scheduler);
     }
 
     /**

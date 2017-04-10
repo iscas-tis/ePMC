@@ -1,5 +1,7 @@
 package epmc.graph.explicit;
 
+import epmc.graph.Scheduler;
+
 public interface SchedulerSimpleSettable extends SchedulerSimple {
     /**
      * Set the decision for a given node.

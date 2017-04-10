@@ -1,6 +1,6 @@
 package epmc.multiobjective;
 
-import epmc.graph.explicit.Scheduler;
+import epmc.graph.Scheduler;
 import epmc.value.ValueAlgebra;
 
 public interface SchedulerInitialRandomised extends Scheduler {

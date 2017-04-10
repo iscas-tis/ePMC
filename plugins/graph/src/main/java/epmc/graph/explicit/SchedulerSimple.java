@@ -20,6 +20,8 @@
 
 package epmc.graph.explicit;
 
+import epmc.graph.Scheduler;
+
 /**
  * Simple scheduler.
  * A simple scheduler is a function mapping each node of a graph to an outgoing

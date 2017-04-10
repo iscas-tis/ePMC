@@ -22,6 +22,8 @@ package epmc.modelchecker;
 
 import com.google.common.base.MoreObjects;
 
+import epmc.graph.Scheduler;
+
 // TODO in case server functionality is indeed moved to JANI interaction plugin,
 // this class might be deleted
 
@@ -42,6 +44,11 @@ public final class ModelCheckerResult {
     private final RawProperty property;
     /** Result for this property. */
     private final Object result;
+	private Scheduler scheduler;
+    
+    public ModelCheckerResult(RawProperty property, Object result) {
+    	this(property, result, null);
+    }
     
     /**
      * Construct a new model checker result.
@@ -50,11 +57,13 @@ public final class ModelCheckerResult {
      * 
      * @param property property to store result for or {@code null}
      * @param result model checking result
+     * @param scheduler 
      */
-    public ModelCheckerResult(RawProperty property, Object result) {
+    public ModelCheckerResult(RawProperty property, Object result, Scheduler scheduler) {
         assert result != null;
         this.property = property;
         this.result = result;
+        this.scheduler = scheduler;
     }
     
     /**
@@ -74,7 +83,11 @@ public final class ModelCheckerResult {
      */
     public Object getResult() {
         return result;
-    };
+    }
+    
+    public Scheduler getScheduler() {
+    	return scheduler;
+    }
     
     @Override
     public String toString() {

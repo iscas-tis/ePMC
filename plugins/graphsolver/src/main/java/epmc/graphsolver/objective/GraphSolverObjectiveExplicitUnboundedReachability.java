@@ -20,8 +20,8 @@
 
 package epmc.graphsolver.objective;
 
+import epmc.graph.Scheduler;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.graph.explicit.Scheduler;
 import epmc.util.BitSet;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;

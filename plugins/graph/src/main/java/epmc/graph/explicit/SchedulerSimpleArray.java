@@ -22,6 +22,8 @@ package epmc.graph.explicit;
 
 import java.util.Arrays;
 
+import epmc.graph.Scheduler;
+
 /**
  * Implementation of a simple scheduler using Java arrays.
  * 
