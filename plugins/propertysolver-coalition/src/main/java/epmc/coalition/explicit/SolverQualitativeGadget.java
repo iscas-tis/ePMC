@@ -33,6 +33,7 @@ import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
@@ -99,7 +100,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 		QualitativeResult qualitativeResult = nonStochasticSolver.solve();
         BitSet evenWins = UtilBitSet.newBitSetBounded(stochasticGame.getNumNodes());
         BitSet oddWins = UtilBitSet.newBitSetBounded(stochasticGame.getNumNodes());
-        SchedulerSimple strategies = qualitativeResult.getStrategies() == null ? null
+        SchedulerSimpleSettable strategies = qualitativeResult.getStrategies() == null ? null
         		: new SchedulerSimpleArray(stochasticGame);
 		NodeProperty propertyPlayer = stochasticGame.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < stochasticToQualitative.length; node++) {

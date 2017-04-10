@@ -33,8 +33,8 @@ import epmc.graph.SemanticsNonDet;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.Scheduler;
-import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.util.BitSet;
@@ -104,7 +104,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
 
     private Scheduler computeScheduler(GraphExplicit graph,
             BitSet target, BitSet extendedTarget) throws EPMCException {
-        SchedulerSimple scheduler = new SchedulerSimpleArray(graph);
+        SchedulerSimpleSettable scheduler = new SchedulerSimpleArray(graph);
         graph.computePredecessors();
         NodeProperty states = graph.getNodeProperty(CommonProperties.STATE);
         BitSet seen = UtilBitSet.newBitSetUnbounded();
@@ -125,7 +125,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
                     if (states.getBoolean(predecessor) && scheduler.getDecision(predecessor) == -1) {
                         for (int succNr = 0; succNr < graph.getNumSuccessors(predecessor); succNr++) {
                             if (graph.getSuccessorNode(predecessor, succNr) == node) {
-                                scheduler.set(predecessor, succNr);
+                            	scheduler.set(predecessor, succNr);
                             }
                         }
                     }

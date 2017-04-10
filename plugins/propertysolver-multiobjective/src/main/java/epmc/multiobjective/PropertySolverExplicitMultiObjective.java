@@ -22,6 +22,7 @@ package epmc.multiobjective;
 
 import static epmc.error.UtilError.ensure;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -38,6 +39,7 @@ import epmc.graph.UtilGraph;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graph.explicit.NodeProperty;
+import epmc.graph.explicit.Scheduler;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
@@ -204,7 +206,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
-        ContextValue context = bounds.getType().getContext();
+//        ContextValue context = bounds.getType().getContext();
 //        bounds.set(0, 0);
   //      System.out.println(bounds);
         int numAutomata = product.getNumAutomata();
@@ -233,19 +235,18 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             }
         } while (true);
 //        if (feasible) {
-    //    	computeRandomizedScheduler(product, down, bounds);
+        SchedulerInitialRandomisedImpl sched = computeRandomizedScheduler(product, down, bounds);
+        printInitiallyRandomisedScheduler(sched);
   //      }
         return prepareResult(numerical, feasible, bounds, subtractNumericalFrom);
 	}
 
-	// TODO currently just ad-hoc solution for robot case study
-	private void computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
+	private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
 		assert product != null;
 		assert down != null;
 		assert bounds != null;
     	GraphExplicit modelGraph = modelChecker.getLowLevel();
     	int numStates = modelGraph.computeNumStates();
-    	int[] decisions = new int[numStates];
 		GraphExplicitSparseAlternate computationGraph = (GraphExplicitSparseAlternate) product.getGraph();
 		NodeProperty nodeProp = computationGraph.getNodeProperty(CommonProperties.NODE_MODEL);
 		assert nodeProp != null;
@@ -254,13 +255,29 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 		int numNodes = computationGraph.getNumNodes();
 		
 		ValueArrayAlgebra schedProbs = down.findFeasibleRandomisedScheduler(bounds);
-		ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
+		int numSchedulers = 0;
 		for (int schedNr = 0; schedNr < down.size(); schedNr++) {
+			ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
+			schedProbs.get(schedProb, schedNr);
+			if (schedProb.isZero()) {
+				continue;
+			}
+			numSchedulers++;
+		}
+		ValueAlgebra[] probabilities = new ValueAlgebra[numSchedulers];
+		Scheduler[] schedulers = new Scheduler[numSchedulers];
+
+		// TODO check memorylessness
+		int usedSchedNr = 0;
+		for (int schedNr = 0; schedNr < down.size(); schedNr++) {
+			ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
 			schedProbs.get(schedProb, schedNr);
 			if (schedProb.isZero()) {
 				continue;
 			}
 			SchedulerSimple sched = (SchedulerSimple) down.get(schedNr).getScheduler();
+	    	int[] decisions = new int[numStates];
+	    	Arrays.fill(decisions, -2);
 			for (int node = 0; node < numNodes; node++) {
 				if (!stateProp.getBoolean(node)) {
 					continue;
@@ -270,19 +287,33 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 				if (decision == -2) {
 					decision = 0;
 				}
+				assert decisions[state] == -2 || decisions[state] == decision
+						: state + " " + decisions[state] + " " + decision;
 				decisions[state] = decision;
 			}
+			SchedulerSimpleArray convertedSched = new SchedulerSimpleArray(decisions);
+			probabilities[usedSchedNr] = schedProb;
+			schedulers[usedSchedNr] = convertedSched;
+			usedSchedNr++;
+		}
+		return new SchedulerInitialRandomisedImpl(probabilities, schedulers);
+	}
+
+	// TODO currently just ad-hoc solution for robot case study
+	private void printInitiallyRandomisedScheduler(SchedulerInitialRandomisedImpl scheduler) {
+		assert scheduler != null;
+		for (int schedNr = 0; schedNr < scheduler.size(); schedNr++) {
+			ValueAlgebra schedProb = scheduler.getProbability(schedNr);
+			SchedulerSimple schedSi = (SchedulerSimple) scheduler.getScheduler(schedNr);
 			System.out.println("probability: " + schedProb);
 			System.out.println("s 	 a");
 			System.out.println("- 	 -");
-			for (int state = 0; state < numStates; state++) {
-				int decision = decisions[state];
+			for (int state = 0; state < schedSi.size(); state++) {
+				int decision = schedSi.getDecision(state);
 				System.out.println((state + 1) + " 	 " + (decision + 1));				
 			}
 			System.out.println();
 		}
-		// TODO Auto-generated method stub
-		
 	}
 
 	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom)

@@ -20,10 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
-import epmc.value.Type;
-import epmc.value.TypeInteger;
-
 /**
  * Simple scheduler.
  * A simple scheduler is a function mapping each node of a graph to an outgoing
@@ -36,25 +32,9 @@ import epmc.value.TypeInteger;
  * 
  * @author Ernst Moritz Hahn
  */
-public interface SchedulerSimple extends Scheduler, NodeProperty {
+public interface SchedulerSimple extends Scheduler {
 	int size();
 	
-    /**
-     * Set the decision for a given node.
-     * The node must be nonnegative and smaller than the number of nodes.
-     * The decision must be nonnegative or equal to
-     * {@link Scheduler#UNSET}. It must also be smaller than the value obtained
-     * by {@link GraphExplicit#getNumSuccessors()} directly after a call to
-     * {@link GraphExplicit#queryNode(int)} on the node parameter of this
-     * method. If the decision is set to {@link Scheduler#UNSET}, it means that
-     * there is no decision for this node, otherwise the according outgoing edge
-     * of the node is selected.
-     * 
-     * @param node node to which to set the decision
-     * @param decision decision to set
-     */
-    void set(int node, int decision);
-    
     /**
      * Get decision for a given node.
      * The node must be nonnegative and smaller than the number of nodes.
@@ -70,31 +50,4 @@ public interface SchedulerSimple extends Scheduler, NodeProperty {
      * @return decision for a given node
      */
     int getDecision(int node);
-    
-    default void set(SchedulerSimple other) throws EPMCException {
-        assert other != null;
-        int numNodes = size();
-        for (int node = 0; node < numNodes; node++) {
-            set(node, other.getDecision(node));
-        }
-    }
-    
-    default boolean equals(SchedulerSimple other) throws EPMCException {
-        assert other != null;
-        if (size() != other.size()) {
-        	return false;
-        }
-        int numNodes = size();
-        for (int node = 0; node < numNodes; node++) {
-            if (get(node) != other.get(node)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    @Override
-    default Type getType() {
-    	return TypeInteger.get(getGraph().getContextValue());
-    }
 }

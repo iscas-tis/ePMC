@@ -29,8 +29,8 @@ import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
-import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.SchedulerSimpleArray;
+import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
@@ -90,7 +90,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 			assert false;
 			break;		
 		}
-		SchedulerSimple strategies = computeStrategyP0 || computeStrategyP1
+		SchedulerSimpleSettable strategies = computeStrategyP0 || computeStrategyP1
 				? new SchedulerSimpleArray(game) : null;
         BitSet evenWins = UtilBitSet.newBitSetBounded(game.getNumNodes());
         BitSet oddWins = UtilBitSet.newBitSetBounded(game.getNumNodes());
