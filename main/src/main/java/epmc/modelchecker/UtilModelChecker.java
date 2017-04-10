@@ -103,6 +103,8 @@ public final class UtilModelChecker {
 
         Map<String,Class<?>> propertySolvers = new OrderedMap<>();
         options.set(OptionsModelChecker.PROPERTY_SOLVER_CLASS, propertySolvers);
+        Map<String,Class<?>> schedulerPrinters = new OrderedMap<>();
+        options.set(OptionsModelChecker.SCHEDULER_PRINTER_CLASS, schedulerPrinters);
         OptionTypeStringListSubset<Class<?>> propertySolverType = new OptionTypeStringListSubset<>(propertySolvers);
         options.addOption().setIdentifier(OptionsModelChecker.PROPERTY_SOLVER)
             .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)

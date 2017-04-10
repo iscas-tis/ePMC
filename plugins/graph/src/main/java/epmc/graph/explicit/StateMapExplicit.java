@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.error.EPMCException;
+import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.value.Operator;
@@ -49,17 +50,24 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     private final TypeArray typeArray;
     private final Value helper;
     private final Value helper2;
+    private final Scheduler scheduler;
     private int refs = 1;
+
+    public StateMapExplicit(StateSetExplicit states,
+            ValueArray valuesExplicit) {
+    	this(states, valuesExplicit, null);
+    }
     
     // note: consumes arguments states, valuesExplicit, and valuesDD
     public StateMapExplicit(StateSetExplicit states,
-            ValueArray valuesExplicit) {
+            ValueArray valuesExplicit, Scheduler scheduler) {
         this.valuesExplicit = valuesExplicit;
         this.states = states;
         this.type = valuesExplicit.getType().getEntryType();
         this.typeArray = type.getTypeArray();
         this.helper = type.newValue();
         this.helper2 = type.newValue();
+        this.scheduler = scheduler;
     }
 
     @Override
@@ -323,5 +331,10 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public Scheduler getScheduler() {
+    	return scheduler;
     }
 }
