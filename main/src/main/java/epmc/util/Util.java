@@ -21,6 +21,7 @@
 package epmc.util;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,6 +32,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
+
+import epmc.graph.LowLevel;
+import epmc.graph.Scheduler;
+import epmc.graph.SchedulerPrinter;
+import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.options.Options;
 
 /**
  * Several utility functions not found in the standard Java library.
@@ -317,6 +324,21 @@ public final class Util {
         return null;
     }
     
+	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler, Options options) {
+		Map<String,Class<SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
+		assert schedulerPrinters != null;
+		for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {
+			SchedulerPrinter printer = Util.getInstance(entry.getValue());
+			printer.setLowLevel(graph);
+			printer.setOptions(options);
+			printer.setOutput(out);
+			if (printer.canHandle()) {
+				printer.print();
+				break;
+			}
+		}
+	}
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

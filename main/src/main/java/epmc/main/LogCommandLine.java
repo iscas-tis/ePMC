@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import epmc.error.EPMCException;
+import epmc.graph.Scheduler;
 import epmc.messages.Message;
 import epmc.messages.OptionsMessages;
 import epmc.messages.UtilMessages;
@@ -72,7 +73,7 @@ public final class LogCommandLine implements Log {
     private Object commonResult;
     /** Map from properties to results computed for them. */
     private final Map<RawProperty, Object> results = new LinkedHashMap<>();
-
+    private final Map<RawProperty, Scheduler> schedulers = new LinkedHashMap<>();
     /**
      * Create new command line log.
      * The options parameter must not be {@code null}.
@@ -121,7 +122,11 @@ public final class LogCommandLine implements Log {
         if (result.getProperty() == null) {
             commonResult = result.getResult();
         } else {
-            results.put(result.getProperty(), result.getResult());
+        	results.put(result.getProperty(), result.getResult());
+        	Scheduler scheduler = result.getScheduler();
+        	if (scheduler != null) {
+        		schedulers.put(result.getProperty(), scheduler);
+        	}
         }
     }
 
@@ -184,5 +189,10 @@ public final class LogCommandLine implements Log {
     public Object get(RawProperty property) {
         assert property != null;
         return results.get(property);
+    }
+    
+    public Scheduler getScheduler(RawProperty property) {
+    	assert property != null;
+    	return schedulers.get(property);
     }
 }

@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 
 import epmc.error.EPMCException;
+import epmc.graph.Scheduler;
 import epmc.main.options.OptionsEPMC;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
@@ -34,6 +35,7 @@ import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
+import epmc.util.Util;
 
 /**
  * Main class of EPMC.
@@ -159,9 +161,9 @@ public final class EPMC {
     private static void printResults(Options options, LogCommandLine log) {
         assert options != null;
         assert log != null;
-        for (RawProperty prop : log.getProperties()) {
-            String exprString = prop.getDefinition();
-            Object propResult = log.get(prop);
+        for (RawProperty property : log.getProperties()) {
+            String exprString = property.getDefinition();
+            Object propResult = log.get(property);
             if (propResult == null) {
                 continue;
             }
@@ -179,6 +181,10 @@ public final class EPMC {
                 resultString = propResult.toString();
             }
             System.out.println(exprString + SPACE_COLON + resultString);
+            Scheduler scheduler = log.getScheduler(property);
+            if (scheduler != null) {
+            	Util.printScheduler(System.out, null, scheduler, options);
+            }
         }
         if (log.getCommonResult() != null) {
             System.out.println(log.getCommonResult().toString());

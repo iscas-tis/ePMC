@@ -46,6 +46,8 @@ import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.value.ContextValue;
 import epmc.value.TypeArray;
@@ -234,11 +236,12 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 }
             }
         } while (true);
-//        if (feasible) {
-//        SchedulerInitialRandomisedImpl sched = computeRandomizedScheduler(product, down, bounds);
+        SchedulerInitialRandomisedImpl sched = null;
+        if (feasible && getOptions().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
+        	sched = computeRandomizedScheduler(product, down, bounds);
   //      printInitiallyRandomisedScheduler(sched);
-  //      }
-        return prepareResult(numerical, feasible, bounds, subtractNumericalFrom);
+        }
+        return prepareResult(numerical, feasible, bounds, subtractNumericalFrom, sched);
 	}
 
 	private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
@@ -300,7 +303,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	// TODO currently just ad-hoc solution for robot case study
-	private void printInitiallyRandomisedScheduler(SchedulerInitialRandomisedImpl scheduler) {
+	private void printInitiallyRandomisedScheduler(SchedulerInitialRandomised scheduler) {
 		assert scheduler != null;
 		for (int schedNr = 0; schedNr < scheduler.size(); schedNr++) {
 			ValueAlgebra schedProb = scheduler.getProbability(schedNr);
@@ -316,7 +319,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 		}
 	}
 
-	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom)
+	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler)
 			throws EPMCException {
         ValueArray resultValues;
         if (numerical) {
@@ -339,9 +342,13 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 resultValues.set(valueFeasible, i);
             }
         }
-        return UtilGraph.newStateMap((StateSetExplicit) forStates.clone(), resultValues);
+        return new StateMapExplicit((StateSetExplicit) forStates.clone(), resultValues, scheduler);
 	}
 
+	private Options getOptions() {
+		return getContextValue().getOptions();
+	}
+	
 	private ContextValue getContextValue() {
     	return modelChecker.getModel().getContextValue();
     }

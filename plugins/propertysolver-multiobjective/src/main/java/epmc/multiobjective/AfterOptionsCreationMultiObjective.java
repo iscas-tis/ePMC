@@ -23,6 +23,7 @@ package epmc.multiobjective;
 import java.util.Map;
 
 import epmc.error.EPMCException;
+import epmc.graph.SchedulerPrinter;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverIterativeMultiObjectiveScheduledJava;
@@ -77,5 +78,9 @@ public final class AfterOptionsCreationMultiObjective implements AfterOptionsCre
         	.setType(OptionTypeRealNonnegative.getInstance())
         	.setDefault(MIN_NONZERO)
         	.build();
+        Map<String,Class<? extends SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
+        assert schedulerPrinters != null;
+        schedulerPrinters.put(SchedulerPrinterSimple.IDENTIFIER, SchedulerPrinterSimple.class);
+        schedulerPrinters.put(SchedulerPrinterInitialRandomised.IDENTIFIER, SchedulerPrinterInitialRandomised.class);
 	}
 }
