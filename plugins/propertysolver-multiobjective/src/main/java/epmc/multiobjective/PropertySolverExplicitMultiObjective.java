@@ -235,8 +235,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             }
         } while (true);
 //        if (feasible) {
-        SchedulerInitialRandomisedImpl sched = computeRandomizedScheduler(product, down, bounds);
-        printInitiallyRandomisedScheduler(sched);
+//        SchedulerInitialRandomisedImpl sched = computeRandomizedScheduler(product, down, bounds);
+  //      printInitiallyRandomisedScheduler(sched);
   //      }
         return prepareResult(numerical, feasible, bounds, subtractNumericalFrom);
 	}
