@@ -45,6 +45,7 @@ import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.SemanticsCTMC;
+import epmc.graph.SemanticsDTMC;
 import epmc.graph.SemanticsNonDet;
 import epmc.jani.extensions.derivedoperators.ModelExtensionDerivedOperators;
 import epmc.jani.model.Action;
@@ -602,6 +603,10 @@ public final class PRISM2JANIConverter {
 	private Automaton moduleToAutomaton(ModuleCommands module, Actions actions,
 			Variables globalVariables) throws EPMCException {
 		Automaton automaton = new Automaton();
+		Rate rateOne = new Rate();
+		rateOne.setExp(ExpressionLiteral.getOne(modelPRISM.getContextValue()));
+		rateOne.setModel(modelJANI);
+		
 		Edges edges = new Edges();
 		edges.setModel(modelJANI);
 		automaton.setModel(modelJANI);
@@ -632,6 +637,9 @@ public final class PRISM2JANIConverter {
 			}
 			edge.setAction(action);
 			edge.setLocation(location);
+			if (SemanticsDTMC.isDTMC(modelPRISM.getSemantics())) {
+				edge.setRate(rateOne);
+			}
 			Guard guard = new Guard();
 			guard.setModel(modelJANI);
 			guard.setExp(prism2jani(command.getGuard()));
