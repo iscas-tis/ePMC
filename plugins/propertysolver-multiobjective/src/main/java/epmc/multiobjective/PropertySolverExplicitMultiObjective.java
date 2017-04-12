@@ -237,7 +237,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             }
         } while (true);
         SchedulerInitialRandomisedImpl sched = null;
-        if (feasible && getOptions().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
+        if ((feasible || numerical) && getOptions().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
         	sched = computeRandomizedScheduler(product, down, bounds);
   //      printInitiallyRandomisedScheduler(sched);
         }
@@ -294,29 +294,17 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 						: state + " " + decisions[state] + " " + decision;
 				decisions[state] = decision;
 			}
+			for (int state = 0; state < numStates; state++) {
+				if (decisions[state] < 0) {
+					decisions[state] = 0;
+				}
+			}
 			SchedulerSimpleArray convertedSched = new SchedulerSimpleArray(decisions);
 			probabilities[usedSchedNr] = schedProb;
 			schedulers[usedSchedNr] = convertedSched;
 			usedSchedNr++;
 		}
 		return new SchedulerInitialRandomisedImpl(probabilities, schedulers);
-	}
-
-	// TODO currently just ad-hoc solution for robot case study
-	private void printInitiallyRandomisedScheduler(SchedulerInitialRandomised scheduler) {
-		assert scheduler != null;
-		for (int schedNr = 0; schedNr < scheduler.size(); schedNr++) {
-			ValueAlgebra schedProb = scheduler.getProbability(schedNr);
-			SchedulerSimple schedSi = (SchedulerSimple) scheduler.getScheduler(schedNr);
-			System.out.println("probability: " + schedProb);
-			System.out.println("s 	 a");
-			System.out.println("- 	 -");
-			for (int state = 0; state < schedSi.size(); state++) {
-				int decision = schedSi.getDecision(state);
-				System.out.println((state + 1) + " 	 " + (decision + 1));				
-			}
-			System.out.println();
-		}
 	}
 
 	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler)

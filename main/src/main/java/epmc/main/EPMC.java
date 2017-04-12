@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 
 import epmc.error.EPMCException;
+import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
 import epmc.main.options.OptionsEPMC;
 import epmc.main.options.UtilOptionsEPMC;
@@ -182,8 +183,9 @@ public final class EPMC {
             }
             System.out.println(exprString + SPACE_COLON + resultString);
             Scheduler scheduler = log.getScheduler(property);
+            LowLevel lowLevel = log.getLowLevel(property);
             if (scheduler != null) {
-            	Util.printScheduler(System.out, null, scheduler, options);
+            	Util.printScheduler(System.out, lowLevel, scheduler, options);
             }
         }
         if (log.getCommonResult() != null) {
