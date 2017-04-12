@@ -22,6 +22,7 @@ package epmc.modelchecker;
 
 import com.google.common.base.MoreObjects;
 
+import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
 
 // TODO in case server functionality is indeed moved to JANI interaction plugin,
@@ -44,10 +45,11 @@ public final class ModelCheckerResult {
     private final RawProperty property;
     /** Result for this property. */
     private final Object result;
-	private Scheduler scheduler;
+	private final Scheduler scheduler;
+	private final LowLevel lowLevel;
     
     public ModelCheckerResult(RawProperty property, Object result) {
-    	this(property, result, null);
+    	this(property, result, null, null);
     }
     
     /**
@@ -59,11 +61,12 @@ public final class ModelCheckerResult {
      * @param result model checking result
      * @param scheduler 
      */
-    public ModelCheckerResult(RawProperty property, Object result, Scheduler scheduler) {
+    public ModelCheckerResult(RawProperty property, Object result, Scheduler scheduler, LowLevel lowLevel) {
         assert result != null;
         this.property = property;
         this.result = result;
         this.scheduler = scheduler;
+        this.lowLevel = lowLevel;
     }
     
     /**
@@ -87,6 +90,10 @@ public final class ModelCheckerResult {
     
     public Scheduler getScheduler() {
     	return scheduler;
+    }
+
+    public LowLevel getLowLevel() {
+    	return lowLevel;
     }
     
     @Override

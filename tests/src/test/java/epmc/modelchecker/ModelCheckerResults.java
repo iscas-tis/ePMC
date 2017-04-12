@@ -20,20 +20,15 @@
 
 package epmc.modelchecker;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import epmc.graph.LowLevel;
+import epmc.graph.Scheduler;
 import epmc.modelchecker.ModelCheckerResult;
 import epmc.modelchecker.RawProperty;
-
-
-//TODO in case server functionality is indeed moved to JANI interaction plugin,
-//this class might be deleted
 
 // TODO continue documentation
 
@@ -50,9 +45,8 @@ public final class ModelCheckerResults {
     private final static String ENDLINE = "\n";
     private Object commonResult;
     private final Map<RawProperty,Object> results = new LinkedHashMap<>();
-    private final List<Object> resultList = new ArrayList<>();
-    private final List<Object> publicResultList =
-            Collections.unmodifiableList(resultList);
+    private final Map<RawProperty, Scheduler> schedulers = new LinkedHashMap<>();
+    private final Map<RawProperty, LowLevel> lowLevels = new LinkedHashMap<>();
     
     public void set(ModelCheckerResult result) {
         assert result != null;
@@ -60,7 +54,14 @@ public final class ModelCheckerResults {
             this.commonResult = result.getResult();
         } else {
             results.put(result.getProperty(), result.getResult());
-            resultList.add(result.getResult());
+            Scheduler scheduler = result.getScheduler();
+            if (scheduler != null) {
+            	schedulers.put(result.getProperty(), scheduler);
+            }
+            LowLevel lowLevel = result.getLowLevel();
+            if (lowLevel != null) {
+            	lowLevels.put(result.getProperty(), lowLevel);
+            }
         }
     }
     
@@ -78,13 +79,6 @@ public final class ModelCheckerResults {
             return null;
         }
         return commonResult.toString();
-    }
-
-    public void add(RawProperty property, Object result) {
-        assert property != null;
-        assert result != null;
-        results.put(property, result);
-        resultList.add(result);
     }
 
     public Object get(RawProperty property) {
@@ -115,17 +109,27 @@ public final class ModelCheckerResults {
         return builder.toString();
     }
     
-    public List<Object> getResultList() {
-        return publicResultList;
-    }
-
     public Collection<RawProperty> getProperties() {
         return results.keySet();
+    }
+
+    public Object getResult(RawProperty property) {
+    	assert property != null;
+    	return results.get(property);
+    }
+    
+    public Scheduler getScheduler(RawProperty property) {
+    	assert property != null;
+    	return schedulers.get(property);
+    }
+    
+    public LowLevel getLowLevel(RawProperty property) {
+    	assert property != null;
+    	return lowLevels.get(property);
     }
     
     public void clear() {
         this.commonResult = null;
-        this.resultList.clear();
         this.results.clear();
     }
 }

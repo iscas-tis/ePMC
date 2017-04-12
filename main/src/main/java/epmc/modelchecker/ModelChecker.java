@@ -186,7 +186,7 @@ public final class ModelChecker implements Closeable {
             try {
             	propRes = checkProperty(property, expression);
             } catch (EPMCException e) {
-                propRes = new ModelCheckerResult(property, e, null);
+                propRes = new ModelCheckerResult(property, e);
             }
             getLog().send(propRes);
         }
@@ -244,7 +244,7 @@ public final class ModelChecker implements Closeable {
         StateMap stateMap = check(expression, lowLevel.newInitialStateSet());
         Value value = stateMap.subsumeResult(lowLevel.newInitialStateSet());
         Scheduler scheduler = stateMap.getScheduler();
-        return new ModelCheckerResult(property, value, scheduler);
+        return new ModelCheckerResult(property, value, scheduler, lowLevel);
     }
 
     /**

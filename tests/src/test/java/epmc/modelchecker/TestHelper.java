@@ -469,6 +469,11 @@ public final class TestHelper {
         assertEquals(message, expected, actual);
     }
 
+    public static ModelCheckerResults computeResults(Model model, String property) {
+        addProperty(model, property);
+        return computeResults(model);
+    }
+    
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
         try {
@@ -518,14 +523,7 @@ public final class TestHelper {
         try {
             Model model = loadModel(options, modelFile);
             assert model != null;
-            addProperty(model, property);
-            List<Object> results = computeResults(model).getResultList();
-            assert results.size() == 1;
-            Object result = results.get(0);
-            if (result instanceof Exception) {
-                throw new RuntimeException((Exception) result);
-            }
-            return (Value) result;
+            return computeResult(model, property);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -536,9 +534,26 @@ public final class TestHelper {
         assert property != null;
         try {
             addProperty(model, property);
-            List<Object> results = computeResults(model).getResultList();
-            assert results.size() == 1;
-            Object result = results.get(0);
+            ModelCheckerResults results = computeResults(model);
+            assert results.getProperties().size() == 1;
+            Object result = results.get(results.getProperties().iterator().next());
+            if (result instanceof Exception) {
+                throw new RuntimeException((Exception) result);
+            }
+            return (Value) result;
+        } catch (Exception e) {
+        	throw new RuntimeException(e);
+        }
+    }
+
+    public static Value computeScheduler(Model model, String property) {
+        assert model != null;
+        assert property != null;
+        try {
+            addProperty(model, property);
+            ModelCheckerResults results = computeResults(model);
+            assert results.getProperties().size() == 1;
+            Object result = results.get(results.getProperties().iterator().next());
             if (result instanceof Exception) {
                 throw new RuntimeException((Exception) result);
             }

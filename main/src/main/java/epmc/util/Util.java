@@ -329,12 +329,13 @@ public final class Util {
 		assert schedulerPrinters != null;
 		for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {
 			SchedulerPrinter printer = Util.getInstance(entry.getValue());
+			printer.setScheduler(scheduler);
 			printer.setLowLevel(graph);
 			printer.setOptions(options);
 			printer.setOutput(out);
 			if (printer.canHandle()) {
 				printer.print();
-				break;
+				return;
 			}
 		}
 	}
