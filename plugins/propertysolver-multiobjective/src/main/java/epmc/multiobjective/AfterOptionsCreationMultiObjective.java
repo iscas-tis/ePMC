@@ -80,7 +80,5 @@ public final class AfterOptionsCreationMultiObjective implements AfterOptionsCre
         	.build();
         Map<String,Class<? extends SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
         assert schedulerPrinters != null;
-        schedulerPrinters.put(SchedulerPrinterSimple.IDENTIFIER, SchedulerPrinterSimple.class);
-        schedulerPrinters.put(SchedulerPrinterInitialRandomised.IDENTIFIER, SchedulerPrinterInitialRandomised.class);
 	}
 }
