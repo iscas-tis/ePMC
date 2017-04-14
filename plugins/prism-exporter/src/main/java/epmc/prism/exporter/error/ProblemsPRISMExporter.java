@@ -48,6 +48,7 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_RENAMING = newProblem("prism-exporter-unsupported-feature-action-renaming");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED = newProblem("prism-exporter-unsupported-feature-action-not-synchronized");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION = newProblem("prism-exporter-unsupported-feature-synchronization-on-hidden-action");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_EDGE_RATE_NOT_ONE = newProblem("prism-exporter-unsupported-feature-edge-rate-not-one");
     /** Errors in the input model*/
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION = newProblem("prism-exporter-error-undefined-used-action");
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_CONSTANT = newProblem("prism-exporter-error-undefined-used-constant");
