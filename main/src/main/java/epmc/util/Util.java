@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.jar.Manifest;
 
+import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
 import epmc.graph.SchedulerPrinter;
@@ -324,7 +325,7 @@ public final class Util {
         return null;
     }
     
-	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler, Options options) {
+	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler, Options options) throws EPMCException {
 		Map<String,Class<SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
 		assert schedulerPrinters != null;
 		for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {

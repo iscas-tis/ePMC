@@ -158,8 +158,9 @@ public final class EPMC {
      * 
      * @param options options to use
      * @param log log used
+     * @throws EPMCException 
      */
-    private static void printResults(Options options, LogCommandLine log) {
+    private static void printResults(Options options, LogCommandLine log) throws EPMCException {
         assert options != null;
         assert log != null;
         for (RawProperty property : log.getProperties()) {
