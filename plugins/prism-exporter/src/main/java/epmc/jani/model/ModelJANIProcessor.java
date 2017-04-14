@@ -80,6 +80,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		// Automata
 		Automata automata = jani.getAutomata();
 		processor = ProcessorRegistrar.getProcessor(automata);
+		processor.setWithInitialValue(jani.getRestrictInitial() == null);
 		prism.append(processor.toPRISM().toString()).append("\n");
 		
 		// Initial states expression

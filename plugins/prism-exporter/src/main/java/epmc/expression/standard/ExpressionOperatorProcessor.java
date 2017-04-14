@@ -70,6 +70,7 @@ import epmc.value.OperatorPow;
 public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 
 	private ExpressionOperator expressionOperator = null;
+	private String prefix = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -80,11 +81,20 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert expressionOperator != null;
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor;
+		
+		if (prefix != null) {
+			prism.append(prefix);
+		}
 		
 		Operator operator = expressionOperator.getOperator();
 		

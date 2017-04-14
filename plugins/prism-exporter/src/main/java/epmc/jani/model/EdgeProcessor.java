@@ -20,8 +20,13 @@
 
 package epmc.jani.model;
 
+import static epmc.error.UtilError.ensure;
+
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.graph.SemanticsDTMC;
+import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -58,6 +63,14 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert edge != null;
+		
+		Rate edgeRate = edge.getRate();
+		
+		if (edgeRate != null && SemanticsDTMC.isDTMC(edge.getModel().getSemantics())) {
+			Rate rateOne = new Rate();
+			rateOne.setExp(ExpressionLiteral.getOne(edge.getModel().getContextValue()));
+			ensure(rateOne.equals(edgeRate), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_EDGE_RATE_NOT_ONE);
+		}
 		
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 

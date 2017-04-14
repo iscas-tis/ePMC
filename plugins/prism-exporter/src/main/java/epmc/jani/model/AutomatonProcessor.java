@@ -28,6 +28,7 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 
 	private Automaton automaton = null;
+	private boolean withInitialValue = false;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -52,6 +53,11 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
+	public void setWithInitialValue(boolean withInitialValue) {
+		this.withInitialValue = withInitialValue;
+	}
+
+	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert automaton != null;
 
@@ -70,6 +76,7 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 			processor = ProcessorRegistrar.getProcessor(local);
 			processor.setPrefix(ModelJANIProcessor.INDENT);
 			processor.setForDefinition(true);
+			processor.setWithInitialValue(withInitialValue);
 			prism.append(processor.toPRISM().toString());
 		}
 		
@@ -77,6 +84,7 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 			processor = ProcessorRegistrar.getProcessor(variable);
 			processor.setPrefix(ModelJANIProcessor.INDENT);
 			processor.setForDefinition(true);
+			processor.setWithInitialValue(withInitialValue);
 			prism.append(processor.toPRISM().toString());
 		}
 		
