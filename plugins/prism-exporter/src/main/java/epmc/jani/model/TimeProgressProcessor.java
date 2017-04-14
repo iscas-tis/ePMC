@@ -49,7 +49,7 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
 		} else {
 			processor.setPrefix(ModelJANIProcessor.INDENT);			
 		}
-		prism.append(processor.toPRISM().toString());
+		prism.append(processor.toPRISM().toString()).append("\n");
 		if (prefix != null)	{
 			prism.append(prefix);
 		}
