@@ -25,6 +25,7 @@ import epmc.expression.Expression;
 import epmc.jani.model.type.JANIType;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.time.TypeClock;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class VariableProcessor implements JANI2PRISMProcessorStrict {
@@ -88,10 +89,12 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
 		prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable)).append(" : ").append(processor.toPRISM().toString());
 		
 		if (withInitialValue) {
-			Expression initial = variable.getInitialValueOrNull();
-			if (initial != null) {
-				processor = ProcessorRegistrar.getProcessor(initial);
-				prism.append(" init ").append(processor.toPRISM().toString());
+			if (!(variable.toType() instanceof TypeClock)) {
+				Expression initial = variable.getInitialValueOrNull();
+				if (initial != null) {
+					processor = ProcessorRegistrar.getProcessor(initial);
+					prism.append(" init ").append(processor.toPRISM().toString());
+				}
 			}
 		}
 		
