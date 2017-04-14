@@ -464,6 +464,9 @@ public final class ExplorerJANI implements Explorer {
 			RewardSpecification specification = (RewardSpecification) property;
 			return transitionTransientValuesMap.get(specification.getExpression());
 		}
+		if (property == CommonProperties.TRANSITION_LABEL) {
+			return system.getEdgeProperty(property);
+		}
 		return null;
 	}
 

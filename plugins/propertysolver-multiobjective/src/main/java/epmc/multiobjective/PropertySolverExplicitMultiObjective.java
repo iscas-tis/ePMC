@@ -29,6 +29,7 @@ import java.util.Set;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
@@ -139,6 +140,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	        	}
 	        }
 	    }
+//	    required.add(new ExpressionIdentifierStandard.Builder()
+	//    		.setName("x").build());
+	 //   required.add(new ExpressionIdentifierStandard.Builder()
+	  //  		.setName("y").build());
 		return Collections.unmodifiableSet(required);
 	}
 
@@ -153,6 +158,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	            required.add(((ExpressionReward) quantified).getReward());
 	        }
 	    }
+//	    required.add(CommonProperties.TRANSITION_LABEL);
 		return Collections.unmodifiableSet(required);
 	}
 
@@ -258,6 +264,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 		int numNodes = computationGraph.getNumNodes();
 		
 		ValueArrayAlgebra schedProbs = down.findFeasibleRandomisedScheduler(bounds);
+		assert schedProbs != null;
 		int numSchedulers = 0;
 		for (int schedNr = 0; schedNr < down.size(); schedNr++) {
 			ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();

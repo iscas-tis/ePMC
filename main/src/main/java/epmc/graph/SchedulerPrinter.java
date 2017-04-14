@@ -2,6 +2,7 @@ package epmc.graph;
 
 import java.io.OutputStream;
 
+import epmc.error.EPMCException;
 import epmc.options.Options;
 
 public interface SchedulerPrinter {
@@ -15,5 +16,5 @@ public interface SchedulerPrinter {
 
 	boolean canHandle();
 		
-	void print();
+	void print() throws EPMCException;
 }
