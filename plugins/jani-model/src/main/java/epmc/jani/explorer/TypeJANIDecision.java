@@ -15,7 +15,7 @@ public final class TypeJANIDecision implements Type {
 		StateVariables stateVariables = explorer.getStateVariables();
 		for (Expression expression : stateVariables.getIdentifiersArray()) {
 			ExpressionIdentifier identifier = (ExpressionIdentifier) expression;
-			Type type = stateVariables.getType(identifier);
+			Type type = stateVariables.get(identifier).getType();
 		}
 	}
 	

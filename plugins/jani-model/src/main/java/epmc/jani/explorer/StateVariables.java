@@ -25,79 +25,51 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.value.ContextValue;
-import epmc.value.Type;
 import epmc.value.TypeNumBitsKnown;
-import epmc.value.Value;
 
 public final class StateVariables {
-	private final List<Expression> variables = new ArrayList<>();
-	private final List<Boolean> permanentVariables = new ArrayList<>();
-	private final Map<Expression,Integer> varMap = new LinkedHashMap<>();
-	private final Map<Expression,Type> typeMap = new LinkedHashMap<>();
-	private final Map<Expression,Value> initialValues = new LinkedHashMap<>();
+	private final List<StateVariable> variables = new ArrayList<>();
+	private final Map<Expression,Integer> numberMap = new LinkedHashMap<>();
 	private int numBits;
 	
-	public int addVariable(Expression identifier, Type type, boolean permanent, Expression initialValue) throws EPMCException {
-		assert identifier != null;
-		assert type != null;
-//		assert permanent || initialValue != null : identifier + SPACE + type;
-		variables.add(identifier);
-		if (permanent) {
-			if (TypeNumBitsKnown.getNumBits(type) == TypeNumBitsKnown.UNKNOWN
+	public int add(StateVariable variable) {
+		assert variable != null;
+		int number = variables.size();
+		variables.add(variable);
+		numberMap.put(variable.getIdentifier(), number);
+		if (variable.isPermanent()) {
+			if (TypeNumBitsKnown.getNumBits(variable.getType()) == TypeNumBitsKnown.UNKNOWN
 					|| numBits == Integer.MAX_VALUE) {
 				numBits = Integer.MAX_VALUE;
 			} else {
-				numBits += TypeNumBitsKnown.getNumBits(type);
+				numBits += TypeNumBitsKnown.getNumBits(variable.getType());
 			}
 		}
-		permanentVariables.add(permanent);
-		varMap.put(identifier, variables.size() - 1);
-		typeMap.put(identifier, type);
-		if (initialValue != null) {
-			initialValues.put(identifier, UtilEvaluatorExplicit.evaluate(initialValue, new ExpressionToType() {
-				@Override
-				public Type getType(Expression expression) throws EPMCException {
-					return null;
-				}
-			
-				@Override
-				public ContextValue getContextValue() {
-					return type.getContext();
-				}
-			}));
-		}
-		return variables.size() - 1;
-	}
-
-	
-	public int addVariable(Expression identifier, Type type, boolean permanent) throws EPMCException {
-		assert identifier != null;
-		assert type != null;
-		return addVariable(identifier, type, permanent, null);
+		return number;
 	}
 	
 	public int getVariableNumber(Expression identifier) {
 		assert identifier != null;
-		assert varMap != null;
-		assert varMap.containsKey(identifier) : identifier;
-		return varMap.get(identifier);
+		assert numberMap != null;
+		assert numberMap.containsKey(identifier) : identifier;
+		return numberMap.get(identifier);
 	}
-	
-	public boolean isStoreVariable(int variable) {
-		return permanentVariables.get(variable);
-	}
-	
+		
 	public Expression[] getIdentifiersArray() {
-		return variables.toArray(new Expression[0]);
+		Expression[] result = new Expression[variables.size()];
+		for (int i = 0; i < variables.size(); i++) {
+			result[i] = variables.get(i).getIdentifier();
+		}
+		return result;
 	}
 	
 	public List<Expression> getVariables() {
-		return variables;
+		List<Expression> result = new ArrayList<>();
+		for (StateVariable variable : variables) {
+			result.add(variable.getIdentifier());
+		}
+		return result;
 	}
 
 	public int getNumBits() {
@@ -105,15 +77,19 @@ public final class StateVariables {
 	}
 
 	public boolean contains(Expression identifier) {
-		return varMap.containsKey(identifier);
+		assert identifier != null;
+		return numberMap.containsKey(identifier);
 	}
 	
-	public Type getType(Expression expression) {
-		return typeMap.get(expression);
+	public StateVariable get(int number) {
+		assert number >= 0;
+		assert number < variables.size();
+		return variables.get(number);
 	}
-	
-	public Value getInitial(Expression expression) {
+
+	public StateVariable get(Expression expression) {
 		assert expression != null;
-		return initialValues.get(expression);
+		int number = numberMap.get(expression);
+		return variables.get(number);
 	}
 }
