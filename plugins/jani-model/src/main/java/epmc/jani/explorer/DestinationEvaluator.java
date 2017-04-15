@@ -155,15 +155,6 @@ public final class DestinationEvaluator {
 		TypeLocation typeLocation = builder.getTypeLocation();
 
 		location = typeLocation.getNumber(destination.getLocation());
-//		AT: there are no transient/observable assignment in the JANI specification
-		int numObservables = 0;
-//		for (Assignment entry : destination.getObservableAssignmentsOrEmpty()) {
-//			AssignmentEvaluator evaluator = newAssignmentEvaluator(autVarToLocal, variableMap, variables, entry);;
-//			if (evaluator == null) {
-//				continue;
-//			}
-//			numObservables++;
-//		}
 		
 		assignments = new AssignmentsEvaluator.Builder()
 				.setAssignments(destination.getAssignmentsOrEmpty())
