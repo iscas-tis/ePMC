@@ -41,6 +41,9 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 
 final class DownClosure {
+	private final static String SLACK_VARIABLE = "v";
+	private final static String WEIGHT_VARIABLE = "w%d";
+	private final static String DIFFERENCE_VARIABLE = "d";
     private final ContextValue contextValue;
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
@@ -116,10 +119,10 @@ final class DownClosure {
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
         for (int i = 0; i < dimension; i++) {
-            wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
         }
-        int dLpVar = problem.addVariable("d", TypeWeight.get(contextValue));
-        int vLpVar = problem.addVariable("v", TypeWeight.get(contextValue), TypeReal.get(contextValue).getNegInf(), TypeReal.get(contextValue).getPosInf());
+        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get(contextValue));
+        int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(contextValue), TypeReal.get(contextValue).getNegInf(), TypeReal.get(contextValue).getPosInf());
         
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -271,9 +274,9 @@ final class DownClosure {
 
         int[] wLpVars = new int[elements.size() + 1];
         for (int i = 0; i < elements.size(); i++) {
-            wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
         }
-        int dLpVar = problem.addVariable("d", TypeWeight.get(contextValue), negInf, posInf);
+        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get(contextValue), negInf, posInf);
         ValueAlgebra entry = newValueWeight();        
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -364,7 +367,7 @@ final class DownClosure {
 
         int[] wLpVars = new int[elements.size()];
         for (int i = 0; i < elements.size(); i++) {
-            wLpVars[i] = problem.addVariable("w" + i, TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
         }
         ValueAlgebra entry = newValueWeight();        
         ValueArrayAlgebra problemWeights;
