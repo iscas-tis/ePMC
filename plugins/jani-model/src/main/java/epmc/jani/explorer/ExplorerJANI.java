@@ -175,11 +175,11 @@ public final class ExplorerJANI implements Explorer {
 					.setName("%selfLoopId")
 					.build();
 			TypeBoolean typeBoolean = TypeBoolean.get(getContextValue());
-			selfLoopVariable = stateVariables.addVariable(selfLoopIdentifier, typeBoolean, false);
+			selfLoopVariable = stateVariables.add(new StateVariable.Builder().setIdentifier(selfLoopIdentifier).setType(typeBoolean).setPermanent(false).build());
 		}
 		for (Variable variable : model.getGlobalVariablesOrEmpty()) {
 			boolean store = !variable.isTransient();
-			stateVariables.addVariable(variable.getIdentifier(), variable.getType().toType(), store, variable.getInitialValueOrNull());
+			stateVariables.add(new StateVariable.Builder().setIdentifier(variable.getIdentifier()).setType(variable.getType().toType()).setPermanent(store).setInitialValue(variable.getInitialValueOrNull()).build());
 		}
 	}
 
@@ -424,7 +424,7 @@ public final class ExplorerJANI implements Explorer {
 			}
 			PropertyNodeExpression result = expressionProperties.get(property);
 			if (result == null) {
-				Type type = stateVariables.getType((Expression) property);
+				Type type = stateVariables.get((Expression) property).getType();
 				result = new PropertyNodeExpression(this, stateVariables.getIdentifiersArray(), (Expression) property, type);
 				expressionProperties.put((Expression) property, result);
 			}
@@ -508,7 +508,7 @@ public final class ExplorerJANI implements Explorer {
 	
 	@Override
 	public Type getType(Expression expression) throws EPMCException {
-		Type type = stateVariables.getType(expression);
+		Type type = stateVariables.get(expression).getType();
 		if (type != null) {
 			return type;
 		}

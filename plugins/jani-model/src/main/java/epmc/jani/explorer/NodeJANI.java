@@ -61,9 +61,8 @@ public final class NodeJANI implements ExplorerNode {
 		initialValues = new Value[variables.size()];
 		for (int varNr = 0; varNr < variables.size(); varNr++) {
 			assert variables.get(varNr) != null : varNr;
-			assert stateVariables.getType(variables.get(varNr)) != null : variables.get(varNr);
-			values[varNr] = stateVariables.getType(variables.get(varNr)).newValue();
-			boolean storeVariable = stateVariables.isStoreVariable(varNr);
+			values[varNr] = stateVariables.get(variables.get(varNr)).getType().newValue();
+			boolean storeVariable = stateVariables.get(varNr).isPermanent();
 			storeVariables[varNr] = storeVariable;
 			if (storeVariable) {
 				if (ValueNumBitsKnown.getNumBits(values[varNr]) == Integer.MAX_VALUE
@@ -74,7 +73,7 @@ public final class NodeJANI implements ExplorerNode {
 				}
 			}
 			if (!storeVariable) {
-				Value initial = stateVariables.getInitial(variables.get(varNr));
+				Value initial = stateVariables.get(variables.get(varNr)).getInitialValue();
 //				assert initial != null : variables.get(varNr);
 				initialValues[varNr] = initial;
 			}

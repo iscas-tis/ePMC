@@ -259,7 +259,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setName(LOCATION_IDENTIFIER)
 					.setScope(this)
 					.build();
-			locationVarNr = stateVariables.addVariable(locationIdentifier, typeLocation, true);
+			locationVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(locationIdentifier).setType(typeLocation).setPermanent(true).build());
 		} else {
 			locationVarNr = -1;
 		}
@@ -268,7 +268,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setName(EDGE_IDENTIFIER)
 					.setScope(this)
 					.build();
-			edgeVarNr = stateVariables.addVariable(edgeIdentifier, typeEdge, false);
+			edgeVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(edgeIdentifier).setType(typeEdge).setPermanent(false).build());
 		}
 		for (Variable variable : automaton.getVariablesOrEmpty()) {
 			Expression identifier = new ExpressionIdentifierStandard.Builder()
@@ -276,7 +276,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setScope(this)
 					.build();
 			boolean store = !variable.isTransient();
-			variableToNumber.put(variable, stateVariables.addVariable(identifier, variable.toType(), store, variable.getInitialValueOrNull()));
+			variableToNumber.put(variable, stateVariables.add(new StateVariable.Builder().setIdentifier(identifier).setType(variable.toType()).setPermanent(store).setInitialValue(variable.getInitialValueOrNull()).build()));
 			autVarToLocal.put(variable.getIdentifier(), identifier);
 		}
 		for (Variable variable : explorer.getModel().getGlobalVariablesOrEmpty()) {

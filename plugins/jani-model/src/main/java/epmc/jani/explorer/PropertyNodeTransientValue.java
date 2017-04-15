@@ -34,7 +34,7 @@ public final class PropertyNodeTransientValue implements PropertyNode {
 		assert varNr >= 0;
 		this.explorer = explorer;
 		this.varNr = varNr;
-		this.type = explorer.getStateVariables().getType(explorer.getStateVariables().getVariables().get(varNr));
+		this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariables().get(varNr)).getType();
 	}
 	
 	@Override
