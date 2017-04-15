@@ -55,8 +55,6 @@ public enum CommonProperties {
     NODE_MODEL,
     /** Automaton node part of a model automaton product. */
     NODE_AUTOMATON,
-    /** Strategy (for simple strategies). */
-    STRATEGY,
     
     /* edge properties */
     /** edge weight (rate or probability) */
