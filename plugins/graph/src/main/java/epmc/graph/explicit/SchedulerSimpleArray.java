@@ -90,9 +90,4 @@ public final class SchedulerSimpleArray implements SchedulerSimpleSettable {
     public SchedulerSimple clone() {
         return new SchedulerSimpleArray(graph, content.clone());
     }
-
-	@Override
-	public int size() {
-		return content.length;
-	}
 }

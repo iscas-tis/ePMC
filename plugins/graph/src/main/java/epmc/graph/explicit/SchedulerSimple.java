@@ -35,21 +35,12 @@ import epmc.graph.Scheduler;
  * @author Ernst Moritz Hahn
  */
 public interface SchedulerSimple extends Scheduler {
-	int size();
-	
     /**
-     * Get decision for a given node.
-     * The node must be nonnegative and smaller than the number of nodes.
-     * The decision will be nonnegative or equal to
-     * {@link Scheduler#UNSET}. It will also be smaller than the value obtained
-     * by {@link GraphExplicit#getNumSuccessors()} directly after a call to
-     * {@link GraphExplicit#queryNode(int)} on the node parameter of this
-     * method. If the decision is {@link Scheduler#UNSET}, it means that there
-     * is no decision for this node, otherwise the according outgoing edge
-     * of the node is selected.
+     * Get decision for a given state.
+     * The state must be a valid index in the graph the scheduler refers to.
      * 
-     * @param node node to get decision of
+     * @param state node to get decision of
      * @return decision for a given node
      */
-    int getDecision(int node);
+    int getDecision(int state);
 }

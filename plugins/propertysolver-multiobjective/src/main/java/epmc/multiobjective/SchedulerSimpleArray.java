@@ -11,11 +11,6 @@ final class SchedulerSimpleArray implements SchedulerSimple {
 	}
 	
 	@Override
-	public int size() {
-		return array.length;
-	}
-
-	@Override
 	public int getDecision(int node) {
 		return array[node];
 	}
