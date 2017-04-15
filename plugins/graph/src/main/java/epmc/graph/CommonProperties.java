@@ -63,4 +63,6 @@ public enum CommonProperties {
     AUTOMATON_LABEL,
     /** transition label (as e.g. used for synchronisation or rewards) */
     TRANSITION_LABEL,
+    /** identifies command/edge/etc in high-level model */
+    DECISION,
 }
