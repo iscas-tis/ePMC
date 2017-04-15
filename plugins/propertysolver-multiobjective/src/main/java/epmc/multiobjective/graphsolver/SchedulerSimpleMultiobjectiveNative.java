@@ -24,11 +24,6 @@ public final class SchedulerSimpleMultiobjectiveNative implements SchedulerSimpl
 	}
 	
 	@Override
-	public int size() {
-		return numStates;
-	}
-
-	@Override
 	public int getDecision(int node) {
 		return decisions.getInt(Integer.BYTES * node) - stateBounds.getInt(Integer.BYTES * node);
 	}

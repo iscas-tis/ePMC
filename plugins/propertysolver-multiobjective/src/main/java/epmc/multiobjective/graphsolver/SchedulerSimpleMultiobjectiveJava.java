@@ -20,11 +20,6 @@ public final class SchedulerSimpleMultiobjectiveJava implements SchedulerSimple 
 	}
 	
 	@Override
-	public int size() {
-		return numStates;
-	}
-
-	@Override
 	public int getDecision(int node) {
 		return decisions[node] - stateBounds[node];
 	}

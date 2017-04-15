@@ -152,10 +152,5 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
             assert false;
             return null;
         }
-    }
-    
-	@Override
-	public int size() {
-		return numNodes;
-	}
+    }    
 }
