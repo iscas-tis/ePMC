@@ -62,11 +62,6 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
 		this.values[0] = type.newValue();
 	}
 	
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
-	}
-
 	/**
 	 * Set value of given successor
 	 * The parameter may not be {@code null}. The successor parameter must not

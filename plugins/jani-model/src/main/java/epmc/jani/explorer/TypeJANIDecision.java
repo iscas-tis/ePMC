@@ -1,5 +1,7 @@
 package epmc.jani.explorer;
 
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifier;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
@@ -10,6 +12,11 @@ public final class TypeJANIDecision implements Type {
 	TypeJANIDecision(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
+		StateVariables stateVariables = explorer.getStateVariables();
+		for (Expression expression : stateVariables.getIdentifiersArray()) {
+			ExpressionIdentifier identifier = (ExpressionIdentifier) expression;
+			Type type = stateVariables.getType(identifier);
+		}
 	}
 	
 	@Override

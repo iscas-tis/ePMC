@@ -21,7 +21,6 @@
 package epmc.jani.explorer;
 
 import epmc.error.EPMCException;
-import epmc.graph.explorer.Explorer;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -47,11 +46,6 @@ public final class PropertyNodeState implements PropertyNode {
 		this.explorer = explorer;
 		this.type = TypeBoolean.get(explorer.getContextValue());
 		this.value = type.newValue();
-	}
-
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
 	}
 
 	@Override

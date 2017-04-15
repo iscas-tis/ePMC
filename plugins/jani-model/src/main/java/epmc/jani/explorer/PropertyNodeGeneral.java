@@ -39,8 +39,6 @@ import epmc.value.ValueObject;
  * @author Ernst Moritz Hahn
  */
 public final class PropertyNodeGeneral implements PropertyNode {
-	/** The explorer to which this property belongs. */
-	private final Explorer explorer;
 	/** Type of value stored. */
 	private final Type type;
 	/** Value of this property for the node queried last. */
@@ -56,14 +54,8 @@ public final class PropertyNodeGeneral implements PropertyNode {
 	public PropertyNodeGeneral(Explorer explorer, Type type) {
 		assert explorer != null;
 		assert type != null;
-		this.explorer = explorer;
 		this.type = type;
 		this.value = type.newValue();
-	}
-
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
 	}
 
 	/**

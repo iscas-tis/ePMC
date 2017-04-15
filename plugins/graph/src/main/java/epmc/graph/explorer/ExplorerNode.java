@@ -31,13 +31,6 @@ import epmc.util.BitStream;
  * @author Ernst Moritz Hahn
  */
 public interface ExplorerNode extends Cloneable, BitStoreable {
-    /**
-     * Get the explorer the node belongs to.
-     * 
-     * @return explorer the node belongs to
-     */
-    Explorer getExplorer();
-    
     ExplorerNode clone();
 
     @Override

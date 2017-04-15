@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import epmc.error.EPMCException;
-import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.value.TypeBoolean;
 import epmc.value.ValueBoolean;
@@ -50,11 +49,6 @@ final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
 		value = type.newValue();
 	}
 	
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
-	}
-
 	@Override
 	public ValueBoolean get() throws EPMCException {
 		value.set(initialNodes.contains(explorer.getQueriedNode()));

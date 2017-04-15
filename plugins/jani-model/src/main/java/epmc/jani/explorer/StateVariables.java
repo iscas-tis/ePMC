@@ -35,8 +35,6 @@ import epmc.value.TypeNumBitsKnown;
 import epmc.value.Value;
 
 public final class StateVariables {
-	private final static String SPACE = " ";
-	
 	private final List<Expression> variables = new ArrayList<>();
 	private final List<Boolean> permanentVariables = new ArrayList<>();
 	private final Map<Expression,Integer> varMap = new LinkedHashMap<>();

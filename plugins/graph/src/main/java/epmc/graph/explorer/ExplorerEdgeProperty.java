@@ -21,11 +21,9 @@
 package epmc.graph.explorer;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueObject;
 
 /**
  * Edge properties of an explorer.
@@ -37,13 +35,6 @@ import epmc.value.ValueObject;
 public interface ExplorerEdgeProperty {
     /* methods to be implemented by implementing classes */
 
-    /**
-     * Get the explorer to which the edge property belongs.
-     * 
-     * @return explorer to which the edge property belongs
-     */
-    Explorer getExplorer();
-    
     /**
      * Get value for an edge of the node queried last.
      * The value obtained is the value for the edge with the given number of the
@@ -72,22 +63,4 @@ public interface ExplorerEdgeProperty {
      * @return type of the values returned by {@link #get(int)}
      */
     Type getType();
-
-    
-    /* default methods */
-    
-    default <T> T getObject(int successor) throws EPMCException {
-        assert successor >= 0;
-        ValueObject value = ValueObject.asObject(get(successor));
-        return value.getObject();
-    }
-   
-    /**
-     * Get value context used by explorer of this edge property.
-     * 
-     * @return value context used by explorer of this edge property
-     */
-    default ContextValue getContextValue() {
-        return getExplorer().getContextValue();
-    }
 }

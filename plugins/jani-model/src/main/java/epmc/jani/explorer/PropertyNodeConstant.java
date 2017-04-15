@@ -37,11 +37,6 @@ final class PropertyNodeConstant implements PropertyNode {
 	}
 	
 	@Override
-	public Explorer getExplorer() {
-		return explorer;
-	}
-
-	@Override
 	public Value get() throws EPMCException {
 		return value;
 	}

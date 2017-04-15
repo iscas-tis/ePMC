@@ -21,14 +21,10 @@
 package epmc.graph.explorer;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.ValueEnum;
-import epmc.value.ValueInteger;
-import epmc.value.ValueObject;
 
 /**
  * Node properties of an explorer.
@@ -39,13 +35,6 @@ import epmc.value.ValueObject;
  */
 public interface ExplorerNodeProperty {
     /* methods to be implemented by implementing classes */
-    
-    /**
-     * Get the explorer to which the node property belongs.
-     * 
-     * @return explorer to which the node property belongs
-     */
-    Explorer getExplorer();
 
     /**
      * Get value for node queried last.
@@ -72,21 +61,6 @@ public interface ExplorerNodeProperty {
     
     
     /* default methods */
-    
-    /**
-     * Return value of this node as integer.
-     * In addition to the requirements of {@link #get()}, the node property must
-     * indeed store integer values. If this is not the case, an
-     * {@link AssertionError} may be thrown if assertions are enabled.
-     * 
-     * @return value of this node as integer
-     * @throws EPMCException thrown in case of problems obtaining the value
-     */
-    default int getInt() throws EPMCException {
-        Value value = get();
-        assert ValueInteger.isInteger(value);
-        return ValueInteger.asInteger(value).getInt();
-    }
 
     /**
      * Return value of this node as boolean.
@@ -101,43 +75,5 @@ public interface ExplorerNodeProperty {
         Value value = get();
         assert ValueBoolean.isBoolean(value);
         return ValueBoolean.asBoolean(value).getBoolean();
-    }
-    
-    /**
-     * Return value of this node as object.
-     * In addition to the requirements of {@link #get()}, the node property must
-     * indeed store object values. If this is not the case, an
-     * {@link AssertionError} may be thrown if assertions are enabled.
-     * 
-     * @return value of this node as object
-     * @throws EPMCException thrown in case of problems obtaining the value
-     */
-    default <T> T getObject() throws EPMCException {
-        ValueObject value = ValueObject.asObject(get());
-        return value.getObject();
-    }
-    
-    /**
-     * Return value of this node as enum.
-     * In addition to the requirements of {@link #get()}, the node property must
-     * indeed store enum values. If this is not the case, an
-     * {@link AssertionError} may be thrown if assertions are enabled.
-     * 
-     * @return value of this node as enum
-     * @throws EPMCException thrown in case of problems obtaining the value
-     */
-    default <T extends Enum<?>> T getEnum() throws EPMCException {
-        Value value = get();
-        assert ValueEnum.isEnum(value);
-        return ValueEnum.asEnum(value).getEnum();
-    }
-    
-    /**
-     * Get value context used by explorer of this node property.
-     * 
-     * @return value context used by explorer of this node property
-     */
-    default ContextValue getContextValue() {
-        return getExplorer().getContextValue();
     }
 }
