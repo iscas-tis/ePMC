@@ -53,7 +53,6 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
         assert collection != null;
         for (ExplorerNode node : collection) {
             assert node != null;
-            assert node.getExplorer() == explorer;
         }
         this.explorer = explorer;
         for (T node : collection) {

@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.error.EPMCException;
-import epmc.graph.explorer.Explorer;
 import epmc.jani.model.Action;
 import epmc.jani.model.ModelJANI;
 import epmc.value.Type;
@@ -35,7 +34,6 @@ import epmc.value.ValueObject;
 import epmc.value.TypeObject.StorageType;
 
 public final class PropertyEdgeAction implements PropertyEdge {
-	private final ExplorerJANI explorer;
 	private final Map<Action,Integer> actionToNumber = new HashMap<>();
 	private final Action[] numberToAction;
 	private final TypeObject type;
@@ -43,7 +41,7 @@ public final class PropertyEdgeAction implements PropertyEdge {
 	private int[] values = new int[1];
 	
 	PropertyEdgeAction(ExplorerJANI explorer) {
-		this.explorer = explorer;
+		assert explorer != null;
 		ModelJANI model = explorer.getModel();
 		numberToAction = new Action[model.getActions().size() + 1];
 		int actionNumber = 0;
@@ -61,11 +59,6 @@ public final class PropertyEdgeAction implements PropertyEdge {
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build();
 		value = type.newValue();
-	}
-	
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
 	}
 
 	@Override

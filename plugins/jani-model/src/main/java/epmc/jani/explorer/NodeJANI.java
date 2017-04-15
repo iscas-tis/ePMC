@@ -28,7 +28,6 @@ import java.util.List;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.util.BitStream;
 import epmc.value.Value;
@@ -83,11 +82,6 @@ public final class NodeJANI implements ExplorerNode {
 		this.numBits = numBits;
 		this.variablesSetMarks = new boolean[variables.size()];
 		this.variablesSet = new int[variables.size()];
-	}
-
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
 	}
 
 	@Override

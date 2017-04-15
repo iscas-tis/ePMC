@@ -46,7 +46,6 @@ public final class ExplorerProperties implements Serializable {
     /** String "edgeProperties". */
     private final static String EDGE_PROPERTIES = "edgeProperties";
     
-    private final Explorer explorer;
     private final Map<Object,Value> explorerProperties = new LinkedHashMap<>();
     private final Map<Object,Value> explorerPropertiesExternal = Collections.unmodifiableMap(explorerProperties);
     private final Map<Object,ExplorerNodeProperty> nodeProperties = new LinkedHashMap<>();
@@ -58,7 +57,6 @@ public final class ExplorerProperties implements Serializable {
     public ExplorerProperties(Explorer explorer, ContextValue contextValue) {
         assert explorer != null;
         assert contextValue != null;
-        this.explorer = explorer;
         this.contextValue = contextValue;
     }
     
@@ -103,7 +101,6 @@ public final class ExplorerProperties implements Serializable {
             ExplorerNodeProperty property) {
         assert propertyName != null;
         assert property != null;
-        assert property.getExplorer() == this.explorer;
         if (nodeProperties.containsKey(propertyName)) {
             return;
         }
@@ -128,7 +125,6 @@ public final class ExplorerProperties implements Serializable {
             ExplorerEdgeProperty property) {
         assert propertyName != null;
         assert property != null;
-        assert property.getExplorer() == this.explorer;
         if (edgeProperties.containsKey(propertyName)) {
             return;
         }

@@ -47,11 +47,6 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
 	}
 	
 	@Override
-	public Explorer getExplorer() {
-		return explorer;
-	}
-
-	@Override
 	public Value get() throws EPMCException {
 		evaluator.evaluate(values);
 		return evaluator.getResultValue();

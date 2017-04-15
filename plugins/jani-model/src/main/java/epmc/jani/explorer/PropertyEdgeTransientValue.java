@@ -21,7 +21,6 @@
 package epmc.jani.explorer;
 
 import epmc.error.EPMCException;
-import epmc.graph.explorer.Explorer;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -37,11 +36,6 @@ public final class PropertyEdgeTransientValue implements PropertyEdge {
 		this.explorer = explorer;
 		this.varNr = varNr;
 		this.type = explorer.getStateVariables().getType(explorer.getStateVariables().getVariables().get(varNr));
-	}
-	
-	@Override
-	public Explorer getExplorer() {
-		return explorer;
 	}
 
 	@Override
