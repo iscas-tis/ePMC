@@ -268,7 +268,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setName(EDGE_IDENTIFIER)
 					.setScope(this)
 					.build();
-			edgeVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(edgeIdentifier).setType(typeEdge).setPermanent(false).build());
+			edgeVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(edgeIdentifier).setType(typeEdge).setPermanent(false).setDecision(true).build());
 		}
 		for (Variable variable : automaton.getVariablesOrEmpty()) {
 			Expression identifier = new ExpressionIdentifierStandard.Builder()

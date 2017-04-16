@@ -21,6 +21,7 @@
 package epmc.jani.explorer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import epmc.value.TypeNumBitsKnown;
 
 public final class StateVariables {
 	private final List<StateVariable> variables = new ArrayList<>();
+	private final List<StateVariable> variablesExternal = Collections.unmodifiableList(variables);
 	private final Map<Expression,Integer> numberMap = new LinkedHashMap<>();
 	private int numBits;
 	
@@ -64,7 +66,7 @@ public final class StateVariables {
 		return result;
 	}
 	
-	public List<Expression> getVariables() {
+	public List<Expression> getVariableIdentifiers() {
 		List<Expression> result = new ArrayList<>();
 		for (StateVariable variable : variables) {
 			result.add(variable.getIdentifier());
@@ -91,5 +93,9 @@ public final class StateVariables {
 		assert expression != null;
 		int number = numberMap.get(expression);
 		return variables.get(number);
+	}
+	
+	public List<StateVariable> getVariables() {
+		return variablesExternal;
 	}
 }

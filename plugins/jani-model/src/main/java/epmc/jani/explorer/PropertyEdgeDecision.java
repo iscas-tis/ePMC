@@ -6,23 +6,25 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 public final class PropertyEdgeDecision implements ExplorerEdgeProperty {
-//	private final ExplorerJANI explorer;
+	private final ExplorerJANI explorer;
+	private final ValueJANIDecision value;
 
 	PropertyEdgeDecision(ExplorerJANI explorer) {
 		assert explorer != null;
-	//	this.explorer = explorer;
+		this.explorer = explorer;
+		TypeJANIDecision type = new TypeJANIDecision(explorer);
+		value = type.newValue();
 	}
 	
 	@Override
 	public Value get(int successor) throws EPMCException {
-		// TODO Auto-generated method stub
-		return null;
+		NodeJANI node = explorer.getSuccessorNode(successor);
+		value.set(node);
+		return value;
 	}
 
 	@Override
 	public Type getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return value.getType();
 	}
-
 }

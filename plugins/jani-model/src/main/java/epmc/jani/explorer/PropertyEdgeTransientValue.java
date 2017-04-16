@@ -35,7 +35,7 @@ public final class PropertyEdgeTransientValue implements PropertyEdge {
 		assert varNr >= 0;
 		this.explorer = explorer;
 		this.varNr = varNr;
-		this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariables().get(varNr)).getType();
+		this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariableIdentifiers().get(varNr)).getType();
 	}
 
 	@Override

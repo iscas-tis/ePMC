@@ -119,9 +119,6 @@ public abstract class ValueArray implements Value {
     }
     
     @Override
-    public abstract ValueArray clone();
-    
-    @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
         Value entry = getType().getEntryType().newValue();

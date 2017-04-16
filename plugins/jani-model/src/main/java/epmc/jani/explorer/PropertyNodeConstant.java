@@ -21,7 +21,6 @@
 package epmc.jani.explorer;
 
 import epmc.error.EPMCException;
-import epmc.graph.explorer.Explorer;
 import epmc.value.Type;
 import epmc.value.Value;
 
