@@ -25,7 +25,6 @@ import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.value.Type;
 import epmc.value.Value;

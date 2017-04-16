@@ -15,6 +15,7 @@ public final class StateVariable {
 		private boolean permanent;
 		private Type type;
 		private Expression initialValue;
+		private boolean decision;
 
 		public Builder setIdentifier(Expression identifier) {
 			this.identifier = identifier;
@@ -51,6 +52,15 @@ public final class StateVariable {
 		private Expression getInitialValue() {
 			return initialValue;
 		}
+
+		public Builder setDecision(boolean decision) {
+			this.decision = decision;
+			return this;
+		}
+		
+		private boolean isDecision() {
+			return decision;
+		}
 		
 		public StateVariable build() throws EPMCException {
 			return new StateVariable(this);
@@ -63,6 +73,7 @@ public final class StateVariable {
 	private final Type type;
 	private final int numBits;
 	private final Value initialValue;
+	private final boolean decision;
 	
 	private StateVariable(Builder builder) throws EPMCException {
 		assert builder != null;
@@ -93,6 +104,7 @@ public final class StateVariable {
 		} else {
 			initialValue = null;
 		}
+		decision = builder.isDecision();
 	}
 	
 	public Expression getIdentifier() {
@@ -117,5 +129,9 @@ public final class StateVariable {
 	
 	public boolean isPermanent() {
 		return permanent;
+	}
+	
+	public boolean isDecision() {
+		return decision;
 	}
 }

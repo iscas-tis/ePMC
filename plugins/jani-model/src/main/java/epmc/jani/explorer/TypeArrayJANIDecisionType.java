@@ -31,8 +31,7 @@ public final class TypeArrayJANIDecisionType implements TypeArray {
 
 	@Override
 	public ValueArray newValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ValueArrayJANIDecision(this);
 	}
 
 }

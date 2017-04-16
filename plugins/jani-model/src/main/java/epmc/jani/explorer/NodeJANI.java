@@ -54,7 +54,7 @@ public final class NodeJANI implements ExplorerNode {
 		assert stateVariables != null;
 		this.explorer = explorer;
 		this.stateVariables = stateVariables;
-		List<Expression> variables = new ArrayList<>(stateVariables.getVariables());
+		List<Expression> variables = new ArrayList<>(stateVariables.getVariableIdentifiers());
 		values = new Value[variables.size()];
 		int numBits = 0;
 		storeVariables = new boolean[variables.size()];
@@ -259,7 +259,7 @@ public final class NodeJANI implements ExplorerNode {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("-----\n");
-		builder.append(this.stateVariables.getVariables());
+		builder.append(this.stateVariables.getVariableIdentifiers());
 		builder.append("\n");
 		builder.append(Arrays.toString(storeVariables));
 		builder.append("\n");

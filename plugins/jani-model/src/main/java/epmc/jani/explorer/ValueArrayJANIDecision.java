@@ -6,35 +6,32 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class ValueArrayJANIDecision extends ValueArray {
+	private final TypeArrayJANIDecisionType type;
+	private boolean immutable;
+
+	public ValueArrayJANIDecision(TypeArrayJANIDecisionType type) {
+		assert type != null;
+		this.type = type;
+	}
 
 	@Override
 	public void set(String value) throws EPMCException {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	@Override
 	public void setImmutable() {
-		// TODO Auto-generated method stub
-		
+		this.immutable = true;
 	}
 
 	@Override
 	public boolean isImmutable() {
-		// TODO Auto-generated method stub
-		return false;
+		return immutable;
 	}
 
 	@Override
 	public TypeArray getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ValueArray clone() {
-		// TODO Auto-generated method stub
-		return null;
+		return type;
 	}
 
 	@Override
