@@ -140,4 +140,8 @@ public final class ValueJANIDecision implements Value {
 		builder.append(RBRACK);
 		return builder.toString();
 	}
+	
+	public Value[] getValues() {
+		return values;
+	}
 }

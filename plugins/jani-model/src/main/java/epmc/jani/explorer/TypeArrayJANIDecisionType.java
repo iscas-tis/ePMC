@@ -3,29 +3,29 @@ package epmc.jani.explorer;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
+import epmc.value.TypeArrayGeneric;
 import epmc.value.ValueArray;
 
 public final class TypeArrayJANIDecisionType implements TypeArray {
 	private final TypeJANIDecision entryType;
 
-	TypeArrayJANIDecisionType(TypeJANIDecision typeJANIDecision) {
-		this.entryType = typeJANIDecision;
+	TypeArrayJANIDecisionType(TypeJANIDecision entryType) {
+		assert entryType != null;
+		this.entryType = entryType;
 	}
 	
 	@Override
 	public ContextValue getContext() {
-		// TODO Auto-generated method stub
-		return null;
+		return entryType.getContext();
 	}
 
 	@Override
 	public TypeArray getTypeArray() {
-		// TODO Auto-generated method stub
-		return null;
+		return getContext().makeUnique(new TypeArrayGeneric(this));
 	}
 
 	@Override
-	public Type getEntryType() {
+	public TypeJANIDecision getEntryType() {
 		return entryType;
 	}
 
