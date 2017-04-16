@@ -14,7 +14,6 @@ public final class TypeJANIDecision implements Type {
 	private final int[] numBits;
 	private final Type[] types;
 	private final int totalNumBits;
-	private int requiredEntries;
 
 	TypeJANIDecision(ExplorerJANI explorer) {
 		assert explorer != null;
@@ -48,7 +47,6 @@ public final class TypeJANIDecision implements Type {
 			}
 		}
 		this.totalNumBits = totalNumBits;
-		this.requiredEntries = totalNumBits / Long.SIZE + (totalNumBits % Long.SIZE == 0 ? 0 : 1);
 	}
 	
 	@Override
@@ -89,10 +87,6 @@ public final class TypeJANIDecision implements Type {
 	
 	int getTotalNumBits() {
 		return totalNumBits;
-	}
-	
-	int getRequiredEntries() {
-		return requiredEntries;
 	}
 	
 	Type[] getTypes() {

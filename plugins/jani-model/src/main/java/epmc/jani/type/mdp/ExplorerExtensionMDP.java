@@ -31,6 +31,7 @@ import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.ExplorerJANI;
 import epmc.jani.explorer.NodeJANI;
 import epmc.jani.explorer.PropertyEdge;
+import epmc.jani.explorer.PropertyEdgeDecision;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
 import epmc.value.TypeEnum;
@@ -40,7 +41,9 @@ public final class ExplorerExtensionMDP implements ExplorerExtension {
 	private PropertyNodeGeneral player;
 	private PropertyNodeGeneral systemState;
 	private PropertyEdge systemWeight;
+	private PropertyEdgeDecision decision;
 	private ExplorerComponent system;
+	private ExplorerJANI explorer;
 
 	@Override
 	public String getIdentifier() {
@@ -53,6 +56,7 @@ public final class ExplorerExtensionMDP implements ExplorerExtension {
 		system = explorer.getExplorerSystem();
 		systemState = (PropertyNodeGeneral) system.getNodeProperty(CommonProperties.STATE);
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
+		this.explorer = explorer;
 	}
 	
 	@Override
@@ -81,6 +85,12 @@ public final class ExplorerExtensionMDP implements ExplorerExtension {
 	public ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
 		if (property == CommonProperties.WEIGHT) {
 			return systemWeight;
+		}
+		if (property == CommonProperties.DECISION) {
+			if (decision == null) {
+				decision = new PropertyEdgeDecision(explorer);
+			}
+			return decision;
 		}
 		return null;
 	}
