@@ -7,9 +7,9 @@ import epmc.value.TypeArrayGeneric;
 import epmc.value.ValueArray;
 
 public final class TypeArrayJANIDecisionType implements TypeArray {
-	private final TypeJANIDecision entryType;
+	private final TypeDecision entryType;
 
-	TypeArrayJANIDecisionType(TypeJANIDecision entryType) {
+	TypeArrayJANIDecisionType(TypeDecision entryType) {
 		assert entryType != null;
 		this.entryType = entryType;
 	}
@@ -25,7 +25,7 @@ public final class TypeArrayJANIDecisionType implements TypeArray {
 	}
 
 	@Override
-	public TypeJANIDecision getEntryType() {
+	public TypeDecision getEntryType() {
 		return entryType;
 	}
 

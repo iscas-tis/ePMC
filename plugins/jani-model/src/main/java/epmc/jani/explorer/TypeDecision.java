@@ -8,14 +8,14 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeNumBitsKnown;
 
-public final class TypeJANIDecision implements Type {
+public final class TypeDecision implements Type {
 	private final ExplorerJANI explorer;
 	private final int[] variables;
 	private final int[] numBits;
 	private final Type[] types;
 	private final int totalNumBits;
 
-	TypeJANIDecision(ExplorerJANI explorer) {
+	TypeDecision(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
 		StateVariables stateVariables = explorer.getStateVariables();
@@ -55,17 +55,17 @@ public final class TypeJANIDecision implements Type {
 	}
 
 	@Override
-	public ValueJANIDecision newValue() {
-		return new ValueJANIDecision(this);
+	public ValueDecision newValue() {
+		return new ValueDecision(this);
 	}
 
 	@Override
 	public boolean canImport(Type type) {
 		assert type != null;
-		if (!(type instanceof TypeJANIDecision)) {
+		if (!(type instanceof TypeDecision)) {
 			return false;
 		}
-		TypeJANIDecision other = (TypeJANIDecision) type;
+		TypeDecision other = (TypeDecision) type;
 		if (explorer != other.explorer) {
 			return false;
 		}

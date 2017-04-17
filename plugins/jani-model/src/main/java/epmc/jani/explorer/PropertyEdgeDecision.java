@@ -7,12 +7,12 @@ import epmc.value.Value;
 
 public final class PropertyEdgeDecision implements ExplorerEdgeProperty {
 	private final ExplorerJANI explorer;
-	private final ValueJANIDecision value;
+	private final ValueDecision value;
 
 	public PropertyEdgeDecision(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
-		TypeJANIDecision type = new TypeJANIDecision(explorer);
+		TypeDecision type = new TypeDecision(explorer);
 		value = type.newValue();
 	}
 	
