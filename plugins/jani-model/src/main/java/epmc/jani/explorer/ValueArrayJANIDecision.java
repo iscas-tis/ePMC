@@ -75,10 +75,10 @@ public final class ValueArrayJANIDecision extends ValueArray {
 	@Override
 	public void get(Value value, int index) {
 		assert value != null;
-		assert value instanceof ValueJANIDecision;
+		assert value instanceof ValueDecision;
 		assert index >= 0;
 		assert index < getTotalSize();
-		ValueJANIDecision valueJaniDecision = (ValueJANIDecision) value;
+		ValueDecision valueJaniDecision = (ValueDecision) value;
 		Value[] values = valueJaniDecision.getValues();
 		bitIndex = index * bitsPerEntry;
 		for (Value entry : values) {
@@ -88,7 +88,7 @@ public final class ValueArrayJANIDecision extends ValueArray {
 
 	@Override
 	public void set(Value value, int index) {
-		ValueJANIDecision valueJaniDecision = (ValueJANIDecision) value;
+		ValueDecision valueJaniDecision = (ValueDecision) value;
 		Value[] values = valueJaniDecision.getValues();
 		bitIndex = index * bitsPerEntry;
 		for (Value entry : values) {

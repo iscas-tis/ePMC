@@ -4,16 +4,16 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class ValueJANIDecision implements Value {
-	private final static String LBRACK = "(";
-	private final static String RBRACK = ")";
+public final class ValueDecision implements Value {
+	private final static String LBRACE = "(";
+	private final static String RBRACE = ")";
 	private final static String COMMA = ",";
-	private final TypeJANIDecision type;
+	private final TypeDecision type;
 	private final int[] variables;
 	private final Value[] values;
 	private boolean immutable;
 
-	ValueJANIDecision(TypeJANIDecision type) {
+	ValueDecision(TypeDecision type) {
 		assert type != null;
 		this.type = type;
 		variables = type.getVariables();
@@ -27,8 +27,8 @@ public final class ValueJANIDecision implements Value {
 	@Override
 	public int compareTo(Value value) {
 		assert value != null;
-		assert value instanceof ValueJANIDecision;
-		ValueJANIDecision other = (ValueJANIDecision) value;
+		assert value instanceof ValueDecision;
+		ValueDecision other = (ValueDecision) value;
 		for (int i = 0; i < values.length; i++) {
 			int cmp = values[i].compareTo(other.values[i]);
 			if (cmp != 0) {
@@ -46,8 +46,8 @@ public final class ValueJANIDecision implements Value {
 	@Override
 	public void set(Value value) {
 		assert value != null;
-		assert value instanceof ValueJANIDecision;
-		ValueJANIDecision other = (ValueJANIDecision) value;
+		assert value instanceof ValueDecision;
+		ValueDecision other = (ValueDecision) value;
 		for (int i = 0; i < values.length; i++) {
 			values[i].set(other.values[i]);
 		}
@@ -86,15 +86,15 @@ public final class ValueJANIDecision implements Value {
 	@Override
 	public double distance(Value other) throws EPMCException {
 		assert other != null;
-		assert other instanceof ValueJANIDecision;
+		assert other instanceof ValueDecision;
 		return isEq(other) ? 0.0 : 1.0;
 	}
 
 	@Override
 	public boolean isEq(Value other) throws EPMCException {
 		assert other != null;
-		assert other instanceof ValueJANIDecision;
-		ValueJANIDecision otherDecision = (ValueJANIDecision) other;
+		assert other instanceof ValueDecision;
+		ValueDecision otherDecision = (ValueDecision) other;
 		for (int index = 0; index < values.length; index++) {
 			if (!values[index].isEq(otherDecision.values[index])) {
 				return false;
@@ -105,10 +105,10 @@ public final class ValueJANIDecision implements Value {
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof ValueJANIDecision)) {
+		if (!(obj instanceof ValueDecision)) {
 			return false;
 		}
-		ValueJANIDecision otherDecision = (ValueJANIDecision) obj;
+		ValueDecision otherDecision = (ValueDecision) obj;
 		for (int index = 0; index < values.length; index++) {
 			if (!values[index].equals(otherDecision.values[index])) {
 				return false;
@@ -129,7 +129,7 @@ public final class ValueJANIDecision implements Value {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(LBRACK);
+		builder.append(LBRACE);
 		for (int index = 0; index < values.length; index++) {
 			builder.append(values[index]);
 			if (index < values.length - 1) {
@@ -137,7 +137,7 @@ public final class ValueJANIDecision implements Value {
 			}
 		}
 
-		builder.append(RBRACK);
+		builder.append(RBRACE);
 		return builder.toString();
 	}
 	
