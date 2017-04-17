@@ -41,10 +41,8 @@ import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.CommonProperties;
-import epmc.graph.UtilGraph;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.graph.explorer.Explorer;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.graphsolver.lumping.LumperDD;
 import epmc.graphsolver.lumping.LumperExplicit;
@@ -128,8 +126,8 @@ public class CommandTaskLump implements CommandTask {
         Set<Object> edgeProperties = new LinkedHashSet<>();
         edgeProperties.add(CommonProperties.WEIGHT);
         
-        Explorer explorer = (Explorer) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
-        GraphExplicit modelGraph = UtilGraph.buildModelGraphExplicit(explorer, graphProperties, nodeProperties, edgeProperties);
+        
+        GraphExplicit modelGraph = (GraphExplicit) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
         time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         log.send(MessagesCommandLump.EXPLORING_DONE, time);
         
