@@ -64,8 +64,6 @@ import epmc.graph.SemanticsMA;
 import epmc.graph.SemanticsMDP;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsSMG;
-import epmc.graph.UtilGraph;
-import epmc.graph.explorer.Explorer;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.jani.model.type.JANIType;
@@ -844,6 +842,9 @@ public final class ModelPRISM implements ModelJANIConverter {
 		if (engine instanceof EngineExplorer) {
 			ModelJANI jani = toJANI(false);
 			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
+		} else if (engine instanceof EngineExplicit) {
+			ModelJANI jani = toJANI(false);
+			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
 		} else {
 			return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
 		}
@@ -869,11 +870,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 
 	private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
 			Set<Object> edgeProperties) throws EPMCException {
-		if (engine instanceof EngineExplicit) {
-			Explorer explorer = (Explorer) newLowLevel(EngineExplorer.getInstance(),
-	                graphProperties, nodeProperties, edgeProperties);
-			return UtilGraph.buildModelGraphExplicit(explorer, graphProperties, nodeProperties, edgeProperties);
-		} else if (engine instanceof EngineDD) {
+		if (engine instanceof EngineDD) {
 	        prepareAndCheckReady();
 			return new GraphDDPRISM(this, ContextDD.get(getContextValue()), nodeProperties, edgeProperties);
 		} else {
