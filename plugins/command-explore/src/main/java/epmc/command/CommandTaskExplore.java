@@ -132,14 +132,7 @@ public class CommandTaskExplore implements CommandTask {
             Set<Object> nodeProperties,
             Set<Object> edgeProperties) throws EPMCException {
     	Model model = modelChecker.getModel();
-        Explorer explorer = (Explorer) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
-        GraphBuilderExplorer builder = new GraphBuilderExplorer();
-        builder.setExplorer(explorer);
-        builder.addDerivedGraphProperties(graphProperties);
-        builder.addDerivedNodeProperties(nodeProperties);
-        builder.addDerivedEdgeProperties(edgeProperties);
-        builder.build();
-        return builder.getGraph();
+    	return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
      }
     
     private Set<Object> prepareNodeProperties(Model model)
