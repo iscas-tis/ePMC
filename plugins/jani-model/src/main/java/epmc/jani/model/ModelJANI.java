@@ -47,7 +47,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
-import epmc.graph.UtilGraph;
+import epmc.graph.explicit.GraphBuilderExplorer;
 import epmc.graph.explorer.Explorer;
 import epmc.jani.dd.GraphDDJANI;
 import epmc.jani.error.ProblemsJANI;
@@ -552,7 +552,13 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		} else if (engine instanceof EngineExplicit) {
 			Explorer explorer = (Explorer) newLowLevel(EngineExplorer.getInstance(),
 	                graphProperties, nodeProperties, edgeProperties);
-			return UtilGraph.buildModelGraphExplicit(explorer, graphProperties, nodeProperties, edgeProperties);
+	        GraphBuilderExplorer builder = new GraphBuilderExplorer();
+	        builder.setExplorer(explorer);
+	        builder.addDerivedGraphProperties(graphProperties);
+	        builder.addDerivedNodeProperties(nodeProperties);
+	        builder.addDerivedEdgeProperties(edgeProperties);
+	        builder.build();
+	        return builder.getGraph();
 		} else if (engine instanceof EngineDD) {
 			return new GraphDDJANI(this, nodeProperties, edgeProperties);
 		} else {
