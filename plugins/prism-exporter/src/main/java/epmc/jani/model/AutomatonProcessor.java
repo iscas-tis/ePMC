@@ -80,6 +80,15 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(processor.toPRISM().toString());
 		}
 		
+		if (automaton.equals(JANIComponentRegistrar.getDefaultAutomatonForUnassignedClocks())) {
+			for (Variable variable : JANIComponentRegistrar.getUnassignedClockVariables()) {
+				processor = ProcessorRegistrar.getProcessor(variable);
+				processor.setPrefix(ModelJANIProcessor.INDENT);
+				processor.setForDefinition(true);
+				processor.setWithInitialValue(withInitialValue);
+				prism.append(processor.toPRISM().toString());
+			}
+		}
 		for (Variable variable : JANIComponentRegistrar.getAssignedVariablesOrEmpty(automaton)) {
 			processor = ProcessorRegistrar.getProcessor(variable);
 			processor.setPrefix(ModelJANIProcessor.INDENT);
