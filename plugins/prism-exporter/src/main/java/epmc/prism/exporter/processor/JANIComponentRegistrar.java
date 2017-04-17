@@ -37,6 +37,7 @@ import epmc.jani.model.Constant;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
+import epmc.time.TypeClock;
 
 /**
  * Class that is responsible for registering the JANI components; the transient variables are considered as corresponding to rewards.
@@ -63,6 +64,9 @@ public class JANIComponentRegistrar {
 	
 	private static Map<Action, String> actionNames = new HashMap<>();
 	
+	private static Automaton defaultAutomatonForUnassignedClocks;
+	private static Set<Variable> unassignedClockVariables = new HashSet<>();
+	
 	private static boolean isTimedModel = false;
 	
 	private static int reward_counter = 0;
@@ -75,6 +79,20 @@ public class JANIComponentRegistrar {
 	
 	public static boolean isTimedModel() {
 		return isTimedModel;
+	}
+	
+	public static void setDefaultAutomatonForUnassignedClocks(Automaton defaultAutomatonForUnassignedClocks) {
+		assert defaultAutomatonForUnassignedClocks != null;
+		
+		JANIComponentRegistrar.defaultAutomatonForUnassignedClocks = defaultAutomatonForUnassignedClocks;
+	}
+	
+	public static Automaton getDefaultAutomatonForUnassignedClocks() {
+		return defaultAutomatonForUnassignedClocks;
+	}
+	
+	public static Set<Variable> getUnassignedClockVariables() {
+		return Collections.unmodifiableSet(unassignedClockVariables);
 	}
 	
 	/**
@@ -177,15 +195,19 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param variable the variable to register
 	 */
-	public static void registerGlobalVariable(Variable variable) {
+	public static void registerGlobalVariable(Variable variable) throws EPMCException {
 		assert variable != null;
 
 		if (variable.isTransient()) {
 			return;
 		}
 		
-		if (!variablesAssignedByAutomaton.containsKey(variable)) {
-			globalVariables.add(variable);
+		if (variable.getType().toType() instanceof TypeClock && !variablesAssignedByAutomaton.containsKey(variable)) {
+			unassignedClockVariables.add(variable);
+		} else { 
+			if (!variablesAssignedByAutomaton.containsKey(variable)) {
+				globalVariables.add(variable);
+			}
 		}
 	}
 	
