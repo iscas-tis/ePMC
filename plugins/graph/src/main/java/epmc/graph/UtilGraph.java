@@ -22,19 +22,15 @@ package epmc.graph;
 
 import static epmc.error.UtilError.ensure;
 
-import java.util.Set;
-
 import epmc.dd.DD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.StateSetDD;
-import epmc.graph.explicit.GraphBuilderExplorer;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
-import epmc.graph.explorer.Explorer;
 import epmc.graph.options.OptionsGraph;
 import epmc.options.Options;
 import epmc.util.BitSet;
@@ -44,19 +40,6 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class UtilGraph {
-
-    public static GraphExplicit buildModelGraphExplicit(Explorer explorer,
-            Set<Object> graphProperties,
-            Set<Object> nodeProperties,
-            Set<Object> edgeProperties) throws EPMCException {
-        GraphBuilderExplorer builder = new GraphBuilderExplorer();
-        builder.setExplorer(explorer);
-        builder.addDerivedGraphProperties(graphProperties);
-        builder.addDerivedNodeProperties(nodeProperties);
-        builder.addDerivedEdgeProperties(edgeProperties);
-        builder.build();
-        return builder.getGraph();
-     }
 
     public static BitStoreableToNumber newNodeStore(Options options, int numBits) throws EPMCException {
         BitStoreableToNumber nodeStore;
