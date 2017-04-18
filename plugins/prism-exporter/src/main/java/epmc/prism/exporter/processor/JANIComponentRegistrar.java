@@ -47,31 +47,61 @@ import epmc.time.TypeClock;
  */
 public class JANIComponentRegistrar {
 	
-	private static Set<String> usedNames = new HashSet<>();
-	private static Map<Constant, String> constantNames = new HashMap<>();
-	private static Map<String, String> constantNameNames = new HashMap<>();
+	private static Set<String> usedNames;
+	private static Map<Constant, String> constantNames;
+	private static Map<String, String> constantNameNames;
 	
-	private static Set<Variable> globalVariables = new HashSet<>();
+	private static Set<Variable> globalVariables;
 	
-	private static Map<Variable, String> variableNames = new HashMap<>();
-	private static Map<String, Variable> variableByName = new HashMap<>();
-	private static Map<String, String> variableNameNames = new HashMap<>();
-	private static Map<Variable, Map<Action, Expression>> rewardTransitionExpressions = new HashMap<>();
-	private static Map<Variable, Expression> rewardStateExpressions = new HashMap<>();
+	private static Map<Variable, String> variableNames;
+	private static Map<String, Variable> variableByName;
+	private static Map<String, String> variableNameNames;
+	private static Map<Variable, Map<Action, Expression>> rewardTransitionExpressions;
+	private static Map<Variable, Expression> rewardStateExpressions;
 	
-	private static Map<Variable, Automaton> variablesAssignedByAutomaton = new HashMap<>();
-	private static Map<Automaton, Set<Variable>> automatonAssignsVariables = new HashMap<>();
+	private static Map<Variable, Automaton> variablesAssignedByAutomaton;
+	private static Map<Automaton, Set<Variable>> automatonAssignsVariables;
 	
-	private static Map<Action, String> actionNames = new HashMap<>();
+	private static Map<Action, String> actionNames;
 	
 	private static Automaton defaultAutomatonForUnassignedClocks;
-	private static Set<Variable> unassignedClockVariables = new HashSet<>();
+	private static Set<Variable> unassignedClockVariables;
 	
-	private static boolean isTimedModel = false;
+	private static boolean isTimedModel;
 	
-	private static int reward_counter = 0;
-	private static int variable_counter = 0;
-	private static int constant_counter = 0;
+	private static int reward_counter;
+	private static int variable_counter;
+	private static int constant_counter;
+	
+	static {
+		reset();
+	}
+	
+	public static void reset() {
+		usedNames = new HashSet<>(); 
+		
+		constantNames = new HashMap<>();
+		constantNameNames = new HashMap<>();
+		
+		globalVariables  = new HashSet<>();
+		variableNames = new HashMap<>();
+		variableByName = new HashMap<>();
+		variableNameNames = new HashMap<>();
+		
+		rewardTransitionExpressions = new HashMap<>();
+		rewardStateExpressions = new HashMap<>();
+		variablesAssignedByAutomaton = new HashMap<>();
+		automatonAssignsVariables = new HashMap<>();
+		actionNames = new HashMap<>();
+		
+		defaultAutomatonForUnassignedClocks = null;
+		unassignedClockVariables = new HashSet<>();
+		
+		isTimedModel = false;
+		reward_counter = 0;
+		variable_counter = 0;
+		constant_counter = 0;
+	}
 	
 	public static void setIsTimedModel(boolean isTimedModel) {
 		JANIComponentRegistrar.isTimedModel = isTimedModel;
