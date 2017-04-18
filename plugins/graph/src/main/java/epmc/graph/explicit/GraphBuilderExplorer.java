@@ -168,9 +168,11 @@ public final class GraphBuilderExplorer {
             graphNodeProperties[nodePropNr] = graph.addSettableNodeProperty(property, type);
             nodePropNr++;
         }
+        NodePropertyExplorerNode explorerNodeProperty = null;
         if (withExplorerNode) {
+        	explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
             graph.registerNodeProperty(CommonProperties.NODE_EXPLORER,
-                    new NodePropertyExplorerNode(graph, explorer, nodeStore));
+                    explorerNodeProperty);
         }
         ExplorerEdgeProperty[] explorerEdgeProperties = new ExplorerEdgeProperty[edgeProperties.size()];
         EdgePropertySparseNondet[] graphEdgePropertiesAlter = new EdgePropertySparseNondet[edgeProperties.size()];
@@ -255,6 +257,9 @@ public final class GraphBuilderExplorer {
 //            ((GraphExplicitSparse) graph).setNumStates(numStates);
         } else if (graph instanceof GraphExplicitSparseAlternate) {
 //            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
+        }
+        if (explorerNodeProperty != null) {
+        	explorerNodeProperty.setNumStates(graph.computeNumStates());
         }
     }
     
