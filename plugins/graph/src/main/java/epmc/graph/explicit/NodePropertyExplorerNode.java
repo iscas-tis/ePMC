@@ -322,12 +322,16 @@ final class NodePropertyExplorerNode implements NodeProperty {
         assert explorer != null;
         assert nodeStore != null;
         this.graph = graph;
-        this.numStates = graph.computeNumStates();
         this.node = explorer.newNode();
         this.type = new TypeExplorerNode();
         this.typeArray = new TypeArrayExplorerNode(type);
         this.value = type.newValue();
         this.nodeStore = nodeStore;
+    }
+
+    void setNumStates(int numStates) {
+    	assert numStates >= 0;
+    	this.numStates = numStates;
     }
     
     @Override
@@ -340,8 +344,10 @@ final class NodePropertyExplorerNode implements NodeProperty {
 //        int graphNode = graph.getQueriedNode();
         if (graphNode >= numStates) {
             value.node = -1;
+            lastNode = graphNode;
             return value;
         }
+        System.out.println("NS " + numStates);
         if (lastNode != graphNode) {
             value.node = graphNode;
             nodeStore.fromNumber(node, graphNode);
