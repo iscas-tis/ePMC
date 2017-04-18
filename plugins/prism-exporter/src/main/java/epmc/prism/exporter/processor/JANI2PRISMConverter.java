@@ -30,6 +30,7 @@ public final class JANI2PRISMConverter {
 	
 	public JANI2PRISMConverter(ModelJANI jani) {
 		assert jani != null;
+		JANIComponentRegistrar.reset();
 		
 		this.jani = jani;
 	}
