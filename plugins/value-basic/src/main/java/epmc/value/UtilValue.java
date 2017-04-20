@@ -132,6 +132,7 @@ public final class UtilValue {
     }
 
     public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int valueInt) {
+    	assert type != null;
         @SuppressWarnings("unchecked")
 		T value = (T) type.newValue();
         value.setSize(valueInt);

@@ -22,47 +22,50 @@ package epmc.value;
 
 import epmc.value.ContextValue;
 
-final class TypeArrayIntegerNative implements TypeArrayInteger {
-    private final static String ARRAY_INDICATOR = "[](integer-native)";
-	private final TypeInteger entryType;
+public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
+    private final static String ARRAY_INDICATOR = "[](generic-algebra)";
+    private final TypeAlgebra entryType;
     
-    TypeArrayIntegerNative(TypeInteger entryType) {
-    	assert entryType != null;
-    	this.entryType = entryType;
+    public TypeArrayGenericAlgebra(TypeAlgebra entryType) {
+        assert entryType != null;
+        this.entryType = entryType;
     }
     
     @Override
-    public ValueArrayInteger newValue() {
-        return new ValueArrayIntegerNative(this);
+    public ValueArrayGenericAlgebra newValue() {
+        return new ValueArrayGenericAlgebra(this);
     }
 
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
+    @Override
+    public ContextValue getContext() {
+        return entryType.getContext();
+    }
 
-	@Override
-	public TypeInteger getEntryType() {
-		return entryType;
-	}
+    @Override
+    public TypeAlgebra getEntryType() {
+        return entryType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TypeArrayIntegerNative)) {
-			return false;
-		}
-		TypeArrayIntegerNative other = (TypeArrayIntegerNative) obj;
-		return this.getEntryType().equals(other.getEntryType());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TypeArrayGenericAlgebra)) {
+            return false;
+        }
+        TypeArrayGenericAlgebra other = (TypeArrayGenericAlgebra) obj;
+        if (!this.getEntryType().equals(other.getEntryType())) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-	}
-	
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -70,9 +73,8 @@ final class TypeArrayIntegerNative implements TypeArrayInteger {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-
-	@Override
-	public TypeArrayAlgebra getTypeArray() {
-		return new TypeArrayGenericAlgebra(this);
-	}
+    
+    public TypeArrayAlgebra getTypeArray() {
+        return getContext().makeUnique(new TypeArrayGenericAlgebra(this));
+    }
 }

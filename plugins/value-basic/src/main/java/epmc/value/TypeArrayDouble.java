@@ -73,9 +73,6 @@ public final class TypeArrayDouble implements TypeArrayReal {
 
 	@Override
 	public TypeArrayAlgebra getTypeArray() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TypeArrayGenericAlgebra(this);
 	}
-    
-    
 }
