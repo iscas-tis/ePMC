@@ -182,6 +182,10 @@ public abstract class ValueArray implements Value {
     }
     
     public final void setDimensions(int... dimensions) {
+    	assert dimensions != null;
+    	for (int index = 0; index < dimensions.length; index++) {
+    		assert dimensions[index] >= 0;
+    	}
         assert !isImmutable();
         this.dimensions = new int[dimensions.length];
         offset = new int[dimensions.length];
@@ -337,7 +341,7 @@ public abstract class ValueArray implements Value {
         double maxDistance = 0.0;
         int totalSize = getTotalSize();
         Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
+        Value entryAccOther = opArray.getType().getEntryType().newValue();
         for (int entry = 0; entry < totalSize; entry++) {
             get(entryAccThis, entry);
             opArray.get(entryAccOther, entry);

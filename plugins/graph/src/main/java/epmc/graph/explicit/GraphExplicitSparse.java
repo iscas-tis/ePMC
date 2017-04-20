@@ -63,6 +63,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
             TypeArray typeArray = forNative
                     ? TypeHasNativeArray.getTypeNativeArray(type)
                     : type.getTypeArray();
+            assert typeArray != null : type + " " + forNative;
             this.content = UtilValue.newArray(typeArray, numTotalOut > 0 ? numTotalOut : 1);
         }
         

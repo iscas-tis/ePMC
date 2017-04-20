@@ -131,9 +131,12 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         for (Expression operand : expression.getOperands()) {
             operands[opNr] = UtilEvaluatorExplicit.newEvaluator(null, operand, variables, builder.getCache(), builder.getExpressionToType());
             operandValues[opNr] = operands[opNr].getResultValue();
+            assert operandValues[opNr] != null : opNr;
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
+        assert operator != null;
+        assert operator.resultType(types) != null : operator;
         result = operator.resultType(types).newValue();
     }
 
