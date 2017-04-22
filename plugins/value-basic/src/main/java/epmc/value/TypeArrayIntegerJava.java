@@ -73,7 +73,6 @@ public final class TypeArrayIntegerJava implements TypeArrayInteger {
 
 	@Override
 	public TypeArrayAlgebra getTypeArray() {
-		// TODO Auto-generated method stub
-		return null;
+		return new TypeArrayGenericAlgebra(this);
 	}
 }

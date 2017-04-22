@@ -259,6 +259,8 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 objective.setZeroSink(zeroSet);
                 objective.setMin(min);
                 objective.setGraph(graph);
+//                System.out.println(graph);
+  //              System.out.println(oneSet);
                 configuration.setObjective(objective);
                 configuration.solve();
                 values = objective.getResult();
