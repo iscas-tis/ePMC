@@ -77,7 +77,7 @@ public class JANIComponentRegistrar {
 		reset();
 	}
 	
-	public static void reset() {
+	static void reset() {
 		usedNames = new HashSet<>(); 
 		
 		constantNames = new HashMap<>();
