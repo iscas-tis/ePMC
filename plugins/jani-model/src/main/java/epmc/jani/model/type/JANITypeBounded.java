@@ -71,6 +71,9 @@ public final class JANITypeBounded implements JANIType {
 	@Override
 	public void setModel(ModelJANI model) {
 		this.model = model;
+		if (contextValue == null) {
+			contextValue = model.getContextValue();
+		}
 	}
 	
 	@Override
@@ -192,7 +195,7 @@ public final class JANITypeBounded implements JANIType {
 	@Override
 	public JANIType replace(Map<Expression, Expression> map) {
 		assert map != null;
-		assert contextValue != null;
+//		assert contextValue != null;
         Expression newLower = null;
         if (lowerBound != null) {
             newLower = UtilExpressionStandard.replace(lowerBound, map);

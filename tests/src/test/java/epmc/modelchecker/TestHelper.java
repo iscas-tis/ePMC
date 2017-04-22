@@ -232,6 +232,7 @@ public final class TestHelper {
             rawProp.setDescription(null);
             ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
             properties.parseProperties(new InputStream[]{input});
+            assert properties.getRawProperties().size() >= 1;
         } catch (Exception e) {
         	throw new RuntimeException(e);
         }

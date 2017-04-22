@@ -341,13 +341,11 @@ final class NodePropertyExplorerNode implements NodeProperty {
 
     @Override
     public Value get(int graphNode) throws EPMCException {
-//        int graphNode = graph.getQueriedNode();
         if (graphNode >= numStates) {
             value.node = -1;
             lastNode = graphNode;
             return value;
         }
-        System.out.println("NS " + numStates);
         if (lastNode != graphNode) {
             value.node = graphNode;
             nodeStore.fromNumber(node, graphNode);
@@ -359,9 +357,9 @@ final class NodePropertyExplorerNode implements NodeProperty {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getObject(int graphNode) throws EPMCException {
-//        int graphNode = graph.getQueriedNode();
         if (graphNode >= numStates) {
             value.node = -1;
+            lastNode = graphNode;
             return null;
         }
         if (lastNode != graphNode) {
