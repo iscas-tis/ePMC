@@ -53,7 +53,6 @@ import epmc.value.TypeObject.StorageType;
 public final class GraphExplicitWrapper implements GraphExplicit {
     /** Empty string. */
     private final static String EMPTY = "";
-    private final static String SPACE = " ";
 
     private final static class DummyName {
         @Override
@@ -65,7 +64,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     private final class NodePropertyWrapperDerived implements NodeProperty {
         private final GraphExplicit graph;
         private final Type typeEntry;
-        private final ValueArray content;
+        private ValueArray content;
         private final Value helper;
         private final NodeProperty inner;
         
@@ -86,14 +85,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         @Override
         public Value get(int currentNode) throws EPMCException {
         	queryNode(currentNode);
-            int size = content.getLength(0);
-            if (size <= currentNode) {
-                int newSize = size;
-                while (newSize <= currentNode) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+        	content = UtilValue.ensureSize(content, currentNode + 1);
             content.get(helper, currentNode);
             return helper;
         }
@@ -102,14 +94,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         public void set(int currentNode, Value value) {
             assert value != null;
             assert typeEntry.canImport(value.getType()) : typeEntry + " " + value;
-            int size = content.getLength(0);
-            if (size <= currentNode) {
-                int newSize = size;
-                while (newSize <= currentNode) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+            content = UtilValue.ensureSize(content, currentNode + 1);
             content.set(value, currentNode);
         }
 
@@ -131,7 +116,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     private final class EdgePropertyWrapperSettable implements EdgeProperty {
         private final GraphExplicit graph;
         private final Type typeEntry;
-        private final ValueArray content;
+        private ValueArray content;
         private final Value helper;
         
         EdgePropertyWrapperSettable(GraphExplicitWrapper graph, Type type) {
@@ -149,14 +134,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         	queryNode(currentNode);
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
-            int size = content.getLength(0);
-            if (size <= entryNr) {
-                int newSize = size;
-                while (newSize <= entryNr) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+            content = UtilValue.ensureSize(content, entryNr + 1);
             content.get(helper, entryNr);
             return helper;
         }
@@ -167,14 +145,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
-            int size = content.getLength(0);
-            if (size <= entryNr) {
-                int newSize = size;
-                while (newSize <= entryNr) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+            content = UtilValue.ensureSize(content, entryNr + 1);
             content.set(value, entryNr);
         }
 
@@ -200,7 +171,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     private final class EdgePropertyWrapperDerived implements EdgeProperty {
         private final GraphExplicit graph;
         private final Type typeEntry;
-        private final ValueArray content;
+        private ValueArray content;
         private final Value helper;
         private final EdgeProperty inner;
         
@@ -222,14 +193,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         public Value get(int currentNode, int successor) {
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
-            int size = content.getLength(0);
-            if (size <= entryNr) {
-                int newSize = size;
-                while (newSize <= entryNr) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+            content = UtilValue.ensureSize(content, entryNr + 1);
             content.get(helper, entryNr);
             return helper;
         }
@@ -240,14 +204,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
-            int size = content.getLength(0);
-            if (size <= entryNr) {
-                int newSize = size;
-                while (newSize <= entryNr) {
-                    newSize <<= 1;
-                }
-                content.resize(newSize);
-            }
+            content = UtilValue.ensureSize(content, entryNr + 1);
             content.set(value, entryNr);
         }
 

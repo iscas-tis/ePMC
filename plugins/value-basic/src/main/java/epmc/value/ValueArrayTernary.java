@@ -35,7 +35,7 @@ final class ValueArrayTernary extends ValueArray {
     ValueArrayTernary(TypeArrayTernary type) {
     	assert type != null;
     	this.type = type;
-        int numBits = getTotalSize() * getBitsPerEntry();
+        int numBits = size() * getBitsPerEntry();
         int numLongs = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[numLongs];
     }
@@ -50,7 +50,7 @@ final class ValueArrayTernary extends ValueArray {
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        int numBits = getTotalSize() * getBitsPerEntry();
+        int numBits = size() * getBitsPerEntry();
         int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[size];
     }
@@ -65,7 +65,7 @@ final class ValueArrayTernary extends ValueArray {
         assert value != null;
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         ValueTernary valueTernary = (ValueTernary) value;
         int number = valueTernary.getTernary().ordinal();
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
@@ -85,7 +85,7 @@ final class ValueArrayTernary extends ValueArray {
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = 0;
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -105,7 +105,7 @@ final class ValueArrayTernary extends ValueArray {
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
+        int hash = 0;
         hash = Arrays.hashCode(content) + (hash << 6) + (hash << 16) - hash;
         return hash;
     }

@@ -68,7 +68,6 @@ final class DownClosure {
             throws EPMCException {
         assert outside != null;
         assert outside.getType().getContext() == contextValue;
-        assert outside.getNumDimensions() == 1;
         assert outside.size() == dimension;            
         if (elements.size() == 0) {
             return findSeparatingEmptyEntries(outside, numerical);

@@ -20,6 +20,7 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
@@ -31,6 +32,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.Operator;
 import epmc.value.Type;
+import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class EvaluatorExplicitOperator implements EvaluatorExplicit, EvaluatorExplicitBoolean {
@@ -137,6 +139,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
         assert operator != null;
         assert operator.resultType(types) != null : operator;
+        assert !TypeUnknown.isUnknown(operator.resultType(types)) : operator.getIdentifier()
+        + " " + Arrays.toString(types);
         result = operator.resultType(types).newValue();
     }
 

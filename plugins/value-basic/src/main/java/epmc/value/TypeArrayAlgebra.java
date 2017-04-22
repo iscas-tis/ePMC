@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 
-public interface TypeArrayAlgebra extends TypeArray, TypeAlgebra {
+public interface TypeArrayAlgebra extends TypeArray {
 	static boolean isArrayAlgebra(Type type) {
 		return type instanceof TypeArrayAlgebra;
 	}
@@ -40,17 +40,5 @@ public interface TypeArrayAlgebra extends TypeArray, TypeAlgebra {
 	TypeAlgebra getEntryType();
 	
     @Override
-    ValueArrayAlgebra newValue();
-    
-    @Override
-    default ValueAlgebra getZero() {
-    	// TODO Auto-generated method stub
-    	return null;
-    }
-    
-    @Override
-    default ValueAlgebra getOne() {
-    	// TODO Auto-generated method stub
-    	return null;
-    }
+    ValueArrayAlgebra newValue();    
 }

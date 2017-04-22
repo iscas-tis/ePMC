@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
@@ -59,8 +57,8 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.length < getTotalSize()) {
-            content = new double[getTotalSize()];
+        if (this.content.length < size()) {
+            content = new double[size()];
         }
     }
     
@@ -70,7 +68,7 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
         assert value != null;
         assert getType().getEntryType().canImport(value.getType()) : value;
         assert index >= 0 : index;
-        assert index < getTotalSize() : index + SPACE + getTotalSize();
+        assert index < size() : index + SPACE + size();
         content[index] = ValueNumber.asNumber(value).getDouble();
     }
 
@@ -81,7 +79,7 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
             this + SPACE + this.getType() + SPACE + value
             + SPACE + value.getType();
         assert index >= 0 : index;
-        assert index < getTotalSize() : index + SPACE + getTotalSize();
+        assert index < size() : index + SPACE + size();
         double entry = content[index];
         if (ValueReal.isReal(value)) {
         	assert ValueReal.asReal(value) != null : value;
@@ -99,8 +97,8 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+        int hash = 0;
+        for (int entryNr = 0; entryNr < size(); entryNr++) {
             long entry = Double.doubleToRawLongBits(content[entryNr]);
             hash = ((int) entry) + (hash << 6) + (hash << 16) - hash;
             entry >>>= 32;
@@ -123,36 +121,6 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

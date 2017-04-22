@@ -43,7 +43,7 @@ public final class NodePropertyGeneral implements NodeProperty {
     /** Value returned by {@link #get()}. */
     private final Value value;
     /** Array value storing the values for all nodes so far. */
-    private final ValueArray content;
+    private ValueArray content;
     /** Value for nodes for which no value was set. */
     private final Value defaultValue;
 
@@ -142,21 +142,10 @@ public final class NodePropertyGeneral implements NodeProperty {
      * node values to ensure {@link #content} is large enough.
      */
     private void ensureSize(int queriedNode) {
-        int newSize = queriedNode + 1;
-        int size = content.size();
-        int oldSize = size;
-        if (newSize <= size) {
-            return;
-        }
-        if (size == 0) {
-            size = 1;
-        }
-        while (size < newSize) {
-            size *= 2;
-        }
-        content.resize(size);
-        for (int entry = oldSize; entry < size; entry++) {
-            content.set(defaultValue, entry);
+    	int oldSize = content.size();
+        content = UtilValue.ensureSize(content, queriedNode + 1);
+        for (int i = oldSize; i < content.size(); i++) {
+        	content.set(defaultValue, i);
         }
     }
 }

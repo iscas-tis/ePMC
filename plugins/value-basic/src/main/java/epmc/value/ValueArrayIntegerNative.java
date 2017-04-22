@@ -21,7 +21,6 @@
 package epmc.value;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import com.sun.jna.Memory;
 
@@ -37,12 +36,12 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     ValueArrayIntegerNative(TypeArrayIntegerNative type) {
     	assert type != null;
     	this.type = type;
-        int numBytes = getTotalSize() * 4;
+        int numBytes = size() * 4;
         if (numBytes == 0) {
             numBytes = 1;
         }
         this.content = new Memory(numBytes);
-        for (int i = 0; i < getTotalSize(); i++) {
+        for (int i = 0; i < size(); i++) {
             set(getType().getEntryType().getZero(), i);
         }
     }
@@ -57,8 +56,8 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.size() / 4 < getTotalSize()) {
-            content = new Memory(getTotalSize() * 4);
+        if (this.content.size() / 4 < size()) {
+            content = new Memory(size() * 4);
         }
     }
     
@@ -67,7 +66,7 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
         assert !isImmutable();
         assert value != null;
         assert index >= 0;
-        assert index < getTotalSize() : index + SPACE + getTotalSize();
+        assert index < size() : index + SPACE + size();
         content.setInt(index * 4, ValueInteger.asInteger(value).getInt());
     }
 
@@ -76,14 +75,14 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int entry = content.getInt(index * 4);
         ValueAlgebra.asAlgebra(value).set(entry);
     }
     
     @Override
     public ByteBuffer getMemory() {
-        return content.getByteBuffer(0, Integer.BYTES * getTotalSize());
+        return content.getByteBuffer(0, Integer.BYTES * size());
     }
 
     @Override
@@ -95,14 +94,14 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     public void setInt(int value, int index) {
         assert !isImmutable();
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         content.setInt(index * 4, value);
     }
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+        int hash = 0;
+        for (int entryNr = 0; entryNr < size(); entryNr++) {
             long entry = content.getInt(entryNr * 4);
             hash = ((int) entry) + (hash << 6) + (hash << 16) - hash;
         }
@@ -123,36 +122,6 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

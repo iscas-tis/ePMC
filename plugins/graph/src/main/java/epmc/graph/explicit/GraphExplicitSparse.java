@@ -77,7 +77,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
         @Override
         public void set(int currentNode, int successor, Value value) {
             int entry = bounds.getInt(currentNode) + successor;
-            ensureSize(content, entry + 1);
+            content = ensureSize(content, entry + 1);
             content.set(value, entry);
         }
         
@@ -252,7 +252,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
         assert succNode >= 0 : succNode;
         assert !fixedMode | succNode < numNodes : succNode + " " + numNodes;
         int entry = bounds.getInt(currentNode) + succNr;
-        ensureSize(successors, entry + 1);
+        successors = ensureSize(successors, entry + 1);
         successors.set(succNode, entry);
     }
     
@@ -261,7 +261,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
             throws EPMCException {
         assert numSuccessors >= 0;
         int from = bounds.getInt(currentNode);
-        ensureSize(bounds, currentNode + 1 + 1);
+        bounds = ensureSize(bounds, currentNode + 1 + 1);
         bounds.set(from + numSuccessors, currentNode + 1);
         if (!fixedMode) {
             this.numNodes++;
@@ -309,18 +309,24 @@ public final class GraphExplicitSparse implements GraphExplicit {
         return GraphExporterDOT.toString(this);
     }
 
-    private void ensureSize(ValueArray array, int newSize) {
+    private <T extends ValueArray> T ensureSize(T array, int newSize) {
         if (fixedMode) {
-            return;
+            return array;
         }
         int size = array.size();
         if (newSize <= size) {
-            return;
+            return array;
         }
         while (size < newSize) {
             size *= 2;
         }
-        array.resize(size);
+        T result = UtilValue.newArray(array.getType(), size);
+        Value entry = array.getType().getEntryType().newValue();
+        for (int i = 0; i < array.size(); i++) {
+        	array.get(entry, i);
+        	result.set(entry, i);
+        }
+        return result;
     }
     
     public void clear() {

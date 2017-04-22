@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
@@ -57,7 +55,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
     @Override
     public int getInt(int index) {
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = 0;
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -75,7 +73,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
     public void setInt(int value, int index) {
         assert !isImmutable();
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         assert value >= lower : value + SPACE + lower;
         assert value <= upper : value + SPACE + upper;
         int number = value - lower;
@@ -103,7 +101,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
         assert value != null;
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         setInt(ValueInteger.asInteger(value).getInt(), index);
     }
 
@@ -112,14 +110,14 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         ValueAlgebra.asAlgebra(value).set(getInt(index));
     }
 
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        int numBits = getTotalSize() * getBitsPerEntry();
+        int numBits = size() * getBitsPerEntry();
         int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[size];
     }
@@ -143,7 +141,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
+        int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
@@ -157,37 +155,6 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	@Override
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub

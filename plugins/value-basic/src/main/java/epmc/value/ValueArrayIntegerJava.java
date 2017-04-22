@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
@@ -46,8 +44,8 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.length < getTotalSize()) {
-            content = new int[getTotalSize()];
+        if (this.content.length < size()) {
+            content = new int[size()];
         }
     }
     
@@ -57,7 +55,7 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
         assert value != null;
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
-        assert index < getTotalSize() : index + SPACE + getTotalSize();
+        assert index < size() : index + SPACE + size();
         content[index] = ValueInteger.asInteger(value).getInt();
     }
 
@@ -66,7 +64,7 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int entry = content[index];
         ValueAlgebra.asAlgebra(value).set(entry);
     }
@@ -79,7 +77,7 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
     @Override
     public int getInt(int index) {
         assert index >= 0;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         return content[index];
     }
 
@@ -90,8 +88,8 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+        int hash = 0;
+        for (int entryNr = 0; entryNr < size(); entryNr++) {
             int entry = content[entryNr];
             hash = entry + (hash << 6) + (hash << 16) - hash;
         }
@@ -112,36 +110,6 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

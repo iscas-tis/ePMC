@@ -198,7 +198,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         double[] distance = new double[1];
         ValueAlgebra zero = values.getType().getEntryType().getZero();
         ValueAlgebra optInitValue = typeWeight.getNegInf();
-        int valuesTotalSize = values.getTotalSize();
+        int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
             values.set(zero, index);
         }
@@ -273,7 +273,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         double[] distance = new double[1];
         Value zero = values.getType().getEntryType().getZero();
         Value optInitValue = typeWeight.getNegInf();
-        int valuesTotalSize = values.getTotalSize();
+        int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
             values.set(zero, index);
         }

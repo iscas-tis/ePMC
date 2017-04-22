@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -34,7 +32,7 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
     ValueArrayInterval(TypeArrayInterval type) {
     	assert type != null;
     	this.type = type;
-        this.content = UtilValue.newArray(type.getTypeArrayReal(), getTotalSize() * 2);
+        this.content = UtilValue.newArray(type.getTypeArrayReal(), size() * 2);
     }
     
     @Override
@@ -52,8 +50,8 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.getTotalSize() < getTotalSize() * 2) {
-            content = UtilValue.newArray(getType().getTypeArrayReal(), getTotalSize() * 2);
+        if (this.content.size() < size() * 2) {
+            content = UtilValue.newArray(getType().getTypeArrayReal(), size() * 2);
         }
     }
     
@@ -63,7 +61,7 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
         assert value != null;
         assert ValueInterval.isInterval(value);
         assert index >= 0;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         content.set(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
         content.set(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
     }
@@ -73,7 +71,7 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
         assert value != null;
         assert ValueInterval.isInterval(value);
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size() : index + " " + size();
         content.get(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
         content.get(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
     }
@@ -85,7 +83,7 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
+        int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
@@ -99,36 +97,6 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

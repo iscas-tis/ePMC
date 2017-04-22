@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -46,7 +44,7 @@ public final class ValueArrayGeneric extends ValueArray {
 
     void setContent(Type entryType, Value[] content) throws EPMCException {
         assert !isImmutable();
-        for (int index = 0; index < getTotalSize(); index++) {
+        for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);
         }
     }
@@ -55,8 +53,8 @@ public final class ValueArrayGeneric extends ValueArray {
     protected void setDimensionsContent() {
         assert !isImmutable();
         Type entryType = getType().getEntryType();
-        if (this.content.length < getTotalSize()) {
-            this.content = new Value[getTotalSize()];
+        if (this.content.length < size()) {
+            this.content = new Value[size()];
             for (int index = 0; index < content.length; index++) {
                 this.content[index] = entryType.newValue();
             }
@@ -68,7 +66,7 @@ public final class ValueArrayGeneric extends ValueArray {
         assert value != null;
         assert getType().getEntryType().canImport(value.getType()) : getType().getEntryType() + " " + value + " " + value.getType();
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         content[index].set(value);
     }
 
@@ -77,14 +75,14 @@ public final class ValueArrayGeneric extends ValueArray {
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0 : index;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         value.set(content[index]);
     }
 
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int i = 0; i < getTotalSize(); i++) {
+        int hash = 0;
+        for (int i = 0; i < size(); i++) {
             hash = content[i].hashCode() + (hash << 6) + (hash << 16) - hash;
         }
         return hash;
