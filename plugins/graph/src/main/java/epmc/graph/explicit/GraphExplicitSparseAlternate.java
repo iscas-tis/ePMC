@@ -144,8 +144,8 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     public final class EdgePropertySparseNondetGeneral implements EdgePropertySparseNondet {
         private final GraphExplicit graph;
         private final Value value;
-        private final ValueArray content;
-        private final ValueArray contentND;
+        private ValueArray content;
+        private ValueArray contentND;
 		private int nextND;
 		private int nextS;
 
@@ -165,11 +165,11 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         public Value get(int currentNode, int successor) {
             if (currentNode < numStates) {
             	int entryNr = stateBounds.getInt(currentNode) + successor;
-                ensureSize(content, entryNr + 1);
+                content = ensureSize(content, entryNr + 1);
             	content.get(value, entryNr);
             } else {
             	int entryNr = nondetBounds.getInt(currentNode - numStates) + successor;
-                ensureSize(contentND, entryNr + 1);
+            	contentND = ensureSize(contentND, entryNr + 1);
             	contentND.get(value, entryNr);
             }
             return value;
@@ -179,11 +179,11 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         public void set(int currentNode, int successor, Value value) {
         	if (currentNode < numStates) {
                 int entryNr = stateBounds.getInt(currentNode) + successor;
-                ensureSize(content, entryNr + 1);
+                content = ensureSize(content, entryNr + 1);
                 content.set(value, entryNr);
         	} else {
                 int entryNr = nondetBounds.getInt(currentNode - numStates) + successor;
-                ensureSize(contentND, entryNr + 1);
+                contentND = ensureSize(contentND, entryNr + 1);
                 contentND.set(value, entryNr);
         	}
         }
@@ -204,7 +204,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
         @Override
         public void setForState(Value value, int succNr) {
-            ensureSize(content, nextS + 1);
+            content = ensureSize(content, nextS + 1);
             content.set(value, nextS);
             nextS++;
         }
@@ -212,7 +212,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         @Override
         public void setForNonDet(Value value, int interSuccNr) {
 //            System.out.println("SN  " + currentNode + " " + interSuccNr + " " + entryNr + " " + value);
-            ensureSize(contentND, nextND + 1);
+            contentND = ensureSize(contentND, nextND + 1);
             contentND.set(value, nextND);
             nextND++;
         }
@@ -222,7 +222,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     public final class EdgePropertySparseNondetOnlyNondet implements EdgePropertySparseNondet {
         private final GraphExplicit graph;
         private final Value value;
-        private final ValueArray content;
+        private ValueArray content;
 
         EdgePropertySparseNondetOnlyNondet(GraphExplicitSparseAlternate graph, Type type) {
             assert graph != null;
@@ -253,7 +253,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
                 ValueAlgebra.asAlgebra(value).set(-1);
             } else {
                 int entryNr = getEntryNumber(currentNode, successor);
-                ensureSize(content, entryNr + 1);
+                content = ensureSize(content, entryNr + 1);
                 content.get(value, entryNr);
             }
             return value;
@@ -265,7 +265,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
                 
             } else {
                 int entryNr = getEntryNumber(currentNode, successor);
-                ensureSize(content, entryNr + 1);
+                content = ensureSize(content, entryNr + 1);
                 content.set(value, entryNr);
             }
         }
@@ -292,7 +292,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         public void setForNonDet(Value value, int successor) {
 //            int entryNr = getEntryNumber(successor);
             int entryNr = nondetBounds.getInt(numNondet - 1) + successor;
-            ensureSize(content, entryNr + 1);
+            content = ensureSize(content, entryNr + 1);
             content.set(value, entryNr);
         }
     }
@@ -324,7 +324,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         stateBounds = UtilValue.newArray(typeArrayInteger, 2);
         nondetBounds = UtilValue.newArray(typeArrayInteger, 2);
         successors = UtilValue.newArray(typeArrayInteger, 1);
-        int successorsTotalSize = successors.getTotalSize();
+        int successorsTotalSize = successors.size();
         for (int index = 0; index < successorsTotalSize; index++) {
         	successors.set(-1, index);
         }
@@ -347,7 +347,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         stateBounds = UtilValue.newArray(typeArrayInteger, numStates + 1);
         nondetBounds = UtilValue.newArray(typeArrayInteger, numNondet + 1);
         successors = UtilValue.newArray(typeArrayInteger, numProb);
-        int successorsTotalSize = successors.getTotalSize();
+        int successorsTotalSize = successors.size();
         for (int index = 0; index < successorsTotalSize; index++) {
         	successors.set(-1, index);
         }
@@ -373,7 +373,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             int to = stateBounds.getInt(node + 1);
             return to - from;
         } else {
-            ensureSize(nondetBounds, node - numStates + 1 + 1);
+        	nondetBounds = ensureSize(nondetBounds, node - numStates + 1 + 1);
             int from = nondetBounds.getInt(node - numStates);
             int to = nondetBounds.getInt(node - numStates + 1);
             return to - from;
@@ -408,13 +408,13 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             assert lastStatePrepared + 1 == currentNode : lastStatePrepared + " " + currentNode;
             lastStatePrepared++;
             int from = stateBounds.getInt(currentNode);
-            ensureSize(stateBounds, currentNode + 1 + 1);
+            stateBounds = ensureSize(stateBounds, currentNode + 1 + 1);
             stateBounds.set(from + numSuccessors, currentNode + 1);
         } else {
             assert !fixedMode || lastNondetPrepared + 1 == currentNode - numStates : lastNondetPrepared + " " + (currentNode - numStates);
             lastNondetPrepared++;
             int from = nondetBounds.getInt(currentNode - numStates);
-            ensureSize(nondetBounds, currentNode - numStates + 1 + 1);
+            nondetBounds = ensureSize(nondetBounds, currentNode - numStates + 1 + 1);
             nondetBounds.set(from + numSuccessors, currentNode - numStates + 1);
         }
     }
@@ -429,7 +429,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         } else {
             assert !fixedMode || succNode < numStates : currentNode + " " + succNode + " " + numStates;
             int entryNr = nondetBounds.getInt(currentNode - numStates) + succNr;
-            ensureSize(successors, entryNr + 1);
+            successors = ensureSize(successors, entryNr + 1);
             successors.set(succNode, entryNr);
         }
     }
@@ -551,13 +551,13 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         return GraphExporterDOT.toString(this);
     }
     
-    private void ensureSize(ValueArray array, int newSize) {
+    private <T extends ValueArray> T ensureSize(T array, int newSize) {
         if (fixedMode) {
 //            return;
         }
         int size = array.size();
         if (newSize <= size) {
-            return;
+            return array;
         }
         if (size == 0) {
             size = 1;
@@ -565,26 +565,32 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         while (size < newSize) {
             size *= 2;
         }
-        array.resize(size);
+        T result = UtilValue.newArray(array.getType(), size);
+        Value entry = array.getType().getEntryType().newValue();
+        for (int i = 0; i < array.size(); i++) {
+        	array.get(entry, i);
+        	result.set(entry, i);
+        }
+        return result;
     }
 
     public void prepareState(int numSuccessors) {
         int bound = stateBounds.getInt(numStates) + numSuccessors;
-        ensureSize(stateBounds, numStates + 1 + 1);
+        stateBounds = ensureSize(stateBounds, numStates + 1 + 1);
         stateBounds.set(bound, numStates + 1);
         numStates++;
     }
 
     public void prepareNondet(int numSuccessors) {
         int bound = nondetBounds.getInt(numNondet) + numSuccessors;
-        ensureSize(nondetBounds, numNondet + 1 + 1);
+        nondetBounds = ensureSize(nondetBounds, numNondet + 1 + 1);
         nondetBounds.set(bound, numNondet + 1);
         numNondet++;
     }
 
     public void setNondetSuccessor(int succNr, int state) {
         int offset = nondetBounds.getInt(numNondet - 1) + succNr;
-        ensureSize(successors, offset + 1);
+        successors = ensureSize(successors, offset + 1);
         successors.set(state, offset);
     }
     

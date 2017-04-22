@@ -203,6 +203,23 @@ public final class UtilValue {
     	return clone;
     }
     
+    public static <T extends ValueArray> T ensureSize(T array, int size) {
+    	if (size <= array.size()) {
+    		return array;
+    	}
+        int newSize = 1;
+        while (newSize < size) {
+            newSize <<= 1;
+        }
+        T result = newArray(array.getType(), newSize);
+        Value entry = array.getType().getEntryType().newValue();
+        for (int i = 0; i < array.size(); i++) {
+        	array.get(entry, i);
+        	result.set(entry, i);
+        }
+        return result;
+    }
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */

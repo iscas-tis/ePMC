@@ -34,7 +34,7 @@ final class ValueArrayBoolean extends ValueArray {
     
     ValueArrayBoolean(TypeArrayBoolean type) {
     	this.type = type;
-        int numLongs = ((getTotalSize() - 1) >> LOG2LONGSIZE) + 1;
+        int numLongs = ((size() - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[numLongs];
     }
     
@@ -48,7 +48,7 @@ final class ValueArrayBoolean extends ValueArray {
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        int size = ((getTotalSize() - 1) >> LOG2LONGSIZE) + 1;
+        int size = ((size() - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[size];
     }
 
@@ -58,7 +58,7 @@ final class ValueArrayBoolean extends ValueArray {
         assert value != null;
         assert ValueBoolean.isBoolean(value);
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int offset = index >> LOG2LONGSIZE;
         if (ValueBoolean.asBoolean(value).getBoolean()) {
             content[offset] |= 1L << index;
@@ -72,14 +72,14 @@ final class ValueArrayBoolean extends ValueArray {
         assert value != null;
         assert ValueBoolean.isBoolean(value);
         assert index >= 0;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         int offset = index >> 6;
         ValueBoolean.asBoolean(value).set((content[offset] & (1L << index)) != 0);
     }    
     
     public int nextSetBit(int index) {
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int offset = index >> LOG2LONGSIZE;
         long mask = 1L << index;
         while (offset < content.length) {
@@ -99,9 +99,7 @@ final class ValueArrayBoolean extends ValueArray {
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        hash = Arrays.hashCode(content) + (hash << 6) + (hash << 16) - hash;
-        return hash;
+    	return Arrays.hashCode(content);
     }
     
     @Override

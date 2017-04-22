@@ -232,7 +232,7 @@ public final class GraphBuilderExplicit {
             BitSet sinks = computeSinks(inputGraph.getContextValue(), sinkList);
             NodeProperty stateProp = inputGraph.getNodeProperty(CommonProperties.STATE);
             assert stateProp != null;
-            for (int inputState = 0; inputState < inputToOutputNodes.getTotalSize(); inputState++) {
+            for (int inputState = 0; inputState < inputToOutputNodes.size(); inputState++) {
                 if (!stateProp.getBoolean(inputState)) {
                     continue;
                 }
@@ -475,7 +475,7 @@ public final class GraphBuilderExplicit {
             int numOut = numInEdges.getInt(outputNode);
             outputGraph.prepareNode(outputNode, numOut);
         }
-        int numInEdgesotalSize = numInEdges.getTotalSize();
+        int numInEdgesotalSize = numInEdges.size();
         for (int index = 0; index < numInEdgesotalSize; index++) {
             numInEdges.set(0, index);
         }
@@ -550,7 +550,7 @@ public final class GraphBuilderExplicit {
         BitSet inputNodes = UtilBitSet.newBitSetUnbounded();
         inputNodes.set(0, inputGraph.getNumNodes(), true);
         inputToOutputNodes.setSize(inputNodes.length());
-        int inputToOutputTotalSize = inputToOutputNodes.getTotalSize();
+        int inputToOutputTotalSize = inputToOutputNodes.size();
         for (int index = 0; index < inputToOutputTotalSize; index++) {
             inputToOutputNodes.set(-1, index);
         }

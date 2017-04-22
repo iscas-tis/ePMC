@@ -21,7 +21,6 @@
 package epmc.value;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 import com.sun.jna.Memory;
 
@@ -36,7 +35,7 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
     ValueArrayDoubleNative(TypeArrayDoubleNative type) {
         assert type != null;
         this.type = type;
-        int numBytes = getTotalSize() * 8;
+        int numBytes = size() * 8;
         if (numBytes == 0) {
             numBytes = 1;
         }
@@ -54,8 +53,8 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.size() / 8 < getTotalSize()) {
-            content = new Memory(getTotalSize() * 8);
+        if (this.content.size() / 8 < size()) {
+            content = new Memory(size() * 8);
         }
     }
     
@@ -65,7 +64,7 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
         assert value != null;
         assert getType().getEntryType().canImport(value.getType()) :  value;
         assert index >= 0 : index;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         content.setDouble(index * 8, ValueNumber.asNumber(value).getDouble());
     }
 
@@ -74,20 +73,20 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
         assert value != null;
         assert value.getType().canImport(getType().getEntryType()) : value;
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         double entry = content.getDouble(index * 8);
         ValueReal.asReal(value).set(entry);
     }
     
     @Override
     public ByteBuffer getMemory() {
-        return content.getByteBuffer(0, Double.BYTES * getTotalSize());
+        return content.getByteBuffer(0, Double.BYTES * size());
     }
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+        int hash = 0;
+        for (int entryNr = 0; entryNr < size(); entryNr++) {
             long entry = Double.doubleToRawLongBits(content.getDouble(entryNr * 8));
             hash = ((int) entry) + (hash << 6) + (hash << 16) - hash;
             entry >>>= 32;
@@ -110,36 +109,6 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

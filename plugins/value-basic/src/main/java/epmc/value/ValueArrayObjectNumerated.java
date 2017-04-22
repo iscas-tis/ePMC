@@ -65,7 +65,7 @@ final class ValueArrayObjectNumerated extends ValueArray {
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        int numBits = getTotalSize() * getBitsPerEntry();
+        int numBits = size() * getBitsPerEntry();
         int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[size];
     }
@@ -77,7 +77,7 @@ final class ValueArrayObjectNumerated extends ValueArray {
         assert ValueObject.isObject(value);
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = objectToNumber(ValueObject.asObject(value).getObject());
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             boolean bitValue = (number & (1 << bitNr)) != 0;
@@ -96,7 +96,7 @@ final class ValueArrayObjectNumerated extends ValueArray {
         assert value != null;
         assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = 0;
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -139,7 +139,7 @@ final class ValueArrayObjectNumerated extends ValueArray {
     }
     
     void increaseNumBits() {
-        int totalSize = getTotalSize();
+        int totalSize = size();
         int oldNumBitsPerEntry = getBitsPerEntry();
         int newNumBitsPerEntry = oldNumBitsPerEntry + 1;
         int newNumBits = newNumBitsPerEntry * totalSize;
@@ -171,7 +171,7 @@ final class ValueArrayObjectNumerated extends ValueArray {
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
+        int hash = 0;
         hash = 0 + (hash << 6) + (hash << 16) - hash;
         return hash;
     }

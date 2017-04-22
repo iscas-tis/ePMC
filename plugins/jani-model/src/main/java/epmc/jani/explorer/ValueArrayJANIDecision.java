@@ -66,7 +66,7 @@ public final class ValueArrayJANIDecision extends ValueArray {
 
 	@Override
 	protected void setDimensionsContent() {
-		int size = getTotalSize();
+		int size = size();
 		int totalNumBits = size * bitsPerEntry;
 		int numEntries = totalNumBits / Long.SIZE + (totalNumBits % Long.SIZE == 0 ? 0 : 1);
 		content = new long[numEntries];
@@ -77,7 +77,7 @@ public final class ValueArrayJANIDecision extends ValueArray {
 		assert value != null;
 		assert value instanceof ValueDecision;
 		assert index >= 0;
-		assert index < getTotalSize();
+		assert index < size();
 		ValueDecision valueJaniDecision = (ValueDecision) value;
 		Value[] values = valueJaniDecision.getValues();
 		bitIndex = index * bitsPerEntry;

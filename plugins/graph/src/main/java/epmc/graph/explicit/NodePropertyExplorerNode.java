@@ -227,8 +227,8 @@ final class NodePropertyExplorerNode implements NodeProperty {
         @Override
         protected void setDimensionsContent() {
             assert !isImmutable();
-            if (this.content.length < getTotalSize()) {
-                content = new int[getTotalSize()];
+            if (this.content.length < size()) {
+                content = new int[size()];
             }
         }
         
@@ -238,7 +238,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
             assert value != null;
             assert getType().getEntryType().canImport(value.getType());
             assert index >= 0;
-            assert index < getTotalSize();
+            assert index < size();
             ValueExplorerNode other = (ValueExplorerNode) value;
             content[index] = other.node;
         }
@@ -248,7 +248,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
             assert value != null;
             assert value.getType().canImport(getType().getEntryType());
             assert index >= 0;
-            assert index < getTotalSize();
+            assert index < size();
             int entry = content[index];
             ValueExplorerNode other = (ValueExplorerNode) value;
             other.node = entry;
@@ -261,8 +261,8 @@ final class NodePropertyExplorerNode implements NodeProperty {
 
         @Override
         public int hashCode() {
-            int hash = Arrays.hashCode(getDimensions());
-            for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+            int hash = size();
+            for (int entryNr = 0; entryNr < size(); entryNr++) {
                 int entry = content[entryNr];
                 hash = entry + (hash << 6) + (hash << 16) - hash;
             }

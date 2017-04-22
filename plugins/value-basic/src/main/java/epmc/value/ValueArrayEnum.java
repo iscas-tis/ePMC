@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -48,7 +46,7 @@ final class ValueArrayEnum extends ValueArray {
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        int numBits = getTotalSize() * getBitsPerEntry();
+        int numBits = size() * getBitsPerEntry();
         int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[size];
     }
@@ -68,7 +66,7 @@ final class ValueArrayEnum extends ValueArray {
         assert ValueEnum.isEnum(value);
         assert getType().getEntryType().getEnumClass() == ValueEnum.asEnum(value).getEnumClass();
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = ValueEnum.asEnum(value).getEnum().ordinal();
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             boolean bitValue = (number & (1 << bitNr)) != 0;
@@ -88,7 +86,7 @@ final class ValueArrayEnum extends ValueArray {
         assert ValueEnum.isEnum(value);
         assert getType().getEntryType().getEnumClass() == ValueEnum.asEnum(value).getEnumClass();
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         int number = 0;
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -108,7 +106,7 @@ final class ValueArrayEnum extends ValueArray {
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
+        int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }

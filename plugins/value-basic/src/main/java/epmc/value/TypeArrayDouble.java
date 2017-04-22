@@ -72,7 +72,7 @@ public final class TypeArrayDouble implements TypeArrayReal {
     }
 
 	@Override
-	public TypeArrayAlgebra getTypeArray() {
-		return new TypeArrayGenericAlgebra(this);
+	public TypeArrayGeneric getTypeArray() {
+		return new TypeArrayGeneric(this);
 	}
 }

@@ -27,7 +27,6 @@ import java.nio.channels.FileChannel.MapMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 
 import epmc.error.EPMCException;
 import epmc.value.Value;
@@ -53,7 +52,7 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
     @Override
     public int getInt(int index) {
         assert index >= 0 : index;
-        assert index < getTotalSize() : index + " " + getTotalSize();
+        assert index < size() : index + " " + size();
         int result = 0;
         result = buffer.getInt(index * 4);
         return result;
@@ -82,7 +81,7 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
             Path tmpFile = Files.createTempFile("valueArrayIntegerMappedByteBuffer", "dat");
             channel.close();
             channel = FileChannel.open(tmpFile, StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.DELETE_ON_CLOSE);
-            buffer = channel.map(MapMode.READ_WRITE, 0, getTotalSize() * 4);
+            buffer = channel.map(MapMode.READ_WRITE, 0, size() * 4);
         } catch (IOException e) {
             assert false;
         }
@@ -96,14 +95,14 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
     @Override
     public void setInt(int value, int index) {
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         buffer.putInt(index * 4, value);
     }
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int i = 0; i < getTotalSize(); i++) {
+        int hash = 0;
+        for (int i = 0; i < size(); i++) {
             int entry = buffer.getInt(i * 4);
             hash = entry + (hash << 6) + (hash << 16) - hash;
         }
@@ -119,36 +118,6 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
     public boolean isImmutable() {
     	return immutable;
     }
-
-	@Override
-	public void set(int value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isZero() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isOne() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isPosInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void set(String value) throws EPMCException {

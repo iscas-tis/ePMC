@@ -697,7 +697,6 @@ public final class GraphBuilderDD implements Closeable {
         assert !closed;
         assert explResult != null;
         assert contextDD.getContextValue() == explResult.getType().getContext();
-        assert explResult.getNumDimensions() == 1;
         DD result = valuesToDDRec(explResult);
         Value sinkValue = explResult.getType().getEntryType().newValue();
         Value zero = UtilValue.newValue(ValueArrayAlgebra.asArrayAlgebra(explResult).getType().getEntryType(), 0);

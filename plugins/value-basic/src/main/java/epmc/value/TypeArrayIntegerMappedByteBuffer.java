@@ -72,7 +72,7 @@ final class TypeArrayIntegerMappedByteBuffer implements TypeArrayInteger {
     }
 
 	@Override
-	public TypeArrayAlgebra getTypeArray() {
-		return new TypeArrayGenericAlgebra(this);
+	public TypeArrayGeneric getTypeArray() {
+		return new TypeArrayGeneric(this);
 	}
 }

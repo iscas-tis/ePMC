@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -33,7 +31,7 @@ final class ValueArrayObjectDirect extends ValueArray {
 
     ValueArrayObjectDirect(TypeArrayObjectDirect type) {
     	this.type = type;
-        this.content = new Object[getTotalSize()];
+        this.content = new Object[size()];
     }
     
     @Override
@@ -46,8 +44,8 @@ final class ValueArrayObjectDirect extends ValueArray {
     @Override
     protected void setDimensionsContent() {
         assert !isImmutable();
-        if (this.content.length < getTotalSize()) {
-            content = new Object[getTotalSize()];
+        if (this.content.length < size()) {
+            content = new Object[size()];
         }
     }
     
@@ -57,7 +55,7 @@ final class ValueArrayObjectDirect extends ValueArray {
         assert value != null;
         assert ValueObject.isObject(value);
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         content[index] = ValueObject.asObject(value).getObject();
     }
 
@@ -66,15 +64,15 @@ final class ValueArrayObjectDirect extends ValueArray {
         assert value != null;
         assert ValueObject.isObject(value);
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         Object entry = content[index];
         ValueObject.asObject(value).set(entry);
     }
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        for (int entryNr = 0; entryNr < getTotalSize(); entryNr++) {
+        int hash = 0;
+        for (int entryNr = 0; entryNr < size(); entryNr++) {
             long entry = 0;
             if (content[entryNr] != null) {
                 entry = content[entryNr].hashCode();

@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -54,7 +52,7 @@ public final class ValueArrayConstant extends ValueArray {
         assert value != null;
         assert content.getType().canImport(value.getType());
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         content.set(value);
     }
     
@@ -62,16 +60,14 @@ public final class ValueArrayConstant extends ValueArray {
     public void get(Value value, int index) {
         assert value != null;
         assert index >= 0;
-        assert index < getTotalSize();
+        assert index < size();
         assert value.getType().canImport(content.getType());
         value.set(content);
     }
     
     @Override
     public int hashCode() {
-        int hash = Arrays.hashCode(getDimensions());
-        hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
-        return hash;
+        return content.hashCode();
     }
     
     @Override
