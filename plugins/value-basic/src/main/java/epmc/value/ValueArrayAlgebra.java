@@ -20,12 +20,10 @@
 
 package epmc.value;
 
-import java.util.Arrays;
-
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-public abstract class ValueArrayAlgebra extends ValueArray {
+public interface ValueArrayAlgebra extends ValueArray {
 	public static boolean isArrayAlgebra(Value value) {
 		return value instanceof ValueArrayAlgebra;
 	}
@@ -38,32 +36,8 @@ public abstract class ValueArrayAlgebra extends ValueArray {
 		}
 	}
 	
-    private ValueAlgebra[] entryAccs = new ValueAlgebra[1];
-
-    protected ValueAlgebra getEntryAcc(int number) {
-        assert number >= 0;
-        int numEntryAccs = this.entryAccs.length;
-        while (number >= numEntryAccs) {
-            numEntryAccs *= 2;
-        }
-        if (numEntryAccs != this.entryAccs.length) {
-            this.entryAccs = Arrays.copyOf(this.entryAccs, numEntryAccs);
-        }
-        if (this.entryAccs[number] == null) {
-            this.entryAccs[number] = getType().getEntryType().newValue();
-        }
-        return this.entryAccs[number];
-    }
-    
-    public final void set(int entry, int index) {
-        assert !isImmutable();
-        getEntryAcc(0).set(entry);
-        set(getEntryAcc(0), index);
-    }
+    void set(int entry, int index);
     
     @Override
-    public abstract TypeArrayAlgebra getType();
-    
-    @Override
-    public abstract ValueArrayAlgebra clone();
+    TypeArrayAlgebra getType();
 }

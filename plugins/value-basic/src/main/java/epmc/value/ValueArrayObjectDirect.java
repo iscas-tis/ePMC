@@ -24,10 +24,11 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-final class ValueArrayObjectDirect extends ValueArray {
+final class ValueArrayObjectDirect implements ValueArray {
 	private final TypeArrayObjectDirect type;
     private Object[] content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayObjectDirect(TypeArrayObjectDirect type) {
     	this.type = type;
@@ -39,14 +40,6 @@ final class ValueArrayObjectDirect extends ValueArray {
     	ValueArrayObjectDirect other = new ValueArrayObjectDirect(getType());
     	other.set(this);
     	return other;
-    }
-
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.length < size()) {
-            content = new Object[size()];
-        }
     }
     
     @Override
@@ -101,5 +94,25 @@ final class ValueArrayObjectDirect extends ValueArray {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        if (this.content.length < size) {
+            content = new Object[size];
+        }
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

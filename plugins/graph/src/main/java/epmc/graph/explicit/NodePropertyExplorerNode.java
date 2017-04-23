@@ -20,8 +20,6 @@
 
 package epmc.graph.explicit;
 
-import java.util.Arrays;
-
 import epmc.error.EPMCException;
 import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNode;
@@ -205,11 +203,12 @@ final class NodePropertyExplorerNode implements NodeProperty {
 	    }
     }
     
-    private final class ValueArrayExplorerNode extends ValueArray implements ValueContentIntArray {
+    private final class ValueArrayExplorerNode implements ValueArray, ValueContentIntArray {
         /** Content of the array, storing indices of explorer nodes. */
         private int[] content;
 		private final TypeArrayExplorerNode type;
 		private boolean immutable;
+		private int size;
 
         ValueArrayExplorerNode(TypeArrayExplorerNode type) {
         	assert type != null;
@@ -224,14 +223,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
             return clone;
         }
 
-        @Override
-        protected void setDimensionsContent() {
-            assert !isImmutable();
-            if (this.content.length < size()) {
-                content = new int[size()];
-            }
-        }
-        
         @Override
         public void set(Value value, int index) {
             assert !isImmutable();
@@ -288,6 +279,18 @@ final class NodePropertyExplorerNode implements NodeProperty {
 		public void set(String value) throws EPMCException {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public void setSize(int size) {
+            assert !isImmutable();
+            content = new int[size];
+            this.size = size;
+		}
+
+		@Override
+		public int size() {
+			return size;
 		}
     }
     

@@ -1,7 +1,6 @@
 package epmc.jani.explorer;
 
 import epmc.value.ContextValue;
-import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeArrayGeneric;
 import epmc.value.ValueArray;

@@ -22,13 +22,6 @@ package epmc.value;
 
 import epmc.error.EPMCException;
 
-// TODO should be divided into two interfaces (not classes). One which is just
-// TODO for one-dimensional arrays. One which allows multi-dimensional arrays.
-// TODO For the multi-dimensional, we should provide a default implementation
-// TODO wrapping around the single-dimensional array. It is only needed for JANI
-// TODO and QMC at the moment anyway. Having one-dimensional arrays as
-// TODO interfaces allows for a cleaner implementation in the plugins.
-
 /**
  * {@link Value} storing multiple {@link Value}s of given {@link Type}.
  * In principle, multiple values could just be stored as Java arrays.
@@ -46,7 +39,7 @@ import epmc.error.EPMCException;
  * 
  * @author Ernst Moritz Hahn
  */
-public abstract class ValueArray implements Value {
+public interface ValueArray extends Value {
     /**
      * Checks whether given value is an array value.
      * 
@@ -72,56 +65,12 @@ public abstract class ValueArray implements Value {
         }
     }
 
-    private int size;
-    
     @Override
-    public abstract TypeArray getType();
-    
-    @Override
-    public final boolean equals(Object obj) {
-        if (!(obj instanceof ValueArray)) {
-            return false;
-        }
-        ValueArray other = (ValueArray) obj;
-        if (this.size != other.size) {
-            return false;
-        }
-        int totalSize = size();
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
-        for (int entry = 0; entry < totalSize; entry++) {
-            try {
-                get(entryAccThis, entry);
-                other.get(entryAccOther, entry);
-                if (!entryAccThis.isEq(entryAccOther)) {
-                    return false;
-                }
-            } catch (EPMCException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return true;
-    }
-    
-    @Override
-    public final String toString() {
-        StringBuilder builder = new StringBuilder();
-        Value entry = getType().getEntryType().newValue();
-        builder.append("[");
-        for (int entryNr = 0; entryNr < size(); entryNr++) {
-        	get(entry, entryNr);
-        	builder.append(entry);
-        	if (entryNr < size() - 1) {
-        		builder.append(",");
-        	}
-        }
-        builder.append("]");
-        return builder.toString();
-    }
+    TypeArray getType();
         
-    protected abstract void setDimensionsContent();
-    
-    public final void setSize(int size) {
+    void setSize(int size);
+    /*
+    {
         assert !isImmutable();
         this.size = size;
         setDimensionsContent();
@@ -130,17 +79,19 @@ public abstract class ValueArray implements Value {
             set(entryAcc, index);
         }
     }
+    */
     
-    public final int size() {
-        return size;
-    }
+    int size();
+
+    void get(Value presStateProb, int state);
+    
+    void set(Value value, int index);
 
     @Override
-    public void set(Value op) {
+    default void set(Value op) {
         assert !isImmutable();
         ValueArray opArray = ValueArray.asArray(op);
         setSize(opArray.size());
-        setDimensionsContent();
         int totalSize = opArray.size();
         Value entryAcc = getType().getEntryType().newValue();
         for (int index = 0; index < totalSize; index++) {
@@ -150,7 +101,7 @@ public abstract class ValueArray implements Value {
     }    
     
     @Override
-    public boolean isEq(Value other) throws EPMCException {
+    default boolean isEq(Value other) throws EPMCException {
     	assert other != null;
     	assert isArray(other);
         ValueArray otherArray = ValueArray.asArray(other);
@@ -170,7 +121,7 @@ public abstract class ValueArray implements Value {
     }
     
     @Override
-    public int compareTo(Value other) {
+    default int compareTo(Value other) {
     	assert other != null;
         assert !isImmutable();
         ValueArray opArray = ValueArray.asArray(other);
@@ -193,7 +144,7 @@ public abstract class ValueArray implements Value {
     }
     
     @Override
-    public double distance(Value other) throws EPMCException {
+    default double distance(Value other) throws EPMCException {
         assert other != null;
         if (!isArray(other)) {
             return Double.POSITIVE_INFINITY;
@@ -216,7 +167,4 @@ public abstract class ValueArray implements Value {
         return maxDistance;
     }
 
-    public abstract void get(Value presStateProb, int state);
-    
-    public abstract void set(Value value, int index);
 }

@@ -31,11 +31,14 @@ import java.nio.file.StandardOpenOption;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
+final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
+	private final static String TMP_PREFIX = "valueArrayIntegerMappedByteBuffer";
+	private final static String TMP_ENDING = "dat";
     private FileChannel channel;
     private MappedByteBuffer buffer;
 	private TypeArrayIntegerMappedByteBuffer type;
 	private boolean immutable;
+	private int size;
 
     ValueArrayIntegerMappedByteBuffer(TypeArrayIntegerMappedByteBuffer type) {
     	assert type != null;
@@ -76,24 +79,12 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
     }
 
     @Override
-    protected void setDimensionsContent() {
-        try {
-            Path tmpFile = Files.createTempFile("valueArrayIntegerMappedByteBuffer", "dat");
-            channel.close();
-            channel = FileChannel.open(tmpFile, StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.DELETE_ON_CLOSE);
-            buffer = channel.map(MapMode.READ_WRITE, 0, size() * 4);
-        } catch (IOException e) {
-            assert false;
-        }
-    }
-
-    @Override
     public TypeArrayIntegerMappedByteBuffer getType() {
     	return type;
     }
 
     @Override
-    public void setInt(int value, int index) {
+    public void set(int value, int index) {
         assert index >= 0;
         assert index < size();
         buffer.putInt(index * 4, value);
@@ -123,5 +114,29 @@ final class ValueArrayIntegerMappedByteBuffer extends ValueArrayInteger {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+		assert size >= 0;
+        try {
+            Path tmpFile = Files.createTempFile(TMP_PREFIX, TMP_ENDING);
+            channel.close();
+            channel = FileChannel.open(tmpFile, StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.DELETE_ON_CLOSE);
+            buffer = channel.map(MapMode.READ_WRITE, 0, size * Integer.BYTES);
+        } catch (IOException e) {
+            assert false;
+        }
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

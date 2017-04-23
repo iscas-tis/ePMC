@@ -27,16 +27,17 @@ import com.sun.jna.Memory;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueContentMemory {
+final class ValueArrayIntegerNative implements ValueArrayInteger, ValueContentMemory {
 	private final static String SPACE = " ";
 	private final TypeArrayIntegerNative type;
     private Memory content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayIntegerNative(TypeArrayIntegerNative type) {
     	assert type != null;
     	this.type = type;
-        int numBytes = size() * 4;
+        int numBytes = size() * Integer.BYTES;
         if (numBytes == 0) {
             numBytes = 1;
         }
@@ -51,14 +52,6 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     	ValueArrayIntegerNative other = new ValueArrayIntegerNative(getType());
     	other.set(this);
     	return other;
-    }
-    
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.size() / 4 < size()) {
-            content = new Memory(size() * 4);
-        }
     }
     
     @Override
@@ -91,7 +84,7 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
     }
 
     @Override
-    public void setInt(int value, int index) {
+    public void set(int value, int index) {
         assert !isImmutable();
         assert index >= 0;
         assert index < size();
@@ -127,5 +120,26 @@ final class ValueArrayIntegerNative extends ValueArrayInteger implements ValueCo
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        content = new Memory(size * Integer.BYTES);
+        for (int index = 0; index < size; index++) {
+        	content.setInt(index * Integer.BYTES, 0);
+        }
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

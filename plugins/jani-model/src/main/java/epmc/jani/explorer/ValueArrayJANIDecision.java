@@ -7,7 +7,7 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueBitStoreable;
 
-public final class ValueArrayJANIDecision extends ValueArray {
+public final class ValueArrayJANIDecision implements ValueArray {
 	private final class DecisionBitStream implements BitStream {
 
 		@Override
@@ -36,6 +36,7 @@ public final class ValueArrayJANIDecision extends ValueArray {
 	private long content[] = new long[0];
 	private boolean immutable;
 	private int bitIndex;
+	private int size;
 
 	public ValueArrayJANIDecision(TypeArrayJANIDecisionType type) {
 		assert type != null;
@@ -65,14 +66,6 @@ public final class ValueArrayJANIDecision extends ValueArray {
 	}
 
 	@Override
-	protected void setDimensionsContent() {
-		int size = size();
-		int totalNumBits = size * bitsPerEntry;
-		int numEntries = totalNumBits / Long.SIZE + (totalNumBits % Long.SIZE == 0 ? 0 : 1);
-		content = new long[numEntries];
-	}
-
-	@Override
 	public void get(Value value, int index) {
 		assert value != null;
 		assert value instanceof ValueDecision;
@@ -94,5 +87,18 @@ public final class ValueArrayJANIDecision extends ValueArray {
 		for (Value entry : values) {
 			ValueBitStoreable.asBitStoreable(entry).write(stream);
 		}
+	}
+
+	@Override
+	public void setSize(int size) {
+		int totalNumBits = size * bitsPerEntry;
+		int numEntries = totalNumBits / Long.SIZE + (totalNumBits % Long.SIZE == 0 ? 0 : 1);
+		content = new long[numEntries];
+		this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
 	}
 }

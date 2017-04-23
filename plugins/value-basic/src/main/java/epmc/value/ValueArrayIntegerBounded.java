@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-final class ValueArrayIntegerBounded extends ValueArrayInteger {
+final class ValueArrayIntegerBounded implements ValueArrayInteger {
     /** Log2 of {@link Long#SIZE}. */
     private static final int LOG2LONGSIZE = 6;
     /** String containing a single space. */
@@ -42,6 +42,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
      * */
     private final int bitsPerEntry;
 	private boolean immutable;
+	private int size;
     
     ValueArrayIntegerBounded(TypeArrayIntegerBounded type) {
         assert type != null;
@@ -70,26 +71,6 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
     }
 
     @Override
-    public void setInt(int value, int index) {
-        assert !isImmutable();
-        assert index >= 0;
-        assert index < size();
-        assert value >= lower : value + SPACE + lower;
-        assert value <= upper : value + SPACE + upper;
-        int number = value - lower;
-        for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
-            boolean bitValue = (number & (1 << bitNr)) != 0;
-            int bitIndex = index * getBitsPerEntry() + bitNr;
-            int offset = bitIndex >> LOG2LONGSIZE;
-            if (bitValue) {
-                content[offset] |= 1L << bitIndex;
-            } else {
-                content[offset] &= ~(1L << bitIndex);
-            }
-        }
-    }
-    
-    @Override
     public ValueArrayIntegerBounded clone() {
     	ValueArrayIntegerBounded other = new ValueArrayIntegerBounded(getType());
     	other.set(this);
@@ -102,7 +83,7 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
         assert index < size();
-        setInt(ValueInteger.asInteger(value).getInt(), index);
+        set(ValueInteger.asInteger(value).getInt(), index);
     }
 
     @Override
@@ -112,14 +93,6 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
         assert index >= 0;
         assert index < size();
         ValueAlgebra.asAlgebra(value).set(getInt(index));
-    }
-
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        int numBits = size() * getBitsPerEntry();
-        int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
-        this.content = new long[size];
     }
 
     private int getBitsPerEntry() {
@@ -159,5 +132,45 @@ final class ValueArrayIntegerBounded extends ValueArrayInteger {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void set(int value, int index) {
+        assert !isImmutable();
+        assert index >= 0;
+        assert index < size();
+        assert value >= lower : value + SPACE + lower;
+        assert value <= upper : value + SPACE + upper;
+        int number = value - lower;
+        for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
+            boolean bitValue = (number & (1 << bitNr)) != 0;
+            int bitIndex = index * getBitsPerEntry() + bitNr;
+            int offset = bitIndex >> LOG2LONGSIZE;
+            if (bitValue) {
+                content[offset] |= 1L << bitIndex;
+            } else {
+                content[offset] &= ~(1L << bitIndex);
+            }
+        }
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        int numBits = size * getBitsPerEntry();
+        int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
+        this.content = new long[num];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

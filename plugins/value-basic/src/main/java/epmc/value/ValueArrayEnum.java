@@ -24,11 +24,12 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-final class ValueArrayEnum extends ValueArray {
+final class ValueArrayEnum implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
     private long[] content;
 	private final TypeArrayEnum type;
 	private boolean immutable;
+	private int size;
 
     ValueArrayEnum(TypeArrayEnum type) {
     	assert type != null;
@@ -41,14 +42,6 @@ final class ValueArrayEnum extends ValueArray {
     	ValueArrayEnum other = new ValueArrayEnum(getType());
     	other.set(this);
     	return other;
-    }
-
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        int numBits = size() * getBitsPerEntry();
-        int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
-        this.content = new long[size];
     }
 
     private int getBitsPerEntry() {
@@ -125,5 +118,25 @@ final class ValueArrayEnum extends ValueArray {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        int numBits = size * getBitsPerEntry();
+        int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
+        this.content = new long[num];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

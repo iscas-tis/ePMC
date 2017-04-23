@@ -26,11 +26,12 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-final class ValueArrayBoolean extends ValueArray {
+final class ValueArrayBoolean implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
 	private final TypeArrayBoolean type;
     private long[] content;
 	private boolean immutable;
+	private int size;
     
     ValueArrayBoolean(TypeArrayBoolean type) {
     	this.type = type;
@@ -38,19 +39,19 @@ final class ValueArrayBoolean extends ValueArray {
         this.content = new long[numLongs];
     }
     
-    @Override
-    public ValueArray clone() {
-    	ValueArrayBoolean other = new ValueArrayBoolean(getType());
-    	other.set(this);
-    	return other;
-    }
-
-    @Override
-    protected void setDimensionsContent() {
+	@Override
+	public void setSize(int size) {
         assert !isImmutable();
-        int size = ((size() - 1) >> LOG2LONGSIZE) + 1;
-        this.content = new long[size];
-    }
+        assert size >= 0;
+        int num = ((size - 1) >> LOG2LONGSIZE) + 1;
+        this.content = new long[num];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
 
      @Override
     public void set(Value value, int index) {
@@ -122,5 +123,9 @@ final class ValueArrayBoolean extends ValueArray {
 		// TODO Auto-generated method stub
 		
 	}
-    
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
+	}
 }

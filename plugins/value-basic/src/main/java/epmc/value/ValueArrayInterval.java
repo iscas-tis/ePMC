@@ -22,12 +22,12 @@ package epmc.value;
 
 import epmc.error.EPMCException;
 import epmc.value.Value;
-import epmc.value.ValueArray;
 
-public final class ValueArrayInterval extends ValueArrayAlgebra implements ValueContentDoubleArray {
+public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContentDoubleArray {
 	private final TypeArrayInterval type;
-    private ValueArray content;
+    private ValueArrayAlgebra content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayInterval(TypeArrayInterval type) {
     	assert type != null;
@@ -48,14 +48,6 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
     }
 
     @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.size() < size() * 2) {
-            content = UtilValue.newArray(getType().getTypeArrayReal(), size() * 2);
-        }
-    }
-    
-    @Override
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
@@ -65,6 +57,15 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
         content.set(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
         content.set(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
     }
+
+	@Override
+	public void set(int entry, int index) {
+        assert !isImmutable();
+        assert index >= 0;
+        assert index < size() : index + " " + size();
+        content.set(entry, index * 2);
+        content.set(entry, index * 2 + 1);
+	}
 
     @Override
     public void get(Value value, int index) {
@@ -102,5 +103,23 @@ public final class ValueArrayInterval extends ValueArrayAlgebra implements Value
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        content = UtilValue.newArray(getType().getTypeArrayReal(), size * 2);
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

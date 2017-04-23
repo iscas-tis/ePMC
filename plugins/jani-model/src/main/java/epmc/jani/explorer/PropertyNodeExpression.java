@@ -30,7 +30,6 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class PropertyNodeExpression implements ExplorerNodeProperty {
-	private final ExplorerJANI explorer;
 	private final EvaluatorExplicit evaluator;
 	private final Type type;
 	private final Value[] values;
@@ -39,7 +38,6 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
 		assert explorer != null;
 		assert expression != null;
 		expression = UtilExpressionStandard.replace(expression, explorer.getModel().getConstants());
-		this.explorer = explorer;
 		this.evaluator = UtilEvaluatorExplicit.newEvaluator(expression, explorer, identifiers);
 		this.type = type;
 		this.values = new Value[identifiers.length];

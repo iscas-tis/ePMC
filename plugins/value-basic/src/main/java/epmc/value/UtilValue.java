@@ -219,6 +219,46 @@ public final class UtilValue {
         }
         return result;
     }
+
+    public static boolean arrayEquals(ValueArray array, Object obj) {
+        if (!(obj instanceof ValueArray)) {
+            return false;
+        }
+        ValueArray other = (ValueArray) obj;
+        if (array.size() != other.size()) {
+            return false;
+        }
+        int totalSize = array.size();
+        Value entryAccThis = array.getType().getEntryType().newValue();
+        Value entryAccOther = array.getType().getEntryType().newValue();
+        for (int entry = 0; entry < totalSize; entry++) {
+            try {
+            	array.get(entryAccThis, entry);
+                other.get(entryAccOther, entry);
+                if (!entryAccThis.isEq(entryAccOther)) {
+                    return false;
+                }
+            } catch (EPMCException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
+    }
+    
+    public static String arrayToString(ValueArray array) {
+        StringBuilder builder = new StringBuilder();
+        Value entry = array.getType().getEntryType().newValue();
+        builder.append("[");
+        for (int entryNr = 0; entryNr < array.size(); entryNr++) {
+        	array.get(entry, entryNr);
+        	builder.append(entry);
+        	if (entryNr < array.size() - 1) {
+        		builder.append(",");
+        	}
+        }
+        builder.append("]");
+        return builder.toString();
+    }
     
     /**
      * Private constructor to prevent instantiation of this class.

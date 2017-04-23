@@ -27,15 +27,16 @@ import com.sun.jna.Memory;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueContentMemory {
+final class ValueArrayDoubleNative implements ValueArrayDouble, ValueContentMemory {
 	private final TypeArrayDoubleNative type;
     private Memory content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayDoubleNative(TypeArrayDoubleNative type) {
         assert type != null;
         this.type = type;
-        int numBytes = size() * 8;
+        int numBytes = size() * Double.BYTES;
         if (numBytes == 0) {
             numBytes = 1;
         }
@@ -51,14 +52,6 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
     }
 
     @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.size() / 8 < size()) {
-            content = new Memory(size() * 8);
-        }
-    }
-    
-    @Override
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
@@ -67,6 +60,14 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
         assert index < size() : index + " " + size();
         content.setDouble(index * 8, ValueNumber.asNumber(value).getDouble());
     }
+
+	@Override
+	public void set(int entry, int index) {
+        assert !isImmutable();
+        assert index >= 0 : index;
+        assert index < size() : index + " " + size();
+        content.setDouble(index * 8, entry);
+	}
 
     @Override
     public void get(Value value, int index) {
@@ -114,5 +115,29 @@ final class ValueArrayDoubleNative extends ValueArrayDouble implements ValueCont
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        this.size = size;
+        if (size == 0) {
+        	size = 1;
+        }
+        content = new Memory(size * Double.BYTES);
+        for (int index = 0; index < size; index++) {
+        	content.setDouble(index * Double.BYTES, 0);
+        }
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

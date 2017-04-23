@@ -26,11 +26,12 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-final class ValueArrayTernary extends ValueArray {
+final class ValueArrayTernary implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
 	private final TypeArrayTernary type;
     private long[] content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayTernary(TypeArrayTernary type) {
     	assert type != null;
@@ -45,14 +46,6 @@ final class ValueArrayTernary extends ValueArray {
     	ValueArrayTernary other = new ValueArrayTernary(getType());
     	other.set(this);
     	return other;
-    }
-
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        int numBits = size() * getBitsPerEntry();
-        int size = ((numBits - 1) >> LOG2LONGSIZE) + 1;
-        this.content = new long[size];
     }
 
     private int getBitsPerEntry() {
@@ -124,5 +117,25 @@ final class ValueArrayTernary extends ValueArray {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        int numBits = size * getBitsPerEntry();
+        int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
+        this.content = new long[num];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }
