@@ -25,13 +25,11 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class PropertyNodeConstant implements PropertyNode {
-	private final ExplorerJANI explorer;
 	private final Value value;
 
 	PropertyNodeConstant(ExplorerJANI explorer, Value value) {
 		assert explorer != null;
 		assert value != null;
-		this.explorer = explorer;
 		this.value = value;
 	}
 	

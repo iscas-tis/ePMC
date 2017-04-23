@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-public final class ValueArrayDoubleJava extends ValueArrayDouble implements ValueContentDoubleArray {
+public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray {
 	public static boolean isValueArrayDoubleJava(Value value) {
 		return value instanceof ValueArrayDoubleJava;
 	}
@@ -40,11 +40,14 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
     private double[] content;
 	private final TypeArrayDouble type;
 	private boolean immutable;
+	private final ValueDouble entry;
+	private int size;
 
     ValueArrayDoubleJava(TypeArrayDouble type) {
     	assert type != null;
     	this.type = type;
         this.content = new double[0];
+        this.entry = type.getEntryType().newValue();
     }
     
     @Override
@@ -55,14 +58,6 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
     }
 
     @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.length < size()) {
-            content = new double[size()];
-        }
-    }
-    
-    @Override
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
@@ -71,6 +66,12 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
         assert index < size() : index + SPACE + size();
         content[index] = ValueNumber.asNumber(value).getDouble();
     }
+    
+	@Override
+	public void set(int entry, int index) {
+		content[index] = entry;
+	}
+
 
     @Override
     public void get(Value value, int index) {
@@ -85,8 +86,8 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
         	assert ValueReal.asReal(value) != null : value;
         	ValueReal.asReal(value).set(entry);
         } else {
-        	((ValueDouble) getEntryAcc(0)).set(entry);
-        	value.set(getEntryAcc(0));
+        	this.entry.set(entry);
+        	value.set(this.entry);
         }
     }
     
@@ -126,5 +127,23 @@ public final class ValueArrayDoubleJava extends ValueArrayDouble implements Valu
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        content = new double[size];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

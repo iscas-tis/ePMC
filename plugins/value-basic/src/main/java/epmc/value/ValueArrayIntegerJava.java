@@ -23,11 +23,12 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Value;
 
-final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueContentIntArray {
+final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray {
 	private final static String SPACE = " ";
 	private final TypeArrayIntegerJava type;
     private int[] content;
 	private boolean immutable;
+	private int size;
 
     ValueArrayIntegerJava(TypeArrayIntegerJava type) {
         this.type = type;
@@ -42,14 +43,6 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
     }
 
     @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        if (this.content.length < size()) {
-            content = new int[size()];
-        }
-    }
-    
-    @Override
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
@@ -58,6 +51,14 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
         assert index < size() : index + SPACE + size();
         content[index] = ValueInteger.asInteger(value).getInt();
     }
+    
+	@Override
+	public void set(int entry, int index) {
+        assert !isImmutable();
+        assert index >= 0;
+        assert index < size() : index + SPACE + size();
+        content[index] = entry;		
+	}
 
     @Override
     public void get(Value value, int index) {
@@ -81,11 +82,6 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
         return content[index];
     }
 
-    @Override
-    public void setInt(int value, int index) {
-        content[index] = value;
-    }
-    
     @Override
     public int hashCode() {
         int hash = 0;
@@ -115,5 +111,23 @@ final class ValueArrayIntegerJava extends ValueArrayInteger implements ValueCont
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        content = new int[size];
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }

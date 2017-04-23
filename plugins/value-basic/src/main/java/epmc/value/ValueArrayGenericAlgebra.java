@@ -24,15 +24,16 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class ValueArrayGenericAlgebra extends ValueArrayAlgebra {
+public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
 	private final static String SPACE = " ";
     private final TypeArrayGenericAlgebra type;
-    private Value[] content;
+    private ValueAlgebra[] content;
     private boolean immutable;
+	private int size;
 
     ValueArrayGenericAlgebra(TypeArrayGenericAlgebra type) {
         this.type = type;
-        this.content = new Value[0];
+        this.content = new ValueAlgebra[0];
     }
     
     @Override
@@ -48,18 +49,6 @@ public final class ValueArrayGenericAlgebra extends ValueArrayAlgebra {
             this.content[index].set(content[index]);
         }
     }
-    
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
-        Type entryType = getType().getEntryType();
-        if (this.content.length < size()) {
-            this.content = new Value[size()];
-            for (int index = 0; index < content.length; index++) {
-                this.content[index] = entryType.newValue();
-            }
-        }
-    }
 
     @Override
     public void set(Value value, int index) {
@@ -69,6 +58,13 @@ public final class ValueArrayGenericAlgebra extends ValueArrayAlgebra {
         assert index < size();
         content[index].set(value);
     }
+
+	@Override
+	public void set(int entry, int index) {
+        assert index >= 0;
+        assert index < size();
+        content[index].set(entry);
+	}
 
     @Override
     public void get(Value value, int index) {
@@ -109,4 +105,26 @@ public final class ValueArrayGenericAlgebra extends ValueArrayAlgebra {
         // TODO Auto-generated method stub
         
     }
+
+	@Override
+	public void setSize(int size) {
+        assert !isImmutable();
+        assert size >= 0;
+        TypeAlgebra entryType = getType().getEntryType();
+        this.content = new ValueAlgebra[size];
+        for (int index = 0; index < size; index++) {
+        	this.content[index] = entryType.newValue();
+        }
+        this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
+	}
 }

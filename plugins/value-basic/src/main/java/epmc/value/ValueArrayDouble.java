@@ -20,6 +20,6 @@
 
 package epmc.value;
 
-public abstract class ValueArrayDouble extends ValueArrayAlgebra {
+public interface ValueArrayDouble extends ValueArrayAlgebra {
 
 }

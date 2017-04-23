@@ -24,10 +24,11 @@ import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
-public final class ValueArrayConstant extends ValueArray {
+public final class ValueArrayConstant implements ValueArray {
 	private final TypeArrayConstant type;
     private final Value content;
 	private boolean immutable;
+	private int size;
     
     ValueArrayConstant(TypeArrayConstant type) {
         this.type = type;
@@ -39,11 +40,6 @@ public final class ValueArrayConstant extends ValueArray {
     	ValueArrayConstant other = new ValueArrayConstant(getType());
     	other.set(this);
     	return other;
-    }
-
-    @Override
-    protected void setDimensionsContent() {
-        assert !isImmutable();
     }
 
     @Override
@@ -89,5 +85,21 @@ public final class ValueArrayConstant extends ValueArray {
 	public void set(String value) throws EPMCException {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setSize(int size) {
+        assert size >= 0;
+		this.size = size;
+	}
+
+	@Override
+	public int size() {
+		return size;
+	}
+	
+	@Override
+	public String toString() {
+		return UtilValue.arrayToString(this);
 	}
 }
