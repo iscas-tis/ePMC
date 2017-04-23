@@ -69,17 +69,6 @@ public interface ValueArray extends Value {
     TypeArray getType();
         
     void setSize(int size);
-    /*
-    {
-        assert !isImmutable();
-        this.size = size;
-        setDimensionsContent();
-        Value entryAcc = getType().getEntryType().newValue();
-        for (int index = 0; index < size; index++) {
-            set(entryAcc, index);
-        }
-    }
-    */
     
     int size();
 
@@ -166,5 +155,4 @@ public interface ValueArray extends Value {
         }
         return maxDistance;
     }
-
 }
