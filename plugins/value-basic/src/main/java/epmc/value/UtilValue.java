@@ -131,11 +131,12 @@ public final class UtilValue {
         return value;
     }
 
-    public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int valueInt) {
+    public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int size) {
     	assert type != null;
+    	assert size >= 0;
         @SuppressWarnings("unchecked")
 		T value = (T) type.newValue();
-        value.setSize(valueInt);
+        value.setSize(size);
         return value;
     }
     
@@ -165,11 +166,12 @@ public final class UtilValue {
                 operation, value.getType());
     }
 
-    public static Type upper(Type a, Type b) {
+    @SuppressWarnings("unchecked")
+	public static <T extends Type> T upper(T a, T b) {
     	assert a != null;
         assert b != null;
         assert a.getContext() == b.getContext();
-        Type upper = null;
+        T upper = null;
         if (TypeUnknown.isUnknown(a)) {
             upper = a;
         } else if (TypeUnknown.isUnknown(b)) {
@@ -179,14 +181,14 @@ public final class UtilValue {
             		TypeInteger.asInteger(b).getLowerInt());
             int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
             		TypeInteger.asInteger(b).getUpperInt());
-            upper = new TypeInteger(a.getContext(), lowerBound, upperBound);
+            upper = (T) new TypeInteger(a.getContext(), lowerBound, upperBound);
         } else {
             if (a.canImport(b)) {
                 upper = a;
             } else if (b.canImport(a)) {
                 upper = b;
             } else {
-                upper = TypeUnknown.get(a.getContext());
+                upper = (T) TypeUnknown.get(a.getContext());
             }
         }
         if (upper != null) {

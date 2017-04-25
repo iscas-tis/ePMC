@@ -187,7 +187,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             opTypes[opNr] = childType;
         }
         result = this.operator.resultType(opTypes);
-//        assert result != null : this + " ... " + this.getOperator().getIdentifier() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
+        assert result != null : this + " ... " + this.getOperator().getIdentifier() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
         return result;
     }
