@@ -59,6 +59,8 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(processor.toPRISM().toString()).append("\n");
 		}
 		
+		prism.append(JANIComponentRegistrar.performedRenamings().toString());
+		
 		// Semantic type
 		ModelExtensionSemantics semantics = jani.getSemanticsExtension();
 		processor = ProcessorRegistrar.getProcessor(semantics);
@@ -66,8 +68,10 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 		
 		// Constants
 		Constants constants = jani.getModelConstants();
-		processor = ProcessorRegistrar.getProcessor(constants);
-		prism.append(processor.toPRISM().toString()).append("\n");
+		if (constants != null) {
+			processor = ProcessorRegistrar.getProcessor(constants);
+			prism.append(processor.toPRISM().toString()).append("\n");
+		}
 		
 		// Global variables
 		for (Variable variable : JANIComponentRegistrar.getGlobalVariables()) {
