@@ -35,6 +35,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 
 	private Edge edge = null;
 	private String prefix = null;
+	private Automaton automaton = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -55,6 +56,11 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		}
 	}
 
+	@Override
+	public void setAutomaton(Automaton automaton) {
+		this.automaton = automaton;
+	}
+	
 	@Override
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
@@ -90,6 +96,13 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		}
 		prism.append(processor.toPRISM().toString()).append(" ");
 		
+		if (automaton.getLocations().size() > 1) {
+			prism.append("(")
+			     .append(JANIComponentRegistrar.getLocationName(automaton))
+			     .append(" = ")
+			     .append(JANIComponentRegistrar.getLocationIdentifier(automaton, edge.getLocation()))
+			     .append(") & ");
+		}
 		Guard guard = edge.getGuard();
 		processor = ProcessorRegistrar.getProcessor(guard);
 		prism.append(processor.toPRISM().toString());
@@ -98,6 +111,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		
 		Destinations destinations = edge.getDestinations();
 		processor = ProcessorRegistrar.getProcessor(destinations);
+		processor.setAutomaton(automaton);
 		prism.append(processor.toPRISM().toString());
 				
 		prism.append(";\n");

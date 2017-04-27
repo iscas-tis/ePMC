@@ -21,6 +21,7 @@
 package epmc.prism.exporter.processor;
 
 import epmc.error.EPMCException;
+import epmc.jani.model.Automaton;
 import epmc.value.ContextValue;
 
 public interface JANI2PRISMProcessorStrict {
@@ -32,6 +33,8 @@ public interface JANI2PRISMProcessorStrict {
 	default void setForDefinition(boolean forDefinition) {}
 
 	default void setWithInitialValue(boolean withInitialValue) {}
+	
+	default void setAutomaton(Automaton automaton) {}
 	
 	void setElement(Object obj) throws EPMCException;
 

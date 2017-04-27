@@ -35,6 +35,7 @@ import epmc.expression.Expression;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.Constant;
+import epmc.jani.model.Location;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
@@ -47,6 +48,7 @@ import epmc.time.TypeClock;
  *
  */
 public class JANIComponentRegistrar {
+	
 	private static final Collection<String> reservedWords;
 	static {
 		Set<String> reservedWordsMutable = new HashSet<String>();
@@ -120,6 +122,9 @@ public class JANIComponentRegistrar {
 	
 	private static Map<Action, String> actionNames;
 	
+	private static Map<Automaton, String> automatonLocationName;
+	private static Map<Automaton, Map<Location, Integer>> automatonLocationIdentifier;
+	
 	private static Automaton defaultAutomatonForUnassignedClocks;
 	private static Set<Variable> unassignedClockVariables;
 	
@@ -129,6 +134,8 @@ public class JANIComponentRegistrar {
 	private static int variable_counter;
 	private static int action_counter;
 	private static int constant_counter;
+	private static int location_counter_name;
+	private static int location_counter_id;
 	
 	static void reset() {
 		usedNames = new HashSet<>(); 
@@ -147,6 +154,9 @@ public class JANIComponentRegistrar {
 		automatonAssignsVariables = new HashMap<>();
 		actionNames = new HashMap<>();
 		
+		automatonLocationIdentifier = new HashMap<>();
+		automatonLocationName = new HashMap<>();
+		
 		defaultAutomatonForUnassignedClocks = null;
 		unassignedClockVariables = new HashSet<>();
 		
@@ -155,6 +165,8 @@ public class JANIComponentRegistrar {
 		variable_counter = 0;
 		action_counter = 0;
 		constant_counter = 0;
+		location_counter_name = 0;
+		location_counter_id = 0;
 	}
 	
 	public static void setIsTimedModel(boolean isTimedModel) {
@@ -203,6 +215,72 @@ public class JANIComponentRegistrar {
 			constantNames.put(constant, name);
 			constantNameNames.put(constant.getName(), name);
 		}
+	}
+	
+	/**
+	 * Register a location.
+	 * 
+	 * @param automaton the the automaton the location belongs to
+	 * @param location the location to register
+	 * @throws EPMCException if the location has been already registered
+	 */
+	public static void registerLocation(Automaton automaton, Location location) throws EPMCException {
+		assert automaton != null;
+		assert location != null;
+
+		Map<Location, Integer> mapLI = automatonLocationIdentifier.get(automaton);
+		if (mapLI == null) {
+			mapLI = new HashMap<>();
+			automatonLocationIdentifier.put(automaton, mapLI);
+		}
+		ensure(!mapLI.containsKey(location), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_LOCATION_DEFINED_TWICE, location.getName());
+		mapLI.put(location, location_counter_id++);
+		
+		String name = "location";
+		while (usedNames.contains(name)) {
+			name = "location_" + location_counter_name;
+			location_counter_name++;
+		}
+		usedNames.add(name);
+		automatonLocationName.put(automaton, name);
+	}
+	
+	public static String getLocationName(Automaton automaton) {
+		assert automatonLocationName.containsKey(automaton);
+		
+		return automatonLocationName.get(automaton);
+	}
+	
+	public static Integer getLocationIdentifier(Automaton automaton, Location location) {
+		assert automatonLocationIdentifier.containsKey(automaton);
+		
+		Map<Location, Integer> mapLI = automatonLocationIdentifier.get(automaton);
+		assert mapLI != null && mapLI.containsKey(location);
+		
+		return mapLI.get(location);
+	}
+	
+	public static Range getLocationRange(Automaton automaton) {
+		assert automatonLocationIdentifier.containsKey(automaton);
+		
+		Map<Location, Integer> mapLI = automatonLocationIdentifier.get(automaton);
+		assert !mapLI.isEmpty();
+		
+		int low = Integer.MAX_VALUE;
+		int high = Integer.MIN_VALUE;
+		
+		for (int value : mapLI.values()) {
+			if (low > value) {
+				low = value;
+			}
+			if (high < value) {
+				high = value;
+			}
+		}
+		
+		assert low <= high;
+		
+		return new Range(low, high);
 	}
 	
 	/**
@@ -502,8 +580,8 @@ public class JANIComponentRegistrar {
 			Action action = entry.getKey();
 			String name = entry.getValue();
 			if (! action.getName().equals(name)) {
-				sb.append("//Original action name: ").append(action.getName()).append("\n")
-				  .append("//New name: ").append(name).append("\n\n");
+				sb.append("// Original action name: ").append(action.getName()).append("\n")
+				  .append("// New name: ").append(name).append("\n\n");
 			}
 		}
 		
@@ -511,8 +589,8 @@ public class JANIComponentRegistrar {
 			Constant constant = entry.getKey();
 			String name = entry.getValue();
 			if (! constant.getName().equals(name)) {
-				sb.append("//Original constant name: ").append(constant.getName()).append("\n")
-				  .append("//New name: ").append(name).append("\n\n");
+				sb.append("// Original constant name: ").append(constant.getName()).append("\n")
+				  .append("// New name: ").append(name).append("\n\n");
 			}
 		}
 		
@@ -520,9 +598,22 @@ public class JANIComponentRegistrar {
 			Variable variable = entry.getKey();
 			String name = entry.getValue();
 			if (! variable.getName().equals(name)) {
-				sb.append("//Original variable name: ").append(variable.getName()).append("\n")
-				  .append("//New name: ").append(name).append("\n\n");
+				sb.append("// Original variable name: ").append(variable.getName()).append("\n")
+				  .append("// New name: ").append(name).append("\n\n");
 			}
+		}
+		
+		return sb;
+	}
+	
+	public static StringBuilder locationRenaming(Automaton automaton) {
+		StringBuilder sb = new StringBuilder();
+		assert automatonLocationIdentifier.containsKey(automaton);
+
+		String locationName = automatonLocationName.get(automaton);
+		for (Entry<Location, Integer> entry : automatonLocationIdentifier.get(automaton).entrySet()) {
+			sb.append("// Original location: ").append(entry.getKey().getName()).append("\n")
+			  .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
 		}
 		
 		return sb;
