@@ -31,6 +31,8 @@ public enum OptionsPRISMExporter {
 	/** Category used for JANI converter options. */
 	PRISM_EXPORTER_CATEGORY,
 	/** Name of the generated PRISM model file. */
+	PRISM_EXPORTER_PRISM_MODEL_NAME,
+	/** Name of the generated PRISM model file. */
 	PRISM_EXPORTER_PRISM_MODEL_FILE_NAME,
 	/** Name of the generated PRISM properties file. */
 	PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME,

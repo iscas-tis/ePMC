@@ -76,6 +76,12 @@ public final class AfterOptionsCreationPRISMExporter implements AfterOptionsCrea
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
 
         options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+    		.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_NAME)
+    		.setType(typeString)
+    		.setCommandLine()
+    		.setCategory(category).build();
+
+        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
     		.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_FILE_NAME)
     		.setType(typeString)
     		.setCommandLine()

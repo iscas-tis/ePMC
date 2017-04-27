@@ -86,7 +86,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
 
             String modelFilename = modelFilenames.get(0);
             
-        	String modelName = options.get(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_FILE_NAME);
+        	String modelName = options.get(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_NAME);
         	if (modelName == null) {
         		modelName = new File(modelFilename).getName();
         		int index = modelName.lastIndexOf('.');
