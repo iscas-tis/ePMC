@@ -26,6 +26,12 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 
 	private ExpressionLiteral literal = null;
+	private String prefix = null;
+	
+	@Override
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -38,8 +44,15 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert literal != null;
+		StringBuilder prism = new StringBuilder();
 		
-		return new StringBuilder(literal.getValue().toString());
+		if (prefix != null) {
+			prism.append(prefix);
+		}
+		
+		prism.append(literal.getValue().toString());
+		
+		return prism;
 	}
 	
 	@Override
