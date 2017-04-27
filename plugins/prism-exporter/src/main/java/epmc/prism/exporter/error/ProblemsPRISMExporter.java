@@ -54,6 +54,7 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_CONSTANT = newProblem("prism-exporter-error-undefined-used-constant");
     public final static Problem PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE = newProblem("prism-exporter-error-undefined-used-variable");
     public final static Problem PRISM_EXPORTER_ERROR_CONSTANT_DEFINED_TWICE = newProblem("prism-exporter-error-constant-defined-twice");
+    public final static Problem PRISM_EXPORTER_ERROR_LOCATION_DEFINED_TWICE = newProblem("prism-exporter-error-location-defined-twice");
     public final static Problem PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE = newProblem("prism-exporter-error-variable-defined-twice");
     public final static Problem PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("prism-exporter-error-unknown-processor");
     public final static Problem PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED = newProblem("prism-exporter-error-extended-syntax-required");

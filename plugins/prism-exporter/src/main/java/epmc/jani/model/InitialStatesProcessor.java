@@ -23,12 +23,20 @@ package epmc.jani.model;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class InitialStatesProcessor implements JANI2PRISMProcessorStrict {
 
 	private InitialStates initialStates = null;
 	
+	private Automaton automaton;
+	
+	@Override
+	public void setAutomaton(Automaton automaton) {
+		this.automaton = automaton;
+	}
+
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
@@ -49,6 +57,25 @@ public class InitialStatesProcessor implements JANI2PRISMProcessorStrict {
 			prism.append("// ").append(comment).append("\n");
 		}
 		prism.append("init\n").append(ModelJANIProcessor.INDENT);
+		
+		if (automaton.getLocations().size() > 1) {
+			String locationName = JANIComponentRegistrar.getLocationName(automaton);
+			boolean remaining = false;
+			prism.append("(");
+			for (Location location : automaton.getInitialLocations()) {
+				if (remaining) {
+					prism.append("|");
+				} else {
+					remaining = true;
+				}
+				prism.append("(")
+				     .append(locationName)
+				     .append("=")
+				     .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
+				     .append(")");
+			}
+			prism.append(")");
+		}
 		
 		Expression exp = initialStates.getExp(); 
 		processor = ProcessorRegistrar.getProcessor(exp);

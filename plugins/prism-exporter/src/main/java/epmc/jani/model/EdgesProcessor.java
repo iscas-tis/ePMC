@@ -28,6 +28,7 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 
 	private Edges edges = null;
 	private String prefix = null;
+	private Automaton automaton = null;
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -37,6 +38,11 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 		edges = (Edges) obj;
 	}
 
+	@Override
+	public void setAutomaton(Automaton automaton) {
+		this.automaton = automaton;
+	}
+	
 	@Override
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
@@ -52,6 +58,7 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 		for (Edge edge : edges) {
 			processor = ProcessorRegistrar.getProcessor(edge);
 			processor.setPrefix(prefix);
+			processor.setAutomaton(automaton);
 			prism.append(processor.toPRISM().toString());
 		}
 		

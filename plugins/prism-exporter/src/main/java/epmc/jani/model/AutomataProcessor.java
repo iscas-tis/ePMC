@@ -22,6 +22,7 @@ package epmc.jani.model;
 
 import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class AutomataProcessor implements JANI2PRISMProcessorStrict {
@@ -53,7 +54,9 @@ public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 		for (Automaton automaton : automata) {
 			processor = ProcessorRegistrar.getProcessor(automaton);
 			processor.setWithInitialValue(withInitialValue);
-			prism.append(processor.toPRISM().toString()).append("\n");
+			String automatonString = processor.toPRISM().toString();
+			prism.append(JANIComponentRegistrar.locationRenaming(automaton).toString());
+			prism.append(automatonString).append("\n");
 		}
 		
 		return prism;

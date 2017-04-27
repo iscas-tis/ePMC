@@ -60,6 +60,8 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 	@Override
 	public StringBuilder toPRISM() throws EPMCException {
 		assert automaton != null;
+		
+		withInitialValue &= automaton.getInitialLocations().size() == 1;
 
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
@@ -100,11 +102,14 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 		Locations locations = automaton.getLocations();
 		processor = ProcessorRegistrar.getProcessor(locations);
 		processor.setPrefix(ModelJANIProcessor.INDENT);
+		processor.setAutomaton(automaton);
+		processor.setWithInitialValue(withInitialValue);
 		prism.append(processor.toPRISM().toString());
 		
 		Edges edges = automaton.getEdges();
 		processor = ProcessorRegistrar.getProcessor(edges);
 		processor.setPrefix(ModelJANIProcessor.INDENT);
+		processor.setAutomaton(automaton);
 		prism.append(processor.toPRISM().toString());
 		
 		prism.append("endmodule\n");

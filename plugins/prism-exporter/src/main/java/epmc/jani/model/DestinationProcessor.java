@@ -23,13 +23,20 @@ package epmc.jani.model;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 
 	private Destination destination = null;
 	private String prefix = null;
+	private Automaton automaton = null;
 	
+	@Override
+	public void setAutomaton(Automaton automaton) {
+		this.automaton = automaton;
+	}
+
 	@Override
 	public void setElement(Object obj) throws EPMCException {
 		assert obj != null;
@@ -68,6 +75,13 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(" : ");
 		}
 		
+		if (automaton.getLocations().size() > 1) {
+			prism.append("(")
+				 .append(JANIComponentRegistrar.getLocationName(automaton))
+				 .append("'=")
+				 .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
+				 .append(") & ");
+		}
 		Assignments assignments = destination.getAssignments();
 		if (assignments != null) {
 			processor = ProcessorRegistrar.getProcessor(assignments);

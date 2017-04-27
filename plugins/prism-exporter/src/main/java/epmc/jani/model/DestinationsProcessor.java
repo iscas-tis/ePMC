@@ -27,6 +27,12 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 
 	private Destinations destinations = null;
+	private Automaton automaton = null;
+
+	@Override
+	public void setAutomaton(Automaton automaton) {
+		this.automaton = automaton;
+	}
 	
 	@Override
 	public void setElement(Object obj) throws EPMCException {
@@ -51,6 +57,7 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 			} else {
 				remaining = true;
 			}
+			processor.setAutomaton(automaton);
 			prism.append(processor.toPRISM().toString());
 		}
 		
