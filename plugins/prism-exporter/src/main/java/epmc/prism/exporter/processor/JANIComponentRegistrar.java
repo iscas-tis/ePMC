@@ -22,6 +22,7 @@ package epmc.prism.exporter.processor;
 
 import static epmc.error.UtilError.ensure;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,61 @@ import epmc.time.TypeClock;
  *
  */
 public class JANIComponentRegistrar {
+	private static final Collection<String> reservedWords;
+	static {
+		Set<String> reservedWordsMutable = new HashSet<String>();
+		reservedWordsMutable.add("A");
+		reservedWordsMutable.add("bool");
+		reservedWordsMutable.add("clock");
+		reservedWordsMutable.add("const");
+		reservedWordsMutable.add("ctmc");
+		reservedWordsMutable.add("C");
+		reservedWordsMutable.add("double");
+		reservedWordsMutable.add("dtmc");
+		reservedWordsMutable.add("E");
+		reservedWordsMutable.add("endinit");
+		reservedWordsMutable.add("endinvariant");
+		reservedWordsMutable.add("endmodule");
+		reservedWordsMutable.add("endrewards");
+		reservedWordsMutable.add("endsystem");
+		reservedWordsMutable.add("false");
+		reservedWordsMutable.add("formula");
+		reservedWordsMutable.add("filter");
+		reservedWordsMutable.add("func");
+		reservedWordsMutable.add("F");
+		reservedWordsMutable.add("global");
+		reservedWordsMutable.add("G");
+		reservedWordsMutable.add("init");
+		reservedWordsMutable.add("invariant");
+		reservedWordsMutable.add("I");
+		reservedWordsMutable.add("int");
+		reservedWordsMutable.add("label");
+		reservedWordsMutable.add("max");
+		reservedWordsMutable.add("mdp");
+		reservedWordsMutable.add("min");
+		reservedWordsMutable.add("module");
+		reservedWordsMutable.add("X");
+		reservedWordsMutable.add("nondeterministic");
+		reservedWordsMutable.add("Pmax");
+		reservedWordsMutable.add("Pmin");
+		reservedWordsMutable.add("P");
+		reservedWordsMutable.add("probabilistic");
+		reservedWordsMutable.add("prob");
+		reservedWordsMutable.add("pta");
+		reservedWordsMutable.add("rate");
+		reservedWordsMutable.add("rewards");
+		reservedWordsMutable.add("Rmax");
+		reservedWordsMutable.add("Rmin");
+		reservedWordsMutable.add("R");
+		reservedWordsMutable.add("S");
+		reservedWordsMutable.add("stochastic");
+		reservedWordsMutable.add("system");
+		reservedWordsMutable.add("true");
+		reservedWordsMutable.add("U");
+		reservedWordsMutable.add("W");
+		reservedWords = Collections.unmodifiableCollection(reservedWordsMutable);
+		reset();
+	}
 	
 	private static Set<String> usedNames;
 	private static Map<Constant, String> constantNames;
@@ -71,11 +127,8 @@ public class JANIComponentRegistrar {
 	
 	private static int reward_counter;
 	private static int variable_counter;
+	private static int action_counter;
 	private static int constant_counter;
-	
-	static {
-		reset();
-	}
 	
 	static void reset() {
 		usedNames = new HashSet<>(); 
@@ -100,6 +153,7 @@ public class JANIComponentRegistrar {
 		isTimedModel = false;
 		reward_counter = 0;
 		variable_counter = 0;
+		action_counter = 0;
 		constant_counter = 0;
 	}
 	
@@ -138,7 +192,9 @@ public class JANIComponentRegistrar {
 		if (!constantNames.containsKey(constant)) {
 			String name;
 			name = constant.getName();
-			//TODO: manage the case the variable name contains unexpected characters
+			if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
+				name = "constant_" + constant_counter;
+			}
 			while (usedNames.contains(name)) {
 				name = "constant_" + constant_counter;
 				constant_counter++;
@@ -169,7 +225,9 @@ public class JANIComponentRegistrar {
 				} while (usedNames.contains(name));
 			} else {
 				name = variable.getName();
-				//TODO: manage the case the variable name contains unexpected characters
+				if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
+					name = "variable_" + variable_counter;
+				}
 				while (usedNames.contains(name)) {
 					name = "variable_" + variable_counter;
 					variable_counter++;
@@ -405,6 +463,14 @@ public class JANIComponentRegistrar {
 			} else {
 				name = action.getName();
 			}
+			if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
+				name = "action_" + action_counter;
+			}
+			while (usedNames.contains(name)) {
+				name = "action_" + action_counter;
+				action_counter++;
+			}
+			usedNames.add(name);
 			actionNames.put(action, name);
 		}
 	}
@@ -427,5 +493,38 @@ public class JANIComponentRegistrar {
 		assert action != null;
 
 		return "τ".equals(action.getName());
+	}
+	
+	public static StringBuilder performedRenamings() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (Entry<Action,String> entry : actionNames.entrySet()) {
+			Action action = entry.getKey();
+			String name = entry.getValue();
+			if (! action.getName().equals(name)) {
+				sb.append("//Original action name: ").append(action.getName()).append("\n")
+				  .append("//New name: ").append(name).append("\n\n");
+			}
+		}
+		
+		for (Entry<Constant,String> entry : constantNames.entrySet()) {
+			Constant constant = entry.getKey();
+			String name = entry.getValue();
+			if (! constant.getName().equals(name)) {
+				sb.append("//Original constant name: ").append(constant.getName()).append("\n")
+				  .append("//New name: ").append(name).append("\n\n");
+			}
+		}
+		
+		for (Entry<Variable,String> entry : variableNames.entrySet()) {
+			Variable variable = entry.getKey();
+			String name = entry.getValue();
+			if (! variable.getName().equals(name)) {
+				sb.append("//Original variable name: ").append(variable.getName()).append("\n")
+				  .append("//New name: ").append(name).append("\n\n");
+			}
+		}
+		
+		return sb;
 	}
 }
