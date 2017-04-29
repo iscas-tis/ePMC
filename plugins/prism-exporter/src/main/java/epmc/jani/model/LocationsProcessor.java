@@ -103,7 +103,8 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(";\n");
 			
 			if (JANIComponentRegistrar.isTimedModel()) {
-				prism.append(prefix)
+				prism.append("\n")
+					 .append(prefix)
 					 .append("invariant\n");
 				boolean remaining = false;
 				for (Location location : locations) {
