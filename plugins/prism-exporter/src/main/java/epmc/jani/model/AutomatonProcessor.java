@@ -96,6 +96,7 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 									   .setPrefix(ModelJANIProcessor.INDENT)
 									   .setAutomaton(automaton)
 									   .toPRISM())
+			 .append("\n")
 			 .append(ProcessorRegistrar.getProcessor(automaton.getEdges())
 									   .setPrefix(ModelJANIProcessor.INDENT)
 									   .setAutomaton(automaton)
