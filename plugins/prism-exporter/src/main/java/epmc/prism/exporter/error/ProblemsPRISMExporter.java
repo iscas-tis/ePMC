@@ -58,6 +58,7 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE = newProblem("prism-exporter-error-variable-defined-twice");
     public final static Problem PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("prism-exporter-error-unknown-processor");
     public final static Problem PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED = newProblem("prism-exporter-error-extended-syntax-required");
+    public final static Problem PRISM_EXPORTER_ERROR_NONPRISM_SYNTAX_REQUIRED = newProblem("prism-exporter-error-nonprism-syntax-required");
     
    
     

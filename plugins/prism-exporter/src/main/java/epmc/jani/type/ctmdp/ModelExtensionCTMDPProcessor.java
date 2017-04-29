@@ -25,12 +25,12 @@ import java.util.List;
 
 import epmc.error.EPMCException;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
-public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorExtended {
+public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorNonPRISM {
 
 	@Override
-	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorNonPRISM setElement(Object obj) throws EPMCException {
 		assert obj instanceof ModelExtensionCTMDP;
 		return this;
 	}
