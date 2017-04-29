@@ -29,37 +29,35 @@ public class RateProcessor implements JANI2PRISMProcessorStrict {
 	private Rate rate = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Rate; 
 		
 		rate = (Rate) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert rate != null;
 		
-		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
-
-		processor = ProcessorRegistrar.getProcessor(rate.getExp());
-		prism.append(processor.toPRISM().toString());
-
-		return prism;
+		return ProcessorRegistrar.getProcessor(rate.getExp())
+							     .toPRISM();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert rate != null;
 		
-		ProcessorRegistrar.getProcessor(rate.getExp()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(rate.getExp())
+						  .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert rate != null;
 		
-		return ProcessorRegistrar.getProcessor(rate.getExp()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(rate.getExp())
+								 .usesTransientVariables();
 	}	
 }

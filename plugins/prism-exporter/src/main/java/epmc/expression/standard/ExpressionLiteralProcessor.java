@@ -29,20 +29,22 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 	private String prefix = null;
 	
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionLiteral; 
 		
 		literal = (ExpressionLiteral) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert literal != null;
 		StringBuilder prism = new StringBuilder();
 		
@@ -52,7 +54,7 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 		
 		prism.append(literal.getValue().toString());
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override

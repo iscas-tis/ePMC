@@ -28,17 +28,18 @@ public final class JANITypeRealProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeReal real = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof JANITypeReal;
 
 		real = (JANITypeReal) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert real != null;
 		
-		return new StringBuilder("double");
+		return "double";
 	}
 	
 	@Override

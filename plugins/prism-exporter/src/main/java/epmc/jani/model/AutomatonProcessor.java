@@ -28,14 +28,14 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 
 	private Automaton automaton = null;
-	private boolean withInitialValue = false;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Automaton;
 		
 		automaton = (Automaton) obj;
+		return this;
 	}
 
 	@Override
@@ -53,68 +53,56 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void setWithInitialValue(boolean withInitialValue) {
-		this.withInitialValue = withInitialValue;
-	}
-
-	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert automaton != null;
 		
-		withInitialValue &= automaton.getInitialLocations().size() == 1;
-
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		String comment = automaton.getComment();
 		if (comment != null) {
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 
-		prism.append("module ").append(automaton.getName()).append("\n");
+		prism.append("module ")
+			 .append(automaton.getName())
+			 .append("\n");
 		
 		Variables local = automaton.getVariablesNonTransient();
 		if (local != null) {
-			processor = ProcessorRegistrar.getProcessor(local);
-			processor.setPrefix(ModelJANIProcessor.INDENT);
-			processor.setForDefinition(true);
-			processor.setWithInitialValue(withInitialValue);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(local)
+										   .setPrefix(ModelJANIProcessor.INDENT)
+										   .setForDefinition(true)
+										   .toPRISM());
 		}
 		
 		if (automaton.equals(JANIComponentRegistrar.getDefaultAutomatonForUnassignedClocks())) {
 			for (Variable variable : JANIComponentRegistrar.getUnassignedClockVariables()) {
-				processor = ProcessorRegistrar.getProcessor(variable);
-				processor.setPrefix(ModelJANIProcessor.INDENT);
-				processor.setForDefinition(true);
-				processor.setWithInitialValue(withInitialValue);
-				prism.append(processor.toPRISM().toString());
+				prism.append(ProcessorRegistrar.getProcessor(variable)
+											   .setPrefix(ModelJANIProcessor.INDENT)
+											   .setForDefinition(true)
+											   .toPRISM());
 			}
 		}
 		for (Variable variable : JANIComponentRegistrar.getAssignedVariablesOrEmpty(automaton)) {
-			processor = ProcessorRegistrar.getProcessor(variable);
-			processor.setPrefix(ModelJANIProcessor.INDENT);
-			processor.setForDefinition(true);
-			processor.setWithInitialValue(withInitialValue);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(variable)
+										   .setPrefix(ModelJANIProcessor.INDENT)
+										   .setForDefinition(true)
+										   .toPRISM());
 		}
 		
-		Locations locations = automaton.getLocations();
-		processor = ProcessorRegistrar.getProcessor(locations);
-		processor.setPrefix(ModelJANIProcessor.INDENT);
-		processor.setAutomaton(automaton);
-		processor.setWithInitialValue(withInitialValue);
-		prism.append(processor.toPRISM().toString());
+		prism.append(ProcessorRegistrar.getProcessor(automaton.getLocations())
+									   .setPrefix(ModelJANIProcessor.INDENT)
+									   .setAutomaton(automaton)
+									   .toPRISM())
+			 .append(ProcessorRegistrar.getProcessor(automaton.getEdges())
+									   .setPrefix(ModelJANIProcessor.INDENT)
+									   .setAutomaton(automaton)
+									   .toPRISM())
+			 .append("endmodule\n");
 		
-		Edges edges = automaton.getEdges();
-		processor = ProcessorRegistrar.getProcessor(edges);
-		processor.setPrefix(ModelJANIProcessor.INDENT);
-		processor.setAutomaton(automaton);
-		prism.append(processor.toPRISM().toString());
-		
-		prism.append("endmodule\n");
-		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -123,10 +111,13 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 		
 		InitialStates initial = automaton.getInitialStates();
 		if (initial != null) {
-			ProcessorRegistrar.getProcessor(initial).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(initial)
+							  .validateTransientVariables();
 		}
-		ProcessorRegistrar.getProcessor(automaton.getLocations()).validateTransientVariables();
-		ProcessorRegistrar.getProcessor(automaton.getEdges()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(automaton.getLocations())
+						  .validateTransientVariables();
+		ProcessorRegistrar.getProcessor(automaton.getEdges())
+						  .validateTransientVariables();
 	}
 
 	@Override
@@ -136,10 +127,13 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
 		boolean usesTransient = false;
 		InitialStates initial = automaton.getInitialStates();
 		if (initial != null) {
-			usesTransient |= ProcessorRegistrar.getProcessor(initial).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(initial)
+											   .usesTransientVariables();
 		}
-		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getLocations()).usesTransientVariables();
-		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getEdges()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getLocations())
+										   .usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(automaton.getEdges())
+										   .usesTransientVariables();
 		
 		return usesTransient;
 	}	

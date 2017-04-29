@@ -28,38 +28,31 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 
 	private Automata automata = null;
-	private boolean withInitialValue = false;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Automata;
 		
 		automata = (Automata) obj;
+		return this;
 	}
 
 	@Override
-	public void setWithInitialValue(boolean withInitialValue) {
-		this.withInitialValue = withInitialValue;
-	}
-	
-
-	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert automata != null;
 
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		for (Automaton automaton : automata) {
-			processor = ProcessorRegistrar.getProcessor(automaton);
-			processor.setWithInitialValue(withInitialValue);
-			String automatonString = processor.toPRISM().toString();
-			prism.append(JANIComponentRegistrar.locationRenaming(automaton).toString());
-			prism.append(automatonString).append("\n");
+			//AT: the location renaming is performed during the computation of AutomatonProcessor.toPRISM()
+			String automatonString = ProcessorRegistrar.getProcessor(automaton).toPRISM();
+			prism.append(JANIComponentRegistrar.locationRenaming(automaton))
+				 .append(automatonString)
+				 .append("\n");
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -67,7 +60,8 @@ public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 		assert automata != null;
 		
 		for (Automaton automaton : automata) {
-			ProcessorRegistrar.getProcessor(automaton).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(automaton)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -77,7 +71,8 @@ public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Automaton automaton : automata) {
-			usesTransient |= ProcessorRegistrar.getProcessor(automaton).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(automaton)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

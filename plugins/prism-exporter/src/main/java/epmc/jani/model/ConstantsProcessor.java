@@ -29,26 +29,26 @@ public class ConstantsProcessor implements JANI2PRISMProcessorStrict {
 	private Constants constants = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Constants; 
 
 		constants = (Constants) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert constants != null;
 
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		for (Constant constant : constants) {
-			processor = ProcessorRegistrar.getProcessor(constant);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(constant)
+										   .toPRISM());
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -56,7 +56,8 @@ public class ConstantsProcessor implements JANI2PRISMProcessorStrict {
 		assert constants != null;
 		
 		for (Constant constant : constants) {
-			ProcessorRegistrar.getProcessor(constant).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(constant)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -66,7 +67,8 @@ public class ConstantsProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Constant constant : constants) {
-			usesTransient |= ProcessorRegistrar.getProcessor(constant).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(constant)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

@@ -29,37 +29,35 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 	private Probability probability = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Probability; 
 		
 		probability = (Probability) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert probability != null;
 		
-		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
-
-		processor = ProcessorRegistrar.getProcessor(probability.getExp());
-		prism.append(processor.toPRISM().toString());
-
-		return prism;
+		return ProcessorRegistrar.getProcessor(probability.getExp())
+								 .toPRISM();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert probability != null;
 		
-		ProcessorRegistrar.getProcessor(probability.getExp()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(probability.getExp())
+					      .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert probability != null;
 		
-		return ProcessorRegistrar.getProcessor(probability.getExp()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(probability.getExp())
+								 .usesTransientVariables();
 	}	
 }

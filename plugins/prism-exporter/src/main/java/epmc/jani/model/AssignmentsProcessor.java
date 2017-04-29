@@ -29,38 +29,38 @@ public class AssignmentsProcessor implements JANI2PRISMProcessorStrict {
 	private Assignments assignments = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Assignments; 
 		
 		assignments = (Assignments) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert assignments != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		boolean remaining = false;
 		for (AssignmentSimple assignment : assignments) {
 			Variable variable = assignment.getRef();
 			if (!variable.isTransient()) {
-				processor = ProcessorRegistrar.getProcessor(assignment);
+				JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(assignment);
 				if (remaining) {
 					processor.setPrefix(" & ");
 				} else {
 					remaining = true;
 				}
-				prism.append(processor.toPRISM().toString());
+				prism.append(processor.toPRISM());
 			}
 		}
 		if (!remaining) {
 			prism.append("true");
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -68,7 +68,8 @@ public class AssignmentsProcessor implements JANI2PRISMProcessorStrict {
 		assert assignments != null;
 		
 		for (Assignment assignment : assignments) {
-			ProcessorRegistrar.getProcessor(assignment).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(assignment)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -78,7 +79,8 @@ public class AssignmentsProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Assignment assignment : assignments) {
-			usesTransient |= ProcessorRegistrar.getProcessor(assignment).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(assignment)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

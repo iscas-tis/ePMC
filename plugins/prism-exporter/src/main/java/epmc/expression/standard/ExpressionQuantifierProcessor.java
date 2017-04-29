@@ -30,19 +30,19 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 	private ExpressionQuantifier quantifier = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionQuantifier; 
 		
 		quantifier = (ExpressionQuantifier) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert quantifier != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		Expression quantified = quantifier.getQuantified();
         if (quantified instanceof ExpressionSteadyState) {
@@ -50,9 +50,11 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
         } else if (quantified instanceof ExpressionReward) {
             prism.append("R");
             
-            Expression rewardStructure = ((ExpressionReward) quantified).getReward().getExpression();
-			processor = ProcessorRegistrar.getProcessor(rewardStructure);
-			prism.append("{").append(processor.toPRISM().toString()).append("}");
+			prism.append("{")
+			     .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
+			    		 																.getExpression())
+			    		 				   .toPRISM())
+			     .append("}");
         } else {
             prism.append("P");
         }
@@ -62,19 +64,16 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 		CmpType cmpType = quantifier.getCompareType();
 		prism.append(cmpType.toString());
 		if (cmpType != CmpType.IS) {
-			Expression cmpExp = quantifier.getCompare();
-			processor = ProcessorRegistrar.getProcessor(cmpExp);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(quantifier.getCompare())
+										   .toPRISM());
 		}
 		
-		prism.append("[");
+		prism.append("[")
+			 .append(ProcessorRegistrar.getProcessor(quantified)
+					 				   .toPRISM())
+			 .append("]");
 		
-		processor = ProcessorRegistrar.getProcessor(quantified);
-		prism.append(processor.toPRISM().toString());
-		
-		prism.append("]");
-		
-		return prism;
+		return prism.toString();
 	}
 
 	@Override
@@ -82,7 +81,8 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 		assert quantifier != null;
 		
 		for (Expression child : quantifier.getChildren()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(child)
+							  .validateTransientVariables();
 		}
 	}
 	
@@ -92,7 +92,8 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 		
 		boolean usesTransient = false;
 		for (Expression child : quantifier.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(child)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

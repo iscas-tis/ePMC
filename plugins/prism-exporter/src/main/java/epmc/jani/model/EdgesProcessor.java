@@ -31,38 +31,40 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 	private Automaton automaton = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Edges; 
 		
 		edges = (Edges) obj;
+		return this;
 	}
 
 	@Override
-	public void setAutomaton(Automaton automaton) {
+	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
 		this.automaton = automaton;
+		return this;
 	}
 	
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 	
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert edges != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		for (Edge edge : edges) {
-			processor = ProcessorRegistrar.getProcessor(edge);
-			processor.setPrefix(prefix);
-			processor.setAutomaton(automaton);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(edge)
+					  					   .setPrefix(prefix)
+					  					   .setAutomaton(automaton)
+					  					   .toPRISM());
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -70,7 +72,8 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 		assert edges != null;
 		
 		for (Edge edge : edges) {
-			ProcessorRegistrar.getProcessor(edge).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(edge)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -80,7 +83,8 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Edge edge : edges) {
-			usesTransient |= ProcessorRegistrar.getProcessor(edge).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(edge)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

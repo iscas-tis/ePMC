@@ -22,7 +22,6 @@ package epmc.jani.model;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.jani.model.type.JANIType;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -32,53 +31,58 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
 	private Constant constant = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Constant; 
 
 		constant = (Constant) obj;
 		JANIComponentRegistrar.registerConstant(constant);
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert constant != null;
 
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		String comment = constant.getComment();
 		if (comment != null) {
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 
-		prism.append("const ");
-		
-		JANIType type = constant.getType();
-		processor = ProcessorRegistrar.getProcessor(type);
-		prism.append(processor.toPRISM().toString()).append(" ").append(constant.getName());
+		prism.append("const ")
+			 .append(ProcessorRegistrar.getProcessor(constant.getType())
+					 										 .toPRISM())
+			 .append(" ")
+			 .append(constant.getName());
 		
 		Expression expression = constant.getValue();
 		if (expression != null) {
-			prism.append(" = ").append(expression.toString());
+			prism.append(" = ")
+				 .append(expression.toString());
 		}
 		
 		prism.append(";\n");
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert constant != null;
 		
-		ProcessorRegistrar.getProcessor(constant.getValue()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(constant.getValue())
+						  .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert constant != null;
 		
-		return ProcessorRegistrar.getProcessor(constant.getValue()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(constant.getValue())
+								 .usesTransientVariables();
 	}	
 }

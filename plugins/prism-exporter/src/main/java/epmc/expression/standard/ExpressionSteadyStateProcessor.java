@@ -30,25 +30,20 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 	private ExpressionSteadyState steadyState = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionSteadyState; 
 		
 		steadyState = (ExpressionSteadyState) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert steadyState != null;
 		
-		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
-		
-		Expression operator = steadyState.getOperand1();
-		processor = ProcessorRegistrar.getProcessor(operator);
-		prism.append(processor.toPRISM().toString());
-		
-		return prism;
+		return ProcessorRegistrar.getProcessor(steadyState.getOperand1())
+								 .toPRISM();
 	}
 
 	@Override
@@ -56,7 +51,8 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 		assert steadyState != null;
 		
 		for (Expression child: steadyState.getChildren()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(child)
+							  .validateTransientVariables();
 		}
 	}
 	
@@ -66,7 +62,8 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 		
 		boolean usesTransient = false;
 		for (Expression child : steadyState.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(child)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

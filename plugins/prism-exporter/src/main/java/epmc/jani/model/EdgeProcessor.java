@@ -23,7 +23,6 @@ package epmc.jani.model;
 import static epmc.error.UtilError.ensure;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.graph.SemanticsDTMC;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
@@ -38,7 +37,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	private Automaton automaton = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Edge; 
 		
@@ -49,25 +48,27 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 			for (AssignmentSimple assignment : destination.getAssignmentsOrEmpty()) {
 				Variable reward = assignment.getRef();
 				if (reward.isTransient()) {
-					Expression expression = assignment.getValue();
-					JANIComponentRegistrar.registerTransitionRewardExpression(reward, action, expression);
+					JANIComponentRegistrar.registerTransitionRewardExpression(reward, action, assignment.getValue());
 				}
 			}
 		}
+		return this;
 	}
 
 	@Override
-	public void setAutomaton(Automaton automaton) {
+	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
 		this.automaton = automaton;
+		return this;
 	}
 	
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert edge != null;
 		
 		Rate edgeRate = edge.getRate();
@@ -75,26 +76,28 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		if (edgeRate != null && SemanticsDTMC.isDTMC(edge.getModel().getSemantics())) {
 			Rate rateOne = new Rate();
 			rateOne.setExp(ExpressionLiteral.getOne(edge.getModel().getContextValue()));
-			ensure(rateOne.equals(edgeRate), ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_EDGE_RATE_NOT_ONE);
+			ensure(rateOne.equals(edgeRate), 
+				   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_EDGE_RATE_NOT_ONE);
 		}
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 
 		String comment = edge.getComment();
 		if (comment != null) {
 			if (prefix != null) {
 				prism.append(prefix);
 			}
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 		
-		Action action = edge.getActionOrSilent();
-		processor = ProcessorRegistrar.getProcessor(action);
 		if (prefix != null)	{
 			prism.append(prefix);
 		}
-		prism.append(processor.toPRISM().toString()).append(" ");
+		prism.append(ProcessorRegistrar.getProcessor(edge.getActionOrSilent())
+									   .toPRISM())
+			 .append(" ");
 		
 		if (automaton.getLocations().size() > 1) {
 			prism.append("(")
@@ -103,28 +106,25 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 			     .append(JANIComponentRegistrar.getLocationIdentifier(automaton, edge.getLocation()))
 			     .append(") & ");
 		}
-		Guard guard = edge.getGuard();
-		processor = ProcessorRegistrar.getProcessor(guard);
-		prism.append(processor.toPRISM().toString());
+		prism.append(ProcessorRegistrar.getProcessor(edge.getGuard())
+									   .toPRISM())
+			 .append(" -> ")
+			 .append(ProcessorRegistrar.getProcessor(edge.getDestinations())
+					 				   .setAutomaton(automaton)
+					 				   .toPRISM())
+			 .append(";\n");
 		
-		prism.append(" -> ");
-		
-		Destinations destinations = edge.getDestinations();
-		processor = ProcessorRegistrar.getProcessor(destinations);
-		processor.setAutomaton(automaton);
-		prism.append(processor.toPRISM().toString());
-				
-		prism.append(";\n");
-		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert edge != null;
 		
-		ProcessorRegistrar.getProcessor(edge.getGuard()).validateTransientVariables();
-		ProcessorRegistrar.getProcessor(edge.getDestinations()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(edge.getGuard())
+						  .validateTransientVariables();
+		ProcessorRegistrar.getProcessor(edge.getDestinations())
+					      .validateTransientVariables();
 	}
 
 	@Override
@@ -132,8 +132,10 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		assert edge != null;
 		
 		boolean usesTransient = false;
-		usesTransient |= ProcessorRegistrar.getProcessor(edge.getGuard()).usesTransientVariables();
-		usesTransient |= ProcessorRegistrar.getProcessor(edge.getDestinations()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(edge.getGuard())
+										   .usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(edge.getDestinations())
+								 	 	   .usesTransientVariables();
 		
 		return usesTransient;
 	}	

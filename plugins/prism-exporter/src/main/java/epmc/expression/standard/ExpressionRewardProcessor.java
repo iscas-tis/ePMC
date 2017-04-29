@@ -30,47 +30,47 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 	private ExpressionReward reward = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionReward; 
 		
 		reward = (ExpressionReward) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert reward != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor;
-		Expression expr;
 		
 		RewardType type = reward.getRewardType();
         prism.append(type.toString());
         switch(type) {
         case REACHABILITY:
-        	expr = reward.getRewardReachSet();
-    		processor = ProcessorRegistrar.getProcessor(expr);
-        	prism.append("(").append(processor.toPRISM().toString()).append(")");
+        	prism.append("(")
+        	     .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
+        	    		 				   .toPRISM())
+        	     .append(")");
         	break;
         case INSTANTANEOUS:
         case CUMULATIVE:
-        	expr = reward.getTime();
-    		processor = ProcessorRegistrar.getProcessor(expr);
-        	prism.append("(").append(processor.toPRISM().toString()).append(")");
+        	prism.append("(")
+        	     .append(ProcessorRegistrar.getProcessor(reward.getTime())
+        	    		 				   .toPRISM())
+        	     .append(")");
         	break;
         case DISCOUNTED:
-        	expr = reward.getTime();
-    		processor = ProcessorRegistrar.getProcessor(expr);
-            prism.append(processor.toPRISM().toString()).append(",");
-        	expr = reward.getDiscount();
-    		processor = ProcessorRegistrar.getProcessor(expr);
-            prism.append(processor.toPRISM().toString());
+            prism.append(ProcessorRegistrar.getProcessor(reward.getTime())
+            							   .toPRISM())
+                 .append(",")
+                 .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
+                		 				   .toPRISM());
         	break;
     	default:
         }
 
-		return prism;
+		return prism.toString();
 	}
 
 	@Override
@@ -78,7 +78,8 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 		assert reward != null;
 		
 		for (Expression child : reward.getChildren()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(child)
+							  .validateTransientVariables();
 		}
 	}
 	
@@ -88,7 +89,8 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Expression child : reward.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(child)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

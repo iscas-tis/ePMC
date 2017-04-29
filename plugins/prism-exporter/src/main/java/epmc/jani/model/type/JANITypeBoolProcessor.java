@@ -28,16 +28,18 @@ public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeBool bool = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof JANITypeBool;
+
 		bool = (JANITypeBool) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert bool != null;
 		
-		return new StringBuilder("bool");
+		return "bool";
 	}
 	
 	@Override

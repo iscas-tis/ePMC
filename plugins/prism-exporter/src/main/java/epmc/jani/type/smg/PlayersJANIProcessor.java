@@ -26,7 +26,6 @@ import java.util.List;
 import epmc.error.EPMCException;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
@@ -34,26 +33,26 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 	private PlayersJANI players = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof PlayersJANI; 
 		
 		players = (PlayersJANI) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert players != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 
 		for (PlayerJANI player : players) {
-			processor = ProcessorRegistrar.getProcessor(player);
-			prism.append("\n").append(processor.toPRISM().toString());			
+			prism.append("\n")
+				 .append(ProcessorRegistrar.getProcessor(player).toPRISM());			
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	

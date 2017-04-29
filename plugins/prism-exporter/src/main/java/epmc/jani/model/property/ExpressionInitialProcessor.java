@@ -26,14 +26,15 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 public class ExpressionInitialProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionInitial; 
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
-		return new StringBuilder("\"init\"");
+	public String toPRISM() throws EPMCException {
+		return "\"init\"";
 	}
 	
 	@Override

@@ -30,19 +30,19 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 	private ExpressionMultiObjective multiObjective = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionMultiObjective; 
 		
 		multiObjective = (ExpressionMultiObjective) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert multiObjective != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 
 		prism.append("multi(");
 
@@ -53,19 +53,19 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 			} else {
 				remaining = true;
 			}
-			processor = ProcessorRegistrar.getProcessor(operand);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(operand).toPRISM());
 		}
 		prism.append(")");
 		
-		return prism;
+		return prism.toString();
 	}
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert multiObjective != null;
 		
 		for (Expression child : multiObjective.getOperands()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(child)
+							  .validateTransientVariables();
 		}
 	}
 	
@@ -75,7 +75,8 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 		
 		boolean usesTransient = false;
 		for (Expression child : multiObjective.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(child)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

@@ -26,13 +26,14 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 public final class ModelExtensionDTMCProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof ModelExtensionDTMC;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() {
-		return new StringBuilder(ModelExtensionDTMC.IDENTIFIER).append("\n");
+	public String toPRISM() {
+		return "dtmc\n";
 	}
 	
 	@Override
