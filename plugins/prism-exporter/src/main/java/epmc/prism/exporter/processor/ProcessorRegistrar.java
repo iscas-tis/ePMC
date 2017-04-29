@@ -230,7 +230,6 @@ public class ProcessorRegistrar {
 		
 		//Semantic types
 		processors.put(ModelExtensionCTMC.class, ModelExtensionCTMCProcessor.class);
-		processors.put(ModelExtensionCTMDP.class, ModelExtensionCTMDPProcessor.class);
 		processors.put(ModelExtensionDTMC.class, ModelExtensionDTMCProcessor.class);
 		processors.put(ModelExtensionMDP.class, ModelExtensionMDPProcessor.class);
 		
@@ -323,6 +322,7 @@ public class ProcessorRegistrar {
 		processors.put(ModelExtensionLTS.class, ModelExtensionLTSProcessor.class);
 		processors.put(ModelExtensionMA.class, ModelExtensionMAProcessor.class);
 		processors.put(ModelExtensionSMG.class, ModelExtensionSMGProcessor.class);
+		processors.put(ModelExtensionCTMDP.class, ModelExtensionCTMDPProcessor.class);
 		
 		//Expressions
 		processors.put(ExpressionCoalition.class, ExpressionCoalitionProcessor.class);

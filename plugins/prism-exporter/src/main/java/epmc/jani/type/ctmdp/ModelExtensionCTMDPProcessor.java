@@ -20,13 +20,17 @@
 
 package epmc.jani.type.ctmdp;
 
-import epmc.error.EPMCException;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import java.util.LinkedList;
+import java.util.List;
 
-public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorStrict {
+import epmc.error.EPMCException;
+import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
+
+public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorExtended {
 
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
 		assert obj instanceof ModelExtensionCTMDP;
 		return this;
 	}
@@ -43,5 +47,12 @@ public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorSt
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		return false;
+	}
+
+	@Override
+	public List<String> getUnsupportedFeature() {
+		List<String> ll = new LinkedList<>();
+		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_CTMDP);
+		return ll;
 	}	
 }
