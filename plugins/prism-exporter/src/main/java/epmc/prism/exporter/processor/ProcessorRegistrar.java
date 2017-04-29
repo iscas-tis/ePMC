@@ -144,9 +144,11 @@ public class ProcessorRegistrar {
 	
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> nonPRISMProcessors = registerNonPRISMProcessors();
 	
 	private static boolean allowMultipleLocations = false;
 	private static boolean useExtendedSyntax = false;
+	private static boolean useNonPRISMSyntax = false;
 	
 	public static void setContextValue(ContextValue contextValue) {
 		ProcessorRegistrar.contextValue = contextValue;
@@ -175,6 +177,16 @@ public class ProcessorRegistrar {
 	}
 	
 	/**
+	 * Add a new processor for a JANI component in the set of known non-PRISM processors.
+	 * 
+	 * @param JANIComponent the JANI component to which associate the processor
+	 * @param JANI2PRISMProcessor the corresponding processor
+	 */
+	public static void registerNonPRISMProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorNonPRISM> JANI2PRISMProcessor) {
+		nonPRISMProcessors.put(JANIComponent, JANI2PRISMProcessor);
+	}
+	
+	/**
 	 * Return the processor associated to the given JANI component.
 	 * 
 	 * @param JANIComponent the JANI component for which obtain the processor
@@ -196,10 +208,25 @@ public class ProcessorRegistrar {
 				processor = Util.getInstance(extendedProcessorClass)
 								.setContextValue(contextValue)
 								.setElement(JANIComponent);
-				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
-						((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature().toArray());
+				ensure(useExtendedSyntax, 
+					   ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
+					   ((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature()
+					   										   .toArray());
 			} else {
-				ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR, JANIComponent.getClass().getSimpleName());
+				Class<? extends JANI2PRISMProcessorNonPRISM> nonPRISMProcessorClass = nonPRISMProcessors.get(JANIComponent.getClass());
+				if (nonPRISMProcessorClass != null) {
+					processor = Util.getInstance(nonPRISMProcessorClass)
+									.setContextValue(contextValue)
+									.setElement(JANIComponent);
+					ensure(useNonPRISMSyntax, 
+						   ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
+						   ((JANI2PRISMProcessorNonPRISM)processor).getUnsupportedFeature()
+						   										   .toArray());
+				} else {
+					ensure(false, 
+						   ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR, 
+						   JANIComponent.getClass().getSimpleName());
+				}
 			}
 		}
 		
@@ -319,10 +346,7 @@ public class ProcessorRegistrar {
 		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> processors = new HashMap<>();
 		
 		//Semantic types
-		processors.put(ModelExtensionLTS.class, ModelExtensionLTSProcessor.class);
-		processors.put(ModelExtensionMA.class, ModelExtensionMAProcessor.class);
 		processors.put(ModelExtensionSMG.class, ModelExtensionSMGProcessor.class);
-		processors.put(ModelExtensionCTMDP.class, ModelExtensionCTMDPProcessor.class);
 		
 		//Expressions
 		processors.put(ExpressionCoalition.class, ExpressionCoalitionProcessor.class);
@@ -330,6 +354,17 @@ public class ProcessorRegistrar {
 		//SMG players
 		processors.put(PlayersJANI.class, PlayersJANIProcessor.class);
 		processors.put(PlayerJANI.class, PlayerJANIProcessor.class);
+		
+		return processors;
+	}
+	
+	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> registerNonPRISMProcessors() {
+		Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> processors = new HashMap<>();
+		
+		//Semantic types
+		processors.put(ModelExtensionLTS.class, ModelExtensionLTSProcessor.class);
+		processors.put(ModelExtensionMA.class, ModelExtensionMAProcessor.class);
+		processors.put(ModelExtensionCTMDP.class, ModelExtensionCTMDPProcessor.class);
 		
 		return processors;
 	}

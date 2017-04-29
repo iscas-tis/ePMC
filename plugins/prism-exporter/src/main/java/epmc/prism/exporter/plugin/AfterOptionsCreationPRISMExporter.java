@@ -101,6 +101,13 @@ public final class AfterOptionsCreationPRISMExporter implements AfterOptionsCrea
 	    	.setCategory(category).build();
 
         options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+	    	.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM)
+	    	.setType(typeBoolean)
+	    	.setDefault(false)
+	    	.setCommandLine()
+	    	.setCategory(category).build();
+
+        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
 	    	.setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS)
 	    	.setType(typeBoolean)
 	    	.setDefault(false)

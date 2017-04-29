@@ -18,29 +18,11 @@
 
 *****************************************************************************/
 
-package epmc.prism.exporter.options;
+package epmc.prism.exporter.processor;
 
-/**
- * Class collecting options used for PRISM converter plugin.
- * 
- * @author Andrea Turrini
- */
-public enum OptionsPRISMExporter {
-	/** Base name of resource file for options description. */
-	OPTIONS_PRISM_EXPORTER,
-	/** Category used for JANI converter options. */
-	PRISM_EXPORTER_CATEGORY,
-	/** Name of the generated PRISM model file. */
-	PRISM_EXPORTER_PRISM_MODEL_NAME,
-	/** Name of the generated PRISM model file. */
-	PRISM_EXPORTER_PRISM_MODEL_FILE_NAME,
-	/** Name of the generated PRISM properties file. */
-	PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME,
-	/** Whether to use the extended PRISM syntax. */
-	PRISM_EXPORTER_EXTENDED_PRISM,
-	/** Whether to use the non-official PRISM syntax. */
-	PRISM_EXPORTER_NON_OFFICIAL_PRISM,
-	/** Whether to allow for multiple locations. */
-	PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS
-	;
+import java.util.List;
+
+public interface JANI2PRISMProcessorNonPRISM extends JANI2PRISMProcessorStrict {
+	
+	List<String> getUnsupportedFeature();
 }
