@@ -26,13 +26,14 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 public final class ModelExtensionMDPProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof ModelExtensionMDP;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() {
-		return new StringBuilder(ModelExtensionMDP.IDENTIFIER).append("\n");
+	public String toPRISM() {
+		return "mdp\n";
 	}
 	
 	@Override

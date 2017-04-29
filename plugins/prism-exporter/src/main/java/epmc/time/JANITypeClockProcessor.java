@@ -28,17 +28,18 @@ public final class JANITypeClockProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeClock clock = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof JANITypeClock;
 
 		clock = (JANITypeClock) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert clock != null;
 		
-		return new StringBuilder("clock");
+		return "clock";
 	}
 	
 	@Override

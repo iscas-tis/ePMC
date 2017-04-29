@@ -73,88 +73,74 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	private String prefix = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionOperator; 
 		
 		expressionOperator = (ExpressionOperator) obj;
+		return this;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert expressionOperator != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor;
 		
 		if (prefix != null) {
 			prism.append(prefix);
 		}
 		
 		Operator operator = expressionOperator.getOperator();
+		String operatorIdentifier = operator.getIdentifier();
 		
-		Expression exp;
-		
-        switch (operator.getIdentifier()) {
+        switch (operatorIdentifier) {
         case OperatorNot.IDENTIFIER:
         case OperatorFloor.IDENTIFIER: 
         case OperatorCeil.IDENTIFIER:
-        	prism.append(operator.getIdentifier());
+        	prism.append(operatorIdentifier);
             prism.append("(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
     		prism.append(")");
         	break;
         case OperatorAddInverse.IDENTIFIER:
             prism.append("-(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(")");
             break;
         case OperatorIte.IDENTIFIER:
         	boolean needBraces = true;
             prism.append("(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(")");
             prism.append(" ? ");
-    		exp = expressionOperator.getOperand2();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-            if (exp instanceof ExpressionLiteral) {
-            	needBraces = false;
-            }
-            if (exp instanceof ExpressionIdentifier) {
+    		Expression exp = expressionOperator.getOperand2();
+            if (exp instanceof ExpressionLiteral || exp instanceof ExpressionIdentifier) {
             	needBraces = false;
             }
             if (needBraces) {
             	prism.append("(");
             }
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
             if (needBraces) {
             	prism.append(")");
             }
             prism.append(" : ");
             needBraces = true;
     		exp = expressionOperator.getOperand3();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-            if (exp instanceof ExpressionLiteral) {
-            	needBraces = false;
-            }
-            if (exp instanceof ExpressionIdentifier) {
+            if (exp instanceof ExpressionLiteral || exp instanceof ExpressionIdentifier) {
             	needBraces = false;
             }
             if (needBraces) {
             	prism.append("(");
             }
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
             if (needBraces) {
             	prism.append(")");
             }
@@ -163,43 +149,31 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
         case OperatorMax.IDENTIFIER: 
         case OperatorPow.IDENTIFIER: 
         case OperatorLog.IDENTIFIER:
-            prism.append(operator.getIdentifier());
+            prism.append(operatorIdentifier);
             prism.append("(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		exp = expressionOperator.getOperand2();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
             break;
         case OperatorPRISMPow.IDENTIFIER:
             prism.append("pow(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		exp = expressionOperator.getOperand2();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
             break;
         case OperatorMod.IDENTIFIER: 
             prism.append("mod(");
-    		exp = expressionOperator.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		exp = expressionOperator.getOperand2();
-    		processor = ProcessorRegistrar.getProcessor(exp);
-    		prism.append(processor.toPRISM().toString());
+    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
             break;
         default:
         	List<Expression> children = expressionOperator.getChildren();
         	String operatorSymbol = null;
-        	switch (operator.getIdentifier()) {
+        	switch (operatorIdentifier) {
     		case OperatorAnd.IDENTIFIER:
     			operatorSymbol = "&";
     			break;
@@ -245,16 +219,15 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		case OperatorCos.IDENTIFIER:
     		case OperatorSin.IDENTIFIER:
     		case OperatorTan.IDENTIFIER:
-    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operator.getIdentifier());
+    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operatorIdentifier);
     		default:
-    			operatorSymbol = operator.getIdentifier();
+    			operatorSymbol = operatorIdentifier;
     			break;
         	}
             if (children.size() == 1) {
-        		processor = ProcessorRegistrar.getProcessor(children.get(0));
                 prism.append(operatorSymbol)
                 	 .append("(")
-                	 .append(processor.toPRISM().toString())
+                	 .append(ProcessorRegistrar.getProcessor(children.get(0)).toPRISM())
                 	 .append(")");
             } else {
             	boolean remaining = false;
@@ -275,17 +248,14 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                        needBraces = false;
 	                    }
 	                }
-	                if (child instanceof ExpressionLiteral) {
-	                	needBraces = false;
-	                }
-	                if (child instanceof ExpressionIdentifier) {
+	                if (child instanceof ExpressionLiteral || child instanceof ExpressionIdentifier) {
 	                	needBraces = false;
 	                }
 	                if (needBraces) {
 	                    prism.append("(");
 	                }
-	        		processor = ProcessorRegistrar.getProcessor(child);
-	        		prism.append(processor.toPRISM().toString());
+	        		prism.append(ProcessorRegistrar.getProcessor(child)
+	        									   .toPRISM());
 	                if (needBraces) {
 	                    prism.append(")");
 	                }
@@ -294,7 +264,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
             break;
         }
 
-        return prism;
+        return prism.toString();
 	}
 
 	@Override

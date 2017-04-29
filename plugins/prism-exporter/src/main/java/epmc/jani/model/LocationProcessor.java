@@ -29,18 +29,19 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 	private Location location = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Location; 
 		
 		location = (Location) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert location != null;
 		
-		return new StringBuilder();
+		return "";
 	}
 	
 	@Override
@@ -49,10 +50,12 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 		
 		TimeProgress timeProgress = location.getTimeProgress();
 		if (timeProgress != null) {
-			ProcessorRegistrar.getProcessor(timeProgress).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(timeProgress)
+							  .validateTransientVariables();
 		}
 		for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-			ProcessorRegistrar.getProcessor(assignment).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(assignment)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -63,10 +66,12 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 		boolean usesTransient = false;
 		TimeProgress timeProgress = location.getTimeProgress();
 		if (timeProgress != null) {
-			usesTransient |= ProcessorRegistrar.getProcessor(timeProgress).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(timeProgress)
+											   .usesTransientVariables();
 		}
 		for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(assignment).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(assignment)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

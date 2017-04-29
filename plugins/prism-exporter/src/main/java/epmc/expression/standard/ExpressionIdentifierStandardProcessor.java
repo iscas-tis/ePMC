@@ -29,18 +29,19 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
 	private ExpressionIdentifierStandard identifier = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionIdentifierStandard; 
 		
 		identifier = (ExpressionIdentifierStandard) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert identifier != null;
 		
-		return new StringBuilder(JANIComponentRegistrar.getVariableNameByName(identifier.getName()));
+		return JANIComponentRegistrar.getVariableNameByName(identifier.getName());
 	}
 
 	@Override
@@ -52,6 +53,7 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
 	public boolean usesTransientVariables() throws EPMCException {
 		assert identifier != null;
 
-		return JANIComponentRegistrar.getVariableByName(identifier.getName()).isTransient();
+		return JANIComponentRegistrar.getVariableByName(identifier.getName())
+								     .isTransient();
 	}
 }

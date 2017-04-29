@@ -21,7 +21,6 @@
 package epmc.jani.model.property;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -30,45 +29,47 @@ public class JANIPropertyEntryProcessor implements JANI2PRISMProcessorStrict {
 	private JANIPropertyEntry property = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof JANIPropertyEntry; 
 		
 		property = (JANIPropertyEntry) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert property != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		String comment = property.getComment();
 		if (comment != null) {
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 		
-		Expression exp = property.getExpression();
-		processor = ProcessorRegistrar.getProcessor(exp);
-		prism.append(processor.toPRISM().toString());
+		prism.append(ProcessorRegistrar.getProcessor(property.getExpression())
+									   .toPRISM())
+			 .append("\n");
 		
-		prism.append("\n");
-		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert property != null;
 		
-		ProcessorRegistrar.getProcessor(property.getExpression()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(property.getExpression())
+		                  .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert property != null;
 		
-		return ProcessorRegistrar.getProcessor(property.getExpression()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(property.getExpression())
+					             .usesTransientVariables();
 	}	
 }

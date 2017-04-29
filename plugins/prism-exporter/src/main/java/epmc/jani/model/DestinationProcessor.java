@@ -21,7 +21,6 @@
 package epmc.jani.model;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -33,29 +32,31 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 	private Automaton automaton = null;
 	
 	@Override
-	public void setAutomaton(Automaton automaton) {
+	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
 		this.automaton = automaton;
+		return this;
 	}
 
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Destination; 
 		
 		destination = (Destination) obj;
+		return this;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert destination != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		if (prefix != null)	{
 			prism.append(prefix);
@@ -64,15 +65,14 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 		Probability probability = destination.getProbability();
 		if (probability == null) {
 			if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
-				Expression prob = destination.getProbabilityExpressionOrOne(); 
-				processor = ProcessorRegistrar.getProcessor(prob);
-				prism.append(processor.toPRISM().toString());
-				prism.append(" : ");
+				prism.append(ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+											   .toPRISM())
+					 .append(" : ");
 			}
 		} else {
-			processor = ProcessorRegistrar.getProcessor(probability);
-			prism.append(processor.toPRISM().toString());
-			prism.append(" : ");
+			prism.append(ProcessorRegistrar.getProcessor(probability)
+										   .toPRISM())
+				 .append(" : ");
 		}
 		
 		if (automaton.getLocations().size() > 1) {
@@ -84,22 +84,24 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 		}
 		Assignments assignments = destination.getAssignments();
 		if (assignments != null) {
-			processor = ProcessorRegistrar.getProcessor(assignments);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(assignments)
+										   .toPRISM());
 		}
 
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert destination != null;
 		
-		ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+						  .validateTransientVariables();
 		
 		Assignments assignments = destination.getAssignments();
 		if (assignments != null) {
-			ProcessorRegistrar.getProcessor(assignments).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(assignments)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -109,11 +111,13 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		
-		usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne()).usesTransientVariables();
+		usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+										   .usesTransientVariables();
 		
 		Assignments assignments = destination.getAssignments();
 		if (assignments != null) {
-			usesTransient |= ProcessorRegistrar.getProcessor(assignments).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(assignments)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

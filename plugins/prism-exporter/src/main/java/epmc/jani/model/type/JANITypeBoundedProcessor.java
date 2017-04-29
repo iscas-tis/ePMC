@@ -28,17 +28,18 @@ public final class JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict
 	private JANITypeBounded bounded = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof JANITypeBounded;
 
 		bounded = (JANITypeBounded) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert bounded != null;
 		
-		return new StringBuilder(bounded.toType().toString());
+		return bounded.toType().toString();
 	}
 	
 	@Override

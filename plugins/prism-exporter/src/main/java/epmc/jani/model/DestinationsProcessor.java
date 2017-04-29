@@ -30,38 +30,39 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 	private Automaton automaton = null;
 
 	@Override
-	public void setAutomaton(Automaton automaton) {
+	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
 		this.automaton = automaton;
+		return this;
 	}
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Destinations; 
 		
 		destinations = (Destinations) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert destinations != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		boolean remaining = false;
 		for (Destination destination : destinations) {
-			processor = ProcessorRegistrar.getProcessor(destination);
+			JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(destination);
 			if (remaining) {
 				processor.setPrefix(" + ");
 			} else {
 				remaining = true;
 			}
-			processor.setAutomaton(automaton);
-			prism.append(processor.toPRISM().toString());
+			prism.append(processor.setAutomaton(automaton)
+								  .toPRISM());
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -69,7 +70,8 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 		assert destinations != null;
 		
 		for (Destination destination : destinations) {
-			ProcessorRegistrar.getProcessor(destination).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(destination)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -79,7 +81,8 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Destination destination : destinations) {
-			usesTransient |= ProcessorRegistrar.getProcessor(destination).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(destination)
+										 	   .usesTransientVariables();
 		}
 		
 		return usesTransient;

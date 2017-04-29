@@ -37,15 +37,16 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 	private ComponentSynchronisationVectors syncVectors = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ComponentSynchronisationVectors; 
 		
 		syncVectors = (ComponentSynchronisationVectors) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert syncVectors != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -77,7 +78,8 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING,
 							   synched.getName());
 					}
-					ensure(counter == 1, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
+					ensure(counter == 1, 
+						   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
 				}
 			} else {
 				int lenght = actions.size();
@@ -87,14 +89,16 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 					if (synched != null) {
 						ensure(synched.equals(result), 
 							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_RENAMING,
-							   synched.getName(), result.getName());
+							   synched.getName(), 
+							   result.getName());
 						boolean canSynchronize = false;
 						for (Edge edge : automaton.getEdges()) {
 							canSynchronize |= result.equals(edge.getActionOrSilent());
 						}
 						ensure(canSynchronize,
 							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
-							   automaton.getName(), synched.getName());
+							   automaton.getName(), 
+							   synched.getName());
 					} else {
 						boolean cannotSynchronize = true;
 						for (Edge edge : automaton.getEdges()) {
@@ -102,14 +106,15 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 						}
 						ensure(cannotSynchronize,
 							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
-							   automaton.getName(), result.getName());
+							   automaton.getName(), 
+							   result.getName());
 					}
 				}
 			}
 		}
 		
 		
-		return prism;
+		return prism.toString();
 	}
 
 	@Override

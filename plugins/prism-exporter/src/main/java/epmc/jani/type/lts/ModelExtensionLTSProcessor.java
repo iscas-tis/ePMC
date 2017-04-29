@@ -30,13 +30,14 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorExtended {
 
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
 		assert obj instanceof ModelExtensionLTS;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() {
-		return new StringBuilder(ModelExtensionLTS.IDENTIFIER).append("\n");
+	public String toPRISM() {
+		return "lts\n";
 	}
 	
 	@Override

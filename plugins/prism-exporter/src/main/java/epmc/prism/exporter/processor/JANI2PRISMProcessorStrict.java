@@ -26,24 +26,22 @@ import epmc.value.ContextValue;
 
 public interface JANI2PRISMProcessorStrict {
 	
-	default void setContextValue(ContextValue contextValue) {}
+	default JANI2PRISMProcessorStrict setContextValue(ContextValue contextValue) { return this; }
 	
-	default void setPrefix(String prefix) {}
+	default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; }
 
-	default void setForDefinition(boolean forDefinition) {}
+	default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; }
 
-	default void setWithInitialValue(boolean withInitialValue) {}
+	default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; }
 	
-	default void setAutomaton(Automaton automaton) {}
-	
-	void setElement(Object obj) throws EPMCException;
+	JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException;
 
 	/**
 	 * Generate a PRISM representation of the component.
 	 * @return the PRISM representation
 	 * @throws EPMCException if the component has no PRISM counterpart
 	 */
-	StringBuilder toPRISM() throws EPMCException;
+	String toPRISM() throws EPMCException;
 	
 	/**
 	 * Explore the JANI model and identify the variables that are assigned 

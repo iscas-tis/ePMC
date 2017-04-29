@@ -1,7 +1,6 @@
 package epmc.jani.model;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -11,20 +10,22 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
 	private String prefix = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof TimeProgress; 
 		
 		timeProgress = (TimeProgress) obj;
+		return this;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert timeProgress != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -35,40 +36,44 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
 			if (prefix != null) {
 				prism.append(prefix);
 			}
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 		
-		Expression expression = timeProgress.getExp();
-		processor = ProcessorRegistrar.getProcessor(expression);
 		if (prefix != null)	{
 			prism.append(prefix);
 		}
 		prism.append("invariant\n");
+		processor = ProcessorRegistrar.getProcessor(timeProgress.getExp());
 		if (prefix != null)	{
 			processor.setPrefix(ModelJANIProcessor.INDENT + prefix);
 		} else {
 			processor.setPrefix(ModelJANIProcessor.INDENT);			
 		}
-		prism.append(processor.toPRISM().toString()).append("\n");
+		prism.append(processor.toPRISM())
+		     .append("\n");
 		if (prefix != null)	{
 			prism.append(prefix);
 		}
 		prism.append("endinvariant\n");
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert timeProgress != null;
 		
-		ProcessorRegistrar.getProcessor(timeProgress.getExp()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(timeProgress.getExp())
+						  .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert timeProgress != null;
 		
-		return ProcessorRegistrar.getProcessor(timeProgress.getExp()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(timeProgress.getExp())
+								 .usesTransientVariables();
 	}	
 }

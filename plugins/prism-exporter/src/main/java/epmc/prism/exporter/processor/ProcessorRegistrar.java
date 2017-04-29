@@ -187,15 +187,15 @@ public class ProcessorRegistrar {
 		JANI2PRISMProcessorStrict processor = null;
 		Class<? extends JANI2PRISMProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
 		if (processorClass != null) {
-			processor = Util.getInstance(processorClass);
-			processor.setContextValue(contextValue);
-			processor.setElement(JANIComponent);
+			processor = Util.getInstance(processorClass)
+							.setContextValue(contextValue)
+							.setElement(JANIComponent);
 		} else {
 			Class<? extends JANI2PRISMProcessorExtended> extendedProcessorClass = extendedProcessors.get(JANIComponent.getClass());
 			if (extendedProcessorClass != null) {
-				processor = Util.getInstance(extendedProcessorClass);
-				processor.setContextValue(contextValue);
-				processor.setElement(JANIComponent);
+				processor = Util.getInstance(extendedProcessorClass)
+								.setContextValue(contextValue)
+								.setElement(JANIComponent);
 				ensure(useExtendedSyntax, ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
 						((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature().toArray());
 			} else {

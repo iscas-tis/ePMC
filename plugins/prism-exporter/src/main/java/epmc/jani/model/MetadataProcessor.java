@@ -30,24 +30,29 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 	private Metadata metadata = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Metadata; 
 
 		metadata = (Metadata) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert metadata != null;
 		
 		StringBuilder prism = new StringBuilder();
 		
 		for (Entry<String, String> entry : metadata.getValues().entrySet()) {
-			prism.append("// ").append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+			prism.append("// ")
+				 .append(entry.getKey())
+				 .append(": ")
+				 .append(entry.getValue())
+				 .append("\n");
 		}
 				
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override

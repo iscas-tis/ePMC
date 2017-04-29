@@ -137,19 +137,19 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
     		}
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_CREATION, modelName);
         	JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);
-        	StringBuilder modelSB = converter.convertModel();
-        	StringBuilder propertiesSB = converter.convertProperties();
+        	String modelString = converter.convertModel();
+        	String propertiesString = converter.convertProperties();
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_CREATION_DONE, modelName);
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_FILE_CREATION, prismModelFilename);
         	try (PrintWriter out = new PrintWriter(prismModelFile)) {
-        	    out.println(modelSB.toString());
+        	    out.println(modelString);
         	} catch (FileNotFoundException e) {
         		throw new RuntimeException(e);
     		}
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_FILE_CREATION_DONE, prismModelFilename);
         	log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_FILE_CREATION, prismPropertiesFilename);
         	try (PrintWriter out = new PrintWriter(prismPropertiesFile)) {
-        	    out.println(propertiesSB.toString());
+        	    out.println(propertiesString);
         	} catch (FileNotFoundException e) {
         		throw new RuntimeException(e);
     		}

@@ -28,17 +28,18 @@ public final class JANITypeIntProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeInt integer = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj instanceof JANITypeInt;
 
 		integer = (JANITypeInt) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert integer != null;
 		
-		return new StringBuilder("int");
+		return "int";
 	}
 	
 	@Override

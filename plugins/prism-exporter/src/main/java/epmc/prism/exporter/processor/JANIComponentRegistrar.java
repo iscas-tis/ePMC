@@ -35,6 +35,7 @@ import epmc.expression.Expression;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.Constant;
+import epmc.jani.model.InitialStates;
 import epmc.jani.model.Location;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Variable;
@@ -128,6 +129,10 @@ public class JANIComponentRegistrar {
 	private static Automaton defaultAutomatonForUnassignedClocks;
 	private static Set<Variable> unassignedClockVariables;
 	
+	private static InitialStates initialStates;
+	private static Map<Automaton, Collection<Location>> initialLocations;
+	private static Boolean usesInitialConditions;
+	
 	private static boolean isTimedModel;
 	
 	private static int reward_counter;
@@ -156,6 +161,10 @@ public class JANIComponentRegistrar {
 		
 		automatonLocationIdentifier = new HashMap<>();
 		automatonLocationName = new HashMap<>();
+		
+		initialStates = null;
+		initialLocations = new HashMap<>();
+		usesInitialConditions = null;
 		
 		defaultAutomatonForUnassignedClocks = null;
 		unassignedClockVariables = new HashSet<>();
@@ -484,7 +493,7 @@ public class JANIComponentRegistrar {
 		return Collections.unmodifiableSet(assignedVariables);
 	}
 	
-	public static StringBuilder toPRISMRewards() throws EPMCException {
+	public static String toPRISMRewards() throws EPMCException {
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
 
@@ -494,6 +503,7 @@ public class JANIComponentRegistrar {
 		boolean remaining = false;
 		for (Entry<Variable, String> entry: variableNames.entrySet()) {
 			Variable reward = entry.getKey();
+			String name = entry.getValue();
 			if (!reward.isTransient()) {
 				continue;
 			}
@@ -502,7 +512,9 @@ public class JANIComponentRegistrar {
 			} else {
 				remaining = true;
 			}
-			prism.append("rewards ").append(entry.getValue()).append("\n");
+			prism.append("// Original variable name: ").append(reward.getName()).append("\n")
+			     .append("// New name: ").append(name).append("\n");
+			prism.append("rewards ").append(name).append("\n");
 			expression = rewardStateExpressions.get(reward);
 			if (expression != null) {
 				processor = ProcessorRegistrar.getProcessor(expression);
@@ -524,7 +536,7 @@ public class JANIComponentRegistrar {
 			prism.append("endrewards\n");
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	/**
@@ -573,7 +585,51 @@ public class JANIComponentRegistrar {
 		return "τ".equals(action.getName());
 	}
 	
-	public static StringBuilder performedRenamings() {
+	public static String constantsRenaming() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (Entry<Constant,String> entry : constantNames.entrySet()) {
+			Constant constant = entry.getKey();
+			String name = entry.getValue();
+			if (! constant.getName().equals(name)) {
+				sb.append("// Original constant name: ").append(constant.getName()).append("\n")
+				  .append("// New name: ").append(name).append("\n\n");
+			}
+		}
+		
+		return sb.toString();		
+	}
+
+	public static String globalVariablesRenaming() {
+		StringBuilder sb = new StringBuilder();
+		
+		for (Entry<Variable,String> entry : variableNames.entrySet()) {
+			Variable variable = entry.getKey();
+			if (globalVariables.contains(variable)) {
+				String name = entry.getValue();
+				if (! variable.getName().equals(name)) {
+					sb.append("// Original variable name: ").append(variable.getName()).append("\n")
+					  .append("// New name: ").append(name).append("\n\n");
+				}
+			}
+		}
+		
+		return sb.toString();		
+	}
+
+	public static String variableRenaming(Variable variable, String prefix) {
+		StringBuilder sb = new StringBuilder();
+		
+		String name = variableNames.get(variable);
+		if (! variable.getName().equals(name)) {
+			sb.append(prefix).append("// Original variable name: ").append(variable.getName()).append("\n")
+			  .append(prefix).append("// New name: ").append(name).append("\n\n");
+		}
+		
+		return sb.toString();		
+	}
+
+	public static String actionsRenaming() {
 		StringBuilder sb = new StringBuilder();
 		
 		for (Entry<Action,String> entry : actionNames.entrySet()) {
@@ -585,37 +641,101 @@ public class JANIComponentRegistrar {
 			}
 		}
 		
-		for (Entry<Constant,String> entry : constantNames.entrySet()) {
-			Constant constant = entry.getKey();
-			String name = entry.getValue();
-			if (! constant.getName().equals(name)) {
-				sb.append("// Original constant name: ").append(constant.getName()).append("\n")
-				  .append("// New name: ").append(name).append("\n\n");
-			}
-		}
-		
-		for (Entry<Variable,String> entry : variableNames.entrySet()) {
-			Variable variable = entry.getKey();
-			String name = entry.getValue();
-			if (! variable.getName().equals(name)) {
-				sb.append("// Original variable name: ").append(variable.getName()).append("\n")
-				  .append("// New name: ").append(name).append("\n\n");
-			}
-		}
-		
-		return sb;
+		return sb.toString();
 	}
 	
-	public static StringBuilder locationRenaming(Automaton automaton) {
+	public static String locationRenaming(Automaton automaton) {
 		StringBuilder sb = new StringBuilder();
 		assert automatonLocationIdentifier.containsKey(automaton);
 
-		String locationName = automatonLocationName.get(automaton);
-		for (Entry<Location, Integer> entry : automatonLocationIdentifier.get(automaton).entrySet()) {
-			sb.append("// Original location: ").append(entry.getKey().getName()).append("\n")
-			  .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
+		if (automatonLocationIdentifier.get(automaton).size() > 1) {
+			String locationName = automatonLocationName.get(automaton);
+			for (Entry<Location, Integer> entry : automatonLocationIdentifier.get(automaton).entrySet()) {
+				sb.append("// Original location: ").append(entry.getKey().getName()).append("\n")
+				  .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
+			}
 		}
 		
-		return sb;
+		return sb.toString();
+	}
+	
+	public static void registerInitialRestriction(InitialStates initialStates) {
+		JANIComponentRegistrar.initialStates = initialStates;
+		if (usesInitialConditions == null) {
+			usesInitialConditions = new Boolean(initialStates != null);
+		} else {
+			usesInitialConditions |= initialStates != null;
+		}
+	}
+	
+	public static void registerInitialLocation(Automaton automaton, Collection<Location> locations) {
+		assert automaton != null;
+		assert locations != null;
+		
+		initialLocations.put(automaton, locations);
+		if (usesInitialConditions == null) {
+			usesInitialConditions = new Boolean(locations.size() > 1);
+		} else {
+			usesInitialConditions |= locations.size() > 1;
+		}
+	}
+	
+	public static boolean areInitialConditionsUsed() {
+		assert usesInitialConditions != null;
+		
+		return usesInitialConditions.booleanValue();
+	}
+	
+	public static String processInitialConditions() throws EPMCException {
+		assert usesInitialConditions != null;
+		
+		StringBuilder prism = new StringBuilder();
+		JANI2PRISMProcessorStrict processor; 
+
+		if (usesInitialConditions) {
+			prism.append("init\n").append(ModelJANIProcessor.INDENT);
+			boolean addAnd = false;
+			
+			for (Entry<Automaton, Collection<Location>> entry : initialLocations.entrySet()) {
+				Automaton automaton = entry.getKey();
+				if (entry.getValue().size() > 1) {
+					String locationName = JANIComponentRegistrar.getLocationName(automaton);
+					boolean remaining = false;
+					prism.append("(");
+					for (Location location : entry.getValue()) {
+						if (remaining) {
+							prism.append("|");
+						} else {
+							remaining = true;
+						}
+						prism.append("(")
+						     .append(locationName)
+						     .append("=")
+						     .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
+						     .append(")");
+					}
+					prism.append(")");
+					addAnd = true;
+				}
+			}
+			if (initialStates != null) {
+				if (addAnd) {
+					prism.append("\n")
+					     .append(ModelJANIProcessor.INDENT)
+					     .append("&\n")
+					     .append(ModelJANIProcessor.INDENT);
+				}
+				String comment = initialStates.getComment();
+				if (comment != null) {
+					prism.append("// ").append(comment).append("\n").append(ModelJANIProcessor.INDENT);
+				}
+				Expression exp = initialStates.getExp(); 
+				processor = ProcessorRegistrar.getProcessor(exp);
+				prism.append(processor.toPRISM().toString());
+			}	
+				
+			prism.append("\nendinit\n");
+		}
+		return prism.toString();
 	}
 }

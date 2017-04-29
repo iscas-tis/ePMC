@@ -21,7 +21,6 @@
 package epmc.jani.model;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -30,35 +29,35 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 	private Guard guard = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Guard; 
 		
 		guard = (Guard) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert guard != null;
 		
-		JANI2PRISMProcessorStrict processor; 
-
-		Expression exp = guard.getExp();
-		processor = ProcessorRegistrar.getProcessor(exp);
-		return processor.toPRISM();
+		return ProcessorRegistrar.getProcessor(guard.getExp())
+								 .toPRISM();
 	}
 	
 	@Override
 	public void validateTransientVariables() throws EPMCException {
 		assert guard != null;
 		
-		ProcessorRegistrar.getProcessor(guard.getExp()).validateTransientVariables();
+		ProcessorRegistrar.getProcessor(guard.getExp())
+						  .validateTransientVariables();
 	}
 
 	@Override
 	public boolean usesTransientVariables() throws EPMCException {
 		assert guard != null;
 		
-		return ProcessorRegistrar.getProcessor(guard.getExp()).usesTransientVariables();
+		return ProcessorRegistrar.getProcessor(guard.getExp())
+								 .usesTransientVariables();
 	}	
 }

@@ -21,7 +21,6 @@
 package epmc.jani.model.property;
 
 import epmc.error.EPMCException;
-import epmc.expression.Expression;
 import epmc.modelchecker.RawProperty;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -31,27 +30,27 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
 	private JANIProperties properties = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof JANIProperties; 
 		
 		properties = (JANIProperties) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert properties != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		for (RawProperty raw : properties.getRawProperties()) {
-			Expression property = properties.getParsedProperty(raw);
-			processor = ProcessorRegistrar.getProcessor(property);
-			prism.append(processor.toPRISM().toString()).append("\n");
+			prism.append(ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+										   .toPRISM())
+				  .append("\n");
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -59,8 +58,8 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
 		assert properties != null;
 		
 		for (RawProperty raw : properties.getRawProperties()) {
-			Expression property = properties.getParsedProperty(raw);
-			ProcessorRegistrar.getProcessor(property).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+							  .validateTransientVariables();
 		}
 	}
 
@@ -70,8 +69,8 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (RawProperty raw : properties.getRawProperties()) {
-			Expression property = properties.getParsedProperty(raw);
-			usesTransient |= ProcessorRegistrar.getProcessor(property).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

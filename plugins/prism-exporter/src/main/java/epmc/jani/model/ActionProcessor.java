@@ -29,22 +29,25 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
 	private Action action = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Action; 
 		
 		action = (Action) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert action != null;
 		
 		StringBuilder prism = new StringBuilder();
 		
-		prism.append("[").append(JANIComponentRegistrar.getActionName(action)).append("]");
+		prism.append("[")
+			 .append(JANIComponentRegistrar.getActionName(action))
+			 .append("]");
 		
-		return prism;
+		return prism.toString();
 	}
 
 	@Override

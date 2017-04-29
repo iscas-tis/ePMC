@@ -37,21 +37,23 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	private PlayerJANI player = null;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof PlayerJANI; 
 		
 		player = (PlayerJANI) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert player != null;
 		
 		StringBuilder prism = new StringBuilder();
 		boolean remaining = false;
 
-		prism.append("player ").append(player.getName());
+		prism.append("player ")
+			 .append(player.getName());
 		
 		for (Automaton automaton: player.getAutomataOrEmpty()) {
 			if (remaining) {
@@ -78,7 +80,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 		
 		prism.append("\nendplayer\n");
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	

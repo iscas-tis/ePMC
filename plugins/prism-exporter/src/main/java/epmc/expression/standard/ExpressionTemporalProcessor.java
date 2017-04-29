@@ -34,67 +34,69 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	private ContextValue contextValue = null;
 	
 	@Override
-	public void setContextValue(ContextValue contextValue) {
+	public JANI2PRISMProcessorStrict setContextValue(ContextValue contextValue) {
 		this.contextValue = contextValue;
+		return this;
 	}
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof ExpressionTemporal; 
 		
 		temporal = (ExpressionTemporal) obj;
+		return this;
 	}
 
 	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert temporal != null;
 		assert contextValue != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 
 		TemporalType type = temporal.getTemporalType();
         switch (type) {
-        case NEXT: case FINALLY: case GLOBALLY: {
-            prism.append(type.toString());
-            
-            TimeBound timeBound = temporal.getTimeBound(contextValue);
-    		processor = ProcessorRegistrar.getProcessor(timeBound);
-    		prism.append(processor.toPRISM().toString());
-    		
-    		Expression child = temporal.getOperand1();
-    		processor = ProcessorRegistrar.getProcessor(child);
-            prism.append("(").append(processor.toPRISM().toString()).append(")");
+        case NEXT: 
+        case FINALLY: 
+        case GLOBALLY: {
+            prism.append(type.toString())
+                 .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound(contextValue))
+                		 				   .toPRISM())
+                 .append("(")
+                 .append(ProcessorRegistrar.getProcessor(temporal.getOperand1())
+                 						   .toPRISM())
+                 .append(")");
             break;
         }
-        case UNTIL: case RELEASE:
+        case UNTIL: 
+        case RELEASE:
             if (type == TemporalType.UNTIL && temporal.getNumOps() == 2 && isTrue(temporal.getOperand1())) {
-        		Expression child = temporal.getOperand2();
-        		processor = ProcessorRegistrar.getProcessor(child);
-                prism.append("F(").append(processor.toPRISM().toString()).append(")");
+                prism.append("F(")
+                     .append(ProcessorRegistrar.getProcessor(temporal.getOperand2())
+                    		 				   .toPRISM())
+                     .append(")");
             } else if (type == TemporalType.RELEASE && temporal.getNumOps() == 2 && isFalse(temporal.getOperand2())) {
-        		Expression child = temporal.getOperand1();
-        		processor = ProcessorRegistrar.getProcessor(child);
-                prism.append("G(").append(processor.toPRISM().toString()).append(")");
+                prism.append("G(")
+                     .append(ProcessorRegistrar.getProcessor(temporal.getOperand1())
+                    		 				   .toPRISM())
+                     .append(")");
             } else {
             	boolean remaining = false;
                 int timeBoundIndex = 0;
                 for (Expression child : temporal.getOperands()) {
             		if (remaining) {
-                        prism.append(type);
-                        
-                        TimeBound timeBound = temporal.getTimeBound(contextValue, timeBoundIndex);
-                		processor = ProcessorRegistrar.getProcessor(timeBound);
-                		prism.append(processor.toPRISM().toString());
-                		
+                        prism.append(type)
+                        	 .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound(contextValue, timeBoundIndex))
+                        			                   .toPRISM());
                         timeBoundIndex++;
                 	} else {
                 		remaining = true;
                 	}
-
-            		processor = ProcessorRegistrar.getProcessor(child);
-                    prism.append("(").append(processor.toPRISM().toString()).append(")");
+                    prism.append("(")
+                    	 .append(ProcessorRegistrar.getProcessor(child)
+                    			 				   .toPRISM())
+                    	 .append(")");
                 }
             }
             break;
@@ -102,7 +104,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
             assert (false);
         }
 		
-		return prism;
+		return prism.toString();
 	}
 
 	@Override
@@ -110,7 +112,8 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 		assert temporal != null;
 		
 		for (Expression child : temporal.getChildren()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(child)
+							  .validateTransientVariables();
 		}
 	}
 	
@@ -120,7 +123,8 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Expression child : temporal.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(child)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;
@@ -128,26 +132,26 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 
 	private static boolean isTrue(Expression expression) {
         assert expression != null;
+        
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return ValueBoolean.isTrue(getValue((ExpressionLiteral) expression));
     }
     
     private static boolean isFalse(Expression expression) {
         assert expression != null;
+        
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(getValue(expressionLiteral));
+        return ValueBoolean.isFalse(getValue((ExpressionLiteral) expression));
     }  
     
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
+
+        return ((ExpressionLiteral) expression).getValue();
     }
 }

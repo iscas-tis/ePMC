@@ -28,42 +28,36 @@ public class VariablesProcessor implements JANI2PRISMProcessorStrict {
 
 	private Variables variables = null;
 	private String prefix = null;
-	private boolean withInitialValue = false;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Variables; 
 		
 		variables = (Variables) obj;
+		return this;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 	
 	@Override
-	public void setWithInitialValue(boolean withInitialValue) {
-		this.withInitialValue = withInitialValue;
-	}
-
-	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert variables != null;
 		
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		for (Variable variable : variables) {
-			processor = ProcessorRegistrar.getProcessor(variable);
-			processor.setPrefix(prefix);
-			processor.setForDefinition(true);
-			processor.setWithInitialValue(withInitialValue);
-			prism.append(processor.toPRISM().toString());
+			prism.append(ProcessorRegistrar.getProcessor(variable)
+										   .setPrefix(prefix)
+										   .setForDefinition(true)
+										   .toPRISM());
 		}
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
@@ -71,7 +65,8 @@ public class VariablesProcessor implements JANI2PRISMProcessorStrict {
 		assert variables != null;
 		
 		for (Variable variable : variables) {
-			ProcessorRegistrar.getProcessor(variable).validateTransientVariables();
+			ProcessorRegistrar.getProcessor(variable)
+							  .validateTransientVariables();
 		}
 	}
 
@@ -81,7 +76,8 @@ public class VariablesProcessor implements JANI2PRISMProcessorStrict {
 		
 		boolean usesTransient = false;
 		for (Variable variable : variables) {
-			usesTransient |= ProcessorRegistrar.getProcessor(variable).usesTransientVariables();
+			usesTransient |= ProcessorRegistrar.getProcessor(variable)
+											   .usesTransientVariables();
 		}
 		
 		return usesTransient;

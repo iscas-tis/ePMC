@@ -22,85 +22,85 @@ package epmc.jani.model;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.jani.model.type.JANIType;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.time.TypeClock;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class VariableProcessor implements JANI2PRISMProcessorStrict {
 
 	private Variable variable = null;
 	private String prefix = null;
 	private boolean forDefinition = false;
-	private boolean withInitialValue = false;
 	
 	@Override
-	public void setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
 		assert obj != null;
 		assert obj instanceof Variable; 
 		
 		variable = (Variable) obj;
+		return this;
 	}
 
 	@Override
-	public void setPrefix(String prefix) {
+	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
 		this.prefix = prefix;
+		return this;
 	}
 	
 	@Override
-	public void setForDefinition(boolean forDefinition) {
+	public JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) {
 		this.forDefinition = forDefinition;
+		return this;
 	}
 
 	@Override
-	public void setWithInitialValue(boolean withInitialValue) {
-		this.withInitialValue = withInitialValue;
-	}
-
-	@Override
-	public StringBuilder toPRISM() throws EPMCException {
+	public String toPRISM() throws EPMCException {
 		assert variable != null;
 		
+		JANIComponentRegistrar.variableRenaming(variable, prefix);
 		if (forDefinition) {
 			return toPRISMForDefinition();
 		} else {
-			return new StringBuilder(variable.getName());
+			return variable.getName();
 		}
 	}
 	
-	private StringBuilder toPRISMForDefinition() throws EPMCException {
+	private String toPRISMForDefinition() throws EPMCException {
 		StringBuilder prism = new StringBuilder();
-		JANI2PRISMProcessorStrict processor; 
 		
 		String comment = variable.getComment();
 		if (comment != null) {
 			if (prefix != null) {
 				prism.append(prefix);
 			}
-			prism.append("// ").append(comment).append("\n");
+			prism.append("// ")
+				 .append(comment)
+				 .append("\n");
 		}
 
-		JANIType type = variable.getType();
-		processor = ProcessorRegistrar.getProcessor(type);
 		if (prefix != null)	{
 			prism.append(prefix);
 		}
-		prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable)).append(" : ").append(processor.toPRISM().toString());
+		prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable))
+		     .append(" : ")
+		     .append(ProcessorRegistrar.getProcessor(variable.getType())
+		    		 				   .toPRISM());
 		
-		if (withInitialValue) {
+		if (!JANIComponentRegistrar.areInitialConditionsUsed()) {
 			if (!(variable.toType() instanceof TypeClock)) {
 				Expression initial = variable.getInitialValueOrNull();
 				if (initial != null) {
-					processor = ProcessorRegistrar.getProcessor(initial);
-					prism.append(" init ").append(processor.toPRISM().toString());
+					prism.append(" init ")
+						 .append(ProcessorRegistrar.getProcessor(initial)
+								 				   .toPRISM());
 				}
 			}
 		}
 		
 		prism.append(";\n");
 		
-		return prism;
+		return prism.toString();
 	}
 	
 	@Override
