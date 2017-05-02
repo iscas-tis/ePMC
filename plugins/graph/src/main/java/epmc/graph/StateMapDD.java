@@ -29,6 +29,7 @@ import epmc.error.EPMCException;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorId;
@@ -105,7 +106,6 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public StateMapDD restrict(StateSet to) throws EPMCException {
         assert !closed();
         assert to != null;
-        assert to.getContextValue() == getContextValue();
         assert to.isSubsetOf(states);
         if (states.equals(to)) {
             return clone();
@@ -179,19 +179,19 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     
     @Override
     public void getRange(Value range, StateSet of) throws EPMCException {
-        Value min = applyOver(getContextValue().getOperator(OperatorMin.IDENTIFIER), of);
-        Value max = applyOver(getContextValue().getOperator(OperatorMax.IDENTIFIER), of);
-        range.set(TypeInterval.get(getContextValue()).newValue(min, max));
+        Value min = applyOver(ContextValue.get().getOperator(OperatorMin.IDENTIFIER), of);
+        Value max = applyOver(ContextValue.get().getOperator(OperatorMax.IDENTIFIER), of);
+        range.set(TypeInterval.get().newValue(min, max));
     }
     
     private boolean isAllTrue(StateSet of) throws EPMCException {
-        Value result = applyOver(getContextValue().getOperator(OperatorAnd.IDENTIFIER), of);
+        Value result = applyOver(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER), of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
     
     @Override
     public void getSomeValue(Value to, StateSet of) throws EPMCException {
-        Value result = applyOver(getContextValue().getOperator(OperatorId.IDENTIFIER), of);
+        Value result = applyOver(ContextValue.get().getOperator(OperatorId.IDENTIFIER), of);
         to.set(result);
     }
 
@@ -208,10 +208,10 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
                 boolean allTrue = true;
                 allTrue = isAllTrue(initialStates);
                 return allTrue
-                        ? TypeBoolean.get(getContextValue()).getTrue()
-                        : TypeBoolean.get(getContextValue()).getFalse();
+                        ? TypeBoolean.get().getTrue()
+                        : TypeBoolean.get().getFalse();
             } else if (hasMinAndMaxElements(initialStates)) {
-                Value range = TypeInterval.get(getContextValue()).newValue();
+                Value range = TypeInterval.get().newValue();
                 getRange(range, initialStates);
                 return range;
             } else {
@@ -226,7 +226,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
             return true;
         }
         try {
-            getRange(TypeInterval.get(getContextValue()).newValue(),
+            getRange(TypeInterval.get().newValue(),
                     getStateSet());
         } catch (EPMCException e) {
             return false;

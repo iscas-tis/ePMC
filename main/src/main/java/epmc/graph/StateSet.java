@@ -23,13 +23,10 @@ package epmc.graph;
 import java.io.Closeable;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 
 //TODO complete documentation
 
 public interface StateSet extends Closeable, Cloneable {
-
-    ContextValue getContextValue();
 
     int size();
  

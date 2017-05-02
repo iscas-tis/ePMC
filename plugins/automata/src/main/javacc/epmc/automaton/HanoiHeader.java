@@ -30,7 +30,6 @@ import epmc.util.BitSetUnboundedLongArray;
 import epmc.value.ContextValue;
 
 final class HanoiHeader {
-	private final ContextValue context;
 	private final Map<String,Expression> ap2expr;
 	private int numStates;
 	private final BitSet startStates = new BitSetUnboundedLongArray();
@@ -40,12 +39,7 @@ final class HanoiHeader {
 	HanoiHeader(ContextValue context, Map<String,Expression> ap2expr) {
 		assert context != null;
 		assert ap2expr != null;
-		this.context = context;
 		this.ap2expr = ap2expr;
-	}
-	
-	ContextValue getContext() {
-		return context;
 	}
 	
 	void setNumStates(int numStates) {

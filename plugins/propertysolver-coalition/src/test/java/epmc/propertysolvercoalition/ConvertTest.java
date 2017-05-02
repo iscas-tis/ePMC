@@ -81,7 +81,7 @@ public final class ConvertTest {
 //    	System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
     	Set<Object> nodeProperties = new HashSet<>();
     	nodeProperties.add(CommonProperties.STATE);
-    	ContextValue context = statistics.getJaniModel().getContextValue();
+    	ContextValue context = ContextValue.get();
 		nodeProperties.add(newPlayer(context, 1));
 		nodeProperties.add(newPlayer(context, 2));
 		nodeProperties.add(newPlayer(context, 3));
@@ -113,7 +113,7 @@ public final class ConvertTest {
     	System.out.println(statistics);
     	Set<Object> nodeProperties = new HashSet<>();
     	nodeProperties.add(CommonProperties.STATE);
-    	ContextValue context = statistics.getJaniModel().getContextValue();
+    	ContextValue context = ContextValue.get();
 		nodeProperties.add(newPlayer(context, 1));
 		nodeProperties.add(newPlayer(context, 2));
 //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
@@ -554,7 +554,7 @@ public final class ConvertTest {
 			
 			@Override
 			public Expression getExpression() {
-				TypeInteger typeInteger = TypeInteger.get(context);
+				TypeInteger typeInteger = TypeInteger.get();
 				return new ExpressionLiteral.Builder()
 						.setValue(UtilValue.newValue(typeInteger, i))
 						.build();

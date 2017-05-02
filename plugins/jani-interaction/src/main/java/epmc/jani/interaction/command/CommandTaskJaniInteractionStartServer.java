@@ -38,6 +38,7 @@ import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
+import epmc.value.ContextValue;
 
 /**
  * Command to start JANI interaction mode.
@@ -67,7 +68,7 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
 	@Override
 	public void setModelChecker(ModelChecker modelChecker) {
 		assert modelChecker != null;
-		this.options = modelChecker.getModel().getContextValue().getOptions();
+		this.options = ContextValue.get().getOptions();
 	}
 	
 	@Override

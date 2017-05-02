@@ -31,8 +31,8 @@ import epmc.value.ValueAlgebra;
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) throws EPMCException {
         assert graph != null;
-        ContextValue contextValue = graph.getContextValue();
-        ValueAlgebra zero = TypeWeight.get(contextValue).getZero();
+        ContextValue contextValue = ContextValue.get();
+        ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight(contextValue);
         ValueAlgebra weight = newValueWeight(contextValue);
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
@@ -59,8 +59,8 @@ public final class GraphExplicitModifier {
         if (uniRate != null) {
             uniRate.set(uniformisationRate);
         }
-        ContextValue contextValue = graph.getContextValue();
-        ValueAlgebra zero = TypeWeight.get(contextValue).getZero();
+        ContextValue contextValue = ContextValue.get();
+        ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight(contextValue);
         ValueAlgebra weight = newValueWeight(contextValue);
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
@@ -87,7 +87,7 @@ public final class GraphExplicitModifier {
     
     private static Value computeUniformisationRate(GraphExplicit graph)
             throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         ValueAlgebra result = newValueWeight(contextValue);
         ValueAlgebra sumRate = newValueWeight(contextValue);
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
@@ -114,6 +114,6 @@ public final class GraphExplicitModifier {
     }
     
     private static ValueAlgebra newValueWeight(ContextValue contextValue) {
-        return TypeWeight.get(contextValue).newValue();
+        return TypeWeight.get().newValue();
     }
 }

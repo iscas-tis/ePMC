@@ -44,8 +44,6 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
 	/** String used for the {@link #toString()} method. */
 	private final static String LOCATION = "location";
 
@@ -107,11 +105,6 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 		return result;
 	}
 	
-	@Override
-	public ContextValue getContext() {
-		return context;
-	}
-
 	@Override
 	public ValueLocation newValue() {
 		return new ValueLocation(this);
@@ -223,7 +216,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 
 	@Override
     public TypeArray getTypeArray() {
-        return getContext().makeUnique(new TypeArrayGeneric(this));
+        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 	
 	@Override

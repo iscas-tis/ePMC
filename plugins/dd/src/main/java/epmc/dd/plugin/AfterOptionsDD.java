@@ -29,7 +29,6 @@ import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
 import epmc.options.Options;
-import epmc.options.UtilOptions;
 import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
 

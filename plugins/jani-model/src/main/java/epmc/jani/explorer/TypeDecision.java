@@ -3,7 +3,6 @@ package epmc.jani.explorer;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeNumBitsKnown;
@@ -49,11 +48,6 @@ public final class TypeDecision implements Type {
 		this.totalNumBits = totalNumBits;
 	}
 	
-	@Override
-	public ContextValue getContext() {
-		return explorer.getContextValue();
-	}
-
 	@Override
 	public ValueDecision newValue() {
 		return new ValueDecision(this);

@@ -121,7 +121,6 @@ public final class LibraryDDJDD implements LibraryDD {
     public long newConstant(Value value) throws EPMCException {
         assert alive;
         assert value != null;
-        assert value.getType().getContext() == contextValue;
         assert ValueBoolean.isBoolean(value);
         int result = ValueBoolean.asBoolean(value).getBoolean() ? bdd.getOne() : bdd.getZero();
         bdd.ref(result);
@@ -311,12 +310,12 @@ public final class LibraryDDJDD implements LibraryDD {
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
         this.contextDD = contextDD;
-        this.contextValue = contextDD.getContextValue();
+        this.contextValue = ContextValue.get();
         int initCache = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
         int initSlots = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_NODES);
         this.bdd = new BDD(initSlots, initCache);
-        this.zeroValue = TypeBoolean.get(contextValue).getFalse();
-        this.oneValue = TypeBoolean.get(contextValue).getTrue();
+        this.zeroValue = TypeBoolean.get().getFalse();
+        this.oneValue = TypeBoolean.get().getTrue();
         this.zeroNode = bdd.getZero();
         this.oneNode = bdd.getOne();
         this.alive = true;

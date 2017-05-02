@@ -22,7 +22,6 @@ package epmc.jani.plugin;
 
 import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
 
 /**
  * JANI plugin class containing method to execute just before model creation.
@@ -39,6 +38,6 @@ public final class BeforeModelCreationJANI implements BeforeModelCreation {
 	}
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
+	public void process() throws EPMCException {
 	}
 }

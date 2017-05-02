@@ -42,8 +42,6 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
     private List<DD> vector;
     private boolean closed;
 
-	private ContextValue context;
-
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -71,9 +69,9 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
 
     @Override
     public void build() throws EPMCException {
-        Options options = context.getOptions();
+        Options options = ContextValue.get().getOptions();
         boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
-        ContextDD contextDD = ContextDD.get(context);
+        ContextDD contextDD = ContextDD.get(ContextValue.get());
         VariableDD variableDD = variables.get(expression);
         
         if (useVector && variableDD.isInteger()) {
@@ -104,9 +102,4 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
     public void close() {
         closed = UtilEvaluatorDD.close(closed, dd, vector);
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

@@ -88,11 +88,10 @@ final class GraphPreparator {
 	}
 	
 	GraphExplicitWrapper toGraph() throws EPMCException {
-		ContextValue context = getContextValue();
+		ContextValue context = ContextValue.get();
 	    GraphExplicitWrapper graph = new GraphExplicitWrapper(context);
-	    TypeInteger typeInteger = TypeInteger.get(context);
+	    TypeInteger typeInteger = TypeInteger.get();
 	    TypeObject typeLabel = new TypeObject.Builder()
-                .setContext(context)
                 .setClazz(BuechiTransition.class)
                 .build();
 	    ValueInteger numLabels = typeInteger.newValue();
@@ -119,10 +118,6 @@ final class GraphPreparator {
 	    init.or(header.getStartStates());
 	    graph.setGraphProperty(CommonProperties.NUM_LABELS, numLabels);
 	    return graph;
-	}
-	
-	private ContextValue getContextValue() {
-		return header.getContext();
 	}
 	
 	HanoiHeader getHeader() {

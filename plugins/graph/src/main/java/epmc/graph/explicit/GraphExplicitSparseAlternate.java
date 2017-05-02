@@ -319,8 +319,8 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         this.contextValue = contextValue;
         assert contextValue != null;
         TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get(contextValue).getTypeArrayNative()
-                : TypeInteger.get(contextValue).getTypeArray();
+                ? TypeInteger.get().getTypeArrayNative()
+                : TypeInteger.get().getTypeArray();
         stateBounds = UtilValue.newArray(typeArrayInteger, 2);
         nondetBounds = UtilValue.newArray(typeArrayInteger, 2);
         successors = UtilValue.newArray(typeArrayInteger, 1);
@@ -342,8 +342,8 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         this.numProb = numProb;
         this.contextValue = contextValue;
         TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get(contextValue).getTypeArrayNative()
-                : TypeInteger.get(contextValue).getTypeArray();
+                ? TypeInteger.get().getTypeArrayNative()
+                : TypeInteger.get().getTypeArray();
         stateBounds = UtilValue.newArray(typeArrayInteger, numStates + 1);
         nondetBounds = UtilValue.newArray(typeArrayInteger, numNondet + 1);
         successors = UtilValue.newArray(typeArrayInteger, numProb);
@@ -526,11 +526,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     @Override
     public Options getOptions() {
         return contextValue.getOptions();
-    }
-    
-    @Override
-    public ContextValue getContextValue() {
-        return contextValue;
     }
     
     @Override

@@ -238,7 +238,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = contextExpression.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
         Expression formula = UtilModelChecker.parse(options, "(a | (b U c))");
         Set<Expression> identifiers = formula.collectIdentifiers();

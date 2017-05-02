@@ -39,8 +39,6 @@ import epmc.value.ValueObject;
 public interface GraphDD extends LowLevel {
     /* methods to be implemented by implementing classes. */
 
-    ContextValue getContextValue();
-    
     DD getInitialNodes() throws EPMCException;
 
     DD getTransitions() throws EPMCException;
@@ -65,7 +63,7 @@ public interface GraphDD extends LowLevel {
     /* default methods */
     
     default Options getOptions() {
-        return getContextValue().getOptions();
+        return ContextValue.get().getOptions();
     }
 
     default <T> T getGraphPropertyObject(Object property) {
@@ -118,7 +116,7 @@ public interface GraphDD extends LowLevel {
     }
 
     default ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(getContextValue());
+        return ContextDD.get(ContextValue.get());
     }
 
     @Override

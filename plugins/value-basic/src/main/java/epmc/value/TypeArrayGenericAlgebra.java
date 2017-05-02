@@ -37,11 +37,6 @@ public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
     }
 
     @Override
-    public ContextValue getContext() {
-        return entryType.getContext();
-    }
-
-    @Override
     public TypeAlgebra getEntryType() {
         return entryType;
     }
@@ -75,6 +70,6 @@ public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
     }
     
     public TypeArray getTypeArray() {
-        return getContext().makeUnique(new TypeArrayGeneric(this));
+        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

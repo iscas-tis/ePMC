@@ -62,13 +62,13 @@ public class CommandTaskExpression2Automaton implements CommandTask {
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         this.modelChecker = modelChecker;
-        this.options = modelChecker.getModel().getContextValue().getOptions();
+        this.options = ContextValue.get().getOptions();
     }
 
     @Override
     public void executeInServer() {
         Model model = modelChecker.getModel();
-        ContextValue contextValue = modelChecker.getModel().getContextValue();
+        ContextValue contextValue = ContextValue.get();
         Properties properties = model.getPropertyList();
         Log log = getLog();
         for (RawProperty property : properties.getRawProperties()) {
@@ -85,7 +85,7 @@ public class CommandTaskExpression2Automaton implements CommandTask {
                 	/*
                     try {
 						if (rel.getType() == null) {
-						    rel.getContext().registerType(rel, TypeBoolean.get(contextValue));
+						    ContextValue.get().registerType(rel, TypeBoolean.get(contextValue));
 						}
 					} catch (EPMCException e) {
 						log.send(new ModelCheckerResult(property, e));
@@ -103,7 +103,7 @@ public class CommandTaskExpression2Automaton implements CommandTask {
             	/*
                 try {
 					if (rel.getType() == null) {
-					    rel.getContext().registerType(rel, TypeBoolean.get(contextValue));
+					    ContextValue.get().registerType(rel, TypeBoolean.get(contextValue));
 					}
 				} catch (EPMCException e) {
 					log.send(new ModelCheckerResult(property, e));
@@ -157,6 +157,6 @@ public class CommandTaskExpression2Automaton implements CommandTask {
 	}
 
 	private Log getLog() {
-		return modelChecker.getModel().getContextValue().getOptions().get(OptionsMessages.LOG);
+		return ContextValue.get().getOptions().get(OptionsMessages.LOG);
 	}
 }

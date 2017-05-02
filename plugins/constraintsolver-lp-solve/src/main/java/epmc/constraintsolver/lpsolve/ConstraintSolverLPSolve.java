@@ -40,7 +40,6 @@ import epmc.util.JNATools;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.Type;
-import epmc.value.TypeArray;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
@@ -162,7 +161,6 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     }
 
     private final Set<Feature> features = new LinkedHashSet<>();
-    private ContextValue contextValue;
     private Pointer lp;
     private int numVariables;
     private int numConstraints;
@@ -187,11 +185,6 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
 	}
 
 	@Override
@@ -251,7 +244,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert constraintType != null;
         assert rightHandSide != null;
         assert row.length == variables.length;
-        assert assertNoDublicateVariables(rightHandSide.getType().getContext(), variables);
+        assert assertNoDublicateVariables(ContextValue.get(), variables);
         incIntArrayOne(variables);
         LpSolve.set_add_rowmode(lp, TRUE);
         int lpConstraintType = toLpSolveConstraintType(constraintType);
@@ -362,7 +355,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             break;
         case FEASIBILITY: {
             LpSolve.set_maxim(this.lp);
-            TypeArrayAlgebra typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+            TypeArrayAlgebra typeArray = TypeWeight.get().getTypeArray();
             ValueArrayAlgebra problemWeights = UtilValue.newArray(typeArray, 1);
             int[] problemVariables = new int[1];
             problemWeights.set(1, 0);
@@ -439,14 +432,14 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     public ValueReal getResultObjectiveValue() throws EPMCException {
         assert !closed;
         double result = LpSolve.get_var_primalresult(lp, 0);
-        return UtilValue.newValueDouble(TypeReal.get(contextValue), result);
+        return UtilValue.newValueDouble(TypeReal.get(), result);
     }
     
     @Override
     public ValueArray getResultVariablesValuesSingleType() throws EPMCException {
         assert !closed;
-        Value entry = TypeReal.get(contextValue).newValue();
-        ValueArray result = UtilValue.newArray(TypeReal.get(contextValue).getTypeArray(),
+        Value entry = TypeReal.get().newValue();
+        ValueArray result = UtilValue.newArray(TypeReal.get().getTypeArray(),
         		numVariables);
         for (int i = 0; i < result.size(); i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
@@ -462,7 +455,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         Value[] result = new Value[numVariables];
         for (int i = 0; i < result.length; i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            Value entry = UtilValue.newValueDouble(TypeReal.get(contextValue)
+            Value entry = UtilValue.newValueDouble(TypeReal.get()
             		, doubleVal);
             result[i] = entry;
         }
@@ -497,20 +490,8 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     }
 
 	@Override
-	public ContextValue getContextValue() {
-		return contextValue;
-	}
-
-	@Override
 	public String getVariableName(int number) {
 		// TODO
 		return null;
 	}
-
-    
-    private static Value newValue(Type type, String valueString) throws EPMCException {
-        Value value = type.newValue();
-        value.set(valueString);
-        return value;
-    }
 }

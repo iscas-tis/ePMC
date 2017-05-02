@@ -69,50 +69,48 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
 
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
-		addOperators(contextValue);
-		addTypes(contextValue);
+	public void process() throws EPMCException {
+		addOperators();
+		addTypes();
 	}
 
-	private static void addOperators(ContextValue context) {
-        assert context != null;
-        context.addOrSetOperator(OperatorAdd.class);
-        context.addOrSetOperator(OperatorAddInverse.class);
-        context.addOrSetOperator(OperatorAnd.class);
-        context.addOrSetOperator(OperatorCeil.class);
-        context.addOrSetOperator(OperatorDivide.class);
-        context.addOrSetOperator(OperatorDivideIgnoreZero.class);
-        context.addOrSetOperator(OperatorEq.class);
-        context.addOrSetOperator(OperatorFloor.class);
-        context.addOrSetOperator(OperatorGe.class);
-        context.addOrSetOperator(OperatorGt.class);
-        context.addOrSetOperator(OperatorId.class);
-        context.addOrSetOperator(OperatorIff.class);
-        context.addOrSetOperator(OperatorImplies.class);
-        context.addOrSetOperator(OperatorIte.class);
-        context.addOrSetOperator(OperatorLe.class);
-        context.addOrSetOperator(OperatorLog.class);
-        context.addOrSetOperator(OperatorLt.class);
-        context.addOrSetOperator(OperatorMax.class);
-        context.addOrSetOperator(OperatorMin.class);
-        context.addOrSetOperator(OperatorMod.class);
-        context.addOrSetOperator(OperatorMultiply.class);
-        context.addOrSetOperator(OperatorMultiplyInverse.class);
-        context.addOrSetOperator(OperatorNe.class);
-        context.addOrSetOperator(OperatorNot.class);
-        context.addOrSetOperator(OperatorOr.class);
-        context.addOrSetOperator(OperatorPow.class);
-        context.addOrSetOperator(OperatorSubtract.class);
+	private static void addOperators() {
+        ContextValue.get().addOrSetOperator(OperatorAdd.class);
+        ContextValue.get().addOrSetOperator(OperatorAddInverse.class);
+        ContextValue.get().addOrSetOperator(OperatorAnd.class);
+        ContextValue.get().addOrSetOperator(OperatorCeil.class);
+        ContextValue.get().addOrSetOperator(OperatorDivide.class);
+        ContextValue.get().addOrSetOperator(OperatorDivideIgnoreZero.class);
+        ContextValue.get().addOrSetOperator(OperatorEq.class);
+        ContextValue.get().addOrSetOperator(OperatorFloor.class);
+        ContextValue.get().addOrSetOperator(OperatorGe.class);
+        ContextValue.get().addOrSetOperator(OperatorGt.class);
+        ContextValue.get().addOrSetOperator(OperatorId.class);
+        ContextValue.get().addOrSetOperator(OperatorIff.class);
+        ContextValue.get().addOrSetOperator(OperatorImplies.class);
+        ContextValue.get().addOrSetOperator(OperatorIte.class);
+        ContextValue.get().addOrSetOperator(OperatorLe.class);
+        ContextValue.get().addOrSetOperator(OperatorLog.class);
+        ContextValue.get().addOrSetOperator(OperatorLt.class);
+        ContextValue.get().addOrSetOperator(OperatorMax.class);
+        ContextValue.get().addOrSetOperator(OperatorMin.class);
+        ContextValue.get().addOrSetOperator(OperatorMod.class);
+        ContextValue.get().addOrSetOperator(OperatorMultiply.class);
+        ContextValue.get().addOrSetOperator(OperatorMultiplyInverse.class);
+        ContextValue.get().addOrSetOperator(OperatorNe.class);
+        ContextValue.get().addOrSetOperator(OperatorNot.class);
+        ContextValue.get().addOrSetOperator(OperatorOr.class);
+        ContextValue.get().addOrSetOperator(OperatorPow.class);
+        ContextValue.get().addOrSetOperator(OperatorSubtract.class);
     }
 
-    private static void addTypes(ContextValue context) {
-    	assert context != null;
-    	TypeWeight.set(new TypeDouble(context, null, null));
-    	TypeWeightTransition.set(new TypeDouble(context, null, null));
-    	TypeReal.set(new TypeDouble(context, null, null));
-    	TypeInterval.set(new TypeInterval(context));
-    	TypeBoolean.set(new TypeBoolean(context));
-    	TypeUnknown.set(new TypeUnknown(context));
-    	TypeInteger.set(new TypeInteger(context));
+    private static void addTypes() {
+    	TypeWeight.set(new TypeDouble(null, null));
+    	TypeWeightTransition.set(new TypeDouble(null, null));
+    	TypeReal.set(new TypeDouble(null, null));
+    	TypeInterval.set(new TypeInterval());
+    	TypeBoolean.set(new TypeBoolean());
+    	TypeUnknown.set(new TypeUnknown());
+    	TypeInteger.set(new TypeInteger());
 	}
 }

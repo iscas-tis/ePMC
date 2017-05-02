@@ -40,11 +40,6 @@ import epmc.value.ValueContentIntArray;
 final class NodePropertyExplorerNode implements NodeProperty {
     private final class TypeExplorerNode implements Type {
         @Override
-        public ContextValue getContext() {
-            return NodePropertyExplorerNode.this.graph.getContextValue();
-        }
-
-        @Override
         public Type clone() {
             TypeExplorerNode clone = new TypeExplorerNode();
             return clone;
@@ -163,11 +158,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
 
 		@Override
-		public ContextValue getContext() {
-			return entryType.getContext();
-		}
-
-		@Override
 		public Type getEntryType() {
 			return entryType;
 		}
@@ -191,7 +181,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
 		
 		@Override
 	    public TypeArray getTypeArray() {
-	        return getContext().makeUnique(new TypeArrayGeneric(this));
+	        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
 	    }
 
 	    @Override

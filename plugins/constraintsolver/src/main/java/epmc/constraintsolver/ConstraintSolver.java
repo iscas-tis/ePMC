@@ -48,10 +48,6 @@ public interface ConstraintSolver extends Closeable {
 	
 	void requireFeature(Feature feature);
 
-	void setContextValue(ContextValue contextValue);
-	
-	ContextValue getContextValue();
-	
 	boolean canHandle();
 
 	void build() throws EPMCException;
@@ -77,13 +73,12 @@ public interface ConstraintSolver extends Closeable {
     /* default methods */
     
 	default Options getOptions() {
-		return getContextValue().getOptions();
+		return ContextValue.get().getOptions();
 	}
 
 	/*
     default int addVariable(ExpressionIdentifierStandard identifier) throws EPMCException {
         assert identifier != null;
-//        assert identifier.getContext() == getContextExpression();
         String name = identifier.getName();
         Object scope = identifier.getScope();
         if (scope != null) {

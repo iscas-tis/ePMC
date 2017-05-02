@@ -112,7 +112,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get(contextValue).getZero());
+                return valueToNumber(TypeInteger.get().getZero());
             }
         }
     }
@@ -129,7 +129,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get(contextValue).getZero());
+                return valueToNumber(TypeInteger.get().getZero());
             }
         }
     }
@@ -147,7 +147,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get(contextValue).getZero());
+                return valueToNumber(TypeInteger.get().getZero());
             }
         }
     }
@@ -208,13 +208,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
      * @author Ernst Moritz Hahn
      */
     public final class DdValueTable extends Structure {
-        public long zero = valueToNumber(TypeInteger.get(contextValue).getZero());
-        public long one = valueToNumber(TypeInteger.get(contextValue).getOne());
-        public long posInf = valueToNumber(TypeReal.get(contextValue).getPosInf());
-        public long negInf = valueToNumber(TypeReal.get(contextValue).getNegInf());
-        public long two = valueToNumber(UtilValue.newValue(TypeInteger.get(contextValue), 2));
-        public long falseValue = valueToNumber(TypeBoolean.get(contextValue).getFalse());
-        public long trueValue = valueToNumber(TypeBoolean.get(contextValue).getTrue());
+        public long zero = valueToNumber(TypeInteger.get().getZero());
+        public long one = valueToNumber(TypeInteger.get().getOne());
+        public long posInf = valueToNumber(TypeReal.get().getPosInf());
+        public long negInf = valueToNumber(TypeReal.get().getNegInf());
+        public long two = valueToNumber(UtilValue.newValue(TypeInteger.get(), 2));
+        public long falseValue = valueToNumber(TypeBoolean.get().getFalse());
+        public long trueValue = valueToNumber(TypeBoolean.get().getTrue());
 
         @Override
         protected List<String> getFieldOrder() {
@@ -420,7 +420,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        ContextValue contextValue = contextDD.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         this.contextValue = contextValue;

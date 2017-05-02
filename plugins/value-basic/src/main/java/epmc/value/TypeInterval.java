@@ -37,27 +37,23 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
 		}
 	}
 	
-    private final ContextValue context;
     private final ValueInterval one;
     private final ValueInterval zero;
     private final ValueInterval posInf;
     private final ValueInterval negInf;
 
-    public static TypeInterval get(ContextValue context) {
-        assert context != null;
-        return context.getType(TypeInterval.class);
+    public static TypeInterval get() {
+        return ContextValue.get().getType(TypeInterval.class);
     }
     
     public static void set(TypeInterval type) {
         assert type != null;
-        ContextValue context = type.getContext();
+        ContextValue context = ContextValue.get();
         context.setType(TypeInterval.class, context.makeUnique(type));
     }
     
-    public TypeInterval(ContextValue context) {
-        assert context != null;
-        this.context = context;
-        TypeReal typeReal = TypeReal.get(context);
+    public TypeInterval() {
+        TypeReal typeReal = TypeReal.get();
         one = new ValueInterval(this, typeReal.getOne(), typeReal.getOne());
         zero = new ValueInterval(this, typeReal.getZero(), typeReal.getZero());
         posInf = new ValueInterval(this, typeReal.getPosInf(), typeReal.getPosInf());
@@ -87,8 +83,6 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     public ValueInterval newValue(Value lower, Value upper) {
         assert lower != null;
         assert upper != null;
-        assert lower.getType().getContext() == getContext();
-        assert upper.getType().getContext() == getContext();
         assert ValueReal.isReal(lower) || ValueInteger.isInteger(lower);
         assert ValueReal.isReal(upper) || ValueInteger.isInteger(upper);
         ValueInterval result = newValue();
@@ -105,20 +99,12 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     }
     
     @Override
-    public ContextValue getContext() {
-        return context;
-    }
-    
-    @Override
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
             return false;
         }
         Type other = (Type) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -143,7 +129,7 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     }
     
     public TypeReal getEntryType() {
-        return TypeReal.get(getContext());
+        return TypeReal.get();
     }
     
     public ValueInterval getPosInf() {
@@ -152,7 +138,7 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     
     @Override
     public TypeArrayInterval getTypeArray() {
-        return context.makeUnique(new TypeArrayInterval(this));
+        return ContextValue.get().makeUnique(new TypeArrayInterval(this));
     }
 
 	@Override

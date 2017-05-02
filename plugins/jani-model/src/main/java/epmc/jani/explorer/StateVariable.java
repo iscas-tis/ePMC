@@ -4,7 +4,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeNumBitsKnown;
 import epmc.value.Value;
@@ -94,11 +93,6 @@ public final class StateVariable {
 				@Override
 				public Type getType(Expression expression) throws EPMCException {
 					return null;
-				}
-			
-				@Override
-				public ContextValue getContextValue() {
-					return type.getContext();
 				}
 			});
 		} else {

@@ -36,7 +36,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -186,10 +185,5 @@ public final class Automata implements JANINode, Map<String,Automaton>, Iterable
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return model.getContextValue();
 	}
 }

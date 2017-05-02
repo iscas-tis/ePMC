@@ -377,7 +377,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     /** find all the accepted BSCCs*/
     private DD checkProperty(Expression property) throws EPMCException {
         // TODO Auto-generated method stub
-        Expression propNorm = UtilLTL.getNormForm(getContextValue(), property, stateLabels);
+        Expression propNorm = UtilLTL.getNormForm(ContextValue.get(), property, stateLabels);
         Set<Set<Expr>> sets = flatten(propNorm,stateLabels);
         DD acSCCs = contextDD.newConstant(false);
         int numSCCs = 0;
@@ -509,7 +509,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
-        Options options = modelChecker.getModel().getContextValue().getOptions();
+        Options options = ContextValue.get().getOptions();
         this.log = options.get(OptionsMessages.LOG);
         this.skipTransient = options.getBoolean(OptionsLTLFairness.LTL_FAIRNESS_SCC_SKIP_TRANSIENT);
         this.contextDD = modelGraph.getContextDD();
@@ -530,7 +530,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(contextDD.getContextValue());
+            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
             result = result.applyWith(op, compare);
         }
         return result;
@@ -588,10 +588,6 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     	return Collections.unmodifiableSet(required);
     }
 
-    private ContextValue getContextValue() {
-    	return contextDD.getContextValue();
-    }
-    
     @Override
     public String getIdentifier() {
         return IDENTIFIER;

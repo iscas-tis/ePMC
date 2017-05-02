@@ -62,7 +62,7 @@ final class PrismParser {
 
 	public void setModel(ModelPRISM model) {
 		this.model = model;
-		this.contextVal = model.getContextValue();
+		this.contextVal = ContextValue.get();
 	}
 
 	private void privSyntaxCheckModel() throws EPMCException, ParseException {
@@ -128,7 +128,6 @@ final class PrismParser {
 		  ModelPRISM result;
 		  if (this.model == null) {
 			result = new ModelPRISM();
-		  result.setContext(contextVal);
 	      } else {
 	        result = this.model;
 	      }
@@ -153,7 +152,7 @@ final class PrismParser {
 
     private ValueInteger newValueInteger(String string) throws EPMCException {
       assert string != null;
-      return UtilValue.newValue(TypeInteger.get(contextVal), string);
+      return UtilValue.newValue(TypeInteger.get(), string);
    }
 
     private static Positional newPositional(long line, long column) {
@@ -476,20 +475,16 @@ private void parseConstant(Formulas formulae) throws EPMCException :
 	(
 		(
 			<CONSTANT>
-			{ type = new JANITypeInt();
-			type.setContextValue(contextVal); }
+			{ type = new JANITypeInt(); }
 			(
 				<INT>
-				{ type = new JANITypeInt();
-				type.setContextValue(contextVal); }
+				{ type = new JANITypeInt(); }
 			|
 				<DOUBLE>
-				{ type = new JANITypeReal();
-				type.setContextValue(contextVal); }
+				{ type = new JANITypeReal(); }
 			|
 				<BOOL>
-				{ type = new JANITypeBool();
-				type.setContextValue(contextVal);	} 
+				{ type = new JANITypeBool(); } 
 			)? //if missing, it corresponds to CONST INT, so covered by the initial assignment...
 		| // equivalent to CONSTANT DOUBLE
 			(
@@ -497,8 +492,7 @@ private void parseConstant(Formulas formulae) throws EPMCException :
 			| 
 				<PROB> 
 			)
-			{ type = new JANITypeReal();
-			type.setContextValue(contextVal); } 
+			{ type = new JANITypeReal(); } 
 		)
 		{ idt = getToken(1); }
 		id = parseIdentifier()
@@ -767,8 +761,7 @@ private JANIType parseVariable() throws EPMCException :
 {
 	(
 		<BOOL> 
-		{ type = new JANITypeBool();
-		type.setContextValue(contextVal); }
+		{ type = new JANITypeBool(); }
 //	|
 //		<INT> 
 //		{ type = VariableType.getInteger(); }
@@ -779,14 +772,12 @@ private JANIType parseVariable() throws EPMCException :
 		high = parseExpBrack()
 		<NESTING_BRACKET_RBRACKET>
 		{ JANITypeBounded typeBounded = new JANITypeBounded();
-		typeBounded.setContextValue(contextVal);
 		typeBounded.setLowerBound(low);
 		typeBounded.setUpperBound(high);
 		type = typeBounded; }
 	|
 		<CLOCK> 
-		{ type = new JANITypeClock();
-		type.setContextValue(contextVal); }
+		{ type = new JANITypeClock(); }
 	)
 	{ return type; }
 }

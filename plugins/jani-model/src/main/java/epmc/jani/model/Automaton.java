@@ -156,7 +156,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 	public Expression getInitialStatesExpressionOrTrue() throws EPMCException {
 		Expression initial;
 		if (restrictInitial == null) {
-			initial = ExpressionLiteral.getTrue(getContextValue());
+			initial = ExpressionLiteral.getTrue(ContextValue.get());
 		} else {
 			initial = restrictInitial.getExp();
 		}
@@ -166,10 +166,10 @@ public final class Automaton implements JANINode, ExpressionToType {
 				continue;
 			}
 			Expression varInit = UtilExpressionStandard.opEq(
-					getContextValue(),
+					ContextValue.get(),
 					variable.getIdentifier(),
 					varInitValue);
-			initial = UtilExpressionStandard.opAnd(getContextValue(), initial, varInit);
+			initial = UtilExpressionStandard.opAnd(ContextValue.get(), initial, varInit);
 		}
 		return initial;
 	}
@@ -312,9 +312,4 @@ public final class Automaton implements JANINode, ExpressionToType {
 		}
 		return null;
 	}	
-	
-	@Override
-	public ContextValue getContextValue() {
-		return model.getContextValue();
-	}
 }

@@ -24,7 +24,6 @@ import java.io.Closeable;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -57,7 +56,7 @@ public interface Automaton extends Closeable {
         }
         
         default Builder setExpression(ContextValue contextValue, Expression expression, Expression[] expressions) throws EPMCException {
-            ValueBoolean negate = TypeBoolean.get(contextValue).newValue(false);
+            ValueBoolean negate = TypeBoolean.get().newValue(false);
             Buechi buechi = UtilAutomaton.newBuechi(expression, expressions, true, negate);
             setBuechi(buechi);
             return this;
@@ -119,12 +118,6 @@ public interface Automaton extends Closeable {
         assert successorNumber >= 0;
         assert successorNumber < 1;
         return getSuccessorLabel();
-    }
-    
-    ContextValue getContextValue();
-    
-    default Options getOptions() {
-    	return getContextValue().getOptions();
     }
     
     @Override

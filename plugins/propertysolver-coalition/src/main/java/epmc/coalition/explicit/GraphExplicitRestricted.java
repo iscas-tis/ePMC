@@ -52,7 +52,7 @@ final class GraphExplicitRestricted implements GraphExplicit {
     		int succ = restriction.nextSetBit(maxNumSuccessors * node);
     		substitute[node] = succ % maxNumSuccessors;
     	}
-    	properties = new GraphExplicitProperties(this, original.getContextValue());
+    	properties = new GraphExplicitProperties(this, ContextValue.get());
     	for (Object property : original.getGraphProperties()) {
     		properties.registerGraphProperty(property, original.getGraphProperty(property));
     	}
@@ -62,11 +62,6 @@ final class GraphExplicitRestricted implements GraphExplicit {
     	for (Object property : original.getEdgeProperties()) {
     		properties.registerEdgeProperty(property, new EdgePropertyRestricted(this, original.getEdgeProperty(property)));
     	}
-	}
-	
-	@Override
-	public ContextValue getContextValue() {
-		return original.getContextValue();
 	}
 
 	@Override

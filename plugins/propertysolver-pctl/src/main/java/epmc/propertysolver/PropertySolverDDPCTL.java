@@ -107,20 +107,20 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
             Expression left = pathTemporal.getOperand1();
             Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue(forStates.getContextValue());
+            Expression left = ExpressionLiteral.getTrue(ContextValue.get());
             Expression right = pathTemporal.getOperand1();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue(forStates.getContextValue());
+            Expression left = ExpressionLiteral.getTrue(ContextValue.get());
             Expression right = not(pathTemporal.getOperand1());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             min = !min;
             negate = true;
         } else {
@@ -143,7 +143,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     private DD solveUntil(StateSet forStates) throws EPMCException {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
-        TimeBound timeBound = innerTemporal.getTimeBound(getContextValue());
+        TimeBound timeBound = innerTemporal.getTimeBound(ContextValue.get());
         Expression leftExpr = innerTemporal.getOperand1();
         Expression rightExpr = innerTemporal.getOperand2();
         DD leftDD = expressionToDD.translate(leftExpr);
@@ -184,7 +184,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             throws EPMCException {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
-        TimeBound timeBound = innerTemporal.getTimeBound(getContextValue());
+        TimeBound timeBound = innerTemporal.getTimeBound(ContextValue.get());
         List<DD> sinks = new ArrayList<>();
         failDD = failDD.orWith(nodeSpace.not());
         sinks.add(failDD);
@@ -211,13 +211,13 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 targetS.set(state, trans);
             }
         }
-        ValueAlgebra leftValue = timeBound.getLeftValue(getContextValue());
-        ValueAlgebra rightValue = timeBound.getRightValue(getContextValue());
+        ValueAlgebra leftValue = timeBound.getLeftValue(ContextValue.get());
+        ValueAlgebra rightValue = timeBound.getRightValue(ContextValue.get());
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
         if (timeBound.isRightBounded()) {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 Value unifRate = converter.getUnifRate();
-                ValueReal rate = TypeReal.get(getContextDD().getContextValue()).newValue();
+                ValueReal rate = TypeReal.get().newValue();
                 rate.subtract(rightValue, leftValue);
                 rate.multiply(rate, unifRate);
                 assert !rate.isPosInf();
@@ -230,11 +230,11 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt(getContextValue());
+                int leftBound = timeBound.getLeftInt(ContextValue.get());
                 if (timeBound.isLeftOpen()) {
                     leftBound++;
                 }
-                int rightBound = timeBound.getRightInt(getContextValue());
+                int rightBound = timeBound.getRightInt(ContextValue.get());
                 if (timeBound.isRightOpen()) {
                     rightBound--;
                 }
@@ -242,7 +242,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 objective.setGraph(graph);
                 objective.setTargets(targetS);
                 objective.setMin(min);
-                Value time = UtilValue.newValue(TypeInteger.get(getContextDD().getContextValue()), rightBound - leftBound);
+                Value time = UtilValue.newValue(TypeInteger.get(), rightBound - leftBound);
                 objective.setTime(time);
                 configuration.setObjective(objective);
                 configuration.solve();
@@ -300,9 +300,9 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             graph = converter.buildGraph();
             values = ValueArrayAlgebra.asArrayAlgebra(converter.ddToValueArray(result));
             if (SemanticsContinuousTime.isContinuousTime(type)) {
-                ValueReal rate = TypeReal.get(getContextDD().getContextValue()).newValue();
+                ValueReal rate = TypeReal.get().newValue();
                 Value unifRate = converter.getUnifRate();
-                rate.multiply(timeBound.getLeftValue(getContextValue()), unifRate);
+                rate.multiply(timeBound.getLeftValue(ContextValue.get()), unifRate);
                 GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
                 objective.setGraph(graph);
                 objective.setMin(min);
@@ -312,7 +312,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt(getContextValue());
+                int leftBound = timeBound.getLeftInt(ContextValue.get());
                 if (timeBound.isLeftOpen()) {
                     leftBound++;
                 }
@@ -320,7 +320,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 objective.setGraph(graph);
                 objective.setValues(values);
                 objective.setMin(min);
-                Value lb = UtilValue.newValue(TypeInteger.get(getContextDD().getContextValue()), leftBound);
+                Value lb = UtilValue.newValue(TypeInteger.get(), leftBound);
                 objective.setTime(lb);
                 configuration.setObjective(objective);
                 configuration.solve();
@@ -340,9 +340,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     private DD checkUntilQualitative(DD targetDD, DD failDD)
             throws EPMCException {
         DD nodeSpace = modelGraph.getNodeSpace();
-        ContextValue contextValue = getContextDD().getContextValue();
-        Value oneHalf = UtilValue.newValue(TypeReal.get(contextValue), "1/2");
-        Value zero = TypeReal.get(contextValue).getZero();
+        Value oneHalf = UtilValue.newValue(TypeReal.get(), "1/2");
+        Value zero = TypeReal.get().getZero();
         DD rest = nodeSpace.andNot(targetDD, failDD).toMTWith(oneHalf, zero);
         DD result = targetDD.toMT().addWith(rest);
         return result;
@@ -382,7 +381,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         boolean qualitative = false;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            op = propertyQuantifier.getCompareType().asExOpType(getContextDD().getContextValue());
+            op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
             if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
                     || ValueAlgebra.asAlgebra(compare.getSomeValue()).isOne())) {
                 qualitative = true;
@@ -456,12 +455,12 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(modelChecker.getModel().getContextValue());
+    	return ContextDD.get(ContextValue.get());
 	}
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(getContextValue().getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();
@@ -524,9 +523,5 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         assert bound != null;
         return new ExpressionTemporal
                 (op1, op2, type, bound, positional);
-    }
-    
-    private ContextValue getContextValue() {
-    	return modelChecker.getModel().getContextValue();
     }
 }

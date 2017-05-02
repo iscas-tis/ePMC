@@ -79,10 +79,10 @@ public final class AutomatonDDSubset implements AutomatonDD {
         DD init = computeInit();
         this.init = init.andWith(states.clone());
         DD stateStaySame = computeStateStaySame();
-        DD tr = computeTransition(buechi.getContextValue());
+        DD tr = computeTransition(ContextValue.get());
         trans = states.clone().andWith(tr).orWith(states.not().andWith(stateStaySame));
-        under = computeUnder(buechi.getContextValue(), contextDD);
-        over = computeOver(buechi.getContextValue(), contextDD);
+        under = computeUnder(ContextValue.get(), contextDD);
+        over = computeOver(ContextValue.get(), contextDD);
     }
 
     @Override

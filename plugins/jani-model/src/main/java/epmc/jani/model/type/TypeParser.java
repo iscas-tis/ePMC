@@ -51,7 +51,6 @@ public final class TypeParser implements JANINode {
 		for (Class<? extends JANIType> clazz : types.values()) {
 			JANIType tryType = Util.getInstance(clazz);
 			tryType.setModel(model);
-			tryType.setContextValue(model.getContextValue());
 			tryType = tryType.parseAsJANIType(value);
 			if (tryType != null) {
 				type = tryType;

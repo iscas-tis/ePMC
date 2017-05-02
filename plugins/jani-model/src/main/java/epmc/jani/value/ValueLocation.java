@@ -36,8 +36,6 @@ import epmc.value.ValueNumBitsKnown;
  * @author Ernst Moritz Hahn
  */
 public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, ValueBitStoreable {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
 	/** String used in the {@link #toString()} method. */
 	private final static String LOCATION = "location:";
 	

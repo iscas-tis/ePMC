@@ -178,7 +178,6 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
 		assert model != null;
 		assert validIdentifiers != null;
 		return new ExpressionQuantifier.Builder()
-				.setContext(model.getContextValue())
 				.setCmpType(CmpType.IS)
 				.setDirType(dirType)
 				.setQuantified(exp.getExpression())

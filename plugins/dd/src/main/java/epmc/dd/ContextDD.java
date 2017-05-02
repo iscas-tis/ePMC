@@ -245,7 +245,6 @@ public final class ContextDD implements Closeable {
             throws EPMCException {
         assert name != null;
         assert type != null;
-        assert type.getContext() == contextValue;
         assert copies > 0;
         totalTime.start();
         VariableDD variable = new VariableDDImpl(this, copies, type, name);
@@ -264,7 +263,6 @@ public final class ContextDD implements Closeable {
             throws EPMCException {
         assert name != null;
         assert type != null;
-        assert type.getContext() == contextValue;
         assert copies > 0;
         assert ddVariables != null;
         assert ddVariables.size() == copies;
@@ -284,7 +282,7 @@ public final class ContextDD implements Closeable {
         assert name != null;
         assert copies > 0;
         totalTime.start();
-        VariableDD result = newVariable(name, TypeBoolean.get(contextValue), copies);
+        VariableDD result = newVariable(name, TypeBoolean.get(), copies);
         totalTime.stop();
         return result;
     }
@@ -295,17 +293,12 @@ public final class ContextDD implements Closeable {
         assert copies > 0;
         assert lower <= upper;
         totalTime.start();
-        Type type = TypeInteger.get(contextValue, lower, upper);
+        Type type = TypeInteger.get(lower, upper);
         VariableDD result = newVariable(name, type, copies);
         totalTime.stop();
         return result;
     }
     
-    public ContextValue getContextValue() {
-        assert alive;
-        return contextValue;
-    }
-
     public void setVariableName(int number, String name) {
         assert alive;
         assert number >= 0;
@@ -513,7 +506,6 @@ public final class ContextDD implements Closeable {
     public DD newConstant(Value value) throws EPMCException {
         assert alive();
         assert value != null;
-        assert value.getType().getContext() == contextValue;
         totalTime.start();
         DD result;
         if (ValueBoolean.isBoolean(value)) {
@@ -529,7 +521,7 @@ public final class ContextDD implements Closeable {
     public DD newConstant(int value) throws EPMCException {
         assert alive();
         totalTime.start();
-        DD result = newConstant(UtilValue.<ValueInteger,TypeInteger>newValue(TypeInteger.get(contextValue), value));
+        DD result = newConstant(UtilValue.<ValueInteger,TypeInteger>newValue(TypeInteger.get(), value));
         totalTime.stop();
         return result;
     }
@@ -538,7 +530,7 @@ public final class ContextDD implements Closeable {
     public final DD newConstant(boolean value) throws EPMCException {
         assert alive();
         totalTime.start();
-        DD result = newConstant(TypeBoolean.get(contextValue).newValue(value));
+        DD result = newConstant(TypeBoolean.get().newValue(value));
         totalTime.stop();
         return result;
     }
@@ -547,7 +539,7 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert constant != null;
         totalTime.start();
-        TypeEnum typeEnum = TypeEnum.get(contextValue, constant.getDeclaringClass());
+        TypeEnum typeEnum = TypeEnum.get(constant.getDeclaringClass());
         DD result = newConstant(typeEnum.newValue(constant));
         totalTime.stop();
         return result;
@@ -1367,8 +1359,6 @@ public final class ContextDD implements Closeable {
         assert TypeBoolean.isBoolean(dd.getType());
         assert forTrue != null;
         assert forFalse != null;
-        assert contextValue == forTrue.getType().getContext();
-        assert contextValue == forFalse.getType().getContext();        
         totalTime.start();
         DD one = newConstant(forTrue);
         DD zero = newConstant(forFalse);
@@ -1382,8 +1372,8 @@ public final class ContextDD implements Closeable {
     
     public DD toMT(DD dd, int forTrue, int forFalse) throws EPMCException {
         assert checkDD();
-        Value forTrueValue = UtilValue.newValue(TypeInteger.get(contextValue), forTrue);
-        Value forFalseValue = UtilValue.newValue(TypeInteger.get(contextValue), forFalse);
+        Value forTrueValue = UtilValue.newValue(TypeInteger.get(), forTrue);
+        Value forFalseValue = UtilValue.newValue(TypeInteger.get(), forFalse);
         assert checkDD();
         return toMT(dd, forTrueValue, forFalseValue);
     }
@@ -1666,7 +1656,7 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert assertValidDD(dd);
         assert assertOperatorCompatible(contextValue.getOperator(OperatorDivide.IDENTIFIER), dd.getType(),
-                TypeInteger.get(contextValue));
+                TypeInteger.get());
         totalTime.start();
         DD divBy = newConstant(intValue);
         DD result = apply(contextValue.getOperator(OperatorDivide.IDENTIFIER), dd, divBy);
@@ -2615,6 +2605,6 @@ public final class ContextDD implements Closeable {
     }
     
     public Options getOptions() {
-        return getContextValue().getOptions();
+        return ContextValue.get().getOptions();
     }
 }

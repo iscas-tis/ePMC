@@ -40,6 +40,7 @@ public class LTLTest {
         Options options = UtilOptionsEPMC.newOptions();
         RawProperties props = LTLHelper.readProperties(options, file);
         ContextValue context = new ContextValue(options);
+        ContextValue.set(context);
         options.set(TestHelper.CONTEXT_VALUE, context);
         
 //        PropertiesImpl pList = new PropertiesImpl(context);

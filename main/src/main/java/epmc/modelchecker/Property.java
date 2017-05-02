@@ -25,7 +25,6 @@ import java.io.OutputStream;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -40,32 +39,12 @@ public interface Property {
      * @return unique identifier of property type
      */
     String getIdentifier();
-    
-    /**
-     * Sets the expression context used for this property type.
-     * This method should be used before parsing the property using
-     * the {@link #read(InputStream...) read} method. This is necessary because
-     * all the expressions used in the same model checking process need to be
-     * created using the same context. The same holds for the values and
-     * decision diagrams. The context given must not be {@code null}.
-     * 
-     * @param context value context to be used for reading the model
-     */
-    void setContext(ContextValue context);
-    
-    /**
-     * Get the value previously set by {@link #setContext(ContextExpression)}.
-     * 
-     * @return context previously set
-     */
-    ContextValue getContext();
-    
+        
     /**
      * Parse a property in the syntax of this property type.
      * An exception might be thrown if the input string is not a valid
-     * expression in this format. Before calling this method, the expression
-     * context must have been set using {@link #setContext(ContextExpression)
-     * setContext}. The input parameter must not be <code>null</code>.
+     * expression in this format.
+     * The input parameter must not be <code>null</code>.
      * 
      * @param expression expression to be parsed.
      * @return parsed expression
@@ -76,9 +55,8 @@ public interface Property {
     /**
      * Parse a type in the syntax of this property type.
      * An exception might be thrown if the input string is not a valid
-     * type in this format. Before calling this method, the expression
-     * context must have been set using {@link #setContext(ContextExpression)
-     * setContext}. The input parameter must not be {@code null}.
+     * type in this format.
+     * The input parameter must not be {@code null}.
      * 
      * @param expression expression to be parsed.
      * @return parsed expression

@@ -312,11 +312,6 @@ public final class AutomatonBreakpoint implements Automaton {
     GraphExplicit getGraph() {
         return automaton;
     }
-
-    @Override
-    public ContextValue getContextValue() {
-    	return automaton.getContextValue();
-    }
     
     @Override
 	public Buechi getBuechi() {

@@ -45,7 +45,6 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeObject;
 import epmc.value.TypeWeight;
@@ -188,7 +187,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		}
 		
 		BitSet zeroNodes = UtilBitSet.newBitSetUnbounded();
-		Value zero = TypeWeight.get(game.getContextValue()).getZero();
+		Value zero = TypeWeight.get().getZero();
 		Value entry = newValueWeight();
 		for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
 			quantiRes.getProbabilities().get(entry, subNode);
@@ -291,8 +290,8 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_IMPROVE_START);
 		assert strategies != null;
 		int numNodes = game.getNumNodes();
-		Value value = TypeWeight.get(getContextValue()).newValue();
-		ValueAlgebra succValue = TypeWeight.get(getContextValue()).newValue();
+		Value value = TypeWeight.get().newValue();
+		ValueAlgebra succValue = TypeWeight.get().newValue();
 		NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
 		boolean changed = true;
 		ValueArrayAlgebra values = null;
@@ -425,7 +424,6 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 
     	NodeProperty oldLabelProp = induced.getNodeProperty(CommonProperties.AUTOMATON_LABEL);    	
     	Type typeLabel = new TypeObject.Builder()
-                .setContext(getContextValue())
                 .setClazz(SettableParityLabel.class)
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build();
@@ -518,15 +516,6 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     	return game.getOptions();
     }
 
-	/**
-	 * Obtain value context used.
-	 * 
-	 * @return value context used.
-	 */
-    private ContextValue getContextValue() {
-    	return game.getContextValue();
-    }
-    
     /**
      * Disable log output.
      * This method will only have an effect, if 
@@ -552,6 +541,6 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     }
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
+    	return TypeWeight.get().newValue();
     }
 }

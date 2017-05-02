@@ -29,7 +29,6 @@ import java.util.Set;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
@@ -214,11 +213,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
-//        ContextValue context = bounds.getType().getContext();
-//        bounds.set(0, 0);
-  //      System.out.println(bounds);
         int numAutomata = product.getNumAutomata();
-        DownClosure down = new DownClosure(getContextValue(), numAutomata);
+        DownClosure down = new DownClosure(ContextValue.get(), numAutomata);
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
@@ -329,9 +325,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 resultValues.set(entry, i);
             }
         } else {
-            resultValues = UtilValue.newArray(TypeBoolean.get(getContextValue()).getTypeArray(),
+            resultValues = UtilValue.newArray(TypeBoolean.get().getTypeArray(),
             		forStates.size());
-            ValueBoolean valueFeasible = TypeBoolean.get(getContextValue()).newValue();
+            ValueBoolean valueFeasible = TypeBoolean.get().newValue();
             valueFeasible.set(feasible);
             for (int i = 0; i < forStates.size(); i++) {
                 resultValues.set(valueFeasible, i);
@@ -341,19 +337,15 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	private Options getOptions() {
-		return getContextValue().getOptions();
+		return ContextValue.get().getOptions();
 	}
 	
-	private ContextValue getContextValue() {
-    	return modelChecker.getModel().getContextValue();
-    }
-    
     private ValueArrayAlgebra newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
+    	return TypeWeight.get().newValue();
     }
 }

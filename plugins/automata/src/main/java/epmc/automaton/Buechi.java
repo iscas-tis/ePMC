@@ -24,7 +24,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 // TODO complete documentation
@@ -53,10 +52,6 @@ public interface Buechi {
     
     
     /* default methods */
-    
-    default ContextValue getContextValue() {
-        return getGraph().getContextValue();
-    }
     
     default int getNumStates() {
         return getGraph().getNumNodes();

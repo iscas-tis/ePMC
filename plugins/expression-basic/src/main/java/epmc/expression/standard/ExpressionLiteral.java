@@ -183,7 +183,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      */
     public static ExpressionLiteral getPosInf(ContextValue context) {
         ExpressionLiteral posInfExpr = new Builder()
-                .setValue(TypeReal.get(context).getPosInf())
+                .setValue(TypeReal.get().getPosInf())
                 .build();
         return posInfExpr;
     }
@@ -195,7 +195,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      */
     public static Expression getOne(ContextValue context) {
         ExpressionLiteral oneExpr = new Builder()
-                .setValue(TypeInteger.get(context).getOne())
+                .setValue(TypeInteger.get().getOne())
                 .build();
         return oneExpr;
     }
@@ -207,7 +207,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      */
     public static ExpressionLiteral getZero(ContextValue context) {
         ExpressionLiteral zeroExpr = new Builder()
-                .setValue(TypeInteger.get(context).getZero())
+                .setValue(TypeInteger.get().getZero())
                 .build();
         return zeroExpr;
     }
@@ -219,7 +219,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      */
     public static ExpressionLiteral getTrue(ContextValue contextValue) {
         ExpressionLiteral trueExpr = new Builder()
-                .setValue(TypeBoolean.get(contextValue).getTrue())
+                .setValue(TypeBoolean.get().getTrue())
                 .build();
         return trueExpr;
     }
@@ -231,7 +231,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      */
     public static Expression getFalse(ContextValue contextValue) {
         ExpressionLiteral falseExpr = new Builder()
-                .setValue(TypeBoolean.get(contextValue).getFalse())
+                .setValue(TypeBoolean.get().getFalse())
                 .build();
         return falseExpr;
     }

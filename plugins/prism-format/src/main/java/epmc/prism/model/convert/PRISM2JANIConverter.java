@@ -112,13 +112,11 @@ import epmc.value.ValueBoolean;
  */
 public final class PRISM2JANIConverter {
 	private final static class ExpressionToTypeJANIConverter implements ExpressionToType {
-		private final ContextValue context;
 		private final Map<Expression,Type> typeMap;
 		
 		private ExpressionToTypeJANIConverter(ContextValue context, Variables variables) {
 			assert context != null;
 			assert variables != null;
-			this.context = context;
 			Map<Expression,Type> typeMap = new HashMap<>();
 			for (Variable variable : variables) {
 				try {
@@ -130,11 +128,6 @@ public final class PRISM2JANIConverter {
 			this.typeMap = Collections.unmodifiableMap(typeMap);
 		}
 		
-		@Override
-		public ContextValue getContextValue() {
-			return context;
-		}
-
 		@Override
 		public Type getType(Expression expression) throws EPMCException {
 			return typeMap.get(expression);
@@ -200,14 +193,13 @@ public final class PRISM2JANIConverter {
 	 * @throws EPMCException thrown in case of problems
 	 */
 	public ModelJANI convert() throws EPMCException {
-    	modelJANI.setContext(getContextValue());
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
     	modelJANI.setVersion(JANI_VERSION);
     	
     	convertExtensions();
 
 		Variables globalVariables = buildGlobalVariables();
-		this.expressionToType = new ExpressionToTypeJANIConverter(modelJANI.getContextValue(), globalVariables);
+		this.expressionToType = new ExpressionToTypeJANIConverter(ContextValue.get(), globalVariables);
     	modelJANI.setGlobalVariables(globalVariables);
     	modelJANI.setModelConstants(buildConstants());
     	Actions actions = computeActions();
@@ -269,7 +261,6 @@ public final class PRISM2JANIConverter {
 	}
 
 	private Constants buildConstants() {
-		ContextValue context = modelPRISM.getContextValue();
 		PropertiesImpl properties = modelPRISM.getPropertyList();
 		Set<String> prismConstants = properties.getConstants().keySet();
 		Constants janiConstants = new Constants();
@@ -293,7 +284,6 @@ public final class PRISM2JANIConverter {
 				}
 			}
 			type.setModel(modelJANI);
-			type.setContextValue(context);
 			Constant constant = new Constant();
 			constant.setModel(modelJANI);
 			constant.setName(name);
@@ -477,7 +467,7 @@ public final class PRISM2JANIConverter {
     		CmpType cmpType = expressionQuantifier.getCompareType();
 	        DirType dirType = expressionQuantifier.getDirType();
 	        Expression quantified = useQuantitativePropertiesOnly(expressionQuantifier.getQuantified());
-	        Operator operator = cmpType.asExOpType(getContextValue());
+	        Operator operator = cmpType.asExOpType(ContextValue.get());
         	if (dirType.equals(DirType.NONE)
         			&& SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
         		if (cmpType.equals(CmpType.GE) || cmpType.equals(CmpType.GT)) {
@@ -487,7 +477,6 @@ public final class PRISM2JANIConverter {
         		}
         	}
         	Expression qExp = new ExpressionQuantifier.Builder()
-					.setContext(getContextValue())
 					.setDirType(dirType)
 					.setCmpType(CmpType.IS)
 					.setQuantified(quantified)
@@ -604,7 +593,7 @@ public final class PRISM2JANIConverter {
 			Variables globalVariables) throws EPMCException {
 		Automaton automaton = new Automaton();
 		Rate rateOne = new Rate();
-		rateOne.setExp(ExpressionLiteral.getOne(modelPRISM.getContextValue()));
+		rateOne.setExp(ExpressionLiteral.getOne(ContextValue.get()));
 		rateOne.setModel(modelJANI);
 		
 		Edges edges = new Edges();
@@ -653,7 +642,7 @@ public final class PRISM2JANIConverter {
 					if (totalWeight == null) {
 						totalWeight = weight;
 					} else {
-						totalWeight = UtilExpressionStandard.opAdd(getContextValue(), totalWeight, weight);
+						totalWeight = UtilExpressionStandard.opAdd(ContextValue.get(), totalWeight, weight);
 					}
 				}
 				Rate rate = new Rate();
@@ -667,7 +656,7 @@ public final class PRISM2JANIConverter {
 				destination.setModel(modelJANI);
 				Expression probability = prism2jani(alternative.getWeight());
 				if (totalWeight != null) {
-					probability = UtilExpressionStandard.opDivide(getContextValue(), probability, totalWeight);
+					probability = UtilExpressionStandard.opDivide(ContextValue.get(), probability, totalWeight);
 				}
 				Probability probabilityJ = new Probability();
 				probabilityJ.setModel(modelJANI);
@@ -723,10 +712,10 @@ public final class PRISM2JANIConverter {
 		case OperatorAddInverse.IDENTIFIER: {
 			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
-					.setValue(TypeReal.get(getContextValue()).getZero())
+					.setValue(TypeReal.get().getZero())
 					.build();
 			return new ExpressionOperator.Builder()
-					.setOperator(getContextValue().getOperator(OperatorSubtract.IDENTIFIER))
+					.setOperator(ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER))
 					.setOperands(zero, operand)
 					.build();
 		}
@@ -743,11 +732,11 @@ public final class PRISM2JANIConverter {
 			if (allInteger) {
 				result = new ExpressionOperator.Builder()
 						.setOperands(newChildren)
-						.setOperator(getContextValue().getOperator(OperatorPow.IDENTIFIER))
+						.setOperator(ContextValue.get().getOperator(OperatorPow.IDENTIFIER))
 						.build();
 				result = new ExpressionOperator.Builder()
 						.setOperands(result)
-						.setOperator(getContextValue().getOperator(OperatorCeil.IDENTIFIER))
+						.setOperator(ContextValue.get().getOperator(OperatorCeil.IDENTIFIER))
 						.build();
 			} else {
 				result = expression.replaceChildren(newChildren);
@@ -768,15 +757,6 @@ public final class PRISM2JANIConverter {
 		return tauAction;
 	}
 	
-	/**
-	 * Get value context used.
-	 * 
-	 * @return value context used
-	 */
-	private ContextValue getContextValue() {
-		return modelPRISM.getContextValue();
-	}
-	
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -792,6 +772,6 @@ public final class PRISM2JANIConverter {
 	 * @return options used
 	 */
 	private Options getOptions() {
-		return modelPRISM.getContextValue().getOptions();
+		return ContextValue.get().getOptions();
 	}
 }

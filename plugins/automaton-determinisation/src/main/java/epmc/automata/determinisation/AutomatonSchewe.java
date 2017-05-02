@@ -46,7 +46,6 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayInt;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, AutomatonSafra {
@@ -477,11 +476,6 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         return buechi;
     }
 
-    @Override
-    public ContextValue getContextValue() {
-    	return buechi.getContextValue();
-    }
-    
     @Override
     public Expression[] getExpressions() {
         return expressions;

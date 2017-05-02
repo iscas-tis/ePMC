@@ -84,7 +84,6 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     
     public AutomatonMojmir(Expression formula, ExpressionsUnique expressionsUnique,
             boolean implicit, boolean simpleG) throws EPMCException {
-        this.contextExpression = formula.getContext();
         formula = UtilExpression.toNegationNormalForm(formula);
         this.languageMap = contextExpression.newMap();
         this.expressionsUnique = expressionsUnique;
@@ -446,7 +445,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = contextExpression.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
 //        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
 //        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");

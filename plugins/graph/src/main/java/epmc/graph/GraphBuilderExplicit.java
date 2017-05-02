@@ -143,14 +143,14 @@ public final class GraphBuilderExplicit {
         assert assertGraphProperties(inputGraph, derivedGraphProperties);
         assert assertNodeProperties(inputGraph, derivedNodeProperties);
         assert assertEdgeProperties(inputGraph, derivedEdgeProperties);
-        ContextValue contextValue = inputGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         processSinks(sinks);
         if (parts == null) {
             parts = prepareParts(inputGraph, reorder);
         }
         TIntList partsBegin = new TIntArrayList();
-        this.inputToOutputNodes = TypeInteger.get(contextValue).getTypeArray().newValue();
-        this.outputToInputNodes = TypeInteger.get(contextValue).getTypeArray().newValue();
+        this.inputToOutputNodes = TypeInteger.get().getTypeArray().newValue();
+        this.outputToInputNodes = TypeInteger.get().getTypeArray().newValue();
         prepareInputToOutputNodes(inputGraph, parts, sinks, inputToOutputNodes, outputToInputNodes, partsBegin);
         prepareOutputToInputNodes(inputGraph, parts, sinks, inputToOutputNodes, outputToInputNodes, partsBegin);
         this.outputGraph = prepareGraph(inputGraph, sinks, inputToOutputNodes, uniformise, graphBuilderMode);
@@ -212,7 +212,7 @@ public final class GraphBuilderExplicit {
         GraphExplicit outputGraph = null;
         Semantics semanticsType = inputGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(semanticsType)) {
-            BitSet sinks = computeSinks(inputGraph.getContextValue(), sinkList);
+            BitSet sinks = computeSinks(ContextValue.get(), sinkList);
             int numStates = 0;
             int numTotalOut = 0;
           for (int inputNode = 0; inputNode < inputToOutputNodes.size(); inputNode++) {
@@ -224,12 +224,12 @@ public final class GraphBuilderExplicit {
             }
             numStates += sinkList.size();
             numTotalOut += sinkList.size();
-            outputGraph = new GraphExplicitSparse(inputGraph.getContextValue(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalOut);
+            outputGraph = new GraphExplicitSparse(ContextValue.get(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalOut);
         } else {
             int numStates = 0;
             int numTotalNondet = 0;
             int numTotalProb = 0;
-            BitSet sinks = computeSinks(inputGraph.getContextValue(), sinkList);
+            BitSet sinks = computeSinks(ContextValue.get(), sinkList);
             NodeProperty stateProp = inputGraph.getNodeProperty(CommonProperties.STATE);
             assert stateProp != null;
             for (int inputState = 0; inputState < inputToOutputNodes.size(); inputState++) {
@@ -250,7 +250,7 @@ public final class GraphBuilderExplicit {
             numStates += sinkList.size();
             numTotalNondet += sinkList.size() * parts.size();
             numTotalProb += sinkList.size() * parts.size();
-            outputGraph = new GraphExplicitSparseAlternate(inputGraph.getContextValue(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalNondet, numTotalProb);
+            outputGraph = new GraphExplicitSparseAlternate(ContextValue.get(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalNondet, numTotalProb);
         }
         return outputGraph;
     }
@@ -336,7 +336,7 @@ public final class GraphBuilderExplicit {
             numProperties++;
         }
 
-        BitSet sinks = computeSinks(inputGraph.getContextValue(), sinksList);
+        BitSet sinks = computeSinks(ContextValue.get(), sinksList);
         int numOutputNodes = outputToInputNodes.size();
         NodeProperty stateProp = inputGraph.getNodeProperty(CommonProperties.STATE);
         int nextNondetNode = outputGraph.computeNumStates();
@@ -408,7 +408,7 @@ public final class GraphBuilderExplicit {
             outputProperties[numProperties] = outputGraph.getEdgeProperty(property);
             numProperties++;
         }
-        BitSet sinks = computeSinks(inputGraph.getContextValue(), sinksList);
+        BitSet sinks = computeSinks(ContextValue.get(), sinksList);
         int numOutputNodes = outputToInputNodes.size();
         for (int outputNode = 0; outputNode < numOutputNodes; outputNode++) {
             int inputNode = outputToInputNodes.getInt(outputNode);
@@ -450,10 +450,10 @@ public final class GraphBuilderExplicit {
             List<BitSet> sinksList,
             List<BitSet> parts, TIntList partsBegin,
             List<Object> edgeProperties) throws EPMCException {
-        BitSet sinks = computeSinks(inputGraph.getContextValue(), sinksList);
+        BitSet sinks = computeSinks(ContextValue.get(), sinksList);
         int numOutputNodes = outputToInputNodes.size();
-        ContextValue contextValue = inputGraph.getContextValue();
-        ValueArrayInteger numInEdges = UtilValue.newArray(TypeInteger.get(contextValue).getTypeArray(), numOutputNodes);
+        ContextValue contextValue = ContextValue.get();
+        ValueArrayInteger numInEdges = UtilValue.newArray(TypeInteger.get().getTypeArray(), numOutputNodes);
         for (int outputNode = 0; outputNode < numOutputNodes; outputNode++) {
             int inputNode = outputToInputNodes.getInt(outputNode);
             assert inputNode >= 0;

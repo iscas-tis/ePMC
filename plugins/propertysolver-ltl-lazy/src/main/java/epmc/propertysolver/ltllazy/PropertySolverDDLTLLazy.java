@@ -77,6 +77,7 @@ import epmc.propertysolver.ltllazy.automata.AutomatonDDBreakpoint;
 import epmc.propertysolver.ltllazy.automata.AutomatonDDSubset;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
@@ -115,7 +116,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     private StateMap solve(Expression property, StateSet forStates, boolean min)
             throws EPMCException {
         this.negate = min;
-        ValueBoolean negate = TypeBoolean.get(getContextDD().getContextValue())
+        ValueBoolean negate = TypeBoolean.get()
                 .newValue(this.negate);
         Buechi buechi = UtilAutomaton.newBuechi
                 (property, null, SemanticsNonDet.isNonDet(type), negate);
@@ -939,7 +940,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         }
         this.type = modelChecker.getModel().getSemantics();
         this.nonDet = SemanticsNonDet.isNonDet(this.type);
-        this.options = modelChecker.getModel().getContextValue().getOptions();
+        this.options = ContextValue.get().getOptions();
         this.log = this.options.get(OptionsMessages.LOG);
         this.skipTransient = options.getBoolean(OptionsLTLLazy.LTL_LAZY_SCC_SKIP_TRANSIENT);
         Expression quantifiedProp = propertyQuantifier.getQuantified();
@@ -958,7 +959,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(getContextDD().getContextValue());
+            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
             result = result.applyWith(op, compare);
         }
         return result;
@@ -976,7 +977,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         if (propertyQuantifier.getQuantified() instanceof ExpressionReward) {
             return false;
         }
-        if (!TypeReal.isReal(TypeWeight.get(modelChecker.getModel().getContextValue()))) {
+        if (!TypeReal.isReal(TypeWeight.get())) {
         	return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());
@@ -1019,6 +1020,6 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }    
     
     public ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(modelChecker.getModel().getContextValue());
+    	return ContextDD.get(ContextValue.get());
 	}
 }

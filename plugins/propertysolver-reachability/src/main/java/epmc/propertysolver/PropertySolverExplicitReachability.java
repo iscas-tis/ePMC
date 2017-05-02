@@ -86,7 +86,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
         }
         // no need to use contextExpression
         //this.contextExpression = modelChecker.getContextExpression();
-        this.contextValue = modelChecker.getModel().getContextValue();
+        this.contextValue = ContextValue.get();
     }
     
 	@Override
@@ -171,9 +171,9 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
     
     /** get results for states we are interested in */
     private StateMap prepareStateMap(ValueArrayAlgebra values) {
-    	TypeArray typeArray = TypeWeight.get(contextValue).getTypeArray();
+    	TypeArray typeArray = TypeWeight.get().getTypeArray();
     	ValueArray resultValues = UtilValue.newArray(typeArray, computeForStates.size());
-    	TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+    	TypeAlgebra typeWeight = TypeWeight.get();
         Value val = typeWeight.newValue();
         for (int i = 0; i < computeForStates.size(); i++) {
             values.get(val, i);

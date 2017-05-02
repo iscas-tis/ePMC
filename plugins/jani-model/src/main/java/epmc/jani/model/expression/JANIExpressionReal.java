@@ -106,7 +106,7 @@ public final class JANIExpressionReal implements JANIExpression {
 		assert initialized;
 		assert model != null;
 		return new ExpressionLiteral.Builder()
-				.setValue(UtilValue.newValue(TypeReal.get(model.getContextValue()), number))
+				.setValue(UtilValue.newValue(TypeReal.get(), number))
 				.build();
 	}
 

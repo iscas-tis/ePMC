@@ -21,7 +21,6 @@
 package epmc.jani.extensions.trigonometricfunctions;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
@@ -36,23 +35,10 @@ import epmc.value.ValueTrigonometric;
 public final class OperatorSin implements Operator {
 	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "sin";
-	/** Context of this operator. */
-	private ContextValue context;
 
 	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
-	}
-
-	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-	}
-
-	@Override
-	public ContextValue getContext() {
-		return context;
 	}
 
 	@Override

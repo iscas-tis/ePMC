@@ -26,7 +26,6 @@ import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueReal;
 
 /**
  * Operator representing the constant π (Pi).
@@ -45,17 +44,6 @@ public final class OperatorEuler implements Operator {
 	}
 
 	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-	}
-
-	@Override
-	public ContextValue getContext() {
-		return context;
-	}
-
-	@Override
 	public void apply(Value result, Value... operands) throws EPMCException {
 		assert result != null;
 		assert operands != null;
@@ -68,6 +56,6 @@ public final class OperatorEuler implements Operator {
 	public Type resultType(Type... types) {
 		assert types != null;
 		assert types.length == 0;
-		return TypeReal.get(context);
+		return TypeReal.get();
 	}
 }

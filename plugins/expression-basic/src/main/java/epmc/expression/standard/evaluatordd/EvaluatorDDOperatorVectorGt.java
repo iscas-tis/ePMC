@@ -38,8 +38,6 @@ public final class EvaluatorDDOperatorVectorGt implements EvaluatorDD {
     private Expression expression;
     private DD dd;
     private boolean closed;
-
-	private ContextValue context;
     
     @Override
     public String getIdentifier() {
@@ -58,12 +56,12 @@ public final class EvaluatorDDOperatorVectorGt implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(context, expression, OperatorGt.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(ContextValue.get(), expression, OperatorGt.IDENTIFIER, variables);
     }
 
     @Override
     public void build() throws EPMCException {
-        dd = UtilEvaluatorDD.applyVector(context, expression, variables, getContextDD()::twoCplGt);
+        dd = UtilEvaluatorDD.applyVector(ContextValue.get(), expression, variables, getContextDD()::twoCplGt);
     }
 
     @Override
@@ -83,11 +81,6 @@ public final class EvaluatorDDOperatorVectorGt implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(context);
+        return ContextDD.get(ContextValue.get());
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

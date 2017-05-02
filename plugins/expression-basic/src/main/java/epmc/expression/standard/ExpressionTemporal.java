@@ -289,7 +289,6 @@ public final class ExpressionTemporal implements Expression {
         Expression left = getChildren().get(getNumOps() + 2 * num);
         Expression right = getChildren().get(getNumOps() + 2 * num + 1);
         return new TimeBound.Builder()
-        		.setContext(context)
                 .setLeft(left)
                 .setLeftOpen(leftOpen.get(num))
                 .setRight(right)
@@ -361,7 +360,7 @@ public final class ExpressionTemporal implements Expression {
             Type opType = op.getType(expressionToType);
             ensure(opType == null || TypeReal.isReal(opType), ProblemsExpression.EXPR_INCONSISTENT, "", op);
         }
-        return TypeWeight.get(expressionToType.getContextValue());
+        return TypeWeight.get();
     }
     
     @Override
@@ -402,7 +401,6 @@ public final class ExpressionTemporal implements Expression {
                 builder.append(")");
             } else {
                 opIter = getOperands().iterator();
-                int timeBoundIndex = 0;
                 while (opIter.hasNext()) {
                     Expression child = opIter.next();
                     builder.append("(");
@@ -412,7 +410,6 @@ public final class ExpressionTemporal implements Expression {
                         builder.append(type);
                         //TODO
 //                        builder.append(getTimeBound(null, timeBoundIndex));
-                        timeBoundIndex++;
                     }
                 }
             }

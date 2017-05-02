@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 
 public final class TypeArrayInterval implements TypeArrayAlgebra {
@@ -40,11 +39,6 @@ public final class TypeArrayInterval implements TypeArrayAlgebra {
     TypeArray getTypeArrayReal() {
         return entryType.getEntryType().getTypeArray();
     }
-
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
 
 	@Override
 	public TypeInterval getEntryType() {

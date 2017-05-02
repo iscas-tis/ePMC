@@ -48,7 +48,7 @@ public final class UtilValue {
                 return null;
             }
             if (TypeInteger.isInteger(result)) {
-                result = TypeReal.get(result.getContext());
+                result = TypeReal.get();
             }
             return result;
         }
@@ -84,7 +84,7 @@ public final class UtilValue {
          * explicitly e.g. for Values which are contained in explorer nodes.
          * */
         if (TypeInteger.isIntegerWithBounds(upper)) {
-            return TypeInteger.get(types[0].getContext());
+            return TypeInteger.get();
         }
         return upper;
     }
@@ -96,7 +96,7 @@ public final class UtilValue {
                 return null;
             }
         }
-        Type result = TypeBoolean.get(operator.getContext());
+        Type result = TypeBoolean.get();
         return result;
     }
 
@@ -170,7 +170,6 @@ public final class UtilValue {
 	public static <T extends Type> T upper(T a, T b) {
     	assert a != null;
         assert b != null;
-        assert a.getContext() == b.getContext();
         T upper = null;
         if (TypeUnknown.isUnknown(a)) {
             upper = a;
@@ -181,18 +180,18 @@ public final class UtilValue {
             		TypeInteger.asInteger(b).getLowerInt());
             int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
             		TypeInteger.asInteger(b).getUpperInt());
-            upper = (T) new TypeInteger(a.getContext(), lowerBound, upperBound);
+            upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
             if (a.canImport(b)) {
                 upper = a;
             } else if (b.canImport(a)) {
                 upper = b;
             } else {
-                upper = (T) TypeUnknown.get(a.getContext());
+                upper = (T) TypeUnknown.get();
             }
         }
         if (upper != null) {
-            upper = a.getContext().makeUnique(upper);
+            upper = ContextValue.get().makeUnique(upper);
         }
         return upper;
     }

@@ -23,31 +23,21 @@ package epmc.value;
 // TODO check whether the type is indeed used, or should indeed be used
 
 public final class TypeUnknown implements Type {
-    public static TypeUnknown get(ContextValue context) {
-        assert context != null;
-        return context.getType(TypeUnknown.class);
+    public static TypeUnknown get() {
+        return ContextValue.get().getType(TypeUnknown.class);
     }
     
     public static void set(TypeUnknown type) {
         assert type != null;
-        ContextValue context = type.getContext();
+        ContextValue context = ContextValue.get();
         context.setType(TypeUnknown.class, context.makeUnique(type));
     }
 
     public static boolean isUnknown(Type type) {
         return type instanceof TypeUnknown;
     }
-    
-    private final ContextValue context;
 
-    public TypeUnknown(ContextValue context) {
-        assert context != null;
-        this.context = context;
-    }
-    
-    @Override
-    public ContextValue getContext() {
-        return context;
+    public TypeUnknown() {
     }
 
     @Override
@@ -57,9 +47,6 @@ public final class TypeUnknown implements Type {
             return false;
         }
         Type other = (Type) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }

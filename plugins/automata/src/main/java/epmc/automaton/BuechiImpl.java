@@ -116,7 +116,7 @@ public class BuechiImpl implements Buechi {
         this.expressions = expressions.clone();
         expressionTypes = new Type[expressions.length];
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-            expressionTypes[exprNr] = TypeBoolean.get(contextValue);
+            expressionTypes[exprNr] = TypeBoolean.get();
         }
 
         int totalSize = 0;

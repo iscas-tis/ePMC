@@ -128,7 +128,7 @@ public final class ExpressionToDD implements Closeable {
             
             if (type == null || TypeInteger.isInteger(type)) {
                 int digVal = 1;
-                ValueInteger value = TypeInteger.get(contextDD.getContextValue())
+                ValueInteger value = TypeInteger.get()
                         .newValue();
                 singleDD = contextDD.newConstant(0);
                 for (int pos = 0; pos < vector.size() - 1; pos++) {
@@ -284,9 +284,9 @@ public final class ExpressionToDD implements Closeable {
         if (variableDD.isInteger()) {
             int lower = variableDD.getLower();
             int upper = variableDD.getUpper();
-            type = TypeInteger.get(contextDD.getContextValue(), lower, upper);
+            type = TypeInteger.get(lower, upper);
         } else {
-            type = TypeBoolean.get(contextDD.getContextValue());
+            type = TypeBoolean.get();
         }
         return type;
     }
@@ -353,7 +353,6 @@ public final class ExpressionToDD implements Closeable {
         assert contextValue != null;
         ContextDD contextDD = getContextDD(contextValue);
         assert variables != null;
-        assert contextValue == contextDD.getContextValue();
         for (Entry<Expression, VariableDD> entry : variables.entrySet()) {
             assert entry.getKey() != null;
             assert entry.getValue() != null;

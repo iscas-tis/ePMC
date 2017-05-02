@@ -49,7 +49,6 @@ public final class ConstraintSolverDD implements ConstraintSolver {
     private Expression objective;
     private Direction direction;
     private final Set<Feature> features = new LinkedHashSet<>();
-	private ContextValue contextValue;    
 
 	@Override
 	public void requireFeature(Feature feature) {
@@ -64,13 +63,8 @@ public final class ConstraintSolverDD implements ConstraintSolver {
 	}
 
 	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
-	}
-
-	@Override
 	public void build() throws EPMCException {
-        this.conjunction = getContextDD(contextValue).newConstant(false);
+        this.conjunction = getContextDD(ContextValue.get()).newConstant(false);
 	}
 
     
@@ -169,11 +163,6 @@ public final class ConstraintSolverDD implements ConstraintSolver {
 	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return contextValue;
 	}
 
 	@Override

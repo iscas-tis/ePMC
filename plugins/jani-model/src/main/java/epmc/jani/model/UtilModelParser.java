@@ -252,7 +252,7 @@ public final class UtilModelParser {
 				result = (result == null) ? bound : UtilExpressionStandard.opAnd(contextValue, result, bound);
 			}
 		}
-		TypeBoolean typeBoolean = TypeBoolean.get(contextValue);
+		TypeBoolean typeBoolean = TypeBoolean.get();
 		result = (result == null) ? new ExpressionLiteral.Builder()
 				.setValue(typeBoolean.getTrue())
 				.build() : result;

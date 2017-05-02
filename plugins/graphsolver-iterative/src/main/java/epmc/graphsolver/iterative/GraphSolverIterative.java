@@ -269,9 +269,9 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             builder.addSinks(sinks);
         }
         builder.setUniformise(uniformise);
-        ContextValue contextValue = origGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         builder.setForNative(useNative);
         builder.setReorder();
         builder.build();
@@ -284,12 +284,12 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
-            this.lambda = TypeReal.get(contextValue).newValue();
+            this.lambda = TypeReal.get().newValue();
             GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
             Value time = objectiveBounded.getTime();
             this.lambda.multiply(time, unifRate);
         } else if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-            this.lambda = TypeReal.get(contextValue).newValue();
+            this.lambda = TypeReal.get().newValue();
             GraphSolverObjectiveExplicitBoundedReachability objectiveBounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
             Value time = objectiveBounded.getTime();
             this.lambda.multiply(time, unifRate);        	
@@ -306,8 +306,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             assert this.inputValues == null;
             int numStates = iterGraph.computeNumStates();
             this.inputValues = useNative
-            		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), numStates)
-            		: UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numStates);
+            		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
+            		: UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
             for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
                 int iterNode = builder.inputToOutputNode(origNode);
                 if (iterNode < 0) {
@@ -360,8 +360,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private void prepareResultValues() throws EPMCException {
-    	ContextValue contextValue = origGraph.getContextValue();
-    	TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+    	ContextValue contextValue = ContextValue.get();
+    	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
     	Value val = typeWeight.newValue();
@@ -455,12 +455,12 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         log.send(MessagesGraphSolverIterative.ITERATING);
         numIterations = 0;
         GraphSolverObjectiveExplicitUnboundedCumulative graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        ContextValue contextValue = origGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
-        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), iterGraph.computeNumStates())
-        	    : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), iterGraph.computeNumStates());
+        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
+        	    : UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
@@ -509,7 +509,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void bounded() throws EPMCException {
         assert iterGraph != null;
         assert inputValues != null;
-        assert inputValues.getType().getContext() == iterGraph.getContextValue();
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
         ValueInteger time = ValueInteger.asInteger(objectiveBounded.getTime());
         assert time.getInt() >= 0;
@@ -535,12 +534,12 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         numIterations = time.getInt();
         boolean min = objectiveBoundedCumulative.isMin();
-        ContextValue contextValue = origGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
-        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), iterGraph.computeNumStates())
-        		: UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), iterGraph.computeNumStates());
+        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
+        		: UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         if (isSparseMarkovJava(iterGraph)) {
             dtmcBoundedCumulativeJava(time.getInt(), asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
         } else if (isSparseMarkovNative(iterGraph)) {
@@ -556,12 +555,12 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
 
     private void boundedCumulativeDiscounted() throws EPMCException {
         assert iterGraph != null;
-        ContextValue contextValue = origGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
-        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), iterGraph.computeNumStates())
-        		: UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), iterGraph.computeNumStates());
+        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
+        		: UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
         ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulativeDiscounted.getTime());
         assert time.getInt() >= 0;
@@ -589,10 +588,10 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert ValueReal.isReal(lambda) : lambda;
         assert !lambda.isPosInf() : lambda;
         Options options = iterGraph.getOptions();
-        ValueReal precision = UtilValue.newValue(TypeReal.get(inputValues.getType().getContext()), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
-        ContextValue contextValue = lambda.getType().getContext();
+        ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision, useNative);
         if (isSparseMarkovJava(iterGraph)) {
             ctmcBoundedJava(asSparseMarkov(iterGraph), inputValues, foxGlynn);
@@ -612,10 +611,10 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert !lambda.isPosInf() : lambda;
         Options options = iterGraph.getOptions();
         
-        ValueReal precision = UtilValue.newValue(TypeReal.get(inputValues.getType().getContext()), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
-        ContextValue contextValue = precision.getType().getContext();
+        ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision, useNative);
         if (isSparseMarkovJava(iterGraph)) {
             ctmcBoundedJava(asSparseMarkov(iterGraph), inputValues, foxGlynn);
@@ -1143,8 +1142,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1217,8 +1216,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance)
                     throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1286,8 +1285,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1361,8 +1360,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul)
                     throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1429,8 +1428,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1497,8 +1496,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedCumulativeJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1548,8 +1547,8 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedCumulativeDiscountedJava(int bound,
             Value discount, GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -1633,10 +1632,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
-    }
-    
-    private ContextValue getContextValue() {
-    	return origGraph.getContextValue();
+    	return TypeWeight.get().newValue();
     }
 }

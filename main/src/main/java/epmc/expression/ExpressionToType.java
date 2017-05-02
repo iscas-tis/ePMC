@@ -21,7 +21,6 @@
 package epmc.expression;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -33,8 +32,6 @@ import epmc.value.Type;
  * @author Ernst Moritz Hahn
  */
 public interface ExpressionToType {
-    // TODO
-    ContextValue getContextValue();
     /**
      * Get type of the expression.
      * If the type is not stored or unknown, {@code null} should be returned.

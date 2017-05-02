@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 final class TypeArrayIntegerMappedByteBuffer implements TypeArrayInteger {
     private final static String ARRAY_INDICATOR = "[](integer-mapped-byte-buffer)";
 	private final TypeInteger entryType;
@@ -35,11 +33,6 @@ final class TypeArrayIntegerMappedByteBuffer implements TypeArrayInteger {
     public ValueArrayIntegerMappedByteBuffer newValue() {
         return new ValueArrayIntegerMappedByteBuffer(this);
     }
-
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
 
 	@Override
 	public TypeInteger getEntryType() {

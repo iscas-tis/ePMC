@@ -43,6 +43,7 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.ModelCheckerResult;
+import epmc.value.ContextValue;
 
 public class CommandTaskExplore implements CommandTask {
     public final static String IDENTIFIER = "explore";
@@ -153,6 +154,6 @@ public class CommandTaskExplore implements CommandTask {
     }
 
     private Log getLog() {
-    	return modelChecker.getModel().getContextValue().getOptions().get(OptionsMessages.LOG);
+    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
     }
 }

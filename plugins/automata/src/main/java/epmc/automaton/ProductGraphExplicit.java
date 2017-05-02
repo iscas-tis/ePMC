@@ -390,14 +390,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         assert builder.getAutomaton() != null;
         manualEnumeration = builder.isManual();
         initStates = UtilBitSet.newBitSetUnbounded();
-        ContextValue contextValue = builder.getModel().getContextValue();
+        ContextValue contextValue = ContextValue.get();
         properties = new GraphExplicitProperties(this, contextValue);
         TypeObject typeModel = new TypeObject.Builder()
-                .setContext(contextValue)
                 .setClazz(GraphExplicit.class)
                 .build();
         TypeObject typeAutomaton = new TypeObject.Builder()
-                .setContext(contextValue)
                 .setClazz(Automaton.class)
                 .build();
         this.model = builder.getModel();
@@ -456,7 +454,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         if (builder.getAutomaton().isDeterministic()) {
             propAutomatonValue = new TypeObject.Builder()
-                    .setContext(contextValue)
                     .setClazz(Object.class)
                     .setStorageClass(StorageType.NUMERATED_IDENTITY)
                     .build()
@@ -470,7 +467,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
             
             for (int i = 0; i < num; i++) {
                 propAutomatonValues[i] = new TypeObject.Builder()
-                        .setContext(contextValue)
                         .setClazz(Object.class)
                         .setStorageClass(StorageType.NUMERATED_IDENTITY)
                         .build()
@@ -481,11 +477,10 @@ public final class ProductGraphExplicit implements GraphExplicit {
 
             propAutomatonValue = null;
         }
-        propNodeModelValue = TypeInteger.get(contextValue).newValue();
+        propNodeModelValue = TypeInteger.get().newValue();
         NodePropertySettable propNodeModelValueProperty = new NodePropertySettable(this, propNodeModelValue);
         registerNodeProperty(CommonProperties.NODE_MODEL, propNodeModelValueProperty);
         automatonState = new TypeObject.Builder()
-                .setContext(contextValue)
                 .setClazz(Object.class)
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build().newValue();
@@ -676,11 +671,6 @@ public final class ProductGraphExplicit implements GraphExplicit {
     @Override
     public BitSet getInitialNodes() {
         return initStates;
-    }
-
-    @Override
-    public ContextValue getContextValue() {
-        return model.getContextValue();
     }
     
     @Override

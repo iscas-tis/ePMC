@@ -43,8 +43,6 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     private List<DD> vector;
     private boolean closed;
 
-	private ContextValue context;
-
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -73,7 +71,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
         Value value = getValue(expression);
         boolean useVector = false;
 //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
-        ContextDD contextDD = ContextDD.get(context);
+        ContextDD contextDD = ContextDD.get(ContextValue.get());
         if (useVector && ValueInteger.isInteger(value)) {
             this.vector = contextDD.twoCplFromInt(ValueInteger.asInteger(value).getInt());
         } else if (useVector && ValueEnum.isEnum(value)) {
@@ -108,9 +106,4 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     public void close() {
         closed = UtilEvaluatorDD.close(closed, dd, vector);
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

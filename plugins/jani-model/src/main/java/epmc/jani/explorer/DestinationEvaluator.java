@@ -34,7 +34,6 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -148,8 +147,7 @@ public final class DestinationEvaluator {
 		Expression probExpr = destination.getProbabilityExpressionOrOne();
 		probExpr = destination.getModel().replaceConstants(probExpr);
 		probExpr = UtilExpressionStandard.replace(probExpr, autVarToLocal);
-		ContextValue contextValue = builder.getExpressionToType().getContextValue();
-		Type typeWeight = TypeWeight.get(contextValue);
+		Type typeWeight = TypeWeight.get();
 		probExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), probExpr, typeWeight);
 		probability = UtilEvaluatorExplicit.newEvaluator(probExpr, builder.getExpressionToType(), variables);
 		TypeLocation typeLocation = builder.getTypeLocation();
@@ -163,7 +161,7 @@ public final class DestinationEvaluator {
 				.setVariableMap(variableMap)
 				.setVariables(variables)
 				.build();
-		zeroReal = UtilValue.newValue(TypeReal.get(destination.getModel().getContextValue()), 0);
+		zeroReal = UtilValue.newValue(TypeReal.get(), 0);
 	}
 
 	Value evaluateProbability(NodeJANI node) throws EPMCException {
@@ -186,5 +184,4 @@ public final class DestinationEvaluator {
 			toNode.setVariable(locationVariable, location);
 		}
 	}
-	
 }

@@ -25,7 +25,6 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
-    private final ContextValue context;
     private final ValueBoolean valueFalse = new ValueBoolean(this, false);
     private final ValueBoolean valueTrue = new ValueBoolean(this, true);
 
@@ -41,20 +40,17 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     	}
     }
     
-    public static TypeBoolean get(ContextValue context) {
-        assert context != null;
-        return context.getType(TypeBoolean.class);
+    public static TypeBoolean get() {
+        return ContextValue.get().getType(TypeBoolean.class);
     }
     
     public static void set(TypeBoolean type) {
         assert type != null;
-        ContextValue context = type.getContext();
+        ContextValue context = ContextValue.get();
         context.setType(TypeBoolean.class, context.makeUnique(type));
     }
 
-    public TypeBoolean(ContextValue context) {
-        assert context != null;
-        this.context = context;
+    public TypeBoolean() {
         valueFalse.setImmutable();
         valueTrue.setImmutable();
     }
@@ -100,11 +96,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     public int getNumValues() {
         return 2;
     }
-    
-    @Override
-    public ContextValue getContext() {
-        return context;
-    }
 
     @Override
     public int hashCode() {
@@ -120,9 +111,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
             return false;
         }
         Type other = (Type) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -131,6 +119,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     
     @Override
     public TypeArray getTypeArray() {
-        return context.makeUnique(new TypeArrayBoolean(this));
+        return ContextValue.get().makeUnique(new TypeArrayBoolean(this));
     }
 }

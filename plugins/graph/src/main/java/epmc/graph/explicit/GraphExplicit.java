@@ -45,9 +45,6 @@ import epmc.value.ValueObject;
 public interface GraphExplicit extends LowLevel {
     /* methods to be implemented by classes implementing the interface */
     
-    @Override
-    ContextValue getContextValue();
-    
     /**
      * Get the number of nodes of this graph.
      * 
@@ -101,7 +98,7 @@ public interface GraphExplicit extends LowLevel {
      * @return options used by this graph
      */
     default Options getOptions() {
-        return getContextValue().getOptions();
+        return ContextValue.get().getOptions();
     }
     
     default void computePredecessors(BitSet states) throws EPMCException {

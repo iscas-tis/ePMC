@@ -34,8 +34,6 @@ public class LTLDD {
         Model model = parser.parseModel();
         Options options = UtilOptionsEPMC.newOptions();
         ContextExpression context = UtilExpression.newContextExpression(options);
-        options.set(OptionsExpression.CONTEXT_EXPRESSION, context);
-        options.set(OptionsValue.CONTEXT_VALUE, context.getContextValue());
         properties = new PropertyList(context, props);
         properties.addConstants(options.getDefList(OptionsEPMC.CONST));
         if (properties != null) {

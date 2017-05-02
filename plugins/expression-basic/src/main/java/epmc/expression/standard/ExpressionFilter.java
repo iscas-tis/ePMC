@@ -39,7 +39,6 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -140,14 +139,13 @@ public final class ExpressionFilter implements Expression {
     
     @Override
     public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	ContextValue contextValue = expressionToType.getContextValue();
     	Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
         Type propType = prop.getType(expressionToType);
         if (TypeInteger.isIntegerWithBounds(propType)) {
-            propType = TypeInteger.get(propType.getContext());
+            propType = TypeInteger.get();
         }
         Type statesType = states.getType(expressionToType);
         ensure(statesType == null || TypeBoolean.isBoolean(statesType),
@@ -156,30 +154,30 @@ public final class ExpressionFilter implements Expression {
         case AVG:
             ensure(propType == null || TypeWeight.isWeight(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeWeight.get(contextValue);
+            result = TypeWeight.get();
             break;
         case SUM:
             ensure(propType == null || TypeWeight.isWeight(propType)
             || TypeInteger.isInteger(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeWeight.get(contextValue);
+            result = TypeWeight.get();
             break;
         case RANGE:
             ensure(propType == null || TypeReal.isReal(propType)
             	|| TypeInterval.isInterval(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeInterval.get(contextValue);
+            result = TypeInterval.get();
             break;
         case MAX: case MIN:
             ensure(propType == null || TypeReal.isReal(propType)
             	|| TypeInteger.isInteger(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeReal.get(contextValue);
+            result = TypeReal.get();
             break;
         case COUNT:
             ensure(propType == null || TypeBoolean.isBoolean(propType),
             	ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeInteger.get(contextValue);
+            result = TypeInteger.get();
             break;
         case FIRST: case STATE: case PRINT: case PRINTALL:
             result = propType;
@@ -187,12 +185,12 @@ public final class ExpressionFilter implements Expression {
         case FORALL: case EXISTS:
             ensure(propType == null || TypeBoolean.isBoolean(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeBoolean.get(contextValue);
+            result = TypeBoolean.get();
             break;
         case ARGMAX: case ARGMIN:
             ensure(propType == null || TypeReal.isReal(propType),
             ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeBoolean.get(contextValue);
+            result = TypeBoolean.get();
             break;
         }
         return result;
@@ -258,16 +256,15 @@ public final class ExpressionFilter implements Expression {
     public Value initialAccumulatorValue(ExpressionToType expressionToType, Value value) throws EPMCException {
     	assert expressionToType != null;
         assert value != null;
-    	ContextValue contextValue = expressionToType.getContextValue();
         switch (type) {
         case COUNT:
-            return UtilValue.clone(TypeInteger.get(contextValue).getZero());
+            return UtilValue.clone(TypeInteger.get().getZero());
         case EXISTS:
-            return UtilValue.clone(TypeBoolean.get(contextValue).getFalse());
+            return UtilValue.clone(TypeBoolean.get().getFalse());
         case FORALL:
-            return UtilValue.clone(TypeBoolean.get(contextValue).getTrue());
+            return UtilValue.clone(TypeBoolean.get().getTrue());
         case RANGE:
-            return TypeInterval.get(contextValue).newValue(value, value);
+            return TypeInterval.get().newValue(value, value);
         case AVG: case SUM:
             return UtilValue.clone(TypeAlgebra.asAlgebra(getType(expressionToType)).getZero());
         default:

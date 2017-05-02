@@ -36,7 +36,6 @@ import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
@@ -80,7 +79,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Type typeWeight = TypeWeight.get(origGraph.getContextValue());
+        Type typeWeight = TypeWeight.get();
         if (!TypeDouble.isDouble(typeWeight)) {
         	return false;
         }

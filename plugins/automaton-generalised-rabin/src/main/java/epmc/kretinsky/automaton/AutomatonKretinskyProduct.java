@@ -116,7 +116,6 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public void setExpression(Expression expression, Expression[] expressions) throws EPMCException {
         assert expression != null;
         assert expressions != null;
-        this.contextExpression = expression.getContext();
         this.options = expression.getOptions();
         this.disableUnusedSlaves = options.get(OptionsKretinsky.KRETINSKY_DISABLE_UNUSED_SLAVES);
         expression = UtilExpression.toNegationNormalForm(expression);
@@ -186,11 +185,8 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
             Expression[] expressions) {
         assert expression != null;
         assert expressions != null;
-        ContextExpression contextExpression = expression.getContext();
-        assert expression.getContext() == contextExpression;
         for (Expression exp : expressions) {
             assert exp != null;
-            assert exp.getContext() == contextExpression;
         }
         return true;
     }
@@ -420,7 +416,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         options.set(OptionsEPMC.PLUGIN, "/Users/emhahn/Documents/workspace/iscasmc/plugins/kretinsky");
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = contextExpression.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
 //        options.set(Options.KRETINSKY_GFFG_OPTIMISATION, false);
 //      options.set(Options.KRETINSKY_OPTIMISE_MOJMIR, KretinskyOptimiseMojmir.LANGUAGE);

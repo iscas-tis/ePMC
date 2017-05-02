@@ -48,22 +48,6 @@ public interface Operator {
     String getIdentifier();
 
     /**
-     * Set the value context of the operator.
-     * This function should only be used once immediately after the creation
-     * of the operator.
-     * 
-     * @param context value context to set for the operator
-     */
-    void setContext(ContextValue context);
-    
-    /**
-     * Get the value context of the operator.
-     * 
-     * @return value context of the operator
-     */
-    ContextValue getContext();
-
-    /**
      * Apply the operator.
      * The type of the result value is computed by calling
      * {@link #resultType(Value...)} on the operands parameter of this function.

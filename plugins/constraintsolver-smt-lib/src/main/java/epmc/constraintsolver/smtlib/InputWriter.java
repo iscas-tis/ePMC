@@ -193,7 +193,7 @@ final class InputWriter {
 			Expression varExpr = null;
 			if (lower != null && !ValueAlgebra.asAlgebra(lower).isNegInf()) {
 				try {
-					varExpr = UtilModelChecker.parseExpression(variable.getContextValue(), lower  + "");
+					varExpr = UtilModelChecker.parseExpression(lower.toString());
 				} catch (EPMCException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -204,7 +204,7 @@ final class InputWriter {
 			Value upper = variable.getUpper();
 			if (upper != null && !ValueAlgebra.asAlgebra(upper).isPosInf()) {
 				try {
-					varExpr = UtilModelChecker.parseExpression(variable.getContextValue(), upper  + "");
+					varExpr = UtilModelChecker.parseExpression(upper.toString());
 				} catch (EPMCException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

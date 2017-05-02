@@ -14,9 +14,8 @@ public final class BeforeModelCreationPRISM implements BeforeModelCreation {
 	}
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
-		assert contextValue != null;
-		contextValue.addOrSetOperator(OperatorPRISMPow.class);
+	public void process() throws EPMCException {
+		ContextValue.get().addOrSetOperator(OperatorPRISMPow.class);
 	}
 
 }

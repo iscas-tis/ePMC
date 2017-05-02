@@ -30,13 +30,6 @@ package epmc.value;
  */
 public interface Type {
     /**
-     * Get value context used.
-     * 
-     * @return value context used
-     */
-    ContextValue getContext();
-
-    /**
      * Create a new value of this type.
      * 
      * @return new value of this type

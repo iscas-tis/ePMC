@@ -24,18 +24,17 @@ import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerable, TypeHasNativeArray, TypeNumBitsKnown {
-    public static TypeInteger get(ContextValue context, int lowerBound, int upperBound) {
-        return context.makeUnique(new TypeInteger(context, lowerBound, upperBound));
+    public static TypeInteger get(int lowerBound, int upperBound) {
+        return ContextValue.get().makeUnique(new TypeInteger(lowerBound, upperBound));
     }
     
-    public static TypeInteger get(ContextValue context) {
-        assert context != null;
-        return context.getType(TypeInteger.class);
+    public static TypeInteger get() {
+        return ContextValue.get().getType(TypeInteger.class);
     }
     
     public static void set(TypeInteger type) {
         assert type != null;
-        ContextValue context = type.getContext();
+        ContextValue context = ContextValue.get();
         context.setType(TypeInteger.class, context.makeUnique(type));
     }
     
@@ -67,7 +66,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         return typeInteger.isLeftBounded() || typeInteger.isRightBounded();
     }
 
-    private final ContextValue context;
     private final ValueInteger lowerBound;
     private final ValueInteger upperBound;
     private final ValueInteger valueZero = new ValueInteger(this, 0);
@@ -75,9 +73,7 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     private final ValueInteger valueMax = new ValueInteger(this, Integer.MAX_VALUE);
     private final int numBits;
 
-    public TypeInteger(ContextValue context, int lowerBound, int upperBound) {
-        assert context != null;
-        this.context = context;
+    public TypeInteger(int lowerBound, int upperBound) {
         assert lowerBound <= upperBound;
         if (lowerBound != Integer.MIN_VALUE && upperBound != Integer.MAX_VALUE) {
             int numValues = upperBound - lowerBound + 1;
@@ -98,8 +94,8 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     	return new ValueInteger(this, value);
 	}
 
-	public TypeInteger(ContextValue context) {
-        this(context, Integer.MIN_VALUE, Integer.MAX_VALUE);
+	public TypeInteger() {
+        this(Integer.MIN_VALUE, Integer.MAX_VALUE);
     }    
 
     @Override
@@ -180,9 +176,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
             return false;
         }
         TypeInteger other = (TypeInteger) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -213,22 +206,17 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     }
     
     @Override
-    public ContextValue getContext() {
-        return context;
-    }
-
-    @Override
     public TypeArrayInteger getTypeArrayNative() {
         TypeArrayIntegerNative arrayType = new TypeArrayIntegerNative(this);
-        return getContext().makeUnique(arrayType);
+        return ContextValue.get().makeUnique(arrayType);
     }
     
     @Override
     public TypeArrayInteger getTypeArray() {
         if (TypeInteger.isIntegerBothBounded(this)) {
-            return context.makeUnique(new TypeArrayIntegerBounded(this));
+            return ContextValue.get().makeUnique(new TypeArrayIntegerBounded(this));
         } else {
-            return context.makeUnique(new TypeArrayIntegerJava(this));            
+            return ContextValue.get().makeUnique(new TypeArrayIntegerJava(this));            
         }
     }    
 }

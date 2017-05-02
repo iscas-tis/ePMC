@@ -41,6 +41,7 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 
 /**
  * Solve stochastic game by transforming it to a nonstochastic game.
@@ -199,7 +200,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 			priorities[priority] = new SettableParityLabel(priority);
 		}
 		/* construct new game */
-		qualitativeGame = new GraphExplicitSparse(stochasticGame.getContextValue(), false, nextMappedNodeQualitative, numTotalOut);
+		qualitativeGame = new GraphExplicitSparse(ContextValue.get(), false, nextMappedNodeQualitative, numTotalOut);
         NodeProperty qualitativeLabels = qualitativeGame.addSettableNodeProperty(CommonProperties.AUTOMATON_LABEL, stochasticLabels.getType());
         NodeProperty qualitativePlayer = qualitativeGame.addSettableNodeProperty(CommonProperties.PLAYER, propertyPlayer.getType());
 		for (int stochasticNode = 0; stochasticNode < numStochasticGameNodes; stochasticNode++) {

@@ -59,7 +59,7 @@ public interface JANINode {
 	
 	/**
 	 * Generate JSON from this JANI node.
-	 * Must only be called after {@link #parseExpression(Parser, JsonValue)} has been
+	 * Must only be called after {@link #parseExpression(JsonValue)} has been
 	 * called successfully.
 	 * 
 	 * @return JSON representing this JANI node

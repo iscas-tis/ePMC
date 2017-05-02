@@ -92,7 +92,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
-        this.contextValue = modelChecker.getModel().getContextValue();
+        this.contextValue = ContextValue.get();
     }
     
 	@Override
@@ -136,20 +136,20 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
             Expression left = pathTemporal.getOperand1();
             Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
             Expression left = ExpressionLiteral.getTrue(contextValue);
             Expression right = pathTemporal.getOperand1();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
             Expression left = ExpressionLiteral.getTrue(contextValue);
             Expression right = not(pathTemporal.getOperand1());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(getContextValue()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
             min = !min;
             negate = true;
         } else {
@@ -170,7 +170,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             throws EPMCException {
         assert pathTemporal != null;
         Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        TimeBound timeBound = pathTemporal.getTimeBound(getContextValue());
+        TimeBound timeBound = pathTemporal.getTimeBound(ContextValue.get());
 
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];
@@ -183,7 +183,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         }
         
         BitSet sinkSet = UtilBitSet.newBitSetUnbounded();
-        TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+        TypeAlgebra typeWeight = TypeWeight.get();
         Value zero = UtilValue.newValue(typeWeight, 0);
         Value one = UtilValue.newValue(typeWeight, 1);
         ValueArray resultValues = newValueArrayWeight(computeForStates.size());
@@ -227,15 +227,15 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();
                     objective.setGraph(graph);
                     objective.setMin(min);
-                    objective.setTime(timeBound.getRightValue(getContextValue()));
+                    objective.setTime(timeBound.getRightValue(ContextValue.get()));
                     objective.setZeroSink(zeroSet);
                     objective.setTargets(oneSet);
                     configuration.setObjective(objective);
                     configuration.solve();
                     values = objective.getResult();
                 } else {
-                    int leftBound = timeBound.getLeftInt(getContextValue());
-                    int rightBound = timeBound.getRightInt(getContextValue());
+                    int leftBound = timeBound.getLeftInt(ContextValue.get());
+                    int rightBound = timeBound.getRightInt(ContextValue.get());
                     if (timeBound.isRightOpen()) {
                         rightBound--;
                     }
@@ -247,7 +247,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     objective.setTargets(oneSet);
                     objective.setMin(min);
                     objective.setGraph(graph);
-                    Value time = UtilValue.newValue(TypeInteger.get(contextValue), rightBound - leftBound);
+                    Value time = UtilValue.newValue(TypeInteger.get(), rightBound - leftBound);
                     objective.setTime(time);
                     configuration.setObjective(objective);
                     configuration.solve();
@@ -265,7 +265,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             }
-            if (timeBound.getLeftValue(getContextValue()).isGt(timeBound.getLeftValue(getContextValue()).getType().getZero())
+            if (timeBound.getLeftValue(ContextValue.get()).isGt(timeBound.getLeftValue(ContextValue.get()).getType().getZero())
                     || timeBound.isLeftOpen()) {
                 configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(this.contextValue.getOptions());
                 sinkSet.clear();
@@ -295,11 +295,11 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     objective.setGraph(graph);
                     objective.setValues(values);
                     objective.setMin(min);
-                    objective.setTime(timeBound.getLeftValue(getContextValue()));
+                    objective.setTime(timeBound.getLeftValue(ContextValue.get()));
                     configuration.solve();
                     values = objective.getResult();
                 } else {
-                    int leftBound = timeBound.getLeftInt(getContextValue());
+                    int leftBound = timeBound.getLeftInt(ContextValue.get());
                     if (timeBound.isLeftOpen()) {
                         leftBound++;
                     }
@@ -307,7 +307,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     objective.setGraph(graph);
                     objective.setValues(values);
                     objective.setMin(min);
-                    Value time = UtilValue.newValue(TypeInteger.get(contextValue), leftBound);
+                    Value time = UtilValue.newValue(TypeInteger.get(), leftBound);
                     objective.setTime(time);
                     configuration.setObjective(objective);
                     configuration.solve();
@@ -333,7 +333,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     }
 
     private void solveNext(ExpressionTemporal pathTemporal, Expression[] expressions, Value[] evalValues, EvaluatorExplicitBoolean[] evaluators, boolean min) throws EPMCException {
-        TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+        TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
         Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
@@ -346,7 +346,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         edgeProperties.add(CommonProperties.WEIGHT);
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(this.contextValue.getOptions());
         int iterNumStates = graph.computeNumStates();
-        ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), iterNumStates);
+        ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterNumStates);
         for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
                 evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
@@ -359,23 +359,23 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         objective.setGraph(graph);
         objective.setMin(min);
         objective.setValues(values);
-        objective.setTime(TypeInteger.get(contextValue).getOne());
+        objective.setTime(TypeInteger.get().getOne());
         configuration.setObjective(objective);
         configuration.solve();
         values = objective.getResult();
-        TimeBound timeBound = pathTemporal.getTimeBound(getContextValue());
+        TimeBound timeBound = pathTemporal.getTimeBound(ContextValue.get());
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
-            Value rightValue = timeBound.getRightValue(getContextValue());
+            Value rightValue = timeBound.getRightValue(ContextValue.get());
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
             iterStates.set(0, graph.getNumNodes());
-            Value leftValue = TypeWeight.get(contextValue).newValue();
-            leftValue.set(timeBound.getLeftValue(getContextValue()));
-            ValueAlgebra sum = TypeWeight.get(contextValue).newValue();
-            ValueAlgebra jump = TypeWeight.get(contextValue).newValue();
+            Value leftValue = TypeWeight.get().newValue();
+            leftValue.set(timeBound.getLeftValue(ContextValue.get()));
+            ValueAlgebra sum = TypeWeight.get().newValue();
+            ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
             for (int state = 0; state < iterNumStates; state++) {
-                sum.set(TypeWeight.get(contextValue).getZero());
+                sum.set(TypeWeight.get().getZero());
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
                     sum.add(sum, succWeight);
@@ -432,7 +432,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     				.setType(TemporalType.GLOBALLY)
     				.setPositional(quantified.getPositional())
     				.setChildren(new ExpressionOperator.Builder()
-    						.setOperator(getContextValue().getOperator(OperatorNot.IDENTIFIER))
+    						.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
     						.setOperands(quantifiedOp1.getOperand1())
     						.build(),
     						quantifiedOp1.getChildren().get(1),
@@ -441,7 +441,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     				.setRightOpen(false)
     				.build();
     		property = new ExpressionQuantifier.Builder()
-    				.setContext(getContextValue())
     				.setCmpType(propertyQuantifier.getCompareType())
     				.setCompare(propertyQuantifier.getCompare())
     				.setCondition(propertyQuantifier.getCondition())
@@ -484,19 +483,15 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-
-    private ContextValue getContextValue() {
-    	return contextValue;
-    }
     
     private ValueArray newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(getContextValue().getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();

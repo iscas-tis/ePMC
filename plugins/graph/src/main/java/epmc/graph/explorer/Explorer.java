@@ -29,6 +29,7 @@ import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.options.Options;
+import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -191,7 +192,7 @@ public interface Explorer extends LowLevel {
      * @return expression context
      */
     default Options getOptions() {
-        return getContextValue().getOptions();
+        return ContextValue.get().getOptions();
     }
     
     /**

@@ -41,6 +41,7 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
 import epmc.prism.model.convert.PRISM2JANIConverter;
+import epmc.value.ContextValue;
 
 //TODO: Add support for property files
 //TODO: Add support for property name pattern
@@ -71,7 +72,7 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
 	
     @Override
     public void executeInServer() {
-		Options options = modelChecker.getModel().getContextValue().getOptions();
+		Options options = ContextValue.get().getOptions();
 		Log log = options.get(OptionsMessages.LOG);
 		//TODO: probably the reward prefix has to be moved to a more appropriate place independent from the converted model type
 		PRISM2JANIConverter.setRewardPrefix(options.getString(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX));

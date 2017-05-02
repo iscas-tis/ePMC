@@ -42,7 +42,7 @@ public final class PropertyNodeSMGPlayer implements PropertyNode {
 		assert player >= 0;
 		this.extension = extension;
 		this.player = player;
-		this.type = TypeBoolean.get(explorer.getContextValue());
+		this.type = TypeBoolean.get();
 		this.value = type.newValue();
 	}
 	

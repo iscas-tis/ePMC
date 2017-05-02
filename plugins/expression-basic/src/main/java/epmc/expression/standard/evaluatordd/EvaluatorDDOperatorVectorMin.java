@@ -87,9 +87,4 @@ public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
     private ContextDD getContextDD() throws EPMCException {
         return ContextDD.get(context);
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

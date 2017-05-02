@@ -146,7 +146,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        contextValue = contextDD.getContextValue();
+        contextValue = ContextValue.get();
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         int workers = contextDD.getOptions().getInteger(OptionsDDSylvan.DD_SYLVAN_WORKERS);
@@ -159,8 +159,8 @@ public final class LibraryDDSylvan implements LibraryDD {
         Sylvan.sylvan_init_bdd(cacheGranularity);
         falseNode = Sylvan.Sylvan_false();
         trueNode = Sylvan.Sylvan_true();
-        this.valueTrue = TypeBoolean.get(contextValue).getTrue();
-        this.valueFalse = TypeBoolean.get(contextValue).getFalse();
+        this.valueTrue = TypeBoolean.get().getTrue();
+        this.valueFalse = TypeBoolean.get().getFalse();
     }
 
     @Override

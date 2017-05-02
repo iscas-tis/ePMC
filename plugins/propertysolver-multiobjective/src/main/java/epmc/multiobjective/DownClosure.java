@@ -53,7 +53,7 @@ final class DownClosure {
         assert contextValue != null;
         assert dimension >= 0;
         this.contextValue = contextValue;
-        assert TypeReal.isReal(TypeWeight.get(contextValue));
+        assert TypeReal.isReal(TypeWeight.get());
         this.dimension = dimension;
         this.contextSolver = new ConstraintSolverConfiguration(contextValue);
         contextSolver.requireFeature(Feature.LP);
@@ -67,7 +67,6 @@ final class DownClosure {
     ValueArrayAlgebra findSeparating(ValueArrayAlgebra outside, boolean numerical)
             throws EPMCException {
         assert outside != null;
-        assert outside.getType().getContext() == contextValue;
         assert outside.size() == dimension;            
         if (elements.size() == 0) {
             return findSeparatingEmptyEntries(outside, numerical);
@@ -79,8 +78,8 @@ final class DownClosure {
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
     		boolean numerical) throws EPMCException {
     	assert outside != null;
-        ValueAlgebra zero = TypeWeight.get(contextValue).getZero();
-    	ValueAlgebra lowerBound = TypeWeight.get(contextValue).newValue();
+        ValueAlgebra zero = TypeWeight.get().getZero();
+    	ValueAlgebra lowerBound = TypeWeight.get().newValue();
     	lowerBound.set(zero);
     	ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
     	if (unrestrictedResult == null) {
@@ -91,8 +90,8 @@ final class DownClosure {
     	if (restrictedResult != null) {
     		return restrictedResult;
     	}
-    	ValueAlgebra entry = TypeWeight.get(contextValue).newValue();
-    	ValueAlgebra sum = TypeWeight.get(contextValue).newValue();
+    	ValueAlgebra entry = TypeWeight.get().newValue();
+    	ValueAlgebra sum = TypeWeight.get().newValue();
     	for (int i = 0; i < unrestrictedResult.size(); i++) {
     		unrestrictedResult.get(entry, i);
     		if (entry.isZero()) {
@@ -113,15 +112,15 @@ final class DownClosure {
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
             boolean numerical, Value lowerBound)
             throws EPMCException {
-        Value zero = TypeWeight.get(contextValue).getZero();
-        Value one = TypeWeight.get(contextValue).getOne();
+        Value zero = TypeWeight.get().getZero();
+        Value one = TypeWeight.get().getOne();
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
         for (int i = 0; i < dimension; i++) {
-            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get());
         }
-        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get(contextValue));
-        int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(contextValue), TypeReal.get(contextValue).getNegInf(), TypeReal.get(contextValue).getPosInf());
+        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get());
+        int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(), TypeReal.get().getNegInf(), TypeReal.get().getPosInf());
         
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -226,8 +225,8 @@ final class DownClosure {
             }
         }
         if (numerical) {
-            ValueAlgebra smallValue = TypeWeight.get(contextValue).newValue();
-            String minIncrease = getContextValue().getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
+            ValueAlgebra smallValue = TypeWeight.get().newValue();
+            String minIncrease = ContextValue.get().getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
             smallValue.set(minIncrease);
             separating.get(entry, 0);
             if (entry.isZero()) {
@@ -262,20 +261,19 @@ final class DownClosure {
     
     public void improveNumerical(ValueArray current) throws EPMCException {
         assert current != null;
-        assert current.getType().getContext() == contextValue;
         assert current.size() == dimension;
-        assert current.getType().getEntryType() == TypeWeight.get(contextValue);
-        Value zero = TypeWeight.get(contextValue).getZero();
-        Value one = TypeWeight.get(contextValue).getOne();
-        Value negInf = TypeWeight.get(contextValue).getNegInf();
-        Value posInf = TypeWeight.get(contextValue).getPosInf();
+        assert current.getType().getEntryType() == TypeWeight.get();
+        Value zero = TypeWeight.get().getZero();
+        Value one = TypeWeight.get().getOne();
+        Value negInf = TypeWeight.get().getNegInf();
+        Value posInf = TypeWeight.get().getPosInf();
         ConstraintSolver problem = contextSolver.newProblem();
 
         int[] wLpVars = new int[elements.size() + 1];
         for (int i = 0; i < elements.size(); i++) {
-            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get());
         }
-        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get(contextValue), negInf, posInf);
+        int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get(), negInf, posInf);
         ValueAlgebra entry = newValueWeight();        
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -356,17 +354,16 @@ final class DownClosure {
 
     public ValueArrayAlgebra findFeasibleRandomisedScheduler(ValueArray current) throws EPMCException {
         assert current != null;
-        assert current.getType().getContext() == contextValue;
         assert current.size() == dimension;
-        assert current.getType().getEntryType() == TypeWeight.get(contextValue);
+        assert current.getType().getEntryType() == TypeWeight.get();
         assert elements.size() > 0;
-        Value zero = TypeWeight.get(contextValue).getZero();
-        Value one = TypeWeight.get(contextValue).getOne();
+        Value zero = TypeWeight.get().getZero();
+        Value one = TypeWeight.get().getOne();
         ConstraintSolver problem = contextSolver.newProblem();
 
         int[] wLpVars = new int[elements.size()];
         for (int i = 0; i < elements.size(); i++) {
-            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get(contextValue));
+            wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get());
         }
         ValueAlgebra entry = newValueWeight();        
         ValueArrayAlgebra problemWeights;
@@ -428,20 +425,16 @@ final class DownClosure {
     }
     
     private ValueArrayAlgebra newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
     
     private Options getOptions() {
-    	return getContextValue().getOptions();
-    }
-    
-    private ContextValue getContextValue() {
-    	return contextValue;
+    	return ContextValue.get().getOptions();
     }
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
+    	return TypeWeight.get().newValue();
     }
     
     IterationResult get(int index) {

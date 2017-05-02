@@ -62,7 +62,7 @@ public final class UtilExpressionStandard {
 
     public static Expression opAdd(ContextValue context, Expression op1, int op2) {
         assert op1 != null;
-        TypeInteger typeInteger = TypeInteger.get(context);
+        TypeInteger typeInteger = TypeInteger.get();
         
         Expression op2Expr = new ExpressionLiteral.Builder()
         		.setValue(UtilValue.newValue(typeInteger, op2))
@@ -101,7 +101,7 @@ public final class UtilExpressionStandard {
 
     public static Expression opMin(ContextValue context, int op1, Expression op2) {
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get(context);
+        TypeInteger typeInteger = TypeInteger.get();
         Expression op1Expr = new ExpressionLiteral.Builder()
                 .setValue(UtilValue.newValue(typeInteger, op1))
                 .build();
@@ -130,7 +130,7 @@ public final class UtilExpressionStandard {
     public static Expression opIte(ContextValue context, Expression op1, Expression op2, int op3) {
         assert op1 != null;
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get(context);
+        TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
         		.setValue(UtilValue.newValue(typeInteger, op3))
         		.build();

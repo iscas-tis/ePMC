@@ -138,7 +138,6 @@ public final class TestHelper {
             assert classloader != null;
             ContextValue context = options.get(TestHelper.CONTEXT_VALUE);
             assert context != null;
-            model.setContext(context);
             InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
             model.read(inputsArray);
             if (propertyStream != null) {
@@ -295,8 +294,8 @@ public final class TestHelper {
         options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
         options.set(OptionsMessages.LOG, log);
-//        options.set(OptionsEPMC.INPUT_TYPE, modelInputType);
         ContextValue context = new ContextValue(options);
+        ContextValue.set(context);
         options.set(TestHelper.CONTEXT_VALUE, context);
         processBeforeModelLoading(options);
     }
@@ -331,17 +330,16 @@ public final class TestHelper {
         return message;
     }
     
-    private static Value stringToValue(String expected, ContextValue contextValue) {
+    private static Value stringToValue(String expected) {
         assert expected != null;
-        assert contextValue != null;
         Value expectedValue = null;
         try {
-            Options options = contextValue.getOptions();
+            Options options = ContextValue.get().getOptions();
             String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
             options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
-            Expression expectedExpression = UtilModelChecker.parseExpression(contextValue, expected);
+            Expression expectedExpression = UtilModelChecker.parseExpression(expected);
             options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, modelInputType);
-            expectedValue = evaluateValue(contextValue, expectedExpression);
+            expectedValue = evaluateValue(expectedExpression);
         } catch (EPMCException e) {
         	throw new RuntimeException(e);
         }
@@ -354,7 +352,6 @@ public final class TestHelper {
             Value actual, double tolerance) {
         assert expected != null;
         assert actual != null;
-        assert expected.getType().getContext() == actual.getType().getContext();
         assert tolerance >= 0.0;
         if (message == null) {
             message = prepareMessage(expected, actual, tolerance);
@@ -375,7 +372,6 @@ public final class TestHelper {
             double tolerance) {
         assert expected != null;
         assert actual != null;
-        assert expected.getType().getContext() == actual.getType().getContext();
         assert tolerance >= 0.0;
         assertEquals(null, expected, actual, tolerance);
     }
@@ -416,8 +412,7 @@ public final class TestHelper {
         assert expected != null;
         assert actual != null;
         assert tolerance >= 0.0;
-        ContextValue contextValue = actual.getType().getContext();
-        Value expectedValue = stringToValue(expected, contextValue);
+        Value expectedValue = stringToValue(expected);
         assertEquals(message, expectedValue, actual, tolerance);
     }
 
@@ -426,8 +421,7 @@ public final class TestHelper {
         assert expected != null;
         assert actual != null;
         assert tolerance >= 0.0;
-        ContextValue contextValue = actual.getType().getContext();
-        Value expectedValue = stringToValue(expected, contextValue);
+        Value expectedValue = stringToValue(expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
     
@@ -435,14 +429,12 @@ public final class TestHelper {
             Value actual) {
         assert expected != null;
         assert actual != null;
-        assert expected.getType().getContext() == actual.getType().getContext();
         assertEquals(null, expected, actual, 0.0);
     }
     
     public static void assertEquals(Value expected, Value actual) {
         assert expected != null;
         assert actual != null;
-        assert expected.getType().getContext() == actual.getType().getContext();
         assertEquals(null, expected, actual, 0.0);
     }
     
@@ -478,7 +470,7 @@ public final class TestHelper {
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
         try {
-            Options options = model.getContextValue().getOptions();
+            Options options = ContextValue.get().getOptions();
             ModelChecker checker = new ModelChecker(model);
             LogTest log = options.get(OptionsMessages.LOG);
             log.getResults().clear();
@@ -570,7 +562,7 @@ public final class TestHelper {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(contextValue.getOptions(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
-            afterCommandExecution.process(contextValue);
+            afterCommandExecution.process();
         }
     }
 
@@ -580,7 +572,7 @@ public final class TestHelper {
             BeforeModelCreation beforeModelLoading = null;
             beforeModelLoading = Util.getInstance(clazz);
             ContextValue contextValue = options.get(CONTEXT_VALUE);
-            beforeModelLoading.process(contextValue);
+            beforeModelLoading.process();
         }
     }
     
@@ -590,7 +582,7 @@ public final class TestHelper {
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
             afterModelLoading = Util.getInstance(clazz);
-            afterModelLoading.process(contextValue);
+            afterModelLoading.process();
         }
     }
     
@@ -601,15 +593,10 @@ public final class TestHelper {
         	ContextDD.close(contextValue);
         }
     }
-
-    public static ContextValue getContextValue(Options options) {
-        assert options != null;
-        return options.get(CONTEXT_VALUE);
-    }
     
-    private static Value evaluateValue(ContextValue contextValue, Expression expression) throws EPMCException {
+    private static Value evaluateValue(Expression expression) throws EPMCException {
         assert expression != null;
-        return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty(contextValue));
+        return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty());
     }
     
     

@@ -189,7 +189,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
         assert contextDD != null;
         ensure(BuDDy.loaded, ProblemsDD.BUDDY_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.contextValue = contextDD.getContextValue();
+        this.contextValue = ContextValue.get();
         Options options = contextDD.getOptions();
         int initCache = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_CACHE_SIZE);
         int initSlots = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_NODES);
@@ -218,8 +218,8 @@ public final class LibraryDDBuDDy implements LibraryDD {
         this.trueNode = BuDDy.bdd_true();
         this.falseNode = BuDDy.bdd_false();
         
-        this.valueFalse = TypeBoolean.get(contextValue).getFalse();
-        this.valueTrue = TypeBoolean.get(contextValue).getTrue();
+        this.valueFalse = TypeBoolean.get().getFalse();
+        this.valueTrue = TypeBoolean.get().getTrue();
         
         instancesRunning++;
     }

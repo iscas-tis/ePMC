@@ -28,7 +28,6 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -42,8 +41,6 @@ public final class JANITypeBool implements JANIType {
 	public final static String IDENTIFIER = "bool";
 	/** Identifier for boolean type. */
 	private final static String BOOL = "bool";
-
-	private ContextValue contextValue;
 	/** Whether the last try to parse type was successful. */
 	private ModelJANI model;
 	
@@ -80,21 +77,13 @@ public final class JANITypeBool implements JANIType {
 	}
 
 	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
-	}
-
-
-	@Override
 	public Type toType() {
-		assert contextValue != null;
-		return TypeBoolean.get(contextValue);
+		return TypeBoolean.get();
 	}
 
 	@Override
 	public Value getDefaultValue() throws EPMCException {
-		assert contextValue != null;
-		return TypeBoolean.get(contextValue).getFalse();
+		return TypeBoolean.get().getFalse();
 	}
 
 	@Override

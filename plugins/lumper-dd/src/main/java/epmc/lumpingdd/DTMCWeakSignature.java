@@ -93,8 +93,8 @@ public class DTMCWeakSignature implements Signature {
 	@Override
 	public DD computeSignatures(DD partitions) throws EPMCException {
         Permutation presNext = original.getSwapPresNext();
-        ContextValue contextValue = contextDD.getContextValue();
-        TypeWeightTransition typeWeightTransition = TypeWeightTransition.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeightTransition typeWeightTransition = TypeWeightTransition.get();
         ValueAlgebra zeroValue = UtilValue.newValue(typeWeightTransition, 0);
         ValueAlgebra zeroOne = UtilValue.newValue(typeWeightTransition, 1);        
         DD zeroDD = contextDD.newConstant(zeroValue);

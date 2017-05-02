@@ -39,6 +39,7 @@ import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.util.BitStoreableToNumber;
 import epmc.util.StopWatch;
+import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.ValueObject;
 
@@ -144,10 +145,10 @@ public final class GraphBuilderExplorer {
         
         int numStates = lastNumber + 1;
         if (nondet) {
-            graphAlter = new GraphExplicitSparseAlternate(explorer.getContextValue(), false);
+            graphAlter = new GraphExplicitSparseAlternate(ContextValue.get(), false);
             this.graph = graphAlter;
         } else {
-            graphStoch = new GraphExplicitSparse(explorer.getContextValue(), false);
+            graphStoch = new GraphExplicitSparse(ContextValue.get(), false);
             this.graph = graphStoch;
         }
         for (Object property : graphProperties) {

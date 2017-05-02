@@ -96,7 +96,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     		return false;
     	}
         Options options = origGraph.getOptions();
-        Type typeWeight = TypeWeight.get(origGraph.getContextValue());
+        Type typeWeight = TypeWeight.get();
         if (!(options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeDouble.isDouble(typeWeight))) {
         	return false;

@@ -234,12 +234,12 @@ public final class ConvertTestPRISM {
 //    			.setExploreAll()
     			.run();
 
-    	ContextValue contextValue = statistics.getContextValue();
+    	ContextValue contextValue = ContextValue.get();
     	Set<Object> nodeProperties = new LinkedHashSet<>();
-    	nodeProperties.add(UtilModelChecker.parseExpression(contextValue, "p1=10"));
-    	nodeProperties.add(UtilModelChecker.parseExpression(contextValue, "p2=10"));
-    	nodeProperties.add(UtilModelChecker.parseExpression(contextValue, "p3=10"));
-    	nodeProperties.add(UtilModelChecker.parseExpression(contextValue, "p4=10"));
+    	nodeProperties.add(UtilModelChecker.parseExpression("p1=10"));
+    	nodeProperties.add(UtilModelChecker.parseExpression("p2=10"));
+    	nodeProperties.add(UtilModelChecker.parseExpression("p3=10"));
+    	nodeProperties.add(UtilModelChecker.parseExpression("p4=10"));
     	
 //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
 	//	System.out.println(graph);

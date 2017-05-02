@@ -63,7 +63,6 @@ public final class JANITypeBounded implements JANIType {
 	/** Identifier for upper bond of bounded type. */
 	private final static String UPPER_BOUND = "upper-bound";
 	
-	private ContextValue contextValue;
 	private Expression lowerBound;
 	private Expression upperBound;
 	private ModelJANI model;
@@ -71,9 +70,6 @@ public final class JANITypeBounded implements JANIType {
 	@Override
 	public void setModel(ModelJANI model) {
 		this.model = model;
-		if (contextValue == null) {
-			contextValue = model.getContextValue();
-		}
 	}
 	
 	@Override
@@ -132,7 +128,6 @@ public final class JANITypeBounded implements JANIType {
 
 	@Override
 	public JsonValue generate() throws EPMCException {
-		assert contextValue != null;
 		JsonObjectBuilder result = Json.createObjectBuilder().add(KIND, BOUNDED);
 		
 		result.add(BASE, INT);
@@ -147,14 +142,13 @@ public final class JANITypeBounded implements JANIType {
 
 	@Override
 	public TypeInteger toType() throws EPMCException {
-		assert contextValue != null;
         int lowerInt = Integer.MIN_VALUE;
         int upperInt = Integer.MAX_VALUE;
         if (lowerBound != null) {
         	if (model != null) {
         		lowerBound = UtilExpressionStandard.replace(lowerBound, model.getConstants());
         	}
-            Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty(contextValue));
+            Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty(ContextValue.get()));
             if (ValueInteger.isInteger(lowerValue)) {
                 lowerInt = ValueInteger.asInteger(lowerValue).getInt();
             }
@@ -163,17 +157,12 @@ public final class JANITypeBounded implements JANIType {
         	if (model != null) {
         		upperBound = UtilExpressionStandard.replace(upperBound, model.getConstants());
         	}
-            Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty(contextValue));
+            Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty(ContextValue.get()));
             if (ValueInteger.isInteger(upperValue)) {
                 upperInt = ValueInteger.asInteger(upperValue).getInt();
             }
         }
-        return TypeInteger.get(contextValue, lowerInt, upperInt);
-	}
-
-	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
+        return TypeInteger.get(lowerInt, upperInt);
 	}
 
 	public void setLowerBound(Expression lowerBound) {
@@ -205,7 +194,6 @@ public final class JANITypeBounded implements JANIType {
             newUpper = UtilExpressionStandard.replace(upperBound, map);
         }
         JANITypeBounded result = new JANITypeBounded();
-        result.setContextValue(contextValue);
         result.setLowerBound(newLower);
         result.setUpperBound(newUpper);
         return result;

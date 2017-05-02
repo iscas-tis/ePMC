@@ -174,7 +174,6 @@ public final class UtilLTL {
 //		if(expression instanceof ExpressionPropositional) return expression;
 //		
 //		Expression result = null;
-//		ContextExpression context = expression.getContext();
 //		if (expression instanceof ExpressionTemporal) { //
 //			ExpressionTemporal expressionTemporal = (ExpressionTemporal)expression;
 //			Expression op1, op2;

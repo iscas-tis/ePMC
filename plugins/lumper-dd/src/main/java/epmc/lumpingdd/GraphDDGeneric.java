@@ -29,7 +29,6 @@ import epmc.dd.Permutation;
 import epmc.error.EPMCException;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
@@ -37,7 +36,6 @@ import epmc.value.ValueObject;
 public final class GraphDDGeneric implements GraphDD {
 
 	public final static class Builder {
-		private ContextValue contextValue;
 		private DD initialNodes;
 		private final Map<Object,Value> graphProperties = new LinkedHashMap<>();
 		private final Map<Object,DD> nodeProperties = new LinkedHashMap<>();
@@ -50,15 +48,6 @@ public final class GraphDDGeneric implements GraphDD {
 
 		public GraphDDGeneric build() {
 			return new GraphDDGeneric(this);
-		}
-
-		public Builder setContextValue(ContextValue contextValue) {
-			this.contextValue = contextValue;
-			return this;
-		}
-		
-		private ContextValue getContextValue() {
-			return contextValue;
 		}
 		
 		public Builder setInitialNodes(DD initialNodes) {
@@ -129,7 +118,6 @@ public final class GraphDDGeneric implements GraphDD {
 		}
 	}
 
-	private final ContextValue contextValue;
 	private final DD initialNodes;
 	private final DD transitions;
 	private final Permutation swapPresNext;
@@ -137,19 +125,12 @@ public final class GraphDDGeneric implements GraphDD {
 
 	private GraphDDGeneric(Builder builder) {
 		assert builder != null;
-		assert builder.getContextValue() != null;
 		assert builder.getInitialNodes() != null;
 		assert builder.getTransitions() != null;
-		this.contextValue = builder.getContextValue();
 		this.initialNodes = builder.getInitialNodes().clone();
 		this.transitions = builder.getTransitions().clone();
 		this.swapPresNext = builder.getSwapPresNext();
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return contextValue;
 	}
 
 	@Override

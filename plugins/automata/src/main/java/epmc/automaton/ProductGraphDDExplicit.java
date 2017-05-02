@@ -103,9 +103,9 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.automaton = automaton;
 
         Options options = model.getOptions();
-        ContextValue contextValue = model.getContextValue();
-        this.falseValue = TypeBoolean.get(contextValue).getFalse();
-        this.trueValue = TypeBoolean.get(contextValue).getTrue();
+        ContextValue contextValue = ContextValue.get();
+        this.falseValue = TypeBoolean.get().getFalse();
+        this.trueValue = TypeBoolean.get().getTrue();
         ContextDD contextDD = model.getContextDD();
         
         numStatesReserved = options.getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);
@@ -171,7 +171,6 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
             Object semantics = model.getGraphPropertyObject(CommonProperties.SEMANTICS);
             properties.registerGraphProperty(CommonProperties.SEMANTICS,
             		new TypeObject.Builder()
-                    .setContext(contextDD.getContextValue())
                     .setClazz(semantics.getClass())
                     .build());
             setGraphPropertyObject(CommonProperties.SEMANTICS,
@@ -418,11 +417,6 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         predecessors.dispose();
         log.send(MessagesAutomaton.EXPLORING_DONE, timer.getTimeSeconds());
         return states;
-    }
-
-    @Override
-    public ContextValue getContextValue() {
-        return model.getContextValue();
     }
 
 	@Override

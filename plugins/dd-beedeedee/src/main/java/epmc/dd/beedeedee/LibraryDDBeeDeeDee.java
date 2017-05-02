@@ -87,12 +87,12 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         this.contextDD = contextDD;
-        this.contextValue = contextDD.getContextValue();
+        this.contextValue = ContextValue.get();
         int initCache = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_CACHE_SIZE);
         int initSlots = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_NODES);
         this.factory = Factory.mkResizingAndGarbageCollected(initSlots, initCache);
-        this.zeroValue = TypeBoolean.get(contextValue).getFalse();
-        this.oneValue = TypeBoolean.get(contextValue).getTrue();
+        this.zeroValue = TypeBoolean.get().getFalse();
+        this.oneValue = TypeBoolean.get().getTrue();
         this.zeroNode = factory.makeZero();
         this.oneNode = factory.makeOne();
         uniqueIdTable.put(zeroNode.hashCodeAux(), zeroNode);
@@ -151,7 +151,6 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     public long newConstant(Value value) throws EPMCException {
         assert alive;
         assert value != null;
-        assert value.getType().getContext() == contextValue;
         assert ValueBoolean.isBoolean(value);
         BDD result = ValueBoolean.asBoolean(value).getBoolean() ? factory.makeOne() : factory.makeZero();
         ref(result);

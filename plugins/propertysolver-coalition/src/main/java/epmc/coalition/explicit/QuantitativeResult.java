@@ -54,7 +54,7 @@ final class QuantitativeResult {
 	QuantitativeResult(ValueArrayAlgebra probabilities, SchedulerSimple strategies) {
 		assert probabilities != null;
 		assert ValueArray.isArray(probabilities);
-		assert TypeWeight.get(probabilities.getType().getContext())
+		assert TypeWeight.get()
 				.canImport(TypeArray.asArray(probabilities.getType()).getEntryType());
 		this.probabilities = probabilities;
 		this.strategies = strategies;

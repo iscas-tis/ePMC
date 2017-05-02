@@ -69,7 +69,6 @@ public class ConstraintSolverConfiguration {
                 continue;
             }
             ConstraintSolver solver = Util.getInstance(solverClass);
-            solver.setContextValue(contextValue);
 			for (Feature feature : features) {
 	            solver.requireFeature(feature);
             }
@@ -85,10 +84,6 @@ public class ConstraintSolverConfiguration {
         return options;
     }
 
-    public ContextValue getContextValue() {
-        return contextValue;
-    }
-    
     public ContextDD getContextDD() throws EPMCException {
         return ContextDD.get(contextValue);
     }

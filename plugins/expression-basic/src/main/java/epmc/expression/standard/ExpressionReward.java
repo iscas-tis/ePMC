@@ -53,7 +53,6 @@ public final class ExpressionReward implements Expression {
 	}
 	
 	public final static class Builder {
-		private ContextValue context;
         private Expression reward;
         private Expression reachSet;
         private Expression time;
@@ -61,15 +60,6 @@ public final class ExpressionReward implements Expression {
         private RewardType rewardType;
         private Positional positional;
 
-        public Builder setContext(ContextValue context) {
-        	this.context = context;
-        	return this;
-        }
-        
-        private ContextValue getContext() {
-			return context;
-		}
-        
         public Builder setReward(Expression reward) {
         	this.reward = reward;
         	return this;
@@ -133,7 +123,6 @@ public final class ExpressionReward implements Expression {
     private final static String COMMA = ",";
     private final static String LBRACE = "(";
     private final static String RBRACE = ")";
-    private final static String QUOT = "\"";
     
     private final Positional positional;
     private final RewardType type;
@@ -141,31 +130,27 @@ public final class ExpressionReward implements Expression {
     private final Expression reachSet;
     private final Expression time;
     private final Expression discount;
-	private final ContextValue context;
 
     private ExpressionReward(Builder builder) {
     	assert builder != null;
         assert builder.getRewardType() != null;
         assert builder.getReward() != null;
-//        assert builder.getReachSet() != null;
-        assert builder.getContext() != null;
         this.positional = builder.getPositional();
         this.type = builder.getRewardType();
         this.reward = builder.getReward();
-        this.context = builder.getContext();
         Expression reachSet = builder.getReachSet();
         if (reachSet == null) {
-        	reachSet = ExpressionLiteral.getFalse(builder.getContext());
+        	reachSet = ExpressionLiteral.getFalse(ContextValue.get());
         }
         this.reachSet = reachSet;
         Expression time = builder.getTime();
         if (time == null) {
-        	time = ExpressionLiteral.getPosInf(builder.getContext());
+        	time = ExpressionLiteral.getPosInf(ContextValue.get());
         }
         this.time = time;
         Expression discount = builder.getDiscount();
         if (discount == null) {
-        	discount = ExpressionLiteral.getOne(builder.getContext());
+        	discount = ExpressionLiteral.getOne(ContextValue.get());
         }
         this.discount = discount;
     }
@@ -174,7 +159,6 @@ public final class ExpressionReward implements Expression {
             RewardType type, Positional positional) {
         assert type != null;
         assert children.size() == 4;
-        this.context = context;
         this.positional = positional;
         this.type = type;
         this.reward = children.get(0);
@@ -199,7 +183,6 @@ public final class ExpressionReward implements Expression {
 //    	on exporting to JANI while they should not be relabelled for internal use; this 
 //    	is now considered inside PRISM2JANIConverter
         return new ExpressionReward.Builder()
-        		.setContext(context)
         		.setRewardType(type)
         		.setReward(children.get(0))
         		.setReachSet(children.get(1))
@@ -212,7 +195,6 @@ public final class ExpressionReward implements Expression {
     @Override
     public Type getType(ExpressionToType expressionToType) throws EPMCException {
     	assert expressionToType != null;
-    	ContextValue contextValue = expressionToType.getContextValue();
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
@@ -235,7 +217,7 @@ public final class ExpressionReward implements Expression {
             assert false;
             break;        
         }
-        return TypeWeight.get(contextValue);
+        return TypeWeight.get();
     }
     
     public RewardSpecification getReward() {

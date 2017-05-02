@@ -21,7 +21,6 @@
 package epmc.prism.value;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -40,22 +39,11 @@ import epmc.value.ValueReal;
  * @author Ernst Moritz Hahn
  */
 public final class OperatorPRISMPow implements Operator {
-    private ContextValue context;
     public final static String IDENTIFIER = "pow-prism";
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
-    }
-
-    @Override
-    public void setContext(ContextValue context) {
-        this.context = context;
-    }
-
-    @Override
-    public ContextValue getContext() {
-        return context;
     }
 
     @Override
@@ -78,9 +66,9 @@ public final class OperatorPRISMPow implements Operator {
         	allInteger &= TypeInteger.isInteger(type);
         }
         if (allInteger) {
-        	return TypeInteger.get(types[0].getContext());
+        	return TypeInteger.get();
         } else {
-        	return TypeReal.get(types[0].getContext());
+        	return TypeReal.get();
         }
     }
 

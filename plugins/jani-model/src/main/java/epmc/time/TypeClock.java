@@ -20,12 +20,9 @@ public final class TypeClock implements TypeAlgebra {
 	}
 	
 	private final static String CLOCK = "clock";
-	/** Value context to which this type belongs. */
-	private ContextValue contextValue;
 
 	public TypeClock(ContextValue contextValue) {
 		assert contextValue != null;
-		this.contextValue = contextValue;
 	}
 	
 	@Override
@@ -33,11 +30,6 @@ public final class TypeClock implements TypeAlgebra {
 		return new ValueClock(this);
 	}
 	
-	@Override
-	public ContextValue getContext() {
-		return contextValue;
-	}
-
 	@Override
 	public boolean canImport(Type type) {
 		assert type != null;

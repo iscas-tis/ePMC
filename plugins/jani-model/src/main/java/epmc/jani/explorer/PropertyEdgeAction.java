@@ -54,7 +54,6 @@ public final class PropertyEdgeAction implements PropertyEdge {
 			actionNumber++;
 		}
 		type = new TypeObject.Builder()
-                .setContext(model.getContextValue())
                 .setClazz(Action.class)
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build();

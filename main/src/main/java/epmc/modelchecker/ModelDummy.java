@@ -26,7 +26,6 @@ import java.util.Set;
 import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
-import epmc.value.ContextValue;
 
 /**
  * Dummy model or cases where a model is not really needed.
@@ -38,22 +37,12 @@ import epmc.value.ContextValue;
 public final class ModelDummy implements Model {
     /** Identifier of this model class. */
     public final static String IDENTIFIER = "dummy";
-    /** Value context used. */
-    private ContextValue contextValue;
     /** Properties of the model. */
     private PropertiesDummy properties;
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
-    }
-
-    @Override
-    public void setContext(ContextValue context) {
-        assert this.contextValue == null;
-        assert context != null;
-        this.contextValue = context;
-        this.properties = new PropertiesDummy(context);
     }
 
     @Override
@@ -65,11 +54,6 @@ public final class ModelDummy implements Model {
     @Override
     public Semantics getSemantics() {
         return null;
-    }
-
-    @Override
-    public ContextValue getContextValue() {
-        return contextValue;
     }
 
     @Override

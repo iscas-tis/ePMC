@@ -135,10 +135,10 @@ public final class GraphDDJANI implements GraphDD {
 		assert assertConstructor(nodeProperties, edgeProperties);
 		
 		this.model = model;
-		this.contextDD = ContextDD.get(model.getContextValue());
+		this.contextDD = ContextDD.get(ContextValue.get());
 		prepareActionDDVariable();
 		buildGlobalVariables();
-		expressionToDD = new ExpressionToDD(getContextValue(), globalIdentifierToDD);
+		expressionToDD = new ExpressionToDD(ContextValue.get(), globalIdentifierToDD);
 		PreparatorDDComponent preparator = new PreparatorDDComponent();
 		DDComponent component = preparator.prepare(this, model.getSystem());
 
@@ -152,7 +152,7 @@ public final class GraphDDJANI implements GraphDD {
         DD deadlocks = buildDeadlocks(transitions);
         DDTransition deadlockTransition = null;
         if (!deadlocks.isFalse()) {
-        	ensure(model.getContextValue().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS), ProblemsJANIDD.JANI_DD_DEADLOCK);
+        	ensure(ContextValue.get().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS), ProblemsJANIDD.JANI_DD_DEADLOCK);
         	deadlockTransition = computeDeadlockTransition(deadlocks, component.getVariables());
         }
 		deadlocks.dispose();
@@ -174,20 +174,18 @@ public final class GraphDDJANI implements GraphDD {
 	private void buildProperties(DD weight) throws EPMCException {
         properties.registerGraphProperty(CommonProperties.EXPRESSION_TO_DD,
         		new TypeObject.Builder()
-                .setContext(model.getContextValue())
                 .setClazz(expressionToDD.getClass())
                 .build());
         properties.setGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD,
                 expressionToDD);
         properties.registerGraphProperty(CommonProperties.SEMANTICS,
         		new TypeObject.Builder()
-                .setContext(model.getContextValue())
                 .setClazz(Semantics.class)
                 .build());
         properties.setGraphPropertyObject(CommonProperties.SEMANTICS,
                 model.getSemantics());
         
-        TypeEnum playerType = TypeEnum.get(model.getContextValue(), Player.class);
+        TypeEnum playerType = TypeEnum.get(Player.class);
         Value playerOneStochastic = playerType.newValue(Player.ONE_STOCHASTIC);
         DD player;
         player = getContextDD().newConstant(playerOneStochastic);
@@ -256,7 +254,7 @@ public final class GraphDDJANI implements GraphDD {
 		if (SemanticsNonDet.isNonDet(model.getSemantics())) {
 			int required = Integer.SIZE - Integer.numberOfLeadingZeros(transitions.size() - 1);
 			ensure(this.ddActionBits.get(0).size() >= required, ProblemsJANIDD.JANI_DD_ACTION_BITS_INSUFFICIENT, this.ddActionBits.get(0).size(), required);
-			Type actionType = TypeInteger.get(getContextValue(), 0, transitions.size() - 1);
+			Type actionType = TypeInteger.get(0, transitions.size() - 1);
 			return contextDD.newVariable(ACTION, actionType, ddActionBits);
 		} else {
 			return null;
@@ -459,7 +457,7 @@ public final class GraphDDJANI implements GraphDD {
 		}
 		ddActionBits = new ArrayList<>();
 		ddActionBits.add(new ArrayList<>());
-		Options options = model.getContextValue().getOptions();
+		Options options = ContextValue.get().getOptions();
 		int numBits = options.getInteger(OptionsJANIModel.JANI_ACTION_BITS);
         for (int bitNr = 0; bitNr < numBits; bitNr++) {
         	int varNr = contextDD.numVariables();
@@ -498,8 +496,8 @@ public final class GraphDDJANI implements GraphDD {
 	private DD buildInitialNodes(DDComponent component) throws EPMCException {
 		assert component != null;
 		Expression initialStates = model.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(getContextValue(), model.getGlobalVariablesOrEmpty());
-		initialStates = UtilExpressionStandard.opAnd(getContextValue(), initialStates, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), model.getGlobalVariablesOrEmpty());
+		initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, bounds);
 		initialStates = model.replaceConstants(initialStates);
 		DD initialNodes = getContextDD().newConstant(true);
 		initialNodes = initialNodes.andWith(component.getInitialNodes().clone());
@@ -610,11 +608,6 @@ public final class GraphDDJANI implements GraphDD {
 	 */
 	Map<Variable, Expression> getGlobalVariableToIdentifier() {
 		return globalVariableToIdentifierExternal;
-	}
-	
-	@Override
-	public ContextValue getContextValue() {
-		return model.getContextValue();
 	}
 	
 	ContextValueJANI getContextValueJANI() {

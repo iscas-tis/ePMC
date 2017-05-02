@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 public final class TypeArrayIntegerJava implements TypeArrayInteger {
     private final static String ARRAY_INDICATOR = "[](integer-java)";
 	private final TypeInteger entryType;
@@ -35,11 +33,6 @@ public final class TypeArrayIntegerJava implements TypeArrayInteger {
     public ValueArrayInteger newValue() {
         return new ValueArrayIntegerJava(this);
     }
-
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
 
 	@Override
 	public TypeInteger getEntryType() {

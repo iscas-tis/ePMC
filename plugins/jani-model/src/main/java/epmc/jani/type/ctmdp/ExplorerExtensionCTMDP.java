@@ -49,8 +49,8 @@ public final class ExplorerExtensionCTMDP implements ExplorerExtension {
 	@Override
 	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
 		this.explorer = explorer;
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
-		weight = new PropertyEdgeGeneral(explorer, TypeWeight.get(explorer.getContextValue()));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
+		weight = new PropertyEdgeGeneral(explorer, TypeWeight.get());
 	}
 	
 	@Override

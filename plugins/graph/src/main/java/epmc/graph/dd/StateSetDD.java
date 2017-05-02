@@ -36,7 +36,7 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
 
     // note: consumes arguments statesExplicit and statesDD
     public StateSetDD(LowLevel lowLevel, DD statesDD) {
-        this.contextValue = lowLevel.getContextValue();
+        this.contextValue = ContextValue.get();
         this.lowLevel = lowLevel;
         this.statesDD = statesDD;
     }
@@ -76,9 +76,6 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
             return false;
         }
         StateSetDD other = (StateSetDD) obj;
-        if (contextValue != other.getContextValue()) {
-            return false;
-        }
         if ((this.statesDD == null) != (other.statesDD == null)) {
             return false;
         }
@@ -92,18 +89,12 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
     public boolean isSubsetOf(StateSet states) throws EPMCException {
         assert !closed();
         assert states != null;
-        assert contextValue == states.getContextValue();
+        assert contextValue == ContextValue.get();
         assert states instanceof StateSetDD;
         StateSetDD other = (StateSetDD) states;
         return statesDD.andNot(other.statesDD).isFalseWith();
     }
     
-    @Override
-    public ContextValue getContextValue() {
-        assert !closed();
-        return contextValue;
-    }
-
     public DD getStatesDD() {
         return statesDD;
     }

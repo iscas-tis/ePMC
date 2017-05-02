@@ -40,7 +40,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
         assert scheduler != null;
         this.original = original;
         this.scheduler = scheduler;
-        this.properties = new GraphExplicitProperties(this, original.getContextValue());
+        this.properties = new GraphExplicitProperties(this, ContextValue.get());
         for (Object property : original.getGraphProperties()) {
             properties.registerGraphProperty(property, original.getGraphProperty(property));
         }
@@ -108,10 +108,5 @@ public final class GraphExplicitInduced implements GraphExplicit {
     
 	@Override
 	public void close() {
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return original.getContextValue();
 	}
 }

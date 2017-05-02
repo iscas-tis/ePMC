@@ -26,12 +26,10 @@ import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 
 public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     private final BitSet statesExplicit;
     private final int[] numberToState;
-    private final ContextValue contextValue;
     private int size;
 
     // note: consumes arguments statesExplicit and statesDD
@@ -40,11 +38,9 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
         if (statesExplicit == null) {
             this.statesExplicit = null;
             this.numberToState = null;
-            this.contextValue = lowLevel.getContextValue();
         } else {
             this.statesExplicit = statesExplicit;
             this.numberToState = new int[statesExplicit.cardinality()];
-            this.contextValue = lowLevel.getContextValue();
             int index = 0;
             for (int state = statesExplicit.nextSetBit(0); state >= 0; state = statesExplicit.nextSetBit(state + 1)) {
                 numberToState[index] = state;
@@ -75,9 +71,6 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
             return false;
         }
         StateSetExplicit other = (StateSetExplicit) obj;
-        if (contextValue != other.getContextValue()) {
-            return false;
-        }
         if ((this.statesExplicit == null) != (other.statesExplicit == null)) {
             return false;
         }
@@ -90,7 +83,6 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     @Override
     public boolean isSubsetOf(StateSet states) throws EPMCException {
         assert states != null;
-        assert contextValue == states.getContextValue();
         assert states instanceof StateSetExplicit;
         StateSetExplicit other = (StateSetExplicit) states;
         for (int state = statesExplicit.nextSetBit(0); state >= 0; state = statesExplicit.nextSetBit(state + 1)) {
@@ -101,11 +93,6 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
         return true;
     }
     
-    @Override
-    public ContextValue getContextValue() {
-        return contextValue;
-    }
-
     public int getExplicitIthState(int i) {
         assert i >= 0;
         assert i < numberToState.length;

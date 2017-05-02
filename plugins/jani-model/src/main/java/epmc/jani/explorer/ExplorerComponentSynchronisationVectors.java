@@ -124,7 +124,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 			automataWeights[autNr] = automata[autNr].getEdgeProperty(CommonProperties.WEIGHT);
 			autNr++;
 		}
-		state = new PropertyNodeGeneral(explorer, TypeBoolean.get(getContextValue()));
+		state = new PropertyNodeGeneral(explorer, TypeBoolean.get());
 		label = new PropertyEdgeAction(explorer);
 		twoLayer = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics())
 				&& SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
@@ -165,8 +165,8 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 			vectorResult[vecNr] = resultAction;
 			vecNr++;
 		}
-		prodWeight = TypeWeightTransition.get(explorer.getContextValue()).newValue();
-		weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get(explorer.getContextValue()));
+		prodWeight = TypeWeightTransition.get().newValue();
+		weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get());
 	}
 
 	@Override

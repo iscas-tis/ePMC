@@ -76,7 +76,7 @@ public final class FoxGlynn {
     private void finder(int m) throws EPMCException {
     	ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
-        ValueReal e = UtilValue.newValue(TypeReal.get(typeReal.getContext()), UtilValue.LOG);
+        ValueReal e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
         tau.log(this.tau, e);
         ValueReal epsilon = typeReal.newValue();
         epsilon.multiply(this.epsilon, sqrt_2_pi);
@@ -332,20 +332,16 @@ public final class FoxGlynn {
         assert tau != null;
         assert omega != null;
         assert epsilon != null;
-        ContextValue contextValue = lambda.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         Options options = contextValue.getOptions();
-        assert lambda.getType().getContext() == contextValue;
-        assert tau.getType().getContext() == contextValue;
-        assert omega.getType().getContext() == contextValue;
-        assert epsilon.getType().getContext() == contextValue;
         assert TypeReal.isReal(lambda.getType());
         assert TypeReal.isReal(tau.getType());
         assert TypeReal.isReal(omega.getType());
         assert TypeReal.isReal(epsilon.getType());
-        assert lambda.isGe(TypeReal.get(lambda.getType().getContext()).getZero()) : lambda;
+        assert lambda.isGe(TypeReal.get().getZero()) : lambda;
         assert !lambda.isPosInf();
-        ContextValue context = lambda.getType().getContext();
-        this.typeReal = TypeReal.get(context);
+        ContextValue context = ContextValue.get();
+        this.typeReal = TypeReal.get();
         
         /* store input parameters and derived stuff */
         this.log = options.get(OptionsMessages.LOG);
@@ -359,8 +355,8 @@ public final class FoxGlynn {
         this.epsilon.set(epsilon);
         
         this.typeArray = useNative
-                ? TypeHasNativeArray.asHasNativeArray(TypeReal.get(context)).getTypeArrayNative()
-                : TypeReal.get(context).getTypeArray();
+                ? TypeHasNativeArray.asHasNativeArray(TypeReal.get()).getTypeArrayNative()
+                : TypeReal.get().getTypeArray();
 
         /* set constants */
         this.zero = UtilValue.newValue(typeReal, 0);
@@ -408,12 +404,12 @@ public final class FoxGlynn {
 
     private static ValueReal getUnderflow(ValueReal value) {
         assert value != null;
-        return TypeReal.get(value.getType().getContext()).getUnderflow();
+        return TypeReal.get().getUnderflow();
     }
     
     private static ValueReal getOverflow(ValueReal value) {
         assert value != null;
-        return TypeReal.get(value.getType().getContext()).getOverflow();
+        return TypeReal.get().getOverflow();
     }
     
     public int getLeft() {

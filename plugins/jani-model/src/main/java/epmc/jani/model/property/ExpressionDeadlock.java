@@ -50,7 +50,7 @@ public final class ExpressionDeadlock implements Expression {
         if (result != null) {
             return result;
         }
-    	return TypeBoolean.get(expressionToType.getContextValue());
+    	return TypeBoolean.get();
     }
     
     @Override

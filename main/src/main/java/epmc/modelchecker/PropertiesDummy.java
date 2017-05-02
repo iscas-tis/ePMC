@@ -45,8 +45,6 @@ import epmc.value.Type;
  * @author Ernst Moritz Hahn
  */
 public final class PropertiesDummy implements Properties {
-    /** Value context used. */
-    private ContextValue contextValue;
     /** Set of properties stored. */
     private final Map<RawProperty,Expression> properties = new LinkedHashMap<>();
     /** Constants stored in these options. */
@@ -55,17 +53,6 @@ public final class PropertiesDummy implements Properties {
     private final Map<String,Type> constantTypes = new LinkedHashMap<>();
     /** Labels stored. */
     private final Map<String,Expression> labels = new LinkedHashMap<>();
-
-    /**
-     * Create new properties object.
-     * The value context parameter must not be {@code null}.
-     * 
-     * @param contextValue value context to use
-     */
-    public PropertiesDummy(ContextValue contextValue) {
-        assert contextValue != null;
-        this.contextValue = contextValue;
-    }
     
     @Override
     public void parseProperties(InputStream... inputs) throws EPMCException {
@@ -87,7 +74,7 @@ public final class PropertiesDummy implements Properties {
      */
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         Property property = UtilOptions.getInstance(options,
                 OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -104,7 +91,7 @@ public final class PropertiesDummy implements Properties {
      */
     private void parseProperties(RawProperties rawProperties) throws EPMCException {
         assert rawProperties != null;
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
             optionsConsts = new LinkedHashMap<>();
@@ -114,7 +101,7 @@ public final class PropertiesDummy implements Properties {
             if (definition == null) {
                 continue;
             }
-            Expression parsed = UtilModelChecker.parseExpression(contextValue, definition);
+            Expression parsed = UtilModelChecker.parseExpression(definition);
             properties.put(prop, parsed);
         }
         for (Entry<String,String> entry : rawProperties.getConstants().entrySet()) {
@@ -125,14 +112,14 @@ public final class PropertiesDummy implements Properties {
             }
             Expression expr = null;
             if (definition != null && definition instanceof String) {
-                expr = UtilModelChecker.parseExpression(contextValue, ((String) definition));
+                expr = UtilModelChecker.parseExpression(((String) definition));
             } else if (definition != null && definition instanceof Expression) {
                 expr = (Expression) definition;
             } else if (definition != null) {
                 assert false : definition;
             }
             constants.put(name, expr);
-            Type type = UtilModelChecker.parseType(contextValue, rawProperties.getConstantType(name));
+            Type type = UtilModelChecker.parseType(rawProperties.getConstantType(name));
             assert type != null;
             constantTypes.put(name, type);
         }
@@ -141,7 +128,7 @@ public final class PropertiesDummy implements Properties {
             String definition = entry.getValue();
             Expression expr = null;
             if (definition != null) {
-                expr = UtilModelChecker.parseExpression(contextValue, definition);
+                expr = UtilModelChecker.parseExpression(definition);
             }
             labels.put(name, expr);
         }

@@ -28,8 +28,8 @@ import epmc.value.TypeArray;
 import epmc.value.Value;
 
 public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
-    public static TypeEnum get(ContextValue context, Class<? extends Enum<?>> enumClass) {
-        return context.makeUnique(new TypeEnum(context, enumClass));
+    public static TypeEnum get(Class<? extends Enum<?>> enumClass) {
+        return ContextValue.get().makeUnique(new TypeEnum(enumClass));
     }
     
     public static TypeEnum asEnum(Type type) {
@@ -44,14 +44,11 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     	return type instanceof TypeEnum;
     }
     
-    private final ContextValue context;
     private final Class<? extends Enum<?>> enumClass;
     private final int numBits;
     private final int numConstants;
 
-    TypeEnum(ContextValue context, Class<? extends Enum<?>> enumClass) {
-        assert context != null;
-        this.context = context;
+    TypeEnum(Class<? extends Enum<?>> enumClass) {
         assert enumClass != null;
         this.enumClass = enumClass;
         numConstants = enumClass.getEnumConstants().length;
@@ -92,9 +89,6 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
             return false;
         }
         TypeEnum other = (TypeEnum) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -129,12 +123,7 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     }
     
     @Override
-    public ContextValue getContext() {
-        return context;
-    }
-    
-    @Override
     public TypeArray getTypeArray() {
-        return context.makeUnique(new TypeArrayEnum(this));
+        return ContextValue.get().makeUnique(new TypeArrayEnum(this));
     }
 }

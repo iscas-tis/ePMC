@@ -59,14 +59,14 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 		assert explorer != null;
 		this.explorer = explorer;
 		this.system = explorer.getExplorerSystem();
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
 		player.set(Player.STOCHASTIC);
 		noNondetHelperNode = new NodeJANI[1];
 		noNondetHelperNode[0] = system.newNode();
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
 		allowMulti = explorer.getOptions().getBoolean(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
-		dtmcSum = TypeWeight.get(explorer.getContextValue()).newValue();
-		dtmcAligned = TypeWeight.get(explorer.getContextValue()).newValue();
+		dtmcSum = TypeWeight.get().newValue();
+		dtmcAligned = TypeWeight.get().newValue();
 	}
 	
 	@Override

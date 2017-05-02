@@ -59,12 +59,9 @@ final class MultiObjectiveUtils {
         assert weights != null;
         assert q != null;
         assert bounds != null;
-        ContextValue contextValue = weights.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         int size = weights.size();
-        Type typeWeight = TypeWeight.get(contextValue);
-        assert weights.getType().getContext() == contextValue;
-        assert q.getType().getContext() == contextValue;
-        assert bounds.getType().getContext() == contextValue;
+        Type typeWeight = TypeWeight.get();
         assert weights.size() == size;
         assert q.size() == size;
         assert bounds.size() == size;
@@ -94,14 +91,13 @@ final class MultiObjectiveUtils {
             ExpressionMultiObjective property, boolean invert)
                     throws EPMCException {
         assert property != null;
-        ContextValue contextValue = modelChecker.getModel().getContextValue();
+        ContextValue contextValue = ContextValue.get();
         ValueAlgebra numMinValue = null;
         if (isNumericalQuery(property)) {
         	ExpressionQuantifier propOp1 = (ExpressionQuantifier) property.getOperand1();
             Expression quantified = propOp1.getQuantified();
             if (!(quantified instanceof ExpressionReward)) {
                 Expression minQ = new ExpressionQuantifier.Builder()
-                		.setContext(contextValue)
                 		.setDirType(DirType.MIN)
                 		.setCmpType(CmpType.IS)
                 		.setQuantified(quantified)
@@ -154,18 +150,18 @@ final class MultiObjectiveUtils {
         assert graph != null;
         assert rewards != null;
         int numAutomata = rewards.getNumObjectives();
-        ValueArrayAlgebra q = newValueArrayWeight(rewards.getContextValue(), numAutomata);
-        ContextValue contextValue = q.getType().getContext();
+        ValueArrayAlgebra q = newValueArrayWeight(ContextValue.get(), numAutomata);
+        ContextValue contextValue = ContextValue.get();
         int iterInit = graph.getInitialNodes().nextSetBit(0);
         int[] choice = new int[graph.computeNumStates()];
         ValueArrayAlgebra weightedCombinations = combinationsToWeighted(rewards, choice, weights);
         ValueArrayAlgebra weightedRewards = rewardsToWeighted(rewards, weights);
-        Type typeWeight = TypeWeight.get(contextValue);
+        Type typeWeight = TypeWeight.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(typeWeight) != null;
         ValueArrayAlgebra iterResult = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
-                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
+                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), graph.computeNumStates())
+                : UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
 
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objective = new GraphSolverObjectiveExplicitMultiObjectiveWeighted();
@@ -225,14 +221,14 @@ final class MultiObjectiveUtils {
         assert rewards != null;
         assert weights != null;
         assert weights.size() == rewards.getNumObjectives();
-        ContextValue contextValue = weights.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         int numNondet = rewards.getNumNondet();
         int numObjectives = rewards.getNumObjectives();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), numNondet)
-                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numNondet);
+                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numNondet)
+                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numNondet);
         ValueAlgebra entry = newValueWeight(contextValue);
         ValueAlgebra objWeight = newValueWeight(contextValue);
         ValueAlgebra objRew = newValueWeight(contextValue);
@@ -256,15 +252,15 @@ final class MultiObjectiveUtils {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();
-        ContextValue contextValue = weights.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
         
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), numStates)
-                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numStates);
+                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
+                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra max = newValueWeight(contextValue);
         ValueAlgebra entryValue = newValueWeight(contextValue);
         Value weight = newValueWeight(contextValue);
@@ -300,14 +296,14 @@ final class MultiObjectiveUtils {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();
-        ContextValue contextValue = weights.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), numStates)
-                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numStates);
+                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
+                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra entryValue = newValueWeight(contextValue);
         Value weight = newValueWeight(contextValue);
         for (int state = 0; state < numStates; state++) {
@@ -325,12 +321,12 @@ final class MultiObjectiveUtils {
     }
 
     private static ValueArrayAlgebra newValueArrayWeight(ContextValue contextValue, int size) {
-        TypeArray typeArray = TypeWeight.get(contextValue).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
     
     private static ValueAlgebra newValueWeight(ContextValue contextValue) {
-    	return TypeWeight.get(contextValue).newValue();
+    	return TypeWeight.get().newValue();
     }
 
     private static boolean isIs(Expression expression) {

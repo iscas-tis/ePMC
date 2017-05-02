@@ -39,11 +39,6 @@ public final class TypeArrayGeneric implements TypeArray {
     }
 
     @Override
-    public ContextValue getContext() {
-        return entryType.getContext();
-    }
-
-    @Override
     public Type getEntryType() {
         return entryType;
     }
@@ -77,6 +72,6 @@ public final class TypeArrayGeneric implements TypeArray {
     }
     
     public TypeArray getTypeArray() {
-        return getContext().makeUnique(new TypeArrayGeneric(this));
+        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

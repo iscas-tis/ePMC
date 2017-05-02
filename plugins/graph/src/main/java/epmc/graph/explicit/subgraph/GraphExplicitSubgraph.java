@@ -67,7 +67,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
             origToSub[origNode] = subNode;
             subNode++;
         }
-        properties = new GraphExplicitProperties(this, original.getContextValue());
+        properties = new GraphExplicitProperties(this, ContextValue.get());
         successors = new int[1];
         origSuccNumbers = new int[1];
         for (Object property : original.getGraphProperties()) {
@@ -187,10 +187,5 @@ public class GraphExplicitSubgraph implements GraphExplicit {
 
 	@Override
 	public void close() {
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return original.getContextValue();
 	}
 }

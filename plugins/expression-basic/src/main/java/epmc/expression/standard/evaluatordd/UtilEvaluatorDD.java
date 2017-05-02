@@ -21,7 +21,6 @@
 package epmc.expression.standard.evaluatordd;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,19 +46,12 @@ public final class UtilEvaluatorDD {
     private final static String SPACE = " ";
     
     private final static class ExpressionToTypeDD implements ExpressionToType {
-    	private final ContextValue context;
 		private final Map<Expression, VariableDD> variables;
 
 		private ExpressionToTypeDD(ContextValue context, Map<Expression, VariableDD> variables) {
     		assert context != null;
-    		this.context = context;
     		this.variables = variables;
     	}
-
-		@Override
-		public ContextValue getContextValue() {
-			return context;
-		}
 
 		@Override
 		public Type getType(Expression expression) throws EPMCException {
@@ -89,7 +81,6 @@ public final class UtilEvaluatorDD {
             EvaluatorDD evaluator = Util.getInstance(clazz);
             evaluator.setExpression(expression);
             evaluator.setVariables(variables);
-            evaluator.setContextValue(context);
             if (evaluator.canHandle()) {
                 evaluator.build();
                 return evaluator;
@@ -112,7 +103,7 @@ public final class UtilEvaluatorDD {
         assert copy >= 0;
         assert copy < variable.getNumCopies();
         assert value != null;
-        EvaluatorDD evaluator = newEvaluator(variable.getContext().getContextValue(), value, variables);
+        EvaluatorDD evaluator = newEvaluator(ContextValue.get(), value, variables);
         ContextDD contextDD = variable.getContext();
         DD result;
         if (evaluator.getVector() != null) {
@@ -133,11 +124,11 @@ public final class UtilEvaluatorDD {
         }
         assert vector != null;
         ContextDD contextDD = vector.get(0).getContext();
-        Type type = TypeInteger.get(contextDD.getContextValue());
-//        Type type = expression.getType(new ExpressionToTypeDD(contextDD.getContextValue(), null));
+        Type type = TypeInteger.get();
+//        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
         if (type == null || TypeInteger.isInteger(type)) {
             int digVal = 1;
-            ValueInteger value = TypeInteger.get(contextDD.getContextValue())
+            ValueInteger value = TypeInteger.get()
                     .newValue();
             singleDD = contextDD.newConstant(0);
             for (int pos = 0; pos < vector.size() - 1; pos++) {
@@ -277,7 +268,6 @@ public final class UtilEvaluatorDD {
             EvaluatorDDOperatorGeneral general = new EvaluatorDDOperatorGeneral();
             general.setExpression(expression);
             general.setVariables(variables);
-            general.setContextValue(context);
             general.build();
             result = general.getDD().clone();
             general.close();

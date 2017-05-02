@@ -41,6 +41,7 @@ import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
+import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -197,7 +198,7 @@ public final class EquivalenceWeakCTMC implements Equivalence {
             maxOrigFanout = Math.max(maxOrigFanout, numSuccStates);
         }
         
-        TypeAlgebra typeWeight = TypeWeight.get(successorWeights.getType().getContext());
+        TypeAlgebra typeWeight = TypeWeight.get();
 
         Signature cmpSignature = new Signature();
         cmpSignature.size = maxOrigFanout;
@@ -240,8 +241,8 @@ public final class EquivalenceWeakCTMC implements Equivalence {
         }
         ValueAlgebra[] quotWeightsArr = new ValueAlgebra[maxOrigFanout];
         int[] quotSuccStatesArr = new int[maxOrigFanout];
-        TypeAlgebra typeWeight = TypeWeight.get(original.getContextValue());
-        quotient = new GraphExplicitSparse(original.getContextValue(), false, numStates, numTotalOut);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        quotient = new GraphExplicitSparse(ContextValue.get(), false, numStates, numTotalOut);
         EdgeProperty quotWeight = quotient.addSettableEdgeProperty(CommonProperties.WEIGHT, typeWeight);
         for (int i = 0; i < quotWeightsArr.length; i++) {
             quotWeightsArr[i] = typeWeight.newValue();

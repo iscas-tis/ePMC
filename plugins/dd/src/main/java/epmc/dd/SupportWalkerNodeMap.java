@@ -43,7 +43,6 @@ public final class SupportWalkerNodeMap {
     SupportWalkerNodeMap(SupportWalker walker, Type type) {
         assert walker != null;
         assert type != null;
-        assert walker.getContext().getContextValue() == type.getContext();
         this.valueSet = UtilBitSet.newBitSetUnbounded();
         this.entryType = type;
         this.walker = walker;

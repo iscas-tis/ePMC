@@ -35,7 +35,6 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.jani.model.type.JANIType;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public final class Constants implements JANINode, Iterable<Constant>, ExpressionToType {
@@ -114,10 +113,5 @@ public final class Constants implements JANINode, Iterable<Constant>, Expression
 			return null;
 		}
 		return type.toType();
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return model.getContextValue();
 	}
 }

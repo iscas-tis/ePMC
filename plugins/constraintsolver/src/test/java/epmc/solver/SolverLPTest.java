@@ -59,9 +59,9 @@ public class SolverLPTest {
         contextSolver.requireFeature(Feature.LP);
         ConstraintSolver problem = contextSolver.newProblem();
         problem.setDirection(Direction.MAX);
-        int x = problem.addVariable("x", TypeReal.get(contextValue));
-        int y = problem.addVariable("y", TypeReal.get(contextValue));
-        TypeReal typeReal = TypeReal.get(contextValue);
+        int x = problem.addVariable("x", TypeReal.get());
+        int y = problem.addVariable("y", TypeReal.get());
+        TypeReal typeReal = TypeReal.get();
         int[] variables = new int[]{x, y};
         
         problem.setObjective(new Value[]{newValue(typeReal, 300), newValue(typeReal, 500)},

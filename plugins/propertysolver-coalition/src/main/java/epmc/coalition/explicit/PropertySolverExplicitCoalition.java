@@ -206,9 +206,9 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	
 	    StateMap result;
 	    if (trivialTrue || trivialFalse) {
-	        ValueArray resultValue = UtilValue.newArray(TypeBoolean.get(getContextValue()).getTypeArray(),
+	        ValueArray resultValue = UtilValue.newArray(TypeBoolean.get().getTypeArray(),
 	        		init.size());
-	        ValueBoolean valueTrivialTrue = TypeBoolean.get(getContextValue()).newValue();
+	        ValueBoolean valueTrivialTrue = TypeBoolean.get().newValue();
 	        valueTrivialTrue.set(trivialTrue);
 	        for (int i = 0; i < init.size(); i++) {
 	            int node = init.getExplicitIthState(i);
@@ -270,7 +270,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		assert forStates != null;
 		assert path != null;
 	    Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
-	    AutomatonParity automaton = UtilAutomaton.newAutomatonParity(forStates.getContextValue(), path, expressions);
+	    AutomatonParity automaton = UtilAutomaton.newAutomatonParity(ContextValue.get(), path, expressions);
 		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
 		StopWatch watch = new StopWatch(true);
         ExpressionCoalition propertyCoalition = (ExpressionCoalition) property;
@@ -315,7 +315,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    }
 	    
 	    NodeProperty isState = product.getNodeProperty(CommonProperties.STATE);
-	    TypeEnum playerType = TypeEnum.get(getContextValue(), Player.class);
+	    TypeEnum playerType = TypeEnum.get(Player.class);
 	    NodeProperty playerProp = wrapper.addSettableNodeProperty(CommonProperties.PLAYER, playerType);
 	    NodeProperty labels = wrapper.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
 	    boolean hasInfPrio = false;
@@ -392,11 +392,11 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, BitSet solverResult) throws EPMCException {
 		assert forStates != null;
 		assert solverResult != null;
-		TypeBoolean typeBoolean = TypeBoolean.get(getContextValue());
+		TypeBoolean typeBoolean = TypeBoolean.get();
 		ValueBoolean entry = typeBoolean.newValue();
 	//        BitSet nodes = game.getInitialNodes();
 	//        NodeProperty nodeAutomaton = game.getNodeProperty(CommonProperties.NODE_MODEL);
-		ValueArray resultValues = UtilValue.newArray(TypeBoolean.get(getContextValue())
+		ValueArray resultValues = UtilValue.newArray(TypeBoolean.get()
 				.getTypeArray(), forStates.size());
 		// TODO check!
 		for (int i = 0; i < forStates.size(); i++) {
@@ -404,8 +404,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	//            int modelState = nodeAutomaton.getInt();
 			boolean value = solverResult.get(node);
 			entry.set(value
-					? TypeBoolean.get(getContextValue()).getTrue()
-					: TypeBoolean.get(getContextValue()).getFalse());
+					? TypeBoolean.get().getTrue()
+					: TypeBoolean.get().getFalse());
 			resultValues.set(entry, i);
 		}
 		StateMap result = UtilGraph.newStateMap(forStates, resultValues);
@@ -430,7 +430,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		ValueArray resultValues = UtilValue.newArray(solverResult.getType(), forStates.size());
 	        // TODO check!
 		ValueAlgebra entry = solverResult.getType().getEntryType().newValue();
-		ValueAlgebra one = TypeWeight.get(getContextValue()).getOne();
+		ValueAlgebra one = TypeWeight.get().getOne();
 		for (int i = 0; i < forStates.size(); i++) {
 			int node = forStates.getExplicitIthState(i);
 			//int modelState = nodeAutomaton.getInt();
@@ -445,15 +445,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	}
 
     /**
-     * Get value context used.
-     * 
-     * @return value context used.
-     */
-    private ContextValue getContextValue() {
-    	return modelChecker.getModel().getContextValue();
-    }
-    
-    /**
      * Get low level model of model checker.
      * 
      * @return low level model of model checker
@@ -464,7 +455,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(getContextValue().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
         	.setOperands(expression)
         	.build();
     }
@@ -475,6 +466,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
      * @return log used for analysis
      */
     private Log getLog() {
-    	return modelChecker.getModel().getContextValue().getOptions().get(OptionsMessages.LOG);
+    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
     }
 }

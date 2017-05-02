@@ -44,15 +44,6 @@ public final class ContextValueJANI {
 	}
 	
 	/**
-	 * Obtain context value used.
-	 * 
-	 * @return context value used
-	 */
-	public ContextValue getContextValue() {
-		return contextValue;
-	}
-	
-	/**
 	 * Construct type to store location from a set of locations.
 	 * 
 	 * @param locations set of locations the type will represent

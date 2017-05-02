@@ -34,13 +34,12 @@ public final class BeforeModelCreationJANITrigonometricFunctions implements Befo
 	}
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
-		assert contextValue != null;
-		contextValue.addOrSetOperator(OperatorSin.class);
-		contextValue.addOrSetOperator(OperatorCos.class);
-		contextValue.addOrSetOperator(OperatorTan.class);
-		contextValue.addOrSetOperator(OperatorAsin.class);
-		contextValue.addOrSetOperator(OperatorAcos.class);
-		contextValue.addOrSetOperator(OperatorAtan.class);
+	public void process() throws EPMCException {
+		ContextValue.get().addOrSetOperator(OperatorSin.class);
+		ContextValue.get().addOrSetOperator(OperatorCos.class);
+		ContextValue.get().addOrSetOperator(OperatorTan.class);
+		ContextValue.get().addOrSetOperator(OperatorAsin.class);
+		ContextValue.get().addOrSetOperator(OperatorAcos.class);
+		ContextValue.get().addOrSetOperator(OperatorAtan.class);
 	}
 }
