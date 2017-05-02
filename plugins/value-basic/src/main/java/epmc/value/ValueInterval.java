@@ -55,8 +55,8 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
 
     ValueInterval(TypeInterval type) {
-        this(type, UtilValue.clone(TypeReal.get(type.getContext()).getZero()),
-        		UtilValue.clone(TypeReal.get(type.getContext()).getZero()));
+        this(type, UtilValue.clone(TypeReal.get().getZero()),
+        		UtilValue.clone(TypeReal.get().getZero()));
     }
 
     @Override
@@ -148,14 +148,14 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         string = string.trim();
         String[] parts = string.split(COMMA);
         if (parts.length == 1) {
-            Value point = UtilValue.newValue(TypeReal.get(getType().getContext()), parts[0]);
+            Value point = UtilValue.newValue(TypeReal.get(), parts[0]);
             getIntervalLower().set(point);
             getIntervalUpper().set(point);
         } else if (parts.length == 2) {
             String lowerString = parts[0].substring(1);
             String upperString = parts[1].substring(0, parts[1].length() - 1);
-            Value lower = UtilValue.newValue(TypeReal.get(getType().getContext()), lowerString);
-            Value upper = UtilValue.newValue(TypeReal.get(getType().getContext()), upperString);
+            Value lower = UtilValue.newValue(TypeReal.get(), lowerString);
+            Value upper = UtilValue.newValue(TypeReal.get(), upperString);
             getIntervalLower().set(lower);
             getIntervalUpper().set(upper);
         } else {
@@ -166,12 +166,12 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     
     @Override
     public boolean isZero() {
-        return false;
+        return lower.isZero() && upper.isZero();
     }
 
     @Override
     public boolean isOne() {
-        return false;
+    	return lower.isOne() && upper.isOne();
     }
 
     @Override
@@ -187,7 +187,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     @Override
     public double distance(Value other) throws EPMCException {
         assert other != null;
-        assert other.getType().getContext() == getType().getContext();
         if (isInterval(other)) {
         	ValueInterval otherInterval = (ValueInterval) other;
         	double lowerDistance = lower.distance(otherInterval.getIntervalLower());

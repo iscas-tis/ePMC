@@ -39,11 +39,6 @@ public final class TypeArrayBoolean implements TypeArray {
     }
 
 	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
-
-	@Override
 	public TypeBoolean getEntryType() {
 		return entryType;
 	}
@@ -75,6 +70,6 @@ public final class TypeArrayBoolean implements TypeArray {
     
 	@Override
     public TypeArray getTypeArray() {
-        return getContext().makeUnique(new TypeArrayGeneric(this));
+        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

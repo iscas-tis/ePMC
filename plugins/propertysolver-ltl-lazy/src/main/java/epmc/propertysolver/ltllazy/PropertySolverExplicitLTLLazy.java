@@ -104,8 +104,8 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
-        this.options = modelChecker.getModel().getContextValue().getOptions();
-        this.contextValue = modelChecker.getModel().getContextValue();
+        this.options = ContextValue.get().getOptions();
+        this.contextValue = ContextValue.get();
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
@@ -252,7 +252,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         // TODO implement more cleanly
         assert iterResult != null;
         assert prodGraph != null;
-        Type typeWeight = TypeWeight.get(contextValue);
+        Type typeWeight = TypeWeight.get();
 //        Value result = contextValue.newValueArrayWeight(modelGraph.getQueriedNodesLength());
         Value entry = typeWeight.newValue();
         BitSet nodes = forStates.getStatesExplicit();
@@ -840,7 +840,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             min = false;
         }
         this.negate = min;
-        ValueBoolean negate = TypeBoolean.get(contextValue).newValue(this.negate);
+        ValueBoolean negate = TypeBoolean.get().newValue(this.negate);
         Expression[] expressions = UtilLTL.collectLTLInner(property).toArray(new Expression[0]);
         Buechi buechi = UtilAutomaton.newBuechi(property, expressions, nonDet, negate);
         StateMapExplicit innerResult;
@@ -918,7 +918,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         if (propertyQuantifier.getQuantified() instanceof ExpressionReward) {
             return false;
         }
-        if (!TypeReal.isReal(TypeWeight.get(modelChecker.getModel().getContextValue()))) {
+        if (!TypeReal.isReal(TypeWeight.get())) {
         	return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());

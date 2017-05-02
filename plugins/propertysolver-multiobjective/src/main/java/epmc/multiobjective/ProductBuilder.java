@@ -116,7 +116,7 @@ final class ProductBuilder {
         builder.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         builder.addDerivedEdgeProperty(CommonProperties.WEIGHT);
         Options options = getOptions();
-        Type typeWeight = TypeWeightTransition.get(getContextValue());
+        Type typeWeight = TypeWeightTransition.get();
         boolean useNative = options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeDouble.isDouble(typeWeight);
         builder.setReorder();
@@ -145,12 +145,12 @@ final class ProductBuilder {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
-                quantified = ExpressionLiteral.getFalse(initialStates.getContextValue());
+                quantified = ExpressionLiteral.getFalse(ContextValue.get());
             }
-            AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(initialStates.getContextValue(), quantified, expressions);
+            AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(ContextValue.get(), quantified, expressions);
             automata.add(automaton);
         }
-        automatonProduct = new AutomatonProduct(initialStates.getContextValue(), automata);
+        automatonProduct = new AutomatonProduct(ContextValue.get(), automata);
         numAutomata = automatonProduct.getNumComponents();
         List<Object> prodNodeProperties = new ArrayList<>();
         prodNodeProperties.add(CommonProperties.STATE);
@@ -206,7 +206,7 @@ final class ProductBuilder {
         EdgeProperty weights = prodWrapper.getEdgeProperty(CommonProperties.WEIGHT);
         Value weight = weights.getType().newValue();
         int propNr = 0;
-        Value zero = TypeWeight.get(getContextValue()).getZero();
+        Value zero = TypeWeight.get().getZero();
         for (Expression objective : property.getOperands()) {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
@@ -219,8 +219,8 @@ final class ProductBuilder {
                 transRewards[propNr] = new EdgePropertyConstant(prodWrapper, zero);
             }
             if (invertedRewards.get(propNr)) {
-                stateRewards[propNr] = new NodePropertyApply(prodWrapper, getContextValue().getOperator(OperatorAddInverse.IDENTIFIER), stateRewards[propNr]);
-                transRewards[propNr] = new EdgePropertyApply(prodWrapper, getContextValue().getOperator(OperatorAddInverse.IDENTIFIER), transRewards[propNr]);
+                stateRewards[propNr] = new NodePropertyApply(prodWrapper, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), stateRewards[propNr]);
+                transRewards[propNr] = new EdgePropertyApply(prodWrapper, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), transRewards[propNr]);
             }
             propNr++;
         }
@@ -396,15 +396,11 @@ final class ProductBuilder {
         return result;
     }
     
-    private ContextValue getContextValue() {
-    	return automatonProduct.getContextValue();
-    }
-    
     private Options getOptions() {
-    	return initialStates.getContextValue().getOptions();
+    	return ContextValue.get().getOptions();
     }
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
+    	return TypeWeight.get().newValue();
     }
 }

@@ -76,7 +76,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     		return false;
     	}
         Options options = origGraph.getOptions();
-        Type typeWeight = TypeWeight.get(origGraph.getContextValue());
+        Type typeWeight = TypeWeight.get();
         if (options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeDouble.isDouble(typeWeight)) {
         	return false;
@@ -177,8 +177,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
             ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -254,8 +254,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
             ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
-        ContextValue contextValue = graph.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -319,10 +319,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     }    
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
-    }
-    
-    private ContextValue getContextValue() {
-    	return origGraph.getContextValue();
+    	return TypeWeight.get().newValue();
     }
 }

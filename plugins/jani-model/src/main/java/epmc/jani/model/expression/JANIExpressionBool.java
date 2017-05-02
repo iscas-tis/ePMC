@@ -113,7 +113,7 @@ public final class JANIExpressionBool implements JANIExpression {
 	
 	@Override
 	public Expression getExpression() {
-		TypeBoolean typeBoolean = TypeBoolean.get(this.model.getContextValue());
+		TypeBoolean typeBoolean = TypeBoolean.get();
 		return new ExpressionLiteral.Builder()
 				.setValue(value ? typeBoolean.getTrue() : typeBoolean.getFalse())
 				.build();

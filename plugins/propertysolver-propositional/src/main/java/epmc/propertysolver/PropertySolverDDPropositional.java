@@ -41,6 +41,7 @@ import epmc.graph.dd.StateSetDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.value.ContextValue;
 
 public final class PropertySolverDDPropositional implements PropertySolver {
     public final static String IDENTIFIER = "propositional-dd";
@@ -77,7 +78,7 @@ public final class PropertySolverDDPropositional implements PropertySolver {
         
         if (property instanceof ExpressionLiteral) {
         	ExpressionLiteral propertyLiteral = (ExpressionLiteral) property;
-            value = (ContextDD.get(modelChecker.getModel().getContextValue())).newConstant(propertyLiteral.getValue());
+            value = (ContextDD.get(ContextValue.get())).newConstant(propertyLiteral.getValue());
         } else {
             value = expressionToDD.translate(property);
         }

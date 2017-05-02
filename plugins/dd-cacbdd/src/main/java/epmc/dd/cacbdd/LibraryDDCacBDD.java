@@ -163,7 +163,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         assert contextDD != null;
         ensure(CacBDD.loaded, ProblemsDD.CACBDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.contextValue = contextDD.getContextValue();
+        this.contextValue = ContextValue.get();
         Options options = contextDD.getOptions();
         this.maxNumVariables = options.getInteger(OptionsDDCacBDD.DD_CACBDD_MAX_NUM_VARIABLES);
         this.xbddmanager = CacBDD.cacwrapper_new_manager(maxNumVariables);
@@ -173,8 +173,8 @@ public final class LibraryDDCacBDD implements LibraryDD {
             CacBDD.cacwrapper_set_max_cache_size(this.xbddmanager, maxCacheSize);
         }
         this.xmanager = CacBDD.cacwrapper_get_xmanager(xbddmanager);
-        this.valueFalse = TypeBoolean.get(contextValue).getFalse();
-        this.valueTrue = TypeBoolean.get(contextValue).getTrue();
+        this.valueFalse = TypeBoolean.get().getFalse();
+        this.valueTrue = TypeBoolean.get().getTrue();
     }
     
     @Override

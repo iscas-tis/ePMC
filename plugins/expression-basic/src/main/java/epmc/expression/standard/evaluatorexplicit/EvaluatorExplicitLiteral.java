@@ -33,7 +33,6 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
 
         private Expression[] variables;
         private Expression expression;
-		private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -78,7 +77,6 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
 		@Override
 		public EvaluatorExplicit.Builder setExpressionToType(
 				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
 			return this;
 		}
     }

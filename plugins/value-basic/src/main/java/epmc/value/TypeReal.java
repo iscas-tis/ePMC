@@ -24,15 +24,13 @@ import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
-    static TypeReal get(ContextValue context) {
-        assert context != null;
-        return context.getType(TypeReal.class);
+    static TypeReal get() {
+        return ContextValue.get().getType(TypeReal.class);
     }
     
     static void set(TypeReal type) {
         assert type != null;
-        ContextValue context = type.getContext();
-        context.setType(TypeReal.class, type);
+        ContextValue.get().setType(TypeReal.class, type);
     }
     
     static boolean isReal(Type type) {
@@ -63,6 +61,5 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
     
     ValueReal getZero();
     
-    ValueReal getOne();
-    
+    ValueReal getOne();    
 }

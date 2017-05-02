@@ -65,14 +65,12 @@ public final class GraphExplicitProperties implements Serializable {
     private final Map<Object,NodeProperty> nodePropertiesExternal = Collections.unmodifiableMap(nodeProperties);
     private final Map<Object,EdgeProperty> edgeProperties = new LinkedHashMap<>();
     private final Map<Object,EdgeProperty> edgePropertiesExternal = Collections.unmodifiableMap(edgeProperties);
-    private final ContextValue contextValue;
     private boolean predecessorsComputed;
     
     public GraphExplicitProperties(GraphExplicit graph, ContextValue contextValue) {
         assert graph != null;
         assert contextValue != null;
         this.graph = graph;
-        this.contextValue = contextValue;
         exploredNodes = UtilBitSet.newBitSetUnbounded();
     }
     
@@ -301,8 +299,4 @@ public final class GraphExplicitProperties implements Serializable {
     public void removeEdgeProperty(Object property) {
         edgeProperties.remove(property);
     }
-
-    public ContextValue getContextValue() {
-        return contextValue;
-    }    
 }

@@ -255,7 +255,7 @@ Expression ExpressionTrue(HanoiHeader header) :
   Token literal;
 }
 {
-  <T> { return ExpressionLiteral.getTrue(header.getContext()); }
+  <T> { return ExpressionLiteral.getTrue(ContextValue.get()); }
 }
 
 Expression ExpressionIdentifier(HanoiHeader header) :

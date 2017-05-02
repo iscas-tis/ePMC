@@ -129,7 +129,7 @@ final class GraphDDPRISM implements GraphDD {
         
         this.model = model;
         this.withWeights = edgeProperties.contains(CommonProperties.WEIGHT);
-        this.contextValue = model.getContextValue();
+        this.contextValue = ContextValue.get();
         this.variablesDD = new HashMap<>();
         this.contextDD = contextDD;
         this.actions = collectActions();
@@ -176,7 +176,7 @@ final class GraphDDPRISM implements GraphDD {
         DD presAndActions = actionsCube.and(presCube);
         this.presAndActions = presAndActions.andWith(nondetCubePres);
         this.states = computeStates(transEnc, contextDD, nondetVariables.values());
-        TypeEnum playerType = TypeEnum.get(contextValue, Player.class);
+        TypeEnum playerType = TypeEnum.get(Player.class);
         Value playerStochastic = playerType.newValue(Player.STOCHASTIC);
         Value playerOne = playerType.newValue(Player.ONE);
         Value playerOneStochastic = playerType.newValue(Player.ONE_STOCHASTIC);
@@ -253,14 +253,12 @@ final class GraphDDPRISM implements GraphDD {
     private void processGraphProperties() {
     	properties.registerGraphProperty(CommonProperties.SEMANTICS,
     			new TypeObject.Builder()
-                .setContext(contextValue)
                 .setClazz(Semantics.class)
                 .build());
     	setGraphPropertyObject(CommonProperties.SEMANTICS,
     			model.getSemantics());
     	properties.registerGraphProperty(CommonProperties.EXPRESSION_TO_DD,
     			new TypeObject.Builder()
-                .setContext(contextValue)
                 .setClazz(expressionToDD.getClass())
                 .build());
     	setGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD,
@@ -304,7 +302,6 @@ final class GraphDDPRISM implements GraphDD {
             Iterable<VariableDD> nondetVariables)
             throws EPMCException {
         DD result = transitions.clone();
-        ContextDD contextDD = result.getContext();
         if (transEnc == TransitionEncoding.MC) {
             if (withWeights) {
                 DD sinkAndPresEqNext = sink.clone().andWith(presEqNext.clone(), actionVariable.newIntValue(0, 0));
@@ -332,7 +329,6 @@ final class GraphDDPRISM implements GraphDD {
             Set<Object> nodeProperties, Set<Object> edgeProperties) {
         assert model != null;
         assert contextDD != null;
-        assert model.getContextValue() == contextDD.getContextValue();
         assert nodeProperties != null;
         for (Object object : nodeProperties) {
             assert object != null;
@@ -652,9 +648,9 @@ final class GraphDDPRISM implements GraphDD {
             if (actionCommands == null) {
                 Value value;
                 if (withWeights) {
-                    value = UtilValue.newValue(TypeWeight.get(contextValue), 0);
+                    value = UtilValue.newValue(TypeWeight.get(), 0);
                 } else {
-                    value = TypeBoolean.get(contextValue).getFalse();
+                    value = TypeBoolean.get().getFalse();
                 }
                 actionCommands = contextDD.newConstant(value);
                 result.put(action, actionCommands);
@@ -982,10 +978,5 @@ final class GraphDDPRISM implements GraphDD {
 	@Override
 	public GraphDDProperties getProperties() {
 		return properties;
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return contextValue;
 	}
 }

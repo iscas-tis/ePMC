@@ -114,14 +114,14 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 		PreparatorComponentExplorer preparator = new PreparatorComponentExplorer();
 		left = preparator.prepare(explorer, componentParallel.getLeft());
 		right = preparator.prepare(explorer, componentParallel.getRight());
-		state = new PropertyNodeGeneral(this, TypeBoolean.get(getContextValue()));
-		weight = new PropertyEdgeGeneral(this, TypeWeight.get(getContextValue()));
+		state = new PropertyNodeGeneral(this, TypeBoolean.get());
+		weight = new PropertyEdgeGeneral(this, TypeWeight.get());
 		label = new PropertyEdgeAction(explorer);
 		leftWeight = left.getEdgeProperty(CommonProperties.WEIGHT);
 		assert leftWeight != null;
 		rightWeight = right.getEdgeProperty(CommonProperties.WEIGHT);
 		assert rightWeight != null;
-		weightProduct = TypeWeight.get(getContextValue()).newValue();
+		weightProduct = TypeWeight.get().newValue();
 		leftLabel = (PropertyEdgeAction) left.getEdgeProperty(CommonProperties.TRANSITION_LABEL);
 		assert leftLabel != null;
 		rightLabel = (PropertyEdgeAction) right.getEdgeProperty(CommonProperties.TRANSITION_LABEL);
@@ -322,7 +322,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 				successor.setAndMark(left.getSuccessorNode(leftSuccNr));
 				successor.setSet(right.getSuccessorNode(rightSuccNr));
 				label.set(numSuccessors, leftAction);
-				weight.set(numSuccessors, TypeReal.get(getContextValue()).getZero());
+				weight.set(numSuccessors, TypeReal.get().getZero());
 				numSuccessors++;
 			}
 		}
@@ -336,7 +336,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 			successor.unmark();
 			successor.setAndMark(left.getSuccessorNode(leftSuccNr));
 			label.set(numSuccessors, leftAction);
-			weight.set(numSuccessors, TypeReal.get(getContextValue()).getZero());
+			weight.set(numSuccessors, TypeReal.get().getZero());
 			numSuccessors++;
 		}
 		for (int rightSuccNr = 0; rightSuccNr < numRightSuccessors; rightSuccNr++) {
@@ -349,7 +349,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 			successor.unmark();
 			successor.setAndMark(right.getSuccessorNode(rightSuccNr));
 			label.set(numSuccessors, rightAction);
-			weight.set(numSuccessors, TypeReal.get(getContextValue()).getZero());
+			weight.set(numSuccessors, TypeReal.get().getZero());
 			numSuccessors++;
 		}
 	}

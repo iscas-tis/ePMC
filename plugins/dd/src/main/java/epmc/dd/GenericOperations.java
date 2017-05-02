@@ -32,6 +32,7 @@ import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorIte;
 import epmc.value.Type;
@@ -256,7 +257,7 @@ final class GenericOperations {
                 back.set(index, false);
             }
             long variable = llVariables.get(libraryDD).get(lowestVar).uniqueId();
-            result = libraryDD.apply(contextDD.getContextValue().getOperator(OperatorIte.IDENTIFIER), type, variable, highResult, lowResult);
+            result = libraryDD.apply(ContextValue.get().getOperator(OperatorIte.IDENTIFIER), type, variable, highResult, lowResult);
         }
         for (int index = 0; index < operands.length; index++) {
             cacheEntry[index] = operands[index].uniqueId();

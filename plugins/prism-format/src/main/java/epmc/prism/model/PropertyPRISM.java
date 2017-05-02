@@ -64,12 +64,6 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-	}
-
-	@Override
 	public Expression parseExpression(InputStream stream) throws EPMCException {
 		assert stream != null;
 		PrismExpressionParser parser = new PrismExpressionParser(stream);
@@ -224,24 +218,15 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public ContextValue getContext() {
-		return context;
-	}
-
-	@Override
 	public Type parseType(String type) throws EPMCException {
 		assert type != null;
 		switch (type) {
 		case INT:
-			return TypeInteger.get(getContextValue());
+			return TypeInteger.get();
 		case DOUBLE:
-			return TypeReal.get(getContextValue());
+			return TypeReal.get();
 		}
 		assert false;
 		return null;
-	}
-
-	private ContextValue getContextValue() {
-		return context;
 	}
 }

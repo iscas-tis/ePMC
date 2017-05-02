@@ -47,9 +47,9 @@ public final class ExplorerExtensionLTS implements ExplorerExtension {
 		assert this.explorer == null;
 		assert explorer != null;
 		this.explorer = explorer;
-		state = new PropertyNodeGeneral(explorer, TypeBoolean.get(explorer.getContextValue()));
+		state = new PropertyNodeGeneral(explorer, TypeBoolean.get());
 		state.set(true);
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
 		player.set(Player.ONE);
 	}
 	

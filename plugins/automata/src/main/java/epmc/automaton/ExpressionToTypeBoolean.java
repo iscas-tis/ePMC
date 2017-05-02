@@ -52,14 +52,8 @@ final class ExpressionToTypeBoolean implements ExpressionToType {
 	public Type getType(Expression expression) throws EPMCException {
 		assert expression != null;
 		if (mapped.contains(expression)) {
-			return TypeBoolean.get(contextValue);
+			return TypeBoolean.get();
 		}
 		return null;
 	}
-
-	@Override
-	public ContextValue getContextValue() {
-		return contextValue;
-	}
-
 }

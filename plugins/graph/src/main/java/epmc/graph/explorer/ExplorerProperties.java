@@ -52,12 +52,10 @@ public final class ExplorerProperties implements Serializable {
     private final Map<Object,ExplorerNodeProperty> nodePropertiesExternal = Collections.unmodifiableMap(nodeProperties);
     private final Map<Object,ExplorerEdgeProperty> edgeProperties = new LinkedHashMap<>();
     private final Map<Object,ExplorerEdgeProperty> edgePropertiesExternal = Collections.unmodifiableMap(edgeProperties);
-    private ContextValue contextValue;
     
     public ExplorerProperties(Explorer explorer, ContextValue contextValue) {
         assert explorer != null;
         assert contextValue != null;
-        this.contextValue = contextValue;
     }
     
     // TODO maybe this method should be removed later
@@ -165,8 +163,4 @@ public final class ExplorerProperties implements Serializable {
     public void removeEdgeProperty(Object property) {
         edgeProperties.remove(property);
     }
-
-    public ContextValue getContextValue() {
-        return contextValue;
-    }    
 }

@@ -21,7 +21,6 @@
 package epmc.jani.extensions.derivedoperators;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -37,33 +36,23 @@ import epmc.value.ValueInteger;
 public final class OperatorSgn implements Operator {
 	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "sgn";
-	/** Context of this operator. */
-	private ContextValue context;
 	/** Zero - value returned if value equals zero. */
-	private Value zero;
+	private final Value zero;
 	/** One - value returned if value is greater than zero. */
-	private Value one;
+	private final Value one;
 	/** Minus one - value returned if value is smaller than zero. */
-	private ValueInteger minusOne;
+	private final ValueInteger minusOne;
 
+	public OperatorSgn() {
+		zero = TypeInteger.get().getZero();
+		one = TypeInteger.get().getOne();
+		minusOne = TypeInteger.get().newValue();
+		minusOne.addInverse(one);
+	}
+	
 	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
-	}
-
-	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-		zero = TypeInteger.get(context).getZero();
-		one = TypeInteger.get(context).getOne();
-		minusOne = TypeInteger.get(context).newValue();
-		minusOne.addInverse(one);
-	}
-
-	@Override
-	public ContextValue getContext() {
-		return context;
 	}
 
 	@Override
@@ -88,6 +77,6 @@ public final class OperatorSgn implements Operator {
 		assert types != null;
 		assert types.length >= 1;
 		assert types[0] != null;
-		return TypeInteger.get(context);
+		return TypeInteger.get();
 	}
 }

@@ -52,7 +52,7 @@ public final class ExplorerExtensionMDP implements ExplorerExtension {
 
 	@Override
 	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
 		system = explorer.getExplorerSystem();
 		systemState = (PropertyNodeGeneral) system.getNodeProperty(CommonProperties.STATE);
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);

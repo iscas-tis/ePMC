@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 public final class TypeArrayDouble implements TypeArrayReal {
     private final static String ARRAY_INDICATOR = "[](double)";
 	private final TypeDouble entryType;
@@ -35,11 +33,6 @@ public final class TypeArrayDouble implements TypeArrayReal {
     public ValueArrayDoubleJava newValue() {
         return new ValueArrayDoubleJava(this);
     }
-
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
 
 	@Override
 	public TypeDouble getEntryType() {

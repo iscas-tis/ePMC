@@ -41,7 +41,6 @@ import epmc.value.Value;
  */
 public final class ExpressionQuantifier implements Expression {
     public final static class Builder {
-        private ContextValue context;
         private Positional positional;
         private DirType dirType;
         private CmpType cmpType;
@@ -49,15 +48,6 @@ public final class ExpressionQuantifier implements Expression {
         private Expression compare;
         private Expression condition;
 
-        public Builder setContext(ContextValue context) {
-            this.context = context;
-            return this;
-        }
-        
-        private ContextValue getContext() {
-            return context;
-        }
-        
         public Builder setPositional(Positional positional) {
             this.positional = positional;
             return this;
@@ -129,7 +119,6 @@ public final class ExpressionQuantifier implements Expression {
     	}
     }
     
-    private final ContextValue context;
     private final Positional positional;
     private final DirType dirType;
     private final CmpType cmpType;
@@ -139,12 +128,11 @@ public final class ExpressionQuantifier implements Expression {
     
     private ExpressionQuantifier(Builder builder) {
         assert builder != null;
-        assert builder.getContext() != null;
         if (builder.getCompare() == null) {
-            builder.setCompare(ExpressionLiteral.getTrue(builder.getContext()));
+            builder.setCompare(ExpressionLiteral.getTrue(ContextValue.get()));
         }
         if (builder.getCondition() == null) {
-            builder.setCondition(ExpressionLiteral.getTrue(builder.getContext()));
+            builder.setCondition(ExpressionLiteral.getTrue(ContextValue.get()));
         }
         assert builder.getDirType() != null;
         assert builder.getCmpType() != null;
@@ -152,7 +140,6 @@ public final class ExpressionQuantifier implements Expression {
         assert builder.getCmpType() != CmpType.IS
                 || isTrue(builder.getCompare());
         assert isTrue(builder.getCondition());
-        this.context = builder.getContext();
         this.positional = builder.getPositional();
         this.dirType = builder.getDirType();
         this.cmpType = builder.getCmpType();
@@ -187,7 +174,6 @@ public final class ExpressionQuantifier implements Expression {
                 .setCmpType(cmpType)
                 .setDirType(dirType)
                 .setPositional(positional)
-                .setContext(context)
                 .setQuantified(children.get(0))
                 .setCompare(children.get(1))
                 .setCondition(children.get(2))
@@ -197,18 +183,17 @@ public final class ExpressionQuantifier implements Expression {
     @Override
     public Type getType(ExpressionToType expressionToType) throws EPMCException {
     	assert expressionToType != null;
-    	ContextValue contextValue = expressionToType.getContextValue();
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
-        Type booleanType = TypeBoolean.get(contextValue);
+        Type booleanType = TypeBoolean.get();
         Expression condition = getCondition();
         Type conditionType = condition.getType(expressionToType);
         ensure(conditionType == null || TypeBoolean.isBoolean(conditionType),
                 ProblemsExpression.EXPR_INCONSISTENT, "", condition);
         if (cmpType == CmpType.IS) {
-            return TypeWeight.get(contextValue);
+            return TypeWeight.get();
         } else {
             return booleanType;
         }

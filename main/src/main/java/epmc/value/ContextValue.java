@@ -55,7 +55,19 @@ public final class ContextValue {
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
     private final Map<Type,Type> typesUnique = new HashMap<>();
+    /** The value context used in the model checking process. */
+	private static ContextValue contextValue;
 
+    public static void set(ContextValue contextValue) {
+    	assert contextValue != null;
+    	ContextValue.contextValue = contextValue;
+    }
+    
+    public static ContextValue get() {
+    	assert contextValue != null;
+    	return contextValue;
+    }
+    
     /**
      * Create a new context value.
      * The options parameter may not be {@code null}.
@@ -64,6 +76,7 @@ public final class ContextValue {
      * @throws EPMCException thrown in case of problems during construction
      */
     public ContextValue(Options options) throws EPMCException {
+    	assert options != null;
         this.options = options;
     }
 
@@ -263,8 +276,6 @@ public final class ContextValue {
 
     /**
      * Instantiate given operator class.
-     * After instantiation, the given context value will be set for the operator
-     * using {@link Operator#setContext(ContextValue)}.
      * The operator class parameter and the value context parameter must not be
      * {@code null}.
      * 
@@ -276,7 +287,6 @@ public final class ContextValue {
         assert operatorClass != null;
         assert contextValue != null;
         Operator operator = Util.getInstance(operatorClass);
-        operator.setContext(contextValue);
         return operator;
     }
 }

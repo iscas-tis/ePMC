@@ -45,8 +45,6 @@ import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.SemanticsContinuousTime;
 import epmc.graph.SemanticsDiscreteTime;
-import epmc.graph.SemanticsPTA;
-import epmc.graph.SemanticsSTA;
 import epmc.graph.SemanticsTimed;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -55,6 +53,7 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.expression.JANIExpression;
 import epmc.util.UtilJSON;
+import epmc.value.ContextValue;
 
 /**
  * JANI expected quantifier expression.
@@ -226,29 +225,29 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 		switch (expressionTemporal.getTemporalType()) {
 		case FINALLY:
 			opValue = U;
-			left = parser.matchExpression(model, ExpressionLiteral.getTrue(model.getContextValue()));
+			left = parser.matchExpression(model, ExpressionLiteral.getTrue(ContextValue.get()));
 			right = parser.matchExpression(model, expressionTemporal.getOperand1());
 			break;
 		case GLOBALLY:
 			opValue = W;
 			left = parser.matchExpression(model, expressionTemporal.getOperand1());
-			right = parser.matchExpression(model, ExpressionLiteral.getFalse(model.getContextValue()));
+			right = parser.matchExpression(model, ExpressionLiteral.getFalse(ContextValue.get()));
 			break;
 		case NEXT:
 			opValue = U;
-			left = parser.matchExpression(model, ExpressionLiteral.getTrue(model.getContextValue()));
+			left = parser.matchExpression(model, ExpressionLiteral.getTrue(ContextValue.get()));
 			right = parser.matchExpression(model, expressionTemporal.getOperand1());
 			stepBounds = new JANIPropertyInterval();
-			stepBounds.setLower(ExpressionLiteral.getOne(model.getContextValue()));
+			stepBounds.setLower(ExpressionLiteral.getOne(ContextValue.get()));
 			stepBounds.setLowerExclusive(false);
-			stepBounds.setUpper(ExpressionLiteral.getOne(model.getContextValue()));
+			stepBounds.setUpper(ExpressionLiteral.getOne(ContextValue.get()));
 			stepBounds.setUpperExclusive(false);
 			break;
 		case RELEASE:
 			opValue = W;
 			//op1 R op2 = op2 W (op2 /\ op1)
 			left = parser.matchExpression(model, expressionTemporal.getOperand2());
-			right = parser.matchExpression(model, UtilExpressionStandard.opAdd(model.getContextValue(), expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
+			right = parser.matchExpression(model, UtilExpressionStandard.opAdd(ContextValue.get(), expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
 			break;
 		case UNTIL:
 			opValue = U;
@@ -256,7 +255,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			right = parser.matchExpression(model, expressionTemporal.getOperand2());
 			break;
 		}
-		TimeBound tb = expressionTemporal.getTimeBound(model.getContextValue());
+		TimeBound tb = expressionTemporal.getTimeBound(ContextValue.get());
 		if (tb != null && !tb.isUnbounded()) {
 			JANIPropertyInterval interval = new JANIPropertyInterval();
 			interval.setForProperty(forProperty);
@@ -320,9 +319,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			if (timeBounds != null) {
 				tb = timeBounds.getTimeBound();
 			} else {
-				tb = new TimeBound.Builder()
-						.setContext(model.getContextValue())
-						.build();
+				tb = new TimeBound.Builder().build();
 			}
 		}
 		switch (STRING_TO_TEMPORAL_TYPE.get(opValue)) {
@@ -331,7 +328,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			break;
 		case RELEASE:
 			//phi W psi = psi R (phi \/ psi)
-			composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(model.getContextValue(), left, right), tb);
+			composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(ContextValue.get(), left, right), tb);
 		default: //it should never happen
 			composed = null;
 			break;

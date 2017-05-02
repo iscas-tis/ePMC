@@ -26,7 +26,6 @@ import java.util.Set;
 
 import epmc.error.EPMCException;
 import epmc.graph.StateSet;
-import epmc.value.ContextValue;
 
 /**
  * State set of an explorer.
@@ -48,7 +47,8 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
      * @param explorer explorer to which nodes belong to
      * @param collection collection of which to construct nodes
      */
-    StateSetExplorer(Explorer explorer, Collection<T> collection) {
+    @SuppressWarnings("unchecked")
+	StateSetExplorer(Explorer explorer, Collection<T> collection) {
         assert explorer != null;
         assert collection != null;
         for (ExplorerNode node : collection) {
@@ -60,11 +60,6 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
         }
     }
     
-    @Override
-    public ContextValue getContextValue() {
-        return explorer.getContextValue();
-    }
-
     @Override
     public int size() {
         return nodes.size();

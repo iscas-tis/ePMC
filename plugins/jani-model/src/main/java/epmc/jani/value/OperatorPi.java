@@ -45,17 +45,6 @@ public final class OperatorPi implements Operator {
 	}
 
 	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-	}
-
-	@Override
-	public ContextValue getContext() {
-		return context;
-	}
-
-	@Override
 	public void apply(Value result, Value... operands) throws EPMCException {
 		assert result != null;
 		assert operands != null;
@@ -67,6 +56,6 @@ public final class OperatorPi implements Operator {
 	public Type resultType(Type... types) {
 		assert types != null;
 		assert types.length == 0;
-		return TypeReal.get(context);
+		return TypeReal.get();
 	}
 }

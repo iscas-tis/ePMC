@@ -78,7 +78,7 @@ public final class PropertiesImpl implements Properties {
     
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = getContextValue().getOptions();
+        Options options = ContextValue.get().getOptions();
         Property property = UtilOptions.getInstance(options,
                 OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -88,7 +88,7 @@ public final class PropertiesImpl implements Properties {
     }
     
     public void parseProperties(RawProperties rawProperties) throws EPMCException {
-        Options options = getContextValue().getOptions();
+        Options options = ContextValue.get().getOptions();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
             optionsConsts = new LinkedHashMap<>();
@@ -98,7 +98,7 @@ public final class PropertiesImpl implements Properties {
             if (definition == null) {
                 continue;
             }
-            Expression parsed = UtilModelChecker.parseExpression(getContextValue(), definition);
+            Expression parsed = UtilModelChecker.parseExpression(definition);
             parsed = PRISM2JANIConverter.useOnlyNamedRewards(model, parsed);
             properties.put(prop, parsed);
         }
@@ -110,14 +110,14 @@ public final class PropertiesImpl implements Properties {
             }
             Expression expr = null;
             if (definition != null && definition instanceof String) {
-                expr = UtilModelChecker.parseExpression(getContextValue(), ((String) definition));
+                expr = UtilModelChecker.parseExpression(((String) definition));
             } else if (definition != null && definition instanceof Expression) {
                 expr = (Expression) definition;
             } else if (definition != null) {
                 assert false : definition;
             }
             constants.put(name, expr);
-            Type type = UtilModelChecker.parseType(getContextValue(), rawProperties.getConstantType(name));
+            Type type = UtilModelChecker.parseType(rawProperties.getConstantType(name));
             assert type != null;
             constantTypes.put(name, type);
         }
@@ -126,7 +126,7 @@ public final class PropertiesImpl implements Properties {
             String definition = entry.getValue();
             Expression expr = null;
             if (definition != null) {
-                expr = UtilModelChecker.parseExpression(getContextValue(), definition);
+                expr = UtilModelChecker.parseExpression(definition);
             }
             labels.put(name, expr);
         }
@@ -458,9 +458,5 @@ public final class PropertiesImpl implements Properties {
     @Override
     public List<RawProperty> getRawProperties() {
         return Collections.list(Collections.enumeration(properties.keySet()));
-    }
-    
-    private ContextValue getContextValue() {
-    	return model.getContextValue();
     }
 }

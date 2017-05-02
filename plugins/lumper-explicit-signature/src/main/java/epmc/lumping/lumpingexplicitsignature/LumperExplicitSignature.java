@@ -444,7 +444,7 @@ final class LumperExplicitSignature implements LumperExplicit {
     }
     
     private ValueArray newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(original.getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
 

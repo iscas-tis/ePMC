@@ -54,8 +54,8 @@ public final class ExplorerExtensionMA implements ExplorerExtension {
 	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
 		this.explorer = explorer;
 		this.system = explorer.getExplorerSystem();
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
-		weight = new PropertyEdgeGeneral(explorer, TypeWeight.get(explorer.getContextValue()));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
+		weight = new PropertyEdgeGeneral(explorer, TypeWeight.get());
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
 	}
 	

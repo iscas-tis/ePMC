@@ -113,21 +113,13 @@ import epmc.value.ValueInteger;
  */
 public final class ModelPRISM implements ModelJANIConverter {
 	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private final ContextValue contextValue;
-
 		private ExpressionToTypeEmpty(ContextValue contextValue) {
 			assert contextValue != null;
-			this.contextValue = contextValue;
 		}
 		@Override
 		public Type getType(Expression expression) throws EPMCException {
 			assert expression != null;
 			return null;
-		}
-
-		@Override
-		public ContextValue getContextValue() {
-			return contextValue;
 		}
 	}
 	
@@ -264,7 +256,6 @@ public final class ModelPRISM implements ModelJANIConverter {
     private TObjectIntMap<String> playerNameToNumber;
     private Expression rateIdentifier;
     private Expression rateLabel;
-	private ContextValue context;
     
     public void build(Builder builder) throws EPMCException {
     	assert builder != null;
@@ -275,7 +266,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         		.setName(RATE)
         		.build();
         this.rateLabel = rateIdentifier;
-        Options options = context.getOptions();
+        Options options = ContextValue.get().getOptions();
         List<PlayerDefinition> players = builder.getPlayers();
         if (players != null) {
             this.players.addAll(players);
@@ -351,7 +342,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (options.getBoolean(OptionsPRISM.PRISM_FLATTEN)) {
             flatten();
         }
-        Engine engine = UtilOptions.getSingletonInstance(getContextValue().getOptions(),
+        Engine engine = UtilOptions.getSingletonInstance(ContextValue.get().getOptions(),
         		OptionsModelChecker.ENGINE);
         if (builder.getInitialStates() != null) {
             multipleInit = true;
@@ -388,7 +379,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         assert globalModule != null;
         List<Command> commands = new ArrayList<>();
         List<Alternative> rateAlternatives = new ArrayList<>();
-        Expression rateGuard = ExpressionLiteral.getTrue(context);
+        Expression rateGuard = ExpressionLiteral.getTrue(ContextValue.get());
         for (Command command : globalModule.getCommands()) {
             Expression guard = command.getGuard();
             ExpressionIdentifierStandard commandAction = (ExpressionIdentifierStandard) command.getAction();
@@ -399,7 +390,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 for (Alternative alternative : command.getAlternatives()) {
                     Expression weight = alternative.getWeight();
                     weight = new ExpressionOperator.Builder()
-                    		.setOperands(guard, weight, ExpressionLiteral.getZero(context))
+                    		.setOperands(guard, weight, ExpressionLiteral.getZero(ContextValue.get()))
                     		.build();
                     Map<Expression, Expression> effect = alternative.getEffect();
                     rateAlternatives.add(new Alternative(weight, effect, alternative.getPositional()));
@@ -407,7 +398,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             }
         }
         commands.add(new Command(rateLabel, rateGuard, rateAlternatives, null));
-        return new ModuleCommands(context, globalModule.getName(), globalModule.getVariables(), globalModule.getInitValues(), commands, globalModule.getInvariants(), globalModule.getPositional());
+        return new ModuleCommands(ContextValue.get(), globalModule.getName(), globalModule.getVariables(), globalModule.getInitValues(), commands, globalModule.getInvariants(), globalModule.getPositional());
     }
 
     private void replaceRewardsConstants(Map<Expression, Expression> formulas,
@@ -516,7 +507,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 newCommands.add(newCommand);
             }
             ModuleCommands newModule = new ModuleCommands
-                    (context, moduleGC.getName(), moduleGC.getVariables(),
+                    (ContextValue.get(), moduleGC.getName(), moduleGC.getVariables(),
                             moduleGC.getInitValues(), newCommands, moduleGC.getInvariants(), null);
             newModules.add(newModule);
         }
@@ -835,10 +826,10 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         allTypes.put(new ExpressionIdentifierStandard.Builder()
         		.setName(DEADLOCK)
-        		.build(), TypeBoolean.get(context));
+        		.build(), TypeBoolean.get());
         allTypes.put(new ExpressionIdentifierStandard.Builder()
         		.setName(INIT)
-        		.build(), TypeBoolean.get(context));
+        		.build(), TypeBoolean.get());
 		if (engine instanceof EngineExplorer) {
 			ModelJANI jani = toJANI(false);
 			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
@@ -872,7 +863,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 			Set<Object> edgeProperties) throws EPMCException {
 		if (engine instanceof EngineDD) {
 	        prepareAndCheckReady();
-			return new GraphDDPRISM(this, ContextDD.get(getContextValue()), nodeProperties, edgeProperties);
+			return new GraphDDPRISM(this, ContextDD.get(ContextValue.get()), nodeProperties, edgeProperties);
 		} else {
 			assert false; // TODO user exception
 			return null;
@@ -910,7 +901,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private Expression defaultInitialValue(JANIType type) throws EPMCException {
         Expression value;
         if (type instanceof JANITypeBool) {
-            value = ExpressionLiteral.getFalse(context);
+            value = ExpressionLiteral.getFalse(ContextValue.get());
         } else if (type instanceof JANITypeBounded) {
         	JANITypeBounded typeBounded = (JANITypeBounded) type;
             Expression lower = typeBounded.getLowerBound();
@@ -920,11 +911,11 @@ public final class ModelPRISM implements ModelJANIConverter {
                     .build();
         } else if (type instanceof JANITypeInt) {
             value = new ExpressionLiteral.Builder()
-                    .setValue(TypeInteger.get(context).getZero())
+                    .setValue(TypeInteger.get().getZero())
                     .build();
         } else if (type instanceof JANITypeClock) {
         	value = new ExpressionLiteral.Builder()
-        			.setValue(TypeInteger.get(context).newValue())
+        			.setValue(TypeInteger.get().newValue())
         			.build();
         } else {
             value = null;
@@ -954,7 +945,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             Module newModule;
             if (module.isCommands()) {
                 ModuleCommands commandsModule = module.asCommands();
-                newModule = new ModuleCommands(context, module.getName(), module.getVariables(),
+                newModule = new ModuleCommands(ContextValue.get(), module.getName(), module.getVariables(),
                     newInitValues, commandsModule.getCommands(), commandsModule.getInvariants(), null);
             } else {
                 assert false;
@@ -970,7 +961,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         ModuleCommands globalModule = flatten(system);
         globalVariables.putAll(globalModule.getVariables());
         globalInitValues.putAll(globalModule.getInitValues());
-        globalModule = new ModuleCommands(context, globalModule.getName(), globalVariables,
+        globalModule = new ModuleCommands(ContextValue.get(), globalModule.getName(), globalVariables,
                 globalInitValues, globalModule.getCommands(), globalModule.getInvariants(), null);
         modules.clear();
         if (SemanticsMA.isMA(semanticsType)) {
@@ -1092,7 +1083,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 	for (Alternative leftAlt : leftCmd.getAlternatives()) {
                 		for (Alternative rightAlt : rightCmd.getAlternatives()) {
                 			Expression newWeight = new ExpressionOperator.Builder()
-                			        .setOperator(context.getOperator(OperatorMultiply.IDENTIFIER))
+                			        .setOperator(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER))
                 			        .setOperands(
                 			        		leftAlt.getWeight(),
                 			        		rightAlt.getWeight())
@@ -1118,7 +1109,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         Expression rightInvariant = right.getInvariants();
         Expression newInvariant = null;
         if (leftInvariant != null && rightInvariant != null) {
-        	newInvariant = UtilExpressionStandard.opAnd(context, leftInvariant, rightInvariant);
+        	newInvariant = UtilExpressionStandard.opAnd(ContextValue.get(), leftInvariant, rightInvariant);
         } else if (leftInvariant != null) {
         	newInvariant = leftInvariant;
         } else if (rightInvariant != null) {
@@ -1126,7 +1117,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         } else {
         	newInvariant = null;
         }
-        return new ModuleCommands(context, newName, newVariables, newInitValues, newCommands, newInvariant, null);
+        return new ModuleCommands(ContextValue.get(), newName, newVariables, newInitValues, newCommands, newInvariant, null);
     }
 
     public Map<Expression, JANIType> getGlobalVariables() {
@@ -1141,7 +1132,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             if (initialStates == null) {
             	initialStates = assg;
             } else {
-            	initialStates = UtilExpressionStandard.opAnd(context, initialStates, assg);
+            	initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, assg);
             }
         }
         for (Module module : modules) {
@@ -1151,12 +1142,12 @@ public final class ModelPRISM implements ModelJANIConverter {
                 if (initialStates == null) {
                 	initialStates = assg;
                 } else {
-                	initialStates = UtilExpressionStandard.opAnd(context, initialStates, assg);
+                	initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, assg);
                 }
             }
         }
         if (initialStates == null) {
-        	ExpressionLiteral.getTrue(context);
+        	ExpressionLiteral.getTrue(ContextValue.get());
         }
         return initialStates;
     }
@@ -1214,7 +1205,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     private void checkPropertiesCompatible() throws EPMCException {
-        Log log = getContextValue().getOptions().get(OptionsMessages.LOG);
+        Log log = ContextValue.get().getOptions().get(OptionsMessages.LOG);
         for (RawProperty raw : getPropertyList().getRawProperties()) {
         	Expression expr = getPropertyList().getParsedProperty(raw);
             checkExpressionCompatible(expr, log);
@@ -1297,11 +1288,6 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     @Override
-    public void setContext(ContextValue context) {
-        this.context = context;
-    }
-    
-    @Override
     public void read(InputStream... inputs) throws EPMCException {
         assert inputs != null;
         for (InputStream input : inputs) {
@@ -1310,7 +1296,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         ensure(inputs.length == 1, ProblemsPRISM.PRISM_ONE_MODEL_FILE, inputs.length);
         PrismParser parser = new PrismParser(inputs[0]);    
         parser.setModel(this);
-        parser.parseModel(context);
+        parser.parseModel(ContextValue.get());
     }
 
 	@Override
@@ -1330,21 +1316,21 @@ public final class ModelPRISM implements ModelJANIConverter {
 	
     private Expression and(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(context.getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(context.getOperator(OperatorEq.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
         	.setOperands(a, b)
         	.build();
     }
     
     private Value evaluateValue(Expression expression) throws EPMCException {
         assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(context), new Expression[0]);
+        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(ContextValue.get()), new Expression[0]);
         return evaluator.evaluate();
     }
     
@@ -1366,14 +1352,8 @@ public final class ModelPRISM implements ModelJANIConverter {
     
     private Expression newOperator(String operatorId, Expression... operands) {
         return new ExpressionOperator.Builder()
-                .setOperator(context.getOperator(operatorId))
+                .setOperator(ContextValue.get().getOperator(operatorId))
                 .setOperands(Arrays.asList(operands))
                 .build();
     }
-
-	@Override
-	public ContextValue getContextValue() {
-		return context;
-	}
-    
 }

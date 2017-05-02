@@ -26,7 +26,6 @@ import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
-import epmc.value.ContextValue;
 import epmc.value.TypeWeightTransition;
 
 /**
@@ -60,7 +59,7 @@ interface SolverQuantitative {
 	 * {@link AutomatonParityLabel} assigning priorities to each node.
 	 * In addition, it must contain an edge property
 	 * {@link CommonProperties#WEIGHT} for the transition probabilities, which
-	 * must be of the same type as {@link TypeWeightTransition#get(ContextValue)}.
+	 * must be of the same type as {@link TypeWeightTransition#get()}.
 	 * 
 	 * @param game stochastic parity game to be solved
 	 */

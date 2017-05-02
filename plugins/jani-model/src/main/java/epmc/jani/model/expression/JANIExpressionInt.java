@@ -113,7 +113,7 @@ public final class JANIExpressionInt implements JANIExpression {
 	public Expression getExpression() {
 		assert initialized;
 		assert model != null;
-		TypeInteger typeInteger = TypeInteger.get(model.getContextValue());
+		TypeInteger typeInteger = TypeInteger.get();
 		return new ExpressionLiteral.Builder()
 				.setValue(UtilValue.newValue(typeInteger, number))
 				.build();

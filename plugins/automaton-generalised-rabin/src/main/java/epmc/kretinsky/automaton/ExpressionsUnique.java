@@ -74,7 +74,7 @@ public final class ExpressionsUnique {
         computeReplacement(expressions);
         this.expressions = expressions;
         this.contextExpression = contextExpression;
-        this.contextValue = contextExpression.getContextValue();
+        this.contextValue = ContextValue.get();
         this.uniqueMap = contextExpression.newMap();
         this.atomicMap = contextExpression.newMap();
         this.contextDD = contextExpression.getContextDD();
@@ -108,7 +108,7 @@ public final class ExpressionsUnique {
             return retrieved;
         }
         DD dd = formulaToDD(formula);
-        retrieved = ddToExpressionMap.get(dd);
+        retrieved = ddToExpressionMap.get();
         /*
         if (cmpExprsLanguage && retrieved == null && UtilKretinsky.isTemporal(formula)) {
             Collection<Expression> allExpressions = uniqueMap.values();
@@ -185,7 +185,7 @@ public final class ExpressionsUnique {
     }
     
     private DD atomicExpressionToDD(Expression expression) throws EPMCException {
-        DD entry = atomicMap.get(expression);
+        DD entry = atomicMap.get();
         if (entry == null) {
             entry = contextDD.newVariable(expression.toString(), contextValue.getTypeBoolean(), 1)
                     .getValueEncoding(0).clone();
@@ -374,7 +374,6 @@ public final class ExpressionsUnique {
             replacementInverse = Collections.emptyMap();
             return;
         }
-        ContextExpression contextExpression = expressions[0].getContext();
         replacement = contextExpression.newMap();
         replacementInverse = contextExpression.newMap();
         for (int i = 0; i < expressions.length; i++) {
@@ -388,7 +387,7 @@ public final class ExpressionsUnique {
     DD getExpressionDD(Expression expression) {
         assert expression != null;
         assert expressionToDdMap.containsKey(expression);
-        return expressionToDdMap.get(expression);
+        return expressionToDdMap.get();
     }
     
     public Expression toUnreplaced(Expression expression) {

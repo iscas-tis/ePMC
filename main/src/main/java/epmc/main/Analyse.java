@@ -75,24 +75,25 @@ public final class Analyse {
         ContextValue contextValue;
         try {
             contextValue = new ContextValue(options);
+            ContextValue.set(contextValue);
         } catch (EPMCException e) {
             log.send(e);
             return;
         }
         try {
-            processBeforeModelCreations(contextValue);
+            processBeforeModelCreations();
         } catch (EPMCException e) {
             log.send(e);
         }
         Model model;
         try {
-            model = parseModel(contextValue, rawModel);
+            model = parseModel(rawModel);
         } catch (EPMCException e) {
             log.send(e);
             return;
         }
         try {
-            processAfterModelCreations(contextValue);
+            processAfterModelCreations();
         } catch (EPMCException e) {
             log.send(e);
         }
@@ -110,7 +111,7 @@ public final class Analyse {
         command.executeInServer();
         modelChecker.close();
         try {
-            processAfterCommandExecution(contextValue);
+            processAfterCommandExecution();
         } catch (EPMCException e) {
             log.send(e);
         }
@@ -128,18 +129,15 @@ public final class Analyse {
      * @return parsed model
      * @throws EPMCException thrown in case of problems
      */
-    private static Model parseModel(ContextValue context, RawModel rawModel)
+    private static Model parseModel(RawModel rawModel)
             throws EPMCException {
-        assert context != null;
         Model model;
         if (rawModel == null || rawModel.getModelInputStreams().length == 0) {
             model = new ModelDummy();
-            model.setContext(context);
         } else {
             InputStream[] inputs = rawModel.getModelInputStreams();
-            Options options = context.getOptions();
+            Options options = ContextValue.get().getOptions();
             model = UtilOptions.getInstance(options, OptionsModelChecker.MODEL_INPUT_TYPE);
-            model.setContext(context);
             model.read(inputs);
         }
         Properties properties = model.getPropertyList();
@@ -196,20 +194,18 @@ public final class Analyse {
      * The options of the context expression parameter contain the plugin
      * classes used.
      * It will also be used as a parameter when calling
-     * {@link BeforeModelCreation#process(ContextExpression)}.
+     * {@link BeforeModelCreation#process()}.
      * The expression context parameter must not be {@code null}.
      * 
-     * @param contextValue value context to use
      * @throws EPMCException thrown in case of problems
      */
-    private static void processBeforeModelCreations(ContextValue contextValue)
+    private static void processBeforeModelCreations()
             throws EPMCException {
-        assert contextValue != null;
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
             beforeModelLoading = Util.getInstance(clazz);
-            beforeModelLoading.process(contextValue);
+            beforeModelLoading.process();
         }
     }
 
@@ -218,19 +214,17 @@ public final class Analyse {
      * The options of the context expression parameter contain the plugin
      * classes used.
      * It will also be used as a parameter when calling
-     * {@link AfterModelCreation#process(ContextExpression)}.
+     * {@link AfterModelCreation#process()}.
      * The expression context parameter must not be {@code null}.
      * 
-     * @param contextExpression expression context to use
      * @throws EPMCException thrown in case of problems
      */
-    private static void processAfterModelCreations(ContextValue context) throws EPMCException {
-        assert context != null;
-        Options options = context.getOptions();
+    private static void processAfterModelCreations() throws EPMCException {
+        Options options = ContextValue.get().getOptions();
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
             afterModelLoading = Util.getInstance(clazz);
-            afterModelLoading.process(context);
+            afterModelLoading.process();
         }
     }
 
@@ -238,18 +232,16 @@ public final class Analyse {
      * Process plugin classes implementing {@link AfterCommandExecution}.
      * The options parameter contains the plugin classes used.
      * It will also be used as a parameter when calling
-     * {@link AfterCommandExecution#process(Options)}.
+     * {@link AfterCommandExecution#process()}.
      * The value context parameter must not be {@code null}.
      * 
-     * @param contextValue value context to use
      * @throws EPMCException thrown in case of problems
      */
-    private static void processAfterCommandExecution(ContextValue contextValue) throws EPMCException {
-        assert contextValue != null;
-        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(contextValue.getOptions(), AfterCommandExecution.class)) {
+    private static void processAfterCommandExecution() throws EPMCException {
+        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(ContextValue.get().getOptions(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
-            afterCommandExecution.process(contextValue);
+            afterCommandExecution.process();
         }
     }
 

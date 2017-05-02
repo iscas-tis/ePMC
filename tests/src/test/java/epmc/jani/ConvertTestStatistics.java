@@ -83,25 +83,7 @@ public final class ConvertTestStatistics {
 	}
 	
 	public Options getOptions() {
-		if (prismModel != null) {
-			return prismModel.getContextValue().getOptions();
-		} else if (janiModel != null) {
-			return prismModel.getContextValue().getOptions();
-		} else if (janiClonedModel != null) {
-			return prismModel.getContextValue().getOptions();
-		}
-		return null;
-	}
-
-	public ContextValue getContextValue() {
-		if (prismModel != null) {
-			return prismModel.getContextValue();
-		} else if (janiModel != null) {
-			return prismModel.getContextValue();
-		} else if (janiClonedModel != null) {
-			return prismModel.getContextValue();
-		}
-		return null;
+		return ContextValue.get().getOptions();
 	}
 
 	@Override

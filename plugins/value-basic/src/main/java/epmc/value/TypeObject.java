@@ -38,19 +38,9 @@ public final class TypeObject implements TypeNumBitsKnown {
 	}
 	
     public final static class Builder {
-        private ContextValue context;
         private Class<?> clazz;
         private StorageType storageType = StorageType.DIRECT;
 
-        public Builder setContext(ContextValue context) {
-            this.context = context;
-            return this;
-        }
-        
-        private ContextValue getContext() {
-            return context;
-        }
-        
         public Builder setClazz(Class<?> clazz) {
             this.clazz = clazz;
             return this;
@@ -70,7 +60,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         }
         
         public TypeObject build() {
-            return context.makeUnique(new TypeObject(this));
+            return ContextValue.get().makeUnique(new TypeObject(this));
         }
     }
     
@@ -80,14 +70,12 @@ public final class TypeObject implements TypeNumBitsKnown {
         NUMERATED_IDENTITY
     }
     
-    private final ContextValue context;
     private final Class<?> usedClass;
     private final StorageType storageType;
 
     private TypeObject(Builder builder) {
         assert builder != null;
         assert builder.getClazz() != null;
-        this.context = builder.getContext();
         this.usedClass = builder.getClazz();
         this.storageType = builder.getStorageType();
     }
@@ -127,9 +115,6 @@ public final class TypeObject implements TypeNumBitsKnown {
             return false;
         }
         TypeObject other = (TypeObject) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -183,18 +168,13 @@ public final class TypeObject implements TypeNumBitsKnown {
     }
     
     @Override
-    public ContextValue getContext() {
-        return context;
-    }
-    
-    @Override
     public TypeArray getTypeArray() {
         if (isDirect()) {
-            return context.makeUnique(new TypeArrayObjectDirect(this));
+            return ContextValue.get().makeUnique(new TypeArrayObjectDirect(this));
         } else if (isNumeratedNormal()) {
-            return context.makeUnique(new TypeArrayObjectNumerated(this, false));
+            return ContextValue.get().makeUnique(new TypeArrayObjectNumerated(this, false));
         } else if (isNumeratedIdentity()) {
-            return context.makeUnique(new TypeArrayObjectNumerated(this, true));
+            return ContextValue.get().makeUnique(new TypeArrayObjectNumerated(this, true));
         }
         assert false : storageType;
         return null;

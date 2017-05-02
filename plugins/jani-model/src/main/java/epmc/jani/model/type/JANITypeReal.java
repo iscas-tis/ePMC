@@ -28,7 +28,6 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -37,8 +36,6 @@ public final class JANITypeReal implements JANIType {
 	public final static String IDENTIFIER = "real";
 	/** Identifier for real type. */
 	private final static String REAL = "real";
-	
-	private ContextValue contextValue;
 	/** Whether the last try to parse type was successful. */
 	private ModelJANI model;
 
@@ -76,13 +73,7 @@ public final class JANITypeReal implements JANIType {
 
 	@Override
 	public TypeReal toType() {
-		assert contextValue != null;
-		return TypeReal.get(contextValue);
-	}
-
-	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
+		return TypeReal.get();
 	}
 
 	@Override

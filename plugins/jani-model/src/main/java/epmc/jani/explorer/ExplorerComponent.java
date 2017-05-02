@@ -27,7 +27,6 @@ import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.component.Component;
-import epmc.value.ContextValue;
 
 /**
  * Explorer for a given system component.
@@ -126,11 +125,6 @@ public interface ExplorerComponent extends Explorer {
 	@Override
 	NodeJANI getSuccessorNode(int succNr);
 	
-	@Override
-	default ContextValue getContextValue() {
-		return getExplorer().getContextValue();
-	}
-
 	/**
 	 * Set the number of successors the component is supposed to have.
 	 * This function is meant to be called e.g. in case of there are no

@@ -117,7 +117,7 @@ public final class ValueDouble implements ValueReal, ValueTrigonometric {
         if (Double.isNaN(value)) {
             return NAN;
         } else {
-        	Options options = getType().getContext().getOptions();
+        	Options options = ContextValue.get().getOptions();
         	if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
         		return String.valueOf(value);
         	} else {

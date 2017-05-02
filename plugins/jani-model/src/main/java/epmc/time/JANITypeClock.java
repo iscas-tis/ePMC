@@ -23,8 +23,6 @@ public final class JANITypeClock implements JANIType {
 	
 	private boolean initialized = false;
 
-	/** Value context used. */
-	private ContextValue contextValue;
 	/** Whether the last try to parse type was successful. */
 	private ModelJANI model;
 	
@@ -54,7 +52,6 @@ public final class JANITypeClock implements JANIType {
 		if (!valueString.getString().equals(CLOCK)) {
 			return null;
 		}
-		contextValue = model.getContextValue();
 		initialized = true;
 		return this;
 	}
@@ -66,22 +63,8 @@ public final class JANITypeClock implements JANIType {
 	}
 
 	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
-	}
-
-	@Override
 	public TypeClock toType() {
-		return getContextValue().makeUnique(new TypeClock(getContextValue()));
-	}
-
-	/**
-	 * Get value context from expression context of this JANI type.
-	 * 
-	 * @return value context from expression context of this JANI type
-	 */
-	private ContextValue getContextValue() {
-		return contextValue;
+		return ContextValue.get().makeUnique(new TypeClock(ContextValue.get()));
 	}
 
 	@Override

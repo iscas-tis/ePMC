@@ -100,7 +100,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get(contextValue).getZero());
+                return valueToNumber(TypeInteger.get().getZero());
             }
         }
     }
@@ -117,7 +117,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get(contextValue).getZero());
+                return valueToNumber(TypeInteger.get().getZero());
             }
         }
     }
@@ -280,7 +280,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
         this.contextDD = contextDD;
-        this.contextValue = contextDD.getContextValue();
+        this.contextValue = ContextValue.get();
         Collection<Operator> operators = contextValue.getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
@@ -304,8 +304,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         Sylvan.sylvan_init_package(initMem, 1 << 27, initCache, 1 << 26);
         Sylvan.sylvan_init_mtbdd(cacheGranularity);
         
-        this.valueTrue = TypeBoolean.get(contextValue).getTrue();
-        this.valueFalse = TypeBoolean.get(contextValue).getFalse();
+        this.valueTrue = TypeBoolean.get().getTrue();
+        this.valueFalse = TypeBoolean.get().getFalse();
         falseNode = newConstant(valueFalse);
         trueNode = newConstant(valueTrue);
         Sylvan.epmc_init_mtbdd(vop1, vop2, getOperatorNumber, trueNode, falseNode);

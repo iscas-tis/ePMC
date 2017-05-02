@@ -39,8 +39,6 @@ public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
     private DD dd;
     private List<DD> vector;
     private boolean closed;
-
-	private ContextValue context;
     
     @Override
     public String getIdentifier() {
@@ -59,12 +57,12 @@ public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(context, expression, OperatorAddInverse.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(ContextValue.get(), expression, OperatorAddInverse.IDENTIFIER, variables);
     }
 
     @Override
     public void build() throws EPMCException {
-        vector = UtilEvaluatorDD.applyVector(context, expression, variables, getContextDD()::twoCplAddInverse);
+        vector = UtilEvaluatorDD.applyVector(ContextValue.get(), expression, variables, getContextDD()::twoCplAddInverse);
     }
 
     @Override
@@ -85,11 +83,6 @@ public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(context);
+        return ContextDD.get(ContextValue.get());
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

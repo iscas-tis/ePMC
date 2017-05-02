@@ -82,9 +82,8 @@ final class PropertyNormaliser {
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
         assert subtractNumericalFrom != null;
-        ContextValue contextValue = subtractNumericalFrom.getType().getContext();
-        assert subtractNumericalFrom.getType().getContext() == contextValue;
-        assert subtractNumericalFrom.getType().canImport(TypeWeight.get(contextValue));
+        ContextValue contextValue = ContextValue.get();
+        assert subtractNumericalFrom.getType().canImport(TypeWeight.get());
         subtractNumericalFrom.set(TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
         List<Expression> newQuantifiersQualitative = new ArrayList<>();
@@ -104,30 +103,28 @@ final class PropertyNormaliser {
                 newQuantifiersQualitative.add(objective);
             } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setContext(contextValue)
                 		.setDirType(DirType.MAX)
                 		.setCmpType(CmpType.IS)
-                		.setQuantified(not(expressionToType.getContextValue(), quantified))
+                		.setQuantified(not(ContextValue.get(), quantified))
                 		.setCondition(objectiveQuantifier.getCondition())
                 		.build();
                 newQuantifiersQuantitative.add(newQuantifier);
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getOne());
             } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
-                Expression newCompare = subtract(ExpressionLiteral.getOne(getContextValue()), objectiveQuantifier.getCompare());
+                Expression newCompare = subtract(ExpressionLiteral.getOne(ContextValue.get()), objectiveQuantifier.getCompare());
                 newCompare = new ExpressionLiteral.Builder()
                 		.setValue(evaluateValue(newCompare))
                 		.build();
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                 		.setDirType(DirType.NONE)
                 		.setCmpType(CmpType.GE)
-                		.setQuantified(not(expressionToType.getContextValue(), quantified))
+                		.setQuantified(not(ContextValue.get(), quantified))
                 		.setCompare(newCompare)
                 		.setCondition(objectiveQuantifier.getCondition())
                 		.build();
                 newQuantifiersQualitative.add(newQuantifier);
             } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setContext(getContextValue())
                 		.setDirType(DirType.MAX)
                 		.setCmpType(CmpType.IS)
                 		.setQuantified(quantified)
@@ -144,7 +141,6 @@ final class PropertyNormaliser {
                 		.setValue(evaluateValue(newCompare))
                 		.build();
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setContext(getContextValue())
                 		.setDirType(DirType.NONE)
                 		.setCmpType(CmpType.GE)
                 		.setQuantified(quantified)
@@ -182,17 +178,13 @@ final class PropertyNormaliser {
 		return invertedRewards;
 	}
 	
-	private ContextValue getContextValue() {
-		return expressionToType.getContextValue();
-	}
-	
 	private ValueAlgebra newValueWeight() {
-		return TypeWeight.get(getContextValue()).newValue();
+		return TypeWeight.get().newValue();
 	}
 	
     private Expression subtract(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(getContextValue().getOperator(OperatorSubtract.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }

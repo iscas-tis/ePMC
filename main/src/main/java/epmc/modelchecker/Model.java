@@ -47,8 +47,6 @@ public interface Model {
      */
     String getIdentifier();
     
-    void setContext(ContextValue context);
-
     /**
      * Reads the model from its input file(s).
      * For some model classes (e.g. RDDL, MRMC), the model might be split into
@@ -56,9 +54,7 @@ public interface Model {
      * as parameters. Also, property files might be given as secondary
      * parameters. An exception might be thrown if the model contains syntax
      * errors, the model type has been chosen incorrectly, or if the model is
-     * too large to be parsed. This method must not be called before
-     * {@link #setContext(ContextValue) setContext} has been used to set
-     * the expression context to use. None of the parameters may be
+     * too large to be parsed. None of the parameters may be
      * <code>null</code>.
      * 
      * @param inputs input files of this model
@@ -74,9 +70,6 @@ public interface Model {
      * @return semantics type of the model
      */
     Semantics getSemantics();
-    
-    // TODO
-    ContextValue getContextValue();
     
     /**
      * Create a low-level representation of the model for analysis.

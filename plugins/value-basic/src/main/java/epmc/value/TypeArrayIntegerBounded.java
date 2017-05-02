@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 final class TypeArrayIntegerBounded implements TypeArrayInteger {
     private final static String ARRAY_INDICATOR = "[](integer-bounded)";
 	private final TypeInteger entryType;
@@ -41,10 +39,6 @@ final class TypeArrayIntegerBounded implements TypeArrayInteger {
         return new ValueArrayIntegerBounded(this);
     }
     
-	@Override
-	public ContextValue getContext() {
-		return entryType.getContext();
-	}
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof TypeArrayIntegerBounded)) {

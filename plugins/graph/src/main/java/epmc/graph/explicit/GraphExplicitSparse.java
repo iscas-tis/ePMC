@@ -132,8 +132,8 @@ public final class GraphExplicitSparse implements GraphExplicit {
         this.forNative = forNative;
         this.context = contextValue;
         TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get(context).getTypeArrayNative()
-                : TypeInteger.get(context).getTypeArray();
+                ? TypeInteger.get().getTypeArrayNative()
+                : TypeInteger.get().getTypeArray();
         bounds = UtilValue.newArray(typeArrayInteger, 1);
         successors = UtilValue.newArray(typeArrayInteger, 1);
     }
@@ -149,13 +149,13 @@ public final class GraphExplicitSparse implements GraphExplicit {
         this.numTotalOut = numTotalOut;
         this.context = contextValue;
         TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get(context).getTypeArrayNative()
-                : TypeInteger.get(context).getTypeArray();
+                ? TypeInteger.get().getTypeArrayNative()
+                : TypeInteger.get().getTypeArray();
         bounds = UtilValue.newArray(typeArrayInteger, numNodes + 1);
         successors = UtilValue.newArray(typeArrayInteger, numTotalOut);
         
-        addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get(context));
-        addNodePropertyConstant(CommonProperties.STATE, TypeBoolean.get(context).getTrue());
+        addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
+        addNodePropertyConstant(CommonProperties.STATE, TypeBoolean.get().getTrue());
     }
     
     public NodeProperty addNodePropertyConstant(Object name, Value constant) {
@@ -295,11 +295,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         return initNodes;
     }
 
-    @Override
-    public ContextValue getContextValue() {
-        return context;
-    }
-    
     @Override
     public void explore(BitSet start) throws EPMCException {
     }

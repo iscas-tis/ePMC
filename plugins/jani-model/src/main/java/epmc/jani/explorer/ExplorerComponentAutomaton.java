@@ -71,7 +71,6 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	private final static class ExpressionToTypeAutomaton implements ExpressionToType {
 		private final Map<Expression,Variable> variables = new LinkedHashMap<>();
-		private final ContextValue contextValue;
 		
 		private ExpressionToTypeAutomaton(ContextValue contextValue, Collection<Variable> variables) {
 			assert contextValue != null;
@@ -79,7 +78,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			for (Variable variable : variables) {
 				assert variable != null;
 			}
-			this.contextValue = contextValue;
 			for (Variable variable : variables) {
 				this.variables.put(variable.getIdentifier(), variable);
 			}
@@ -98,13 +96,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			}
 			return type.toType();
 		}
-
-		@Override
-		public ContextValue getContextValue() {
-			return contextValue;
-		}
-
-		
 	}
 	
 	/** Name of variable denoting location of automaton. */
@@ -206,12 +197,12 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		componentAutomaton = (ComponentAutomaton) component;
 		nonDet = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics());
 		stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
-		weightZero = TypeWeightTransition.get(explorer.getContextValue()).getZero();
+		weightZero = TypeWeightTransition.get().getZero();
 		automaton = componentAutomaton.getAutomaton();
 		typeLocation = getContextValueJANI().getTypeLocation(automaton.getLocations());
 		buildTypeEdge();
-		probabilitySum = TypeWeightTransition.get(getContextValue()).newValue();
-		weightValue = TypeWeightTransition.get(getContextValue()).newValue();
+		probabilitySum = TypeWeightTransition.get().newValue();
+		weightValue = TypeWeightTransition.get().newValue();
 		prepareVariables();
 		prepareProperties();
 		name = componentAutomaton.getAutomaton().getName().intern();
@@ -301,7 +292,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			it.advance();
 			maxNumEdges = Math.max(maxNumEdges, it.value());
 		}
-		typeEdge = TypeInteger.get(getContextValue(), -1, maxNumEdges - 1);
+		typeEdge = TypeInteger.get(-1, maxNumEdges - 1);
 	}
 
 	/**
@@ -334,7 +325,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setLocationVariable(locationVarNr)
 					.setTypeLocation(typeLocation)
 					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(getContextValue(), this.variableToNumber.keySet()))
+					.setExpressionToType(new ExpressionToTypeAutomaton(ContextValue.get(), this.variableToNumber.keySet()))
 					.build();
 			edgeEvaluators[locNr][locationsNumEdges[locNr]] = edgeEvaluator;
 			locationsNumEdges[locNr]++;
@@ -348,7 +339,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			locationEvaluators[index] = new AssignmentsEvaluator.Builder()
 					.setAssignments(location.getTransientValueAssignmentsOrEmpty())
 					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(getContextValue(), this.variableToNumber.keySet()))
+					.setExpressionToType(new ExpressionToTypeAutomaton(ContextValue.get(), this.variableToNumber.keySet()))
 					.setVariableMap(variableToNumber)
 					.setVariables(explorer.getStateVariables().getIdentifiersArray())
 					.build();
@@ -384,12 +375,12 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	 * Prepare the graph, node, and edge properties of this explorer.
 	 */
 	private void prepareProperties() {
-		PropertyNodeGeneral state = new PropertyNodeGeneral(this, TypeBoolean.get(getContextValue()));
+		PropertyNodeGeneral state = new PropertyNodeGeneral(this, TypeBoolean.get());
 		if (!nonDet) {
 			state.set(true);
 		}
 		this.state = state;
-		weight = new PropertyEdgeGeneral(this, TypeWeightTransition.get(getContextValue()));
+		weight = new PropertyEdgeGeneral(this, TypeWeightTransition.get());
 		label = new PropertyEdgeAction(explorer);
 	}
 
@@ -436,8 +427,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	@Override
 	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
 		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(getContextValue(), automaton.getVariablesOrEmpty());
-		initialExpression = UtilExpressionStandard.opAnd(getContextValue(), initialExpression, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), automaton.getVariablesOrEmpty());
+		initialExpression = UtilExpressionStandard.opAnd(ContextValue.get(), initialExpression, bounds);
 		initialExpression = automaton.getModel().replaceConstants(initialExpression);
 		VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
 		enumerator.setExpression(initialExpression);

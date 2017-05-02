@@ -24,7 +24,6 @@ import java.io.Closeable;
 
 import epmc.error.EPMCException;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 
 /**
  * Low-level representation of a model.
@@ -40,8 +39,6 @@ public interface LowLevel extends Closeable, ExpressionToType {
      * @throws EPMCException thrown in case of problems during creation
      */
     StateSet newInitialStateSet() throws EPMCException;
-
-    ContextValue getContextValue();
     
     @Override
     void close();

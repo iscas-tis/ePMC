@@ -56,10 +56,10 @@ public class AfterOptionsCreationKretinsky implements AfterOptionsCreation {
 		options.addProgramOption(OptionsKretinsky.KRETINSKY_OPTIONS, OptionsKretinsky.KRETINSKY_GFFG_OPTIMISATION, typeBoolean, true, true, true, true);
 		options.addProgramOption(OptionsKretinsky.KRETINSKY_OPTIONS, OptionsKretinsky.KRETINSKY_OPTIMISE_MOJMIR, typeMojmir, true, true, true, true);
         options.addProgramOption(OptionsKretinsky.KRETINSKY_OPTIONS, OptionsKretinsky.KRETINSKY_PREPROCESS_SLAVES, typeString, "run-100", true, true, true);
-		Map<String, Class<?>> automatonMap = options.get(OptionsEPMC.AUTOMATON_CLASS);
+		Map<String, Class<?>> automatonMap = options.get();
 		assert automatonMap != null;
 		automatonMap.put(AutomatonKretinskyProduct.IDENTIFIER, AutomatonKretinskyProduct.class);
-		Map<String, Class<?>> propertySolverList = options.get(OptionsEPMC.PROPERTY_SOLVER_CLASS);
+		Map<String, Class<?>> propertySolverList = options.get();
 		assert propertySolverList != null;
 		propertySolverList.put(PropertySolverDDGeneralisedRabin.IDENTIFIER, PropertySolverDDGeneralisedRabin.class);
 		propertySolverList.put(PropertySolverExplicitGeneralisedRabin.IDENTIFIER, PropertySolverExplicitGeneralisedRabin.class);

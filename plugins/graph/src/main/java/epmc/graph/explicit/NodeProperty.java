@@ -21,7 +21,6 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -146,15 +145,6 @@ public interface NodeProperty {
         Value value = get(node);
         assert ValueEnum.isEnum(value);
         return ValueEnum.asEnum(value).getEnum();
-    }
-    
-    /**
-     * Get value context used by graph of this node property.
-     * 
-     * @return value context used by graph of this node property
-     */
-    default ContextValue getContextValue() {
-        return getGraph().getContextValue();
     }
     
     /**

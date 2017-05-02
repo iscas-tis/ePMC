@@ -39,7 +39,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         if (!isAnd(expression)) {
             return null;
         }
-        ContextValue context = expressionToType.getContextValue();
+        ContextValue context = ContextValue.get();
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         if (isFalse(expressionOperator.getOperand1())) {
             return ExpressionLiteral.getFalse(context);
@@ -71,13 +71,13 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());
         if (left != null && right != null) {
-            return UtilExpressionStandard.opAnd(expressionToType.getContextValue(), left, right);
+            return UtilExpressionStandard.opAnd(ContextValue.get(), left, right);
         }
         if (left != null) {
-            return UtilExpressionStandard.opAnd(expressionToType.getContextValue(), left, expressionOperator.getOperand2());
+            return UtilExpressionStandard.opAnd(ContextValue.get(), left, expressionOperator.getOperand2());
         }
         if (right != null) {
-            return UtilExpressionStandard.opAnd(expressionToType.getContextValue(), expressionOperator.getOperand1(), right);
+            return UtilExpressionStandard.opAnd(ContextValue.get(), expressionOperator.getOperand1(), right);
         }
         return null;
     }

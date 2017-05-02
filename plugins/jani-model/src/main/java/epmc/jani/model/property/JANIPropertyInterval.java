@@ -132,12 +132,12 @@ public final class JANIPropertyInterval implements JANINode {
 		assert validIdentifiers != null;
 		TimeBound result;
 		if (lower == null) {
-			result = newTimeBound(model.getContextValue(), ExpressionLiteral.getZero(model.getContextValue()), upper, false, upperExclusive);
+			result = newTimeBound(ContextValue.get(), ExpressionLiteral.getZero(ContextValue.get()), upper, false, upperExclusive);
 		} else {
 			if (upper == null) {
-				result = newTimeBound(model.getContextValue(), lower, ExpressionLiteral.getPosInf(model.getContextValue()), lowerExclusive, true);
+				result = newTimeBound(ContextValue.get(), lower, ExpressionLiteral.getPosInf(ContextValue.get()), lowerExclusive, true);
 			} else {
-				result = newTimeBound(model.getContextValue(), lower, upper, lowerExclusive, upperExclusive);
+				result = newTimeBound(ContextValue.get(), lower, upper, lowerExclusive, upperExclusive);
 			}
 		}
 		return result;
@@ -199,7 +199,6 @@ public final class JANIPropertyInterval implements JANINode {
             boolean leftOpen, boolean rightOpen) {
     	assert context != null;
         return new TimeBound.Builder()
-        		.setContext(context)
                 .setLeft(left)
                 .setRight(right)
                 .setLeftOpen(leftOpen)

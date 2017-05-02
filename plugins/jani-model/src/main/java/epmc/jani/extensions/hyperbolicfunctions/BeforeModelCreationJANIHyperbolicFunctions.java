@@ -34,13 +34,12 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 	}
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
-		assert contextValue != null;
-		contextValue.addOrSetOperator(OperatorSinh.class);
-		contextValue.addOrSetOperator(OperatorCosh.class);
-		contextValue.addOrSetOperator(OperatorTanh.class);
-		contextValue.addOrSetOperator(OperatorAsinh.class);
-		contextValue.addOrSetOperator(OperatorAcosh.class);
-		contextValue.addOrSetOperator(OperatorAtanh.class);
+	public void process() throws EPMCException {
+		ContextValue.get().addOrSetOperator(OperatorSinh.class);
+		ContextValue.get().addOrSetOperator(OperatorCosh.class);
+		ContextValue.get().addOrSetOperator(OperatorTanh.class);
+		ContextValue.get().addOrSetOperator(OperatorAsinh.class);
+		ContextValue.get().addOrSetOperator(OperatorAcosh.class);
+		ContextValue.get().addOrSetOperator(OperatorAtanh.class);
 	}
 }

@@ -97,7 +97,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		if (modelChecker.getEngine() instanceof EngineExplicit) {
 			this.modelGraph = modelChecker.getLowLevel();
 		}
-		this.options = modelChecker.getModel().getContextValue().getOptions();
+		this.options = ContextValue.get().getOptions();
 		this.log = options.get(OptionsMessages.LOG);
 	}
 
@@ -265,7 +265,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		assert (!(prop instanceof ExpressionQuantifier));
 		Expression normFromProp = prop;
 		Set<Set<Expression>> clauses = PropertySolverExplicitLTLFairness
-				.flatten(graph.getContextValue(), normFromProp);
+				.flatten(ContextValue.get(), normFromProp);
 
 		BitSet acBSCCs = UtilBitSet.newBitSetUnbounded();
 
@@ -304,7 +304,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			if (formulaTemporal.getTemporalType() == TemporalType.GLOBALLY) {
 				globalFormula = globalFormula == null? 
 						formulaTemporal.getOperand1() :
-						UtilExpressionStandard.opAnd(graph.getContextValue(), globalFormula, formulaTemporal.getOperand1());
+						UtilExpressionStandard.opAnd(ContextValue.get(), globalFormula, formulaTemporal.getOperand1());
 			} else {
 				finalFormulas.add(formulaTemporal.getOperand1());
 			}
@@ -405,7 +405,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		StateMap result = doSolve(modelGraph, forStates, quantifiedProp);
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(modelGraph.getContextValue());
+            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
             assert op != null;
             result = result.applyWith(op, compare);
         }
@@ -429,7 +429,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
         // TODO implement more cleanly
         assert iterResult != null;
         assert prodGraph != null;
-        Type typeWeight = TypeWeight.get(forStates.getContextValue());
+        Type typeWeight = TypeWeight.get();
         Value entry = typeWeight.newValue();
         StateSetExplicit forStatesExplicit = (StateSetExplicit) forStates;
         BitSet nodes = forStatesExplicit.getStatesExplicit();

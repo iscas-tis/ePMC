@@ -123,7 +123,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     private Value[][] computeValidInputs(Automaton automaton)
             throws EPMCException {
     	assert automaton != null;
-        ContextValue contextValue = automaton.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         ContextDD contextDD = ContextDD.get(contextValue);
         Expression[] expressions = automaton.getExpressions();
         Set<Expression> identifiers = new HashSet<>();
@@ -132,14 +132,14 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         }
         Map<Expression,VariableDD> variables = new HashMap<>();
         for (Expression identifier : identifiers) {
-            variables.put(identifier, contextDD.newVariable(identifier.toString(), TypeBoolean.get(contextValue), 1));
+            variables.put(identifier, contextDD.newVariable(identifier.toString(), TypeBoolean.get(), 1));
         }
         ExpressionToDD checkE2D = new ExpressionToDD(contextValue, variables);
         
         List<Value[]> values = new ArrayList<>();
         int maxNumValues = 1;
         for (Expression expression : expressions) {
-            TypeEnumerable type = TypeBoolean.get(contextValue);
+            TypeEnumerable type = TypeBoolean.get();
             maxNumValues *= type.getNumValues();
         }
         for (int entryNr = 0; entryNr < maxNumValues; entryNr++) {
@@ -149,7 +149,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
             Value[] entry = new Value[expressions.length];
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
                 Expression expression = expressions[exprNr];
-                TypeEnumerable type = TypeBoolean.get(contextValue);
+                TypeEnumerable type = TypeBoolean.get();
                 int numValues = type.getNumValues();
                 int valueNr = usedNr % numValues;
                 usedNr /= numValues;
@@ -204,7 +204,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(getContextValue().getOperator(OperatorEq.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
         	.setOperands(a, b)
         	.build();
     }
@@ -212,9 +212,5 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     @Override
     public String toString() {
         return exportToString();
-    }
-    
-    private ContextValue getContextValue() {
-    	return this.automaton.getContextValue();
     }
 }

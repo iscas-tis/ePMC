@@ -94,7 +94,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Type typeWeight = TypeWeight.get(origGraph.getContextValue());
+        Type typeWeight = TypeWeight.get();
         if (!TypeDouble.isDouble(typeWeight)) {
         	return false;
         }

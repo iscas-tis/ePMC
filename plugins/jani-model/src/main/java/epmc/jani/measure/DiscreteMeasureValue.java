@@ -21,14 +21,13 @@
 package epmc.jani.measure;
 
 import epmc.error.EPMCException;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
-	/** 1L, as I don't know any better */
-	private static final long serialVersionUID = 1L;
 	private Operator operator;
 	private DiscreteMeasure[] operands;
 	
@@ -94,7 +93,7 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
 	}
 
 	public void add(Value operand1, Value operand2) throws EPMCException {
-		this.operator = getType().getContext().getOperator(OperatorAdd.IDENTIFIER);
+		this.operator = ContextValue.get().getOperator(OperatorAdd.IDENTIFIER);
 		this.operands = new DiscreteMeasure[2];
 		this.operands[0] = (DiscreteMeasure) operand1; // TODO castorimport
 		this.operands[1] = (DiscreteMeasure) operand2;

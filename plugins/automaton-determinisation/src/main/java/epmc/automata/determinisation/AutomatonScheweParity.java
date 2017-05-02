@@ -26,7 +26,6 @@ import epmc.automaton.Buechi;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 public final class AutomatonScheweParity implements AutomatonParity, AutomatonSafra {
@@ -133,10 +132,5 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
     @Override
     public String toString() {
         return inner.toString();
-    }
-
-    @Override
-    public ContextValue getContextValue() {
-    	return inner.getContextValue();
     }
 }

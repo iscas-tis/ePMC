@@ -205,7 +205,7 @@ public class LumperDDSignature implements LumperDD {
     private ExpressionToDD getQuotientExpressionToDD() throws EPMCException {
     	Map<Expression, VariableDD> variables = new HashMap<>();
     	variables.put(newIdentifier(BLOCK_INDEX), blockIndexVar);
-    	return new ExpressionToDD(modelChecker.getModel().getContextValue(), variables);
+    	return new ExpressionToDD(ContextValue.get(), variables);
     }
     
     private class Tuple {
@@ -413,7 +413,7 @@ public class LumperDDSignature implements LumperDD {
         assert graph != null;
         this.original = graph;
         contextDD = original.getContextDD();
-        contextValue = original.getContextValue();
+        contextValue = ContextValue.get();
         signature.setOriginal(original);
     }
 
@@ -812,7 +812,7 @@ public class LumperDDSignature implements LumperDD {
     	nextVars.addAll(cubeToList(nondetVariablesCubeNext));
     	nondetVariablesCubeNext.dispose();
     	
-        TypeEnum playerType = TypeEnum.get(contextValue, Player.class);
+        TypeEnum playerType = TypeEnum.get(Player.class);
         DD playerStochastic = contextDD.newConstant(playerType.newValue(Player.STOCHASTIC));
         DD playerOne = contextDD.newConstant(playerType.newValue(Player.ONE));
         DD quotientPlayer;
@@ -870,7 +870,7 @@ public class LumperDDSignature implements LumperDD {
 
     @Override
     public DD quotientToOriginal(DD quotient) throws EPMCException {
-    	if (quotient.getType() == TypeBoolean.get(contextValue)) {
+    	if (quotient.getType() == TypeBoolean.get()) {
             return quotient.abstractAndExist(partitionADD.eq(contextDD.newConstant(1)), blockIndexVar.newCube(0));
     	} else {
             return quotient.multiply(partitionADD).abstractSum(blockIndexVar.newCube(0));
@@ -879,7 +879,7 @@ public class LumperDDSignature implements LumperDD {
     
     @Override
     public DD originalToQuotient(DD original) throws EPMCException {
-    	if (original.getType() == TypeBoolean.get(contextValue)) {
+    	if (original.getType() == TypeBoolean.get()) {
     		return original.abstractAndExist(partitionADD.eq(contextDD.newConstant(1)), this.original.getPresCube());
     	} else {
             return original.multiply(partitionADD).abstractSum(this.original.getPresCube());
@@ -900,18 +900,14 @@ public class LumperDDSignature implements LumperDD {
     }
     
     private ExpressionLiteral newLiteral(int value) {
-    	ValueInteger valueInteger = UtilValue.newValue(TypeInteger.get(contextValue), value);
+    	ValueInteger valueInteger = UtilValue.newValue(TypeInteger.get(), value);
     	return newLiteral(valueInteger);
     }
     
     private ValueAlgebra newValueWeightTransition(String string) throws EPMCException {
     	assert string != null;
-    	TypeAlgebra typeWeightTransition = TypeWeightTransition.get(getContextValue());
+    	TypeAlgebra typeWeightTransition = TypeWeightTransition.get();
     	return UtilValue.newValue(typeWeightTransition, string);
-    }
-    
-    private ContextValue getContextValue() {
-    	return modelChecker.getModel().getContextValue();
     }
     
     private ExpressionOperator or(Expression a, Expression b) {
@@ -960,14 +956,13 @@ public class LumperDDSignature implements LumperDD {
     }
 
     ExpressionLiteral getFalse() {
-    	return newLiteral(TypeBoolean.get(contextValue).getFalse());
+    	return newLiteral(TypeBoolean.get().getFalse());
     }
     
 
     private TypeObject getTypeObject(Class<?> clazz) {
     	return new TypeObject.Builder()
     			.setClazz(clazz)
-    			.setContext(contextValue)
     			.build();
     }
     

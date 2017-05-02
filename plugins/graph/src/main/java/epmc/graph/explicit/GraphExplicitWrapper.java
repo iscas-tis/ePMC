@@ -256,20 +256,16 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     
     private final GraphExplicitProperties properties;
 
-	private ContextValue contextValue;
-    
     /* constructors */
     
     private GraphExplicitWrapper(ContextValue contextValue, GraphExplicit innerGraph, boolean cache) throws EPMCException {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
         this.queriedNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this, contextValue);
-        this.contextValue = contextValue;
         this.innerGraph = innerGraph;
         if (innerGraph != null) {
             this.maxNumSuccessors = DEFAULT_NUM_SUCCESSORS;
             TypeObject innerGraphType = new TypeObject.Builder()
-                    .setContext(innerGraph.getContextValue())
                     .setClazz(innerGraph.getClass())
                     .setStorageClass(StorageType.DIRECT)
                     .build();
@@ -304,7 +300,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     public GraphExplicitWrapper(GraphExplicit innerGraph) throws EPMCException {
-        this(innerGraph.getContextValue(), innerGraph, true);
+        this(ContextValue.get(), innerGraph, true);
     }
 
     public GraphExplicitWrapper(ContextValue contextValue) throws EPMCException {
@@ -371,7 +367,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             property = new DummyName();
         }
         assert type != null;
-        assert type.getContext() == contextValue;
         NodeProperty result = new NodePropertyGeneral(this, type, false);
         registerNodeProperty(property, result);
         return result;
@@ -654,11 +649,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     @Override
     public int getNumNodes() {
         return queriedNodes.length();
-    }
-
-    @Override
-    public ContextValue getContextValue() {
-        return contextValue;
     }
     
 	@Override

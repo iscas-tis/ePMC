@@ -20,6 +20,7 @@
 
 package epmc.expression.standard.simplify;
 
+import epmc.value.ContextValue;
 import epmc.value.OperatorImplies;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -36,7 +37,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
             return null;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return UtilExpressionStandard.opOr(expressionToType.getContextValue(), UtilExpressionStandard.opNot(expressionToType.getContextValue(), expressionOperator.getOperand1()), expressionOperator.getOperand2());
+        return UtilExpressionStandard.opOr(ContextValue.get(), UtilExpressionStandard.opNot(ContextValue.get(), expressionOperator.getOperand1()), expressionOperator.getOperand2());
     }
     
     private static boolean isImplies(Expression expression) {

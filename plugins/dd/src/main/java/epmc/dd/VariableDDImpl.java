@@ -59,7 +59,6 @@ final class VariableDDImpl implements VariableDD {
         assert contextDD != null;
         assert copies > 0;
         assert type != null;
-        assert contextDD.getContextValue() == type.getContext();
         assert TypeBoolean.isBoolean(type) || TypeInteger.isInteger(type) || TypeEnumerable.asEnumerable(type).getNumValues() != -1 : type;
         assert !TypeInteger.isInteger(type) || TypeInteger.isIntegerBothBounded(type) :
             name + SPACE + TypeInteger.asInteger(type).getLowerInt() + SPACE + TypeInteger.asInteger(type).getUpperInt();

@@ -35,7 +35,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
 
     private final static String DOUBLE = "double";
     
-    private final ContextValue context;
     private final ValueDouble valueOne = new ValueDouble(this, 1.0);
     private final ValueDouble valueZero = new ValueDouble(this, 0.0);
     private final ValueDouble valuePosInf = new ValueDouble(this, Double.POSITIVE_INFINITY);
@@ -45,9 +44,7 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     private final ValueDouble lower;
     private final ValueDouble upper;
 
-    public TypeDouble(ContextValue context, ValueDouble lower, ValueDouble upper) {
-        assert context != null;
-        this.context = context;
+    public TypeDouble(ValueDouble lower, ValueDouble upper) {
         valueOne.setImmutable();
         valueZero.setImmutable();
         valuePosInf.setImmutable();
@@ -124,9 +121,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
             return false;
         }
         Type other = (Type) obj;
-        if (this.getContext() != other.getContext()) {
-            return false;
-        }
         if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
@@ -141,14 +135,9 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     }
     
     @Override
-    public ContextValue getContext() {
-        return context;
-    }
-    
-    @Override
     public TypeArrayDoubleNative getTypeArrayNative() {
         TypeArrayDoubleNative arrayType = new TypeArrayDoubleNative(this);
-        return getContext().makeUnique(arrayType);
+        return ContextValue.get().makeUnique(arrayType);
     }
     
     @Override
@@ -163,6 +152,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     
     @Override
     public TypeArrayDouble getTypeArray() {
-        return context.makeUnique(new TypeArrayDouble(this));
+        return ContextValue.get().makeUnique(new TypeArrayDouble(this));
     }
 }

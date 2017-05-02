@@ -219,7 +219,6 @@ public final class AutomatonProduct implements Automaton {
         }
     }
 
-    private final ContextValue contextValue;
     private final List<Automaton> automataExternal;
     private final Automaton[] automata;
     private final AutomatonProductState initState;
@@ -232,7 +231,6 @@ public final class AutomatonProduct implements Automaton {
 
     public AutomatonProduct(ContextValue contextValue, Automaton[] automata) throws EPMCException {
         assert assertConstructor(automata);
-        this.contextValue = contextValue;
         this.automata = automata.clone();
         this.succStateArray = new int[automata.length];
         this.succLabelingsArray = new int[automata.length];
@@ -317,11 +315,6 @@ public final class AutomatonProduct implements Automaton {
         return succLabel.getNumber();
     }
 
-    @Override
-    public ContextValue getContextValue() {
-    	return contextValue;
-    }
-    
     @Override
     public Expression[] getExpressions() {
         return automata[0].getExpressions();

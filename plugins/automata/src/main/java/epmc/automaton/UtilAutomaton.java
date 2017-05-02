@@ -69,7 +69,7 @@ public final class UtilAutomaton {
             ValueBoolean negate) throws EPMCException {
         assert property != null;
         assert negate != null;
-        ContextValue contextValue = negate.getType().getContext();
+        ContextValue contextValue = ContextValue.get();
         Options options = contextValue.getOptions();
         Buechi buechi = null;
         Log log = options.get(OptionsMessages.LOG);
@@ -80,7 +80,7 @@ public final class UtilAutomaton {
             } else {
                 log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
             }
-            buechi = new BuechiImpl(negate.getType().getContext(), usedProperty, expressions);
+            buechi = new BuechiImpl(ContextValue.get(), usedProperty, expressions);
             Message buechiDone = buechi.isDeterministic() ?
                     MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                     : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -92,7 +92,7 @@ public final class UtilAutomaton {
             if (detNeg == OptionsAutomaton.Ltl2BaDetNeg.NEVER
                     || detNeg == OptionsAutomaton.Ltl2BaDetNeg.BETTER) {
                 log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
-                origBuechi = new BuechiImpl(negate.getType().getContext(), property, expressions);
+                origBuechi = new BuechiImpl(ContextValue.get(), property, expressions);
                 Message buechiDone = origBuechi.isDeterministic() ?
                         MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                         : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -101,7 +101,7 @@ public final class UtilAutomaton {
             }
             if (detNeg == OptionsAutomaton.Ltl2BaDetNeg.BETTER || detNeg == OptionsAutomaton.Ltl2BaDetNeg.ALWAYS) {
                 log.send(MessagesAutomaton.COMPUTING_NEG_BUECHI);
-                negBuechi = new BuechiImpl(negate.getType().getContext(), not(contextValue, property), expressions);
+                negBuechi = new BuechiImpl(ContextValue.get(), not(contextValue, property), expressions);
                 Message buechiDone = negBuechi.isDeterministic() ?
                         MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                         : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -147,7 +147,7 @@ public final class UtilAutomaton {
         for (Expression expression : expressions) {
             assert expression != null;
         }
-        ValueBoolean negate = UtilValue.clone(TypeBoolean.get(contextValue).getFalse());
+        ValueBoolean negate = UtilValue.clone(TypeBoolean.get().getFalse());
         return newBuechi(property, expressions, true, negate);
     }
 
@@ -318,8 +318,7 @@ public final class UtilAutomaton {
 
     private static ExpressionTemporal newNext(ContextValue context, Expression operand, Positional positional) {
         return newTemporal(TemporalType.NEXT, operand,
-                new TimeBound.Builder().setContext(context)
-                .build(), positional);
+                new TimeBound.Builder().build(), positional);
     }
 
     private static ExpressionTemporal newTemporal

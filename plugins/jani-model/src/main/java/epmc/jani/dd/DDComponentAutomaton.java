@@ -119,7 +119,7 @@ final class DDComponentAutomaton implements DDComponent {
 		automaton = component.getAutomaton();
 		buildVariables();
 		buildCubes();
-		try (ExpressionToDD expressionToDD = new ExpressionToDD(getContextValue(), identifierToDD)) {
+		try (ExpressionToDD expressionToDD = new ExpressionToDD(ContextValue.get(), identifierToDD)) {
 			buildTransitions(expressionToDD);
 			computeInitialNodes(expressionToDD);
 		}
@@ -387,8 +387,8 @@ final class DDComponentAutomaton implements DDComponent {
 			initialNodes = initialNodes.andWith(locationVariableDD.newVariableValue(PRES_STATE, initialLocValue));
 		}
 		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(getContextValue(), automaton.getVariablesOrEmpty());
-		initialExpression = UtilExpressionStandard.opAnd(getContextValue(), initialExpression, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), automaton.getVariablesOrEmpty());
+		initialExpression = UtilExpressionStandard.opAnd(ContextValue.get(), initialExpression, bounds);
 		initialExpression = automaton.getModel().replaceConstants(initialExpression);
 		initialNodes = initialNodes.andWith(expressionToDD.translate(initialExpression));
 		this.initialNodes = initialNodes;
@@ -416,16 +416,6 @@ final class DDComponentAutomaton implements DDComponent {
 		initialNodes.dispose();		
 	}
 
-	/**
-	 * Get value value context used for this DD component.
-	 * The context is derived from the graph the DD component belongs to.
-	 * 
-	 * @return value context used for this DD component
-	 */
-	private ContextValue getContextValue() {
-		return graph.getContextValue();
-	}
-	
 	/**
 	 * Get JANI value context used for this DD component.
 	 * The context is derived from the graph the DD component belongs to.

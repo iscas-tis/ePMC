@@ -44,7 +44,7 @@ public final class PropertyNodeState implements PropertyNode {
 	public PropertyNodeState(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
-		this.type = TypeBoolean.get(explorer.getContextValue());
+		this.type = TypeBoolean.get();
 		this.value = type.newValue();
 	}
 

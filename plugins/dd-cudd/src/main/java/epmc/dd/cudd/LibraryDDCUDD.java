@@ -272,7 +272,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        contextValue = contextDD.getContextValue();
+        contextValue = ContextValue.get();
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         Options options = contextDD.getOptions();
@@ -314,8 +314,8 @@ public final class LibraryDDCUDD implements LibraryDD {
         if (!mtbdd) {
             complement(this.bddOne, this.bddZero);
         }
-        this.valueTrue = TypeBoolean.get(contextValue).getTrue();
-        this.valueFalse = TypeBoolean.get(contextValue).getFalse();
+        this.valueTrue = TypeBoolean.get().getTrue();
+        this.valueFalse = TypeBoolean.get().getFalse();
         this.addZero = mtbdd ? CUDD.Cudd_dd_zero(cuddManager) : null;
         this.addOne = mtbdd ? CUDD.Cudd_dd_one(cuddManager) : null;
     }

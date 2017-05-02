@@ -154,7 +154,6 @@ final class RewardsConverter {
 		Variables rewards = new Variables();
 		rewards.setModel(modelJANI);
 		JANITypeReal rewardType = new JANITypeReal();
-		rewardType.setContextValue(getContextValue());
 		rewardType.setModel(modelJANI);
 		for (RewardStructure reward : modelPRISM.getRewards()) {
 			String name = reward.getName();
@@ -171,7 +170,7 @@ final class RewardsConverter {
 			variable.setType(rewardType);
 			variable.setTransient(true);
 			variable.setInitial(new ExpressionLiteral.Builder()
-					.setValue(TypeWeight.get(modelJANI.getContextValue()).getZero()).build());
+					.setValue(TypeWeight.get().getZero()).build());
 			rewards.addVariable(variable);
 		}
 		return rewards;
@@ -229,7 +228,7 @@ final class RewardsConverter {
 				|| SemanticsCTMDP.isCTMDP(modelPRISM.getSemantics())) {
 			Rate rate = new Rate();
 			rate.setModel(modelJANI);
-			TypeInteger typeInteger = TypeInteger.get(getContextValue());
+			TypeInteger typeInteger = TypeInteger.get();
 			rate.setExp(new ExpressionLiteral.Builder()
 					.setValue(UtilValue.newValue(typeInteger, 1))
 					.build());
@@ -260,12 +259,12 @@ final class RewardsConverter {
 				if (isTrue(guard)) {
 					guardedReward = value;
 				} else {
-					guardedReward = UtilExpressionStandard.opIte(getContextValue(), guard, value, 0);
+					guardedReward = UtilExpressionStandard.opIte(ContextValue.get(), guard, value, 0);
 				}
 				if (assignedToVariable == null) {
 					assignedToVariable = guardedReward;
 				} else {
-					assignedToVariable = UtilExpressionStandard.opAdd(getContextValue(), assignedToVariable, guardedReward);
+					assignedToVariable = UtilExpressionStandard.opAdd(ContextValue.get(), assignedToVariable, guardedReward);
 				}
 			}
 			if (assignedToVariable == null) {
@@ -317,16 +316,16 @@ final class RewardsConverter {
 			if (isTrue(guard)) {
 				guardedReward = value;
 			} else {
-				guardedReward = UtilExpressionStandard.opIte(getContextValue(), guard, value, 0);				
+				guardedReward = UtilExpressionStandard.opIte(ContextValue.get(), guard, value, 0);				
 			}
 			if (result == null) {
 				result = guardedReward;
 			} else {
-				result = UtilExpressionStandard.opAdd(getContextValue(), result, guardedReward);
+				result = UtilExpressionStandard.opAdd(ContextValue.get(), result, guardedReward);
 			}
 		}
 		if (result == null) {
-			TypeInteger typeInteger = TypeInteger.get(getContextValue());
+			TypeInteger typeInteger = TypeInteger.get();
 			return new ExpressionLiteral.Builder()
 					.setValue(UtilValue.newValue(typeInteger, 0))
 					.build();
@@ -500,11 +499,7 @@ final class RewardsConverter {
 	}
 
 	private Options getOptions() {
-		return modelPRISM.getContextValue().getOptions();
-	}
-	
-	private ContextValue getContextValue() {
-		return modelPRISM.getContextValue();
+		return ContextValue.get().getOptions();
 	}
 	
     private static boolean isTrue(Expression expression) {

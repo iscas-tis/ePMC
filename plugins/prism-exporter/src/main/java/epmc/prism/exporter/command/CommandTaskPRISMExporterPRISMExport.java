@@ -42,6 +42,7 @@ import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMConverter;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.value.ContextValue;
 import epmc.value.OptionsValue;
 
 /**
@@ -70,8 +71,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
 	
     @Override
     public void executeInServer() {
-    	ProcessorRegistrar.setContextValue(modelChecker.getModel().getContextValue());
-		Options options = modelChecker.getModel().getContextValue().getOptions();
+		Options options = ContextValue.get().getOptions();
 		options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, true);
 		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
 			ProcessorRegistrar.useExtendedPRISMSyntax();

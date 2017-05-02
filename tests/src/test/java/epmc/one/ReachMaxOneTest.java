@@ -55,8 +55,8 @@ public class ReachMaxOneTest {
         Options options = prepareOptions();
         ContextValue contextValue = options.get(TestHelper.CONTEXT_VALUE);
         GraphExplicitWrapper graph = new GraphExplicitWrapper(contextValue);
-        EdgeProperty weights = graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeightTransition.get(contextValue));
-        NodeProperty player = graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(contextValue, Player.class));
+        EdgeProperty weights = graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeightTransition.get());
+        NodeProperty player = graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
         player.set(0, Player.STOCHASTIC);
         graph.prepareNode(0, 2);
         graph.setSuccessorNode(0, 0, 0);

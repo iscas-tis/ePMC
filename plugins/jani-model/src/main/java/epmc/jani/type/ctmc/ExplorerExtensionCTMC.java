@@ -53,7 +53,7 @@ public final class ExplorerExtensionCTMC implements ExplorerExtension {
 	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
 		this.explorer = explorer;
 		system = explorer.getExplorerSystem();
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(explorer.getContextValue(), Player.class));
+		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
 		player.set(Player.STOCHASTIC);
 		noNondetHelperNode = new NodeJANI[1];
 		noNondetHelperNode[0] = system.newNode();

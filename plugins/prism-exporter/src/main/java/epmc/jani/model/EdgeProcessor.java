@@ -29,6 +29,7 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.value.ContextValue;
 
 public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 
@@ -75,7 +76,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 		
 		if (edgeRate != null && SemanticsDTMC.isDTMC(edge.getModel().getSemantics())) {
 			Rate rateOne = new Rate();
-			rateOne.setExp(ExpressionLiteral.getOne(edge.getModel().getContextValue()));
+			rateOne.setExp(ExpressionLiteral.getOne(ContextValue.get()));
 			ensure(rateOne.equals(edgeRate), 
 				   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_EDGE_RATE_NOT_ONE);
 		}

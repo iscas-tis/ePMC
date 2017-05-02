@@ -56,7 +56,6 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 	private boolean closed;
 	private final Set<Feature> features = new LinkedHashSet<>();
 	private final List<Expression> constraints = new ArrayList<>();
-	private ContextValue contextValue;
 	private final List<ISatVariable> variables = new ArrayList<>();
 	private final Map<String,Integer> variableToNumber = new LinkedHashMap<>();
 	private Value[] resultVariableValues;
@@ -71,19 +70,6 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 		assert !closed;
 		assert feature != null;
 		features.add(feature);
-	}
-
-	@Override
-	public void setContextValue(ContextValue contextValue) {
-		assert !closed;
-		assert contextValue != null;
-		this.contextValue = contextValue;
-	}
-
-	@Override
-	public ContextValue getContextValue() {
-		assert !closed;
-		return contextValue;
 	}
 
 	@Override

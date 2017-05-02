@@ -177,9 +177,9 @@ public final class PropertySolverDDFilter implements PropertySolver {
     		break;
     	case AVG: {
     		DD checkFor = reachableStates.and(states);
-    		Value avg = property.applyOverSat(getContextValue().getOperator(OperatorAdd.IDENTIFIER), getModel().getPresCube(), checkFor);
+    		Value avg = property.applyOverSat(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER), getModel().getPresCube(), checkFor);
     		int numStates = checkFor.countSat(getModel().getPresCube()).intValue();
-            Value numStatesValue = UtilValue.newValue(TypeInteger.get(getContextValue()), numStates);
+            Value numStatesValue = UtilValue.newValue(TypeInteger.get(), numStates);
     		ValueAlgebra.asAlgebra(avg).divide(avg, numStatesValue);
     		checkFor.dispose();
     		result = getContextDD().newConstant(avg);
@@ -231,7 +231,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     		Value min = property.minOverSat(checkFor);
     		Value max = property.maxOverSat(checkFor);
     		checkFor.dispose();
-    		Value interval = TypeInterval.get(getContextValue()).newValue(min, max);
+    		Value interval = TypeInterval.get().newValue(min, max);
     		result = getContextDD().newConstant(interval);
     		break;
     	}
@@ -250,7 +250,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     	}
     	case SUM: {
     		DD checkFor = reachableStates.and(states);
-    		Value sum = property.applyOverSat(getContextValue().getOperator(OperatorAdd.IDENTIFIER), getModel().getPresCube(), checkFor);
+    		Value sum = property.applyOverSat(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER), getModel().getPresCube(), checkFor);
     		checkFor.dispose();
     		result = getContextDD().newConstant(sum);
     		break;
@@ -269,17 +269,8 @@ public final class PropertySolverDDFilter implements PropertySolver {
      * @throws EPMCException thrown in case of failure getting DD context
      */
 	private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(modelChecker.getModel().getContextValue());
+    	return ContextDD.get(ContextValue.get());
 	}
-
-	/**
-	 * Get value context used.
-	 * 
-	 * @return value context used
-	 */
-    private ContextValue getContextValue() {
-    	return modelChecker.getModel().getContextValue();
-    }
 
     /**
      * Get model to analyse.

@@ -156,9 +156,9 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             throws EPMCException {
         Options options = graph.getOptions();
         Log log = options.get(OptionsMessages.LOG);
-        ContextValue contextValue = graph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
-        TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+        TypeAlgebra typeWeight = TypeWeight.get();
         Value one = typeWeight.getOne();
         Value zero = typeWeight.getZero();
         this.numConstrints = 0;
@@ -171,7 +171,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         BitSet zeroStates = computeProb0();
 //        System.out.println("zero: " + zeroStates);
         /** prepare variables for the LP problem */
-        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(graph.getContextValue());
+        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(ContextValue.get());
         contextConstraintSolver.requireFeature(Feature.LP);
         ConstraintSolver lpProblem = contextConstraintSolver.newProblem();
 
@@ -279,9 +279,9 @@ public final class GraphSolverLP implements GraphSolverExplicit {
   
         Options options = graph.getOptions();
         Log log = options.get(OptionsMessages.LOG);
-        ContextValue contextValue = graph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
-        TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+        TypeAlgebra typeWeight = TypeWeight.get();
         Value one = typeWeight.getOne();
         Value zero = typeWeight.getZero();
         
@@ -295,7 +295,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         BitSet zeroStates = computeProb0();
         
         /** prepare variables for the LP problem */
-        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(graph.getContextValue());
+        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(ContextValue.get());
         contextConstraintSolver.requireFeature(Feature.LP);
         ConstraintSolver lpProblem = contextConstraintSolver.newProblem();
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);

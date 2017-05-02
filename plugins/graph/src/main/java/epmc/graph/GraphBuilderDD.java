@@ -260,15 +260,15 @@ public final class GraphBuilderDD implements Closeable {
         DD nonSinks = nodes.andNot(sinks);
         DD combined = nonSinks.toMT();
         int number = 2;
-        ContextValue contextValue = nodes.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         List<Value> stopWhere = new ArrayList<>();
         if (stop) {
-            stopWhere.add(UtilValue.newValue(TypeInteger.get(contextValue), 0));
+            stopWhere.add(UtilValue.newValue(TypeInteger.get(), 0));
         }
         int sinkNumber = 0;
         for (DD sink : sinks) {
             if (stop) {
-                stopWhere.add(UtilValue.newValue(TypeInteger.get(contextValue), number));
+                stopWhere.add(UtilValue.newValue(TypeInteger.get(), number));
                 DD choice = representants[sinkNumber];
                 combined = combined.addWith(choice.toMT(number, 0));
             } else {
@@ -289,7 +289,6 @@ public final class GraphBuilderDD implements Closeable {
         ContextDD contextDD = graphDD.getContextDD();
         DD allSinks = contextDD.newConstant(false);
         for (DD dd : sinks) {
-            assert dd.getContext() == contextDD;
             assert dd.isBoolean();
             assert dd.isDisjoint(allSinks);
             allSinks = allSinks.orWith(dd.clone());
@@ -440,16 +439,16 @@ public final class GraphBuilderDD implements Closeable {
         StopWatch timer = new StopWatch(true);
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraph.CONVERTING_DD_GRAPH_TO_EXPLICIT);
-        GraphExplicitWrapper graph = new GraphExplicitWrapper(graphDD.getContextValue());
+        GraphExplicitWrapper graph = new GraphExplicitWrapper(ContextValue.get());
         graph.addSettableGraphProperty(CommonProperties.SEMANTICS, graphDD.getGraphProperty(CommonProperties.SEMANTICS).getType());
         graph.setGraphProperty(CommonProperties.SEMANTICS, graphDD.getGraphProperty(CommonProperties.SEMANTICS));
-        graph.addSettableNodeProperty(CommonProperties.STATE, TypeBoolean.get(contextDD.getContextValue()));
-        graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(contextDD.getContextValue(), Player.class));
-        graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get(contextDD.getContextValue()));
-        ContextValue contextValue = graphDD.getContextValue();
-        TypeWeight typeWeight = TypeWeight.get(contextValue);
-        TypeBoolean typeBoolean = TypeBoolean.get(contextValue);
-        TypeEnum typePlayer = TypeEnum.get(contextValue, Player.class);
+        graph.addSettableNodeProperty(CommonProperties.STATE, TypeBoolean.get());
+        graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
+        graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
+        ContextValue contextValue = ContextValue.get();
+        TypeWeight typeWeight = TypeWeight.get();
+        TypeBoolean typeBoolean = TypeBoolean.get();
+        TypeEnum typePlayer = TypeEnum.get(Player.class);
         ValueAlgebra weight = typeWeight.newValue();
         ValueAlgebra zero = typeWeight.getZero();
         ValueAlgebra one = typeWeight.getOne();
@@ -639,7 +638,7 @@ public final class GraphBuilderDD implements Closeable {
     }
     
     private ValueArray newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
     
@@ -696,7 +695,6 @@ public final class GraphBuilderDD implements Closeable {
     public DD valuesToDD(ValueArray explResult) throws EPMCException {
         assert !closed;
         assert explResult != null;
-        assert contextDD.getContextValue() == explResult.getType().getContext();
         DD result = valuesToDDRec(explResult);
         Value sinkValue = explResult.getType().getEntryType().newValue();
         Value zero = UtilValue.newValue(ValueArrayAlgebra.asArrayAlgebra(explResult).getType().getEntryType(), 0);
@@ -778,10 +776,6 @@ public final class GraphBuilderDD implements Closeable {
         return this.unifRate;
     }
     
-    private ContextValue getContextValue() {
-    	return this.contextDD.getContextValue();
-    }
-    
     @Override
     public void close() {
         if (closed) {
@@ -794,7 +788,7 @@ public final class GraphBuilderDD implements Closeable {
     }
     
     private Value newValueWeight() {
-        return TypeWeight.get(getContextValue()).newValue();
+        return TypeWeight.get().newValue();
     }
 
 }

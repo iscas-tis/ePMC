@@ -36,7 +36,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     @Override
     public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
-        ContextValue context = expressionToType.getContextValue();
+        ContextValue context = ContextValue.get();
         if (!isOr(expression)) {
             return null;
         }
@@ -69,13 +69,13 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());
         if (left != null && right != null) {
-            return UtilExpressionStandard.opOr(expressionToType.getContextValue(), left, right);
+            return UtilExpressionStandard.opOr(ContextValue.get(), left, right);
         }
         if (left != null) {
-            return UtilExpressionStandard.opOr(expressionToType.getContextValue(), left, expressionOperator.getOperand2());
+            return UtilExpressionStandard.opOr(ContextValue.get(), left, expressionOperator.getOperand2());
         }
         if (right != null) {
-            return UtilExpressionStandard.opOr(expressionToType.getContextValue(), expressionOperator.getOperand1(), right);
+            return UtilExpressionStandard.opOr(ContextValue.get(), expressionOperator.getOperand1(), right);
         }
         return null;
     }

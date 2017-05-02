@@ -28,7 +28,6 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -38,7 +37,6 @@ public final class JANITypeInt implements JANIType {
 	/** Identifier for integer type. */
 	private final static String INT = "int";
 	
-	private ContextValue contextValue;
 	private ModelJANI model;
 
 	@Override
@@ -75,13 +73,7 @@ public final class JANITypeInt implements JANIType {
 
 	@Override
 	public TypeInteger toType() {
-		assert contextValue != null;
-		return TypeInteger.get(contextValue);
-	}
-
-	@Override
-	public void setContextValue(ContextValue contextValue) {
-		this.contextValue = contextValue;
+		return TypeInteger.get();
 	}
 
 	@Override

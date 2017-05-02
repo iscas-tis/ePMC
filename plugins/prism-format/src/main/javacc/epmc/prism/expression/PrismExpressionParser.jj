@@ -96,7 +96,6 @@ public final class PrismExpressionParser {
 		}
 	};
 
-	private ContextValue contextVal;
 	private int initialLine;
 	private int initialColumn;
 	private int errorLine;
@@ -115,7 +114,6 @@ public final class PrismExpressionParser {
 	}
 
 	public Expression parseExpression(ContextValue contextVal, int line, int column) throws EPMCException {
-		this.contextVal = contextVal;
 		this.initialLine = line;
 		this.initialColumn = column;
 
@@ -145,7 +143,6 @@ public final class PrismExpressionParser {
 	}
 
 	public Expression parseExpressionAsProperty(ContextValue contextVal, int line, int column) throws EPMCException {
-		this.contextVal = contextVal;
 		this.initialLine = line;
 		this.initialColumn = column;
 
@@ -178,7 +175,7 @@ public final class PrismExpressionParser {
 
 	private ExpressionOperator newOperator(String operator, Expression... operands) {
 	  return new ExpressionOperator.Builder()
-	  	.setOperator(contextVal.getOperator(operator))
+	  	.setOperator(ContextValue.get().getOperator(operator))
 	  	.setOperands(operands)
 	  	.build();
 	}
@@ -189,35 +186,35 @@ public final class PrismExpressionParser {
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(contextVal.getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
         	.setOperands(expression)
         	.build();
     }
 
   private Expression addInverse(Expression expression) {
     return new ExpressionOperator.Builder()
-      	.setOperator(contextVal.getOperator(OperatorAddInverse.IDENTIFIER))
+      	.setOperator(ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER))
       	.setOperands(expression)
       	.build();
   }
 
     private Expression or(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(contextVal.getOperator(OperatorOr.IDENTIFIER))
+            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
             .setOperands(a, b)
             .build();
     }
 
     private Expression iff(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(contextVal.getOperator(OperatorIff.IDENTIFIER))
+            .setOperator(ContextValue.get().getOperator(OperatorIff.IDENTIFIER))
             .setOperands(a, b)
             .build();
     }
 
     private Expression implies(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(contextVal.getOperator(OperatorImplies.IDENTIFIER))
+            .setOperator(ContextValue.get().getOperator(OperatorImplies.IDENTIFIER))
             .setOperands(a, b)
             .build();
     }
@@ -233,7 +230,6 @@ public final class PrismExpressionParser {
 
     private ExpressionReward newRewardSteadyState(Expression structure) {
         return new ExpressionReward.Builder()
-        		.setContext(contextVal)
                 .setReward(structure)
                 .setRewardType(RewardType.STEADYSTATE)
                 .build();
@@ -242,7 +238,6 @@ public final class PrismExpressionParser {
     private TimeBound newTimeBound(Expression left, Expression right,
             boolean leftOpen, boolean rightOpen) {
         return new TimeBound.Builder()
-        		.setContext(contextVal)
                 .setLeft(left)
                 .setRight(right)
                 .setLeftOpen(leftOpen)
@@ -252,7 +247,6 @@ public final class PrismExpressionParser {
 
     private TimeBound newTimeBound() {
         return new TimeBound.Builder()
-        		.setContext(contextVal)
                 .build();
     }
 
@@ -273,7 +267,6 @@ public final class PrismExpressionParser {
     private ExpressionReward newRewardInstantaneous
     (Expression structure, Expression time) {
         return new ExpressionReward.Builder()
-        		.setContext(contextVal)
                 .setRewardType(RewardType.INSTANTANEOUS)
                 .setReward(structure)
                 .setTime(time)
@@ -283,7 +276,6 @@ public final class PrismExpressionParser {
     private ExpressionReward newRewardReachability
     (Expression structure, Expression reachSet) {
         return new ExpressionReward.Builder()
-        		.setContext(contextVal)
                 .setRewardType(RewardType.REACHABILITY)
                 .setReward(structure)
                 .setReachSet(reachSet)
@@ -293,7 +285,6 @@ public final class PrismExpressionParser {
     private ExpressionReward newRewardCumulative
     (Expression structure, Expression time) {
         return new ExpressionReward.Builder()
-        		.setContext(contextVal)
                 .setRewardType(RewardType.CUMULATIVE)
                 .setReward(structure)
                 .setTime(time)
@@ -303,7 +294,6 @@ public final class PrismExpressionParser {
     private ExpressionReward newRewardDiscounted
     (Expression structure, Expression timebound, Expression discount) {
         return new ExpressionReward.Builder()
-        		.setContext(contextVal)
                 .setRewardType(RewardType.DISCOUNTED)
                 .setReward(structure)
                 .setTime(timebound)
@@ -330,7 +320,7 @@ public final class PrismExpressionParser {
 
     private ValueInteger newValueInteger(String string) throws EPMCException {
       assert string != null;
-      return UtilValue.newValue(TypeInteger.get(contextVal), string);
+      return UtilValue.newValue(TypeInteger.get(), string);
     }
 
     private static Positional newPositional(long line, long column) {
@@ -532,7 +522,7 @@ private Expression ExpressionITE(boolean parseExp) throws EPMCException :
 		<COLON>
 		propElse = ExpressionITE(parseExp)
 		{ prop = new ExpressionOperator.Builder()
-			.setOperator(contextVal.getOperator(OperatorIte.IDENTIFIER))
+			.setOperator(ContextValue.get().getOperator(OperatorIte.IDENTIFIER))
 			.setOperands(prop, propThen, propElse)
 			.build(); }
 	)?
@@ -637,10 +627,10 @@ private Operator EqNe() throws EPMCException :
 {
 	(
 		<EQ> 
-		{ return contextVal.getOperator(OperatorEq.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorEq.IDENTIFIER); }
 	| 
 		<NEQ> 
-		{ return contextVal.getOperator(OperatorNe.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorNe.IDENTIFIER); }
 	)
 }
 
@@ -666,16 +656,16 @@ private Operator LtGtLeGe() throws EPMCException :
 {
 	(
 		<LT> 
-		{ return contextVal.getOperator(OperatorLt.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorLt.IDENTIFIER); }
 	| 
 		<LEQ> 
-		{ return contextVal.getOperator(OperatorLe.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorLe.IDENTIFIER); }
 	| 
 		<GT> 
-		{ return contextVal.getOperator(OperatorGt.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorGt.IDENTIFIER); }
 	| 
 		<GEQ> 
-		{ return contextVal.getOperator(OperatorGe.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorGe.IDENTIFIER); }
 	)
 }
 
@@ -702,10 +692,10 @@ private Operator PlusMinus() throws EPMCException :
 {
 	(
 		<PLUS> 
-		{ return contextVal.getOperator(OperatorAdd.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorAdd.IDENTIFIER); }
 	| 
 		<MINUS> 
-		{ return contextVal.getOperator(OperatorSubtract.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER); }
 	)
 }
 
@@ -731,10 +721,10 @@ private Operator TimesDivide() throws EPMCException :
 {
 	(
 		<TIMES> 
-		{ return contextVal.getOperator(OperatorMultiply.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER); }
 	| 
 		<DIVIDE> 
-		{ return contextVal.getOperator(OperatorDivide.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorDivide.IDENTIFIER); }
 	)
 }
 
@@ -856,9 +846,9 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 	<LPAR>
 	e = parseExp(parseExp)
 	<RPAR>
-	{ return newOperator(contextVal.getOperator(OperatorPRISMPow.IDENTIFIER), e,
+	{ return newOperator(ContextValue.get().getOperator(OperatorPRISMPow.IDENTIFIER), e,
 		new ExpressionLiteral.Builder()
-			.setValue(UtilValue.newValue(TypeReal.get(contextVal), "0.5"))
+			.setValue(UtilValue.newValue(TypeReal.get(), "0.5"))
 			.build()); }
 }
 
@@ -904,10 +894,10 @@ private Operator functionMultipleParams() throws EPMCException :
 {
 	(
 		<MAX> 
-		{ return contextVal.getOperator(OperatorMax.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorMax.IDENTIFIER); }
 	| 
 		<MIN> 
-		{ return contextVal.getOperator(OperatorMin.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorMin.IDENTIFIER); }
 	)
 }
 
@@ -920,10 +910,10 @@ private Operator functionOneParam() throws EPMCException :
 //		<SQRT> 
 //	|
 		<FLOOR> 
-		{ return contextVal.getOperator(OperatorFloor.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorFloor.IDENTIFIER); }
 	| 
 		<CEIL> 
-		{ return contextVal.getOperator(OperatorCeil.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorCeil.IDENTIFIER); }
 	)
 }
 
@@ -933,13 +923,13 @@ private Operator functionTwoParams() throws EPMCException :
 {
 	(
 		<POW> 
-		{ return contextVal.getOperator(OperatorPRISMPow.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorPRISMPow.IDENTIFIER); }
 	| 
 		<MOD> 
-		{ return contextVal.getOperator(OperatorMod.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorMod.IDENTIFIER); }
 	| 
 		<LOG> 
-		{ return contextVal.getOperator(OperatorLog.IDENTIFIER); }
+		{ return ContextValue.get().getOperator(OperatorLog.IDENTIFIER); }
 	)
 }
 
@@ -989,7 +979,7 @@ private Expression parseReal() throws EPMCException :
 {
 	real = <NUM_REAL>
 	{ return new ExpressionLiteral.Builder()
-		.setValue(UtilValue.newValue(TypeReal.get(contextVal), real.toString()))
+		.setValue(UtilValue.newValue(TypeReal.get(), real.toString()))
 		.build(); }
 }
 
@@ -1026,10 +1016,10 @@ private Expression parseBoolean() throws EPMCException :
 {
 	(
 		<TRUE> 
-		{ return ExpressionLiteral.getTrue(contextVal); } 
+		{ return ExpressionLiteral.getTrue(ContextValue.get()); } 
 	|
 		<FALSE> 
-		{ return ExpressionLiteral.getFalse(contextVal); }
+		{ return ExpressionLiteral.getFalse(ContextValue.get()); }
 	)
 }
 
@@ -1119,7 +1109,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(contextVal);
+	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
@@ -1141,7 +1131,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 				<QUESTION> 
 				{ 
 					cmpType = CmpType.IS;
-					cmp = ExpressionLiteral.getTrue(contextVal); 
+					cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
 				}
 			|
 				cmp = parseExpTemporal(parseExp)
@@ -1174,7 +1164,6 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 	)
 	{
 		Expression result = new ExpressionQuantifier.Builder()
-			.setContext(contextVal)
 			.setDirType(dirType)
 			.setCmpType(cmpType)
 			.setQuantified(prop)
@@ -1196,7 +1185,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(contextVal);
+	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
@@ -1217,7 +1206,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS;
-				cmp = ExpressionLiteral.getTrue(contextVal); 
+				cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp)
@@ -1252,7 +1241,6 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			.setStates(prop)
 			.build();
 		Expression result = new ExpressionQuantifier.Builder()
-			.setContext(contextVal)
 			.setDirType(dirType)
 			.setCmpType(cmpType)
 			.setQuantified(prop)
@@ -1304,8 +1292,8 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 	| 
 		<C> 
 		{
-		  timebound = ExpressionLiteral.getPosInf(contextVal);
-		  discount = ExpressionLiteral.getPosInf(contextVal);
+		  timebound = ExpressionLiteral.getPosInf(ContextValue.get());
+		  discount = ExpressionLiteral.getPosInf(ContextValue.get());
 		}
 		(
 			<LEQ> 
@@ -1358,10 +1346,10 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(contextVal);
+	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
 	DirType dirType;
 	CmpType cmpType;
-	Expression rewardStructure = ExpressionLiteral.getTrue(contextVal);
+	Expression rewardStructure = ExpressionLiteral.getTrue(ContextValue.get());
 	OldSchoolFilter filter = null;
 	Token oper;
 }
@@ -1396,14 +1384,14 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 	(
 		{ 
 			cmpType = CmpType.IS;
-			cmp = ExpressionLiteral.getTrue(contextVal); 
+			cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
 		}
 		<EQ>
 		(
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS; 
-				cmp = ExpressionLiteral.getTrue(contextVal); 
+				cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp) 
@@ -1425,7 +1413,6 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 	<RBRACKET>
 	{
 		Expression result = new ExpressionQuantifier.Builder()
-			.setContext(contextVal)
 			.setDirType(dirType)
 			.setCmpType(cmpType)
 			.setQuantified(prop)
@@ -1549,7 +1536,7 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 {
 	FilterType type;
 	Expression prop;
-	Expression states = ExpressionLiteral.getTrue(contextVal);
+	Expression states = ExpressionLiteral.getTrue(ContextValue.get());
 }
 {
 	{ 
@@ -1634,22 +1621,22 @@ TimeBound TimeBound() throws EPMCException :
 		<LT> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(contextVal), right, false, true); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(ContextValue.get()), right, false, true); }
 	|
 		<LEQ> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(contextVal), right, false, false); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(ContextValue.get()), right, false, false); }
 	|
 		<GT> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(contextVal), true, true); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(ContextValue.get()), true, true); }
 	|
 		<GEQ> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(contextVal), false, true); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(ContextValue.get()), false, true); }
 	|
 //		LOOKAHEAD((<LBRACKET>|<RBRACKET>) parseExp(true) <COMMA> parseExp(true) (<LBRACKET>|<RBRACKET>) <LPAR>)
 		(

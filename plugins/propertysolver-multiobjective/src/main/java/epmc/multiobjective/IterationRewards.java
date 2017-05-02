@@ -26,7 +26,6 @@ import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -125,10 +124,6 @@ final class IterationRewards {
         finishState();
     }
     
-    ContextValue getContextValue() {
-        return graph.getContextValue();
-    }
-    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -156,7 +151,7 @@ final class IterationRewards {
     }
     
     private ValueArrayAlgebra newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get(getContextValue()).getTypeArray();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
 }

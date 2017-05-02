@@ -80,7 +80,7 @@ public class MDPOneStepSignature implements Signature {
 	public void setOriginal(GraphDD original) throws EPMCException {
 		this.original = original;
 		this.contextDD = original.getContextDD();
-		this.contextValue = original.getContextValue();
+		this.contextValue = ContextValue.get();
 //		OptionsTypesEPMC.MDPEncoding enc = original.getOptions().getEnum(OptionsEPMC.MDP_ENCODING_MODE);
 //    	useStateDistribution = ((Semantics) original.getGraphPropertyObject(CommonProperties.SEMANTICS)).isNonDet()
   //  			&& enc == OptionsTypesEPMC.MDPEncoding.STATE_DISTRIBUTION;
@@ -155,7 +155,7 @@ public class MDPOneStepSignature implements Signature {
 	            		contextDD, trans1.walker(), replacementsAscending, replacementsDescending, cache);
 	    
 	    if (useStateDistribution) {
-	    	TypeAlgebra typeWeightTransition = TypeWeightTransition.get(contextValue);
+	    	TypeAlgebra typeWeightTransition = TypeWeightTransition.get();
 	    	ValueAlgebra zero = typeWeightTransition.getZero();
 		    DD oneStepReach = stateSpace.clone().andNotWith(
 		    		trans1.eqWith(contextDD.newConstant(zero))).toMTWith();

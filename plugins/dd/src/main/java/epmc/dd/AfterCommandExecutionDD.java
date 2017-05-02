@@ -33,9 +33,8 @@ public final class AfterCommandExecutionDD implements AfterCommandExecution {
 	}
 
 	@Override
-	public void process(ContextValue contextValue) throws EPMCException {
-		assert contextValue != null;
-		ContextDD.close(contextValue);
+	public void process() throws EPMCException {
+		ContextDD.close(ContextValue.get());
 	}
 
 }

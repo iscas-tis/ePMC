@@ -39,7 +39,7 @@ final class NodePropertyPlayerToState implements NodeProperty {
 		assert player != null;
 		this.graph = graph;
 		this.playerProperty = player;
-		this.value = TypeBoolean.get(graph.getContextValue()).newValue();
+		this.value = TypeBoolean.get().newValue();
 	}
 	
 	@Override

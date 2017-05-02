@@ -45,7 +45,7 @@ final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
 		assert explorer != null;
 		this.explorer = explorer;
 		this.initialNodes = new HashSet<>(explorer.getInitialNodes());
-		TypeBoolean type = TypeBoolean.get(explorer.getContextValue());
+		TypeBoolean type = TypeBoolean.get();
 		value = type.newValue();
 	}
 	
@@ -62,6 +62,6 @@ final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
 	
 	@Override
 	public TypeBoolean getType() {
-		return TypeBoolean.get(explorer.getContextValue());
+		return TypeBoolean.get();
 	}
 }

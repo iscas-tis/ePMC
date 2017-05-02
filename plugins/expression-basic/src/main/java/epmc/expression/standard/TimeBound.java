@@ -41,39 +41,21 @@ import epmc.value.Value;
 public final class TimeBound {
 	// TODO actually, we should get types as well as constants from somewhere
 	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private final ContextValue contextValue;
-
 		private ExpressionToTypeEmpty(ContextValue contextValue) {
-			this.contextValue = contextValue;
 		}
 		
 		public Type getType(Expression expression) throws EPMCException {
 			assert expression != null;
 			return null;
 		}
-
-		@Override
-		public ContextValue getContextValue() {
-			return contextValue;
-		}
 	}
 	
     public final static class Builder {
-        private ContextValue context;
         private Expression left;
         private Expression right;
         private Boolean leftOpen;
         private Boolean rightOpen;
 
-        public Builder setContext(ContextValue context) {
-            this.context = context;
-            return this;
-        }
-        
-        private ContextValue getContext() {
-            return context;
-        }
-        
         public Builder setLeft(Expression left) {
             this.left = left;
             return this;
@@ -126,8 +108,7 @@ public final class TimeBound {
     
     private TimeBound(Builder builder) {
         assert builder != null;
-        assert builder.getContext() != null;
-        ContextValue context = builder.getContext();
+        ContextValue context = ContextValue.get();
         Expression left = builder.getLeft();
         if (left == null) {
             left = ExpressionLiteral.getZero(context);

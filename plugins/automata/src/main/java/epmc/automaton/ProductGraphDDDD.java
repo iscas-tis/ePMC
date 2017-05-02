@@ -34,7 +34,6 @@ import epmc.graph.dd.GraphDDProperties;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.util.StopWatch;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeObject;
 
@@ -104,7 +103,6 @@ public final class ProductGraphDDDD implements ProductGraphDD {
             Object semantics = model.getGraphPropertyObject(CommonProperties.SEMANTICS);
             properties.registerGraphProperty(CommonProperties.SEMANTICS,
                     new TypeObject.Builder()
-                            .setContext(contextDD.getContextValue())
                             .setClazz(semantics.getClass())
                             .build());
             setGraphPropertyObject(CommonProperties.SEMANTICS, semantics);
@@ -218,13 +216,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         return trans.abstractAndExist(from, pres).permuteWith(swap);
     }
 
-    
     @Override
-    public ContextValue getContextValue() {
-        return model.getContextValue();
-    }
-
-	@Override
 	public Type getType(Expression expression) throws EPMCException {
 		assert expression != null;
 		return model.getType(expression);

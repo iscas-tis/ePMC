@@ -21,7 +21,6 @@
 package epmc.jani.extensions.derivedoperators;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -35,23 +34,10 @@ import epmc.value.ValueNumber;
 public final class OperatorAbs implements Operator {
 	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "abs";
-	/** Context of this operator. */
-	private ContextValue context;
 
 	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
-	}
-
-	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-	}
-
-	@Override
-	public ContextValue getContext() {
-		return context;
 	}
 
 	@Override

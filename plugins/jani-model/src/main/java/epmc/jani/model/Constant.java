@@ -104,7 +104,6 @@ public final class Constant implements JANINode, JANIIdentifier {
 		typeParser.setModel(model);
 		typeParser.parse(typeV);
 		type = typeParser.getType();
-		type.setContextValue(model.getContextValue());
 		JsonValue constV = object.get(VALUE);
 		if (constV != null) {
 			this.value = ExpressionParser.parseExpression(model, constV, validIdentifiers);

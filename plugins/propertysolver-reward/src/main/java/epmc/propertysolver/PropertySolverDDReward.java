@@ -62,7 +62,7 @@ public final class PropertySolverDDReward implements PropertySolver {
         if (modelChecker.getEngine() instanceof EngineDD) {
         	this.graph = modelChecker.getLowLevel();
         }
-        this.contextValue = modelChecker.getModel().getContextValue();
+        this.contextValue = ContextValue.get();
     }
 
 	@Override

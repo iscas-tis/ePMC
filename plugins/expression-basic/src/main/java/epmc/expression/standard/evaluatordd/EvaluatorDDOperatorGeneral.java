@@ -40,8 +40,6 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     private ExpressionOperator expressionOperator;
     private DD dd;
     private boolean closed;
-
-	private ContextValue context;
     
     @Override
     public String getIdentifier() {
@@ -78,12 +76,11 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
 
     @Override
     public void build() throws EPMCException {
-    	assert context != null;
         Operator operator = expressionOperator.getOperator();
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
             Expression operand = expressionOperator.getOperands().get(i);
-            EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(context, operand, variables);
+            EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(ContextValue.get(), operand, variables);
             dds[i] = evaluator.getDD();
             assert dds[i] != null : expressionOperator.getOperands().get(i) + " " + i + " " + expression;
         }
@@ -106,11 +103,6 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(context);
+        return ContextDD.get(ContextValue.get());
     }
-
-	@Override
-	public void setContextValue(ContextValue context) {
-		this.context = context;
-	}
 }

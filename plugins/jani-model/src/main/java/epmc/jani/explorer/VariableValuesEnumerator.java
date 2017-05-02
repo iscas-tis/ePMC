@@ -218,7 +218,7 @@ public final class VariableValuesEnumerator {
 			Variable variable = variables.get(identifier.getName());
 			return Collections.singletonList(Collections.singletonMap(variable, value));
 		} else {
-			ContextValue contextValue = expressionToType.getContextValue();
+			ContextValue contextValue = ContextValue.get();
 			Expression trueExp = ExpressionLiteral.getTrue(contextValue);
 			List<Map<Variable, Value>> inner = generalEnumerate(remainingVariables, trueExp);
 			List<Map<Variable, Value>> result = new ArrayList<>();
@@ -360,7 +360,7 @@ public final class VariableValuesEnumerator {
 	private List<Map<Variable,Value>> generalEnumerate(Map<String,Variable> variables, Expression expression) throws EPMCException {
 		assert variables != null;
 		assert expression != null;
-		EnumeratorType enumType = expressionToType.getContextValue().getOptions().getEnum(OptionsJANIExplorer.JANI_EXPLORER_INITIAL_ENUMERATOR);
+		EnumeratorType enumType = ContextValue.get().getOptions().getEnum(OptionsJANIExplorer.JANI_EXPLORER_INITIAL_ENUMERATOR);
 		switch (enumType) {
 		case BRUTE_FORCE:
 			return generalEnumerateBruteForce(variables, expression);
@@ -426,7 +426,7 @@ public final class VariableValuesEnumerator {
 			Map<String, Variable> variables,
 			Expression expression) throws EPMCException {
 		Map<Expression, VariableDD> bddVariables = new LinkedHashMap<>();
-		ContextDD contextDD = ContextDD.get(expressionToType.getContextValue());
+		ContextDD contextDD = ContextDD.get(ContextValue.get());
 		VariableDD[] ddVariableArray = new VariableDD[variables.size()];
 		Variable[] variablesArray = new Variable[variables.size()];
 		int varNr = 0;
@@ -438,7 +438,7 @@ public final class VariableValuesEnumerator {
 			variablesArray[varNr] = variable;
 			varNr++;
 		}
-		EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(contextDD.getContextValue(), expression, bddVariables);
+		EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(ContextValue.get(), expression, bddVariables);
 		DD dd = evaluator.getDD().clone();
 		EnumerateSAT sat = new EnumerateSAT();
 		sat.setBDD(dd);

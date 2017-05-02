@@ -135,8 +135,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	/** Denotes model constants. */
 	private final static String CONSTANTS = "constants";
 
-	/** Value context used.  */
-	private ContextValue context;
 	/** Map from semantics identifiers to their semantics extension classes. */
 	private Map<String, Class<? extends ModelExtensionSemantics>> janiToSemantics;
 	/** Model extensions used, excluding the one handling the model type. */
@@ -181,6 +179,12 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
 	public ModelJANI() {
 		StandardJANIOperators.add(operators);
+		this.contextValueJANI = new ContextValueJANI(ContextValue.get());
+		Options options = ContextValue.get().getOptions();
+		janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
+		prepareStandardTypes();
+		prepareStandardExpressions();
+		prepareStandardProperties();
 	}
 	
 	private Action prepareSilentAction() {
@@ -193,18 +197,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	@Override
 	public String getIdentifier() {
 		return IDENTIFIER;
-	}
-
-	@Override
-	public void setContext(ContextValue context) {
-		assert context != null;
-		this.context = context;
-		this.contextValueJANI = new ContextValueJANI(context);
-		Options options = context.getOptions();
-		janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
-		prepareStandardTypes();
-		prepareStandardExpressions();
-		prepareStandardProperties();
 	}
 
 	/**
@@ -278,7 +270,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	@Override
 	public JANINode parse(JsonValue value) throws EPMCException {
 		assert value != null;
-		assert context != null;
 
 		JsonObject object = UtilJSON.toObject(value);
 		parseType(object);
@@ -360,7 +351,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 
 	private Map<Expression, Expression> computeExternalConstants() throws EPMCException {
-		Options options = context.getOptions();
+		Options options = ContextValue.get().getOptions();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         Map<Expression, Expression> result = new LinkedHashMap<>();
         for (Entry<String, Object> entry : optionsConsts.entrySet()) {
@@ -384,24 +375,24 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		assert valueString != null;
 		Value value = null;
 		try {
-			value = UtilValue.newValue(TypeBoolean.get(getContextValue()), valueString);
+			value = UtilValue.newValue(TypeBoolean.get(), valueString);
 		} catch (EPMCException e) {
 		}
 		if (value == null) {
 			try {
-				value = UtilValue.newValue(TypeInteger.get(getContextValue()), valueString);
+				value = UtilValue.newValue(TypeInteger.get(), valueString);
 			} catch (EPMCException e) {
 			}
 		}
 		if (value == null) {
 			try {
-				value = UtilValue.newValue(TypeReal.get(getContextValue()), valueString);
+				value = UtilValue.newValue(TypeReal.get(), valueString);
 			} catch (EPMCException e) {
 			}
 		}
 		if (value == null) {
 			try {
-				value = UtilValue.newValue(TypeWeight.get(getContextValue()), valueString);
+				value = UtilValue.newValue(TypeWeight.get(), valueString);
 			} catch (EPMCException e) {
 			}
 		}
@@ -422,7 +413,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	public Expression getInitialStatesExpressionOrTrue() throws EPMCException {
 		Expression initial;
 		if (restrictInitial == null) {
-			initial = ExpressionLiteral.getTrue(getContextValue());
+			initial = ExpressionLiteral.getTrue(ContextValue.get());
 		} else {
 			initial = restrictInitial.getExp();
 		}
@@ -432,10 +423,10 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 				continue;
 			}
 			Expression varInit = UtilExpressionStandard.opEq(
-					getContextValue(),
+					ContextValue.get(),
 					variable.getIdentifier(),
 					varInitValue);
-			initial = UtilExpressionStandard.opAnd(getContextValue(), initial, varInit);
+			initial = UtilExpressionStandard.opAnd(ContextValue.get(), initial, varInit);
 		}
 		return initial;
 	}
@@ -456,7 +447,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		}
 		this.modelExtensions = new ArrayList<>();
         Map<String,Class<ModelExtension>> modelExtensions =
-        		getContextValue().getOptions().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
+        		ContextValue.get().getOptions().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
 		for (JsonValue identifier : array) {
 			Class<ModelExtension> extension =
 					UtilJSON.toOneOf(identifier, modelExtensions);
@@ -534,11 +525,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 			this.semantics = Util.getInstance(clazz);
 			this.semantics.setModel(this);
 		}
-	}
-	
-	@Override
-	public ContextValue getContextValue() {
-		return context;
 	}
 
 	@Override
@@ -802,7 +788,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	@Override
 	public ModelJANI clone() {
 		ModelJANI clone = new ModelJANI();
-		clone.setContext(context);
 		try {
 			JsonValue generated = generate();
 			clone.parse(generated);

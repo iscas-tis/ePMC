@@ -242,7 +242,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
 		StopWatch watch = new StopWatch(true);
         Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
-        AutomatonParity automaton = UtilAutomaton.newAutomatonParity(forStates.getContextValue(), path, expressions);
+        AutomatonParity automaton = UtilAutomaton.newAutomatonParity(ContextValue.get(), path, expressions);
         List<Object> nodeProperties = new ArrayList<>();
         nodeProperties.add(CommonProperties.STATE);
         nodeProperties.addAll(playerList);
@@ -294,7 +294,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
     
     private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(modelChecker.getModel().getContextValue());
+    	return ContextDD.get(ContextValue.get());
 	}
     
     /**
@@ -303,12 +303,12 @@ public class PropertySolverDDCoalition implements PropertySolver {
      * @return log used for analysis
      */
     private Log getLog() {
-    	return modelChecker.getModel().getContextValue().getOptions().get(OptionsMessages.LOG);
+    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
     }
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(getContextValue().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
         	.setOperands(expression)
         	.build();
     }
@@ -320,9 +320,5 @@ public class PropertySolverDDCoalition implements PropertySolver {
      */
     private GraphDD getLowLevel() {
     	return modelChecker.getLowLevel();
-    }
-    
-    private ContextValue getContextValue() {
-    	return this.modelChecker.getModel().getContextValue();
     }
 }

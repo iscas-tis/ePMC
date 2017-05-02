@@ -162,15 +162,14 @@ public final class SupportWalker {
     private static Value[] toStopWhere(boolean stopAtFalse,
             boolean stopAtZero, DD node) {
         assert node != null;
-        ContextValue contextValue = node.getContextValue();
         Value[] stopWhere = new Value[(stopAtFalse ? 1 : 0) + (stopAtZero ? 1 : 0)];
         int index = 0;
         if (stopAtFalse) {
-            stopWhere[index] = TypeBoolean.get(contextValue).getFalse();
+            stopWhere[index] = TypeBoolean.get().getFalse();
             index++;
         }
         if (stopAtZero) {
-            stopWhere[index] = TypeInteger.get(contextValue).getZero();
+            stopWhere[index] = TypeInteger.get().getZero();
         }
         return stopWhere;
     }
@@ -430,7 +429,6 @@ public final class SupportWalker {
     
     public SupportWalkerNodeMap newNodeMap(Type type) {
         assert type != null;
-        assert type.getContext() == contextDD.getContextValue();
         return new SupportWalkerNodeMap(this, type);
     }
 
@@ -517,9 +515,5 @@ public final class SupportWalker {
         builder.append("[style=solid,arrowhead=none];\n");
         transitionsToString(builder, seen, low);
         transitionsToString(builder, seen, high);
-    }
-    
-    ContextValue getContextValue() {
-        return contextDD.getContextValue();
-    }
+    }    
 }

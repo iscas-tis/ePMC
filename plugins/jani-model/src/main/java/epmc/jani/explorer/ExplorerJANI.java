@@ -130,7 +130,6 @@ public final class ExplorerJANI implements Explorer {
 		assert edgeProperties != null;
 		this.model = model;
 		semantics = new TypeObject.Builder()
-                .setContext(getContextValue())
                 .setClazz(Semantics.class)
                 .build().newValue(model.getSemantics());
 		this.nonDet = SemanticsNonDet.isNonDet(model.getSemantics());
@@ -138,7 +137,7 @@ public final class ExplorerJANI implements Explorer {
 		buildTransientValues(nodeProperties, edgeProperties);
 		system = prepareSystem(model);
 		initialNodes = computeInitialNodes();
-		fixDeadlocks = model.getContextValue().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
+		fixDeadlocks = ContextValue.get().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
 		extensions = prepareExtensions(model);
 		prepareGraphProperties();
 		prepareNodeProperties();
@@ -174,7 +173,7 @@ public final class ExplorerJANI implements Explorer {
 			Expression selfLoopIdentifier = new ExpressionIdentifierStandard.Builder()
 					.setName("%selfLoopId")
 					.build();
-			TypeBoolean typeBoolean = TypeBoolean.get(getContextValue());
+			TypeBoolean typeBoolean = TypeBoolean.get();
 			selfLoopVariable = stateVariables.add(new StateVariable.Builder().setIdentifier(selfLoopIdentifier).setType(typeBoolean).setPermanent(false).build());
 		}
 		for (Variable variable : model.getGlobalVariablesOrEmpty()) {
@@ -197,7 +196,7 @@ public final class ExplorerJANI implements Explorer {
 	private ExplorerExtension[] prepareExtensions(ModelJANI model) throws EPMCException {
 		assert model != null;
 		int size = 0;
-		Options options = model.getContextValue().getOptions();
+		Options options = ContextValue.get().getOptions();
 		List<ModelExtension> modelExtensions = new ArrayList<>();
 		modelExtensions.add(model.getSemanticsExtension());
 		modelExtensions.addAll(model.getModelExtensionsOrEmpty());
@@ -444,7 +443,7 @@ public final class ExplorerJANI implements Explorer {
 			return result;
 		}
 		Map<Expression,Expression> constants = model.getConstants();
-		ExpressionToType expressionToType = new ExpressionToTypeEmpty(getContextValue());
+		ExpressionToType expressionToType = new ExpressionToTypeEmpty(ContextValue.get());
 		Value value = UtilEvaluatorExplicit.evaluate(constants.get(property), expressionToType);
 		result = new PropertyNodeConstant(this, value);
 		constantProperies.put(property, result);
@@ -482,14 +481,9 @@ public final class ExplorerJANI implements Explorer {
 
 	@Override
 	public Options getOptions() {
-		return model.getContextValue().getOptions();
+		return ContextValue.get().getOptions();
 	}
 	
-	@Override
-	public ContextValue getContextValue() {
-		return model.getContextValue();
-	}
-
 	public ModelJANI getModel() {
 		return model;
 	}

@@ -21,28 +21,16 @@
 package epmc.value;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class OperatorPow implements Operator {
-    private ContextValue context;
     public final static String IDENTIFIER = "pow";
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
-    }
-
-    @Override
-    public void setContext(ContextValue context) {
-        this.context = context;
-    }
-
-    @Override
-    public ContextValue getContext() {
-        return context;
     }
 
     @Override
@@ -54,7 +42,7 @@ public final class OperatorPow implements Operator {
     public Type resultType(Type... types) {
         assert types != null;
         assert types.length == 2 : types.length;
-        return TypeReal.get(types[0].getContext());
+        return TypeReal.get();
     }
 
     @Override

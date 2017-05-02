@@ -80,7 +80,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         if (modelChecker.isEngineExplicit()) {
             this.graph = modelChecker.getGraphExplicit();
             this.options = graph.getOptions();
-            this.contextValue = options.get(OptionsValue.CONTEXT_VALUE);
+            this.contextValue = options.get();
             this.log = options.get(OptionsMessages.LOG);
         }
         this.nonDet = modelChecker.getModel().isNonDet();

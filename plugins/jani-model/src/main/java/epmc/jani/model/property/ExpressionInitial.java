@@ -56,7 +56,7 @@ public final class ExpressionInitial implements ExpressionIdentifier {
         if (result != null) {
             return result;
         }
-    	return TypeBoolean.get(expressionToType.getContextValue());
+    	return TypeBoolean.get();
     }
 
     @Override

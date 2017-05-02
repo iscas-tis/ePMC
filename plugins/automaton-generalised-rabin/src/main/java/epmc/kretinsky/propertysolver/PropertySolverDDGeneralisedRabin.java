@@ -200,7 +200,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         StateMap result = modelChecker.newStateMap(forStates.clone(), reachProbs);
         if (property.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(property.getCompare(), forStates);
-            Operator op = property.getCompareType().asExOpType(contextDD.getContextValue());
+            Operator op = property.getCompareType().asExOpType(ContextValue.get());
             result = result.applyWith(op, compare);
         }
 
@@ -228,17 +228,17 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         }
 
         for (DD key : tObjectIntMap.keySet()) {
-            int value = tObjectIntMap.get(key);
+            int value = tObjectIntMap.get();
             AutomatonGeneralisedRabinLabel label = (AutomatonGeneralisedRabinLabel) automaton.numberToLabel(value);
             for (int pairNr = 0; pairNr < numPairs; pairNr++) {
                 if (label.isStable(pairNr)) {
-                    stable.set(pairNr, stable.get(pairNr).orWith(key.clone()));
+                    stable.set(pairNr, stable.get().orWith(key.clone()));
                 }
                 for (int accNr = 0; accNr < automaton.getNumAccepting(pairNr); accNr++) {
                     if (label.isAccepting(pairNr, accNr)) {
-                        DD accDD = accepting.get(pairNr).get(accNr);
+                        DD accDD = accepting.get().get();
                         accDD = accDD.orWith(key.clone());
-                        accepting.get(pairNr).set(accNr, accDD);
+                        accepting.get().set(accNr, accDD);
                     }
                 }
             }
@@ -267,7 +267,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
         GraphExplicit graph = converter.buildGraph();
         BitSet targets = converter.ddToBitSet(target);
-        ContextValue contextValue = contextDD.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         Type typeWeight = contextValue.getTypeWeight();
         GraphSolverConfiguration iters = modelChecker.newGraphSolverConfiguration();
         iters.setGraph(graph);
@@ -286,12 +286,12 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
     private boolean decideComponentGeneralisedRabinMCLeaf(DD component, List<DD> stable,
             List<List<DD>> accepting) throws EPMCException {
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
-            DD stableDD = stable.get(labelNr);
+            DD stableDD = stable.get();
             if (!component.and(stableDD).eqWith(component.clone()).isTrueWith()) {
                 continue;
             }
             boolean accept = true;
-            for (DD acc : accepting.get(labelNr)) {
+            for (DD acc : accepting.get()) {
                 if (component.and(acc).isFalseWith()) {
                     accept = false;
                     break;
@@ -310,13 +310,13 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
             List<DD> stable, List<List<DD>> accepting) throws EPMCException {
         boolean decision = false;
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
-            DD leafSCCAndStable = leafSCC.and(stable.get(labelNr));
+            DD leafSCCAndStable = leafSCC.and(stable.get());
             DD prodNodesNot = product.getNodeProperty(CommonProperties.PLAYER)
                     .eq(contextDD.newConstant(Player.STOCHASTIC));
             DD stableDD = stayIn(product, leafSCCAndStable, prodNodesNot);
             prodNodesNot.dispose();
 //            leafSCCAndStable.dispose();
-            for (DD acc : accepting.get(labelNr)) {
+            for (DD acc : accepting.get()) {
                 if (!stableDD.and(acc).isFalseWith()) {
 //                    stableDD.dispose();
                     decision = true;

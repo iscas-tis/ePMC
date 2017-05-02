@@ -139,9 +139,6 @@ import epmc.value.ContextValue;
  *
  */
 public class ProcessorRegistrar {
-	
-	private static ContextValue contextValue = null;
-	
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
 	private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> nonPRISMProcessors = registerNonPRISMProcessors();
@@ -149,10 +146,6 @@ public class ProcessorRegistrar {
 	private static boolean allowMultipleLocations = false;
 	private static boolean useExtendedSyntax = false;
 	private static boolean useNonPRISMSyntax = false;
-	
-	public static void setContextValue(ContextValue contextValue) {
-		ProcessorRegistrar.contextValue = contextValue;
-	}
 	
 	/**
 	 * Add a new processor for a JANI component in the set of known strict processors.
@@ -200,13 +193,11 @@ public class ProcessorRegistrar {
 		Class<? extends JANI2PRISMProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
 		if (processorClass != null) {
 			processor = Util.getInstance(processorClass)
-							.setContextValue(contextValue)
 							.setElement(JANIComponent);
 		} else {
 			Class<? extends JANI2PRISMProcessorExtended> extendedProcessorClass = extendedProcessors.get(JANIComponent.getClass());
 			if (extendedProcessorClass != null) {
 				processor = Util.getInstance(extendedProcessorClass)
-								.setContextValue(contextValue)
 								.setElement(JANIComponent);
 				ensure(useExtendedSyntax, 
 					   ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
@@ -216,7 +207,6 @@ public class ProcessorRegistrar {
 				Class<? extends JANI2PRISMProcessorNonPRISM> nonPRISMProcessorClass = nonPRISMProcessors.get(JANIComponent.getClass());
 				if (nonPRISMProcessorClass != null) {
 					processor = Util.getInstance(nonPRISMProcessorClass)
-									.setContextValue(contextValue)
 									.setElement(JANIComponent);
 					ensure(useNonPRISMSyntax, 
 						   ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 

@@ -87,14 +87,13 @@ public final class ExpressionSteadyState implements Expression {
     @Override
     public Type getType(ExpressionToType expressionToType) throws EPMCException {
     	assert expressionToType != null;
-    	ContextValue contextValue = expressionToType.getContextValue();
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
         ensure(TypeBoolean.isBoolean(operand.getType(expressionToType)),
                 ProblemsExpression.EXPR_INCONSISTENT, "", operand);
-        return TypeWeight.get(contextValue);
+        return TypeWeight.get();
     }
     
     public Expression getOperand1() {

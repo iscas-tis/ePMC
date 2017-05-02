@@ -30,7 +30,6 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public final class ExpressionMultiObjective implements Expression {
@@ -108,16 +107,15 @@ public final class ExpressionMultiObjective implements Expression {
     @Override
     public Type getType(ExpressionToType expressionToType) throws EPMCException {
     	assert expressionToType != null;
-    	ContextValue contextValue = expressionToType.getContextValue();
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
         Expression op1 = getOperand1();
         if (isQuantEq(op1)) {
-            return TypeWeight.get(contextValue);
+            return TypeWeight.get();
         } else {
-            return TypeBoolean.get(contextValue);
+            return TypeBoolean.get();
         }
     }
     

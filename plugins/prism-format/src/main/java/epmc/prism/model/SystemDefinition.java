@@ -25,7 +25,6 @@ import java.util.Set;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 
 public interface SystemDefinition {
     List<SystemDefinition> getChildren();
@@ -36,10 +35,6 @@ public interface SystemDefinition {
     
     ModelPRISM getModel();
     
-    default ContextValue getContextVlaue() {
-        return getModel().getContextValue();
-    }
-
     Positional getPositional();
     
     default boolean isAlphaParallel() {

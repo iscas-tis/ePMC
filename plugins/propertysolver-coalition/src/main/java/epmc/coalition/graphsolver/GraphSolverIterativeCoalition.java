@@ -180,9 +180,9 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         builder.setParts(parts);
-        ContextValue contextValue = origGraph.getContextValue();
+        ContextValue contextValue = ContextValue.get();
         boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)) != null;
+                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         builder.setForNative(useNative);
         builder.setReorder();
         builder.build();
@@ -196,8 +196,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         assert this.inputValues == null;
         int numStates = iterGraph.computeNumStates();
         this.inputValues = useNative
-        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), numStates)
-        		: UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), numStates);
+        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
+        		: UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
         	int iterNode = builder.inputToOutputNode(origNode);
         	if (iterNode < 0) {
@@ -208,8 +208,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     }
 
     private void prepareResultValues() throws EPMCException {
-    	ContextValue contextValue = origGraph.getContextValue();
-    	TypeAlgebra typeWeight = TypeWeight.get(contextValue);
+    	ContextValue contextValue = ContextValue.get();
+    	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());
     	ValueAlgebra val = typeWeight.newValue();
@@ -572,7 +572,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         	if ((player == Player.ONE || player == Player.TWO)
         			&& !seen.get(node) && !target.get(node)) {
         		values.get(nodeValue, node);
-        		assert nodeValue.distance(TypeWeight.get(getContextValue()).getZero()) < tolerance : node + " " + nodeValue;
+        		assert nodeValue.distance(TypeWeight.get().getZero()) < tolerance : node + " " + nodeValue;
         		strategy.set(node, 0);
         	}
         }
@@ -589,16 +589,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
 		return true;
 	}
 
-    /**
-     * Return value context used by this solver.
-     * 
-     * @return value context used by this solver
-     */
-	private ContextValue getContextValue() {
-    	return origGraph.getContextValue();
-    }
-	
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get(getContextValue()).newValue();
+    	return TypeWeight.get().newValue();
     }
 }

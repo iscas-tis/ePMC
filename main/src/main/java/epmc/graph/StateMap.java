@@ -23,7 +23,6 @@ package epmc.graph;
 import java.io.Closeable;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -73,10 +72,6 @@ public interface StateMap extends Closeable, Cloneable {
         return value;
     }
     
-    default ContextValue getContextValue() {
-        return getType().getContext();
-    }
-
     Value subsumeResult(StateSet initialStates) throws EPMCException;
     
     default Scheduler getScheduler() {

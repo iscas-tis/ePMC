@@ -48,19 +48,16 @@ public final class UtilModelChecker {
      * The string will be parsed using the {@link Property} from
      * {@link OptionsModelChecker#PROPERTY_INPUT_TYPE}.
      * None of the parameters may be {@code null}.
-     * 
-     * @param contextValue value context to use
      * @param string string to parse to expression
+     * 
      * @return parsed expression
      * @throws EPMCException thrown if expression could not be parsed
      */
-    public static Expression parseExpression(ContextValue contextValue, String string) throws EPMCException {
-        assert contextValue != null;
+    public static Expression parseExpression(String string) throws EPMCException {
         assert string != null;
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         Property property = UtilOptions.getInstance(options,
                 OptionsModelChecker.PROPERTY_INPUT_TYPE);
-        property.setContext(contextValue);
         InputStream stream = new ByteArrayInputStream(string.getBytes());
         return property.parseExpression(stream);
     }
@@ -70,19 +67,16 @@ public final class UtilModelChecker {
      * The string will be parsed using the {@link Property} from
      * {@link OptionsModelChecker#PROPERTY_INPUT_TYPE}.
      * None of the parameters may be {@code null}.
-     * 
-     * @param contextExpression expression context to use
      * @param string string to parse to expression
+     * 
      * @return parsed expression
      * @throws EPMCException thrown if expression could not be parsed
      */
-    public static Type parseType(ContextValue contextExpression, String string) throws EPMCException {
-        assert contextExpression != null;
+    public static Type parseType(String string) throws EPMCException {
         assert string != null;
-        Options options = contextExpression.getOptions();
+        Options options = ContextValue.get().getOptions();
         Property property = UtilOptions.getInstance(options,
                 OptionsModelChecker.PROPERTY_INPUT_TYPE);
-        property.setContext(contextExpression);
         return property.parseType(string);
     }
 

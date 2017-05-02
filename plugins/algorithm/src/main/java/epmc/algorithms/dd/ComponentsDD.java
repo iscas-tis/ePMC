@@ -209,7 +209,6 @@ public class ComponentsDD implements Closeable {
     public ComponentsDD(GraphDD graph, DD nodes, boolean onlyBSCC, boolean skipTransient) throws EPMCException {
         assert graph != null;
         assert nodes != null;
-        assert graph.getContextDD() == nodes.getContext();
         assert nodes.isBoolean();
         this.nodes = nodes.clone();
         Options options = graph.getOptions();
@@ -727,8 +726,6 @@ public class ComponentsDD implements Closeable {
         assert graph != null;
         assert target != null;
         assert nodes != null;
-        assert graph.getContextDD() == target.getContext();
-        assert graph.getContextDD() == nodes.getContext();
         if (one) {
             DD reachSome = reachPre(graph, target, nodes, block, min, false);
             DD reachNone = nodes.clone().andNotWith(reachSome);
