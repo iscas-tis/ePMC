@@ -42,7 +42,6 @@ import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 
@@ -74,9 +73,8 @@ public class SMTLibTest {
     @Test
     public void iSat3ManualTest() throws EPMCException {
         Options options = prepareISat3Options();
-        ContextValue contextValue = ContextValue.get();
         options.set(OptionsSMTLib.SMTLIB_VERSION, SMTLibVersion.V25);
-        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
         ConstraintSolver solver = configuration.newProblem();
         assert solver instanceof ConstraintSolverSMTLib;
@@ -98,8 +96,7 @@ public class SMTLibTest {
     @Test
     public void andreaTest() throws EPMCException {
         Options options = prepareISat3Options();
-        ContextValue contextValue = ContextValue.get();
-        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
         ConstraintSolver solver = configuration.newProblem();
         assert solver instanceof ConstraintSolverSMTLib;
@@ -130,8 +127,7 @@ public class SMTLibTest {
     @Test
     public void fractionTest() throws EPMCException {
         Options options = prepareISat3Options();
-        ContextValue contextValue = ContextValue.get();
-        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
         ConstraintSolver solver = configuration.newProblem();
         assert solver instanceof ConstraintSolverSMTLib;
