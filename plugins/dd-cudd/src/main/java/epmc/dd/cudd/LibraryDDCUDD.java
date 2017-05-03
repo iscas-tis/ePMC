@@ -20,6 +20,13 @@
 
 package epmc.dd.cudd;
 
+import static epmc.error.UtilError.ensure;
+import static epmc.error.UtilError.fail;
+
+import com.sun.jna.Memory;
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
@@ -28,7 +35,6 @@ import epmc.dd.cudd.OptionsTypesCUDD.CUDDSubengine;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -43,13 +49,6 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-
-import static epmc.error.UtilError.ensure;
-import static epmc.error.UtilError.fail;
-
-import com.sun.jna.Memory;
-import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
 
 /**
  * CUDD BDD library implementation.
@@ -266,13 +265,11 @@ public final class LibraryDDCUDD implements LibraryDD {
         
     private boolean mtbdd;
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private boolean alive = true;
     
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        contextValue = ContextValue.get();
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         Options options = contextDD.getOptions();

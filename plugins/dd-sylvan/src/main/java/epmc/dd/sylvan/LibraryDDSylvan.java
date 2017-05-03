@@ -30,7 +30,6 @@ import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
 import epmc.util.JNATools;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -141,12 +140,10 @@ public final class LibraryDDSylvan implements LibraryDD {
     private long nextVariable = 0;
         
     private ContextDD contextDD;
-    private ContextValue contextValue;
     
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        contextValue = ContextValue.get();
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         int workers = contextDD.getOptions().getInteger(OptionsDDSylvan.DD_SYLVAN_WORKERS);

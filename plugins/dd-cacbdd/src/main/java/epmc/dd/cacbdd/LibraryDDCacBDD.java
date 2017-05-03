@@ -36,7 +36,6 @@ import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -149,7 +148,6 @@ public final class LibraryDDCacBDD implements LibraryDD {
     private final static int COMPLEMENT = 0x80000000;
     
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private Pointer xbddmanager;
     private Pointer xmanager;
     private Value valueTrue;
@@ -163,7 +161,6 @@ public final class LibraryDDCacBDD implements LibraryDD {
         assert contextDD != null;
         ensure(CacBDD.loaded, ProblemsDD.CACBDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.contextValue = ContextValue.get();
         Options options = contextDD.getOptions();
         this.maxNumVariables = options.getInteger(OptionsDDCacBDD.DD_CACBDD_MAX_NUM_VARIABLES);
         this.xbddmanager = CacBDD.cacwrapper_new_manager(maxNumVariables);

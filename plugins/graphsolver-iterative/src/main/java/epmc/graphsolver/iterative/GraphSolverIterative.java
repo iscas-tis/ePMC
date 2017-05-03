@@ -360,7 +360,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private void prepareResultValues() throws EPMCException {
-    	ContextValue contextValue = ContextValue.get();
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -1142,7 +1141,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1216,7 +1214,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance)
                     throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1285,7 +1282,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1360,7 +1356,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul)
                     throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1428,7 +1423,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1496,7 +1490,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedCumulativeJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -1547,7 +1540,6 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     private void mdpBoundedCumulativeDiscountedJava(int bound,
             Value discount, GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

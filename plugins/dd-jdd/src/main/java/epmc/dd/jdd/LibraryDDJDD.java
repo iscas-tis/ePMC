@@ -20,15 +20,10 @@
 
 package epmc.dd.jdd;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import jdd.bdd.BDD;
-import jdd.bdd.Permutation;
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -43,6 +38,10 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import jdd.bdd.BDD;
+import jdd.bdd.Permutation;
 
 public final class LibraryDDJDD implements LibraryDD {
     public final static String IDENTIFIER = "jdd";
@@ -62,7 +61,6 @@ public final class LibraryDDJDD implements LibraryDD {
     
     private BDD bdd;
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private Value oneValue;
     private Value zeroValue;
     private int zeroNode;
@@ -310,7 +308,6 @@ public final class LibraryDDJDD implements LibraryDD {
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
         this.contextDD = contextDD;
-        this.contextValue = ContextValue.get();
         int initCache = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
         int initSlots = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_NODES);
         this.bdd = new BDD(initSlots, initCache);

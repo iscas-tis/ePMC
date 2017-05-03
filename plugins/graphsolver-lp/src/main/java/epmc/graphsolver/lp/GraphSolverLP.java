@@ -45,7 +45,6 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
@@ -156,7 +155,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             throws EPMCException {
         Options options = graph.getOptions();
         Log log = options.get(OptionsMessages.LOG);
-        ContextValue contextValue = ContextValue.get();
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = typeWeight.getOne();
@@ -279,7 +277,6 @@ public final class GraphSolverLP implements GraphSolverExplicit {
   
         Options options = graph.getOptions();
         Log log = options.get(OptionsMessages.LOG);
-        ContextValue contextValue = ContextValue.get();
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = typeWeight.getOne();
