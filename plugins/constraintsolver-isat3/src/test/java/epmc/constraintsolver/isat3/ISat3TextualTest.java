@@ -40,7 +40,6 @@ import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 
@@ -72,8 +71,7 @@ public class ISat3TextualTest {
     @Test
     public void iSat3ManualTest() throws EPMCException {
         Options options = prepareISat3Options();
-        ContextValue contextValue = ContextValue.get();
-        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
         ConstraintSolver solver = configuration.newProblem();
         assert solver instanceof ConstraintSolverISat3Textual;
@@ -96,8 +94,7 @@ public class ISat3TextualTest {
     @Test
     public void andreaTest() throws EPMCException {
         Options options = prepareISat3Options();
-        ContextValue contextValue = ContextValue.get();
-        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
         ConstraintSolver solver = configuration.newProblem();
         assert solver instanceof ConstraintSolverISat3Textual;
