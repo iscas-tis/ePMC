@@ -54,7 +54,6 @@ public final class ModuleCommands implements Module {
     private final Map<Expression,JANIType> publicVariables;
     private final Map<Expression,Expression> initValues;
     private final ArrayList<Command> commands = new ArrayList<>();
-    private final ContextValue contextValue;
 	private final Positional positional;
 	private Expression invariants;
 
@@ -69,19 +68,17 @@ public final class ModuleCommands implements Module {
      * @param commands list of commands of the module
      * @param positional position where module was defined
      */
-    public ModuleCommands(ContextValue contextExpression,
-            String name,
+    public ModuleCommands(String name,
             Map<Expression,JANIType> variables,
             Map<Expression,Expression> initValues,
             List<Command> commands,
             Expression invariants,
             Positional positional) {
-        assert contextExpression != null;
         assert name != null;
         assert variables != null;
         this.positional = positional;
         if (invariants == null) {
-        	invariants = ExpressionLiteral.getTrue(contextExpression);
+        	invariants = ExpressionLiteral.getTrue(ContextValue.get());
         }
         this.invariants = invariants;
         for (Entry<Expression, JANIType> entry : variables.entrySet()) {
@@ -103,7 +100,6 @@ public final class ModuleCommands implements Module {
         for (Entry<Expression,Expression> entry : initValues.entrySet()) {
             assert entry.getKey() instanceof ExpressionIdentifier;
         }
-        this.contextValue = contextExpression;
         this.name = name;
         this.variables = new HashMap<>();
         this.publicVariables = Collections.unmodifiableMap(this.variables);
@@ -165,7 +161,7 @@ public final class ModuleCommands implements Module {
         }
         Expression newInvariants = UtilExpressionStandard.replace(invariants, map);
         
-        return new ModuleCommands(contextValue, name, newVariables, newInitValues, newCommands, newInvariants, null);
+        return new ModuleCommands(name, newVariables, newInitValues, newCommands, newInvariants, null);
     }
 
     ModuleCommands renameActions(Map<Expression,Expression> map) {
@@ -206,7 +202,7 @@ public final class ModuleCommands implements Module {
         }
         nameBuilder.append("_REN_");
         
-        return new ModuleCommands(contextValue, nameBuilder.toString(), this.variables, this.initValues, newCommands, invariants, null);
+        return new ModuleCommands(nameBuilder.toString(), this.variables, this.initValues, newCommands, invariants, null);
     }
 
     ModuleCommands hideActions(Set<Expression> labels) {
@@ -297,7 +293,7 @@ public final class ModuleCommands implements Module {
             newVariables.put(entry.getKey(), entry.getValue().replace(map));
         }
         Expression newInvariants = UtilExpressionStandard.replace(invariants, map);
-        return new ModuleCommands(contextValue, this.name, newVariables, newInitValues, newCommands, newInvariants, getPositional());
+        return new ModuleCommands(this.name, newVariables, newInitValues, newCommands, newInvariants, getPositional());
     }
     
     @Override
@@ -325,7 +321,7 @@ public final class ModuleCommands implements Module {
 
     ModuleCommands replaceVariables(Map<Expression,JANIType> variables) {
     	assert variables != null;
-    	return new ModuleCommands(contextValue, name, variables, initValues, commands, invariants, positional);
+    	return new ModuleCommands(name, variables, initValues, commands, invariants, positional);
     }
     
 	@Override

@@ -43,7 +43,6 @@ import epmc.jani.model.type.JANIType;
 import epmc.jani.model.type.JANITypeBool;
 import epmc.prism.error.ProblemsPRISM;
 import epmc.prism.expression.PrismExpressionParser;
-import epmc.value.ContextValue;
 
 /**
  * Class to collect the formulas, constants, and labels of a PRISM model during parsing.
@@ -52,14 +51,12 @@ import epmc.value.ContextValue;
  * @author Ernst Moritz Hahn
  */
 public final class Formulas {
-    private final ContextValue context;
     private Map<Expression,Expression> formulas;
     private Map<Expression,Expression> constants;
     private Map<Expression,JANIType> constantTypes;
     private Map<Expression,Expression> labels;
     
-    public Formulas(ContextValue context) {
-        this.context = context;
+    public Formulas() {
         formulas = new HashMap<>();
         constants = new HashMap<>();
         constantTypes = new HashMap<>();
@@ -411,7 +408,7 @@ public final class Formulas {
     private Expression parse(Reader reader) throws EPMCException {
         assert reader != null;
         PrismExpressionParser parser = new PrismExpressionParser(reader);
-        return parser.parseExpressionAsProperty(context);
+        return parser.parseExpressionAsProperty();
     }
 
     private Expression parse(String string) throws EPMCException {
