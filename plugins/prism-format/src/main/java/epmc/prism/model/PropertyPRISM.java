@@ -34,7 +34,6 @@ import epmc.modelchecker.Property;
 import epmc.modelchecker.RawProperties;
 import epmc.modelchecker.RawProperty;
 import epmc.prism.expression.PrismExpressionParser;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
@@ -56,7 +55,6 @@ public final class PropertyPRISM implements Property {
 	private final static String DOUBLE = "double";
 	private final static char QUOT_C = '"';
 	private final static char COLON_C = ':';
-	private ContextValue context;
 
 	@Override
 	public String getIdentifier() {
@@ -67,7 +65,7 @@ public final class PropertyPRISM implements Property {
 	public Expression parseExpression(InputStream stream) throws EPMCException {
 		assert stream != null;
 		PrismExpressionParser parser = new PrismExpressionParser(stream);
-        return parser.parseExpressionAsProperty(context);
+        return parser.parseExpressionAsProperty();
 	}
 
 	@Override

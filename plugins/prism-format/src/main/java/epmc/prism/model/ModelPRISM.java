@@ -20,9 +20,6 @@
 
 package epmc.prism.model;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import static epmc.error.UtilError.ensure;
 
 import java.io.InputStream;
@@ -82,7 +79,6 @@ import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.prism.error.ProblemsPRISM;
 import epmc.prism.messages.MessagesPRISM;
-import epmc.prism.model.PrismParser;
 import epmc.prism.model.convert.PRISM2JANIConverter;
 import epmc.prism.options.OptionsPRISM;
 import epmc.time.JANITypeClock;
@@ -97,6 +93,8 @@ import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 
 // TODO probably better to do multiplicity checking just here, not in parser
 // TODO can already include some checks on probabilities, though not in all case
@@ -113,8 +111,7 @@ import epmc.value.ValueInteger;
  */
 public final class ModelPRISM implements ModelJANIConverter {
 	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private ExpressionToTypeEmpty(ContextValue contextValue) {
-			assert contextValue != null;
+		private ExpressionToTypeEmpty() {
 		}
 		@Override
 		public Type getType(Expression expression) throws EPMCException {
@@ -398,7 +395,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             }
         }
         commands.add(new Command(rateLabel, rateGuard, rateAlternatives, null));
-        return new ModuleCommands(ContextValue.get(), globalModule.getName(), globalModule.getVariables(), globalModule.getInitValues(), commands, globalModule.getInvariants(), globalModule.getPositional());
+        return new ModuleCommands(globalModule.getName(), globalModule.getVariables(), globalModule.getInitValues(), commands, globalModule.getInvariants(), globalModule.getPositional());
     }
 
     private void replaceRewardsConstants(Map<Expression, Expression> formulas,
@@ -507,7 +504,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 newCommands.add(newCommand);
             }
             ModuleCommands newModule = new ModuleCommands
-                    (ContextValue.get(), moduleGC.getName(), moduleGC.getVariables(),
+                    (moduleGC.getName(), moduleGC.getVariables(),
                             moduleGC.getInitValues(), newCommands, moduleGC.getInvariants(), null);
             newModules.add(newModule);
         }
@@ -821,9 +818,9 @@ public final class ModelPRISM implements ModelJANIConverter {
             allVariables.putAll(module.getVariables());
         }
 		Map<Expression,Type> allTypes = new HashMap<>();
-        for (Entry<Expression,JANIType> entry : allVariables.entrySet()) {
+//        for (Entry<Expression,JANIType> entry : allVariables.entrySet()) {
 //             allTypes.put(entry.getKey(), entry.getValue().toType());
-        }
+//        }
         allTypes.put(new ExpressionIdentifierStandard.Builder()
         		.setName(DEADLOCK)
         		.build(), TypeBoolean.get());
@@ -945,7 +942,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             Module newModule;
             if (module.isCommands()) {
                 ModuleCommands commandsModule = module.asCommands();
-                newModule = new ModuleCommands(ContextValue.get(), module.getName(), module.getVariables(),
+                newModule = new ModuleCommands(module.getName(), module.getVariables(),
                     newInitValues, commandsModule.getCommands(), commandsModule.getInvariants(), null);
             } else {
                 assert false;
@@ -961,7 +958,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         ModuleCommands globalModule = flatten(system);
         globalVariables.putAll(globalModule.getVariables());
         globalInitValues.putAll(globalModule.getInitValues());
-        globalModule = new ModuleCommands(ContextValue.get(), globalModule.getName(), globalVariables,
+        globalModule = new ModuleCommands(globalModule.getName(), globalVariables,
                 globalInitValues, globalModule.getCommands(), globalModule.getInvariants(), null);
         modules.clear();
         if (SemanticsMA.isMA(semanticsType)) {
@@ -1117,7 +1114,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         } else {
         	newInvariant = null;
         }
-        return new ModuleCommands(ContextValue.get(), newName, newVariables, newInitValues, newCommands, newInvariant, null);
+        return new ModuleCommands(newName, newVariables, newInitValues, newCommands, newInvariant, null);
     }
 
     public Map<Expression, JANIType> getGlobalVariables() {
@@ -1296,7 +1293,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         ensure(inputs.length == 1, ProblemsPRISM.PRISM_ONE_MODEL_FILE, inputs.length);
         PrismParser parser = new PrismParser(inputs[0]);    
         parser.setModel(this);
-        parser.parseModel(ContextValue.get());
+        parser.parseModel();
     }
 
 	@Override
@@ -1330,7 +1327,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     
     private Value evaluateValue(Expression expression) throws EPMCException {
         assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(ContextValue.get()), new Expression[0]);
+        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(), new Expression[0]);
         return evaluator.evaluate();
     }
     

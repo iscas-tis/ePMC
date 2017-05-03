@@ -109,11 +109,11 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpression(ContextValue contextVal) throws EPMCException {
-		return parseExpression(contextVal, 1, 1);
+	public Expression parseExpression() throws EPMCException {
+		return parseExpression(1, 1);
 	}
 
-	public Expression parseExpression(ContextValue contextVal, int line, int column) throws EPMCException {
+	public Expression parseExpression(int line, int column) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
 
@@ -138,11 +138,11 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpressionAsProperty(ContextValue contextVal) throws EPMCException {
-		return parseExpressionAsProperty(contextVal, 1, 1);
+	public Expression parseExpressionAsProperty() throws EPMCException {
+		return parseExpressionAsProperty(1, 1);
 	}
 
-	public Expression parseExpressionAsProperty(ContextValue contextVal, int line, int column) throws EPMCException {
+	public Expression parseExpressionAsProperty(int line, int column) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
 
