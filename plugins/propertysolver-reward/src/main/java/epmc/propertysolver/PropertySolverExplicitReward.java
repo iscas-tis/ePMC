@@ -200,7 +200,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         assert states != null;
         assert stateReward != null;
         assert transReward != null;
-        ContextValue contextValue = ContextValue.get();
         ExpressionReward propertyReward = (ExpressionReward) property;
         ValueAlgebra time = ValueAlgebra.asAlgebra(evaluateValue(propertyReward.getTime()));
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
@@ -229,7 +228,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         assert states != null;
         assert stateReward != null;
         assert transReward != null;
-        ContextValue contextValue = ContextValue.get();
         BitSet reachSink = computeReachSink(property);
         BitSet reachNotOneSink = computeReachNotOneSink(property, reachSink, min);
         ExpressionReward propertyReward = (ExpressionReward) property;

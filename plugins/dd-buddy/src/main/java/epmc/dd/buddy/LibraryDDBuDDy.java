@@ -35,7 +35,6 @@ import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -175,7 +174,6 @@ public final class LibraryDDBuDDy implements LibraryDD {
     private final static int BDD_ERRNUM = 24;
     
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private Value valueTrue;
     private Value valueFalse;
     private int nextVariable = 0;
@@ -189,7 +187,6 @@ public final class LibraryDDBuDDy implements LibraryDD {
         assert contextDD != null;
         ensure(BuDDy.loaded, ProblemsDD.BUDDY_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.contextValue = ContextValue.get();
         Options options = contextDD.getOptions();
         int initCache = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_CACHE_SIZE);
         int initSlots = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_NODES);

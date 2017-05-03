@@ -20,11 +20,6 @@
 
 package epmc.dd.cuddmtbdd;
 
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
-import gnu.trove.strategy.IdentityHashingStrategy;
-
 import static epmc.error.UtilError.ensure;
 import static epmc.error.UtilError.fail;
 
@@ -34,6 +29,12 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.sun.jna.Callback;
+import com.sun.jna.Memory;
+import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
@@ -64,12 +65,10 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-
-import com.sun.jna.Callback;
-import com.sun.jna.Memory;
-import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
-import com.sun.jna.Structure;
+import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.map.hash.TObjectLongHashMap;
+import gnu.trove.strategy.IdentityHashingStrategy;
 
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public final static String IDENTIFIER = "cudd-mtbdd";
@@ -404,7 +403,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         return numberToValue.get(number);
     }
     
-    private ContextValue contextValue;
     private ContextDD contextDD;
     private boolean alive = true;
     private AssertFailImpl assertFail;
@@ -423,7 +421,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         ContextValue contextValue = ContextValue.get();
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.contextValue = contextValue;
         Collection<Operator> operators = contextValue.getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
