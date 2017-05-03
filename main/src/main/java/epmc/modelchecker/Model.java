@@ -26,7 +26,6 @@ import java.util.Set;
 import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
-import epmc.value.ContextValue;
 
 /**
  * A model description.
