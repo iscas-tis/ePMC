@@ -111,7 +111,7 @@ final class PropertyNormaliser {
                 newQuantifiersQuantitative.add(newQuantifier);
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getOne());
             } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
-                Expression newCompare = subtract(ExpressionLiteral.getOne(ContextValue.get()), objectiveQuantifier.getCompare());
+                Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
                 newCompare = new ExpressionLiteral.Builder()
                 		.setValue(evaluateValue(newCompare))
                 		.build();

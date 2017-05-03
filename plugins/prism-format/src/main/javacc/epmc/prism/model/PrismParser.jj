@@ -1090,7 +1090,7 @@ private Command parseGuardedCommandDeclaration() throws EPMCException, EPMCExcep
 private List<Alternative> parseUpdate() throws EPMCException, EPMCException : 
 {
 	List<Alternative> updates = new ArrayList<Alternative>();
-	Expression one = ExpressionLiteral.getOne(ContextValue.get());
+	Expression one = ExpressionLiteral.getOne();
 }
 {
 	(

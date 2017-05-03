@@ -27,13 +27,12 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
-import epmc.value.Value;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
+import epmc.value.Value;
 
 /**
  * A literal, such as booleans, numeric values, etc. Basically a container for
@@ -181,7 +180,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      * 
      * @return expression representing positive infinity
      */
-    public static ExpressionLiteral getPosInf(ContextValue context) {
+    public static ExpressionLiteral getPosInf() {
         ExpressionLiteral posInfExpr = new Builder()
                 .setValue(TypeReal.get().getPosInf())
                 .build();
@@ -193,7 +192,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      * 
      * @return expression representing the value &quot;1&quot;
      */
-    public static Expression getOne(ContextValue context) {
+    public static Expression getOne() {
         ExpressionLiteral oneExpr = new Builder()
                 .setValue(TypeInteger.get().getOne())
                 .build();
@@ -205,7 +204,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      * 
      * @return expression representing the value &quot;0&quot;
      */
-    public static ExpressionLiteral getZero(ContextValue context) {
+    public static ExpressionLiteral getZero() {
         ExpressionLiteral zeroExpr = new Builder()
                 .setValue(TypeInteger.get().getZero())
                 .build();
@@ -217,7 +216,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      * 
      * @return expression representing the value &quot;true&quot;
      */
-    public static ExpressionLiteral getTrue(ContextValue contextValue) {
+    public static ExpressionLiteral getTrue() {
         ExpressionLiteral trueExpr = new Builder()
                 .setValue(TypeBoolean.get().getTrue())
                 .build();
@@ -229,7 +228,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
      * 
      * @return expression representing the value &quot;false&quot;
      */
-    public static Expression getFalse(ContextValue contextValue) {
+    public static Expression getFalse() {
         ExpressionLiteral falseExpr = new Builder()
                 .setValue(TypeBoolean.get().getFalse())
                 .build();

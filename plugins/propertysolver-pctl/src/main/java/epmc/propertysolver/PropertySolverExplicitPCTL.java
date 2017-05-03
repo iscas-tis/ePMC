@@ -78,7 +78,6 @@ import epmc.value.ValueReal;
 public final class PropertySolverExplicitPCTL implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit";
     private ModelChecker modelChecker;
-    private ContextValue contextValue;
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
     private boolean negate;
@@ -92,7 +91,6 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
-        this.contextValue = ContextValue.get();
     }
     
 	@Override
@@ -118,7 +116,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, dirType.isMin());
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(contextValue);
+            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
             assert op != null;
             result = result.applyWith(op, compare);
         }
@@ -136,20 +134,20 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
             Expression left = pathTemporal.getOperand1();
             Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(), property.getPositional());
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue(contextValue);
+            Expression left = ExpressionLiteral.getTrue();
             Expression right = pathTemporal.getOperand1();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
             ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue(contextValue);
+            Expression left = ExpressionLiteral.getTrue();
             Expression right = not(pathTemporal.getOperand1());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(ContextValue.get()), property.getPositional());
+            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             min = !min;
             negate = true;
         } else {
@@ -170,7 +168,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             throws EPMCException {
         assert pathTemporal != null;
         Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        TimeBound timeBound = pathTemporal.getTimeBound(ContextValue.get());
+        TimeBound timeBound = pathTemporal.getTimeBound();
 
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];
@@ -194,7 +192,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         } else {
         	BitSet allNodes = UtilBitSet.newBitSetUnbounded();
         	allNodes.set(0, graph.getNumNodes(), true);
-            GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(contextValue.getOptions());
+            GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
             ValueAlgebra transValue = typeWeight.newValue();
             transValue.set(transValue.getType().getZero());
 
@@ -227,15 +225,15 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();
                     objective.setGraph(graph);
                     objective.setMin(min);
-                    objective.setTime(timeBound.getRightValue(ContextValue.get()));
+                    objective.setTime(timeBound.getRightValue());
                     objective.setZeroSink(zeroSet);
                     objective.setTargets(oneSet);
                     configuration.setObjective(objective);
                     configuration.solve();
                     values = objective.getResult();
                 } else {
-                    int leftBound = timeBound.getLeftInt(ContextValue.get());
-                    int rightBound = timeBound.getRightInt(ContextValue.get());
+                    int leftBound = timeBound.getLeftInt();
+                    int rightBound = timeBound.getRightInt();
                     if (timeBound.isRightOpen()) {
                         rightBound--;
                     }
@@ -265,9 +263,9 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             }
-            if (timeBound.getLeftValue(ContextValue.get()).isGt(timeBound.getLeftValue(ContextValue.get()).getType().getZero())
+            if (timeBound.getLeftValue().isGt(timeBound.getLeftValue().getType().getZero())
                     || timeBound.isLeftOpen()) {
-                configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(this.contextValue.getOptions());
+                configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
                 sinkSet.clear();
                 for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
                     if (isState.getBoolean(state)) {
@@ -295,11 +293,11 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
                     objective.setGraph(graph);
                     objective.setValues(values);
                     objective.setMin(min);
-                    objective.setTime(timeBound.getLeftValue(ContextValue.get()));
+                    objective.setTime(timeBound.getLeftValue());
                     configuration.solve();
                     values = objective.getResult();
                 } else {
-                    int leftBound = timeBound.getLeftInt(ContextValue.get());
+                    int leftBound = timeBound.getLeftInt();
                     if (timeBound.isLeftOpen()) {
                         leftBound++;
                     }
@@ -344,7 +342,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         nodeProperties.add(CommonProperties.PLAYER);
         List<Object> edgeProperties = new ArrayList<>();
         edgeProperties.add(CommonProperties.WEIGHT);
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(this.contextValue.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
         int iterNumStates = graph.computeNumStates();
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterNumStates);
         for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
@@ -363,14 +361,14 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         configuration.setObjective(objective);
         configuration.solve();
         values = objective.getResult();
-        TimeBound timeBound = pathTemporal.getTimeBound(ContextValue.get());
+        TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
-            Value rightValue = timeBound.getRightValue(ContextValue.get());
+            Value rightValue = timeBound.getRightValue();
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
             iterStates.set(0, graph.getNumNodes());
             Value leftValue = TypeWeight.get().newValue();
-            leftValue.set(timeBound.getLeftValue(ContextValue.get()));
+            leftValue.set(timeBound.getLeftValue());
             ValueAlgebra sum = TypeWeight.get().newValue();
             ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);

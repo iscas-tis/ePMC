@@ -22,7 +22,6 @@ package epmc.prism.exporter.processor;
 
 import epmc.error.EPMCException;
 import epmc.jani.model.Automaton;
-import epmc.value.ContextValue;
 
 public interface JANI2PRISMProcessorStrict {	
 	default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; }

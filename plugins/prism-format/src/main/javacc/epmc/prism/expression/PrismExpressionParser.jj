@@ -1016,10 +1016,10 @@ private Expression parseBoolean() throws EPMCException :
 {
 	(
 		<TRUE> 
-		{ return ExpressionLiteral.getTrue(ContextValue.get()); } 
+		{ return ExpressionLiteral.getTrue(); } 
 	|
 		<FALSE> 
-		{ return ExpressionLiteral.getFalse(ContextValue.get()); }
+		{ return ExpressionLiteral.getFalse(); }
 	)
 }
 
@@ -1109,7 +1109,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
+	Expression cond = ExpressionLiteral.getTrue();
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
@@ -1131,7 +1131,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 				<QUESTION> 
 				{ 
 					cmpType = CmpType.IS;
-					cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
+					cmp = ExpressionLiteral.getTrue(); 
 				}
 			|
 				cmp = parseExpTemporal(parseExp)
@@ -1185,7 +1185,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
+	Expression cond = ExpressionLiteral.getTrue();
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
@@ -1206,7 +1206,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS;
-				cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
+				cmp = ExpressionLiteral.getTrue(); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp)
@@ -1292,8 +1292,8 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 	| 
 		<C> 
 		{
-		  timebound = ExpressionLiteral.getPosInf(ContextValue.get());
-		  discount = ExpressionLiteral.getPosInf(ContextValue.get());
+		  timebound = ExpressionLiteral.getPosInf();
+		  discount = ExpressionLiteral.getPosInf();
 		}
 		(
 			<LEQ> 
@@ -1346,10 +1346,10 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue(ContextValue.get());
+	Expression cond = ExpressionLiteral.getTrue();
 	DirType dirType;
 	CmpType cmpType;
-	Expression rewardStructure = ExpressionLiteral.getTrue(ContextValue.get());
+	Expression rewardStructure = ExpressionLiteral.getTrue();
 	OldSchoolFilter filter = null;
 	Token oper;
 }
@@ -1384,14 +1384,14 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 	(
 		{ 
 			cmpType = CmpType.IS;
-			cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
+			cmp = ExpressionLiteral.getTrue(); 
 		}
 		<EQ>
 		(
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS; 
-				cmp = ExpressionLiteral.getTrue(ContextValue.get()); 
+				cmp = ExpressionLiteral.getTrue(); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp) 
@@ -1536,7 +1536,7 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 {
 	FilterType type;
 	Expression prop;
-	Expression states = ExpressionLiteral.getTrue(ContextValue.get());
+	Expression states = ExpressionLiteral.getTrue();
 }
 {
 	{ 
@@ -1621,22 +1621,22 @@ TimeBound TimeBound() throws EPMCException :
 		<LT> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(ContextValue.get()), right, false, true); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, true); }
 	|
 		<LEQ> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(ContextValue.get()), right, false, false); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, false); }
 	|
 		<GT> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(ContextValue.get()), true, true); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), true, true); }
 	|
 		<GEQ> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(ContextValue.get()), false, true); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), false, true); }
 	|
 //		LOOKAHEAD((<LBRACKET>|<RBRACKET>) parseExp(true) <COMMA> parseExp(true) (<LBRACKET>|<RBRACKET>) <LPAR>)
 		(

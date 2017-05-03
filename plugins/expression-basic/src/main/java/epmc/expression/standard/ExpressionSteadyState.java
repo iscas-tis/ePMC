@@ -25,14 +25,13 @@ import static epmc.error.UtilError.ensure;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn

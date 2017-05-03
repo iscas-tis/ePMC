@@ -55,7 +55,7 @@ public class SolverLPTest {
         Options options = prepareOptions();
         ContextValue contextValue = options.get(TestHelper.CONTEXT_VALUE);
         options.set(TestHelper.CONTEXT_VALUE, contextValue);
-        ConstraintSolverConfiguration contextSolver = new ConstraintSolverConfiguration(contextValue);
+        ConstraintSolverConfiguration contextSolver = new ConstraintSolverConfiguration();
         contextSolver.requireFeature(Feature.LP);
         ConstraintSolver problem = contextSolver.newProblem();
         problem.setDirection(Direction.MAX);

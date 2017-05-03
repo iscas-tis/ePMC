@@ -28,17 +28,16 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
-import epmc.value.ValueBoolean;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
+import epmc.value.TypeWeight;
 import epmc.value.Value;
+import epmc.value.ValueBoolean;
 
 /**
  * Ernst Moritz Hahn
@@ -274,17 +273,16 @@ public final class ExpressionTemporal implements Expression {
         return type;
     }
     
-    public boolean hasTimeBounds(ContextValue context) throws EPMCException {
+    public boolean hasTimeBounds() throws EPMCException {
         for (int boundNr = 0; boundNr < getNumOps(); boundNr++) {
-            if (!getTimeBound(context).isUnbounded()) {
+            if (!getTimeBound().isUnbounded()) {
                 return true;
             }
         }
         return false;
     }
     
-    public TimeBound getTimeBound(ContextValue context, int num) {
-    	assert context != null;
+    public TimeBound getTimeBound(int num) {
         assert getNumOps() + 2 * num + 1 <= getChildren().size();
         Expression left = getChildren().get(getNumOps() + 2 * num);
         Expression right = getChildren().get(getNumOps() + 2 * num + 1);
@@ -296,9 +294,8 @@ public final class ExpressionTemporal implements Expression {
                 .build();
     }
 
-    public TimeBound getTimeBound(ContextValue context) {
-    	assert context != null;
-        return getTimeBound(context, 0);
+    public TimeBound getTimeBound() {
+        return getTimeBound(0);
     }    
 
     public List<Expression> getOperands() {

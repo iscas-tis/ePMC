@@ -24,11 +24,11 @@ import epmc.graph.explicit.GraphExplicitWrapper;
 public class SpotParser {
   private ContextValue context;
 
-  public GraphExplicitWrapper parseAutomaton(ContextValue context, Map<String,Expression> ap2expr)
+  public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr)
       throws EPMCException {
     assert context != null;
     assert ap2expr != null;
-    this.context = context;
+    this.context = ContextValue.get();
     try {
       return Automaton(context, ap2expr);
     } catch (ParseException e) {
@@ -255,7 +255,7 @@ Expression ExpressionTrue(HanoiHeader header) :
   Token literal;
 }
 {
-  <T> { return ExpressionLiteral.getTrue(ContextValue.get()); }
+  <T> { return ExpressionLiteral.getTrue(); }
 }
 
 Expression ExpressionIdentifier(HanoiHeader header) :

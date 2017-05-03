@@ -37,7 +37,6 @@ import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 
 /**
  * JANI property interval.
@@ -132,12 +131,12 @@ public final class JANIPropertyInterval implements JANINode {
 		assert validIdentifiers != null;
 		TimeBound result;
 		if (lower == null) {
-			result = newTimeBound(ContextValue.get(), ExpressionLiteral.getZero(ContextValue.get()), upper, false, upperExclusive);
+			result = newTimeBound(ExpressionLiteral.getZero(), upper, false, upperExclusive);
 		} else {
 			if (upper == null) {
-				result = newTimeBound(ContextValue.get(), lower, ExpressionLiteral.getPosInf(ContextValue.get()), lowerExclusive, true);
+				result = newTimeBound(lower, ExpressionLiteral.getPosInf(), lowerExclusive, true);
 			} else {
-				result = newTimeBound(ContextValue.get(), lower, upper, lowerExclusive, upperExclusive);
+				result = newTimeBound(lower, upper, lowerExclusive, upperExclusive);
 			}
 		}
 		return result;
@@ -195,9 +194,8 @@ public final class JANIPropertyInterval implements JANINode {
 		return model;
 	}
 
-    private static TimeBound newTimeBound(ContextValue context, Expression left, Expression right,
+    private static TimeBound newTimeBound(Expression left, Expression right,
             boolean leftOpen, boolean rightOpen) {
-    	assert context != null;
         return new TimeBound.Builder()
                 .setLeft(left)
                 .setRight(right)

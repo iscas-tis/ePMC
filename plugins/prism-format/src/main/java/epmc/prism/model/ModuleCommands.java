@@ -40,7 +40,6 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.jani.model.type.JANIType;
 import epmc.prism.error.ProblemsPRISM;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -78,7 +77,7 @@ public final class ModuleCommands implements Module {
         assert variables != null;
         this.positional = positional;
         if (invariants == null) {
-        	invariants = ExpressionLiteral.getTrue(ContextValue.get());
+        	invariants = ExpressionLiteral.getTrue();
         }
         this.invariants = invariants;
         for (Entry<Expression, JANIType> entry : variables.entrySet()) {

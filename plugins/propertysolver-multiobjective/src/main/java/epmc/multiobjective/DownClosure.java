@@ -44,18 +44,15 @@ final class DownClosure {
 	private final static String SLACK_VARIABLE = "v";
 	private final static String WEIGHT_VARIABLE = "w%d";
 	private final static String DIFFERENCE_VARIABLE = "d";
-    private final ContextValue contextValue;
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
     private final List<IterationResult> elements = new ArrayList<>();
     
-    DownClosure(ContextValue contextValue, int dimension) {
-        assert contextValue != null;
+    DownClosure(int dimension) {
         assert dimension >= 0;
-        this.contextValue = contextValue;
         assert TypeReal.isReal(TypeWeight.get());
         this.dimension = dimension;
-        this.contextSolver = new ConstraintSolverConfiguration(contextValue);
+        this.contextSolver = new ConstraintSolverConfiguration();
         contextSolver.requireFeature(Feature.LP);
     }
     

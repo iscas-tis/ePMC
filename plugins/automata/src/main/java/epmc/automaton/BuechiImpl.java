@@ -203,7 +203,7 @@ public class BuechiImpl implements Buechi {
                     (new InputStreamReader(autProcess.getInputStream()));
             GraphExplicit automaton;
             SpotParser spotParser = new SpotParser(autIn);
-            automaton = spotParser.parseAutomaton(contextValue, ap2expr);
+            automaton = spotParser.parseAutomaton(ap2expr);
             try {
                 ensure(autProcess.waitFor() == 0, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_EXIT_CODE);
             } catch (InterruptedException e) {

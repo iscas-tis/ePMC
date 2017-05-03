@@ -33,7 +33,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 
 /**
  * Location of an automaton.
@@ -157,7 +156,7 @@ public final class Location implements JANINode, Serializable {
 	 */
 	public Expression getTimeProgressExpressionOrTrue() {
 		if (timeProgress == null) {
-			return ExpressionLiteral.getTrue(ContextValue.get());
+			return ExpressionLiteral.getTrue();
 		} else {
 			return timeProgress.getExp();
 		}

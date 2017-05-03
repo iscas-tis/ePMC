@@ -214,7 +214,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         IterationRewards combinations = product.getRewards();
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
         int numAutomata = product.getNumAutomata();
-        DownClosure down = new DownClosure(ContextValue.get(), numAutomata);
+        DownClosure down = new DownClosure(numAutomata);
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
