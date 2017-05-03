@@ -20,16 +20,15 @@
 
 package epmc.expression.standard;
 
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueInteger;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
+import epmc.value.ValueInteger;
 
 // TODO complete documentation
 
@@ -41,7 +40,7 @@ import epmc.value.Value;
 public final class TimeBound {
 	// TODO actually, we should get types as well as constants from somewhere
 	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private ExpressionToTypeEmpty(ContextValue contextValue) {
+		private ExpressionToTypeEmpty() {
 		}
 		
 		public Type getType(Expression expression) throws EPMCException {
@@ -108,14 +107,13 @@ public final class TimeBound {
     
     private TimeBound(Builder builder) {
         assert builder != null;
-        ContextValue context = ContextValue.get();
         Expression left = builder.getLeft();
         if (left == null) {
-            left = ExpressionLiteral.getZero(context);
+            left = ExpressionLiteral.getZero();
         }
         Expression right = builder.getRight();
         if (right == null) {
-            right = ExpressionLiteral.getPosInf(context);
+            right = ExpressionLiteral.getPosInf();
         }
         Boolean leftOpen = builder.isLeftOpen();
         Boolean rightOpen = builder.isRightOpen();
@@ -285,8 +283,8 @@ public final class TimeBound {
      * @return left time bound as {@link Value}
      * @throws EPMCException in case a problem occurs during evaluation
      */
-    public ValueAlgebra getLeftValue(ContextValue contextValue) throws EPMCException {
-        return evaluateValue(contextValue, getLeft());
+    public ValueAlgebra getLeftValue() throws EPMCException {
+        return evaluateValue(getLeft());
     }
 
     /**
@@ -298,19 +296,16 @@ public final class TimeBound {
      * @return right time bound as {@link Value}
      * @throws EPMCException in case a problem occurs during evaluation
      */
-    public ValueAlgebra getRightValue(ContextValue contextValue) throws EPMCException {
-    	assert contextValue != null;
-        return evaluateValue(contextValue, getRight());
+    public ValueAlgebra getRightValue() throws EPMCException {
+        return evaluateValue(getRight());
     }
 
-    public int getLeftInt(ContextValue contextValue) throws EPMCException {
-    	assert contextValue != null;
-        return ValueInteger.asInteger(evaluateValue(contextValue, getLeft())).getInt();
+    public int getLeftInt() throws EPMCException {
+        return ValueInteger.asInteger(evaluateValue(getLeft())).getInt();
     }
 
-    public int getRightInt(ContextValue contextValue) throws EPMCException {
-    	assert contextValue != null;
-        return ValueInteger.asInteger(evaluateValue(contextValue, getRight())).getInt();
+    public int getRightInt() throws EPMCException {
+        return ValueInteger.asInteger(evaluateValue(getRight())).getInt();
     }
     
     @Override
@@ -335,11 +330,10 @@ public final class TimeBound {
         return hash;
     }
     
-    private static ValueAlgebra evaluateValue(ContextValue contextValue, Expression expression) throws EPMCException {
-    	assert contextValue != null;
+    private static ValueAlgebra evaluateValue(Expression expression) throws EPMCException {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression,
-        		new ExpressionToTypeEmpty(contextValue),
+        		new ExpressionToTypeEmpty(),
         		new Expression[0]);
         return ValueAlgebra.asAlgebra(evaluator.evaluate());
     }

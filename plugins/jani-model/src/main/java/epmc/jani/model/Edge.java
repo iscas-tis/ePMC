@@ -31,7 +31,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 
 public final class Edge implements JANINode {
 	/** String identifying the source location. */
@@ -197,7 +196,7 @@ public final class Edge implements JANINode {
 
 	public Expression getGuardExpressionOrTrue() {
 		if (guard == null) {
-			return ExpressionLiteral.getTrue(ContextValue.get());
+			return ExpressionLiteral.getTrue();
 		} else {
 			return guard.getExp();
 		}

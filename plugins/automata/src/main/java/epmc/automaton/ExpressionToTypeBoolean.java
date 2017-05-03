@@ -32,10 +32,8 @@ import epmc.value.TypeBoolean;
 
 final class ExpressionToTypeBoolean implements ExpressionToType {
 	private final Set<Expression> mapped = new HashSet<>();
-	private final ContextValue contextValue;
 
 	ExpressionToTypeBoolean(ContextValue contextValue, Expression[] expressions) {
-		this.contextValue = contextValue;
 		Set<Expression> seen = new HashSet<>();
 		assert expressions != null;
 		for (Expression expression : expressions) {

@@ -25,16 +25,16 @@ import static epmc.error.UtilError.ensure;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeInteger;
+import epmc.value.TypeReal;
+import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn
@@ -140,17 +140,17 @@ public final class ExpressionReward implements Expression {
         this.reward = builder.getReward();
         Expression reachSet = builder.getReachSet();
         if (reachSet == null) {
-        	reachSet = ExpressionLiteral.getFalse(ContextValue.get());
+        	reachSet = ExpressionLiteral.getFalse();
         }
         this.reachSet = reachSet;
         Expression time = builder.getTime();
         if (time == null) {
-        	time = ExpressionLiteral.getPosInf(ContextValue.get());
+        	time = ExpressionLiteral.getPosInf();
         }
         this.time = time;
         Expression discount = builder.getDiscount();
         if (discount == null) {
-        	discount = ExpressionLiteral.getOne(ContextValue.get());
+        	discount = ExpressionLiteral.getOne();
         }
         this.discount = discount;
     }

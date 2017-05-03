@@ -376,7 +376,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         assert globalModule != null;
         List<Command> commands = new ArrayList<>();
         List<Alternative> rateAlternatives = new ArrayList<>();
-        Expression rateGuard = ExpressionLiteral.getTrue(ContextValue.get());
+        Expression rateGuard = ExpressionLiteral.getTrue();
         for (Command command : globalModule.getCommands()) {
             Expression guard = command.getGuard();
             ExpressionIdentifierStandard commandAction = (ExpressionIdentifierStandard) command.getAction();
@@ -387,7 +387,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 for (Alternative alternative : command.getAlternatives()) {
                     Expression weight = alternative.getWeight();
                     weight = new ExpressionOperator.Builder()
-                    		.setOperands(guard, weight, ExpressionLiteral.getZero(ContextValue.get()))
+                    		.setOperands(guard, weight, ExpressionLiteral.getZero())
                     		.build();
                     Map<Expression, Expression> effect = alternative.getEffect();
                     rateAlternatives.add(new Alternative(weight, effect, alternative.getPositional()));
@@ -898,7 +898,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private Expression defaultInitialValue(JANIType type) throws EPMCException {
         Expression value;
         if (type instanceof JANITypeBool) {
-            value = ExpressionLiteral.getFalse(ContextValue.get());
+            value = ExpressionLiteral.getFalse();
         } else if (type instanceof JANITypeBounded) {
         	JANITypeBounded typeBounded = (JANITypeBounded) type;
             Expression lower = typeBounded.getLowerBound();
@@ -1144,7 +1144,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             }
         }
         if (initialStates == null) {
-        	ExpressionLiteral.getTrue(ContextValue.get());
+        	ExpressionLiteral.getTrue();
         }
         return initialStates;
     }

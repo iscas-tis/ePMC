@@ -130,7 +130,6 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.time.JANITypeClock;
 import epmc.time.JANITypeClockProcessor;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 
 /**
  * Class that is responsible for registering the JANI components and their corresponding JANI2PRISM processors.

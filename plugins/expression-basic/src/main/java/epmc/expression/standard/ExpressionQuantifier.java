@@ -25,16 +25,15 @@ import static epmc.error.UtilError.ensure;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
-import epmc.value.ValueBoolean;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeWeight;
 import epmc.value.Value;
+import epmc.value.ValueBoolean;
 
 /**
  * @author Ernst Moritz Hahn
@@ -129,10 +128,10 @@ public final class ExpressionQuantifier implements Expression {
     private ExpressionQuantifier(Builder builder) {
         assert builder != null;
         if (builder.getCompare() == null) {
-            builder.setCompare(ExpressionLiteral.getTrue(ContextValue.get()));
+            builder.setCompare(ExpressionLiteral.getTrue());
         }
         if (builder.getCondition() == null) {
-            builder.setCondition(ExpressionLiteral.getTrue(ContextValue.get()));
+            builder.setCondition(ExpressionLiteral.getTrue());
         }
         assert builder.getDirType() != null;
         assert builder.getCmpType() != null;

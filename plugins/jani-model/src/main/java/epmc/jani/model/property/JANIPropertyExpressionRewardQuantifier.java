@@ -51,7 +51,6 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.expression.JANIExpression;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.ValueAlgebra;
 
 /**
@@ -337,7 +336,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
 		}
 		if (accumulate != null && timeInstant == null && stepInstant == null && reach == null) {
 			//accumulate -> C
-			quantified = newRewardCumulative(exp.getExpression(), ExpressionLiteral.getPosInf(ContextValue.get()));
+			quantified = newRewardCumulative(exp.getExpression(), ExpressionLiteral.getPosInf());
 		}
 		if (accumulate == null && stepInstant != null) {
 			//instantaneous, discrete time -> I=

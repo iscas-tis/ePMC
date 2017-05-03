@@ -163,15 +163,15 @@ public final class UtilAutomaton {
         TimeBound timeBound = null;
         if (isUntil(expression) || isRelease(expression)) {
         	ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-            timeBound = expressionTemporal.getTimeBound(contextValue);
+            timeBound = expressionTemporal.getTimeBound();
         }
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
             // TODO handle multi-until
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
             Expression leftExpr = expressionTemporal.getOperand1();
             Expression rightExpr = expressionTemporal.getOperand2();
-            int boundLeft = timeBound.getLeftInt(contextValue);
-            int boundRight = timeBound.getRightInt(contextValue);
+            int boundLeft = timeBound.getLeftInt();
+            int boundRight = timeBound.getRightInt();
             int bound;
             Expression result;
             if (timeBound.isRightBounded()) {

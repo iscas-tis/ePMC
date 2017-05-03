@@ -21,7 +21,6 @@
 package epmc.jani.value;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeReal;
@@ -36,8 +35,6 @@ import epmc.value.ValueReal;
 public final class OperatorPi implements Operator {
 	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "π"; //"e";
-	/** Context of this operator. */
-	private ContextValue context;
 
 	@Override
 	public String getIdentifier() {

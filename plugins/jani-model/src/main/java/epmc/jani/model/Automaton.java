@@ -156,7 +156,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 	public Expression getInitialStatesExpressionOrTrue() throws EPMCException {
 		Expression initial;
 		if (restrictInitial == null) {
-			initial = ExpressionLiteral.getTrue(ContextValue.get());
+			initial = ExpressionLiteral.getTrue();
 		} else {
 			initial = restrictInitial.getExp();
 		}

@@ -593,7 +593,7 @@ public final class PRISM2JANIConverter {
 			Variables globalVariables) throws EPMCException {
 		Automaton automaton = new Automaton();
 		Rate rateOne = new Rate();
-		rateOne.setExp(ExpressionLiteral.getOne(ContextValue.get()));
+		rateOne.setExp(ExpressionLiteral.getOne());
 		rateOne.setModel(modelJANI);
 		
 		Edges edges = new Edges();

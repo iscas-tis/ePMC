@@ -20,13 +20,6 @@
 
 package epmc.automaton;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.set.TIntSet;
-
 import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
@@ -48,11 +41,16 @@ import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.StopWatch;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
 import epmc.value.Value;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntObjectMap;
+import gnu.trove.map.TObjectIntMap;
+import gnu.trove.map.hash.TIntObjectHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import gnu.trove.set.TIntSet;
 
 public final class ProductGraphDDExplicit implements ProductGraphDD {
     private final static String AUTSTATE = "%auttstate";
@@ -103,7 +101,6 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.automaton = automaton;
 
         Options options = model.getOptions();
-        ContextValue contextValue = ContextValue.get();
         this.falseValue = TypeBoolean.get().getFalse();
         this.trueValue = TypeBoolean.get().getTrue();
         ContextDD contextDD = model.getContextDD();

@@ -26,8 +26,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
@@ -145,7 +145,7 @@ final class ProductBuilder {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
-                quantified = ExpressionLiteral.getFalse(ContextValue.get());
+                quantified = ExpressionLiteral.getFalse();
             }
             AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(ContextValue.get(), quantified, expressions);
             automata.add(automaton);

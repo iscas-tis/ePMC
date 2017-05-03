@@ -20,15 +20,15 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
-import epmc.value.ValueBoolean;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.value.ContextValue;
+import epmc.value.OperatorNot;
+import epmc.value.OperatorOr;
+import epmc.value.ValueBoolean;
 
 public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     public final static String IDENTIFIER = "or";
@@ -36,7 +36,6 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     @Override
     public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
-        ContextValue context = ContextValue.get();
         if (!isOr(expression)) {
             return null;
         }
@@ -48,10 +47,10 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
             return expressionOperator.getOperand1();
         }
         if (isTrue(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getTrue(context);
+            return ExpressionLiteral.getTrue();
         }
         if (isTrue(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getTrue(context);
+            return ExpressionLiteral.getTrue();
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
             return expressionOperator.getOperand1();
@@ -59,12 +58,12 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         if (isNot(expressionOperator.getOperand1())
                 && ((ExpressionOperator) expressionOperator.getOperand1()).getOperand1()
                 .equals(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getTrue(context);
+            return ExpressionLiteral.getTrue();
         }
         if (isNot(expressionOperator.getOperand2())
                 && ((ExpressionOperator) expressionOperator.getOperand2()).getOperand2()
                 .equals(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getTrue(context);
+            return ExpressionLiteral.getTrue();
         }
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());

@@ -171,7 +171,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         BitSet zeroStates = computeProb0();
 //        System.out.println("zero: " + zeroStates);
         /** prepare variables for the LP problem */
-        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(ContextValue.get());
+        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration();
         contextConstraintSolver.requireFeature(Feature.LP);
         ConstraintSolver lpProblem = contextConstraintSolver.newProblem();
 
@@ -295,7 +295,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         BitSet zeroStates = computeProb0();
         
         /** prepare variables for the LP problem */
-        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration(ContextValue.get());
+        ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration();
         contextConstraintSolver.requireFeature(Feature.LP);
         ConstraintSolver lpProblem = contextConstraintSolver.newProblem();
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);

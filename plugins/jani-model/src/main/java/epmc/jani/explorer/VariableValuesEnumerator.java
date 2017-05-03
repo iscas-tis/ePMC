@@ -218,8 +218,7 @@ public final class VariableValuesEnumerator {
 			Variable variable = variables.get(identifier.getName());
 			return Collections.singletonList(Collections.singletonMap(variable, value));
 		} else {
-			ContextValue contextValue = ContextValue.get();
-			Expression trueExp = ExpressionLiteral.getTrue(contextValue);
+			Expression trueExp = ExpressionLiteral.getTrue();
 			List<Map<Variable, Value>> inner = generalEnumerate(remainingVariables, trueExp);
 			List<Map<Variable, Value>> result = new ArrayList<>();
 			for (Map<Variable, Value> map : inner) {
