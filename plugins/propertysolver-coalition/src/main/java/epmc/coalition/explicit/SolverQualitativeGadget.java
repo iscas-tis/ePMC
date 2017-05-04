@@ -93,8 +93,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 		getLog().send(MessagesCoalition.COALITION_GADGET_START);
 		StopWatch watch = new StopWatch(true);
 		transform();
-		SolverNonStochastic nonStochasticSolver = UtilOptions.getInstance(getOptions(),
-                OptionsCoalition.COALITION_SOLVER_NON_STOCHASTIC);
+		SolverNonStochastic nonStochasticSolver = UtilOptions.getInstance(OptionsCoalition.COALITION_SOLVER_NON_STOCHASTIC);
 		nonStochasticSolver.setGame(qualitativeGame);
 		nonStochasticSolver.setComputeStrategies(computeStrategyPlayerEven, computeStrategyPlayerOdd);
 		QualitativeResult qualitativeResult = nonStochasticSolver.solve();
@@ -290,12 +289,8 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 				qualitativeGame.getNumNodes(), watch.getTimeSeconds());
 	}
 
-	private Options getOptions() {
-		return stochasticGame.getOptions();
-	}
-	
 	private Log getLog() {
-		return stochasticGame.getOptions().get(OptionsMessages.LOG);
+		return Options.get().get(OptionsMessages.LOG);
 	}
 
 	@Override

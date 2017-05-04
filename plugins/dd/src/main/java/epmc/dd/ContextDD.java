@@ -183,16 +183,16 @@ public final class ContextDD implements Closeable {
     public ContextDD() throws EPMCException {
         totalTime.start();
         this.alive = true;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Map<String,Class<? extends LibraryDD>> ddLibraryClasses = options.get(OptionsDD.DD_LIBRARY_CLASS);
         assert ddLibraryClasses != null;
         Map<String,Class<? extends LibraryDD>> ddMtLibraryClasses = options.get(OptionsDD.DD_MT_LIBRARY_CLASS);
         assert ddMtLibraryClasses != null;
-        this.lowLevelMulti = UtilOptions.getInstance(options, OptionsDD.DD_MULTI_ENGINE);
+        this.lowLevelMulti = UtilOptions.getInstance(OptionsDD.DD_MULTI_ENGINE);
         this.lowLevelMulti.setContextDD(this);
         this.log = options.get(OptionsMessages.LOG);
         
-        this.lowLevelBinary = UtilOptions.getInstance(options, OptionsDD.DD_BINARY_ENGINE);
+        this.lowLevelBinary = UtilOptions.getInstance(OptionsDD.DD_BINARY_ENGINE);
         assert this.lowLevelBinary != null;
         this.lowLevelBinary.setContextDD(this);
         this.lowLevels.add(lowLevelMulti);
@@ -577,7 +577,7 @@ public final class ContextDD implements Closeable {
         for (DD var : llVariables.get(lowLevelMulti)) {
             var.dispose();
         }
-        if (ContextValue.get().getOptions().getBoolean(OptionsDD.DD_LEAK_CHECK)) {
+        if (Options.get().getBoolean(OptionsDD.DD_LEAK_CHECK)) {
             if (debugDD) {
                 for (Set<DD> set : nodes.values()) {
                     for (DD dd : set) {
@@ -2587,9 +2587,5 @@ public final class ContextDD implements Closeable {
         DD result = abstractAndExist(notDD, other, cube).notWith();
         notDD.dispose();
         return result;
-    }
-    
-    public Options getOptions() {
-        return ContextValue.get().getOptions();
     }
 }

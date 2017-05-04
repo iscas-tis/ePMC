@@ -109,7 +109,6 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public void setExpression(Expression expression, Expression[] expressions) throws EPMCException {
         assert expression != null;
         assert expressions != null;
-        this.options = expression.getOptions();
         this.disableUnusedSlaves = options.get(OptionsKretinsky.KRETINSKY_DISABLE_UNUSED_SLAVES);
         expression = UtilExpression.toNegationNormalForm(expression);
         if (this.expressionsUnique == null) {

@@ -439,7 +439,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         this.assertFail = new AssertFailImpl();
         this.getOperatorNumber = new GetOperatorNumberImpl();
         this.getNumberOfOperators = new GetNumberOfOperatorsImpl();
-        Options options = contextDD.getOptions();
+        Options options = Options.get();
         int initCache = options.getInteger(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_INIT_CACHE_SIZE);
         long maxMemory = options.getLong(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_MAX_MEMORY);
         int uniqueSlots = options.getInteger(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_UNIQUE_SLOTS);

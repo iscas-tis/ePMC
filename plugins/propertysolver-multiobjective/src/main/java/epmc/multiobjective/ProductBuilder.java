@@ -115,7 +115,7 @@ final class ProductBuilder {
         builder.addDerivedNodeProperty(CommonProperties.STATE);
         builder.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         builder.addDerivedEdgeProperty(CommonProperties.WEIGHT);
-        Options options = getOptions();
+        Options options = Options.get();
         Type typeWeight = TypeWeightTransition.get();
         boolean useNative = options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeDouble.isDouble(typeWeight);
@@ -394,10 +394,6 @@ final class ProductBuilder {
         }
 //        result = ComponentsExplicit.reachMaxOne(prodWrapper, result);
         return result;
-    }
-    
-    private Options getOptions() {
-    	return ContextValue.get().getOptions();
     }
     
     private ValueAlgebra newValueWeight() {

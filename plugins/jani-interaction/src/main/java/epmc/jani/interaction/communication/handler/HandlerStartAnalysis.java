@@ -116,7 +116,7 @@ public final class HandlerStartAnalysis implements Handler {
 		assert clientDescription != null;
 		assert id != null;
 		Object client = clientDescription.getClient();
-		Options options = backend.getOptions();
+		Options options = Options.get();
 		Options userOptions = clientDescription.getOptions().clone();
 		userOptions.set(Options.COMMAND, CHECK);
 		final TaskServer server;
@@ -124,11 +124,9 @@ public final class HandlerStartAnalysis implements Handler {
 			OptionsJANIInteraction.ServerType serverType = options.get(OptionsJANIInteraction.JANI_INTERACTION_ANALYSIS_SERVER_TYPE);
 			if (serverType == ServerType.SAME_PROCESS) {
 				server = new TaskServerSameProcess();
-				server.setOptions(userOptions);
 				server.start();
 			} else if (serverType == ServerType.LOCAL) {
 				server = new TaskServerLocal();
-				server.setOptions(userOptions);
 				server.start();
 			} else {
 				assert false : serverType;

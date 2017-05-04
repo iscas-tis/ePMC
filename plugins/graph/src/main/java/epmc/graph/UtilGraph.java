@@ -41,10 +41,10 @@ import epmc.value.ValueArray;
 
 public final class UtilGraph {
 
-    public static BitStoreableToNumber newNodeStore(Options options, int numBits) throws EPMCException {
+    public static BitStoreableToNumber newNodeStore(int numBits) throws EPMCException {
         BitStoreableToNumber nodeStore;
         OptionsTypesGraph.StateStorage stateStorage;
-        stateStorage = options.getEnum(OptionsGraph.STATE_STORAGE);
+        stateStorage = Options.get().getEnum(OptionsGraph.STATE_STORAGE);
         ensure((stateStorage != OptionsTypesGraph.StateStorage.INT || numBits <= Integer.SIZE)
                 && (stateStorage != OptionsTypesGraph.StateStorage.LONG || numBits <= Long.SIZE),
                 ProblemsGraph.STATE_DS_TOO_SMALL);

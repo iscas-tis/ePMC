@@ -475,11 +475,6 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 		}
 		successors = newSuccessors;
 	}
-
-	@Override
-	public Options getOptions() {
-		return explorer.getOptions();
-	}
 	
 	@Override
 	public void setNumSuccessors(int numSuccessors) {

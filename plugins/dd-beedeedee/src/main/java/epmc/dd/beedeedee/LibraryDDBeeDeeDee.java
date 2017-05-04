@@ -31,6 +31,7 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
+import epmc.options.Options;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -85,8 +86,8 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         this.contextDD = contextDD;
-        int initCache = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_CACHE_SIZE);
-        int initSlots = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_NODES);
+        int initCache = Options.get().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_CACHE_SIZE);
+        int initSlots = Options.get().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_NODES);
         this.factory = Factory.mkResizingAndGarbageCollected(initSlots, initCache);
         this.zeroValue = TypeBoolean.get().getFalse();
         this.oneValue = TypeBoolean.get().getTrue();

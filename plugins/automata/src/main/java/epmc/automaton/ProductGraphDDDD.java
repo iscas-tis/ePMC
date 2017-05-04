@@ -33,6 +33,7 @@ import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.options.Options;
 import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.TypeObject;
@@ -187,7 +188,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     
     private static DD exploreNodeSpace(GraphDD graph) throws EPMCException {
         assert graph != null;
-        Log log = graph.getOptions().get(OptionsMessages.LOG);
+        Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesAutomaton.EXPLORING);
         ContextDD contextDD = graph.getContextDD();

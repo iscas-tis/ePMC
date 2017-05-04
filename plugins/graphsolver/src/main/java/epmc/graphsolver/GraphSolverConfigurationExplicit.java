@@ -34,15 +34,12 @@ import epmc.options.Options;
 import epmc.util.Util;
 
 public final class GraphSolverConfigurationExplicit {
-    private final Options options;
     private GraphSolverObjectiveExplicit objective;
     private GraphSolverExplicit graphSolver;
 	private boolean lumpBeforeGraphSolving;
 
-    GraphSolverConfigurationExplicit(Options options) {
-        assert options != null;
-        this.options = options;
-        this.lumpBeforeGraphSolving = options.getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
+    GraphSolverConfigurationExplicit() {
+        this.lumpBeforeGraphSolving = Options.get().getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
     }
     
     public void setLumpBeforeGraphSolving(boolean lumpBeforeGraphSolving) {
@@ -77,8 +74,8 @@ public final class GraphSolverConfigurationExplicit {
     	if (!lumpBeforeGraphSolving) {
     		return null;
     	}
-        Map<String,Class<? extends LumperExplicit>> lumpersExplicit = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
-        Collection<String> lumperExplicitt = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT);
+        Map<String,Class<? extends LumperExplicit>> lumpersExplicit = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
+        Collection<String> lumperExplicitt = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
         for (String lumperId : lumperExplicit) {
             Class<? extends LumperExplicit> lumperClass = lumpersExplicit.get(lumperId);
@@ -95,8 +92,8 @@ public final class GraphSolverConfigurationExplicit {
     }
 
     private void doSolve(GraphSolverObjectiveExplicit objective) throws EPMCException {
-        Collection<String> solvers = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER);
-        Map<String,Class<GraphSolverExplicit>> solverClasses = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
+        Collection<String> solvers = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER);
+        Map<String,Class<GraphSolverExplicit>> solverClasses = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         graphSolver = Util.getInstance(solverClasses, solvers,
                 e -> { e.setGraphSolverObjective(objective);
                 return e.canHandle();
@@ -106,8 +103,8 @@ public final class GraphSolverConfigurationExplicit {
     }
 
     private void preprocess() throws EPMCException {
-        Map<String,Class<? extends PreprocessorExplicit>> preprocessors = options.get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT_CLASS);
-        Collection<String> preprocessorsC = options.get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT);
+        Map<String,Class<? extends PreprocessorExplicit>> preprocessors = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT_CLASS);
+        Collection<String> preprocessorsC = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT);
         for (String lumperId : preprocessorsC) {
             Class<? extends PreprocessorExplicit> preprocessorClass = preprocessors.get(lumperId);
             if (preprocessorClass == null) {

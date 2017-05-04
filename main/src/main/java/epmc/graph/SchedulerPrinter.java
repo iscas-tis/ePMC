@@ -10,8 +10,6 @@ public interface SchedulerPrinter {
 	
 	void setScheduler(Scheduler scheduler);
 	
-	void setOptions(Options options);
-
 	void setOutput(OutputStream out);
 
 	boolean canHandle();

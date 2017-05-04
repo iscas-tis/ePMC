@@ -57,6 +57,7 @@ import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.options.Options;
 import epmc.util.StopWatch;
 import epmc.value.ContextValue;
 import epmc.value.OperatorNot;
@@ -303,7 +304,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
      * @return log used for analysis
      */
     private Log getLog() {
-    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
+    	return Options.get().get(OptionsMessages.LOG);
     }
     
     private Expression not(Expression expression) {

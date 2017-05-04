@@ -30,7 +30,6 @@ import epmc.options.Options;
 public final class CommandTaskJANIInteractionAddUser implements CommandTask {
 	/** Unique identifier of JANI interaction add user command. */
 	public final static String IDENTIFIER = "jani-interaction-add-user";
-	private Options options;
 
 	@Override
 	public String getIdentifier() {
@@ -38,18 +37,11 @@ public final class CommandTaskJANIInteractionAddUser implements CommandTask {
 	}
 
 	@Override
-	public void setOptions(Options options) {
-		assert this.options == null;
-		assert options != null;
-		this.options = options;
-	}
-
-	@Override
 	public void executeOnClient() throws EPMCException {
-		Database storage = new Database(options);
+		Database storage = new Database();
 		UserManager userManager = new UserManager(storage);
-		String username = options.get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
-		String password = options.get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
+		String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
+		String password = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
 		userManager.createUser(username, password);
 	}
 }

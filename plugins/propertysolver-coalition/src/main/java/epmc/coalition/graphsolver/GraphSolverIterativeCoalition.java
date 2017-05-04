@@ -53,7 +53,6 @@ import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeHasNativeArray;
@@ -180,7 +179,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         builder.setParts(parts);
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         builder.setForNative(useNative);
         builder.setReorder();
@@ -248,7 +247,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     }
 
     private void unboundedReachability() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesGraphSolverIterative.ITERATING);
@@ -519,7 +518,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         seen.or(target);
         ValueAlgebra nodeValue = newValueWeight();
         ValueAlgebra predValue = newValueWeight();
-        double tolerance = origGraph.getOptions().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4;
+        double tolerance = Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4;
         do {
             BitSet swap = previousNodes;
             previousNodes = newNodes;

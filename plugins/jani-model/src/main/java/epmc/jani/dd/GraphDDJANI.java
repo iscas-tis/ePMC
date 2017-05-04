@@ -51,7 +51,6 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.Variable;
 import epmc.jani.value.ContextValueJANI;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeEnum;
 import epmc.value.TypeInteger;
@@ -152,7 +151,7 @@ public final class GraphDDJANI implements GraphDD {
         DD deadlocks = buildDeadlocks(transitions);
         DDTransition deadlockTransition = null;
         if (!deadlocks.isFalse()) {
-        	ensure(ContextValue.get().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS), ProblemsJANIDD.JANI_DD_DEADLOCK);
+        	ensure(Options.get().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS), ProblemsJANIDD.JANI_DD_DEADLOCK);
         	deadlockTransition = computeDeadlockTransition(deadlocks, component.getVariables());
         }
 		deadlocks.dispose();
@@ -457,7 +456,7 @@ public final class GraphDDJANI implements GraphDD {
 		}
 		ddActionBits = new ArrayList<>();
 		ddActionBits.add(new ArrayList<>());
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		int numBits = options.getInteger(OptionsJANIModel.JANI_ACTION_BITS);
         for (int bitNr = 0; bitNr < numBits; bitNr++) {
         	int varNr = contextDD.numVariables();

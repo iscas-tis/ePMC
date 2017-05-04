@@ -224,10 +224,6 @@ public final class Category implements Serializable, Cloneable {
                 : null;
     }
     
-    public Options getOptions() {
-        return options;
-    }
-    
     public String getBundleName() {
         return bundleName;
     }

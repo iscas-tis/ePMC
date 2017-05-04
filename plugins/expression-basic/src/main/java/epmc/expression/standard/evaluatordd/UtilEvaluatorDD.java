@@ -38,7 +38,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -73,7 +72,7 @@ public final class UtilEvaluatorDD {
             assert entry.getKey() != null;
             assert entry.getValue() != null;
         }
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Map<String,Class<? extends EvaluatorDD>> evaluators = options.get(OptionsExpressionBasic.EXPRESSION_EVALUTOR_DD_CLASS);
         for (Class<? extends EvaluatorDD> clazz : evaluators.values()) {
             EvaluatorDD evaluator = Util.getInstance(clazz);
@@ -173,7 +172,7 @@ public final class UtilEvaluatorDD {
         if (!expressionOperator.getOperator().getIdentifier().equals(operator)) {
             return false;
         }
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         if (!options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR)) {
             return false;
         }

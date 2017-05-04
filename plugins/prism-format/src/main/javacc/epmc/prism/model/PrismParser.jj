@@ -20,7 +20,6 @@ import epmc.graph.SemanticsIMC;
 import epmc.graph.SemanticsMA;
 import epmc.graph.SemanticsCTMDP;
 import epmc.graph.SemanticsPTA;
-import epmc.value.ContextValue;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -82,7 +81,7 @@ final class PrismParser {
 	}
 
 	public ModelPRISM parseModel() throws EPMCException {
-	    Options options = ContextValue.get().getOptions();
+	    Options options = Options.get();
 		try {
 			return privParseModel(options);
 		} catch (ParseException pe) {
@@ -100,7 +99,7 @@ final class PrismParser {
 	}
 
 	public ModelPRISM parseModel(boolean flatten) throws EPMCException {
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		options.set(OptionsPRISM.PRISM_FLATTEN, flatten);
 		return parseModel();
 	}

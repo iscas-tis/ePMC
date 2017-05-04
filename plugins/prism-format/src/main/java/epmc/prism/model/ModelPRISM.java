@@ -262,7 +262,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         		.setName(RATE)
         		.build();
         this.rateLabel = rateIdentifier;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         List<PlayerDefinition> players = builder.getPlayers();
         if (players != null) {
             this.players.addAll(players);
@@ -338,7 +338,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (options.getBoolean(OptionsPRISM.PRISM_FLATTEN)) {
             flatten();
         }
-        Engine engine = UtilOptions.getSingletonInstance(ContextValue.get().getOptions(),
+        Engine engine = UtilOptions.getSingletonInstance(Options.get(),
         		OptionsModelChecker.ENGINE);
         if (builder.getInitialStates() != null) {
             multipleInit = true;
@@ -1201,7 +1201,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     private void checkPropertiesCompatible() throws EPMCException {
-        Log log = ContextValue.get().getOptions().get(OptionsMessages.LOG);
+        Log log = Options.get().get(OptionsMessages.LOG);
         for (RawProperty raw : getPropertyList().getRawProperties()) {
         	Expression expr = getPropertyList().getParsedProperty(raw);
             checkExpressionCompatible(expr, log);

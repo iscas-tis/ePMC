@@ -26,13 +26,12 @@ import javax.json.JsonValue;
 
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 public final class UtilValueJSON {
 	public static JsonValue valueToJson(Value value) {
 		assert value != null;
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		List<Class<? extends ValueJSON>> valueJsonClasses = options.get(OptionsJANIValueJSON.JANI_VALUEJSON_CLASS);
 		assert valueJsonClasses != null;
 		for (Class<? extends ValueJSON> clazz : valueJsonClasses) {

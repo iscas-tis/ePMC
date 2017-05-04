@@ -211,7 +211,7 @@ public class ComponentsDD implements Closeable {
         assert nodes != null;
         assert nodes.isBoolean();
         this.nodes = nodes.clone();
-        Options options = graph.getOptions();
+        Options options = Options.get();
         this.contextDD = graph.getContextDD();
         Semantics sem = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         this.isNondet = SemanticsNonDet.isNonDet(sem);

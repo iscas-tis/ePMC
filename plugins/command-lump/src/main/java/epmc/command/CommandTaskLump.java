@@ -62,7 +62,6 @@ import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 
 public class CommandTaskLump implements CommandTask {
     public final static String IDENTIFIER = "lump";
@@ -103,7 +102,7 @@ public class CommandTaskLump implements CommandTask {
     private void lumpExplicit() throws EPMCException {
         long time = System.nanoTime();
         Model model = modelChecker.getModel();
-    	Options options = ContextValue.get().getOptions();
+    	Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesCommandLump.EXPLORING);
         Set<Object> graphProperties = new LinkedHashSet<>();
@@ -215,7 +214,7 @@ public class CommandTaskLump implements CommandTask {
         nodeProperties.add(CommonProperties.STATE);
         edgeProperties.add(CommonProperties.WEIGHT);
         edgeProperties.addAll(collectRewards(model));
-    	Options options = ContextValue.get().getOptions();
+    	Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
 
         GraphDD modelGraph = (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
@@ -249,7 +248,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private LumperDD getLumperForModelAndProp(GraphDD modelGraph, Collection<Expression> propertyList) throws EPMCException {
-    	Options options = ContextValue.get().getOptions();
+    	Options options = Options.get();
         Collection<String> lumperDD = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_DD);
         assert lumperDD != null;
         lumperDD = new ArrayList<>(lumperDD);

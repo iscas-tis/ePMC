@@ -47,16 +47,6 @@ public interface CommandTask {
     String getIdentifier();
 
     /**
-     * Set options to use for this task.
-     * This method shall be called before
-     * {@link #executeOnClient()} is called. 
-     * 
-     * @param options options to use for this task
-     */
-    default void setOptions(Options options) {
-    }
-    
-    /**
      * Set model checker to use for this task.
      * This method shall be called on the server before
      * {@link #executeInServer()} is called.

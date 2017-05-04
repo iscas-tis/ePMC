@@ -76,28 +76,13 @@ public final class TaskServerLocal implements TaskServer {
     private Process process;
     /** RMI connection to EPMC task server to send commands to */
     private JANIRemote server;
-    /** options to use for this task sever */
-    private Options options;
     /** whether the server has been started */
     private boolean started;
     /** whether the server has been stopped */
     private boolean stopped;
-
-    @Override
-    public void setOptions(Options options) {
-        assert options != null;
-        assert this.options == null;
-        this.options = options;
-    }
-    
-    @Override
-    public Options getOptions() {
-        return options;
-    }
     
     @Override
     public void start() throws EPMCException {
-        assert this.options != null;
         assert !started;
         started = true;
         Class<EPMC> mainClass = epmc.main.EPMC.class;
@@ -107,7 +92,7 @@ public final class TaskServerLocal implements TaskServer {
                 File.separator + JAVA;
         String classpath = System.getProperty(JAVA_CLASS_PATH);
         String className = mainClass.getCanonicalName();
-        List<String> plugins = options.get(OptionsPlugin.PLUGIN);
+        List<String> plugins = Options.get().get(OptionsPlugin.PLUGIN);
         assert plugins != null;
         String pluginString = String.join(COMMA, plugins);
         ProcessBuilder builder = new ProcessBuilder();
@@ -193,7 +178,7 @@ public final class TaskServerLocal implements TaskServer {
 					public void send(String name, JsonValue result) throws RemoteException {
 					}
                 };
-                Options userOptions = options.clone();
+                Options userOptions = Options.get().clone();
                 userOptions.set(Options.COMMAND, JANIServer.EXIT);
                 execute(userOptions, channel, null, true);
                 UnicastRemoteObject.unexportObject(channel, true);

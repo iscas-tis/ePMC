@@ -187,7 +187,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
         assert contextDD != null;
         ensure(BuDDy.loaded, ProblemsDD.BUDDY_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Options options = contextDD.getOptions();
+        Options options = Options.get();
         int initCache = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_CACHE_SIZE);
         int initSlots = options.getInteger(OptionsDDBuDDy.DD_BUDDY_INIT_NODES);
 

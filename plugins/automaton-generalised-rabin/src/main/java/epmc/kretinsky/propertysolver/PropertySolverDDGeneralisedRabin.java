@@ -119,7 +119,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         ProductGraphDD product = null;
         DD modelStates = modelGraph.getNodeProperty(CommonProperties.STATE);
         ExpressionToDD expressionToDD = modelChecker.getExpressionToDD();
-        Options options = modelChecker.getOptions();
+        Options options = Options.get();
 
         product = new ProductGraphDDExplicit(modelGraph, forStates.getStatesDD(), automatonRabin, expressionToDD);
 

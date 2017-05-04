@@ -325,14 +325,13 @@ public final class Util {
         return null;
     }
     
-	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler, Options options) throws EPMCException {
-		Map<String,Class<SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
+	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler) throws EPMCException {
+		Map<String,Class<SchedulerPrinter>> schedulerPrinters = Options.get().get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
 		assert schedulerPrinters != null;
 		for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {
 			SchedulerPrinter printer = Util.getInstance(entry.getValue());
 			printer.setScheduler(scheduler);
 			printer.setLowLevel(graph);
-			printer.setOptions(options);
 			printer.setOutput(out);
 			if (printer.canHandle()) {
 				printer.print();

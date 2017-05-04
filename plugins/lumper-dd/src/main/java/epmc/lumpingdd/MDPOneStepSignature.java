@@ -79,7 +79,6 @@ public class MDPOneStepSignature implements Signature {
 	public void setOriginal(GraphDD original) throws EPMCException {
 		this.original = original;
 		this.contextDD = original.getContextDD();
-//		OptionsTypesEPMC.MDPEncoding enc = original.getOptions().getEnum(OptionsEPMC.MDP_ENCODING_MODE);
 //    	useStateDistribution = ((Semantics) original.getGraphPropertyObject(CommonProperties.SEMANTICS)).isNonDet()
   //  			&& enc == OptionsTypesEPMC.MDPEncoding.STATE_DISTRIBUTION;
     	useStateDistribution = false;

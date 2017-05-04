@@ -28,7 +28,6 @@ import epmc.graph.CommonProperties;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeHasNativeArray;
@@ -517,11 +516,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     @Override
     public BitSet getInitialNodes() {
         return initNodes;
-    }
-
-    @Override
-    public Options getOptions() {
-        return ContextValue.get().getOptions();
     }
     
     @Override

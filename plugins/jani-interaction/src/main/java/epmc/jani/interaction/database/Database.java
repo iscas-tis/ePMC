@@ -70,40 +70,25 @@ public final class Database {
 	/** String to append to filename to marks as JAR file for class loader. */
 	private final static String JAR_FILE_URL_END = "!/";
 		
-	/** Options used. */
-	private final Options options;
 	/** JDBC connection used. */
 	private final Connection connection;
 	private final String primaryKeyTypeString;
 
-	public Database(Options options) throws EPMCException {
-		assert options != null;
-		this.options = options;
-		loadDriver(options);
-		connection = establishConnection(options);
-		primaryKeyTypeString = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT);
-	}
-	
-	/**
-	 * Get options used for this permanent storage.
-	 * 
-	 * @return options used for this permanent storage.
-	 */
-	public Options getOptions() {
-		return options;
+	public Database() throws EPMCException {
+		loadDriver();
+		connection = establishConnection();
+		primaryKeyTypeString = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT);
 	}
 	
 	/**
 	 * Load JDBC driver if requested by user.
 	 * The options parameter must not be {@code null}.
 	 * 
-	 * @param options options to get information about driver from
 	 * @throws EPMCException thrown in case of problems
 	 */
-	private static void loadDriver(Options options) throws EPMCException {
-		assert options != null;
-		String driverJAR = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR);
-		String driverClassName = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS);
+	private static void loadDriver() throws EPMCException {
+		String driverJAR = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR);
+		String driverClassName = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS);
 		if (driverClassName != null) {
 			return;
 		}
@@ -149,15 +134,13 @@ public final class Database {
 	 * The information to connect to the database will be read from the
 	 * {@link Options} provided.
 	 * 
-	 * @param options options to use to establish connection
 	 * @return connection created
 	 * @throws EPMCException thrown in case of problems
 	 */
-	private static Connection establishConnection(Options options) throws EPMCException {
-		assert options != null;
-		String url = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL);
-		String username = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME);
-		String password = options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD);
+	private static Connection establishConnection() throws EPMCException {
+		String url = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL);
+		String username = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME);
+		String password = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD);
 		Properties connectionProps = new Properties();
 		if (username != null) {
 			connectionProps.put(JDBC_PROPERTY_USER, username);

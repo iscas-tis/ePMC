@@ -32,7 +32,6 @@ import epmc.expression.Expression;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 // TODO documentation
@@ -74,9 +73,8 @@ public final class PropertiesDummy implements Properties {
      */
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = ContextValue.get().getOptions();
-        Property property = UtilOptions.getInstance(options,
-                OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        Options options = Options.get();
+        Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
         property.readProperties(properties, input);
         parseProperties(properties);
@@ -91,7 +89,7 @@ public final class PropertiesDummy implements Properties {
      */
     private void parseProperties(RawProperties rawProperties) throws EPMCException {
         assert rawProperties != null;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
             optionsConsts = new LinkedHashMap<>();

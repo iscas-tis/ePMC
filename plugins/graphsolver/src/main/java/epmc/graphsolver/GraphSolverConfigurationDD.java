@@ -42,7 +42,6 @@ import epmc.util.BitSet;
 import epmc.util.Util;
 
 public final class GraphSolverConfigurationDD {
-    private final Options options;
     private GraphSolverObjectiveDD objective;
     private GraphDD graphDD;
     private DD targetDD;
@@ -53,15 +52,10 @@ public final class GraphSolverConfigurationDD {
     private LumperDD lumperDD;
     private GraphSolverConfigurationExplicit configuration;
 
-    GraphSolverConfigurationDD(Options options) {
-        assert options != null;
-        this.options = options;
-    }
-    
     public void setGraph(GraphDD graph) {
         assert graph != null;
         this.graphDD = graph;
-        this.lumpBeforeGraphSolving = options.getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
+        this.lumpBeforeGraphSolving = Options.get().getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
     }
 
     // TODO subsume objective, min, and time to one new parameter type
@@ -72,7 +66,7 @@ public final class GraphSolverConfigurationDD {
 
     public void solve() throws EPMCException {
         GraphSolverObjectiveExplicit explicitObjective = preprocessDD();
-        configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(options);
+        configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         configuration.setObjective(explicitObjective);
         configuration.solve();
         postprocessDD(explicitObjective);
@@ -108,7 +102,7 @@ public final class GraphSolverConfigurationDD {
             graphDD.registerNodeProperty(sink, sink);
         }
 
-        Options options = graphDD.getOptions();
+        Options options = Options.get();
         Collection<String> lumpers = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_DD);
         Map<String,Class<? extends LumperDD>> lumpersDD = options.get(OptionsGraphsolver.GRAPHSOLVER_DD_LUMPER_CLASS);
         for (String lumperId : lumpers) {

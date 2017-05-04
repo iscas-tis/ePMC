@@ -97,8 +97,6 @@ public final class Backend {
 	private final BackendFeedback feedback;
 	private final Map<Object,ClientInfo> clients = new LinkedHashMap<>();
 	private final Map<Object,ClientInfo> clientsExternal = Collections.unmodifiableMap(clients);
-	/** Options used in this back end. */
-	private final Options options;
 	private final boolean stdio;
 	private final Database permanentStorage;
 	private final Map<String,InteractionExtension> extensions = new LinkedHashMap<>();
@@ -106,26 +104,22 @@ public final class Backend {
 	/**
 	 * Construct a new backend.
 	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param options options to use for the backend
 	 * @param feedback feedback channel
+	 * 
 	 * @throws EPMCException 
 	 */
-	Backend(Options options, BackendFeedback feedback) throws EPMCException {
-		assert options != null;
+	Backend(BackendFeedback feedback) throws EPMCException {
 		assert feedback != null;
-		this.options = options;
 		this.feedback = feedback;
-		permanentStorage = new Database(options);
-		prepareExtensions(options);
-		JANIInteractionIO type = options.get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
+		permanentStorage = new Database();
+		prepareExtensions();
+		JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
 		stdio = type == JANIInteractionIO.STDIO;
 		handlers = buildHandlers();
 	}
 
-	private void prepareExtensions(Options options) {
-		assert options != null;
-		Map<String,Class<? extends InteractionExtension>> extensions = options.get(OptionsJANIInteraction.JANI_INTERACTION_EXTENSION_CLASS);
+	private void prepareExtensions() {
+		Map<String,Class<? extends InteractionExtension>> extensions = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_EXTENSION_CLASS);
 		assert extensions != null;
 		for (Entry<String, Class<? extends InteractionExtension>> entry : extensions.entrySet()) {
 			this.extensions.put(entry.getKey(), Util.getInstance(entry.getValue()));
@@ -210,15 +204,15 @@ public final class Backend {
 	 * @return tool name
 	 */
 	public String getToolName() {
-		String resourceName = getOptions().getResourceFileName();
-		Locale locale = getOptions().getLocale();
+		String resourceName = Options.get().getResourceFileName();
+		Locale locale = Options.get().getLocale();
         ResourceBundle poMsg = ResourceBundle.getBundle(resourceName, locale);
         return poMsg.getString(Options.TOOL_NAME);
 	}
 	
 	public String buildUserErrorMessage(EPMCException exception) {
 		assert exception != null;
-		String message = exception.getProblem().getMessage(getOptions().getLocale());
+		String message = exception.getProblem().getMessage(Options.get().getLocale());
 		MessageFormat formatter = new MessageFormat(message);
 		formatter.applyPattern(message);
 		return formatter.format(exception.getArguments());
@@ -228,10 +222,6 @@ public final class Backend {
 		assert client != null;
 		assert reply != null;
 		feedback.send(client, reply.toString());
-	}
-	
-	public Options getOptions() {
-		return options;
 	}
 	
 	public Map<Object, ClientInfo> getClients() {
@@ -258,7 +248,7 @@ public final class Backend {
 		ClientInfo clientDescription = new ClientInfo.Builder()
 				.setClient(client)
 				.setID(loginID)
-				.setOptions(getOptions())
+				.setOptions(Options.get())
 				.setExtensions(usableExtensions)
 				.build();
 		clients.put(client, clientDescription);

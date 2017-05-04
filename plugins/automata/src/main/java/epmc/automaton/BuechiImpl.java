@@ -76,7 +76,6 @@ public class BuechiImpl implements Buechi {
     private final int trueState;
     private boolean deterministic;
     private final EvaluatorExplicit[] evaluators;
-    private final Options options;
     private final Expression[] expressions;
     private final Type[] expressionTypes;
 
@@ -88,13 +87,12 @@ public class BuechiImpl implements Buechi {
     public BuechiImpl(Expression expression, Expression[] expressions)
             throws EPMCException {
         assert expression != null;
-        this.options = ContextValue.get().getOptions();
         // TODO does not work if used there
 //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
   //          expression = replaceNeOperator(expression);
     //    }
-        this.ltl2tgba = options.getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
-        OptionsAutomaton.Ltl2BaAutomatonBuilder builder = options.getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
+        this.ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
+        OptionsAutomaton.Ltl2BaAutomatonBuilder builder = Options.get().getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
         Set<Expression> expressionsSeen = new HashSet<>();
         if (builder == OptionsAutomaton.Ltl2BaAutomatonBuilder.SPOT) {
             automaton = createSpotAutomaton(expression, expressionsSeen);

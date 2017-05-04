@@ -50,7 +50,7 @@ public final class UtilMessages {
         assert time >= 0;
         TimeStampFormat solver;
         try {
-            solver = UtilOptions.getInstance(options, OptionsMessages.TIME_STAMPS);
+            solver = UtilOptions.getInstance(OptionsMessages.TIME_STAMPS);
         } catch (EPMCException e) {
             throw new RuntimeException(e);
         }

@@ -49,22 +49,19 @@ public final class Server extends NanoWSD implements BackendFeedback  {
 	private final Backend backend;
 	private final boolean printMessages;
 
-	public Server(Options options) throws EPMCException {
-		super(getPort(options));
-		assert options != null;
-		backend = new Backend(options, this);
-		printMessages = options.getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);
+	public Server() throws EPMCException {
+		super(getPort());
+		backend = new Backend(this);
+		printMessages = Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);
 	}
 
 	/**
 	 * Read the port to use for this server.
 	 * 
-	 * @param options
 	 * @return port to use for this server
 	 */
-	private static int getPort(Options options) {
-		assert options != null;
-		return options.getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT);
+	private static int getPort() {
+		return Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT);
 	}
 
 	/* methods of backend feedback */
@@ -127,15 +124,6 @@ public final class Server extends NanoWSD implements BackendFeedback  {
 	 * @return log used
 	 */
 	private Log getLog() {
-		return getOptions().get(OptionsMessages.LOG);
-	}
-
-	/**
-	 * Get options used.
-	 * 
-	 * @return options used
-	 */
-	private Options getOptions() {
-		return backend.getOptions();
+		return Options.get().get(OptionsMessages.LOG);
 	}
 }

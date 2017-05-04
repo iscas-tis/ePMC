@@ -56,8 +56,4 @@ public interface Buechi {
     default int getNumStates() {
         return getGraph().getNumNodes();
     }
-    
-    default Options getOptions() {
-        return getGraph().getOptions();
-    }
 }

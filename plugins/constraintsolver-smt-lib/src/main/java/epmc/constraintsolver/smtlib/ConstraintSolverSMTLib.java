@@ -43,6 +43,7 @@ import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.smtlib.options.OptionsSMTLib;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -127,7 +128,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 			throw new RuntimeException(e);
 		}
 		File file = path.toFile();
-		if (!getOptions().getBoolean(OptionsSMTLib.SMTLIB_KEEP_TEMPORARY_FILES)) {
+		if (!Options.get().getBoolean(OptionsSMTLib.SMTLIB_KEEP_TEMPORARY_FILES)) {
 			file.deleteOnExit();
 		}
 		try (OutputStream outStream = new FileOutputStream(file);) {
@@ -142,7 +143,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 	}
 	
 	private SMTLibResult callSolver(String file) throws EPMCException {
-		List<String> callOptions = getOptions().get(OptionsSMTLib.SMTLIB_COMMAND_LINE);
+		List<String> callOptions = Options.get().get(OptionsSMTLib.SMTLIB_COMMAND_LINE);
 		List<String> execArgs = new ArrayList<>();
 		for (String param : callOptions) {
 			execArgs.add(MessageFormat.format(param, file));

@@ -33,6 +33,7 @@ import epmc.jani.explorer.NodeJANI;
 import epmc.jani.explorer.PropertyEdge;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
+import epmc.options.Options;
 import epmc.value.TypeEnum;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
@@ -64,7 +65,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 		noNondetHelperNode = new NodeJANI[1];
 		noNondetHelperNode[0] = system.newNode();
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-		allowMulti = explorer.getOptions().getBoolean(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
+		allowMulti = Options.get().getBoolean(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
 		dtmcSum = TypeWeight.get().newValue();
 		dtmcAligned = TypeWeight.get().newValue();
 	}

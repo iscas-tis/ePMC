@@ -64,7 +64,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -474,7 +473,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         for (int nodeNr = 0; nodeNr < graph.getNumNodes(); nodeNr++) {
             targetS.set(nodeNr, targets.get(nodeNr));
         }
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setGraph(graph);
         objective.setMin(false);
@@ -509,7 +508,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         this.log = options.get(OptionsMessages.LOG);
         this.skipTransient = options.getBoolean(OptionsLTLFairness.LTL_FAIRNESS_SCC_SKIP_TRANSIENT);
         this.contextDD = modelGraph.getContextDD();

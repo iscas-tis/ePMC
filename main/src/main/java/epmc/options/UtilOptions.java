@@ -41,19 +41,17 @@ public final class UtilOptions {
     // TODO the options part of EPMC might not the most appropriate place for the static methods here
     
     // TODO documentation
-    public static <T> T getInstance(Options options, String identifier) throws EPMCException {
-        assert options != null;
+    public static <T> T getInstance(String identifier) throws EPMCException {
         assert identifier != null;
-        Class<T> clazz = options.get(identifier);
+        Class<T> clazz = Options.get().get(identifier);
         ensure(clazz != null, ProblemsOptions.OPTIONS_OPTION_NOT_SET, identifier);
         return Util.getInstance(clazz);
     }
 
-    public static <T> T getInstance(Options options, Enum<?> identifier) throws EPMCException {
-        assert options != null;
+    public static <T> T getInstance(Enum<?> identifier) throws EPMCException {
         assert identifier != null;
         String identifierString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());
-        return getInstance(options, identifierString);
+        return getInstance(identifierString);
     }
 
     public static <T> T getSingletonInstance(Options options, String identifier) throws EPMCException {

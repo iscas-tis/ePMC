@@ -272,7 +272,7 @@ public final class LibraryDDCUDD implements LibraryDD {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Options options = contextDD.getOptions();
+        Options options = Options.get();
         OptionsTypesCUDD.CUDDSubengine subengine = options.get(OptionsDDCUDD.DD_CUDD_SUBENGINE);
         this.mtbdd = subengine == CUDDSubengine.MTBDD;
         int initCache = options.getInteger(OptionsDDCUDD.DD_CUDD_INIT_CACHE_SIZE);

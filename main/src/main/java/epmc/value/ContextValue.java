@@ -27,8 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
-import epmc.options.Options;
 import epmc.util.Util;
 
 /**
@@ -49,8 +47,6 @@ public final class ContextValue {
     private final transient Map<String,Operator> identifierToOperator = new LinkedHashMap<>();
     /** Unmodifiable map from operator identifier to according operator. */
     private final transient Map<String,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
-    /** Options used by this context. */
-    private final Options options;
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -59,36 +55,13 @@ public final class ContextValue {
 	private static ContextValue contextValue;
 
     public static void set(ContextValue contextValue) {
-    	assert contextValue != null;
     	ContextValue.contextValue = contextValue;
     }
     
     public static ContextValue get() {
-    	assert contextValue != null;
     	return contextValue;
     }
     
-    /**
-     * Create a new context value.
-     * The options parameter may not be {@code null}.
-     * 
-     * @param options parameter of options used by the value context
-     * @throws EPMCException thrown in case of problems during construction
-     */
-    public ContextValue(Options options) throws EPMCException {
-    	assert options != null;
-        this.options = options;
-    }
-
-    /**
-     * Get options used for this context.
-     * 
-     * @return options used for this context
-     */
-    public Options getOptions() {
-        return options;
-    }
-
     /**
      * Get type identified by object.
      * Obtain the type previously set by

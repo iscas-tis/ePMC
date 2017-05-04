@@ -96,7 +96,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Options options = origGraph.getOptions();
+        Options options = Options.get();
         Type typeWeight = TypeWeight.get();
         if (!(options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeDouble.isDouble(typeWeight))) {
@@ -135,7 +135,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
     }
 
     private void multiobjectiveWeighted() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);

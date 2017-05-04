@@ -128,8 +128,7 @@ public final class TestHelper {
             assert input != null;
         }
         try {
-            Model model = UtilOptions.getInstance(options,
-                    OptionsModelChecker.MODEL_INPUT_TYPE);
+            Model model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
             assert model != null;
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
             assert classloader != null;
@@ -276,6 +275,7 @@ public final class TestHelper {
 
     public static void prepareOptions(Options options, LogType logType,
             String modelInputType) throws EPMCException {
+        Options.set(options);
         List<String> pluginDir = readPluginList();
         List<String> oldPluginDir = options.getStringList(OptionsPlugin.PLUGIN);
         pluginDir.addAll(oldPluginDir);        
@@ -289,7 +289,7 @@ public final class TestHelper {
         options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
         options.set(OptionsMessages.LOG, log);
-        ContextValue.set(new ContextValue(options));
+        ContextValue.set(new ContextValue());
         processBeforeModelLoading(options);
     }
     
@@ -327,7 +327,7 @@ public final class TestHelper {
         assert expected != null;
         Value expectedValue = null;
         try {
-            Options options = ContextValue.get().getOptions();
+            Options options = Options.get();
             String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
             options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
             Expression expectedExpression = UtilModelChecker.parseExpression(expected);
@@ -463,7 +463,7 @@ public final class TestHelper {
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
         try {
-            Options options = ContextValue.get().getOptions();
+            Options options = Options.get();
             ModelChecker checker = new ModelChecker(model);
             LogTest log = options.get(OptionsMessages.LOG);
             log.getResults().clear();
@@ -551,7 +551,7 @@ public final class TestHelper {
 
     public static void processAfterCommandExecution()
             throws EPMCException {
-        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(ContextValue.get().getOptions(), AfterCommandExecution.class)) {
+        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
             afterCommandExecution.process();

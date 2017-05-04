@@ -48,6 +48,7 @@ import epmc.options.OptionTypeEnum;
 import epmc.options.OptionTypeInteger;
 import epmc.options.OptionTypeMap;
 import epmc.options.OptionTypeReal;
+import epmc.options.Options;
 import epmc.util.UtilJSON;
 
 /**
@@ -117,7 +118,7 @@ public final class HandlerAuthenticate implements Handler {
 	private JsonValue buildCapabilitiesParameters() {
 		assert backend != null;
 		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (Option option : backend.getOptions().getAllOptions().values()) {
+		for (Option option : Options.get().getAllOptions().values()) {
 			if (!(option.isGUI() && backend.isStdio())
 					&& !option.isWeb()) {
 				continue;
@@ -207,7 +208,7 @@ public final class HandlerAuthenticate implements Handler {
 		ensure(!stdio || !message.containsKey(AUTHENTICATE_LOGIN),
 				ProblemsJANIInteraction.JANI_INTERACTION_STD_IO_LOGIN_PROVIDED);
 		ensure(stdio
-				|| backend.getOptions().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_ANONYMOUS_LOGINS)
+				|| Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_ANONYMOUS_LOGINS)
 				|| message.containsKey(AUTHENTICATE_LOGIN),
 				ProblemsJANIInteraction.JANI_INTERACTION_WEBSOCKET_NO_LOGIN);
 		ensure(message.containsKey(AUTHENTICATE_LOGIN)

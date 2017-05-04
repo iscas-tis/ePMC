@@ -33,6 +33,7 @@ import epmc.jani.explorer.NodeJANI;
 import epmc.jani.explorer.PropertyEdge;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
+import epmc.options.Options;
 import epmc.value.TypeEnum;
 
 public final class ExplorerExtensionCTMC implements ExplorerExtension {
@@ -59,7 +60,7 @@ public final class ExplorerExtensionCTMC implements ExplorerExtension {
 		noNondetHelperNode[0] = system.newNode();
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
 		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-		allowMulti = explorer.getOptions().getBoolean(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
+		allowMulti = Options.get().getBoolean(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
 	}
 	
 	@Override

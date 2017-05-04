@@ -55,7 +55,6 @@ import epmc.util.BitSet;
 import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
-import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeHasNativeArray;
@@ -269,7 +268,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
             builder.addSinks(sinks);
         }
         builder.setUniformise(uniformise);
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         builder.setForNative(useNative);
         builder.setReorder();
@@ -377,7 +376,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private void unboundedReachability() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesGraphSolverIterative.ITERATING);
@@ -411,7 +410,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private void unbounded() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesGraphSolverIterative.ITERATING);
@@ -445,7 +444,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
     }
 
     private void unboundedCumulative() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         Log log = options.get(OptionsMessages.LOG);
@@ -453,7 +452,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         log.send(MessagesGraphSolverIterative.ITERATING);
         numIterations = 0;
         GraphSolverObjectiveExplicitUnboundedCumulative graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
         		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
@@ -531,7 +530,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         numIterations = time.getInt();
         boolean min = objectiveBoundedCumulative.isMin();
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
         		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
@@ -551,7 +550,7 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
 
     private void boundedCumulativeDiscounted() throws EPMCException {
         assert iterGraph != null;
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         inputValues = useNative
         		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), iterGraph.computeNumStates())
@@ -582,9 +581,9 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert lambda != null : "lambda == null";
         assert ValueReal.isReal(lambda) : lambda;
         assert !lambda.isPosInf() : lambda;
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision, useNative);
         if (isSparseMarkovJava(iterGraph)) {
@@ -603,10 +602,10 @@ public final class GraphSolverIterative implements GraphSolverExplicit {
         assert lambda != null : "lambda == null";
         assert ValueReal.isReal(lambda) : lambda;
         assert !lambda.isPosInf() : lambda;
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision, useNative);
         if (isSparseMarkovJava(iterGraph)) {

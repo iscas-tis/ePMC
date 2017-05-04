@@ -45,7 +45,6 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import epmc.value.ContextValue;
 import gnu.trove.set.hash.THashSet;
 
 public final class TestHelperGraph {
@@ -125,7 +124,7 @@ public final class TestHelperGraph {
     
     public static ExploreStatistics exploreModel(Model model) throws EPMCException {
         assert model != null;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         ExploreStatistics result;
         ModelChecker checker = new ModelChecker(model);
         LogTest log = options.get(OptionsMessages.LOG);
@@ -136,7 +135,7 @@ public final class TestHelperGraph {
     }
 
     private static ExploreStatistics explore(Model model) throws EPMCException {
-        Engine engine = UtilOptions.getSingletonInstance(ContextValue.get().getOptions(),
+        Engine engine = UtilOptions.getSingletonInstance(Options.get(),
                 OptionsModelChecker.ENGINE);
         if (engine instanceof EngineExplicit) {
             long time = System.nanoTime();

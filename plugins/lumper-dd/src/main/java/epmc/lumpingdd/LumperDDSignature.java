@@ -722,7 +722,6 @@ public class LumperDDSignature implements LumperDD {
     }
     
     private boolean originalIsNonDetStateDistribution() {
-//		OptionsTypesEPMC.MDPEncoding enc = original.getOptions().getEnum(OptionsEPMC.MDP_ENCODING_MODE);
 		return false;
 //    	return ((Semantics) original.getGraphPropertyObject(CommonProperties.SEMANTICS)).isNonDet()
   //  			&& enc == OptionsTypesEPMC.MDPEncoding.STATE_DISTRIBUTION;

@@ -38,7 +38,6 @@ import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 
 /**
  * Command to start JANI interaction mode.
@@ -50,9 +49,6 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
 	private final static int NO_TIMEOUT = 0;
 	/** Unique identifier of JANI interaction server start command. */
 	public final static String IDENTIFIER = "jani-interaction-start-server";
-	
-	/** Options used. */
-	private Options options;
 
 	@Override
 	public String getIdentifier() {
@@ -60,41 +56,33 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
 	}
 	
 	@Override
-	public void setOptions(Options options) {
-		assert options != null;
-		this.options = options;
-	}
-
-	@Override
 	public void setModelChecker(ModelChecker modelChecker) {
 		assert modelChecker != null;
-		this.options = ContextValue.get().getOptions();
 	}
 	
 	@Override
 	public void executeOnClient() throws EPMCException {
-		assert options != null;
-		JANIInteractionIO type = options.get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
+		JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
 		switch (type) {
 		case STDIO:
-			StandardStream standard = new StandardStream(options);
+			StandardStream standard = new StandardStream();
 			standard.start();
 			break;
 		case WEBSOCKETS:
-			Server server = new Server(options);
+			Server server = new Server();
 			try {
 				server.start(NO_TIMEOUT);
 			} catch (BindException e) {
 				fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_BIND_FAILED,
-						options.getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+						Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
 			} catch (IOException e) {
 				fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_IO_PROBLEM,
-						options.getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+						Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
 			}
 			getLog().send(MessagesJANIInteraction.JANI_INTERACTION_SERVER_STARTED,
-					options.getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
-			if (options.getBoolean(OptionsJANIInteraction.JANI_INTERACTION_START_GUI)) {
-				GUI.startGUI(options);
+					Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+			if (Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_START_GUI)) {
+				GUI.startGUI(Options.get());
 			}
 			try {
 				System.in.read();
@@ -111,6 +99,6 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
 	}
 
 	private Log getLog() {
-		return options.get(OptionsMessages.LOG);
+		return Options.get().get(OptionsMessages.LOG);
 	}
 }

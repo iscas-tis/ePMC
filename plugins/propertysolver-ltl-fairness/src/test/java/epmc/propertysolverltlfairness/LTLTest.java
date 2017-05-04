@@ -37,7 +37,7 @@ public class LTLTest {
         String file = "/home/liyong/projects/test/mdptt.pctl";
         Options options = UtilOptionsEPMC.newOptions();
         RawProperties props = LTLHelper.readProperties(options, file);
-        ContextValue.set(new ContextValue(options));
+        ContextValue.set(new ContextValue());
         
 //        PropertiesImpl pList = new PropertiesImpl(context);
   //      pList.parseProperties(props);

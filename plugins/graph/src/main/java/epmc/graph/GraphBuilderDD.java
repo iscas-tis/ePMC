@@ -432,7 +432,7 @@ public final class GraphBuilderDD implements Closeable {
 
     public GraphExplicit buildGraph() throws EPMCException {
         assert !closed;
-        Options options = graphDD.getOptions();
+        Options options = Options.get();
         StopWatch timer = new StopWatch(true);
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraph.CONVERTING_DD_GRAPH_TO_EXPLICIT);

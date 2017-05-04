@@ -10,7 +10,6 @@ import epmc.jani.model.Assignments;
 import epmc.jani.model.Variable;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 
 public final class AssignmentsEvaluator {
 	public final static class Builder {
@@ -64,7 +63,7 @@ public final class AssignmentsEvaluator {
 	
 	private static AssignmentEvaluator newAssignmentEvaluator(Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType) throws EPMCException {
 		assert assignment != null;
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
         Map<String,Class<? extends AssignmentEvaluator.Builder>> assignmentEvaluators = options.get(OptionsJANIExplorer.JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS);
         for (Class<? extends AssignmentEvaluator.Builder> entry : assignmentEvaluators.values()) {
         	AssignmentEvaluator.Builder builder = Util.getInstance(entry);

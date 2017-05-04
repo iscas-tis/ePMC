@@ -61,7 +61,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
 
 	private Diff getDiff() {
 	    IterationStopCriterion stopCriterion =
-	    		getOptions().getEnum(OptionsGraphSolverIterative
+	    		Options.get().getEnum(OptionsGraphSolverIterative
 	    				.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
 	    switch (stopCriterion) {
 		case ABSOLUTE:
@@ -98,7 +98,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         if (!TypeDouble.isDouble(typeWeight)) {
         	return false;
         }
-        Options options = origGraph.getOptions();
+        Options options = Options.get();
         if (options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)) {
         	return false;
         }
@@ -139,7 +139,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
     }
 
     private void multiobjectiveScheduled() throws EPMCException {
-        Options options = iterGraph.getOptions();
+        Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
@@ -262,9 +262,5 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
                 values[state] = nextStateProb;
             }
         } while (distance > tolerance / 2);
-    }
-    
-    private Options getOptions() {
-    	return origGraph.getOptions();
     }
 }

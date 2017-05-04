@@ -60,7 +60,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
@@ -97,7 +96,6 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		if (modelChecker.getEngine() instanceof EngineExplicit) {
 			this.modelGraph = modelChecker.getLowLevel();
 		}
-		this.options = ContextValue.get().getOptions();
 		this.log = options.get(OptionsMessages.LOG);
 	}
 
@@ -446,7 +444,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
     /** solve linear equation system */
     private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
             throws EPMCException {
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
         objective.setGraph(graph);

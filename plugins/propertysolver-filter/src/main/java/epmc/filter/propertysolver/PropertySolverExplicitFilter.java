@@ -42,7 +42,7 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.ContextValue;
+import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeArrayConstant;
 import epmc.value.TypeNumber;
@@ -231,6 +231,6 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
      * @return log used
      */
     private Log getLog() {
-    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
+    	return Options.get().get(OptionsMessages.LOG);
     }
 }

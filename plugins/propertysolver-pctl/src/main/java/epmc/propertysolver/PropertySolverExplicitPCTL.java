@@ -192,7 +192,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         } else {
         	BitSet allNodes = UtilBitSet.newBitSetUnbounded();
         	allNodes.set(0, graph.getNumNodes(), true);
-            GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
+            GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
             ValueAlgebra transValue = typeWeight.newValue();
             transValue.set(transValue.getType().getZero());
 
@@ -265,7 +265,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
             }
             if (timeBound.getLeftValue().isGt(timeBound.getLeftValue().getType().getZero())
                     || timeBound.isLeftOpen()) {
-                configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
+                configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
                 sinkSet.clear();
                 for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
                     if (isState.getBoolean(state)) {
@@ -342,7 +342,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         nodeProperties.add(CommonProperties.PLAYER);
         List<Object> edgeProperties = new ArrayList<>();
         edgeProperties.add(CommonProperties.WEIGHT);
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         int iterNumStates = graph.computeNumStates();
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterNumStates);
         for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {

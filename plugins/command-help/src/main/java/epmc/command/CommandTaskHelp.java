@@ -29,13 +29,6 @@ public class CommandTaskHelp implements CommandTask {
     private Options options;
 
     @Override
-	public void setOptions(Options options) {
-        assert this.options == null;
-        assert options != null;
-        this.options = options;
-    }
-    
-    @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }

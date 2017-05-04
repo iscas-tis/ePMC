@@ -98,10 +98,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 
 	@Override
 	public QuantitativeResult solve() throws EPMCException {
-		compareTolerance = getOptions().getDouble(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE);
+		compareTolerance = Options.get().getDouble(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE);
 		StopWatch totalTime = new StopWatch(true);
 		getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_START);
-		reduceOutput = getOptions().get(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_SILENCE_INTERNAL);
+		reduceOutput = Options.get().get(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_SILENCE_INTERNAL);
 		storedLogStatus = getLog().isSilent();
 		
     	if (!game.getNodeProperties().contains(CommonProperties.STATE)) {
@@ -494,8 +494,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 	}
 
     private SolverQualitative newQualitativeSolver() throws EPMCException {
-        return UtilOptions.getInstance(getOptions(),
-                OptionsCoalition.COALITION_SOLVER);
+        return UtilOptions.getInstance(OptionsCoalition.COALITION_SOLVER);
     }
 
     /**
@@ -504,18 +503,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
      * @return log used by this solver
      */
     private Log getLog() {
-    	return getOptions().get(OptionsMessages.LOG);
+    	return Options.get().get(OptionsMessages.LOG);
     }
     
-    /**
-     * Obtain options used.
-     * 
-     * @return options used
-     */
-	private Options getOptions() {
-    	return game.getOptions();
-    }
-
     /**
      * Disable log output.
      * This method will only have an effect, if 
