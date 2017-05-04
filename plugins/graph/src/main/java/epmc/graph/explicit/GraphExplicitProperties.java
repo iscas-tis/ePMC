@@ -20,9 +20,6 @@
 
 package epmc.graph.explicit;
 
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
-
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,10 +32,11 @@ import com.google.common.base.MoreObjects;
 import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import gnu.trove.stack.TIntStack;
+import gnu.trove.stack.array.TIntArrayStack;
 
 /**
  * Stores the graph, node, and edge properties of an explicit-state graph.
@@ -67,9 +65,8 @@ public final class GraphExplicitProperties implements Serializable {
     private final Map<Object,EdgeProperty> edgePropertiesExternal = Collections.unmodifiableMap(edgeProperties);
     private boolean predecessorsComputed;
     
-    public GraphExplicitProperties(GraphExplicit graph, ContextValue contextValue) {
+    public GraphExplicitProperties(GraphExplicit graph) {
         assert graph != null;
-        assert contextValue != null;
         this.graph = graph;
         exploredNodes = UtilBitSet.newBitSetUnbounded();
     }

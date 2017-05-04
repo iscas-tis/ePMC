@@ -26,7 +26,6 @@ import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitProperties;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 
 final class GraphExplicitRestricted implements GraphExplicit {
 	private final GraphExplicit original;
@@ -52,7 +51,7 @@ final class GraphExplicitRestricted implements GraphExplicit {
     		int succ = restriction.nextSetBit(maxNumSuccessors * node);
     		substitute[node] = succ % maxNumSuccessors;
     	}
-    	properties = new GraphExplicitProperties(this, ContextValue.get());
+    	properties = new GraphExplicitProperties(this);
     	for (Object property : original.getGraphProperties()) {
     		properties.registerGraphProperty(property, original.getGraphProperty(property));
     	}

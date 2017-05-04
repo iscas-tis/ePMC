@@ -20,11 +20,6 @@
 
 package epmc.graph.explicit;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TByteArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.list.array.TShortArrayList;
-
 import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
@@ -38,14 +33,17 @@ import epmc.graph.options.OptionsGraph;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeObject;
+import epmc.value.TypeObject.StorageType;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import epmc.value.TypeObject.StorageType;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TByteArrayList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.list.array.TShortArrayList;
 
 // class which takes an existing graph and can be used to speed up computation
 // of successors and state attributes by caching
@@ -258,10 +256,10 @@ public final class GraphExplicitWrapper implements GraphExplicit {
 
     /* constructors */
     
-    private GraphExplicitWrapper(ContextValue contextValue, GraphExplicit innerGraph, boolean cache) throws EPMCException {
+    private GraphExplicitWrapper(GraphExplicit innerGraph, boolean cache) throws EPMCException {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
         this.queriedNodes = UtilBitSet.newBitSetUnbounded();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         this.innerGraph = innerGraph;
         if (innerGraph != null) {
             this.maxNumSuccessors = DEFAULT_NUM_SUCCESSORS;
@@ -300,11 +298,11 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     public GraphExplicitWrapper(GraphExplicit innerGraph) throws EPMCException {
-        this(ContextValue.get(), innerGraph, true);
+        this(innerGraph, true);
     }
 
-    public GraphExplicitWrapper(ContextValue contextValue) throws EPMCException {
-        this(contextValue, null, true);
+    public GraphExplicitWrapper() throws EPMCException {
+        this(null, true);
     }
     
     /* methods for configuration before start of exploration */

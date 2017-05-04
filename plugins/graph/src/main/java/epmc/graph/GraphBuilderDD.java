@@ -20,14 +20,6 @@
 
 package epmc.graph;
 
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
-
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +43,6 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
@@ -65,6 +56,13 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
+import gnu.trove.iterator.TIntIterator;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
+import gnu.trove.stack.TIntStack;
+import gnu.trove.stack.array.TIntArrayStack;
 
 // TODO integrate transitions with presNodes for further speedup
 
@@ -260,7 +258,6 @@ public final class GraphBuilderDD implements Closeable {
         DD nonSinks = nodes.andNot(sinks);
         DD combined = nonSinks.toMT();
         int number = 2;
-        ContextValue contextValue = ContextValue.get();
         List<Value> stopWhere = new ArrayList<>();
         if (stop) {
             stopWhere.add(UtilValue.newValue(TypeInteger.get(), 0));
@@ -439,13 +436,12 @@ public final class GraphBuilderDD implements Closeable {
         StopWatch timer = new StopWatch(true);
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraph.CONVERTING_DD_GRAPH_TO_EXPLICIT);
-        GraphExplicitWrapper graph = new GraphExplicitWrapper(ContextValue.get());
+        GraphExplicitWrapper graph = new GraphExplicitWrapper();
         graph.addSettableGraphProperty(CommonProperties.SEMANTICS, graphDD.getGraphProperty(CommonProperties.SEMANTICS).getType());
         graph.setGraphProperty(CommonProperties.SEMANTICS, graphDD.getGraphProperty(CommonProperties.SEMANTICS));
         graph.addSettableNodeProperty(CommonProperties.STATE, TypeBoolean.get());
         graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
         graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         TypeBoolean typeBoolean = TypeBoolean.get();
         TypeEnum typePlayer = TypeEnum.get(Player.class);

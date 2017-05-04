@@ -20,15 +20,10 @@
 
 package epmc.graph;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.hash.THashSet;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import epmc.error.EPMCException;
-import epmc.graph.Semantics;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitSparse;
@@ -45,6 +40,9 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueObject;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.set.hash.THashSet;
 
 // TODO class would profit from some code review
 
@@ -143,7 +141,6 @@ public final class GraphBuilderExplicit {
         assert assertGraphProperties(inputGraph, derivedGraphProperties);
         assert assertNodeProperties(inputGraph, derivedNodeProperties);
         assert assertEdgeProperties(inputGraph, derivedEdgeProperties);
-        ContextValue contextValue = ContextValue.get();
         processSinks(sinks);
         if (parts == null) {
             parts = prepareParts(inputGraph, reorder);
@@ -224,7 +221,7 @@ public final class GraphBuilderExplicit {
             }
             numStates += sinkList.size();
             numTotalOut += sinkList.size();
-            outputGraph = new GraphExplicitSparse(ContextValue.get(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalOut);
+            outputGraph = new GraphExplicitSparse(graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalOut);
         } else {
             int numStates = 0;
             int numTotalNondet = 0;
@@ -250,7 +247,7 @@ public final class GraphBuilderExplicit {
             numStates += sinkList.size();
             numTotalNondet += sinkList.size() * parts.size();
             numTotalProb += sinkList.size() * parts.size();
-            outputGraph = new GraphExplicitSparseAlternate(ContextValue.get(), graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalNondet, numTotalProb);
+            outputGraph = new GraphExplicitSparseAlternate(graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalNondet, numTotalProb);
         }
         return outputGraph;
     }
@@ -452,7 +449,6 @@ public final class GraphBuilderExplicit {
             List<Object> edgeProperties) throws EPMCException {
         BitSet sinks = computeSinks(ContextValue.get(), sinksList);
         int numOutputNodes = outputToInputNodes.size();
-        ContextValue contextValue = ContextValue.get();
         ValueArrayInteger numInEdges = UtilValue.newArray(TypeInteger.get().getTypeArray(), numOutputNodes);
         for (int outputNode = 0; outputNode < numOutputNodes; outputNode++) {
             int inputNode = outputToInputNodes.getInt(outputNode);

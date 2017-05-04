@@ -20,11 +20,6 @@
 
 package epmc.lumping.lumpingexplicitsignature;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,13 +36,16 @@ import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
-import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TIntIntMap;
+import gnu.trove.map.hash.TIntIntHashMap;
 
 public final class EquivalenceStrong implements Equivalence {
     private int[] successorsFromTo;
@@ -243,7 +241,7 @@ public final class EquivalenceStrong implements Equivalence {
         ValueAlgebra[] quotWeightsArr = new ValueAlgebra[maxOrigFanout];
         int[] quotSuccStatesArr = new int[maxOrigFanout];
         TypeAlgebra typeWeight = TypeWeight.get();
-        quotient = new GraphExplicitSparse(ContextValue.get(), false, numStates, numTotalOut);
+        quotient = new GraphExplicitSparse(false, numStates, numTotalOut);
         EdgeProperty quotWeight = quotient.addSettableEdgeProperty(CommonProperties.WEIGHT, typeWeight);
         for (int i = 0; i < quotWeightsArr.length; i++) {
             quotWeightsArr[i] = typeWeight.newValue();

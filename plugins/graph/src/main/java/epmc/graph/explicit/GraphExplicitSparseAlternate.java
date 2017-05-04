@@ -297,7 +297,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
     }
     
-    private final ContextValue contextValue;
     private final boolean forNative;
     private int numStates;
     private int numNondet;
@@ -312,12 +311,10 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     private final GraphExplicitProperties properties;
     private boolean fixedMode;
 
-    public GraphExplicitSparseAlternate(ContextValue contextValue, boolean forNative) {
+    public GraphExplicitSparseAlternate(boolean forNative) {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         this.forNative = forNative;
-        this.contextValue = contextValue;
-        assert contextValue != null;
         TypeArray typeArrayInteger = forNative
                 ? TypeInteger.get().getTypeArrayNative()
                 : TypeInteger.get().getTypeArray();
@@ -331,16 +328,15 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
     }
     
-    public GraphExplicitSparseAlternate(ContextValue contextValue, boolean forNative,
+    public GraphExplicitSparseAlternate(boolean forNative,
             int numStates, int numNondet, int numProb) {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         this.fixedMode = true;
         this.forNative = forNative;
         this.numStates = numStates;
         this.numNondet = numNondet;
         this.numProb = numProb;
-        this.contextValue = contextValue;
         TypeArray typeArrayInteger = forNative
                 ? TypeInteger.get().getTypeArrayNative()
                 : TypeInteger.get().getTypeArray();
@@ -525,7 +521,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
     @Override
     public Options getOptions() {
-        return contextValue.getOptions();
+        return ContextValue.get().getOptions();
     }
     
     @Override

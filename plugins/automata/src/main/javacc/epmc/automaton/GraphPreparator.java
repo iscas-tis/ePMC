@@ -25,8 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.automaton.BuechiTransition;
-import epmc.automaton.BuechiTransitionImpl;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
@@ -34,7 +32,6 @@ import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicitWrapper;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.TypeObject;
 import epmc.value.ValueInteger;
@@ -88,8 +85,7 @@ final class GraphPreparator {
 	}
 	
 	GraphExplicitWrapper toGraph() throws EPMCException {
-		ContextValue context = ContextValue.get();
-	    GraphExplicitWrapper graph = new GraphExplicitWrapper(context);
+	    GraphExplicitWrapper graph = new GraphExplicitWrapper();
 	    TypeInteger typeInteger = TypeInteger.get();
 	    TypeObject typeLabel = new TypeObject.Builder()
                 .setClazz(BuechiTransition.class)

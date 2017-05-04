@@ -31,7 +31,6 @@ import epmc.graph.explicit.GraphExporterDOT;
 import epmc.graph.explicit.NodeProperty;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 
 // TODO documentation
 
@@ -67,7 +66,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
             origToSub[origNode] = subNode;
             subNode++;
         }
-        properties = new GraphExplicitProperties(this, ContextValue.get());
+        properties = new GraphExplicitProperties(this);
         successors = new int[1];
         origSuccNumbers = new int[1];
         for (Object property : original.getGraphProperties()) {

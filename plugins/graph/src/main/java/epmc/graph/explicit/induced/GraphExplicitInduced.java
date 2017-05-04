@@ -28,7 +28,6 @@ import epmc.graph.explicit.GraphExplicitProperties;
 import epmc.graph.explicit.GraphExporterDOT;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 
 public final class GraphExplicitInduced implements GraphExplicit {
     private final GraphExplicit original;
@@ -40,7 +39,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
         assert scheduler != null;
         this.original = original;
         this.scheduler = scheduler;
-        this.properties = new GraphExplicitProperties(this, ContextValue.get());
+        this.properties = new GraphExplicitProperties(this);
         for (Object property : original.getGraphProperties()) {
             properties.registerGraphProperty(property, original.getGraphProperty(property));
         }
