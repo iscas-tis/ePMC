@@ -26,7 +26,6 @@ import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
@@ -96,8 +95,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         }
     }
 
-    /** Context value used for this graph. */
-    private final ContextValue context;
     /**
      * Whether to store the parts of this graph in native memory.
      * Doing so allows the graph to be accessed by native functions, e.g. for
@@ -122,15 +119,12 @@ public final class GraphExplicitSparse implements GraphExplicit {
     /**
      * Create graph so that the number of nodes and edges can be extended later.
      * 
-     * @param contextExpression expression context to use for this graph
      * @param forNative whether to build the graph with native data structures
      */
-    public GraphExplicitSparse(ContextValue contextValue, boolean forNative) {
-        assert contextValue != null;
+    public GraphExplicitSparse(boolean forNative) {
         initNodes = UtilBitSet.newBitSetUnbounded();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         this.forNative = forNative;
-        this.context = contextValue;
         TypeArray typeArrayInteger = forNative
                 ? TypeInteger.get().getTypeArrayNative()
                 : TypeInteger.get().getTypeArray();
@@ -138,16 +132,14 @@ public final class GraphExplicitSparse implements GraphExplicit {
         successors = UtilValue.newArray(typeArrayInteger, 1);
     }
     
-    public GraphExplicitSparse(ContextValue contextValue, boolean forNative,
+    public GraphExplicitSparse(boolean forNative,
             int numNodes, int numTotalOut) {
-        assert contextValue != null;
         initNodes = UtilBitSet.newBitSetUnbounded();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         this.fixedMode = true;
         this.forNative = forNative;
         this.numNodes = numNodes;
         this.numTotalOut = numTotalOut;
-        this.context = contextValue;
         TypeArray typeArrayInteger = forNative
                 ? TypeInteger.get().getTypeArrayNative()
                 : TypeInteger.get().getTypeArray();

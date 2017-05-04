@@ -27,17 +27,10 @@ import com.juliasoft.beedeedee.bdd.BDD;
 import com.juliasoft.beedeedee.factories.Factory;
 import com.juliasoft.beedeedee.factories.ResizingAndGarbageCollectedFactory;
 
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongIntHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -52,6 +45,12 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+import gnu.trove.list.TIntList;
+import gnu.trove.list.array.TIntArrayList;
+import gnu.trove.map.TLongIntMap;
+import gnu.trove.map.TLongObjectMap;
+import gnu.trove.map.hash.TLongIntHashMap;
+import gnu.trove.map.hash.TLongObjectHashMap;
 
 public final class LibraryDDBeeDeeDee implements LibraryDD {
     public final static String IDENTIFIER = "beedeedee";
@@ -71,7 +70,6 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     
     private ResizingAndGarbageCollectedFactory factory;
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private Value oneValue;
     private Value zeroValue;
     private BDD zeroNode;
@@ -87,7 +85,6 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         this.contextDD = contextDD;
-        this.contextValue = ContextValue.get();
         int initCache = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_CACHE_SIZE);
         int initSlots = contextDD.getOptions().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_NODES);
         this.factory = Factory.mkResizingAndGarbageCollected(initSlots, initCache);

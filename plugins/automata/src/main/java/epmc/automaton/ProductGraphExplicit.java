@@ -20,9 +20,6 @@
 
 package epmc.automaton;
 
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.hash.TLongIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,14 +35,15 @@ import epmc.graph.explicit.GraphExplicitProperties;
 import epmc.graph.explicit.NodeProperty;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
 import epmc.value.TypeObject;
+import epmc.value.TypeObject.StorageType;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
-import epmc.value.TypeObject.StorageType;
+import gnu.trove.map.TLongIntMap;
+import gnu.trove.map.hash.TLongIntHashMap;
 
 public final class ProductGraphExplicit implements GraphExplicit {
     
@@ -390,8 +388,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         assert builder.getAutomaton() != null;
         manualEnumeration = builder.isManual();
         initStates = UtilBitSet.newBitSetUnbounded();
-        ContextValue contextValue = ContextValue.get();
-        properties = new GraphExplicitProperties(this, contextValue);
+        properties = new GraphExplicitProperties(this);
         TypeObject typeModel = new TypeObject.Builder()
                 .setClazz(GraphExplicit.class)
                 .build();
