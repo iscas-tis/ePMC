@@ -69,7 +69,8 @@ public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
         return builder.toString();
     }
     
-    public TypeArray getTypeArray() {
+    @Override
+	public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

@@ -425,7 +425,7 @@ public final class VariableValuesEnumerator {
 			Map<String, Variable> variables,
 			Expression expression) throws EPMCException {
 		Map<Expression, VariableDD> bddVariables = new LinkedHashMap<>();
-		ContextDD contextDD = ContextDD.get(ContextValue.get());
+		ContextDD contextDD = ContextDD.get();
 		VariableDD[] ddVariableArray = new VariableDD[variables.size()];
 		Variable[] variablesArray = new Variable[variables.size()];
 		int varNr = 0;
@@ -437,7 +437,7 @@ public final class VariableValuesEnumerator {
 			variablesArray[varNr] = variable;
 			varNr++;
 		}
-		EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(ContextValue.get(), expression, bddVariables);
+		EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(expression, bddVariables);
 		DD dd = evaluator.getDD().clone();
 		EnumerateSAT sat = new EnumerateSAT();
 		sat.setBDD(dd);

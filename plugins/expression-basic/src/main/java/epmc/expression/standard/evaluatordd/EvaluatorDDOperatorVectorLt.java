@@ -29,7 +29,6 @@ import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 
 public final class EvaluatorDDOperatorVectorLt implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-lt";
@@ -56,12 +55,12 @@ public final class EvaluatorDDOperatorVectorLt implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(ContextValue.get(), expression, OperatorLt.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorLt.IDENTIFIER, variables);
     }
 
     @Override
     public void build() throws EPMCException {
-        dd = UtilEvaluatorDD.applyVector(ContextValue.get(), expression, variables, getContextDD()::twoCplLt);
+        dd = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplLt);
     }
 
     @Override
@@ -81,6 +80,6 @@ public final class EvaluatorDDOperatorVectorLt implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(ContextValue.get());
+        return ContextDD.get();
     }
 }

@@ -269,7 +269,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
      * @throws EPMCException thrown in case of failure getting DD context
      */
 	private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(ContextValue.get());
+    	return ContextDD.get();
 	}
 
     /**

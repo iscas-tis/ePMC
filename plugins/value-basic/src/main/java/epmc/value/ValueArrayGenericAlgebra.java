@@ -38,7 +38,7 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     
     @Override
     public ValueArrayGenericAlgebra clone() {
-        ValueArrayGenericAlgebra clone = (ValueArrayGenericAlgebra) getType().newValue();
+        ValueArrayGenericAlgebra clone = getType().newValue();
         clone.set(this);
         return clone;
     }

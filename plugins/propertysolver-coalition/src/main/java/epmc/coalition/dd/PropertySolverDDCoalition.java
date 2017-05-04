@@ -242,7 +242,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
 		StopWatch watch = new StopWatch(true);
         Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
-        AutomatonParity automaton = UtilAutomaton.newAutomatonParity(ContextValue.get(), path, expressions);
+        AutomatonParity automaton = UtilAutomaton.newAutomatonParity(path, expressions);
         List<Object> nodeProperties = new ArrayList<>();
         nodeProperties.add(CommonProperties.STATE);
         nodeProperties.addAll(playerList);
@@ -294,7 +294,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
     
     private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(ContextValue.get());
+    	return ContextDD.get();
 	}
     
     /**

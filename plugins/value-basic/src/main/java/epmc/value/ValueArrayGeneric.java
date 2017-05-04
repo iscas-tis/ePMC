@@ -38,7 +38,7 @@ public final class ValueArrayGeneric implements ValueArray {
     
     @Override
     public ValueArrayGeneric clone() {
-        ValueArrayGeneric clone = (ValueArrayGeneric) getType().newValue();
+        ValueArrayGeneric clone = getType().newValue();
         clone.set(this);
         return clone;
     }

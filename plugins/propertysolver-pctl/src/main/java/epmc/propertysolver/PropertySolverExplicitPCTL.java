@@ -116,7 +116,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, dirType.isMin());
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             assert op != null;
             result = result.applyWith(op, compare);
         }

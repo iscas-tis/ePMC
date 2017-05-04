@@ -26,17 +26,14 @@ import epmc.dd.DD;
 import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
-import epmc.value.ContextValue;
 
 public final class StateSetDD implements Closeable, Cloneable, StateSet {
     private final DD statesDD;
     private int refs = 1;
-    private final ContextValue contextValue;
     private LowLevel lowLevel;
 
     // note: consumes arguments statesExplicit and statesDD
     public StateSetDD(LowLevel lowLevel, DD statesDD) {
-        this.contextValue = ContextValue.get();
         this.lowLevel = lowLevel;
         this.statesDD = statesDD;
     }
@@ -89,7 +86,6 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
     public boolean isSubsetOf(StateSet states) throws EPMCException {
         assert !closed();
         assert states != null;
-        assert contextValue == ContextValue.get();
         assert states instanceof StateSetDD;
         StateSetDD other = (StateSetDD) states;
         return statesDD.andNot(other.statesDD).isFalseWith();

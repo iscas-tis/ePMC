@@ -85,10 +85,10 @@ public class BuechiImpl implements Buechi {
         return IDENTIFIER;
     }
     
-    public BuechiImpl(ContextValue contextValue, Expression expression, Expression[] expressions)
+    public BuechiImpl(Expression expression, Expression[] expressions)
             throws EPMCException {
         assert expression != null;
-        this.options = contextValue.getOptions();
+        this.options = ContextValue.get().getOptions();
         // TODO does not work if used there
 //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
   //          expression = replaceNeOperator(expression);
@@ -97,7 +97,7 @@ public class BuechiImpl implements Buechi {
         OptionsAutomaton.Ltl2BaAutomatonBuilder builder = options.getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
         Set<Expression> expressionsSeen = new HashSet<>();
         if (builder == OptionsAutomaton.Ltl2BaAutomatonBuilder.SPOT) {
-            automaton = createSpotAutomaton(contextValue, expression, expressionsSeen);
+            automaton = createSpotAutomaton(expression, expressionsSeen);
         } else {
             automaton = null;
         }
@@ -133,7 +133,7 @@ public class BuechiImpl implements Buechi {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 Expression guard = trans.getExpression();
                 evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
-                		new ExpressionToTypeBoolean(contextValue, expressions), expressions);
+                		new ExpressionToTypeBoolean(expressions), expressions);
                 totalSize++;
             }
         }
@@ -176,14 +176,13 @@ public class BuechiImpl implements Buechi {
         return trueState;
     }
 
-    private GraphExplicit createSpotAutomaton(ContextValue contextValue, Expression expression,
-            Set<Expression> expressionsSeen) throws EPMCException {
+    private GraphExplicit createSpotAutomaton(Expression expression, Set<Expression> expressionsSeen) throws EPMCException {
         assert expression != null;
         assert expressionsSeen != null;
         Map<Expression,String> expr2str = new HashMap<>();
-        expression = UtilAutomaton.bounded2next(contextValue, expression);
+        expression = UtilAutomaton.bounded2next(expression);
         int[] numAPs = new int[1];
-        UtilAutomaton.expr2string(contextValue, expression, expr2str, numAPs);
+        UtilAutomaton.expr2string(expression, expr2str, numAPs);
         expressionsSeen.addAll(expr2str.keySet());
         String spotFn = expr2spot(expression, expr2str);
         assert spotFn != null;
@@ -463,18 +462,18 @@ public class BuechiImpl implements Buechi {
                 .equals(OperatorIte.IDENTIFIER);
     }
     
-    public static Expression replaceNeOperator(ContextValue contextValue, Expression expression)
+    public static Expression replaceNeOperator(Expression expression)
             throws EPMCException {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
-            newChildren.add(replaceNeOperator(contextValue, child));
+            newChildren.add(replaceNeOperator(child));
         }
         if (!isNe(expression)) {
             return expression.replaceChildren(newChildren);
         } else {
-            return not(contextValue, new ExpressionOperator.Builder()
-                    .setOperator(contextValue.getOperator(OperatorEq.IDENTIFIER))
+            return not(new ExpressionOperator.Builder()
+                    .setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
                     .setOperands(newChildren)
                     .build());
         }
@@ -490,9 +489,9 @@ public class BuechiImpl implements Buechi {
                 .equals(OperatorNe.IDENTIFIER);
     }
 
-    private static Expression not(ContextValue contextValue, Expression expression) {
+    private static Expression not(Expression expression) {
         return new ExpressionOperator.Builder()
-            .setOperator(contextValue.getOperator(OperatorNot.IDENTIFIER))
+            .setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
             .setOperands(expression)
             .build();
     }

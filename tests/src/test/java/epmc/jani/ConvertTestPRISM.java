@@ -26,7 +26,6 @@ import org.junit.Test;
 import epmc.error.EPMCException;
 import epmc.jani.model.UtilModelParser;
 import epmc.modelchecker.UtilModelChecker;
-import epmc.value.ContextValue;
 
 import static epmc.ModelNamesPRISM.*;
 import static epmc.modelchecker.TestHelper.*;
@@ -234,7 +233,6 @@ public final class ConvertTestPRISM {
 //    			.setExploreAll()
     			.run();
 
-    	ContextValue contextValue = ContextValue.get();
     	Set<Object> nodeProperties = new LinkedHashSet<>();
     	nodeProperties.add(UtilModelChecker.parseExpression("p1=10"));
     	nodeProperties.add(UtilModelChecker.parseExpression("p2=10"));

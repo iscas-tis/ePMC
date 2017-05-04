@@ -418,17 +418,16 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
-        ContextValue contextValue = ContextValue.get();
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Collection<Operator> operators = contextValue.getOperators().values();
+        Collection<Operator> operators = ContextValue.get().getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
-        this.operatorsMap = contextValue.getOperators();
+        this.operatorsMap = ContextValue.get().getOperators();
         for (int i = 0; i < this.operators.length; i++) {
             this.operatorToNumber.put(this.operators[i], i);
         }
-        opId = contextValue.getOperator(OperatorId.IDENTIFIER);
+        opId = ContextValue.get().getOperator(OperatorId.IDENTIFIER);
         opIdNr = operatorToNumber.get(opId);
         
         this.numberToValue = new TLongObjectHashMap<>();

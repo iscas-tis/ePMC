@@ -42,7 +42,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 
-import epmc.dd.ContextDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -84,8 +83,6 @@ public final class TestHelper {
     private final static String LTL2TGBA = "ltl2tgba";
     public final static String ITERATION_TOLERANCE = "graphsolver-iterative-tolerance";
     public static final String ITERATION_STOP_CRITERION = "iteration-stop-criterion";
-    /** String to store value context in {@link Options}. */
-    public static final String CONTEXT_VALUE = "context-value";
     /** String to set the flatten options of the PRISM plugin. We store a copy
      * of the identical string in the plugin here, to avoid having
      * compile-time dependencies to the PRISM plugin.
@@ -136,8 +133,6 @@ public final class TestHelper {
             assert model != null;
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
             assert classloader != null;
-            ContextValue context = options.get(TestHelper.CONTEXT_VALUE);
-            assert context != null;
             InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
             model.read(inputsArray);
             if (propertyStream != null) {
@@ -294,9 +289,7 @@ public final class TestHelper {
         options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
         options.set(OptionsMessages.LOG, log);
-        ContextValue context = new ContextValue(options);
-        ContextValue.set(context);
-        options.set(TestHelper.CONTEXT_VALUE, context);
+        ContextValue.set(new ContextValue(options));
         processBeforeModelLoading(options);
     }
     
@@ -556,10 +549,9 @@ public final class TestHelper {
         }
     }
 
-    public static void processAfterCommandExecution(ContextValue contextValue)
+    public static void processAfterCommandExecution()
             throws EPMCException {
-        assert contextValue != null;
-        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(contextValue.getOptions(), AfterCommandExecution.class)) {
+        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(ContextValue.get().getOptions(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
             afterCommandExecution.process();
@@ -571,14 +563,12 @@ public final class TestHelper {
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
             beforeModelLoading = Util.getInstance(clazz);
-            ContextValue contextValue = options.get(CONTEXT_VALUE);
             beforeModelLoading.process();
         }
     }
     
     public static void processAfterModelLoading(Options options) throws EPMCException {
         assert options != null;
-        ContextValue contextValue = options.get(CONTEXT_VALUE);
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
             afterModelLoading = Util.getInstance(clazz);
@@ -588,10 +578,6 @@ public final class TestHelper {
     
     public static void close(Options options) {
         assert options != null;
-        ContextValue contextValue = options.get(TestHelper.CONTEXT_VALUE);
-        if (contextValue != null) {
-        	ContextDD.close(contextValue);
-        }
     }
     
     private static Value evaluateValue(Expression expression) throws EPMCException {

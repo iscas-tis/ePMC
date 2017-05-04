@@ -35,11 +35,9 @@ import epmc.graph.Player;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicitWrapper;
 import epmc.graph.explicit.NodeProperty;
-import epmc.modelchecker.TestHelper;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeEnum;
 import epmc.value.TypeWeightTransition;
 
@@ -53,8 +51,7 @@ public class ReachMaxOneTest {
     @Test
     public void reachMaxOneLiYongsMailTest() throws EPMCException {
         Options options = prepareOptions();
-        ContextValue contextValue = options.get(TestHelper.CONTEXT_VALUE);
-        GraphExplicitWrapper graph = new GraphExplicitWrapper(contextValue);
+        GraphExplicitWrapper graph = new GraphExplicitWrapper();
         EdgeProperty weights = graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeightTransition.get());
         NodeProperty player = graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
         player.set(0, Player.STOCHASTIC);

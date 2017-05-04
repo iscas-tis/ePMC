@@ -269,7 +269,6 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private EPMCException valueProblem;
         
     private ContextDD contextDD;
-    private ContextValue contextValue;
     private DD_VOP1 vop1;
     private DD_VOP2 vop2;
     private boolean alive = true;
@@ -280,11 +279,10 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
         this.contextDD = contextDD;
-        this.contextValue = ContextValue.get();
-        Collection<Operator> operators = contextValue.getOperators().values();
+        Collection<Operator> operators = ContextValue.get().getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
-        this.operatorsMap = contextValue.getOperators();
+        this.operatorsMap = ContextValue.get().getOperators();
         for (int i = 0; i < this.operators.length; i++) {
             this.operatorToNumber.put(this.operators[i], i);
         }
@@ -335,9 +333,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 idOp3 = operands[2];
             } else {
                 // Call the identity operator to convert all the terminals to the same type.
-                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(contextValue.getOperator(OperatorId.IDENTIFIER)));
+                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(ContextValue.get().getOperator(OperatorId.IDENTIFIER)));
                 Sylvan.mtbdd_ref(idOp2);
-                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(contextValue.getOperator(OperatorId.IDENTIFIER)));
+                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(ContextValue.get().getOperator(OperatorId.IDENTIFIER)));
                 Sylvan.mtbdd_ref(idOp3);
                 doFree = true;
             }
@@ -463,7 +461,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractSum(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(contextValue.getOperator(OperatorAdd.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER)));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -473,7 +471,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(contextValue.getOperator(OperatorMultiply.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER)));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -483,7 +481,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMax(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(contextValue.getOperator(OperatorMax.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMax.IDENTIFIER)));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -493,7 +491,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMin(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(contextValue.getOperator(OperatorMin.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMin.IDENTIFIER)));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;

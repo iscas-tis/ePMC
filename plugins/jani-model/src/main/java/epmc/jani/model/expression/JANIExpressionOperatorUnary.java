@@ -38,7 +38,6 @@ import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 
 /**
@@ -153,7 +152,7 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
 		assert initialized;
 		assert model != null;
 		assert validIdentifiers != null;
-		Operator operator = this.operator.getOperator(ContextValue.get());
+		Operator operator = this.operator.getOperator();
 		return new ExpressionOperator.Builder()
 				.setOperator(operator)
 				.setOperands(operand.getExpression())

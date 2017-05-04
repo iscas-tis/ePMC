@@ -22,7 +22,6 @@ package epmc.dd;
 
 import epmc.error.EPMCException;
 import epmc.plugin.AfterCommandExecution;
-import epmc.value.ContextValue;
 
 public final class AfterCommandExecutionDD implements AfterCommandExecution {
 	public final static String IDENTIFIER = "after-command-execution-dd";
@@ -34,7 +33,6 @@ public final class AfterCommandExecutionDD implements AfterCommandExecution {
 
 	@Override
 	public void process() throws EPMCException {
-		ContextDD.close(ContextValue.get());
 	}
 
 }

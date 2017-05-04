@@ -58,10 +58,10 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 public final class UtilAutomaton {
-    public static String expr2string(ContextValue contextValue, Expression expression,
-            Map<Expression, String> expr2str, int[] numAPs) {
-        Options options = contextValue.getOptions();
-        return expr2string(contextValue, expression, expr2str, numAPs, options.getBoolean(OptionsAutomaton.AUTOMATON_SUBSUME_APS));
+    public static String expr2string(Expression expression, Map<Expression, String> expr2str,
+            int[] numAPs) {
+        Options options = ContextValue.get().getOptions();
+        return expr2string(expression, expr2str, numAPs, options.getBoolean(OptionsAutomaton.AUTOMATON_SUBSUME_APS));
     }
 
     public static Buechi newBuechi
@@ -69,18 +69,17 @@ public final class UtilAutomaton {
             ValueBoolean negate) throws EPMCException {
         assert property != null;
         assert negate != null;
-        ContextValue contextValue = ContextValue.get();
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         Buechi buechi = null;
         Log log = options.get(OptionsMessages.LOG);
         if (isNondet) {
-            Expression usedProperty = negate.getBoolean() ? not(contextValue, property) : property;
+            Expression usedProperty = negate.getBoolean() ? not(property) : property;
             if (negate.getBoolean()) {
                 log.send(MessagesAutomaton.COMPUTING_NEG_BUECHI);
             } else {
                 log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
             }
-            buechi = new BuechiImpl(ContextValue.get(), usedProperty, expressions);
+            buechi = new BuechiImpl(usedProperty, expressions);
             Message buechiDone = buechi.isDeterministic() ?
                     MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                     : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -92,7 +91,7 @@ public final class UtilAutomaton {
             if (detNeg == OptionsAutomaton.Ltl2BaDetNeg.NEVER
                     || detNeg == OptionsAutomaton.Ltl2BaDetNeg.BETTER) {
                 log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
-                origBuechi = new BuechiImpl(ContextValue.get(), property, expressions);
+                origBuechi = new BuechiImpl(property, expressions);
                 Message buechiDone = origBuechi.isDeterministic() ?
                         MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                         : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -101,7 +100,7 @@ public final class UtilAutomaton {
             }
             if (detNeg == OptionsAutomaton.Ltl2BaDetNeg.BETTER || detNeg == OptionsAutomaton.Ltl2BaDetNeg.ALWAYS) {
                 log.send(MessagesAutomaton.COMPUTING_NEG_BUECHI);
-                negBuechi = new BuechiImpl(ContextValue.get(), not(contextValue, property), expressions);
+                negBuechi = new BuechiImpl(not(property), expressions);
                 Message buechiDone = negBuechi.isDeterministic() ?
                         MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
                         : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
@@ -139,9 +138,8 @@ public final class UtilAutomaton {
         return buechi;
     }
 
-    public static Buechi computeBuechi(ContextValue contextValue, Expression property, Expression[] expressions)
+    public static Buechi computeBuechi(Expression property, Expression[] expressions)
             throws EPMCException {
-    	assert contextValue != null;
         assert property != null;
         assert expressions != null;
         for (Expression expression : expressions) {
@@ -151,12 +149,12 @@ public final class UtilAutomaton {
         return newBuechi(property, expressions, true, negate);
     }
 
-    public static Expression bounded2next(ContextValue contextValue, Expression expression)
+    public static Expression bounded2next(Expression expression)
             throws EPMCException {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
-            newChildren.add(bounded2next(contextValue, child));
+            newChildren.add(bounded2next(child));
         }
         expression = expression.replaceChildren(newChildren);
     
@@ -183,17 +181,17 @@ public final class UtilAutomaton {
             }
             bound--;
             while (bound >= 0) {
-                Expression nextResult = newNext(contextValue, result, expression.getPositional());
+                Expression nextResult = newNext(result, expression.getPositional());
                 if (isUntil(expression)) {
-                    result = and(contextValue, leftExpr, nextResult, expression.getPositional());
+                    result = and(leftExpr, nextResult, expression.getPositional());
                 } else if (isRelease(expression)) {
-                    result = or(contextValue, leftExpr, nextResult, expression.getPositional());
+                    result = or(leftExpr, nextResult, expression.getPositional());
                 }
                 if (bound - boundLeft >= 0) {
                     if (isUntil(expression)) {
-                        result = or(contextValue, result, rightExpr, expression.getPositional());
+                        result = or(result, rightExpr, expression.getPositional());
                     } else if (isRelease(expression)) {
-                        result = and(contextValue, result, rightExpr, expression.getPositional());
+                        result = and(result, rightExpr, expression.getPositional());
                     }
                 }
                 bound--;
@@ -227,20 +225,19 @@ public final class UtilAutomaton {
     }
 
     public static AutomatonRabin newAutomatonRabin(
-    		ContextValue contextValue,
     		Expression expression,
-            Expression[] expressions) throws EPMCException {
+    		Expression[] expressions) throws EPMCException {
         assert expression != null;
         assert expressions != null;
         for (Expression entry : expressions) {
             assert entry != null;
         }
-        Map<String,Class<Automaton.Builder>> automata = contextValue.getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
+        Map<String,Class<Automaton.Builder>> automata = ContextValue.get().getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonRabin.Builder result = (AutomatonRabin.Builder)
                 Util.getInstanceByClass(automata,
                         a -> AutomatonRabin.Builder.class.isAssignableFrom(a));
         assert result != null;
-        result.setExpression(contextValue, expression, expressions);
+        result.setExpression(expression, expressions);
         return result.build();
     }
 
@@ -258,43 +255,41 @@ public final class UtilAutomaton {
     }
 
     public static AutomatonParity newAutomatonParity(
-    		ContextValue contextValue,
     		Expression expression,
-            Expression[] expressions) throws EPMCException {
-    	assert contextValue != null;
+    		Expression[] expressions) throws EPMCException {
         assert expression != null;
         assert expressions != null;
         for (Expression entry : expressions) {
             assert entry != null;
         }
-        Map<String,Class<Automaton.Builder>> automata = contextValue.getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
+        Map<String,Class<Automaton.Builder>> automata = ContextValue.get().getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonParity.Builder result = (AutomatonParity.Builder)
                 Util.getInstanceByClass(automata,
                         a -> AutomatonParity.Builder.class.isAssignableFrom(a));
         assert result != null;
-        result.setExpression(contextValue, expression, expressions);
+        result.setExpression(expression, expressions);
         return result.build();
     }
 
-    private static Expression and(ContextValue contextValue, Expression a, Expression b, Positional positional) {
+    private static Expression and(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
     }
 
-    private static Expression or(ContextValue contextValue, Expression a, Expression b, Positional positional) {
+    private static Expression or(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorOr.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
     }
 
-    private static Expression not(ContextValue contextValue, Expression expression) {
+    private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();
@@ -316,7 +311,7 @@ public final class UtilAutomaton {
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
 
-    private static ExpressionTemporal newNext(ContextValue context, Expression operand, Positional positional) {
+    private static ExpressionTemporal newNext(Expression operand, Positional positional) {
         return newTemporal(TemporalType.NEXT, operand,
                 new TimeBound.Builder().build(), positional);
     }
@@ -329,8 +324,8 @@ public final class UtilAutomaton {
                 (operand, type, bound, positional);
     }
 
-    private static String expr2string(ContextValue contextValue, Expression expression,
-            Map<Expression, String> expr2str, int[] numAPs, boolean subsumeAPs) {
+    private static String expr2string(Expression expression, Map<Expression, String> expr2str,
+            int[] numAPs, boolean subsumeAPs) {
         String result = expr2str.get(expression);
         if (result != null) {
             return result;
@@ -342,14 +337,14 @@ public final class UtilAutomaton {
             ExpressionOperator op = (ExpressionOperator) expression;
             if (isAnd(op) || isOr(op) || isIff(op) || isImplies(op)
                     || isIte(op)) {
-                String left = expr2string(contextValue, op.getOperand1(), expr2str, numAPs, subsumeAPs);
-                String right = expr2string(contextValue, op.getOperand2(), expr2str, numAPs, subsumeAPs);
+                String left = expr2string(op.getOperand1(), expr2str, numAPs, subsumeAPs);
+                String right = expr2string(op.getOperand2(), expr2str, numAPs, subsumeAPs);
                 if (left != null && right != null && subsumeAPs) {
                     result = "ap" + numAPs[0];
                     numAPs[0]++;            
                 }
             } else if (isNot(op)) {
-                String left = expr2string(contextValue, op.getOperand1(), expr2str, numAPs, subsumeAPs);
+                String left = expr2string(op.getOperand1(), expr2str, numAPs, subsumeAPs);
                 if (left != null && subsumeAPs) {
                     result = "ap" + numAPs[0];
                     numAPs[0]++;            
@@ -364,10 +359,10 @@ public final class UtilAutomaton {
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal temp = (ExpressionTemporal) expression;
             if (isUntil(temp) || isRelease(temp)) {
-                expr2string(contextValue, temp.getOperand1(), expr2str, numAPs, subsumeAPs);
-                expr2string(contextValue, temp.getOperand2(), expr2str, numAPs, subsumeAPs);
+                expr2string(temp.getOperand1(), expr2str, numAPs, subsumeAPs);
+                expr2string(temp.getOperand2(), expr2str, numAPs, subsumeAPs);
             } else if (isNext(temp) || isFinally(temp) || isGlobally(temp)) {
-                expr2string(contextValue, temp.getOperand1(), expr2str, numAPs, subsumeAPs);
+                expr2string(temp.getOperand1(), expr2str, numAPs, subsumeAPs);
             } else {
                 assert false : expression;
             }

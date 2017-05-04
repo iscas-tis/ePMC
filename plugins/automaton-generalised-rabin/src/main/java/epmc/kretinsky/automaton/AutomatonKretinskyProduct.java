@@ -34,23 +34,16 @@ import epmc.automaton.AutomatonExporterImpl;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
-import epmc.dd.ContextDD;
-import epmc.dd.DD;
 import epmc.error.EPMCException;
-import epmc.expression.ContextExpression;
 import epmc.expression.Expression;
-import epmc.expression.UtilExpression;
 import epmc.kretinsky.options.OptionsKretinsky;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.UtilModelChecker;
-import epmc.options.OptionsEPMC;
 import epmc.options.Options;
-import epmc.options.UtilOptionsEPMC;
 import epmc.plugin.UtilPlugin;
 import epmc.util.StopWatch;
 import epmc.util.Util;
 import epmc.value.ContextValue;
-import epmc.value.OptionsValue;
 import epmc.value.Value;
 
 public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabin {
@@ -219,7 +212,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public void queryState(int modelState, int automatonState)
             throws EPMCException {
         if (runSlaves) {
-            long cacheKey = (((long) modelState) << 32) | ((long) automatonState);
+            long cacheKey = (((long) modelState) << 32) | (automatonState);
             long cacheVal = cache.get(cacheKey);
             if (cacheVal == -1) {
                 AutomatonKretinskyProductState current = numberToState(automatonState);
@@ -233,14 +226,14 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
                 disableUnusedSlaves(succState);
                 this.succState = makeUnique(new AutomatonKretinskyProductState(this, succState)).getNumber();
                 this.succLabel = makeUnique(new AutomatonKretinskyProductLabel(this, current, succLabel)).getNumber();
-                cacheVal = (((long) this.succState) << 32) | ((long) this.succLabel);            
+                cacheVal = (((long) this.succState) << 32) | (this.succLabel);            
                 cache.put(cacheKey, cacheVal);
             } else {
                 this.succState = (int) (cacheVal >>> 32);
                 this.succLabel = (int) (cacheVal & 0xFFFF);
             }
         } else {
-            long cacheKey = (((long) modelState) << 32) | ((long) automatonState);
+            long cacheKey = (((long) modelState) << 32) | (automatonState);
             long cacheVal = cacheNoSlaves.get(cacheKey);
             if (cacheVal == -1) {
                 AutomatonKretinskyProductState current = numberToState(automatonState);
@@ -255,7 +248,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
                 }
                 this.succState = makeUnique(new AutomatonKretinskyProductState(this, succState)).getNumber();
                 this.succLabel = makeUnique(new AutomatonKretinskyProductLabel(this, current, succLabel)).getNumber();
-                cacheVal = (((long) this.succState) << 32) | ((long) this.succLabel);            
+                cacheVal = (((long) this.succState) << 32) | (this.succLabel);            
                 cacheNoSlaves.put(cacheKey, cacheVal);
             } else {
                 this.succState = (int) (cacheVal >>> 32);
@@ -416,8 +409,6 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         options.set(OptionsEPMC.PLUGIN, "/Users/emhahn/Documents/workspace/iscasmc/plugins/kretinsky");
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = ContextValue.get();
-        options.set(OptionsValue.CONTEXT_VALUE, contextValue);
 //        options.set(Options.KRETINSKY_GFFG_OPTIMISATION, false);
 //      options.set(Options.KRETINSKY_OPTIMISE_MOJMIR, KretinskyOptimiseMojmir.LANGUAGE);
 //        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
@@ -451,7 +442,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         Expression[] expressions = new Expression[identifiers.size()];
         for (Expression identifier : identifiers) {
             expressions[idNr] = identifier;
-            identifier.setType(contextValue.getTypeBoolean());
+            identifier.setType(ContextValue.get().getTypeBoolean());
             idNr++;
         }
         StopWatch watch = Util.newStopWatch();

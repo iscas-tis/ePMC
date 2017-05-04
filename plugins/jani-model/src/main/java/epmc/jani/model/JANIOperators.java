@@ -44,11 +44,10 @@ public final class JANIOperators {
 		iscasMCToOperator.put(operator.getEPMC(), operator);
 	}
 	
-	public Operator getOperator(ContextValue context, String jani) {
-		assert context != null;
+	public Operator getOperator(String jani) {
 		assert jani != null;
 		String iscasMCName = janiToOperator.get(jani).getJANI();
-		return context.getOperator(iscasMCName);
+		return ContextValue.get().getOperator(iscasMCName);
 	}
 	
 	public String janiToEPMCName(String jani) {

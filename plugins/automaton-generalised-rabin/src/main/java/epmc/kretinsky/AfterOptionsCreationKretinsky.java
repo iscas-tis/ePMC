@@ -33,7 +33,6 @@ import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeEnum;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
-import epmc.options.OptionsEPMC;
 import epmc.options.UtilOptions;
 import epmc.plugin.AfterOptionsCreation;
 

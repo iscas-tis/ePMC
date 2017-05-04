@@ -26,14 +26,13 @@ import java.util.Set;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 
 final class ExpressionToTypeBoolean implements ExpressionToType {
 	private final Set<Expression> mapped = new HashSet<>();
 
-	ExpressionToTypeBoolean(ContextValue contextValue, Expression[] expressions) {
+	ExpressionToTypeBoolean(Expression[] expressions) {
 		Set<Expression> seen = new HashSet<>();
 		assert expressions != null;
 		for (Expression expression : expressions) {

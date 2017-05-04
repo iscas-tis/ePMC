@@ -20,7 +20,6 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.value.ContextValue;
 import epmc.value.OperatorSubtract;
 import epmc.value.TypeAlgebra;
 import epmc.value.ValueAlgebra;
@@ -43,7 +42,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         if (isZero(expressionOperator.getOperand1())) {
-            return UtilExpressionStandard.opAddInverse(ContextValue.get(), expressionOperator.getOperand2());
+            return UtilExpressionStandard.opAddInverse(expressionOperator.getOperand2());
         }
         if (isZero(expressionOperator.getOperand2())) {
             return expressionOperator.getOperand1();

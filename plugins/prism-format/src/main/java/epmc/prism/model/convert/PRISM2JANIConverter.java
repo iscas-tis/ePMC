@@ -114,8 +114,7 @@ public final class PRISM2JANIConverter {
 	private final static class ExpressionToTypeJANIConverter implements ExpressionToType {
 		private final Map<Expression,Type> typeMap;
 		
-		private ExpressionToTypeJANIConverter(ContextValue context, Variables variables) {
-			assert context != null;
+		private ExpressionToTypeJANIConverter(Variables variables) {
 			assert variables != null;
 			Map<Expression,Type> typeMap = new HashMap<>();
 			for (Variable variable : variables) {
@@ -199,7 +198,7 @@ public final class PRISM2JANIConverter {
     	convertExtensions();
 
 		Variables globalVariables = buildGlobalVariables();
-		this.expressionToType = new ExpressionToTypeJANIConverter(ContextValue.get(), globalVariables);
+		this.expressionToType = new ExpressionToTypeJANIConverter(globalVariables);
     	modelJANI.setGlobalVariables(globalVariables);
     	modelJANI.setModelConstants(buildConstants());
     	Actions actions = computeActions();
@@ -467,7 +466,7 @@ public final class PRISM2JANIConverter {
     		CmpType cmpType = expressionQuantifier.getCompareType();
 	        DirType dirType = expressionQuantifier.getDirType();
 	        Expression quantified = useQuantitativePropertiesOnly(expressionQuantifier.getQuantified());
-	        Operator operator = cmpType.asExOpType(ContextValue.get());
+	        Operator operator = cmpType.asExOpType();
         	if (dirType.equals(DirType.NONE)
         			&& SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
         		if (cmpType.equals(CmpType.GE) || cmpType.equals(CmpType.GT)) {
@@ -642,7 +641,7 @@ public final class PRISM2JANIConverter {
 					if (totalWeight == null) {
 						totalWeight = weight;
 					} else {
-						totalWeight = UtilExpressionStandard.opAdd(ContextValue.get(), totalWeight, weight);
+						totalWeight = UtilExpressionStandard.opAdd(totalWeight, weight);
 					}
 				}
 				Rate rate = new Rate();
@@ -656,7 +655,7 @@ public final class PRISM2JANIConverter {
 				destination.setModel(modelJANI);
 				Expression probability = prism2jani(alternative.getWeight());
 				if (totalWeight != null) {
-					probability = UtilExpressionStandard.opDivide(ContextValue.get(), probability, totalWeight);
+					probability = UtilExpressionStandard.opDivide(probability, totalWeight);
 				}
 				Probability probabilityJ = new Probability();
 				probabilityJ.setModel(modelJANI);

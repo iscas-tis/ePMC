@@ -116,7 +116,7 @@ public interface GraphDD extends LowLevel {
     }
 
     default ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(ContextValue.get());
+        return ContextDD.get();
     }
 
     @Override

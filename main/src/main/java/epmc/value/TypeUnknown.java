@@ -29,8 +29,8 @@ public final class TypeUnknown implements Type {
     
     public static void set(TypeUnknown type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        context.setType(TypeUnknown.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeUnknown.class,
+        		ContextValue.get().makeUnique(type));
     }
 
     public static boolean isUnknown(Type type) {
@@ -71,7 +71,8 @@ public final class TypeUnknown implements Type {
         return null;
     }
     
-    public TypeArray getTypeArray() {
+    @Override
+	public TypeArray getTypeArray() {
         assert false;
         return null;
     }

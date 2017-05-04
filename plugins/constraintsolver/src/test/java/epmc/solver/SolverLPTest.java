@@ -35,9 +35,6 @@ import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.error.EPMCException;
-import epmc.modelchecker.TestHelper;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -52,9 +49,7 @@ public class SolverLPTest {
     @Test
     public void wikipediaTest() throws EPMCException {
         final double tolerance = 1E-10;
-        Options options = prepareOptions();
-        ContextValue contextValue = options.get(TestHelper.CONTEXT_VALUE);
-        options.set(TestHelper.CONTEXT_VALUE, contextValue);
+        prepareOptions();
         ConstraintSolverConfiguration contextSolver = new ConstraintSolverConfiguration();
         contextSolver.requireFeature(Feature.LP);
         ConstraintSolver problem = contextSolver.newProblem();

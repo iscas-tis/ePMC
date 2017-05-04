@@ -131,7 +131,8 @@ public interface ValueAlgebra extends Value {
     double norm() throws EPMCException;
     
 
-    default boolean isEq(Value other) throws EPMCException {
+    @Override
+	default boolean isEq(Value other) throws EPMCException {
         return distance(other) < 1E-6;
     }
 }

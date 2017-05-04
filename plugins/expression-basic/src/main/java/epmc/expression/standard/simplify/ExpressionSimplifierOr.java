@@ -25,7 +25,6 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.value.ContextValue;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorOr;
 import epmc.value.ValueBoolean;
@@ -68,13 +67,13 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());
         if (left != null && right != null) {
-            return UtilExpressionStandard.opOr(ContextValue.get(), left, right);
+            return UtilExpressionStandard.opOr(left, right);
         }
         if (left != null) {
-            return UtilExpressionStandard.opOr(ContextValue.get(), left, expressionOperator.getOperand2());
+            return UtilExpressionStandard.opOr(left, expressionOperator.getOperand2());
         }
         if (right != null) {
-            return UtilExpressionStandard.opOr(ContextValue.get(), expressionOperator.getOperand1(), right);
+            return UtilExpressionStandard.opOr(expressionOperator.getOperand1(), right);
         }
         return null;
     }

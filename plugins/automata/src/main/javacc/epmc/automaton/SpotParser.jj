@@ -22,15 +22,12 @@ import epmc.value.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
 
 public class SpotParser {
-  private ContextValue context;
 
   public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr)
       throws EPMCException {
-    assert context != null;
     assert ap2expr != null;
-    this.context = ContextValue.get();
     try {
-      return Automaton(context, ap2expr);
+      return Automaton(ap2expr);
     } catch (ParseException e) {
       ensure(false, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_PARSE, e);
       return null;
@@ -39,21 +36,21 @@ public class SpotParser {
 
   private Expression and(Expression a, Expression b) {
       return new ExpressionOperator.Builder()
-      	.setOperator(context.getOperator(OperatorAnd.IDENTIFIER))
+      	.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
       	.setOperands(a, b)
       	.build();
   }
 
     private Expression or(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(context.getOperator(OperatorOr.IDENTIFIER))
+            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
             .setOperands(a, b)
             .build();
     }
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(context.getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
         	.setOperands(expression)
         	.build();
     }
@@ -99,18 +96,18 @@ public class SpotParser {
 | < T : "t" >
 | < NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
 | < IDENTIFIER : (["a"-"z","A"-"Z","0"-"9","_"])+ >
-}GraphExplicitWrapper Automaton(ContextValue context, Map<String,Expression> ap2expr) throws EPMCException :{
+}GraphExplicitWrapper Automaton(Map<String,Expression> ap2expr) throws EPMCException :{
   HanoiHeader header;
   GraphExplicitWrapper graph;
 }{
-  header = Header(context, ap2expr)
+  header = Header(ap2expr)
   graph = Body(header)
   { return graph; }
 }
 
-HanoiHeader Header(ContextValue context, Map<String,Expression> ap2expr) :
+HanoiHeader Header(Map<String,Expression> ap2expr) :
 {
-  HanoiHeader header = new HanoiHeader(context, ap2expr);
+  HanoiHeader header = new HanoiHeader(ap2expr);
   int numStates;
   int startState;
   Token ap;

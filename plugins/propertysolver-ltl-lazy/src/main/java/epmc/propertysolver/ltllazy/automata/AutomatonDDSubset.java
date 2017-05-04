@@ -36,7 +36,6 @@ import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 
 public final class AutomatonDDSubset implements AutomatonDD {
     private final ContextDD contextDD;
@@ -79,10 +78,10 @@ public final class AutomatonDDSubset implements AutomatonDD {
         DD init = computeInit();
         this.init = init.andWith(states.clone());
         DD stateStaySame = computeStateStaySame();
-        DD tr = computeTransition(ContextValue.get());
+        DD tr = computeTransition();
         trans = states.clone().andWith(tr).orWith(states.not().andWith(stateStaySame));
-        under = computeUnder(ContextValue.get(), contextDD);
-        over = computeOver(ContextValue.get(), contextDD);
+        under = computeUnder(contextDD);
+        over = computeOver(contextDD);
     }
 
     @Override
@@ -152,7 +151,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return init;
     }
     
-    private DD computeTransition(ContextValue context) throws EPMCException {
+    private DD computeTransition() throws EPMCException {
         List<DD> rSucc = subsetImage();
         
         int trueState = buechi.getTrueState();
@@ -213,7 +212,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return result;
     }
 
-    private DD computeUnder(ContextValue context, ContextDD encoding) throws EPMCException {
+    private DD computeUnder(ContextDD encoding) throws EPMCException {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             labelsOns.add(contextDD.newConstant(true));
@@ -272,7 +271,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return acceptance;
     }
 
-    private DD computeOver(ContextValue context, ContextDD encoding)
+    private DD computeOver(ContextDD encoding)
             throws EPMCException {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {

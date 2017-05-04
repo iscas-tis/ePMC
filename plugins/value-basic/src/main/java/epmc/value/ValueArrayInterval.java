@@ -42,7 +42,7 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     
     @Override
     public ValueArrayInterval clone() {
-        ValueArrayInterval clone = (ValueArrayInterval) getType().newValue();
+        ValueArrayInterval clone = getType().newValue();
         clone.set(this);
         return clone;
     }

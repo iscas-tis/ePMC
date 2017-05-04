@@ -40,7 +40,6 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -81,10 +80,9 @@ public final class ConvertTest {
 //    	System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
     	Set<Object> nodeProperties = new HashSet<>();
     	nodeProperties.add(CommonProperties.STATE);
-    	ContextValue context = ContextValue.get();
-		nodeProperties.add(newPlayer(context, 1));
-		nodeProperties.add(newPlayer(context, 2));
-		nodeProperties.add(newPlayer(context, 3));
+		nodeProperties.add(newPlayer(1));
+		nodeProperties.add(newPlayer(2));
+		nodeProperties.add(newPlayer(3));
 //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
 //    	System.out.println(graph);
 	}
@@ -113,9 +111,8 @@ public final class ConvertTest {
     	System.out.println(statistics);
     	Set<Object> nodeProperties = new HashSet<>();
     	nodeProperties.add(CommonProperties.STATE);
-    	ContextValue context = ContextValue.get();
-		nodeProperties.add(newPlayer(context, 1));
-		nodeProperties.add(newPlayer(context, 2));
+		nodeProperties.add(newPlayer(1));
+		nodeProperties.add(newPlayer(2));
 //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
   //  	System.out.println(graph);
     }
@@ -549,7 +546,7 @@ public final class ConvertTest {
         close(options);
     }
     
-    private static SMGPlayer newPlayer(ContextValue context, int i) {
+    private static SMGPlayer newPlayer(int i) {
     	return new SMGPlayer() {
 			
 			@Override

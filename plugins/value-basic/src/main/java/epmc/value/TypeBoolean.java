@@ -46,8 +46,7 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     
     public static void set(TypeBoolean type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        context.setType(TypeBoolean.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeBoolean.class, ContextValue.get().makeUnique(type));
     }
 
     public TypeBoolean() {

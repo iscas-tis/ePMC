@@ -43,6 +43,7 @@ public final class TimeBound {
 		private ExpressionToTypeEmpty() {
 		}
 		
+		@Override
 		public Type getType(Expression expression) throws EPMCException {
 			assert expression != null;
 			return null;

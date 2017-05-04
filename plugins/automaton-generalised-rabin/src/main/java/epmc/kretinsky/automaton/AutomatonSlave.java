@@ -34,17 +34,12 @@ import epmc.automaton.AutomatonExporterImpl;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
-import epmc.dd.ContextDD;
 import epmc.error.EPMCException;
-import epmc.expression.ContextExpression;
 import epmc.expression.Expression;
-import epmc.expression.UtilExpression;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
-import epmc.options.UtilOptionsEPMC;
 import epmc.plugin.UtilPlugin;
 import epmc.value.ContextValue;
-import epmc.value.OptionsValue;
 import epmc.value.Value;
 
 public final class AutomatonSlave implements AutomatonNumeredInput {
@@ -171,11 +166,11 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
     @Override
     public void queryState(int modelState, int observerState)
             throws EPMCException {
-        long cacheKey = (((long) modelState) << 32) | ((long) observerState);
+        long cacheKey = (((long) modelState) << 32) | (observerState);
         long cacheVal = cache.get(cacheKey);
         if (cacheVal == -1) {
             computeSuccessor((AutomatonSlaveState) numberToState(observerState), modelState);
-            cacheVal = (((long) this.succState) << 32) | ((long) this.succLabel);            
+            cacheVal = (((long) this.succState) << 32) | (this.succLabel);            
             cache.put(cacheKey, cacheVal);
         } else {
             this.succState = (int) (cacheVal >>> 32);
@@ -238,7 +233,6 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = ContextValue.get();
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
         Expression formula = UtilModelChecker.parse(options, "(a | (b U c))");
         Set<Expression> identifiers = formula.collectIdentifiers();

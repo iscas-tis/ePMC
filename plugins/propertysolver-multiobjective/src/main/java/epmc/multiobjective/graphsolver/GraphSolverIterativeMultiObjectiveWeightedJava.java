@@ -35,7 +35,6 @@ import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
@@ -177,7 +176,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
             ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -254,7 +252,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
             ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

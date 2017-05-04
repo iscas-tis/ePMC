@@ -23,7 +23,6 @@ package epmc.graph.explicit;
 import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
-import epmc.value.ContextValue;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -31,10 +30,9 @@ import epmc.value.ValueAlgebra;
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) throws EPMCException {
         assert graph != null;
-        ContextValue contextValue = ContextValue.get();
         ValueAlgebra zero = TypeWeight.get().getZero();
-        ValueAlgebra sum = newValueWeight(contextValue);
-        ValueAlgebra weight = newValueWeight(contextValue);
+        ValueAlgebra sum = newValueWeight();
+        ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int node = 0; node < graph.getNumNodes(); node++) {
@@ -59,10 +57,9 @@ public final class GraphExplicitModifier {
         if (uniRate != null) {
             uniRate.set(uniformisationRate);
         }
-        ContextValue contextValue = ContextValue.get();
         ValueAlgebra zero = TypeWeight.get().getZero();
-        ValueAlgebra sum = newValueWeight(contextValue);
-        ValueAlgebra weight = newValueWeight(contextValue);
+        ValueAlgebra sum = newValueWeight();
+        ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int node = 0; node < graph.getNumNodes(); node++) {
@@ -87,9 +84,8 @@ public final class GraphExplicitModifier {
     
     private static Value computeUniformisationRate(GraphExplicit graph)
             throws EPMCException {
-        ContextValue contextValue = ContextValue.get();
-        ValueAlgebra result = newValueWeight(contextValue);
-        ValueAlgebra sumRate = newValueWeight(contextValue);
+        ValueAlgebra result = newValueWeight();
+        ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int inputNode = 0; inputNode < graph.getNumNodes(); inputNode++) {
@@ -113,7 +109,7 @@ public final class GraphExplicitModifier {
     private GraphExplicitModifier() {
     }
     
-    private static ValueAlgebra newValueWeight(ContextValue contextValue) {
+    private static ValueAlgebra newValueWeight() {
         return TypeWeight.get().newValue();
     }
 }

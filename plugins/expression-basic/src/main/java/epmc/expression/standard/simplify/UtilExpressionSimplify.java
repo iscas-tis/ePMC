@@ -23,12 +23,11 @@ package epmc.expression.standard.simplify;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public final class UtilExpressionSimplify {
     public static Expression simplify(ExpressionToType expressionToType, Expression expression, Type preferredType) throws EPMCException {
-        ContextExpressionSimplifier context = new ContextExpressionSimplifier(ContextValue.get());
+        ContextExpressionSimplifier context = new ContextExpressionSimplifier();
         return context.simplify(expressionToType, expression);
     }
     

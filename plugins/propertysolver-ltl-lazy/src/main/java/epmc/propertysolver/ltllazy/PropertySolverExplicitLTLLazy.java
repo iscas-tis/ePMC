@@ -90,7 +90,6 @@ import epmc.value.ValueObject;
 public class PropertySolverExplicitLTLLazy implements PropertySolver {
     public final static String IDENTIFIER = "ltl-explicit";
     private ModelChecker modelChecker;
-    private ContextValue contextValue;
     private GraphExplicit graph;
     private boolean nonDet;
     private Options options;
@@ -105,7 +104,6 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         this.options = ContextValue.get().getOptions();
-        this.contextValue = ContextValue.get();
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
@@ -826,7 +824,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, min);
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(contextValue);
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

@@ -27,7 +27,6 @@ import java.util.Map;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
-import epmc.value.ContextValue;
 
 final class HanoiHeader {
 	private final Map<String,Expression> ap2expr;
@@ -36,8 +35,7 @@ final class HanoiHeader {
 	private final List<Expression> aps = new ArrayList<>();
 	private int numAcc;
 	
-	HanoiHeader(ContextValue context, Map<String,Expression> ap2expr) {
-		assert context != null;
+	HanoiHeader(Map<String,Expression> ap2expr) {
 		assert ap2expr != null;
 		this.ap2expr = ap2expr;
 	}

@@ -443,7 +443,7 @@ public final class ExplorerJANI implements Explorer {
 			return result;
 		}
 		Map<Expression,Expression> constants = model.getConstants();
-		ExpressionToType expressionToType = new ExpressionToTypeEmpty(ContextValue.get());
+		ExpressionToType expressionToType = new ExpressionToTypeEmpty();
 		Value value = UtilEvaluatorExplicit.evaluate(constants.get(property), expressionToType);
 		result = new PropertyNodeConstant(this, value);
 		constantProperies.put(property, result);

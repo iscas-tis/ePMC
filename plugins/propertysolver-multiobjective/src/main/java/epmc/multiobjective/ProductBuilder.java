@@ -147,10 +147,10 @@ final class ProductBuilder {
             if (quantified instanceof ExpressionReward) {
                 quantified = ExpressionLiteral.getFalse();
             }
-            AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(ContextValue.get(), quantified, expressions);
+            AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(quantified, expressions);
             automata.add(automaton);
         }
-        automatonProduct = new AutomatonProduct(ContextValue.get(), automata);
+        automatonProduct = new AutomatonProduct(automata);
         numAutomata = automatonProduct.getNumComponents();
         List<Object> prodNodeProperties = new ArrayList<>();
         prodNodeProperties.add(CommonProperties.STATE);

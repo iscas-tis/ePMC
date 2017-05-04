@@ -259,12 +259,12 @@ final class RewardsConverter {
 				if (isTrue(guard)) {
 					guardedReward = value;
 				} else {
-					guardedReward = UtilExpressionStandard.opIte(ContextValue.get(), guard, value, 0);
+					guardedReward = UtilExpressionStandard.opIte(guard, value, 0);
 				}
 				if (assignedToVariable == null) {
 					assignedToVariable = guardedReward;
 				} else {
-					assignedToVariable = UtilExpressionStandard.opAdd(ContextValue.get(), assignedToVariable, guardedReward);
+					assignedToVariable = UtilExpressionStandard.opAdd(assignedToVariable, guardedReward);
 				}
 			}
 			if (assignedToVariable == null) {
@@ -316,12 +316,12 @@ final class RewardsConverter {
 			if (isTrue(guard)) {
 				guardedReward = value;
 			} else {
-				guardedReward = UtilExpressionStandard.opIte(ContextValue.get(), guard, value, 0);				
+				guardedReward = UtilExpressionStandard.opIte(guard, value, 0);				
 			}
 			if (result == null) {
 				result = guardedReward;
 			} else {
-				result = UtilExpressionStandard.opAdd(ContextValue.get(), result, guardedReward);
+				result = UtilExpressionStandard.opAdd(result, guardedReward);
 			}
 		}
 		if (result == null) {

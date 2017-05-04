@@ -29,7 +29,6 @@ import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 
 public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-min";
@@ -39,8 +38,6 @@ public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
     private DD dd;
     private List<DD> vector;
     private boolean closed;
-
-	private ContextValue context;
     
     @Override
     public String getIdentifier() {
@@ -59,12 +56,12 @@ public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(context, expression, OperatorMin.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorMin.IDENTIFIER, variables);
     }
 
     @Override
     public void build() throws EPMCException {
-        vector = UtilEvaluatorDD.applyVector(context, expression, variables, getContextDD()::twoCplMin);
+        vector = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplMin);
     }
 
     @Override
@@ -85,6 +82,6 @@ public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(context);
+        return ContextDD.get();
     }
 }

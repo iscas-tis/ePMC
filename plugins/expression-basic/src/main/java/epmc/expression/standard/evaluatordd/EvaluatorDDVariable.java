@@ -71,7 +71,7 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
     public void build() throws EPMCException {
         Options options = ContextValue.get().getOptions();
         boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
-        ContextDD contextDD = ContextDD.get(ContextValue.get());
+        ContextDD contextDD = ContextDD.get();
         VariableDD variableDD = variables.get(expression);
         
         if (useVector && variableDD.isInteger()) {

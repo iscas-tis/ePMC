@@ -24,7 +24,6 @@ import java.io.Closeable;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
@@ -55,16 +54,16 @@ public interface Automaton extends Closeable {
         	return this;
         }
         
-        default Builder setExpression(ContextValue contextValue, Expression expression, Expression[] expressions) throws EPMCException {
+        default Builder setExpression(Expression expression, Expression[] expressions) throws EPMCException {
             ValueBoolean negate = TypeBoolean.get().newValue(false);
             Buechi buechi = UtilAutomaton.newBuechi(expression, expressions, true, negate);
             setBuechi(buechi);
             return this;
         }
         
-        default Builder setExpression(ContextValue contextValue, Expression expression) throws EPMCException {
+        default Builder setExpression(Expression expression) throws EPMCException {
             Expression[] expressions = UtilAutomaton.collectLTLInner(expression).toArray(new Expression[0]);
-            setExpression(contextValue, expression, expressions);
+            setExpression(expression, expressions);
             return this;
         }
 

@@ -34,8 +34,7 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     
     public static void set(TypeInteger type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        context.setType(TypeInteger.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeInteger.class, ContextValue.get().makeUnique(type));
     }
     
     public static boolean isInteger(Type type) {

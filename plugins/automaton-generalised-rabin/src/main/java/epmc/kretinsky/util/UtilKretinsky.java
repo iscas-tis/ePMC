@@ -28,11 +28,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 import epmc.error.EPMCException;
-import epmc.expression.ContextExpression;
 import epmc.expression.Expression;
-import epmc.expression.ProblemsExpression;
-import epmc.expression.UtilExpression;
-import epmc.options.OptionsEPMC;
 
 public final class UtilKretinsky {
     private UtilKretinsky() {

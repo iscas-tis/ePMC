@@ -81,7 +81,7 @@ public class ConstraintSolverConfiguration {
     }
 
     public ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(ContextValue.get());
+        return ContextDD.get();
     }
     
     public ExpressionToDD getExpressionToDD() {

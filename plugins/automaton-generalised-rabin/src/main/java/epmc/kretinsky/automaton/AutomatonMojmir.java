@@ -40,23 +40,17 @@ import epmc.automaton.AutomatonExporterImpl;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
-import epmc.dd.DD;
 import epmc.error.EPMCException;
-import epmc.expression.ContextExpression;
-import epmc.expression.Evaluator;
 import epmc.expression.Expression;
-import epmc.expression.UtilExpression;
 import epmc.kretinsky.options.KretinskyOptimiseMojmir;
 import epmc.kretinsky.options.OptionsKretinsky;
 import epmc.kretinsky.util.UtilKretinsky;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
-import epmc.options.UtilOptionsEPMC;
 import epmc.plugin.UtilPlugin;
 import epmc.util.StopWatch;
 import epmc.util.Util;
 import epmc.value.ContextValue;
-import epmc.value.OptionsValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -226,7 +220,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     public void queryState(int inputNr, int automatonState) throws EPMCException {
         if (implicit) {
             Value[] modelState = consistentValues[inputNr];
-            AutomatonMojmirState kretinskyState = (AutomatonMojmirState) numberToState(automatonState);
+            AutomatonMojmirState kretinskyState = numberToState(automatonState);
             this.succState = computeSuccessor(kretinskyState, modelState).getNumber();
             this.succLabel = makeUnique(new AutomatonMojmirLabel(consistentExpressions[inputNr])).getNumber();
         } else {
@@ -445,7 +439,6 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-        ContextValue contextValue = ContextValue.get();
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
 //        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
 //        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");

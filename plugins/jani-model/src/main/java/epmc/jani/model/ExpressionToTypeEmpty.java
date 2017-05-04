@@ -23,14 +23,9 @@ package epmc.jani.model;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public final class ExpressionToTypeEmpty implements ExpressionToType {
-	public ExpressionToTypeEmpty(ContextValue contextValue) {
-		assert contextValue != null;
-	}
-	
 	@Override
 	public Type getType(Expression expression) throws EPMCException {
 		assert expression != null;

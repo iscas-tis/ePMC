@@ -179,7 +179,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
 	public ModelJANI() {
 		StandardJANIOperators.add(operators);
-		this.contextValueJANI = new ContextValueJANI(ContextValue.get());
+		this.contextValueJANI = new ContextValueJANI();
 		Options options = ContextValue.get().getOptions();
 		janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
 		prepareStandardTypes();
@@ -423,10 +423,9 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 				continue;
 			}
 			Expression varInit = UtilExpressionStandard.opEq(
-					ContextValue.get(),
 					variable.getIdentifier(),
 					varInitValue);
-			initial = UtilExpressionStandard.opAnd(ContextValue.get(), initial, varInit);
+			initial = UtilExpressionStandard.opAnd(initial, varInit);
 		}
 		return initial;
 	}

@@ -64,7 +64,7 @@ public final class JANITypeClock implements JANIType {
 
 	@Override
 	public TypeClock toType() {
-		return ContextValue.get().makeUnique(new TypeClock(ContextValue.get()));
+		return ContextValue.get().makeUnique(new TypeClock());
 	}
 
 	@Override

@@ -51,7 +51,6 @@ import epmc.jani.model.type.JANIType;
 import epmc.jani.value.ContextValueJANI;
 import epmc.jani.value.TypeLocation;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -72,8 +71,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	private final static class ExpressionToTypeAutomaton implements ExpressionToType {
 		private final Map<Expression,Variable> variables = new LinkedHashMap<>();
 		
-		private ExpressionToTypeAutomaton(ContextValue contextValue, Collection<Variable> variables) {
-			assert contextValue != null;
+		private ExpressionToTypeAutomaton(Collection<Variable> variables) {
 			assert variables != null;
 			for (Variable variable : variables) {
 				assert variable != null;
@@ -325,7 +323,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 					.setLocationVariable(locationVarNr)
 					.setTypeLocation(typeLocation)
 					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(ContextValue.get(), this.variableToNumber.keySet()))
+					.setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
 					.build();
 			edgeEvaluators[locNr][locationsNumEdges[locNr]] = edgeEvaluator;
 			locationsNumEdges[locNr]++;
@@ -339,7 +337,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			locationEvaluators[index] = new AssignmentsEvaluator.Builder()
 					.setAssignments(location.getTransientValueAssignmentsOrEmpty())
 					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(ContextValue.get(), this.variableToNumber.keySet()))
+					.setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
 					.setVariableMap(variableToNumber)
 					.setVariables(explorer.getStateVariables().getIdentifiersArray())
 					.build();
@@ -427,8 +425,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	@Override
 	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
 		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), automaton.getVariablesOrEmpty());
-		initialExpression = UtilExpressionStandard.opAnd(ContextValue.get(), initialExpression, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(automaton.getVariablesOrEmpty());
+		initialExpression = UtilExpressionStandard.opAnd(initialExpression, bounds);
 		initialExpression = automaton.getModel().replaceConstants(initialExpression);
 		VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
 		enumerator.setExpression(initialExpression);

@@ -43,7 +43,6 @@ import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBounded;
 import epmc.value.Value;

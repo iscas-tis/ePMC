@@ -29,7 +29,6 @@ import java.util.Set;
 import com.google.common.base.MoreObjects;
 
 import epmc.error.EPMCException;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -53,9 +52,8 @@ public final class ExplorerProperties implements Serializable {
     private final Map<Object,ExplorerEdgeProperty> edgeProperties = new LinkedHashMap<>();
     private final Map<Object,ExplorerEdgeProperty> edgePropertiesExternal = Collections.unmodifiableMap(edgeProperties);
     
-    public ExplorerProperties(Explorer explorer, ContextValue contextValue) {
+    public ExplorerProperties(Explorer explorer) {
         assert explorer != null;
-        assert contextValue != null;
     }
     
     // TODO maybe this method should be removed later

@@ -29,7 +29,6 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -155,8 +154,8 @@ public final class ExpressionReward implements Expression {
         this.discount = discount;
     }
 
-    ExpressionReward(ContextValue context, List<Expression> children,
-            RewardType type, Positional positional) {
+    ExpressionReward(List<Expression> children, RewardType type,
+            Positional positional) {
         assert type != null;
         assert children.size() == 4;
         this.positional = positional;
