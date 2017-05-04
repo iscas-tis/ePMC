@@ -248,7 +248,6 @@ public final class ExpressionToDD implements Closeable {
         }
     }
     
-    private final ContextValue contextValue;
     private final ContextDD contextDD;
     private final Map<Expression,DD> constants;
     private final Map<Expression,VariableDD> variables;
@@ -319,15 +318,12 @@ public final class ExpressionToDD implements Closeable {
         return variableDD.getValueEncoding(copy);
     }
 
-    public ExpressionToDD(ContextValue contextValue,
-            Map<Expression,VariableDD> variables,
+    public ExpressionToDD(Map<Expression,VariableDD> variables,
             Map<Expression,DD> constants) throws EPMCException {
-        assert assertConstructorArgs(contextValue,
-            variables,
+        assert assertConstructorArgs(variables,
             constants);
-        ContextDD contextDD = getContextDD(contextValue);
+        ContextDD contextDD = getContextDD();
         Options options = contextDD.getOptions();
-        this.contextValue = contextValue;
         this.contextDD = contextDD;
         this.variables = new HashMap<>();
         this.variables.putAll(variables);
@@ -343,15 +339,9 @@ public final class ExpressionToDD implements Closeable {
         this.useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
     }
     
-    private static ContextDD getContextDD(ContextValue contextValue) throws EPMCException {
-        return ContextDD.get(contextValue);
-    }
-
-    private static boolean assertConstructorArgs(ContextValue
-            contextValue, Map<Expression,VariableDD>
-    variables, Map<Expression,DD> constants) throws EPMCException {
-        assert contextValue != null;
-        ContextDD contextDD = getContextDD(contextValue);
+    private static boolean assertConstructorArgs(Map<Expression,VariableDD>
+   variables, Map<Expression,DD> constants) throws EPMCException {
+        ContextDD contextDD = ContextDD.get();
         assert variables != null;
         for (Entry<Expression, VariableDD> entry : variables.entrySet()) {
             assert entry.getKey() != null;
@@ -368,10 +358,8 @@ public final class ExpressionToDD implements Closeable {
         return true;
     }
 
-    public ExpressionToDD(ContextValue contextExpression,
-            Map<Expression,VariableDD> variables) throws EPMCException {
-        this(contextExpression, variables,
-                Collections.<Expression,DD>emptyMap());
+    public ExpressionToDD(Map<Expression,VariableDD> variables) throws EPMCException {
+        this(variables, Collections.<Expression,DD>emptyMap());
     }
     
     public void putConstantWith(Expression expression, DD dd) {
@@ -727,7 +715,7 @@ public final class ExpressionToDD implements Closeable {
         for (Translated operand : operands) {
             assert operand != null;
         }
-        Operator operator = contextValue.getOperator(operatorString);
+        Operator operator = ContextValue.get().getOperator(operatorString);
         assert operator != null;
         return generalApply(operator, operands);
     }

@@ -52,7 +52,7 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     
     @Override
     public ValueArrayDoubleJava clone() {
-        ValueArrayDoubleJava clone = (ValueArrayDoubleJava) getType().newValue();
+        ValueArrayDoubleJava clone = getType().newValue();
         clone.set(this);
         return clone;
     }

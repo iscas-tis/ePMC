@@ -29,7 +29,6 @@ import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
 
 public final class EvaluatorDDOperatorVectorGe implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-ge";
@@ -56,12 +55,12 @@ public final class EvaluatorDDOperatorVectorGe implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(ContextValue.get(), expression, OperatorGe.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorGe.IDENTIFIER, variables);
     }
 
     @Override
     public void build() throws EPMCException {
-        dd = UtilEvaluatorDD.applyVector(ContextValue.get(), expression, variables, getContextDD()::twoCplGe);
+        dd = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplGe);
     }
 
     @Override
@@ -81,6 +80,6 @@ public final class EvaluatorDDOperatorVectorGe implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(ContextValue.get());
+        return ContextDD.get();
     }
 }

@@ -38,7 +38,6 @@ import epmc.graph.dd.StateSetDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.ContextValue;
 
 public final class PropertySolverDDOperator implements PropertySolver {
     public final static String IDENTIFIER = "operator-dd";
@@ -134,7 +133,7 @@ public final class PropertySolverDDOperator implements PropertySolver {
     }
 
     public ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(ContextValue.get());
+    	return ContextDD.get();
 	}
 
 

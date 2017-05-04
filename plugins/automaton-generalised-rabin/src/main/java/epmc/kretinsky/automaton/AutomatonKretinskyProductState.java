@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 import epmc.automaton.AutomatonStateUtil;
-import epmc.dd.DD;
 import epmc.error.EPMCException;
 
 final class AutomatonKretinskyProductState implements AutomatonStateUtil {

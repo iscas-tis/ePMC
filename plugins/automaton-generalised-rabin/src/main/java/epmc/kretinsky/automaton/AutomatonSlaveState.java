@@ -23,7 +23,6 @@ package epmc.kretinsky.automaton;
 import java.util.Arrays;
 
 import epmc.automaton.AutomatonStateUtil;
-import epmc.dd.DD;
 import epmc.error.EPMCException;
 
 final class AutomatonSlaveState implements AutomatonStateUtil {

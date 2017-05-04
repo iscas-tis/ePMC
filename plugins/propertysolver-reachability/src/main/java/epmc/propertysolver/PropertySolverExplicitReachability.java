@@ -45,7 +45,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;
@@ -64,7 +63,6 @@ import epmc.value.ValueArrayAlgebra;
 public final class PropertySolverExplicitReachability implements PropertySolver {
     public final static String IDENTIFIER = "reachability-explicit";
     private ModelChecker modelChecker;
-    private ContextValue contextValue;
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
 	private Expression property;
@@ -86,7 +84,6 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
         }
         // no need to use contextExpression
         //this.contextExpression = modelChecker.getContextExpression();
-        this.contextValue = ContextValue.get();
     }
     
 	@Override

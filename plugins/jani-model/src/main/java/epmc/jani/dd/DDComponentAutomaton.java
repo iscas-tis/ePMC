@@ -47,7 +47,6 @@ import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.value.ContextValueJANI;
 import epmc.jani.value.TypeLocation;
 import epmc.jani.value.ValueLocation;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 /**
@@ -119,7 +118,7 @@ final class DDComponentAutomaton implements DDComponent {
 		automaton = component.getAutomaton();
 		buildVariables();
 		buildCubes();
-		try (ExpressionToDD expressionToDD = new ExpressionToDD(ContextValue.get(), identifierToDD)) {
+		try (ExpressionToDD expressionToDD = new ExpressionToDD(identifierToDD)) {
 			buildTransitions(expressionToDD);
 			computeInitialNodes(expressionToDD);
 		}
@@ -387,8 +386,8 @@ final class DDComponentAutomaton implements DDComponent {
 			initialNodes = initialNodes.andWith(locationVariableDD.newVariableValue(PRES_STATE, initialLocValue));
 		}
 		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), automaton.getVariablesOrEmpty());
-		initialExpression = UtilExpressionStandard.opAnd(ContextValue.get(), initialExpression, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(automaton.getVariablesOrEmpty());
+		initialExpression = UtilExpressionStandard.opAnd(initialExpression, bounds);
 		initialExpression = automaton.getModel().replaceConstants(initialExpression);
 		initialNodes = initialNodes.andWith(expressionToDD.translate(initialExpression));
 		this.initialNodes = initialNodes;

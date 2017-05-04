@@ -42,8 +42,7 @@ public final class UtilConstraintSolver {
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		ContextValue contextValue = ContextValue.get();
-		Operator operator = constraintTypeToOperator(contextValue, constraintType);
+		Operator operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        .setOperator(operator)
 		        .setOperands(result, rhsExpression)
@@ -54,12 +53,11 @@ public final class UtilConstraintSolver {
 	public static Expression linearToExpression(ConstraintSolver solver,
 			Value[] row, int[] variables,
             ConstraintType constraintType, Value rightHandSide) {
-		ContextValue contextValue = ContextValue.get();
 		Expression result = linearToExpression(solver, row, variables);
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		Operator operator = constraintTypeToOperator(contextValue, constraintType);
+		Operator operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        	.setOperator(operator)
 		        	.setOperands(result, rhsExpression)
@@ -79,11 +77,11 @@ public final class UtilConstraintSolver {
 			Expression factor = new ExpressionLiteral.Builder()
 					.setValue(entry)
 					.build();
-			Expression term = times(ContextValue.get(), factor, variable);
+			Expression term = times(factor, variable);
 			if (result == null) {
 				result = term;
 			} else {
-				result = plus(ContextValue.get(), result, term);
+				result = plus(result, term);
 			}
 		}
 		return result;
@@ -100,29 +98,28 @@ public final class UtilConstraintSolver {
 			Expression factor = new ExpressionLiteral.Builder()
 					.setValue(entry)
 					.build();
-			Expression term = times(ContextValue.get(), factor, variable);
+			Expression term = times(factor, variable);
 			if (result == null) {
 				result = term;
 			} else {
-				result = plus(ContextValue.get(), result, term);
+				result = plus(result, term);
 			}
 		}
 		return result;
 	}
 	
-	public static Operator constraintTypeToOperator(ContextValue contextValue,
-			ConstraintType type) {
+	public static Operator constraintTypeToOperator(ConstraintType type) {
 		assert type != null;
 		Operator operator = null;
 		switch (type) {
 		case EQ:
-			operator = contextValue.getOperator(OperatorEq.IDENTIFIER);
+			operator = ContextValue.get().getOperator(OperatorEq.IDENTIFIER);
 			break;
 		case GE:
-			operator = contextValue.getOperator(OperatorGe.IDENTIFIER);
+			operator = ContextValue.get().getOperator(OperatorGe.IDENTIFIER);
 			break;
 		case LE:
-			operator = contextValue.getOperator(OperatorLe.IDENTIFIER);
+			operator = ContextValue.get().getOperator(OperatorLe.IDENTIFIER);
 			break;
 		default:
 			break;
@@ -139,16 +136,16 @@ public final class UtilConstraintSolver {
 		return null;
 	}
 
-    private static Expression times(ContextValue contextValue, Expression a, Expression b) {
+    private static Expression times(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-                .setOperator(contextValue.getOperator(OperatorMultiply.IDENTIFIER))
+                .setOperator(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER))
                 .setOperands(a, b)
                 .build();
     }
 
-    private static Expression plus(ContextValue contextValue, Expression a, Expression b) {
+    private static Expression plus(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(contextValue.getOperator(OperatorAdd.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER))
         	.setOperands(a, b)
         	.build();
     }

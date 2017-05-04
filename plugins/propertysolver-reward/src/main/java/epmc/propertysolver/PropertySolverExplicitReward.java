@@ -81,7 +81,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     public final static String IDENTIFIER = "reward-explicit";
     private ModelChecker modelChecker;
     private GraphExplicit graph;
-    private ContextValue contextValue;
 	private Expression property;
 	private StateSet forStates;
 
@@ -92,7 +91,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
-        this.contextValue = ContextValue.get();
     }
 
 
@@ -153,7 +151,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, (StateSetExplicit) forStates, min);
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(contextValue);
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

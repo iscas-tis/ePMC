@@ -71,7 +71,8 @@ public final class LogJANI implements Log {
         }
     }
     
-    public void send(Message key, Object... params) {
+    @Override
+	public void send(Message key, Object... params) {
         assert key != null;
         assert params != null;
         for (Object param : params) {
@@ -91,7 +92,8 @@ public final class LogJANI implements Log {
         }
     }
 
-    public void send(EPMCException exception) {
+    @Override
+	public void send(EPMCException exception) {
         assert exception != null;
         try {
             getChannel().send(exception);
@@ -100,7 +102,8 @@ public final class LogJANI implements Log {
         }
     }
 
-    public void send(ModelCheckerResult result) {
+    @Override
+	public void send(ModelCheckerResult result) {
         assert result != null;
         if (result.getResult() instanceof EPMCException) {
         	EPMCException exception = (EPMCException) result.getResult();
@@ -133,11 +136,13 @@ public final class LogJANI implements Log {
 				.build();
 	}
 
+	@Override
 	public void setSilent(boolean silent) {
         this.silent = silent;
     }
     
-    public boolean isSilent() {
+    @Override
+	public boolean isSilent() {
         return silent;
     }
     

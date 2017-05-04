@@ -32,7 +32,6 @@ import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 public class EvaluatorDDLiteral implements EvaluatorDD {
@@ -71,7 +70,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
         Value value = getValue(expression);
         boolean useVector = false;
 //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
-        ContextDD contextDD = ContextDD.get(ContextValue.get());
+        ContextDD contextDD = ContextDD.get();
         if (useVector && ValueInteger.isInteger(value)) {
             this.vector = contextDD.twoCplFromInt(ValueInteger.asInteger(value).getInt());
         } else if (useVector && ValueEnum.isEnum(value)) {

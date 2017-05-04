@@ -55,11 +55,15 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
 
     ValueReal getOverflow();
         
-    ValueReal getPosInf();
+    @Override
+	ValueReal getPosInf();
 
-    ValueReal getNegInf();
+    @Override
+	ValueReal getNegInf();
     
-    ValueReal getZero();
+    @Override
+	ValueReal getZero();
     
-    ValueReal getOne();    
+    @Override
+	ValueReal getOne();    
 }

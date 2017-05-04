@@ -54,92 +54,92 @@ public final class UtilExpressionStandard {
      * - having them here allows for more flexibility, as e.g. allowing null
      *   arguments for opAnd might be equivalent to the other parameter.
      */    
-    public static Expression opAdd(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opAdd(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorAdd.IDENTIFIER, op1, op2);
+        return newOperator(OperatorAdd.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opAdd(ContextValue context, Expression op1, int op2) {
+    public static Expression opAdd(Expression op1, int op2) {
         assert op1 != null;
         TypeInteger typeInteger = TypeInteger.get();
         
         Expression op2Expr = new ExpressionLiteral.Builder()
         		.setValue(UtilValue.newValue(typeInteger, op2))
         		.build();
-        return newOperator(context, OperatorAdd.IDENTIFIER, op1, op2Expr);
+        return newOperator(OperatorAdd.IDENTIFIER, op1, op2Expr);
     }
 
-    public static Expression opAddInverse(ContextValue context, Expression operand) {
+    public static Expression opAddInverse(Expression operand) {
         assert operand != null;
-        return newOperator(context, OperatorAddInverse.IDENTIFIER, operand);
+        return newOperator(OperatorAddInverse.IDENTIFIER, operand);
     }
 
-    public static Expression opDivide(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opDivide(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorDivide.IDENTIFIER, op1, op2);
+        return newOperator(OperatorDivide.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opAnd(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opAnd(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorAnd.IDENTIFIER, op1, op2);
+        return newOperator(OperatorAnd.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opOr(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opOr(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorOr.IDENTIFIER, op1, op2);
+        return newOperator(OperatorOr.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opMin(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opMin(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorMin.IDENTIFIER, op1, op2);
+        return newOperator(OperatorMin.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opMin(ContextValue context, int op1, Expression op2) {
+    public static Expression opMin(int op1, Expression op2) {
         assert op2 != null;
         TypeInteger typeInteger = TypeInteger.get();
         Expression op1Expr = new ExpressionLiteral.Builder()
                 .setValue(UtilValue.newValue(typeInteger, op1))
                 .build();
-        return newOperator(context, OperatorMin.IDENTIFIER, op1Expr, op2);
+        return newOperator(OperatorMin.IDENTIFIER, op1Expr, op2);
     }
 
-    public static Expression opMax(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opMax(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorMax.IDENTIFIER, op1, op2);
+        return newOperator(OperatorMax.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opEq(ContextValue context, Expression op1, Expression op2) {
+    public static Expression opEq(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(context, OperatorEq.IDENTIFIER, op1, op2);
+        return newOperator(OperatorEq.IDENTIFIER, op1, op2);
     }
 
-    public static Expression opIte(ContextValue context, Expression op1, Expression op2, Expression op3) {
+    public static Expression opIte(Expression op1, Expression op2, Expression op3) {
         assert op1 != null;
         assert op2 != null;
         assert op3 != null;
-        return newOperator(context, OperatorIte.IDENTIFIER, op1, op2, op3);
+        return newOperator(OperatorIte.IDENTIFIER, op1, op2, op3);
     }
 
-    public static Expression opIte(ContextValue context, Expression op1, Expression op2, int op3) {
+    public static Expression opIte(Expression op1, Expression op2, int op3) {
         assert op1 != null;
         assert op2 != null;
         TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
         		.setValue(UtilValue.newValue(typeInteger, op3))
         		.build();
-        return newOperator(context, OperatorIte.IDENTIFIER, op1, op2, op3Expr);
+        return newOperator(OperatorIte.IDENTIFIER, op1, op2, op3Expr);
     }
 
-    public static Expression opNot(ContextValue context, Expression operand) {
+    public static Expression opNot(Expression operand) {
         assert operand != null;
-        return newOperator(context, OperatorNot.IDENTIFIER, operand);
+        return newOperator(OperatorNot.IDENTIFIER, operand);
     }
 
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
@@ -154,8 +154,8 @@ public final class UtilExpressionStandard {
         return expression.replaceChildren(newChildren);
     }
 
-    static Expression newOperator(ContextValue context, String operatorId, Expression... operands) {
-        Operator operator = context.getOperator(operatorId);
+    static Expression newOperator(String operatorId, Expression... operands) {
+        Operator operator = ContextValue.get().getOperator(operatorId);
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))

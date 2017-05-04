@@ -26,15 +26,9 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.dd.OptionsDD;
 import epmc.error.EPMCException;
-import epmc.options.OptionsEPMC;
 import epmc.options.Options;
-import epmc.options.OptionsTypesEPMC;
-import epmc.options.UtilOptionsEPMC;
 import epmc.value.Value;
-import static epmc.modelchecker.TestHelper.*;
-import static epmc.ModelNames.*;
 
 public final class KretinskyTest {
     private final static String pluginDir = System.getProperty("user.dir") + "/plugins/kretinsky/target/classes/";

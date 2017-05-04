@@ -52,7 +52,7 @@ public class JANIComponentRegistrar {
 	
 	private static final Collection<String> reservedWords;
 	static {
-		Set<String> reservedWordsMutable = new HashSet<String>();
+		Set<String> reservedWordsMutable = new HashSet<>();
 		reservedWordsMutable.add("A");
 		reservedWordsMutable.add("bool");
 		reservedWordsMutable.add("clock");

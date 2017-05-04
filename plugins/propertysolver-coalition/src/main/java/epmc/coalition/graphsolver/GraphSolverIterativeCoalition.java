@@ -180,8 +180,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         builder.setParts(parts);
-        ContextValue contextValue = ContextValue.get();
-        boolean useNative = contextValue.getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         builder.setForNative(useNative);
         builder.setReorder();
@@ -208,7 +207,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     }
 
     private void prepareResultValues() throws EPMCException {
-    	ContextValue contextValue = ContextValue.get();
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());

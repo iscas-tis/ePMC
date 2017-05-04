@@ -959,7 +959,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;
@@ -1020,6 +1020,6 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }    
     
     public ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(ContextValue.get());
+    	return ContextDD.get();
 	}
 }

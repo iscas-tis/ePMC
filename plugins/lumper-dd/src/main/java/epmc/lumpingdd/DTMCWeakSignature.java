@@ -34,7 +34,6 @@ import epmc.graph.SemanticsDTMC;
 import epmc.graph.dd.GraphDD;
 import epmc.lumpingdd.transrepresentation.DoubleRepresentation;
 import epmc.lumpingdd.transrepresentation.TransitionRepresentation;
-import epmc.value.ContextValue;
 import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
@@ -93,7 +92,6 @@ public class DTMCWeakSignature implements Signature {
 	@Override
 	public DD computeSignatures(DD partitions) throws EPMCException {
         Permutation presNext = original.getSwapPresNext();
-        ContextValue contextValue = ContextValue.get();
         TypeWeightTransition typeWeightTransition = TypeWeightTransition.get();
         ValueAlgebra zeroValue = UtilValue.newValue(typeWeightTransition, 0);
         ValueAlgebra zeroOne = UtilValue.newValue(typeWeightTransition, 1);        

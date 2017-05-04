@@ -49,7 +49,7 @@ final class ValueArrayEnum implements ValueArray {
     }
     
     private Enum<?>[] getConstants() {
-        return ((TypeArrayEnum) getType()).getConstants();
+        return getType().getConstants();
     }
     
     @Override

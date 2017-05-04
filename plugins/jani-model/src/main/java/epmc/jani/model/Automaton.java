@@ -39,7 +39,6 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -166,10 +165,9 @@ public final class Automaton implements JANINode, ExpressionToType {
 				continue;
 			}
 			Expression varInit = UtilExpressionStandard.opEq(
-					ContextValue.get(),
 					variable.getIdentifier(),
 					varInitValue);
-			initial = UtilExpressionStandard.opAnd(ContextValue.get(), initial, varInit);
+			initial = UtilExpressionStandard.opAnd(initial, varInit);
 		}
 		return initial;
 	}

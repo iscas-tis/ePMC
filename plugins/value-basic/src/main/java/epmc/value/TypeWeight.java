@@ -30,8 +30,8 @@ public interface TypeWeight extends TypeAlgebra {
     
     static void set(TypeWeight type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        ContextValue.get().setType(TypeWeight.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeWeight.class,
+        		ContextValue.get().makeUnique(type));
     }
     
     static boolean isWeight(Type type) {
@@ -50,9 +50,11 @@ public interface TypeWeight extends TypeAlgebra {
 
     ValueAlgebra getNegInf();
     
-    ValueAlgebra getZero();
+    @Override
+	ValueAlgebra getZero();
     
-    ValueAlgebra getOne();
+    @Override
+	ValueAlgebra getOne();
     
     @Override
     ValueAlgebra newValue();

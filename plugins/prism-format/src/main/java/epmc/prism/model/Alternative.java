@@ -121,8 +121,7 @@ public final class Alternative {
                 */
         for (Entry<Expression,Expression> entry : effect.entrySet()) {
             Expression left = entry.getKey();
-            Type definedType = null;
-            definedType = types.get(left);
+            Type definedType = types.get(left);
             // TODO
             /*
             Type actualType = entry.getValue().getType();

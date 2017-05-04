@@ -27,19 +27,11 @@ import java.util.List;
 import java.util.Set;
 
 import epmc.algorithms.dd.ComponentsDD;
-import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.error.EPMCException;
-import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.standard.CmpType;
-import epmc.expression.standard.DirType;
-import epmc.expression.standard.ExpressionLiteral;
-import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
-import epmc.expression.standard.TemporalType;
-import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
@@ -52,25 +44,11 @@ import epmc.graph.UtilGraph;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.StateSetDD;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.graphsolver.GraphSolverConfigurationExplicit;
-import epmc.graphsolver.UtilGraphSolver;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
-import epmc.value.OperatorNot;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.UtilValue;
-import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueReal;
 
 /**
  * This class implements a propertysolver which uses a BDD data structure

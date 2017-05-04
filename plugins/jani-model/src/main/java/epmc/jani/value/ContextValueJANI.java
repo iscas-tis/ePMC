@@ -30,19 +30,6 @@ import epmc.value.ContextValue;
  * @author Ernst Moritz Hahn
  */
 public final class ContextValueJANI {
-	/** Context value used for the plugin. */
-	private final ContextValue contextValue;
-
-	/**
-	 * Construct new context value extension for JANI.
-	 * 
-	 * @param contextValue context value to use
-	 */
-	public ContextValueJANI(ContextValue contextValue) {
-		assert contextValue != null;
-		this.contextValue = contextValue;
-	}
-	
 	/**
 	 * Construct type to store location from a set of locations.
 	 * 
@@ -51,7 +38,7 @@ public final class ContextValueJANI {
 	 */
 	public TypeLocation getTypeLocation(Locations locations) {
 		assert locations != null;
-		TypeLocation type = new TypeLocation(contextValue, locations);
-		return contextValue.makeUnique(type);
+		TypeLocation type = new TypeLocation(locations);
+		return ContextValue.get().makeUnique(type);
 	}
 }

@@ -163,10 +163,10 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	/**
 	 * Flatten operator defined in the paper
 	 */
-	public static Set<Set<Expression>> flatten(ContextValue contextValue, Expression prop) {
+	public static Set<Set<Expression>> flatten(Expression prop) {
 		if(prop instanceof ExpressionPropositional) {
-			Set<Set<Expression>> setOfSets = new HashSet<Set<Expression>>();
-			Set<Expression>       set      = new HashSet<Expression>();
+			Set<Set<Expression>> setOfSets = new HashSet<>();
+			Set<Expression>       set      = new HashSet<>();
 			set.add(prop);
 			setOfSets.add(set);
 			return setOfSets;
@@ -178,13 +178,13 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			switch (expressionOperator.getOperator()
 	                .getIdentifier()) {
 			case OperatorOr.IDENTIFIER:
-				Set<Set<Expression>> op1Set = flatten(contextValue, expressionOperator.getOperand1());
-				op1Set.addAll(flatten(contextValue, expressionOperator.getOperand2())); 
+				Set<Set<Expression>> op1Set = flatten(expressionOperator.getOperand1());
+				op1Set.addAll(flatten(expressionOperator.getOperand2())); 
 				return op1Set;
 			case OperatorAnd.IDENTIFIER:
 				set = new HashSet<>();
-				Set<Set<Expression>> set1 = flatten(contextValue, expressionOperator.getOperand1());
-				Set<Set<Expression>> set2 = flatten(contextValue, expressionOperator.getOperand2());
+				Set<Set<Expression>> set1 = flatten(expressionOperator.getOperand1());
+				Set<Set<Expression>> set2 = flatten(expressionOperator.getOperand2());
 				// CNF => DNF
 				for (Set<Expression> p1 : set1) {
 					for (Set<Expression> p2 : set2) {
@@ -200,14 +200,14 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		}
 		// Temporal operators
 		assert prop instanceof ExpressionTemporal;
-		Set<Set<Expression>> result = new HashSet<Set<Expression>>();
+		Set<Set<Expression>> result = new HashSet<>();
 		Set<Set<Expression>> setOp1 = null;
 		
 		ExpressionTemporal expressionTemporal = (ExpressionTemporal)prop;
 		switch (expressionTemporal.getTemporalType()) {
 		case FINALLY:
 
-			setOp1 = flatten(contextValue, expressionTemporal.getOperand1()); // flatten op1 
+			setOp1 = flatten(expressionTemporal.getOperand1()); // flatten op1 
 			if(expressionTemporal.getOperand1() instanceof ExpressionTemporal) 
 				return setOp1;
 			// if no temporal operators in op1
@@ -220,7 +220,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 					} else {
 						conjs = conjs == null ?
 								// conjunction
-						p : UtilLTL.newOperator(contextValue, OperatorAnd.IDENTIFIER, conjs, p); 
+						p : UtilLTL.newOperator(OperatorAnd.IDENTIFIER, conjs, p); 
 					}
 				}
 				if(conjs != null) tmp.add(UtilLTL.newFinally(conjs));
@@ -228,7 +228,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			}
 			return result;
 		case GLOBALLY: // G a = 0 R a
-			setOp1 = flatten(contextValue, expressionTemporal.getOperand1());
+			setOp1 = flatten(expressionTemporal.getOperand1());
 			if(expressionTemporal.getOperand1() instanceof ExpressionTemporal )
 				return setOp1;
 			Set<Set<Expression>> cnfSet = UtilLTL.permute(setOp1); // to CNF form
@@ -241,7 +241,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 					} else {
 						disjs = disjs == null ?
 						// disjunction
-						p : UtilLTL.newOperator(contextValue, OperatorOr.IDENTIFIER, disjs, p); 
+						p : UtilLTL.newOperator(OperatorOr.IDENTIFIER, disjs, p); 
 					}
 				}
 				if (disjs != null)
@@ -265,7 +265,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		assert (!(prop instanceof ExpressionQuantifier));
 		Expression normFromProp = prop;
 		Set<Set<Expression>> clauses = PropertySolverExplicitLTLFairness
-				.flatten(ContextValue.get(), normFromProp);
+				.flatten(normFromProp);
 
 		BitSet acBSCCs = UtilBitSet.newBitSetUnbounded();
 
@@ -304,7 +304,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			if (formulaTemporal.getTemporalType() == TemporalType.GLOBALLY) {
 				globalFormula = globalFormula == null? 
 						formulaTemporal.getOperand1() :
-						UtilExpressionStandard.opAnd(ContextValue.get(), globalFormula, formulaTemporal.getOperand1());
+						UtilExpressionStandard.opAnd(globalFormula, formulaTemporal.getOperand1());
 			} else {
 				finalFormulas.add(formulaTemporal.getOperand1());
 			}
@@ -405,7 +405,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		StateMap result = doSolve(modelGraph, forStates, quantifiedProp);
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             assert op != null;
             result = result.applyWith(op, compare);
         }

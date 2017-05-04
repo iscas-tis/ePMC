@@ -82,7 +82,6 @@ final class PropertyNormaliser {
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
         assert subtractNumericalFrom != null;
-        ContextValue contextValue = ContextValue.get();
         assert subtractNumericalFrom.getType().canImport(TypeWeight.get());
         subtractNumericalFrom.set(TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
@@ -105,7 +104,7 @@ final class PropertyNormaliser {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                 		.setDirType(DirType.MAX)
                 		.setCmpType(CmpType.IS)
-                		.setQuantified(not(ContextValue.get(), quantified))
+                		.setQuantified(not(quantified))
                 		.setCondition(objectiveQuantifier.getCondition())
                 		.build();
                 newQuantifiersQuantitative.add(newQuantifier);
@@ -118,7 +117,7 @@ final class PropertyNormaliser {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                 		.setDirType(DirType.NONE)
                 		.setCmpType(CmpType.GE)
-                		.setQuantified(not(ContextValue.get(), quantified))
+                		.setQuantified(not(quantified))
                 		.setCompare(newCompare)
                 		.setCondition(objectiveQuantifier.getCondition())
                 		.build();
@@ -135,7 +134,7 @@ final class PropertyNormaliser {
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getZero());
             } else if (isQuantLe(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newCompare = new ExpressionOperator.Builder()
-                        .setOperator(contextValue.getOperator(OperatorAddInverse.IDENTIFIER))
+                        .setOperator(ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER))
                         .setOperands(objectiveQuantifier.getCompare()).build();
                 newCompare = new ExpressionLiteral.Builder()
                 		.setValue(evaluateValue(newCompare))
@@ -189,9 +188,9 @@ final class PropertyNormaliser {
     			.build();
     }
     
-    private static Expression not(ContextValue contextValue, Expression expression) {
+    private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(contextValue.getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
         	.setOperands(expression)
         	.build();
     }

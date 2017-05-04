@@ -67,7 +67,6 @@ public class MDPOneStepSignature implements Signature {
 	private GraphDD original;
 	private VariableDD blockIndexVar;
 	private ContextDD contextDD;
-	private ContextValue contextValue;
 	private TransitionRepresentation transRepr;
 	private DD pVar;
 	
@@ -80,7 +79,6 @@ public class MDPOneStepSignature implements Signature {
 	public void setOriginal(GraphDD original) throws EPMCException {
 		this.original = original;
 		this.contextDD = original.getContextDD();
-		this.contextValue = ContextValue.get();
 //		OptionsTypesEPMC.MDPEncoding enc = original.getOptions().getEnum(OptionsEPMC.MDP_ENCODING_MODE);
 //    	useStateDistribution = ((Semantics) original.getGraphPropertyObject(CommonProperties.SEMANTICS)).isNonDet()
   //  			&& enc == OptionsTypesEPMC.MDPEncoding.STATE_DISTRIBUTION;

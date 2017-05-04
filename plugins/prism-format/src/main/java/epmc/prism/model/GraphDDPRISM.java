@@ -60,7 +60,6 @@ import epmc.prism.error.ProblemsPRISM;
 import epmc.prism.messages.MessagesPRISM;
 import epmc.prism.options.OptionsPRISM;
 import epmc.util.StopWatch;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
@@ -78,8 +77,6 @@ final class GraphDDPRISM implements GraphDD {
     private final GraphDDProperties properties;
     private final ModelPRISM model;
     private final ExpressionToDD expressionToDD;
-    private final ContextDD contextDD;
-    private final ContextValue contextValue;
     private final TObjectIntMap<Expression> actions;
     private final Map<Expression,Type> variables;
     private final DD initial;
@@ -111,12 +108,12 @@ final class GraphDDPRISM implements GraphDD {
 
     /* constructors */
     
-    GraphDDPRISM(ModelPRISM model, ContextDD contextDD,
-            Set<Object> nodeProperties, Set<Object> edgeProperties)
+    GraphDDPRISM(ModelPRISM model, Set<Object> nodeProperties,
+            Set<Object> edgeProperties)
             throws EPMCException {
         this.properties = new GraphDDProperties(this);
-        assert assertConstructorArguments(model, contextDD, nodeProperties, edgeProperties);
-        Options options = contextDD.getOptions();
+        assert assertConstructorArguments(model, nodeProperties, edgeProperties);
+        Options options = ContextDD.get().getOptions();
         ensure(options.getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
         if (SemanticsNonDet.isNonDet(model.getSemantics())) {
             transEnc = TransitionEncoding.MDP_STATE;
@@ -129,21 +126,19 @@ final class GraphDDPRISM implements GraphDD {
         
         this.model = model;
         this.withWeights = edgeProperties.contains(CommonProperties.WEIGHT);
-        this.contextValue = ContextValue.get();
         this.variablesDD = new HashMap<>();
-        this.contextDD = contextDD;
         this.actions = collectActions();
         this.variables = new HashMap<>();
         this.variables.putAll(collectVariables(model));
-        this.actionVariable = contextDD.newInteger("%actions", 1, 0, actions.size() - 1);
+        this.actionVariable = ContextDD.get().newInteger("%actions", 1, 0, actions.size() - 1);
         computeVariableEncoding(variables);
-        this.expressionToDD = new ExpressionToDD(contextValue, variablesDD);
+        this.expressionToDD = new ExpressionToDD(variablesDD);
         this.presVars = computePresVars();
         this.nextVars = computeNextVars();
-        this.nextCube = contextDD.listToCube(this.nextVars);
-        this.nextToPres = contextDD.newPermutationListDD(presVars, nextVars);
+        this.nextCube = ContextDD.get().listToCube(this.nextVars);
+        this.nextToPres = ContextDD.get().newPermutationListDD(presVars, nextVars);
         this.transitionVars = computeActionVars();
-        this.nonDetStates = contextDD.newConstant(false);
+        this.nonDetStates = ContextDD.get().newConstant(false);
         this.presEqNext = computePresEqNext();
         this.initial = translateInitial();
         expressionToDD.putConstant(new ExpressionIdentifierStandard.Builder()
@@ -154,7 +149,7 @@ final class GraphDDPRISM implements GraphDD {
         for (Module module : model.getModules()) {
             modulesDD.add(translateModuleDD(module.asCommands()));
         }
-        DD nondetCubePres = contextDD.newConstant(true);
+        DD nondetCubePres = ContextDD.get().newConstant(true);
         if (SemanticsNonDet.isNonDet(model.getSemantics())) {
             for (Module module : model.getModules()) {
                 DD moduleNondetCubePres = nondetVariables.get(module).newCube(0);
@@ -172,10 +167,10 @@ final class GraphDDPRISM implements GraphDD {
             this.actionsCube = actionVariable.newCube(0);
         }
 
-        presCube = contextDD.listToCube(presVars);
+        presCube = ContextDD.get().listToCube(presVars);
         DD presAndActions = actionsCube.and(presCube);
         this.presAndActions = presAndActions.andWith(nondetCubePres);
-        this.states = computeStates(transEnc, contextDD, nondetVariables.values());
+        this.states = computeStates(transEnc, nondetVariables.values());
         TypeEnum playerType = TypeEnum.get(Player.class);
         Value playerStochastic = playerType.newValue(Player.STOCHASTIC);
         Value playerOne = playerType.newValue(Player.ONE);
@@ -183,9 +178,9 @@ final class GraphDDPRISM implements GraphDD {
         if (nodeProperties.contains(CommonProperties.PLAYER)) {
             DD player;
             if (transEnc == TransitionEncoding.MDP_STATE) {
-                player = contextDD.newConstant(playerOneStochastic);
+                player = ContextDD.get().newConstant(playerOneStochastic);
             } else if (transEnc == TransitionEncoding.MC) {
-                player = contextDD.newConstant(playerStochastic);
+                player = ContextDD.get().newConstant(playerStochastic);
             } else {
                 player = null;
                 assert false;
@@ -211,7 +206,7 @@ final class GraphDDPRISM implements GraphDD {
 
         DD transitionsBoolean;
         if (withWeights) {
-            DD constZero = contextDD.newConstant(0);
+            DD constZero = ContextDD.get().newConstant(0);
             transitionsBoolean = weight.ne(constZero);
             constZero.dispose();
         } else {
@@ -325,10 +320,9 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private static boolean assertConstructorArguments(ModelPRISM model,
-            ContextDD contextDD,
-            Set<Object> nodeProperties, Set<Object> edgeProperties) {
+            Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
         assert model != null;
-        assert contextDD != null;
         assert nodeProperties != null;
         for (Object object : nodeProperties) {
             assert object != null;
@@ -359,7 +353,7 @@ final class GraphDDPRISM implements GraphDD {
         }
         Map<Expression,DD> canMoves = computeCanMode(model.getSystem(), modules,
                 expressionToDD);
-        DD canMove = contextDD.newConstant(false);
+        DD canMove = ContextDD.get().newConstant(false);
         for (DD can : canMoves.values()) {
             canMove = canMove.orWith(can);
         }
@@ -370,7 +364,6 @@ final class GraphDDPRISM implements GraphDD {
     private static Map<Expression,DD> computeCanMode(SystemDefinition system,
             Map<String, Module> modules, ExpressionToDD expressionToDD)
                     throws EPMCException {
-        ContextDD contextDD = expressionToDD.getContextDD();
         Expression noSync = new ExpressionIdentifierStandard.Builder()
         		.setName("")
         		.build();
@@ -381,7 +374,7 @@ final class GraphDDPRISM implements GraphDD {
                 Expression action = command.getLabel();
                 DD guards = result.get(action);
                 if (guards == null) {
-                    guards = contextDD.newConstant(false);
+                    guards = ContextDD.get().newConstant(false);
                     result.put(action, guards);
                 }
                 DD guard = expressionToDD.translate(command.getGuard());
@@ -493,9 +486,9 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private static DD computeStates(TransitionEncoding transEnc,
-            ContextDD contextDD, Iterable<VariableDD> nondetVariables)
+            Iterable<VariableDD> nondetVariables)
             throws EPMCException {
-        return contextDD.newConstant(true);
+        return ContextDD.get().newConstant(true);
     }
     
     @Override
@@ -543,7 +536,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private DD computePresEqNext() throws EPMCException {
-        DD result = contextDD.newConstant(true);
+        DD result = ContextDD.get().newConstant(true);
         for (Expression variable : variables.keySet()) {
             List<DD> ddVarsPres = variablesDD.get(variable).getDDVariables(0);
             List<DD> ddVarsNext = variablesDD.get(variable).getDDVariables(1);
@@ -625,7 +618,7 @@ final class GraphDDPRISM implements GraphDD {
         case MDP_STATE:
             for (Module module : model.getModules()) {
                 int numCommands = ((ModuleCommands) module).getCommands().size();
-                nondetVariables.put(module, contextDD.newInteger("%nondet" + module.getName(), 1, lower, numCommands - 1));
+                nondetVariables.put(module, ContextDD.get().newInteger("%nondet" + module.getName(), 1, lower, numCommands - 1));
             }
             break;
         case MC:
@@ -634,7 +627,7 @@ final class GraphDDPRISM implements GraphDD {
         rateIndex = lower;  // for MA
         for (Entry<Expression, Type> entry : variables.entrySet()) {
             Type type = entry.getValue();
-            variablesDD.put(entry.getKey(), contextDD.newVariable(entry.getKey().toString(), type, 2));
+            variablesDD.put(entry.getKey(), ContextDD.get().newVariable(entry.getKey().toString(), type, 2));
         }
     }
 
@@ -652,7 +645,7 @@ final class GraphDDPRISM implements GraphDD {
                 } else {
                     value = TypeBoolean.get().getFalse();
                 }
-                actionCommands = contextDD.newConstant(value);
+                actionCommands = ContextDD.get().newConstant(value);
                 result.put(action, actionCommands);
             }
             DD commandDD = translateCommand(command, module, commandNr);
@@ -738,7 +731,7 @@ final class GraphDDPRISM implements GraphDD {
 
     private DD translateModuleDD(ModuleCommands module) throws EPMCException {
         int commandNr = 0;
-        DD moduleDD = withWeights ? contextDD.newConstant(0) : contextDD.newConstant(false);
+        DD moduleDD = withWeights ? ContextDD.get().newConstant(0) : ContextDD.get().newConstant(false);
         for (Command command : module.getCommands()) {
             DD commandDD = translateCommand(command, module, commandNr);
             DD oldModuleDD = moduleDD;
@@ -787,7 +780,7 @@ final class GraphDDPRISM implements GraphDD {
             }
         }
 
-        DD probDD = withWeights ? contextDD.newConstant(0) : contextDD.newConstant(false);
+        DD probDD = withWeights ? ContextDD.get().newConstant(0) : ContextDD.get().newConstant(false);
         for (Alternative alternative : command.getAlternatives()) {
             DD alternativeDD = translateAlternative(alternative);
             if (withWeights) {
@@ -815,7 +808,7 @@ final class GraphDDPRISM implements GraphDD {
         int playerNr = command.getPlayer();
         if (playerNr >= 0) {
             while (players.size() < playerNr + 1) {
-                players.add(contextDD.newConstant(false));
+                players.add(ContextDD.get().newConstant(false));
             }
             DD playerDD = players.get(playerNr);
             playerDD = playerDD.orWith(expressionToDD.translate(command.getGuard()));
@@ -830,9 +823,9 @@ final class GraphDDPRISM implements GraphDD {
         if (withWeights) {
             weight = expressionToDD.translate(alternative.getWeight());
         } else {
-            weight = contextDD.newConstant(1);
+            weight = ContextDD.get().newConstant(1);
         }
-        DD assignments = contextDD.newConstant(true);
+        DD assignments = ContextDD.get().newConstant(true);
         for (Entry<Expression,Expression> entry : alternative.getEffect().entrySet()) {
             DD assignment;
             VariableDD variableDD = variablesDD.get(entry.getKey());
@@ -848,7 +841,7 @@ final class GraphDDPRISM implements GraphDD {
             assignmentsOld.dispose();
         } else {
             DD weightOld = weight;
-            weight = weight.gt(contextDD.newConstant(0));
+            weight = weight.gt(ContextDD.get().newConstant(0));
             weightOld.dispose();
             DD assignmentsOld = assignments;
             assignments = assignments.and(weight);
@@ -917,7 +910,7 @@ final class GraphDDPRISM implements GraphDD {
             throws EPMCException {
         assert state != null;
         assert rewardStructure != null;
-        DD rewardDD = contextDD.newConstant(0);
+        DD rewardDD = ContextDD.get().newConstant(0);
         for (StateReward reward : rewardStructure.getStateRewards()) {
             DD guard = expressionToDD.translate(reward.getGuard());
             DD value = expressionToDD.translate(reward.getValue());
@@ -932,7 +925,7 @@ final class GraphDDPRISM implements GraphDD {
             throws EPMCException {
         assert state != null;
         assert rewardStructure != null;
-        DD rewardDD = contextDD.newConstant(0);
+        DD rewardDD = ContextDD.get().newConstant(0);
         for (TransitionReward reward : rewardStructure.getTransitionRewards()) {
             DD guard = expressionToDD.translate(reward.getGuard());
             DD value = expressionToDD.translate(reward.getValue());
@@ -960,9 +953,8 @@ final class GraphDDPRISM implements GraphDD {
                     throws EPMCException {
         StopWatch timer = new StopWatch(true);
         log.send(MessagesPRISM.EXPLORING);
-        ContextDD contextDD = initial.getContext();
         DD states = initial.clone();
-        DD predecessors = contextDD.newConstant(false);
+        DD predecessors = ContextDD.get().newConstant(false);
         while (!states.equals(predecessors)) {
             predecessors.dispose();
             predecessors = states;

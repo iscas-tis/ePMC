@@ -48,8 +48,8 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     
     public static void set(TypeInterval type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        context.setType(TypeInterval.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeInterval.class,
+        		ContextValue.get().makeUnique(type));
     }
     
     public TypeInterval() {
@@ -132,7 +132,8 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
         return TypeReal.get();
     }
     
-    public ValueInterval getPosInf() {
+    @Override
+	public ValueInterval getPosInf() {
         return posInf;
     }
     

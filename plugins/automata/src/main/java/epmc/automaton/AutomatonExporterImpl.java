@@ -123,8 +123,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     private Value[][] computeValidInputs(Automaton automaton)
             throws EPMCException {
     	assert automaton != null;
-        ContextValue contextValue = ContextValue.get();
-        ContextDD contextDD = ContextDD.get(contextValue);
+        ContextDD contextDD = ContextDD.get();
         Expression[] expressions = automaton.getExpressions();
         Set<Expression> identifiers = new HashSet<>();
         for (Expression expression : expressions) {
@@ -134,7 +133,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         for (Expression identifier : identifiers) {
             variables.put(identifier, contextDD.newVariable(identifier.toString(), TypeBoolean.get(), 1));
         }
-        ExpressionToDD checkE2D = new ExpressionToDD(contextValue, variables);
+        ExpressionToDD checkE2D = new ExpressionToDD(variables);
         
         List<Value[]> values = new ArrayList<>();
         int maxNumValues = 1;

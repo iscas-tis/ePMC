@@ -94,13 +94,12 @@ public class LumperDDSignature implements LumperDD {
     private DD partitionADD;
     private VariableDD blockIndexVar;
     private ContextDD contextDD;
-    private ContextValue contextValue;
 	private Signature signature;
 	private ModelChecker modelChecker;
 	private String identifier;
     
     public LumperDDSignature(Signature s, String id) {
-        this.requireValidFor = new ArrayList<Expression>();
+        this.requireValidFor = new ArrayList<>();
     	this.signature = s;
     	this.identifier = id;
     }
@@ -205,7 +204,7 @@ public class LumperDDSignature implements LumperDD {
     private ExpressionToDD getQuotientExpressionToDD() throws EPMCException {
     	Map<Expression, VariableDD> variables = new HashMap<>();
     	variables.put(newIdentifier(BLOCK_INDEX), blockIndexVar);
-    	return new ExpressionToDD(ContextValue.get(), variables);
+    	return new ExpressionToDD(variables);
     }
     
     private class Tuple {
@@ -413,7 +412,6 @@ public class LumperDDSignature implements LumperDD {
         assert graph != null;
         this.original = graph;
         contextDD = original.getContextDD();
-        contextValue = ContextValue.get();
         signature.setOriginal(original);
     }
 
@@ -553,7 +551,7 @@ public class LumperDDSignature implements LumperDD {
     	DD trueDD = contextDD.newConstant(true);
     	VariableDD rewardIndex = contextDD.newInteger("%rewardIndex", 1, 0, stateSpaceSize - 1);
     	for(DD stateReward: reward) {
-        	Set<Value> values = new HashSet<Value>();
+        	Set<Value> values = new HashSet<>();
         	stateReward.collectValues(values, trueDD);
     		values.remove(null);
         	DD valueIndex = contextDD.newConstant(0);
@@ -914,7 +912,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorOr.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }
@@ -923,7 +921,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorGe.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorGe.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }
@@ -932,7 +930,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorLe.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorLe.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }
@@ -941,7 +939,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorEq.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }
@@ -950,7 +948,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(contextValue.getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
     			.setOperands(a, b)
     			.build();
     }

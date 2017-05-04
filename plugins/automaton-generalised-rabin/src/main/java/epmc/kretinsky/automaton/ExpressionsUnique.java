@@ -30,14 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.dd.ContextDD;
-import epmc.dd.DD;
-import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
-import epmc.expression.ContextExpression;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToDD;
-import epmc.util.HashingStrategyArrayObject;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -58,7 +52,6 @@ public final class ExpressionsUnique {
     private final VariableDD[] ddReplacedVariables;
     private final Expression[] replaced;
     private final ContextExpression contextExpression;
-    private final ContextValue contextValue;
     private final ContextDD contextDD;
     private final Expression[] expressions;
     private Value[][] consistentValues;

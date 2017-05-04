@@ -29,7 +29,7 @@ public interface TypeWeightTransition extends TypeAlgebra {
     
     static void set(TypeWeightTransition type) {
         assert type != null;
-        ContextValue context = ContextValue.get();
-        context.setType(TypeWeightTransition.class, context.makeUnique(type));
+        ContextValue.get().setType(TypeWeightTransition.class,
+        		ContextValue.get().makeUnique(type));
     }
 }

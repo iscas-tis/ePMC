@@ -33,8 +33,8 @@ import epmc.value.ContextValue;
 public final class ContextExpressionSimplifier {
     private final ExpressionSimplifier[] simplifiers;
 
-    public ContextExpressionSimplifier(ContextValue contextValue) {
-        Options options = contextValue.getOptions();
+    public ContextExpressionSimplifier() {
+        Options options = ContextValue.get().getOptions();
         Map<String,Class<? extends ExpressionSimplifier>> simplifiers =
                 options.get(OptionsExpressionBasic.EXPRESSION_SIMPLIFIER_CLASS);
         this.simplifiers = new ExpressionSimplifier[simplifiers.size()];

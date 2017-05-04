@@ -72,10 +72,8 @@ public final class Analyse {
             log.send(MessagesEPMC.RUNNING_EPMC_REVISION, revision);
         }
         sendAssertionsMessage(log);
-        ContextValue contextValue;
         try {
-            contextValue = new ContextValue(options);
-            ContextValue.set(contextValue);
+            ContextValue.set(new ContextValue(options));
         } catch (EPMCException e) {
             log.send(e);
             return;

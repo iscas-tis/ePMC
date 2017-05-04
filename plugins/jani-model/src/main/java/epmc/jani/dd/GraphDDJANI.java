@@ -135,10 +135,10 @@ public final class GraphDDJANI implements GraphDD {
 		assert assertConstructor(nodeProperties, edgeProperties);
 		
 		this.model = model;
-		this.contextDD = ContextDD.get(ContextValue.get());
+		this.contextDD = ContextDD.get();
 		prepareActionDDVariable();
 		buildGlobalVariables();
-		expressionToDD = new ExpressionToDD(ContextValue.get(), globalIdentifierToDD);
+		expressionToDD = new ExpressionToDD(globalIdentifierToDD);
 		PreparatorDDComponent preparator = new PreparatorDDComponent();
 		DDComponent component = preparator.prepare(this, model.getSystem());
 
@@ -496,8 +496,8 @@ public final class GraphDDJANI implements GraphDD {
 	private DD buildInitialNodes(DDComponent component) throws EPMCException {
 		assert component != null;
 		Expression initialStates = model.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(ContextValue.get(), model.getGlobalVariablesOrEmpty());
-		initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, bounds);
+		Expression bounds = UtilModelParser.restrictToVariableRange(model.getGlobalVariablesOrEmpty());
+		initialStates = UtilExpressionStandard.opAnd(initialStates, bounds);
 		initialStates = model.replaceConstants(initialStates);
 		DD initialNodes = getContextDD().newConstant(true);
 		initialNodes = initialNodes.andWith(component.getInitialNodes().clone());

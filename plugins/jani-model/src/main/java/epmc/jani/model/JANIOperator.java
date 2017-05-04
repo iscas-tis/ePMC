@@ -191,11 +191,9 @@ public final class JANIOperator {
 	 * Get EPMC operator the operator is mapped to.
 	 * The context operator must not be {@code null}.
 	 * 
-	 * @param context context of the operator returned
 	 * @return EPMC operator the operator is mapped to
 	 */
-	public Operator getOperator(ContextValue context) {
-		assert context != null;
-		return context.getOperator(iscasMC);
+	public Operator getOperator() {
+		return ContextValue.get().getOperator(iscasMC);
 	}
 }

@@ -126,7 +126,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
-        return ValueBoolean.isTrue(getValue((ExpressionLiteral) expression));
+        return ValueBoolean.isTrue(getValue(expression));
     }
     
     private static boolean isFalse(Expression expression) {
@@ -135,7 +135,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
-        return ValueBoolean.isFalse(getValue((ExpressionLiteral) expression));
+        return ValueBoolean.isFalse(getValue(expression));
     }  
     
     private static Value getValue(Expression expression) {

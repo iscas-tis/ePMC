@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.dd.ContextDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -860,7 +859,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 			Set<Object> edgeProperties) throws EPMCException {
 		if (engine instanceof EngineDD) {
 	        prepareAndCheckReady();
-			return new GraphDDPRISM(this, ContextDD.get(ContextValue.get()), nodeProperties, edgeProperties);
+			return new GraphDDPRISM(this, nodeProperties, edgeProperties);
 		} else {
 			assert false; // TODO user exception
 			return null;
@@ -1106,7 +1105,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         Expression rightInvariant = right.getInvariants();
         Expression newInvariant = null;
         if (leftInvariant != null && rightInvariant != null) {
-        	newInvariant = UtilExpressionStandard.opAnd(ContextValue.get(), leftInvariant, rightInvariant);
+        	newInvariant = UtilExpressionStandard.opAnd(leftInvariant, rightInvariant);
         } else if (leftInvariant != null) {
         	newInvariant = leftInvariant;
         } else if (rightInvariant != null) {
@@ -1129,7 +1128,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             if (initialStates == null) {
             	initialStates = assg;
             } else {
-            	initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, assg);
+            	initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
             }
         }
         for (Module module : modules) {
@@ -1139,7 +1138,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 if (initialStates == null) {
                 	initialStates = assg;
                 } else {
-                	initialStates = UtilExpressionStandard.opAnd(ContextValue.get(), initialStates, assg);
+                	initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
                 }
             }
         }

@@ -41,7 +41,6 @@ import epmc.modelchecker.TestHelper.LogType;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.util.StopWatch;
-import epmc.util.Util;
 
 public final class ConvertTestConfiguration {
 	/** Location of plugin directory in file system. */

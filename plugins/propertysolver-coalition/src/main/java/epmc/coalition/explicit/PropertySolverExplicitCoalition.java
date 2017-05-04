@@ -270,7 +270,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 		assert forStates != null;
 		assert path != null;
 	    Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
-	    AutomatonParity automaton = UtilAutomaton.newAutomatonParity(ContextValue.get(), path, expressions);
+	    AutomatonParity automaton = UtilAutomaton.newAutomatonParity(path, expressions);
 		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
 		StopWatch watch = new StopWatch(true);
         ExpressionCoalition propertyCoalition = (ExpressionCoalition) property;

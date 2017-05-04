@@ -29,7 +29,6 @@ import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 
 public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
@@ -80,7 +79,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
             Expression operand = expressionOperator.getOperands().get(i);
-            EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(ContextValue.get(), operand, variables);
+            EvaluatorDD evaluator = UtilEvaluatorDD.newEvaluator(operand, variables);
             dds[i] = evaluator.getDD();
             assert dds[i] != null : expressionOperator.getOperands().get(i) + " " + i + " " + expression;
         }
@@ -103,6 +102,6 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-        return ContextDD.get(ContextValue.get());
+        return ContextDD.get();
     }
 }

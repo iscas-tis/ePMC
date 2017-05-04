@@ -212,9 +212,7 @@ public final class UtilModelParser {
 		}
 	}
 	
-	public static Expression restrictToVariableRange(ContextValue contextValue,
-			Iterable<Variable> variables) throws EPMCException {
-		assert contextValue != null;
+	public static Expression restrictToVariableRange(Iterable<Variable> variables) throws EPMCException {
 		assert variables != null;
 		Expression result = null;
 		for (Variable variable : variables) {
@@ -225,7 +223,7 @@ public final class UtilModelParser {
 						.setValue(lowerValue)
 						.build();
 				lower = new ExpressionOperator.Builder()
-						.setOperator(contextValue.getOperator(OperatorGe.IDENTIFIER))
+						.setOperator(ContextValue.get().getOperator(OperatorGe.IDENTIFIER))
 						.setOperands(variable.getIdentifier(), lowerValueExpr)
 						.build();
 			}
@@ -236,7 +234,7 @@ public final class UtilModelParser {
 						.setValue(upperValue)
 						.build();
 				upper = new ExpressionOperator.Builder()
-						.setOperator(contextValue.getOperator(OperatorLe.IDENTIFIER))
+						.setOperator(ContextValue.get().getOperator(OperatorLe.IDENTIFIER))
 						.setOperands(variable.getIdentifier(), upperValueExpr)
 						.build();
 			}
@@ -246,10 +244,10 @@ public final class UtilModelParser {
 			} else if (lower != null && upper == null) {
 				bound = lower;
 			} else if (lower != null && upper != null) {
-				bound = UtilExpressionStandard.opAnd(contextValue, lower, upper);				
+				bound = UtilExpressionStandard.opAnd(lower, upper);				
 			}
 			if (bound != null) {
-				result = (result == null) ? bound : UtilExpressionStandard.opAnd(contextValue, result, bound);
+				result = (result == null) ? bound : UtilExpressionStandard.opAnd(result, bound);
 			}
 		}
 		TypeBoolean typeBoolean = TypeBoolean.get();

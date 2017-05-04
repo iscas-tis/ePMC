@@ -354,8 +354,8 @@ public final class UtilLTL {
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
     
-    public static Expression newOperator(ContextValue contextValue, String operatorId, Expression... operands) {
-        Operator operator = contextValue.getOperator(operatorId);
+    public static Expression newOperator(String operatorId, Expression... operands) {
+        Operator operator = ContextValue.get().getOperator(operatorId);
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
@@ -399,15 +399,14 @@ public final class UtilLTL {
 	 * Transform a LTL formula to positive normal form 
 	 * !(G a) = F !a !(F a) = G !a
 	 */
-	public static Expression getNormForm(ContextValue contextValue, Expression prop,
-			Set<Expression> stateLabels) {
-		return getNormForm(contextValue, prop, stateLabels, false);
+	public static Expression getNormForm(Expression prop, Set<Expression> stateLabels) {
+		return getNormForm(prop, stateLabels, false);
 	}
 
 
 	// only allowed AND,OR
-	private static Expression getNormForm(ContextValue contextValue, Expression prop,
-			Set<Expression> stateLabels, boolean sig) {
+	private static Expression getNormForm(Expression prop, Set<Expression> stateLabels,
+			boolean sig) {
 		if (prop instanceof ExpressionIdentifier || prop instanceof ExpressionLiteral) {
 			return prop; // this could not happen
 		}
@@ -417,7 +416,7 @@ public final class UtilLTL {
 				return prop;
 			}
 			// NOT has been pushed down here
-			return newOperator(contextValue, OperatorNot.IDENTIFIER, prop);
+			return newOperator(OperatorNot.IDENTIFIER, prop);
 		}
 
 		if (prop instanceof ExpressionTemporal) { //
@@ -426,23 +425,23 @@ public final class UtilLTL {
 
 			if ((type == TemporalType.RELEASE && sig) // F a = 1 U a
 					|| (type == TemporalType.UNTIL && !sig)) {
-				Expression op2 = getNormForm(contextValue, ltlExpr.getOperand2(),
-						stateLabels, sig);
+				Expression op2 = getNormForm(ltlExpr.getOperand2(), stateLabels,
+						sig);
 				return newFinally(op2, prop.getPositional()); // F !b
 			} else if ((type == TemporalType.RELEASE && !sig) // F a = 1 U a
 					|| (type == TemporalType.UNTIL && sig)) { // G b = 0 R b
-				Expression op2 = getNormForm(contextValue, ltlExpr.getOperand2(),
-						stateLabels, sig);
+				Expression op2 = getNormForm(ltlExpr.getOperand2(), stateLabels,
+						sig);
 				return newTemporal(TemporalType.GLOBALLY, op2,
 						prop.getPositional());
 			} else if ((type == TemporalType.FINALLY && !sig) // F a = 1 U a
 					|| (type == TemporalType.GLOBALLY && sig)) {
-				Expression op1 = getNormForm(contextValue, ltlExpr.getOperand1(),
-						stateLabels, sig);
+				Expression op1 = getNormForm(ltlExpr.getOperand1(), stateLabels,
+						sig);
 				return newFinally(op1, prop.getPositional()); // F !b
 			} else {
-				Expression op1 = getNormForm(contextValue, ltlExpr.getOperand1(),
-						stateLabels, sig);
+				Expression op1 = getNormForm(ltlExpr.getOperand1(), stateLabels,
+						sig);
 				return newGlobally(op1, prop.getPositional()); // F !b
 			}
 		} else if (prop instanceof ExpressionOperator) { /* only AND , NOT and OR allowed */
@@ -454,39 +453,39 @@ public final class UtilLTL {
 			case OperatorAnd.IDENTIFIER: // sig
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
-					exprList.add(getNormForm(contextValue, ops.get(i), stateLabels, sig));
+					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(contextValue.getOperator(OperatorOr.IDENTIFIER))
+				            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(contextValue.getOperator(OperatorAnd.IDENTIFIER))
+                            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
                             .setOperands(exprList)
                             .build();
 				}
 			case OperatorNot.IDENTIFIER:
 				// Assert.notNull(ops[0]);
 				if (sig) {
-					return getNormForm(contextValue, ops.get(0), stateLabels, false);
+					return getNormForm(ops.get(0), stateLabels, false);
 				} else {
-					return getNormForm(contextValue, ops.get(0), stateLabels, true);
+					return getNormForm(ops.get(0), stateLabels, true);
 				}
 			case OperatorOr.IDENTIFIER:
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
-					exprList.add(getNormForm(contextValue, ops.get(i), stateLabels, sig));
+					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(contextValue.getOperator(OperatorAnd.IDENTIFIER))
+				            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(contextValue.getOperator(OperatorOr.IDENTIFIER))
+                            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
                             .setOperands(exprList)
                             .build();
 				}
@@ -498,82 +497,72 @@ public final class UtilLTL {
 			case OperatorGt.IDENTIFIER: // >
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorLe.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorLe.IDENTIFIER, ops.get(0), ops.get(1));
 
 			case OperatorGe.IDENTIFIER:
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorLt.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorLt.IDENTIFIER, ops.get(0), ops.get(1));
 
 			case OperatorLt.IDENTIFIER:
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorGe.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorGe.IDENTIFIER, ops.get(0), ops.get(1));
 
 			case OperatorLe.IDENTIFIER:
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorGt.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorGt.IDENTIFIER, ops.get(0), ops.get(1));
 			case OperatorAnd.IDENTIFIER: // sig
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
-					exprList.add(getNormForm(contextValue, ops.get(i), stateLabels, sig));
+					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(contextValue.getOperator(OperatorOr.IDENTIFIER))
+				            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(contextValue.getOperator(OperatorAnd.IDENTIFIER))
+                            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
                             .setOperands(exprList)
                             .build();
 				}
 			case OperatorNot.IDENTIFIER:
 				// Assert.notNull(ops[0]);
 				if (sig) {
-					return getNormForm(contextValue, ops.get(0), stateLabels, false);
+					return getNormForm(ops.get(0), stateLabels, false);
 				} else {
-					return getNormForm(contextValue, ops.get(0), stateLabels, true);
+					return getNormForm(ops.get(0), stateLabels, true);
 				}
 			case OperatorEq.IDENTIFIER: //
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorNe.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorNe.IDENTIFIER, ops.get(0), ops.get(1));
 			case OperatorNe.IDENTIFIER: //
 				if (!sig)
 					return prop;
-				return newOperator(contextValue, OperatorEq.IDENTIFIER, ops.get(0),
-						ops.get(1));
+				return newOperator(OperatorEq.IDENTIFIER, ops.get(0), ops.get(1));
 			case OperatorIff.IDENTIFIER: // a <-> b = a->b & b -> a
-				Expression front = newOperator(contextValue, OperatorImplies.IDENTIFIER,
-						ops.get(0), ops.get(1));
-				Expression back = newOperator(contextValue, OperatorImplies.IDENTIFIER,
-						ops.get(1), ops.get(0));
+				Expression front = newOperator(OperatorImplies.IDENTIFIER, ops.get(0),
+						ops.get(1));
+				Expression back = newOperator(OperatorImplies.IDENTIFIER, ops.get(1),
+						ops.get(0));
 				if (sig) { // !(a->b) | !(b->a)
-					return newOperator(contextValue, OperatorOr.IDENTIFIER,
-							getNormForm(contextValue, front, stateLabels, true),
-							getNormForm(contextValue, back, stateLabels, true));
+					return newOperator(OperatorOr.IDENTIFIER, getNormForm(front, stateLabels, true),
+							getNormForm(back, stateLabels, true));
 				} else { // a->b and b->a
-					return newOperator(contextValue, OperatorAnd.IDENTIFIER,
-							getNormForm(contextValue, front, stateLabels, false),
-							getNormForm(contextValue, back, stateLabels, false));
+					return newOperator(OperatorAnd.IDENTIFIER, getNormForm(front, stateLabels, false),
+							getNormForm(back, stateLabels, false));
 				}
 			case OperatorImplies.IDENTIFIER: // a -> b = !a | b
 				if (sig) { // a & !b
-					return newOperator(contextValue, OperatorAnd.IDENTIFIER,
-							getNormForm(contextValue, ops.get(0), stateLabels, false),
-							getNormForm(contextValue, ops.get(1), stateLabels, true));
+					return newOperator(OperatorAnd.IDENTIFIER, getNormForm(ops.get(0), stateLabels, false),
+							getNormForm(ops.get(1), stateLabels, true));
 				} else { // !a | b
-					return newOperator(contextValue, OperatorOr.IDENTIFIER,
-							getNormForm(contextValue, ops.get(0), stateLabels, true),
-							getNormForm(contextValue, ops.get(1), stateLabels, false));
+					return newOperator(OperatorOr.IDENTIFIER, getNormForm(ops.get(0), stateLabels, true),
+							getNormForm(ops.get(1), stateLabels, false));
 				}
 			default:
 				return prop;

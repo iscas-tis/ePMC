@@ -68,7 +68,6 @@ public class CommandTaskExpression2Automaton implements CommandTask {
     @Override
     public void executeInServer() {
         Model model = modelChecker.getModel();
-        ContextValue contextValue = ContextValue.get();
         Properties properties = model.getPropertyList();
         Log log = getLog();
         for (RawProperty property : properties.getRawProperties()) {
@@ -119,7 +118,7 @@ public class CommandTaskExpression2Automaton implements CommandTask {
             	Automaton.Builder builder;
                 builder = UtilOptions.getInstance(options,
                 		OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE);
-				builder.setExpression(contextValue, expression);
+				builder.setExpression(expression);
 				automaton = builder.build();
 			} catch (EPMCException e) {
 				log.send(new ModelCheckerResult(property,  e));

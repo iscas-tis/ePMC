@@ -38,7 +38,6 @@ import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.util.JNATools;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeBoolean;
@@ -244,7 +243,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert constraintType != null;
         assert rightHandSide != null;
         assert row.length == variables.length;
-        assert assertNoDublicateVariables(ContextValue.get(), variables);
+        assert assertNoDublicateVariables(variables);
         incIntArrayOne(variables);
         LpSolve.set_add_rowmode(lp, TRUE);
         int lpConstraintType = toLpSolveConstraintType(constraintType);
@@ -255,7 +254,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         numConstraints++;
     }
 
-    private boolean assertNoDublicateVariables(ContextValue contextValue, int[] variables) {
+    private boolean assertNoDublicateVariables(int[] variables) {
         BitSet variablesBs = UtilBitSet.newBitSetUnbounded();
         for (int variable : variables) {
             assert !variablesBs.get(variable) : variable;

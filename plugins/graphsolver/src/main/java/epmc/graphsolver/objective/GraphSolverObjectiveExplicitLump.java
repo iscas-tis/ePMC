@@ -64,7 +64,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 		for (Expression expression : atomics) {
 			assert expression != null;
 		}
-		this.atomics = new ArrayList<Expression>(atomics);
+		this.atomics = new ArrayList<>(atomics);
 	}
 	
 	public void prepare() throws EPMCException {

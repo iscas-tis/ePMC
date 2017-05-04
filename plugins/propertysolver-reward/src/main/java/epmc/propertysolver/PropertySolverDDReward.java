@@ -40,7 +40,6 @@ import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 
 // TODO check whether this works for JANI MDPs - probably not
@@ -50,7 +49,6 @@ public final class PropertySolverDDReward implements PropertySolver {
     public final static String IDENTIFIER = "reward-dd";
     private ModelChecker modelChecker;
     private GraphDD graph;
-    private ContextValue contextValue;
 	private Expression property;
 	private ExpressionQuantifier propertyQuantifier;
 	private StateSet forStates;
@@ -62,7 +60,6 @@ public final class PropertySolverDDReward implements PropertySolver {
         if (modelChecker.getEngine() instanceof EngineDD) {
         	this.graph = modelChecker.getLowLevel();
         }
-        this.contextValue = ContextValue.get();
     }
 
 	@Override
@@ -112,7 +109,7 @@ public final class PropertySolverDDReward implements PropertySolver {
 //        StateMap result = doSolve(quantifiedProp, forStates, min);
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType(contextValue);
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
 //            result = result.applyWith(op, compare);
         }
   //      return result;

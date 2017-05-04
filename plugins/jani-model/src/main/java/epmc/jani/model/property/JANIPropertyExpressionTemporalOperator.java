@@ -53,7 +53,6 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.expression.JANIExpression;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 
 /**
  * JANI expected quantifier expression.
@@ -247,7 +246,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			opValue = W;
 			//op1 R op2 = op2 W (op2 /\ op1)
 			left = parser.matchExpression(model, expressionTemporal.getOperand2());
-			right = parser.matchExpression(model, UtilExpressionStandard.opAdd(ContextValue.get(), expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
+			right = parser.matchExpression(model, UtilExpressionStandard.opAdd(expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
 			break;
 		case UNTIL:
 			opValue = U;
@@ -328,7 +327,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 			break;
 		case RELEASE:
 			//phi W psi = psi R (phi \/ psi)
-			composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(ContextValue.get(), left, right), tb);
+			composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(left, right), tb);
 		default: //it should never happen
 			composed = null;
 			break;

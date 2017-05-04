@@ -49,8 +49,6 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 
 	/** Number of bits used to store a value of this type. */
 	private int numBits;
-	/** Context to which this type belongs. */
-	private ContextValue context;
 	/** Set of locations which this type represents. */
 //	private Locations locations;
 	/** Map to enumerate locations. */
@@ -59,11 +57,9 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 	private String[] numberToLocation;
 	private List<String> locations;
 
-	TypeLocation(ContextValue context, Locations locations) {
-		this(context, locationsToStringList(locations));
-		assert context != null;
+	TypeLocation(Locations locations) {
+		this(locationsToStringList(locations));
 		assert locations != null;
-		this.context = context;
 		this.numberToLocation = new String[locations.size()];
 		int locNr = 0;
 		for (Location location : locations) {
@@ -77,14 +73,10 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 	/**
 	 * Generate a new location storing type.
 	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param context context to use for this type
 	 * @param locations set of locations
 	 */
-	TypeLocation(ContextValue context, List<String> locations) {
-		assert context != null;
+	TypeLocation(List<String> locations) {
 		assert locations != null;
-		this.context = context;
 		this.numberToLocation = new String[locations.size()];
 		int locNr = 0;
 		for (String location : locations) {
@@ -124,7 +116,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
 			return false;
 		}
 		TypeLocation other = (TypeLocation) obj;
-		if (this.context != other.context) {
+		if (!this.locations.equals(other.locations)) {
 			return false;
 		}
 		return true;

@@ -332,8 +332,7 @@ public final class FoxGlynn {
         assert tau != null;
         assert omega != null;
         assert epsilon != null;
-        ContextValue contextValue = ContextValue.get();
-        Options options = contextValue.getOptions();
+        Options options = ContextValue.get().getOptions();
         assert TypeReal.isReal(lambda.getType());
         assert TypeReal.isReal(tau.getType());
         assert TypeReal.isReal(omega.getType());

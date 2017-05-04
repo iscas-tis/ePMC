@@ -71,7 +71,8 @@ public final class TypeArrayGeneric implements TypeArray {
         return builder.toString();
     }
     
-    public TypeArray getTypeArray() {
+    @Override
+	public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

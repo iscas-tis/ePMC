@@ -162,12 +162,10 @@ public enum CmpType {
      * </table>
      * The parameter of this function must not be {@code null}.
      * 
-     * @param contextValue context value used
      * @return equivalent operator
      */
-    public Operator asExOpType(ContextValue contextValue) {
-        assert contextValue != null;
+    public Operator asExOpType() {
         assert this != IS;
-        return contextValue.getOperator(operator);
+        return ContextValue.get().getOperator(operator);
     }
 }

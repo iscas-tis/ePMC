@@ -50,7 +50,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
 
     ValueEnum(ValueEnum other) {
         assert other != null;
-        this.type = (TypeEnum) other.getType();
+        this.type = other.getType();
         this.value = other.value;
     }
     

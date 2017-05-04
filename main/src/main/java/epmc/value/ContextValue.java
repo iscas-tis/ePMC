@@ -261,7 +261,7 @@ public final class ContextValue {
     /**
      * Add or replace operator.
      * A new operator will be instantiated from the class paramter using
-     * {@link #newOperator(Class, ContextValue)}.
+     * {@link #newOperator(Class)}.
      * Afterwards, the method
      * {@link #addOrSetOperator(Operator)}
      * will be called on this new operator object.
@@ -270,7 +270,7 @@ public final class ContextValue {
      * @see {@link #addOrSetOperator(Operator)}
      */
     public void addOrSetOperator(Class<? extends Operator> clazz) {
-        Operator operator = newOperator(clazz, this);
+        Operator operator = newOperator(clazz);
         addOrSetOperator(operator);
     }
 
@@ -280,12 +280,10 @@ public final class ContextValue {
      * {@code null}.
      * 
      * @param operatorClass operator class to instantiate
-     * @param contextValue value context to set for operator
      * @return instantiated operator with value context set
      */
-    private Operator newOperator(Class<? extends Operator> operatorClass, ContextValue contextValue) {
+    private Operator newOperator(Class<? extends Operator> operatorClass) {
         assert operatorClass != null;
-        assert contextValue != null;
         Operator operator = Util.getInstance(operatorClass);
         return operator;
     }

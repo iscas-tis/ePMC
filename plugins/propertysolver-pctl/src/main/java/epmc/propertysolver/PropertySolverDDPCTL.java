@@ -381,7 +381,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         boolean qualitative = false;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            op = propertyQuantifier.getCompareType().asExOpType(ContextValue.get());
+            op = propertyQuantifier.getCompareType().asExOpType();
             if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
                     || ValueAlgebra.asAlgebra(compare.getSomeValue()).isOne())) {
                 qualitative = true;
@@ -455,7 +455,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get(ContextValue.get());
+    	return ContextDD.get();
 	}
 
     private Expression not(Expression expression) {

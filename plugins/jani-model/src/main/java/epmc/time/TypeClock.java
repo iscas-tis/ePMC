@@ -1,6 +1,5 @@
 package epmc.time;
 
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
@@ -21,10 +20,6 @@ public final class TypeClock implements TypeAlgebra {
 	
 	private final static String CLOCK = "clock";
 
-	public TypeClock(ContextValue contextValue) {
-		assert contextValue != null;
-	}
-	
 	@Override
 	public ValueClock newValue() {
 		return new ValueClock(this);

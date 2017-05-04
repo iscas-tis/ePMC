@@ -37,7 +37,6 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 public final class AutomatonSubset implements Automaton {
