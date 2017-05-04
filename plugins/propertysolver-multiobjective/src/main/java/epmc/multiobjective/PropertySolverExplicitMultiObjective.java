@@ -49,7 +49,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.util.BitSet;
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
@@ -239,7 +238,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             }
         } while (true);
         SchedulerInitialRandomisedImpl sched = null;
-        if ((feasible || numerical) && getOptions().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
+        if ((feasible || numerical) && Options.get().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
         	sched = computeRandomizedScheduler(product, down, bounds);
   //      printInitiallyRandomisedScheduler(sched);
         }
@@ -336,10 +335,6 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         return new StateMapExplicit((StateSetExplicit) forStates.clone(), resultValues, scheduler);
 	}
 
-	private Options getOptions() {
-		return ContextValue.get().getOptions();
-	}
-	
     private ValueArrayAlgebra newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);

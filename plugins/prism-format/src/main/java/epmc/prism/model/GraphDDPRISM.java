@@ -113,15 +113,14 @@ final class GraphDDPRISM implements GraphDD {
             throws EPMCException {
         this.properties = new GraphDDProperties(this);
         assert assertConstructorArguments(model, nodeProperties, edgeProperties);
-        Options options = ContextDD.get().getOptions();
-        ensure(options.getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
+        ensure(Options.get().getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
         if (SemanticsNonDet.isNonDet(model.getSemantics())) {
             transEnc = TransitionEncoding.MDP_STATE;
         } else {
             transEnc = TransitionEncoding.MC;
         }
 
-        this.log = options.get(OptionsMessages.LOG);
+        this.log = Options.get().get(OptionsMessages.LOG);
         log.send(MessagesPRISM.BUILDING_DD_MODEL);
         
         this.model = model;

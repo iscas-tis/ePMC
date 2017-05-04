@@ -37,6 +37,7 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.modelchecker.UtilModelChecker;
+import epmc.options.Options;
 import epmc.sexpression.SExpression;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
@@ -160,7 +161,7 @@ final class InputWriter {
 		assert outStream != null;
 		this.solver = solver;
 		this.outStream = outStream;
-		version = solver.getOptions().get(OptionsSMTLib.SMTLIB_VERSION);
+		version = Options.get().get(OptionsSMTLib.SMTLIB_VERSION);
 	}
 
 	void write() {

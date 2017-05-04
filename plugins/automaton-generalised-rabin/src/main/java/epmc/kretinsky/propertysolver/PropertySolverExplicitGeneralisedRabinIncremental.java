@@ -59,8 +59,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
         this.modelChecker = modelChecker;
         if (modelChecker.isEngineExplicit()) {
             this.graph = modelChecker.getGraphExplicit();
-            this.options = graph.getOptions();
-            this.log = options.get(OptionsMessages.LOG);
+            this.log = Options.get().get(OptionsMessages.LOG);
         }
         this.nonDet = modelChecker.getModel().isNonDet();
     }

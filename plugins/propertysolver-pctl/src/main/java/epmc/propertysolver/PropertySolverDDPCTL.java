@@ -213,7 +213,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         }
         ValueAlgebra leftValue = timeBound.getLeftValue();
         ValueAlgebra rightValue = timeBound.getRightValue();
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         if (timeBound.isRightBounded()) {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 Value unifRate = converter.getUnifRate();

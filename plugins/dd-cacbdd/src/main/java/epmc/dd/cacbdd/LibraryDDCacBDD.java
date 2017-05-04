@@ -161,7 +161,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         assert contextDD != null;
         ensure(CacBDD.loaded, ProblemsDD.CACBDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Options options = contextDD.getOptions();
+        Options options = Options.get();
         this.maxNumVariables = options.getInteger(OptionsDDCacBDD.DD_CACBDD_MAX_NUM_VARIABLES);
         this.xbddmanager = CacBDD.cacwrapper_new_manager(maxNumVariables);
         ensure(this.xbddmanager != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);

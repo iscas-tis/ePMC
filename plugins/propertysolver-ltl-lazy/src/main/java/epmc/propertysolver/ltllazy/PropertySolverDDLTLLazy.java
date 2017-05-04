@@ -77,7 +77,6 @@ import epmc.propertysolver.ltllazy.automata.AutomatonDDBreakpoint;
 import epmc.propertysolver.ltllazy.automata.AutomatonDDSubset;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
@@ -896,7 +895,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
             throws EPMCException {
-        GraphSolverConfigurationDD configuration = UtilGraphSolver.newGraphSolverConfigurationDD(graphDD.getOptions());
+        GraphSolverConfigurationDD configuration = UtilGraphSolver.newGraphSolverConfigurationDD(Options.get());
         List<DD> sinks = new ArrayList<>();
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNotWith(target.clone());
         DD zeroNodes = nodeSpace.clone().andNotWith(someNodes).andNotWith(target.clone());
@@ -940,7 +939,6 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         }
         this.type = modelChecker.getModel().getSemantics();
         this.nonDet = SemanticsNonDet.isNonDet(this.type);
-        this.options = ContextValue.get().getOptions();
         this.log = this.options.get(OptionsMessages.LOG);
         this.skipTransient = options.getBoolean(OptionsLTLLazy.LTL_LAZY_SCC_SKIP_TRANSIENT);
         Expression quantifiedProp = propertyQuantifier.getQuantified();

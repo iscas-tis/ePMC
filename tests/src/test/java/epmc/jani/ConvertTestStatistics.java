@@ -26,8 +26,6 @@ import java.util.Map.Entry;
 
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 
 public final class ConvertTestStatistics {
 	private final static String SPACE = " ";
@@ -82,10 +80,6 @@ public final class ConvertTestStatistics {
 		data.put(key, value);
 	}
 	
-	public Options getOptions() {
-		return ContextValue.get().getOptions();
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

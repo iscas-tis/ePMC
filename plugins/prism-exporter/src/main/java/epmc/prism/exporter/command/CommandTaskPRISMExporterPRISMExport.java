@@ -71,7 +71,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
 	
     @Override
     public void executeInServer() {
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, true);
 		if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
 			ProcessorRegistrar.useExtendedPRISMSyntax();

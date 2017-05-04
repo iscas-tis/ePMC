@@ -29,7 +29,6 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graph.explicit.NodeProperty;
-import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;
@@ -758,10 +757,5 @@ public final class GraphBuilderExplicit {
         assert !isBuilt();
         setReorder(true);
         return this;
-    }
-
-    public Options getOptions() {
-        assert getInputGraph() != null;
-        return getInputGraph().getOptions();
     }
 }

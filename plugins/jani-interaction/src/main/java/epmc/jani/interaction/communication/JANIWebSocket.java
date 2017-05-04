@@ -61,7 +61,7 @@ final class JANIWebSocket extends WebSocket {
 		assert backend != null;
 		assert handshakeRequest != null;
 		this.backend = backend;
-		this.printMessages = backend.getOptions().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);
+		this.printMessages = Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);
 	}
 
 	@Override
@@ -122,10 +122,6 @@ final class JANIWebSocket extends WebSocket {
 	}
 	
 	private Log getLog() {
-		return getOptions().get(OptionsMessages.LOG);
-	}
-	
-	private Options getOptions() {
-		return backend.getOptions();
+		return Options.get().get(OptionsMessages.LOG);
 	}
 }

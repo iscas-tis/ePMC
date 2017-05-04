@@ -37,6 +37,7 @@ import epmc.graph.explorer.ExplorerNode;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.options.Options;
 import epmc.util.BitStoreableToNumber;
 import epmc.util.StopWatch;
 import epmc.value.Type;
@@ -63,7 +64,7 @@ public final class GraphBuilderExplorer {
     public void setExplorer(Explorer explorer) {
         assert explorer != null;
         this.explorer = explorer;
-        this.log = explorer.getOptions().get(OptionsMessages.LOG);
+        this.log = Options.get().get(OptionsMessages.LOG);
     }
 
     public void addDerivedGraphProperties(Set<Object> graphProperties) {
@@ -285,7 +286,7 @@ public final class GraphBuilderExplorer {
     private static BitStoreableToNumber newNodeStore(Explorer explorer)
             throws EPMCException {
         int numBits = explorer.getNumNodeBits();
-        return UtilGraph.newNodeStore(explorer.getOptions(), numBits);
+        return UtilGraph.newNodeStore(numBits);
     }
 
     public GraphExplicit getGraph() {

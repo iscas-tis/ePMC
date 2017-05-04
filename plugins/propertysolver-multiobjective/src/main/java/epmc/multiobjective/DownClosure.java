@@ -30,7 +30,6 @@ import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.error.EPMCException;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -82,7 +81,7 @@ final class DownClosure {
     	if (unrestrictedResult == null) {
     		return null;
     	}
-    	lowerBound.set(getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
+    	lowerBound.set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
     	ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
     	if (restrictedResult != null) {
     		return restrictedResult;
@@ -170,7 +169,7 @@ final class DownClosure {
             problemVariables = new int[1];
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[0];
-            String minIncrease = getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
+            String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
             entry.set(minIncrease);
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
         }
@@ -223,7 +222,7 @@ final class DownClosure {
         }
         if (numerical) {
             ValueAlgebra smallValue = TypeWeight.get().newValue();
-            String minIncrease = ContextValue.get().getOptions().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
+            String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
             smallValue.set(minIncrease);
             separating.get(entry, 0);
             if (entry.isZero()) {
@@ -424,10 +423,6 @@ final class DownClosure {
     private ValueArrayAlgebra newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
-    }
-    
-    private Options getOptions() {
-    	return ContextValue.get().getOptions();
     }
     
     private ValueAlgebra newValueWeight() {

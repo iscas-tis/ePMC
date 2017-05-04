@@ -43,6 +43,7 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.TypeAlgebra;
@@ -157,7 +158,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
             if (sat)  oneStates.set(node);
             
         }
-        Log log = graph.getOptions().get(OptionsMessages.LOG);
+        Log log = Options.get().get(OptionsMessages.LOG);
         log.send(MessagesReachability.REACHABILITY_NUM_ONE_STATES, graph.getNumNodes(), oneStates.cardinality());
         // compute the reachability probabilities for every state in the model
         ValueArrayAlgebra results = UtilReachability.computeReachabilityProbability(graph, oneStates);

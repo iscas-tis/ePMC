@@ -91,7 +91,6 @@ import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -180,7 +179,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	public ModelJANI() {
 		StandardJANIOperators.add(operators);
 		this.contextValueJANI = new ContextValueJANI();
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
 		prepareStandardTypes();
 		prepareStandardExpressions();
@@ -351,7 +350,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 
 	private Map<Expression, Expression> computeExternalConstants() throws EPMCException {
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         Map<Expression, Expression> result = new LinkedHashMap<>();
         for (Entry<String, Object> entry : optionsConsts.entrySet()) {
@@ -446,7 +445,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		}
 		this.modelExtensions = new ArrayList<>();
         Map<String,Class<ModelExtension>> modelExtensions =
-        		ContextValue.get().getOptions().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
+        		Options.get().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
 		for (JsonValue identifier : array) {
 			Class<ModelExtension> extension =
 					UtilJSON.toOneOf(identifier, modelExtensions);

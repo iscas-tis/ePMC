@@ -43,6 +43,7 @@ import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeBounded;
 import epmc.value.Value;
@@ -148,7 +149,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 			throw new RuntimeException(e);
 		}
 		File file = path.toFile();
-		if (!getOptions().getBoolean(OptionsISat3.ISAT3_KEEP_TEMPORARY_FILES)) {
+		if (!Options.get().getBoolean(OptionsISat3.ISAT3_KEEP_TEMPORARY_FILES)) {
 			file.deleteOnExit();
 		}
 		try (OutputStream outStream = new FileOutputStream(file);) {
@@ -163,7 +164,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 	}
 
 	private ISatResult callSolver(String file) throws EPMCException {
-		List<String> callOptions = getOptions().get(OptionsISat3.ISAT3_COMMAND_LINE);
+		List<String> callOptions = Options.get().get(OptionsISat3.ISAT3_COMMAND_LINE);
 		List<String> execArgs = new ArrayList<>();
 		for (String param : callOptions) {
 			execArgs.add(MessageFormat.format(param, file));

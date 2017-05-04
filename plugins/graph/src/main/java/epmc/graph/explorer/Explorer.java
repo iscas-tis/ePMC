@@ -28,8 +28,6 @@ import epmc.graph.CommonProperties;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -185,16 +183,6 @@ public interface Explorer extends LowLevel {
     
     /* default methods. */
 
-    /**
-     * Get options of the explorer.
-     * The options are usually derived from the model the explorer explores.
-     * 
-     * @return expression context
-     */
-    default Options getOptions() {
-        return ContextValue.get().getOptions();
-    }
-    
     /**
      * Obtain type of graph property with given identifier.
      * The method will return the given graph property type or {@code null} if

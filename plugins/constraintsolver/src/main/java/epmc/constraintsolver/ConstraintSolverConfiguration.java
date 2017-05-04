@@ -32,16 +32,12 @@ import epmc.error.EPMCException;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 
 public class ConstraintSolverConfiguration {
-    private final Options options;
     private final ExpressionToDD expressionToDD = null;
     private final Set<Feature> features = new LinkedHashSet<>();
 
     public ConstraintSolverConfiguration() {
-        this.options = ContextValue.get().getOptions();
-//        this.expressionToDD = options.get(OptionsEPMC.EXPRESSION_TO_DD);
     }
     
     public void requireFeature(Feature feature) {
@@ -55,7 +51,7 @@ public class ConstraintSolverConfiguration {
     }
     
     private ConstraintSolver buildSolver(Set<Feature> features) throws EPMCException {
-    	Options options = ContextValue.get().getOptions();
+    	Options options = Options.get();
         Map<String,Class<? extends ConstraintSolver>> lumpersExplicit = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
         Collection<String> lumperExplicitt = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
@@ -74,10 +70,6 @@ public class ConstraintSolverConfiguration {
             }
         }
         return null;
-    }
-
-    public Options getOptions() {
-        return options;
     }
 
     public ContextDD getContextDD() throws EPMCException {

@@ -63,7 +63,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
@@ -205,7 +204,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         	Value reward = stateReward.get(graphNode);
         	values.set(reward, graphNode);
         }
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
         objective.setGraph(graph);
         objective.setMin(min);
@@ -241,7 +240,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             sinks.add(reachNotOneSink);
         }
         ValueArrayAlgebra cumulRewards = buildCumulativeRewards(sinks, reachSink, reachNotOneSink, stateReward, transReward);
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(ContextValue.get().getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         ExpressionReward quantifiedReward = ExpressionReward.asReward(property);
         RewardType rewardType = quantifiedReward.getRewardType();
         if (rewardType.isCumulative() && !time.isPosInf()) {

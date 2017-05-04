@@ -323,7 +323,7 @@ public final class ExpressionToDD implements Closeable {
         assert assertConstructorArgs(variables,
             constants);
         ContextDD contextDD = getContextDD();
-        Options options = contextDD.getOptions();
+        Options options = Options.get();
         this.contextDD = contextDD;
         this.variables = new HashMap<>();
         this.variables.putAll(variables);

@@ -34,6 +34,7 @@ import epmc.graph.explicit.SchedulerSimpleArray;
 import epmc.graph.explicit.SchedulerSimpleSettable;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
@@ -91,7 +92,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
 				assert false;
 			}
 		}
-		sameColorShortCut = game.getOptions().getBoolean(OptionsCoalition.COALITION_SAME_COLOR_SHORTCUT);
+		sameColorShortCut = Options.get().getBoolean(OptionsCoalition.COALITION_SAME_COLOR_SHORTCUT);
 		EMPTY_BIT_SET = UtilBitSet.newBitSetBounded(game.getNumNodes());
 		SchedulerSimple strategies = null;
 		if (computeStrategyP0 || computeStrategyP1) {
@@ -425,7 +426,7 @@ public final class SolverNonStochasticMcNaughton implements SolverNonStochastic 
      * @return log to send messages
      */
     private Log getLog() {
-    	return game.getOptions().get(OptionsMessages.LOG);
+    	return Options.get().get(OptionsMessages.LOG);
     }
 
 	@Override

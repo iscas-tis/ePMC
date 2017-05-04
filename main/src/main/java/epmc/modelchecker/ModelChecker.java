@@ -45,7 +45,6 @@ import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 //TODO could add some functionality on the server to allow the user to select
@@ -86,7 +85,7 @@ public final class ModelChecker implements Closeable {
     public ModelChecker(Model model) throws EPMCException {
         assert model != null;
         this.model = model;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         engine = UtilOptions.getSingletonInstance(options,
                 OptionsModelChecker.ENGINE);
         solvers = preparePropertySolvers(options);
@@ -212,7 +211,7 @@ public final class ModelChecker implements Closeable {
         Set<Object> graphProperties = solver.getRequiredGraphProperties();
         Set<Object> nodeProperties = solver.getRequiredNodeProperties();
         Set<Object> edgeProperties = solver.getRequiredEdgeProperties();
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Engine engine = UtilOptions.getSingletonInstance(options,
                 OptionsModelChecker.ENGINE);
         return model.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
@@ -350,8 +349,7 @@ public final class ModelChecker implements Closeable {
      * @return log used for analysis
      */
     private Log getLog() {
-        Options options = ContextValue.get().getOptions();
-        return options.get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
     }
     
     /**

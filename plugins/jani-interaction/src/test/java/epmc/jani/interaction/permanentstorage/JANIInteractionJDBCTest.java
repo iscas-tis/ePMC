@@ -81,7 +81,7 @@ public final class JANIInteractionJDBCTest {
 		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
 		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
 		
-		Database permanentStorage = new Database(options);
+		Database permanentStorage = new Database();
 		UserManager userManager = new UserManager(permanentStorage);
 		System.out.println(userManager.checkLogin("fdsa", "asdf"));
 		System.out.println(userManager.createUser("fdsa", "asdf"));

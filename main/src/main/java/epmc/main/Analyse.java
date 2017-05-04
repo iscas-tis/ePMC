@@ -59,6 +59,9 @@ public final class Analyse {
     public static void execute(RawModel rawModel, Options options, Log log) {
         assert options != null;
         assert log != null;
+        Options oldOptions = Options.get();
+        ContextValue oldContext = ContextValue.get();
+        Options.set(options);
         try {
             processAfterServerStart(options);
         } catch (EPMCException e) {
@@ -73,12 +76,6 @@ public final class Analyse {
         }
         sendAssertionsMessage(log);
         try {
-            ContextValue.set(new ContextValue(options));
-        } catch (EPMCException e) {
-            log.send(e);
-            return;
-        }
-        try {
             processBeforeModelCreations();
         } catch (EPMCException e) {
             log.send(e);
@@ -88,6 +85,8 @@ public final class Analyse {
             model = parseModel(rawModel);
         } catch (EPMCException e) {
             log.send(e);
+            Options.set(oldOptions);
+            ContextValue.set(oldContext);
             return;
         }
         try {
@@ -103,6 +102,8 @@ public final class Analyse {
             modelChecker = new ModelChecker(model);
         } catch (EPMCException e) {
             log.send(e);
+            Options.set(oldOptions);
+            ContextValue.set(oldContext);
             return;
         }
         command.setModelChecker(modelChecker);
@@ -113,6 +114,8 @@ public final class Analyse {
         } catch (EPMCException e) {
             log.send(e);
         }
+        Options.set(oldOptions);
+        ContextValue.set(oldContext);
     }
 
     /**
@@ -134,8 +137,8 @@ public final class Analyse {
             model = new ModelDummy();
         } else {
             InputStream[] inputs = rawModel.getModelInputStreams();
-            Options options = ContextValue.get().getOptions();
-            model = UtilOptions.getInstance(options, OptionsModelChecker.MODEL_INPUT_TYPE);
+            Options options = Options.get();
+            model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
             model.read(inputs);
         }
         Properties properties = model.getPropertyList();
@@ -199,7 +202,7 @@ public final class Analyse {
      */
     private static void processBeforeModelCreations()
             throws EPMCException {
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
             beforeModelLoading = Util.getInstance(clazz);
@@ -218,7 +221,7 @@ public final class Analyse {
      * @throws EPMCException thrown in case of problems
      */
     private static void processAfterModelCreations() throws EPMCException {
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
             afterModelLoading = Util.getInstance(clazz);
@@ -236,7 +239,7 @@ public final class Analyse {
      * @throws EPMCException thrown in case of problems
      */
     private static void processAfterCommandExecution() throws EPMCException {
-        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(ContextValue.get().getOptions(), AfterCommandExecution.class)) {
+        for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
             afterCommandExecution.process();

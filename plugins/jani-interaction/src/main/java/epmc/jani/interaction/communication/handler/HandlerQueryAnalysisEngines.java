@@ -36,6 +36,7 @@ import epmc.jani.interaction.error.ProblemsJANIInteraction;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Option;
 import epmc.options.OptionTypeMap;
+import epmc.options.Options;
 import epmc.util.UtilJSON;
 
 // TODO check names when online again.
@@ -78,7 +79,7 @@ public final class HandlerQueryAnalysisEngines implements Handler {
 	}
 
 	private JsonValue buildJsonEngines() {
-		Option engines = backend.getOptions().getOption(OptionsModelChecker.ENGINE);
+		Option engines = Options.get().getOption(OptionsModelChecker.ENGINE);
 		OptionTypeMap<Class<?>> optionType = engines.getType();
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (String id : optionType.getKeys()) {

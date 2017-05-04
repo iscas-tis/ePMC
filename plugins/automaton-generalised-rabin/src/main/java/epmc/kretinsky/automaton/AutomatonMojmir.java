@@ -84,7 +84,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         this.implicit = implicit;
         this.simpleG = simpleG;
         
-        Options options = formula.getOptions();
+        Options options = Options.get();
         this.useGFFGOptimisation = options.getBoolean(OptionsKretinsky.KRETINSKY_GFFG_OPTIMISATION);
         this.optimisation = options.get(OptionsKretinsky.KRETINSKY_OPTIMISE_MOJMIR);
         formula = formula.replace(expressionsUnique.getReplacement());

@@ -47,11 +47,9 @@ import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import epmc.value.ContextValue;
 
 public class CommandTaskExpression2Automaton implements CommandTask {
     public final static String IDENTIFIER = "expression2automaton";
-    private Options options;
     private ModelChecker modelChecker;
 
     @Override
@@ -62,7 +60,6 @@ public class CommandTaskExpression2Automaton implements CommandTask {
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         this.modelChecker = modelChecker;
-        this.options = ContextValue.get().getOptions();
     }
 
     @Override
@@ -116,8 +113,7 @@ public class CommandTaskExpression2Automaton implements CommandTask {
             Automaton automaton = null;
             try {
             	Automaton.Builder builder;
-                builder = UtilOptions.getInstance(options,
-                		OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE);
+                builder = UtilOptions.getInstance(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE);
 				builder.setExpression(expression);
 				automaton = builder.build();
 			} catch (EPMCException e) {
@@ -156,6 +152,6 @@ public class CommandTaskExpression2Automaton implements CommandTask {
 	}
 
 	private Log getLog() {
-		return ContextValue.get().getOptions().get(OptionsMessages.LOG);
+		return Options.get().get(OptionsMessages.LOG);
 	}
 }

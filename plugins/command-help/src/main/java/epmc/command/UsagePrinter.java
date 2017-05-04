@@ -220,9 +220,8 @@ final class UsagePrinter {
     private static void appendOption(StringBuilder builder, Option option, int level) {
         assert builder != null;
         assert option != null;
-        Options options = option.getOptions();
         Locale locale = Locale.getDefault();
-        ResourceBundle poMsg = ResourceBundle.getBundle(options.getResourceFileName(), locale);
+        ResourceBundle poMsg = ResourceBundle.getBundle(Options.get().getResourceFileName(), locale);
         String topLine = buildOptionTopLine(poMsg, option);
         builder.append(spacify(topLine, 2 + level * 2));
         String description = alignWords(option.getShortDescription(), MAX_LINE_LENGTH - (6 + level * 2));

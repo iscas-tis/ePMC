@@ -40,6 +40,7 @@ import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.modelchecker.ModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
+import epmc.options.Options;
 import epmc.propertysolver.PropertySolverExplicitReward;
 import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
@@ -154,13 +155,13 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra weightedCombinations = combinationsToWeighted(rewards, choice, weights);
         ValueArrayAlgebra weightedRewards = rewardsToWeighted(rewards, weights);
         Type typeWeight = TypeWeight.get();
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(typeWeight) != null;
         ValueArrayAlgebra iterResult = useNative
                 ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), graph.computeNumStates())
                 : UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
 
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objective = new GraphSolverObjectiveExplicitMultiObjectiveWeighted();
         objective.setValues(iterResult);
         objective.setGraph(graph);
@@ -220,7 +221,7 @@ final class MultiObjectiveUtils {
         assert weights.size() == rewards.getNumObjectives();
         int numNondet = rewards.getNumNondet();
         int numObjectives = rewards.getNumObjectives();
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
                 ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numNondet)
@@ -251,7 +252,7 @@ final class MultiObjectiveUtils {
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
         
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
                 ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
@@ -293,7 +294,7 @@ final class MultiObjectiveUtils {
         assert weights.size() == combinations.getNumObjectives();
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
-        boolean useNative = ContextValue.get().getOptions().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
+        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
                 && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
         ValueArrayAlgebra result = useNative
                 ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)

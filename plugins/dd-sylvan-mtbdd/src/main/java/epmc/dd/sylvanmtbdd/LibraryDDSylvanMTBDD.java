@@ -38,6 +38,7 @@ import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
+import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
@@ -292,10 +293,10 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         vop1 = new DD_VOP1Impl();
         vop2 = new DD_VOP2Impl();
         GetOperatorNumber getOperatorNumber = new GetOperatorNumberImpl();
-        int workers = contextDD.getOptions().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_WORKERS);
-        long initMem = contextDD.getOptions().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_NODES);
-        long initCache = contextDD.getOptions().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_CACHE_SIZE);
-        int cacheGranularity = contextDD.getOptions().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_CACHE_GRANULARITY);
+        int workers = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_WORKERS);
+        long initMem = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_NODES);
+        long initCache = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_CACHE_SIZE);
+        int cacheGranularity = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_CACHE_GRANULARITY);
         
         Sylvan.lace_init(workers, 1000000);
         Sylvan.lace_startup(0, Pointer.NULL, Pointer.NULL);

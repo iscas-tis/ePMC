@@ -78,7 +78,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
         int[] previousValue = new int[vectorSize];
 		
 		OptionsCoalition.JurdzinskyChooseLiftNodes liftMethod = 
-				getOptions().getEnum(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES);
+				Options.get().getEnum(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES);
 		switch (liftMethod) {
 		case ALL:
 			liftSuccessorAll(vectors, vectorSize, counterBounds, labels, previousValue);
@@ -219,7 +219,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		long completeRounds = 0L;
 		long numChanged = 0L;
 		OptionsCoalition.JurdzinskyLiftOrder order =
-				getOptions().getEnum(OptionsCoalition.COALITION_JURDZINSKY_LIFT_ORDER);
+				Options.get().getEnum(OptionsCoalition.COALITION_JURDZINSKY_LIFT_ORDER);
 		boolean fifo = order == JurdzinskyLiftOrder.FIFO;
     	while (!candidates.isEmpty()) {
     		completeRounds++;
@@ -417,12 +417,8 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		return true;
 	}
 
-	private Options getOptions() {
-		return game.getOptions();
-	}
-	
 	private Log getLog() {
-		return game.getOptions().get(OptionsMessages.LOG);
+		return Options.get().get(OptionsMessages.LOG);
 	}
 
 	@Override

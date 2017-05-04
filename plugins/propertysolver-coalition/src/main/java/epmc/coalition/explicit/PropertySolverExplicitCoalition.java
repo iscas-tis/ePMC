@@ -219,10 +219,9 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	        GraphExplicit game = buildGame(init, path, qualitative);
 	        assert game != null;
 	        StopWatch gameSolverWatch = new StopWatch(true);
-	        Options options = game.getOptions();
+	        Options options = Options.get();
 	        QualitativeResult regions = null;
-	        SolverQualitative solver = UtilOptions.getInstance(options,
-	                OptionsCoalition.COALITION_SOLVER);
+	        SolverQualitative solver = UtilOptions.getInstance(OptionsCoalition.COALITION_SOLVER);
 	        getLog().send(MessagesCoalition.COALITION_SOLVING_USING, solver.getIdentifier());
 			solver.setGame(game);
 			solver.setComputeStrategies(false, false);
@@ -466,6 +465,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
      * @return log used for analysis
      */
     private Log getLog() {
-    	return ContextValue.get().getOptions().get(OptionsMessages.LOG);
+    	return Options.get().get(OptionsMessages.LOG);
     }
 }

@@ -24,6 +24,7 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
+import epmc.options.Options;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
@@ -308,8 +309,8 @@ public final class LibraryDDJDD implements LibraryDD {
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
         this.contextDD = contextDD;
-        int initCache = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
-        int initSlots = contextDD.getOptions().getInteger(OptionsDDJDD.DD_JDD_INIT_NODES);
+        int initCache = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
+        int initSlots = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_NODES);
         this.bdd = new BDD(initSlots, initCache);
         this.zeroValue = TypeBoolean.get().getFalse();
         this.oneValue = TypeBoolean.get().getTrue();

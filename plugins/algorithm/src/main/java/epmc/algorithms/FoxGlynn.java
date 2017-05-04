@@ -24,7 +24,6 @@ import epmc.error.EPMCException;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.TypeArray;
 import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeReal;
@@ -332,7 +331,7 @@ public final class FoxGlynn {
         assert tau != null;
         assert omega != null;
         assert epsilon != null;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         assert TypeReal.isReal(lambda.getType());
         assert TypeReal.isReal(tau.getType());
         assert TypeReal.isReal(omega.getType());

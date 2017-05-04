@@ -286,7 +286,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         ensureSuccessorsSize();
         
 
-        sizeType = computeSizeType(getOptions(), maxNumSuccessors);
+        sizeType = computeSizeType(maxNumSuccessors);
         
         otfNextSuccessorPlace = 0;
 
@@ -381,15 +381,14 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         return result;
     }
     
-    private static OptionsTypesGraph.WrapperGraphSuccessorsSize computeSizeType(Options options, int maxNumSuccessors) throws EPMCException {
-        assert options != null;
+    private static OptionsTypesGraph.WrapperGraphSuccessorsSize computeSizeType(int maxNumSuccessors) throws EPMCException {
         assert maxNumSuccessors >= 0;
         int numSuccessors = maxNumSuccessors;
         if (numSuccessors == Integer.MAX_VALUE) {
             numSuccessors = DEFAULT_NUM_SUCCESSORS;
         }
         /* prepare storage of successors size */
-        OptionsTypesGraph.WrapperGraphSuccessorsSize sizeType = options.getEnum(OptionsGraph.WRAPPER_GRAPH_SUCCESSORS_SIZE);
+        OptionsTypesGraph.WrapperGraphSuccessorsSize sizeType = Options.get().getEnum(OptionsGraph.WRAPPER_GRAPH_SUCCESSORS_SIZE);
         switch (sizeType) {
         case INT:
             ensure(numSuccessors <= Integer.MAX_VALUE, ProblemsGraph.WRAPPER_GRAPH_SUCCESSORS_SIZE_TOO_SMALL);

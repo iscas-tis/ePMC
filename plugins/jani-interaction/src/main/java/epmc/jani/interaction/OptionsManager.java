@@ -49,9 +49,8 @@ public final class OptionsManager {
 	public OptionsManager(Database storage) throws EPMCException {
 		assert storage != null;
 		connection = storage.getConnection();
-		Options options = storage.getOptions();
 		String createOptionsTableString = MessageFormat.format(SQL_CREATE_OPTIONS_TABLE, 
-				new Object[]{options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT)});
+				new Object[]{Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT)});
 		try {
 			PreparedStatement createOptionsTable = connection.prepareStatement(createOptionsTableString);
 			createOptionsTable.execute();

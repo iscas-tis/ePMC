@@ -1016,7 +1016,7 @@ public final class Option implements Serializable, Cloneable {
      * 
      * @return the options set to which this option belongs
      */
-    public Options getOptions() {
+    Options getOptions() {
         return options;
     }
     

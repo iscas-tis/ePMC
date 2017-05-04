@@ -27,7 +27,6 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import epmc.error.EPMCException;
-import epmc.options.Options;
 
 /**
  * Task server which runs in the same process as the one who starts it.
@@ -39,21 +38,8 @@ import epmc.options.Options;
  * @author Ernst Moritz Hahn
  */
 public final class TaskServerSameProcess implements TaskServer {
-    /** Options used for this task server. */
-    private Options options;
     /** Remote server object for this task server. */
     private JANIServer server;
-
-    @Override
-    public void setOptions(Options options) {
-        assert options != null;
-        this.options = options;
-    }
-
-    @Override
-    public Options getOptions() {
-        return options;
-    }
 
     @Override
     public void start() throws EPMCException {

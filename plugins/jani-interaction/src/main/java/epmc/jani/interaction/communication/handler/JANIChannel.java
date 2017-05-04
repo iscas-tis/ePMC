@@ -35,6 +35,7 @@ import epmc.jani.interaction.remote.EPMCChannel;
 import epmc.messages.Message;
 import epmc.messages.MessageInstance;
 import epmc.messages.OptionsMessages;
+import epmc.options.Options;
 
 /**
  * JANI analysis channel.
@@ -134,10 +135,10 @@ final class JANIChannel extends UnicastRemoteObject implements EPMCChannel {
 		assert instance != null;
         Message message = instance.getMessage();
         String[] parameters = instance.getParametersArray();
-        boolean translate = backend.getOptions().getBoolean(OptionsMessages.TRANSLATE_MESSAGES);
+        boolean translate = Options.get().getBoolean(OptionsMessages.TRANSLATE_MESSAGES);
         String status;
         if (translate) {
-            Locale locale = backend.getOptions().getLocale();
+            Locale locale = Options.get().getLocale();
             formatter.applyPattern(message.getMessage(locale));
             status = formatter.format(parameters);
         } else {

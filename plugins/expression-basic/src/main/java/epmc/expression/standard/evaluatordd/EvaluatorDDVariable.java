@@ -31,7 +31,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 
 public final class EvaluatorDDVariable implements EvaluatorDD {
     public final static String IDENTIFIER = "variable";
@@ -69,7 +68,7 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
 
     @Override
     public void build() throws EPMCException {
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
         VariableDD variableDD = variables.get(expression);

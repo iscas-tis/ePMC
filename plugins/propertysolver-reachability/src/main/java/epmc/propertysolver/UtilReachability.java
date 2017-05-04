@@ -73,7 +73,7 @@ public final class UtilReachability {
     public static ValueArrayAlgebra computeReachabilityProbability(
     		GraphExplicit graph, BitSet oneStates) throws EPMCException {
     	
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
         objective.setGraph(graph);

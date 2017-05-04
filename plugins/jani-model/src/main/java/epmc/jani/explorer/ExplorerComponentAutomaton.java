@@ -651,11 +651,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	public int getNumNodeBits() {
 		return explorer.getNumNodeBits();
 	}
-
-	@Override
-	public Options getOptions() {
-		return explorer.getOptions();
-	}
 	
 	@Override
 	public void setNumSuccessors(int numSuccessors) {

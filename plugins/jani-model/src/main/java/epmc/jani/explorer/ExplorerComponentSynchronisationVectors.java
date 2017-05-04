@@ -394,11 +394,6 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public Options getOptions() {
-		return explorer.getOptions();
-	}
-	
-	@Override
 	public void setNumSuccessors(int numSuccessors) {
 		this.numSuccessors = numSuccessors;
 	}

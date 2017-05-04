@@ -24,8 +24,6 @@ import java.io.Closeable;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -72,10 +70,6 @@ public interface ConstraintSolver extends Closeable {
     
     /* default methods */
     
-	default Options getOptions() {
-		return ContextValue.get().getOptions();
-	}
-
 	/*
     default int addVariable(ExpressionIdentifierStandard identifier) throws EPMCException {
         assert identifier != null;

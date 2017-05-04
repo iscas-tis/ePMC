@@ -60,12 +60,6 @@ public interface GraphDD extends LowLevel {
     
     GraphDDProperties getProperties();
 
-    /* default methods */
-    
-    default Options getOptions() {
-        return ContextValue.get().getOptions();
-    }
-
     default <T> T getGraphPropertyObject(Object property) {
         ValueObject graphProperty = ValueObject.asObject(getGraphProperty(property));
         if (graphProperty == null) {

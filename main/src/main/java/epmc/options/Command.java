@@ -258,7 +258,7 @@ public final class Command implements Serializable, Cloneable {
      * 
      * @return options set of this command
      */
-    public Options getOptions() {
+    Options getOptions() {
         return options;
     }
     

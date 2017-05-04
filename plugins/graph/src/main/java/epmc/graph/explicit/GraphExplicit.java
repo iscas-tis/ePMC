@@ -90,17 +90,6 @@ public interface GraphExplicit extends LowLevel {
 
     // default fail / convenience
 
-    /**
-     * Get the options used by this graph.
-     * This is a convenience method, which uses the options of the graphs
-     * expression context.
-     * 
-     * @return options used by this graph
-     */
-    default Options getOptions() {
-        return ContextValue.get().getOptions();
-    }
-    
     default void computePredecessors(BitSet states) throws EPMCException {
         getProperties().computePredecessors(states);
     }

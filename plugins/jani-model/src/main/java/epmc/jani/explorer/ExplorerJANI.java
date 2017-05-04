@@ -52,7 +52,6 @@ import epmc.jani.model.Variable;
 import epmc.jani.model.property.ExpressionInitial;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
@@ -137,7 +136,7 @@ public final class ExplorerJANI implements Explorer {
 		buildTransientValues(nodeProperties, edgeProperties);
 		system = prepareSystem(model);
 		initialNodes = computeInitialNodes();
-		fixDeadlocks = ContextValue.get().getOptions().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
+		fixDeadlocks = Options.get().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
 		extensions = prepareExtensions(model);
 		prepareGraphProperties();
 		prepareNodeProperties();
@@ -196,7 +195,7 @@ public final class ExplorerJANI implements Explorer {
 	private ExplorerExtension[] prepareExtensions(ModelJANI model) throws EPMCException {
 		assert model != null;
 		int size = 0;
-		Options options = ContextValue.get().getOptions();
+		Options options = Options.get();
 		List<ModelExtension> modelExtensions = new ArrayList<>();
 		modelExtensions.add(model.getSemanticsExtension());
 		modelExtensions.addAll(model.getModelExtensionsOrEmpty());
@@ -479,11 +478,6 @@ public final class ExplorerJANI implements Explorer {
 		return stateVariables.getNumBits();
 	}
 
-	@Override
-	public Options getOptions() {
-		return ContextValue.get().getOptions();
-	}
-	
 	public ModelJANI getModel() {
 		return model;
 	}

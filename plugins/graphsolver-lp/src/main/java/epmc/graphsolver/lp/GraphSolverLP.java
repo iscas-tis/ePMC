@@ -153,7 +153,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     /** for MCs, every state is state in MC, no need to check whether it is state */
     private ValueArray solveMCLP(GraphExplicit graph, BitSet acc) 
             throws EPMCException {
-        Options options = graph.getOptions();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
@@ -275,7 +275,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     
     private ValueArray solveMDPLP(GraphExplicit graph, BitSet acc) throws EPMCException {
   
-        Options options = graph.getOptions();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();

@@ -49,7 +49,6 @@ import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.prism.model.convert.PRISM2JANIConverter;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 // TODO constants should not be stored here, but in a separate place in model
@@ -78,9 +77,7 @@ public final class PropertiesImpl implements Properties {
     
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = ContextValue.get().getOptions();
-        Property property = UtilOptions.getInstance(options,
-                OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
         property.readProperties(properties, input);
         parseProperties(properties);
@@ -88,7 +85,7 @@ public final class PropertiesImpl implements Properties {
     }
     
     public void parseProperties(RawProperties rawProperties) throws EPMCException {
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
             optionsConsts = new LinkedHashMap<>();

@@ -74,7 +74,7 @@ public final class UserManager {
 	public UserManager(Database storage) throws EPMCException {
 		assert storage != null;
 		connection = storage.getConnection();
-		Options options = storage.getOptions();
+		Options options = Options.get();
 		try {
 			String createLoginTableString = MessageFormat.format(SQL_CREATE_LOGIN_TABLE, 
 					new Object[]{options.getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT)});

@@ -55,7 +55,7 @@ final class BackendTester {
 	
 	BackendTester(Options options) throws EPMCException {
 		assert options != null;
-		backend = new Backend(options, feedback);
+		backend = new Backend(feedback);
 	}
 	
 	void send(JsonObjectBuilder request) {

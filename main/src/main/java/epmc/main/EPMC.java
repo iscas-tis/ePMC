@@ -123,7 +123,6 @@ public final class EPMC {
                 OptionsEPMC.COMMAND_CLASS,
                 Options.COMMAND);
         assert command != null;
-        command.setOptions(options);
         LogCommandLine log = new LogCommandLine(options);
         options.set(OptionsMessages.LOG, log);
         command.executeOnClient();
@@ -186,7 +185,7 @@ public final class EPMC {
             Scheduler scheduler = log.getScheduler(property);
             LowLevel lowLevel = log.getLowLevel(property);
             if (scheduler != null) {
-            	Util.printScheduler(System.out, lowLevel, scheduler, options);
+            	Util.printScheduler(System.out, lowLevel, scheduler);
             }
         }
         if (log.getCommonResult() != null) {

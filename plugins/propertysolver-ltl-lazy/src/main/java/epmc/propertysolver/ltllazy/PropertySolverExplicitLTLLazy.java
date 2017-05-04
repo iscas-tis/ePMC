@@ -72,7 +72,6 @@ import epmc.propertysolver.ltllazy.automata.AutomatonSubsetState;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -103,7 +102,6 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
-        this.options = ContextValue.get().getOptions();
         if (modelChecker.getEngine() instanceof EngineExplicit) {
         	this.graph = modelChecker.getLowLevel();
         }
@@ -303,7 +301,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
             throws EPMCException {
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit(graph.getOptions());
+        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
         objective.setGraph(graph);

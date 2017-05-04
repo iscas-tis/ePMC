@@ -62,7 +62,6 @@ import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.RewardStructure;
 import epmc.prism.model.StateReward;
 import epmc.prism.model.TransitionReward;
-import epmc.value.ContextValue;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -113,7 +112,7 @@ final class RewardsConverter {
 		assert modelPRISM != null;
 		assert tauAction != null;
 		
-		RewardMethod rewardMethod = getOptions().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
+		RewardMethod rewardMethod = Options.get().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
 		switch (rewardMethod) {
 		case INTEGRATE:
 			attachRewardsIntegrate();
@@ -496,10 +495,6 @@ final class RewardsConverter {
 				attachRewards(renamed, entryFromAction, effectOf);
 			}
 		}
-	}
-
-	private Options getOptions() {
-		return ContextValue.get().getOptions();
 	}
 	
     private static boolean isTrue(Expression expression) {

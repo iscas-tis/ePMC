@@ -51,7 +51,7 @@ import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
-import epmc.value.ContextValue;
+import epmc.options.Options;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.TypeEnumerable;
@@ -359,7 +359,7 @@ public final class VariableValuesEnumerator {
 	private List<Map<Variable,Value>> generalEnumerate(Map<String,Variable> variables, Expression expression) throws EPMCException {
 		assert variables != null;
 		assert expression != null;
-		EnumeratorType enumType = ContextValue.get().getOptions().getEnum(OptionsJANIExplorer.JANI_EXPLORER_INITIAL_ENUMERATOR);
+		EnumeratorType enumType = Options.get().getEnum(OptionsJANIExplorer.JANI_EXPLORER_INITIAL_ENUMERATOR);
 		switch (enumType) {
 		case BRUTE_FORCE:
 			return generalEnumerateBruteForce(variables, expression);

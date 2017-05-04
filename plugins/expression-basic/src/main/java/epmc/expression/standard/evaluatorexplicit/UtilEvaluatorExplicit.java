@@ -31,7 +31,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Value;
 
 public final class UtilEvaluatorExplicit {
@@ -124,7 +123,7 @@ public final class UtilEvaluatorExplicit {
             return already;
         }
         
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluators = options.get(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS);
         for (Class<? extends EvaluatorExplicit.Builder> clazz : evaluators.values()) {
             EvaluatorExplicit.Builder builder = Util.getInstance(clazz)

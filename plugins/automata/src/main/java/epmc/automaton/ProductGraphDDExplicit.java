@@ -100,12 +100,11 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.model = model;
         this.automaton = automaton;
 
-        Options options = model.getOptions();
         this.falseValue = TypeBoolean.get().getFalse();
         this.trueValue = TypeBoolean.get().getTrue();
         ContextDD contextDD = model.getContextDD();
         
-        numStatesReserved = options.getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);
+        numStatesReserved = Options.get().getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);
         stateCounter = contextDD.newInteger(AUTSTATE, 2, 0, numStatesReserved - 1);
         this.presVars.addAll(contextDD.cubeToListClone(model.getPresCube()));
         this.presVars.addAll(contextDD.clone(stateCounter.getDDVariables(0)));
@@ -393,7 +392,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     
     private static DD exploreNodeSpace(ProductGraphDDExplicit graph) throws EPMCException {
         assert graph != null;
-        Log log = graph.getOptions().get(OptionsMessages.LOG);
+        Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesAutomaton.EXPLORING);
         ContextDD contextDD = graph.getContextDD();

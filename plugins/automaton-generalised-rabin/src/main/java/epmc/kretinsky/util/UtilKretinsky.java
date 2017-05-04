@@ -29,6 +29,7 @@ import java.util.Map;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.options.Options;
 
 public final class UtilKretinsky {
     private UtilKretinsky() {
@@ -56,7 +57,7 @@ public final class UtilKretinsky {
         UtilExpression.expr2string(expression2, expr2str, numAPs, false);
         String spotFn1 = UtilExpression.expr2spot(expression1, expr2str);
         String spotFn2 = UtilExpression.expr2spot(expression2, expr2str);
-        String ltlfilt = expression1.getOptions().get();
+        String ltlfilt = Options.get().get();
         try {
             final String[] autExecArgs = {ltlfilt, "-f", spotFn1,
                     "--equivalent-to", spotFn2};

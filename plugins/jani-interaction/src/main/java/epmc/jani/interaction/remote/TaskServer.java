@@ -48,28 +48,8 @@ import epmc.options.Options;
  */
 public interface TaskServer {
     /**
-     * Set options to use for this task server.
-     * The options are are not the which will become the option set used for the
-     * task itself (e.g. which model checking engine to use) but they rather
-     * control details about how the task is started, e.g. command line options
-     * of the Java virtual machine to use. The options may not be {@code null}.
-     * This method may only be called once.
-     * 
-     * @param options options to use for this task server
-     */
-    void setOptions(Options options);
-
-    /**
-     * Obtain options used for this server process.
-     * 
-     * @return options used for this server process.
-     */
-    Options getOptions();
-
-    /**
      * Start given server process.
-     * The method may only be executed once {@link #setOptions(Options)} has
-     * been called. It may not be called several times, not even if
+     * The method may not be called several times, not even if
      * {@link #stop} was called afterwards. Instead, a new task server object
      * should be created to restart the server.
      * 

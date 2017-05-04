@@ -115,6 +115,7 @@ public final class Options implements Serializable, Cloneable {
     public final static String TOOL_NAME = "toolName";
     
     public final static String DEFAULT = "default";
+	private static Options optionsUsed;
     /** String to disable unchecked warning. */
     private final String UNCHECKED = "unchecked";
     
@@ -139,6 +140,14 @@ public final class Options implements Serializable, Cloneable {
     /** Tool description, if set */
     private String toolDescription;
 
+    public static void set(Options options) {
+    	Options.optionsUsed = options;
+    }
+    
+    public static Options get() {
+    	return optionsUsed;
+    }
+    
     /**
      * Creates a new options set.
      * No parameters may be {@code null}.
@@ -965,7 +974,6 @@ public final class Options implements Serializable, Cloneable {
 
     public void addCategory(Category category) {
         assert category != null;
-        assert category.getOptions() == this;
         this.categories.put(category.getIdentifier(), category);
     }
 

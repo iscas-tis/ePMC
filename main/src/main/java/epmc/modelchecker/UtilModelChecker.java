@@ -34,7 +34,6 @@ import epmc.options.OptionTypeStringListSubset;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.util.OrderedMap;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 
 /**
@@ -55,9 +54,8 @@ public final class UtilModelChecker {
      */
     public static Expression parseExpression(String string) throws EPMCException {
         assert string != null;
-        Options options = ContextValue.get().getOptions();
-        Property property = UtilOptions.getInstance(options,
-                OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        Options options = Options.get();
+        Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         InputStream stream = new ByteArrayInputStream(string.getBytes());
         return property.parseExpression(stream);
     }
@@ -74,9 +72,8 @@ public final class UtilModelChecker {
      */
     public static Type parseType(String string) throws EPMCException {
         assert string != null;
-        Options options = ContextValue.get().getOptions();
-        Property property = UtilOptions.getInstance(options,
-                OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        Options options = Options.get();
+        Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         return property.parseType(string);
     }
 

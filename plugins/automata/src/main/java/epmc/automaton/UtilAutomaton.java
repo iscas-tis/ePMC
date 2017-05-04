@@ -60,7 +60,7 @@ import epmc.value.ValueBoolean;
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,
             int[] numAPs) {
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         return expr2string(expression, expr2str, numAPs, options.getBoolean(OptionsAutomaton.AUTOMATON_SUBSUME_APS));
     }
 
@@ -69,7 +69,7 @@ public final class UtilAutomaton {
             ValueBoolean negate) throws EPMCException {
         assert property != null;
         assert negate != null;
-        Options options = ContextValue.get().getOptions();
+        Options options = Options.get();
         Buechi buechi = null;
         Log log = options.get(OptionsMessages.LOG);
         if (isNondet) {
@@ -232,7 +232,7 @@ public final class UtilAutomaton {
         for (Expression entry : expressions) {
             assert entry != null;
         }
-        Map<String,Class<Automaton.Builder>> automata = ContextValue.get().getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
+        Map<String,Class<Automaton.Builder>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonRabin.Builder result = (AutomatonRabin.Builder)
                 Util.getInstanceByClass(automata,
                         a -> AutomatonRabin.Builder.class.isAssignableFrom(a));
@@ -242,8 +242,7 @@ public final class UtilAutomaton {
     }
 
     public static AutomatonRabin newAutomatonRabinSafra(Buechi buechi, BitSet automatonState) throws EPMCException {
-    	Options options = buechi.getOptions();
-        Map<String,Class<Automaton.Builder>> automata = options.get(OptionsAutomaton.AUTOMATON_CLASS);
+        Map<String,Class<Automaton.Builder>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonSafra.Builder result = (AutomatonSafra.Builder)
                 Util.getInstanceByClass(automata,
                         a -> AutomatonRabin.Builder.class.isAssignableFrom(a)
@@ -262,7 +261,7 @@ public final class UtilAutomaton {
         for (Expression entry : expressions) {
             assert entry != null;
         }
-        Map<String,Class<Automaton.Builder>> automata = ContextValue.get().getOptions().get(OptionsAutomaton.AUTOMATON_CLASS);
+        Map<String,Class<Automaton.Builder>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonParity.Builder result = (AutomatonParity.Builder)
                 Util.getInstanceByClass(automata,
                         a -> AutomatonParity.Builder.class.isAssignableFrom(a));

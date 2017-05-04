@@ -231,7 +231,7 @@ public final class PRISM2JANIConverter {
 	}
 
 	private void convertSystem() throws EPMCException {
-    	SystemType systemType = getOptions().get(OptionsPRISMConverter.PRISM_CONVERTER_SYSTEM_METHOD);
+    	SystemType systemType = Options.get().get(OptionsPRISMConverter.PRISM_CONVERTER_SYSTEM_METHOD);
     	SystemConverter systemConverter;
     	switch (systemType) {
 		case SYNCHRONISATION_VECTORS:
@@ -764,13 +764,4 @@ public final class PRISM2JANIConverter {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
-
-	/**
-	 * Get options used for PRISM models.
-	 * 
-	 * @return options used
-	 */
-	private Options getOptions() {
-		return ContextValue.get().getOptions();
-	}
 }

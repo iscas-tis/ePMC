@@ -23,7 +23,6 @@ package epmc.graphsolver;
 import epmc.error.EPMCException;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
-import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.BitSetBoundedLongArray;
 
@@ -36,17 +35,15 @@ public final class UtilGraphSolver {
     /**
      * Create new explicit-state graph solver configuration.
      * 
-     * @param options options to use for creation
      * @return graph solver configuration created
      */
-    public static GraphSolverConfigurationExplicit newGraphSolverConfigurationExplicit(Options options) {
-        assert options != null;
-        return new GraphSolverConfigurationExplicit(options);
+    public static GraphSolverConfigurationExplicit newGraphSolverConfigurationExplicit() {
+        return new GraphSolverConfigurationExplicit();
     }
 
     public static void solve(GraphSolverObjectiveExplicit objective) throws EPMCException {
         assert objective != null;
-        GraphSolverConfigurationExplicit configuration = newGraphSolverConfigurationExplicit(objective.getGraph().getOptions());
+        GraphSolverConfigurationExplicit configuration = newGraphSolverConfigurationExplicit();
         configuration.setObjective(objective);
         configuration.solve();
     }
@@ -54,13 +51,10 @@ public final class UtilGraphSolver {
     /**
      * Create new DD-based sstate graph solver configuration.
      * 
-     * @param options options to use for creation
      * @return graph solver configuration created
      */
-    public static GraphSolverConfigurationDD newGraphSolverConfigurationDD(
-            Options options) {
-        assert options != null;
-        return new GraphSolverConfigurationDD(options);
+    public static GraphSolverConfigurationDD newGraphSolverConfigurationDD() {
+        return new GraphSolverConfigurationDD();
     }
     
     public static BitSet map(int size, StateMap map, BitSet original) {

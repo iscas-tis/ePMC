@@ -44,8 +44,7 @@ public class LTLHelper {
             throws EPMCException {
         if (propFn != null) {
             RawProperties props = new RawProperties();
-            Property property = UtilOptions.getInstance(options,
-                    OptionsModelChecker.PROPERTY_INPUT_TYPE);
+            Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
             TestHelper.readProperties(property, props, propFn);
             return props;
         }
