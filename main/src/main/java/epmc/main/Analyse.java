@@ -137,7 +137,6 @@ public final class Analyse {
             model = new ModelDummy();
         } else {
             InputStream[] inputs = rawModel.getModelInputStreams();
-            Options options = Options.get();
             model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
             model.read(inputs);
         }

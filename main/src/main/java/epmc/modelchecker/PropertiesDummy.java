@@ -73,7 +73,6 @@ public final class PropertiesDummy implements Properties {
      */
     private void parseProperties(InputStream input) throws EPMCException {
         assert input != null;
-        Options options = Options.get();
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
         property.readProperties(properties, input);

@@ -54,7 +54,6 @@ public final class UtilModelChecker {
      */
     public static Expression parseExpression(String string) throws EPMCException {
         assert string != null;
-        Options options = Options.get();
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         InputStream stream = new ByteArrayInputStream(string.getBytes());
         return property.parseExpression(stream);
@@ -72,7 +71,6 @@ public final class UtilModelChecker {
      */
     public static Type parseType(String string) throws EPMCException {
         assert string != null;
-        Options options = Options.get();
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         return property.parseType(string);
     }

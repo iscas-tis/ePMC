@@ -66,9 +66,6 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         this.nonDet = modelChecker.getModel().isNonDet();
-        if (modelChecker.isEngineDD()) {
-            this.contextDD = modelChecker.getContextDD();
-        }
     }
 
     @Override

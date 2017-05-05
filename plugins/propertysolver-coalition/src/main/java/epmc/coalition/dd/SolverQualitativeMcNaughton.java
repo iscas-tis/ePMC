@@ -73,13 +73,13 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 
 	@Override
 	public DDPair solve() throws EPMCException {
-        this.EMPTY_BIT_SET_PAIR = new DDPair(getContextDD().newConstant(false), getContextDD().newConstant(false));
+        this.EMPTY_BIT_SET_PAIR = new DDPair(ContextDD.get().newConstant(false), ContextDD.get().newConstant(false));
 		ProductGraphDDExplicit product = (ProductGraphDDExplicit) game;
 		AutomatonParity automaton = (AutomatonParity) product.getAutomaton();
         this.priorities = computePriorities(automaton, product.getLabeling());
         DD player = game.getNodeProperty(CommonProperties.PLAYER);
-        playerEven = player.clone().eqWith(getContextDD().newConstant(Player.ONE_STOCHASTIC));
-        playerOdd = player.clone().eqWith(getContextDD().newConstant(Player.TWO_STOCHASTIC));
+        playerEven = player.clone().eqWith(ContextDD.get().newConstant(Player.ONE_STOCHASTIC));
+        playerOdd = player.clone().eqWith(ContextDD.get().newConstant(Player.TWO_STOCHASTIC));
         DD nodes = game.getNodeSpace().clone();
         DDPair result = zeroMcNaughton(nodes);
         return result;
@@ -95,7 +95,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         priorities.clear();
         
         for (int labelNr = 0; labelNr < numPriorities; labelNr++) {
-            priorities.add(getContextDD().newConstant(false));
+            priorities.add(ContextDD.get().newConstant(false));
         }
 
         for (DD labelDD : labelsMap.keySet()) {
@@ -131,9 +131,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         }
         assert !allEven || !allOdd;
         if (allEven) {
-            return new DDPair(p, getContextDD().newConstant(false));
+            return new DDPair(p, ContextDD.get().newConstant(false));
         } else if (allOdd) {
-            return new DDPair(getContextDD().newConstant(false), p);
+            return new DDPair(ContextDD.get().newConstant(false), p);
         }
         DD minPrioDD = priorities.get(minPriority);
         
@@ -177,9 +177,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 
     private DD satr0(DD target, DD nodes) throws EPMCException {
         DD exist = playerEven;
-        DD forall = getContextDD().newConstant(false);
+        DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerOdd;
-        DD existForall = getContextDD().newConstant(false);
+        DD existForall = ContextDD.get().newConstant(false);
         
         DD result = ComponentsDD.attract(game, target, nodes, forall, exist, forallExist, existForall);
         forall.dispose();
@@ -189,9 +189,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 
     private DD satr1(DD target, DD nodes) throws EPMCException {
         DD exist = playerOdd;
-        DD forall = getContextDD().newConstant(false);
+        DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerEven;
-        DD existForall = getContextDD().newConstant(false);
+        DD existForall = ContextDD.get().newConstant(false);
         
         DD result = ComponentsDD.attract(game, target, nodes, forall, exist, forallExist, existForall);
         existForall.dispose();
@@ -215,10 +215,10 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     private DD watr(DD target, DD nodes, boolean odd)
             throws EPMCException {
         DD satrSame = satr(target, nodes, odd);
-        DD nodesMSatrSame = getContextDD().newConstant(false);
-        DD nodesMTarget = getContextDD().newConstant(false);
-        DD satrOther = getContextDD().newConstant(false);
-        DD nodesMSatrOther = getContextDD().newConstant(false);
+        DD nodesMSatrSame = ContextDD.get().newConstant(false);
+        DD nodesMTarget = ContextDD.get().newConstant(false);
+        DD satrOther = ContextDD.get().newConstant(false);
+        DD nodesMSatrOther = ContextDD.get().newConstant(false);
         nodes = nodes.clone();
         while (!nodes.equals(satrSame)) {
             nodesMSatrSame = nodes.andNot(satrSame);

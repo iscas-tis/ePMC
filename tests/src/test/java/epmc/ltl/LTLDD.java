@@ -44,7 +44,7 @@ public class LTLDD {
                 .getString(OptionsEPMC.INPUT_TYPE);
         System.out.println(model);
         System.out.println(properties);
-        ContextDD contextDD = context.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         GraphDD modelGraph = model.newGraphDD(null, null, null);
 
         System.out.println("dd -----------------");
