@@ -110,6 +110,8 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
+        this.options = Options.get();
+        this.log = options.get(OptionsMessages.LOG);
     }
 
     private StateMap solve(Expression property, StateSet forStates, boolean min)
@@ -895,7 +897,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
             throws EPMCException {
-        GraphSolverConfigurationDD configuration = UtilGraphSolver.newGraphSolverConfigurationDD(Options.get());
+        GraphSolverConfigurationDD configuration = UtilGraphSolver.newGraphSolverConfigurationDD();
         List<DD> sinks = new ArrayList<>();
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNotWith(target.clone());
         DD zeroNodes = nodeSpace.clone().andNotWith(someNodes).andNotWith(target.clone());
@@ -939,7 +941,6 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         }
         this.type = modelChecker.getModel().getSemantics();
         this.nonDet = SemanticsNonDet.isNonDet(this.type);
-        this.log = this.options.get(OptionsMessages.LOG);
         this.skipTransient = options.getBoolean(OptionsLTLLazy.LTL_LAZY_SCC_SKIP_TRANSIENT);
         Expression quantifiedProp = propertyQuantifier.getQuantified();
         Set<Expression> inners = UtilLTL.collectLTLInner(quantifiedProp);
