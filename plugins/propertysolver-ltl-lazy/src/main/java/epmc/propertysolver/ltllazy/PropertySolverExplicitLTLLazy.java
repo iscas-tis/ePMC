@@ -106,6 +106,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         	this.graph = modelChecker.getLowLevel();
         }
         this.nonDet = SemanticsNonDet.isNonDet(modelChecker.getModel().getSemantics());
+        this.options = Options.get();
         this.log = options.get(OptionsMessages.LOG);
     }
 
