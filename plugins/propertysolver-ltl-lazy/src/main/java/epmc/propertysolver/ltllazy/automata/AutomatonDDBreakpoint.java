@@ -38,7 +38,6 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
 
 public final class AutomatonDDBreakpoint implements AutomatonDD {
-    private final ContextDD contextDD;
     private final GraphExplicit automaton;
     private final int numLabels;
     private final List<DD> rPresVars = new ArrayList<>();
@@ -67,31 +66,30 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         assert buechi != null;
         assert states != null;
         this.expressionToDD = expressionToDD;
-        this.contextDD = expressionToDD.getContextDD();
         assert buechi.getNumLabels() > 0;
         this.automaton = buechi.getGraph();
         this.numLabels = buechi.getNumLabels();
         /* prepare variables */
         if (init == null) {
         	for (int state = 0; state < automaton.getNumNodes(); state++) {
-                VariableDD variable = contextDD.newBoolean("%autstate" + state, 2);
-                rPresVars.addAll(contextDD.clone(variable.getDDVariables(0)));
-                rNextVars.addAll(contextDD.clone(variable.getDDVariables(1)));
+                VariableDD variable = ContextDD.get().newBoolean("%autstate" + state, 2);
+                rPresVars.addAll(ContextDD.get().clone(variable.getDDVariables(0)));
+                rNextVars.addAll(ContextDD.get().clone(variable.getDDVariables(1)));
             }
         } else {
             for (VariableDD variable : subsetVariables) {
-                rPresVars.addAll(contextDD.clone(variable.getDDVariables(0)));
-                rNextVars.addAll(contextDD.clone(variable.getDDVariables(1)));
+                rPresVars.addAll(ContextDD.get().clone(variable.getDDVariables(0)));
+                rNextVars.addAll(ContextDD.get().clone(variable.getDDVariables(1)));
             }
         }
-        counter = contextDD.newInteger("%autcounter", 2, 0, numLabels - 1);
+        counter = ContextDD.get().newInteger("%autcounter", 2, 0, numLabels - 1);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
-            VariableDD variable = contextDD.newBoolean("%autstateC" + state, 2);
-            cPresVars.addAll(contextDD.clone(variable.getDDVariables(0)));
-            cNextVars.addAll(contextDD.clone(variable.getDDVariables(1)));
+            VariableDD variable = ContextDD.get().newBoolean("%autstateC" + state, 2);
+            cPresVars.addAll(ContextDD.get().clone(variable.getDDVariables(0)));
+            cNextVars.addAll(ContextDD.get().clone(variable.getDDVariables(1)));
         }
-        counterPresVars.addAll(contextDD.clone(counter.getDDVariables(0)));
-        counterNextVars.addAll(contextDD.clone(counter.getDDVariables(1)));
+        counterPresVars.addAll(ContextDD.get().clone(counter.getDDVariables(0)));
+        counterNextVars.addAll(ContextDD.get().clone(counter.getDDVariables(1)));
         presVars.addAll(rPresVars);
         presVars.addAll(counterPresVars);
         presVars.addAll(cPresVars);
@@ -101,7 +99,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         
         /* compute initial state */
         if (init == null) {
-            init = contextDD.newConstant(true);
+            init = ContextDD.get().newConstant(true);
             BitSet bInit = buechi.getGraph().getInitialNodes();
             for (int state = 0; state < automaton.getNumNodes(); state++) {
             	if (bInit.get(state)) {
@@ -112,7 +110,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
             }
         }
         DD counterInit = counter.getValueEncoding(0);
-        counterInit = counterInit.clone().eqWith(contextDD.newConstant(0));
+        counterInit = counterInit.clone().eqWith(ContextDD.get().newConstant(0));
         init = init.clone().andWith(counterInit);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             init = init.andWith(cPresVars.get(state).not());
@@ -129,7 +127,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         for (int entryNr = 0; entryNr < acceptanceSet.size(); entryNr++) {
             cSuccOrFis.add(cSucc.get(entryNr).or(acceptanceSet.get(entryNr)));
         }
-        contextDD.dispose(acceptanceSet);
+        ContextDD.get().dispose(acceptanceSet);
         int trueState = buechi.getTrueState();
         if (trueState != -1) {
             DD rNextTrue = rSucc.get(trueState);
@@ -149,20 +147,20 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         DD cSuccOrFisEqRSucc = eq(cSuccOrFis, rSucc);
         ArrayList<DD> emptySet = new ArrayList<>();
         for (int entry = 0; entry < cSuccOrFis.size(); entry++) {
-            emptySet.add(contextDD.newConstant(false));
+            emptySet.add(ContextDD.get().newConstant(false));
         }
         DD rSuccEqEmtpy = eq(emptySet, rSucc);
         DD nextR = eq(rNextVars, rSucc);
-        contextDD.dispose(rSucc);
+        ContextDD.get().dispose(rSucc);
         DD nextC = eq(cNextVars, cSuccOrFis);
-        contextDD.dispose(cSuccOrFis);
+        ContextDD.get().dispose(cSuccOrFis);
         DD cSuccEqEmpty = eq(cNextVars, emptySet);
-        DD transAccept = contextDD.newConstant(true);
+        DD transAccept = ContextDD.get().newConstant(true);
         transAccept = transAccept.andWith(cSuccOrFisEqRSucc.clone());
         transAccept = transAccept.andWith(nextR.clone());
         transAccept = transAccept.andWith(cSuccEqEmpty);
         transAccept = transAccept.andWith(incCounter);
-        DD transNonAccept = contextDD.newConstant(true);
+        DD transNonAccept = ContextDD.get().newConstant(true);
         transNonAccept = transNonAccept.andWith(cSuccOrFisEqRSucc.notWith());
         transNonAccept = transNonAccept.andWith(nextR);
         transNonAccept = transNonAccept.andWith(nextC);
@@ -180,18 +178,18 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
          * */
         this.accepting = transAccept.abstractExist(nextVars);
         transAccept.dispose();
-        DD rejectRootNoChildren = contextDD.newConstant(true);
+        DD rejectRootNoChildren = ContextDD.get().newConstant(true);
         rejectRootNoChildren = rejectRootNoChildren.andWith(transNonAccept);
         rejectRootNoChildren = rejectRootNoChildren.andWith(eq(cSucc, emptySet));
-        contextDD.dispose(emptySet);
-        contextDD.dispose(cSucc);
+        ContextDD.get().dispose(emptySet);
+        ContextDD.get().dispose(cSucc);
         // TODO check
         DD o = rSuccEqEmtpy.orWith(rejectRootNoChildren);
         this.rejecting = o.abstractExist(nextVars);
         o.dispose();
-        this.presCube = contextDD.listToCube(presVars);
-        this.nextCube = contextDD.listToCube(nextVars);
-        this.labelCube = contextDD.newConstant(true);
+        this.presCube = ContextDD.get().listToCube(presVars);
+        this.nextCube = ContextDD.get().listToCube(nextVars);
+        this.labelCube = ContextDD.get().newConstant(true);
     }
     
     public AutomatonDDBreakpoint(ExpressionToDD contextDD, Buechi buechi, DD states)
@@ -209,7 +207,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
             assert dd != null;
         }
         assert set1.size() == set2.size();
-        DD result = contextDD.newConstant(true);
+        DD result = ContextDD.get().newConstant(true);
         Iterator<DD> set1Iter = set1.iterator();
         Iterator<DD> set2Iter = set2.iterator();
         while (set1Iter.hasNext()) {
@@ -223,8 +221,8 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
 
     private DD computeIncModCounter() throws EPMCException {
         DD result = counter.getValueEncoding(0).clone();
-        result = result.addWith(contextDD.newConstant(1));
-        result = result.modWith(contextDD.newConstant(numLabels));
+        result = result.addWith(ContextDD.get().newConstant(1));
+        result = result.modWith(ContextDD.get().newConstant(numLabels));
         result = result.eqWith(counter.getValueEncoding(1).clone());
         return result;
     }
@@ -234,7 +232,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             List<DD> labelNextOns = new ArrayList<>();
             for (int state = 0; state < automaton.getNumNodes(); state++) {
-                labelNextOns.add(contextDD.newConstant(false));
+                labelNextOns.add(ContextDD.get().newConstant(false));
             }
             nextOns.add(labelNextOns);
         }
@@ -266,16 +264,16 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         ArrayList<DD> result = new ArrayList<>();
         DD counter = this.counter.getValueEncoding(0);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
-            DD setDD = contextDD.newConstant(false);
+            DD setDD = ContextDD.get().newConstant(false);
             for (int labelNr = 0; labelNr < numLabels; labelNr++) {
-                DD labelNrDD = counter.clone().eqWith(contextDD.newConstant(labelNr));
+                DD labelNrDD = counter.clone().eqWith(ContextDD.get().newConstant(labelNr));
                 List<DD> labelSet = acceptanceSets.get(labelNr);
                 setDD = setDD.orWith(labelNrDD.andWith(labelSet.get(state).clone()));
             }
             result.add(setDD);
         }
         for (List<DD> free : acceptanceSets) {
-            contextDD.dispose(free);
+        	ContextDD.get().dispose(free);
         }
         
         return result;
@@ -285,7 +283,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
                     throws EPMCException {
         ArrayList<DD> nextOns = new ArrayList<>();
         for (int state = 0; state < automaton.getNumNodes(); state++) {
-            nextOns.add(contextDD.newConstant(false));
+            nextOns.add(ContextDD.get().newConstant(false));
         }
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
@@ -349,12 +347,16 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         presCube.dispose();
         nextCube.dispose();
         labelCube.dispose();
-        contextDD.dispose(rPresVars);
-        contextDD.dispose(rNextVars);
-        contextDD.dispose(cPresVars);
-        contextDD.dispose(cNextVars);
-        contextDD.dispose(counterPresVars);
-        contextDD.dispose(counterNextVars);
+        try {
+			ContextDD.get().dispose(rPresVars);
+	        ContextDD.get().dispose(rNextVars);
+	        ContextDD.get().dispose(cPresVars);
+	        ContextDD.get().dispose(cNextVars);
+	        ContextDD.get().dispose(counterPresVars);
+	        ContextDD.get().dispose(counterNextVars);
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
     }
 
     @Override
