@@ -250,8 +250,4 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         contextExpression.close();
         System.out.println(exporter);
     }
-    
-    ContextDD getContextDD() throws EPMCException {
-        return contextExpression.getContextDD();
-    }
 }

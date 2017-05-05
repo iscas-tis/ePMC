@@ -193,7 +193,6 @@ public class ComponentsDD implements Closeable {
     private final boolean isNondet;
     private final boolean skipTransient;
     private final boolean startWithInit;
-    private final ContextDD contextDD;
     private final boolean onlyBottom;
     private final Permutation nextToPres;
     private final DD transitions;
@@ -212,17 +211,16 @@ public class ComponentsDD implements Closeable {
         assert nodes.isBoolean();
         this.nodes = nodes.clone();
         Options options = Options.get();
-        this.contextDD = graph.getContextDD();
         Semantics sem = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         this.isNondet = SemanticsNonDet.isNonDet(sem);
         this.skipTransient = skipTransient;
         this.startWithInit = true;
         this.onlyBottom = !isNondet && onlyBSCC;
-        this.nextToPres = contextDD.newPermutationCube(graph.getPresCube(), graph.getNextCube());
+        this.nextToPres = ContextDD.get().newPermutationCube(graph.getPresCube(), graph.getNextCube());
         this.transitions = graph.getTransitions().clone();
         this.transitionsNoActions = transitions.abstractExist(graph.getActionCube());
         this.graph = graph;
-        this.mecNextNodes = contextDD.newConstant(false);
+        this.mecNextNodes = ContextDD.get().newConstant(false);
         this.presAndActions = graph.getPresCube().and(graph.getActionCube());
         this.nextAndActions = graph.getNextCube().and(graph.getActionCube());
         DdSccAlgorithm sccAlgorithm = options.getEnum(OptionsAlgorithm.DD_SCC_ALGORITHM);
@@ -251,7 +249,7 @@ public class ComponentsDD implements Closeable {
         DD edges = restrictTrans(nextToPres, transitionsNoActions, nodes);
         assert nodes.assertSupport(graph.getPresCube());
         assert edges.assertSupport(graph.getPresCube(), graph.getNextCube());
-        DD falseConst = contextDD.newConstant(false);
+        DD falseConst = ContextDD.get().newConstant(false);
         Spine spine = new Spine(falseConst, falseConst);
         falseConst.dispose();
         while (!stack.isEmpty()) {
@@ -284,10 +282,10 @@ public class ComponentsDD implements Closeable {
                 while (!pre(scc, edges).andWith(skelResult.getFw().clone()).andNotWith(scc.clone()).isFalseWith()) {
                     scc = scc.orWith(pre(scc, edges).andWith(skelResult.getFw().clone()));
                 }
-                DD transNodes = contextDD.newConstant(false);
+                DD transNodes = ContextDD.get().newConstant(false);
                 if (skipTransient) {
                     DD stableStates = skelResult.getFw().clone();
-                    DD stableLast = contextDD.newConstant(false);
+                    DD stableLast = ContextDD.get().newConstant(false);
                     while (!stableStates.equals(stableLast)) {
                         stableLast.dispose();
                         stableLast = stableStates;
@@ -408,7 +406,7 @@ public class ComponentsDD implements Closeable {
         assert !spine.getS().isFalse();
         Deque<DD> stack = new ArrayDeque<>();
         DD l = spine.getS().clone();
-        DD fwd = contextDD.newConstant(false);
+        DD fwd = ContextDD.get().newConstant(false);
         while (!l.isFalse()) {
             stack.push(l);
             fwd = fwd.orWith(l.clone());
@@ -462,7 +460,7 @@ public class ComponentsDD implements Closeable {
                 } else {
                     startSCCs(mecNextNodes);
                     mecNextNodes.dispose();
-                    mecNextNodes = contextDD.newConstant(false);
+                    mecNextNodes = ContextDD.get().newConstant(false);
                     orig = nextSCC();
                     if (orig == null) {
                         return null;
@@ -471,9 +469,9 @@ public class ComponentsDD implements Closeable {
             }
             assert orig.assertSupport(graph.getPresCube());
             DD player = graph.getNodeProperty(CommonProperties.PLAYER);
-            DD nondet = player.clone().eqWith(contextDD.newConstant(Player.ONE));
-            DD prob = player.clone().eqWith(contextDD.newConstant(Player.STOCHASTIC));
-            DD nondetProb = player.clone().eqWith(contextDD.newConstant(Player.ONE_STOCHASTIC));
+            DD nondet = player.clone().eqWith(ContextDD.get().newConstant(Player.ONE));
+            DD prob = player.clone().eqWith(ContextDD.get().newConstant(Player.STOCHASTIC));
+            DD nondetProb = player.clone().eqWith(ContextDD.get().newConstant(Player.ONE_STOCHASTIC));
 
 //            DD presCube = graph.getPresCube();
             DD nextCube = graph.getNextCube();
@@ -483,7 +481,7 @@ public class ComponentsDD implements Closeable {
             DD validActions = transitions.and(nodes).abstractExistWith(nextCube.clone());
             
             DD scc = orig.clone();
-            DD sccPred = contextDD.newConstant(false);
+            DD sccPred = ContextDD.get().newConstant(false);
             while (!scc.equals(sccPred)) {
                 sccPred.dispose();
                 sccPred = scc;
@@ -541,12 +539,11 @@ public class ComponentsDD implements Closeable {
         assert graph != null;
         assert targetParam != null;
         assert other != null;
-        ContextDD contextDD = graph.getContextDD();        
 
         DD player = graph.getNodeProperty(CommonProperties.PLAYER);
 
-        QuantTypes quantTypes = computeQuantTypes(contextDD, player,
-                stochForall, oneForall, twoForall);
+        QuantTypes quantTypes = computeQuantTypes(player, stochForall,
+                oneForall, twoForall);
         DD forall = quantTypes.forall;
         DD exist = quantTypes.exist;
         DD forallExist = quantTypes.forallExist;
@@ -562,7 +559,7 @@ public class ComponentsDD implements Closeable {
     public static DD attract(GraphDD graph, DD targetParam, DD other,
             DD forall, DD exist, DD forallExist, DD existForall)
             throws EPMCException {
-        ContextDD contextDD = graph.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         DD target = targetParam.clone();
         DD prevOther = contextDD.newConstant(false);
         DD presCube = graph.getPresCube();
@@ -667,8 +664,9 @@ public class ComponentsDD implements Closeable {
         return target;
     }
     
-    private static QuantTypes computeQuantTypes(ContextDD contextDD, DD player, boolean stochForall, boolean oneForall, boolean twoForall)
+    private static QuantTypes computeQuantTypes(DD player, boolean stochForall, boolean oneForall, boolean twoForall)
             throws EPMCException {
+    	ContextDD contextDD = ContextDD.get();
         DD forall = contextDD.newConstant(false);
         DD exist = contextDD.newConstant(false);
         DD existForall = contextDD.newConstant(false);
@@ -715,7 +713,7 @@ public class ComponentsDD implements Closeable {
 
     public static DD reachPre(GraphDD graph, DD target, DD nodes,
             boolean min, boolean one) throws EPMCException {
-        DD blockFalse = graph.getContextDD().newConstant(false);
+        DD blockFalse = ContextDD.get().newConstant(false);
         DD result = reachPre(graph, target, nodes, blockFalse, min, one);
         blockFalse.dispose();
         return result;
@@ -731,7 +729,7 @@ public class ComponentsDD implements Closeable {
             DD reachNone = nodes.clone().andNotWith(reachSome);
             DD reachNoneOld = reachNone;
             DD nodesAndNotTarget = nodes.andNot(target);
-            DD constFalse = graph.getContextDD().newConstant(false);
+            DD constFalse = ContextDD.get().newConstant(false);
             reachNone = reachPre(graph, reachNone, nodesAndNotTarget, constFalse, !min, false);
             constFalse.dispose();
             nodesAndNotTarget.dispose();

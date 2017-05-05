@@ -43,7 +43,6 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     private final DD initial;
     private final DD transitionsBoolean;
     private final DD weight;
-    private final ContextDD contextDD;
     private final DD states;
     private final DD player;
     private final List<DD> presVars;
@@ -65,29 +64,27 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         this.properties = new GraphDDProperties(this);
         assert model != null;
         assert automaton != null;
-        assert model.getContextDD() == automaton.getContextDD();
         this.initial = modelInit.and(automaton.getInitial());
         this.transitionsBoolean = model.getTransitions().
                 and(automaton.getTransitions());
         DD autTransNum = automaton.getTransitions().toMT();
         DD modelWeight = model.getEdgeProperty(CommonProperties.WEIGHT);
         this.weight = modelWeight.clone().multiplyWith(autTransNum);
-        this.contextDD = model.getContextDD();
         this.states = model.getNodeProperty(CommonProperties.STATE).clone();
         this.player = model.getNodeProperty(CommonProperties.PLAYER).clone();
         this.actionVars = new ArrayList<>();
-        for (DD var : contextDD.cubeToList(model.getActionCube())) {
+        for (DD var : ContextDD.get().cubeToList(model.getActionCube())) {
             this.actionVars.add(var.clone());
         }
         this.presVars = new ArrayList<>();
-        for (DD var : contextDD.cubeToList(model.getPresCube())) {
+        for (DD var : ContextDD.get().cubeToList(model.getPresCube())) {
             this.presVars.add(var.clone());
         }
         for (DD var : automaton.getPresVars()) {
             this.presVars.add(var.clone());
         }
         this.nextVars = new ArrayList<>();
-        for (DD var : contextDD.cubeToList(model.getNextCube())) {
+        for (DD var : ContextDD.get().cubeToList(model.getNextCube())) {
             this.nextVars.add(var.clone());
         }
         for (DD var : automaton.getNextVars()) {
@@ -95,11 +92,11 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         }
         this.presAndActions = model.getPresCube().and(automaton.getPresCube(),
                 model.getActionCube(), automaton.getLabelCube());
-        this.nextToPres = contextDD.newPermutationListDD(presVars, nextVars);
+        this.nextToPres = ContextDD.get().newPermutationListDD(presVars, nextVars);
         this.automaton = automaton;
-        this.presCube = contextDD.listToCube(presVars);
-        this.nextCube = contextDD.listToCube(nextVars);
-        this.actionCube = contextDD.listToCube(actionVars);
+        this.presCube = ContextDD.get().listToCube(presVars);
+        this.nextCube = ContextDD.get().listToCube(nextVars);
+        this.actionCube = ContextDD.get().listToCube(actionVars);
         if (model.getGraphProperties().contains(CommonProperties.SEMANTICS)) {
             Object semantics = model.getGraphPropertyObject(CommonProperties.SEMANTICS);
             properties.registerGraphProperty(CommonProperties.SEMANTICS,
@@ -157,9 +154,13 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         weight.dispose();
         states.dispose();
         player.dispose();
-        contextDD.dispose(presVars);
-        contextDD.dispose(nextVars);
-        contextDD.dispose(actionVars);
+        try {
+			ContextDD.get().dispose(presVars);
+	        ContextDD.get().dispose(nextVars);
+	        ContextDD.get().dispose(actionVars);
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         presCube.dispose();
         nextCube.dispose();
 //        actionCube.dispose();
@@ -191,7 +192,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesAutomaton.EXPLORING);
-        ContextDD contextDD = graph.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         DD states = graph.getInitialNodes().clone();
         DD predecessors = contextDD.newConstant(false);
         DD trans = graph.getTransitions().abstractExist(graph.getActionCube());

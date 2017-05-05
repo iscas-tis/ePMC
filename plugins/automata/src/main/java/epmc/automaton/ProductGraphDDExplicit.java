@@ -102,7 +102,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
 
         this.falseValue = TypeBoolean.get().getFalse();
         this.trueValue = TypeBoolean.get().getTrue();
-        ContextDD contextDD = model.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         
         numStatesReserved = Options.get().getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);
         stateCounter = contextDD.newInteger(AUTSTATE, 2, 0, numStatesReserved - 1);
@@ -206,7 +206,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         from = from.and(modelStates);
         DD fromAndVarEqExprs = from.and(varEqExpressions);
         DD assignmentsDD = fromAndVarEqExprs.abstractExist(presCube);
-        ContextDD contextDD = getContextDD();
+        ContextDD contextDD = ContextDD.get();
         DD nextStates = contextDD.newConstant(false);
         DD modelTrans = model.getTransitions().abstractExist(model.getActionCube());
         while (!assignmentsDD.isFalse()) {
@@ -342,7 +342,12 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         closed = true;
         varEqExpressions.dispose();
         exprVarsCube.dispose();
-        ContextDD contextDD = initial.getContext();
+        ContextDD contextDD;
+		try {
+			contextDD = ContextDD.get();
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         initial.dispose();
         contextDD.dispose(presVars);
         contextDD.dispose(nextVars);
@@ -395,7 +400,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesAutomaton.EXPLORING);
-        ContextDD contextDD = graph.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         DD states = graph.getInitialNodes().clone();
         DD predecessors = contextDD.newConstant(false);
         while (!states.equals(predecessors)) {

@@ -23,7 +23,6 @@ package epmc.automaton;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
-import epmc.options.Options;
 import epmc.value.Value;
 
 // TODO complete documentation
