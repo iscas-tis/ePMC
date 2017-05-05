@@ -38,7 +38,6 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
 
 public final class AutomatonDDSubset implements AutomatonDD {
-    private final ContextDD contextDD;
     private final int numLabels;
     private final GraphExplicit automaton;
     private final ArrayList<DD> labels;
@@ -65,23 +64,22 @@ public final class AutomatonDDSubset implements AutomatonDD {
         assert buechi.getNumLabels() > 0;
         this.expressionToDD = expressionToDD;
         this.buechi = buechi;
-        this.contextDD = expressionToDD.getContextDD();
         this.numLabels = buechi.getNumLabels();
         this.automaton = buechi.getGraph();
         this.labels = new ArrayList<>();
         this.presVars = new ArrayList<>();
         this.nextVars = new ArrayList<>();
         prepareVariables();
-        this.presCube = contextDD.listToCube(presVars);
-        this.nextCube = contextDD.listToCube(nextVars);
-        this.labelsCube = contextDD.listToCube(labels);
+        this.presCube = ContextDD.get().listToCube(presVars);
+        this.nextCube = ContextDD.get().listToCube(nextVars);
+        this.labelsCube = ContextDD.get().listToCube(labels);
         DD init = computeInit();
         this.init = init.andWith(states.clone());
         DD stateStaySame = computeStateStaySame();
         DD tr = computeTransition();
         trans = states.clone().andWith(tr).orWith(states.not().andWith(stateStaySame));
-        under = computeUnder(contextDD);
-        over = computeOver(contextDD);
+        under = computeUnder(ContextDD.get());
+        over = computeOver(ContextDD.get());
     }
 
     @Override
@@ -122,12 +120,12 @@ public final class AutomatonDDSubset implements AutomatonDD {
     private void prepareVariables() throws EPMCException {
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             String labelName = "%autlabel" + labelNr;
-            VariableDD variable = contextDD.newBoolean(labelName, 1);
+            VariableDD variable = ContextDD.get().newBoolean(labelName, 1);
             labels.add(variable.getDDVariables(0).get(0).clone());
         }
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             String stateName = "%autstate" + node;
-            VariableDD variable = contextDD.newBoolean(stateName, 2);
+            VariableDD variable = ContextDD.get().newBoolean(stateName, 2);
             stateVariables.add(variable);
             for (DD var : variable.getDDVariables(0)) {
                 presVars.add(var.clone());
@@ -139,7 +137,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     }
     
     private DD computeInit() throws EPMCException {
-        DD init = contextDD.newConstant(true);
+        DD init = ContextDD.get().newConstant(true);
         BitSet bInit = buechi.getGraph().getInitialNodes();
         for (int node = 0; node < automaton.getNumNodes(); node++) {
         	if (bInit.get(node)) {
@@ -165,14 +163,14 @@ public final class AutomatonDDSubset implements AutomatonDD {
         }
         
         DD trans = eq(rSucc, nextVars);
-        contextDD.dispose(rSucc);
+        ContextDD.get().dispose(rSucc);
         return trans;
     }
 
     private List<DD> subsetImage() throws EPMCException {
         List<DD> nextOns = new ArrayList<>();
         for (int node = 0; node < automaton.getNumNodes(); node++) {
-            nextOns.add(contextDD.newConstant(false));
+            nextOns.add(ContextDD.get().newConstant(false));
         }
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
@@ -200,7 +198,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
             assert dd != null;
         }
         assert set1.size() == set2.size();
-        DD result = contextDD.newConstant(true);
+        DD result = ContextDD.get().newConstant(true);
         Iterator<DD> set1Iter = set1.iterator();
         Iterator<DD> set2Iter = set2.iterator();
         while (set1Iter.hasNext()) {
@@ -215,7 +213,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     private DD computeUnder(ContextDD encoding) throws EPMCException {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
-            labelsOns.add(contextDD.newConstant(true));
+            labelsOns.add(ContextDD.get().newConstant(true));
         }
         EdgeProperty labelsProps = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
@@ -236,13 +234,13 @@ public final class AutomatonDDSubset implements AutomatonDD {
             }
         }
         
-        DD under = contextDD.newConstant(true);
+        DD under = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD labelOn = labelsOns.get(labelNr);
             DD label = labels.get(labelNr);
             under = under.andWith(labelOn.iff(label));
         }
-        contextDD.dispose(labelsOns);
+        ContextDD.get().dispose(labelsOns);
         DD underOld = under;
         under = fixAcceptanceEmptySet(under);
         underOld.dispose();
@@ -251,7 +249,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     }
 
     private DD fixAcceptanceEmptySet(DD acceptance) throws EPMCException {
-        DD allStatesOff = contextDD.newConstant(true);
+        DD allStatesOff = ContextDD.get().newConstant(true);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             DD nextVar = nextVars.get(state);
             allStatesOff = allStatesOff.andWith(nextVar.not());
@@ -260,7 +258,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         allStatesOff = allStatesOff.abstractAndExistWith(trans.clone(), nextCube.clone());
         
         
-        DD allLabelsOff = contextDD.newConstant(true);
+        DD allLabelsOff = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD label = labels.get(labelNr);
             allLabelsOff = allLabelsOff.andWith(label.not());
@@ -275,7 +273,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
             throws EPMCException {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
-            labelsOns.add(contextDD.newConstant(false));
+            labelsOns.add(ContextDD.get().newConstant(false));
         }
         EdgeProperty labelsProp = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
@@ -296,13 +294,13 @@ public final class AutomatonDDSubset implements AutomatonDD {
             }
         }
         
-        DD over = contextDD.newConstant(true);
+        DD over = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD labelOn = labelsOns.get(labelNr);
             DD label = labels.get(labelNr);
             over = over.andWith(labelOn.iff(label));
         }
-        contextDD.dispose(labelsOns);
+        ContextDD.get().dispose(labelsOns);
         DD overOld = over;
         over = fixAcceptanceEmptySet(over);
         overOld.dispose();
@@ -311,7 +309,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     }
     
     private DD computeStateStaySame() throws EPMCException {
-        DD result = contextDD.newConstant(true);
+        DD result = ContextDD.get().newConstant(true);
         Iterator<DD> presIter = presVars.iterator();
         Iterator<DD> nextIter = nextVars.iterator();
         while (presIter.hasNext()) {
@@ -332,9 +330,13 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
     @Override
     public void close() {
-        contextDD.dispose(labels);
-        contextDD.dispose(presVars);
-        contextDD.dispose(nextVars);
+    	try {
+        	ContextDD.get().dispose(labels);
+			ContextDD.get().dispose(presVars);
+	    	ContextDD.get().dispose(nextVars);
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         presCube.dispose();
         nextCube.dispose();
         labelsCube.dispose();

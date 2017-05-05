@@ -379,7 +379,7 @@ final class DDComponentAutomaton implements DDComponent {
 	private void computeInitialNodes(ExpressionToDD expressionToDD) throws EPMCException {
 		assert expressionToDD != null;
 		Set<Location> initialLocations = automaton.getInitialLocations();
-		ContextDD contextDD = expressionToDD.getContextDD();
+		ContextDD contextDD = ContextDD.get();
 		DD initialNodes = contextDD.newConstant(true);
 		for (Location initialLocation : initialLocations) {
 			Value initialLocValue = typeLocation.newValue(initialLocation);			

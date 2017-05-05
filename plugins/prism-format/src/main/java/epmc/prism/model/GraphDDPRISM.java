@@ -345,7 +345,6 @@ final class GraphDDPRISM implements GraphDD {
     private static DD computeDeadlock(ModelPRISM model,
             ExpressionToDD expressionToDD, DD states)
             throws EPMCException {
-        ContextDD contextDD = expressionToDD.getContextDD();
         Map<String,Module> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module);
