@@ -18,43 +18,77 @@
 
 *****************************************************************************/
 
-package epmc.jani;
+package epmc.prism;
 
 import static epmc.ModelNamesPRISM.BEAUQUIER_MODEL;
+import static epmc.ModelNamesPRISM.BEAUQUIER_PROPERTY;
 import static epmc.ModelNamesPRISM.BRP_MODEL;
+import static epmc.ModelNamesPRISM.BRP_PROPERTY;
 import static epmc.ModelNamesPRISM.CELL_MODEL;
+import static epmc.ModelNamesPRISM.CELL_PROPERTY;
 import static epmc.ModelNamesPRISM.CLUSTER_MODEL;
+import static epmc.ModelNamesPRISM.CLUSTER_PROPERTY;
 import static epmc.ModelNamesPRISM.COIN_MODEL;
+import static epmc.ModelNamesPRISM.COIN_PROPERTY;
 import static epmc.ModelNamesPRISM.CSMA_MODEL;
+import static epmc.ModelNamesPRISM.CSMA_PROPERTY;
 import static epmc.ModelNamesPRISM.DICE_MODEL;
+import static epmc.ModelNamesPRISM.DICE_PROPERTY;
 import static epmc.ModelNamesPRISM.DINING_CRYPT_MODEL;
+import static epmc.ModelNamesPRISM.DINING_CRYPT_PROPERTY;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_PROPERTY;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_PROPERTY;
 import static epmc.ModelNamesPRISM.FMS_MODEL;
+import static epmc.ModelNamesPRISM.FMS_PROPERTY;
 import static epmc.ModelNamesPRISM.HERMAN_MODEL;
+import static epmc.ModelNamesPRISM.HERMAN_PROPERTY;
 import static epmc.ModelNamesPRISM.IJ_MODEL;
+import static epmc.ModelNamesPRISM.IJ_PROPERTY;
 import static epmc.ModelNamesPRISM.KANBAN_MODEL;
+import static epmc.ModelNamesPRISM.KANBAN_PROPERTY;
 import static epmc.ModelNamesPRISM.KNACL_MODEL;
+import static epmc.ModelNamesPRISM.KNACL_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_PROPERTY;
 import static epmc.ModelNamesPRISM.MC_MODEL;
+import static epmc.ModelNamesPRISM.MC_PROPERTY;
 import static epmc.ModelNamesPRISM.MUTUAL_MODEL;
+import static epmc.ModelNamesPRISM.MUTUAL_PROPERTY;
 import static epmc.ModelNamesPRISM.NACL_MODEL;
+import static epmc.ModelNamesPRISM.NACL_PROPERTY;
 import static epmc.ModelNamesPRISM.PEER2PEER_MODEL;
+import static epmc.ModelNamesPRISM.PEER2PEER_PROPERTY;
 import static epmc.ModelNamesPRISM.PHIL_LSS_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_LSS_PROPERTY;
 import static epmc.ModelNamesPRISM.PHIL_MODEL;
 import static epmc.ModelNamesPRISM.PHIL_NOFAIR_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_NOFAIR_PROPERTY;
+import static epmc.ModelNamesPRISM.PHIL_PROPERTY;
 import static epmc.ModelNamesPRISM.POLLING_MODEL;
+import static epmc.ModelNamesPRISM.POLLING_PROPERTY;
 import static epmc.ModelNamesPRISM.RABIN_MODEL;
+import static epmc.ModelNamesPRISM.RABIN_PROPERTY;
 import static epmc.ModelNamesPRISM.TANDEM_MODEL;
+import static epmc.ModelNamesPRISM.TANDEM_PROPERTY;
 import static epmc.ModelNamesPRISM.TWO_DICE_MODEL;
+import static epmc.ModelNamesPRISM.TWO_DICE_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_COLLIDE_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_COLLIDE_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_PROPERTY;
 import static epmc.ModelNamesPRISM.ZEROCONF_MODEL;
+import static epmc.ModelNamesPRISM.ZEROCONF_PROPERTY;
 import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_MODEL;
-import static epmc.jani.ModelNames.JANI_EXPORT_DIR;
-import static epmc.jani.ModelNames.JANI_EXTENSION;
-import static epmc.jani.ModelNames.getJANIFilenameFromPRISMFilename;
+import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_PROPERTY;
 import static epmc.modelchecker.TestHelper.assertEquals;
 import static epmc.modelchecker.TestHelper.computeResults;
-import static epmc.modelchecker.TestHelper.computeResultsMapName;
+import static epmc.modelchecker.TestHelper.computeResultsMapDefinition;
 import static epmc.modelchecker.TestHelper.loadModel;
 import static epmc.modelchecker.TestHelper.prepare;
 import static epmc.modelchecker.TestHelper.prepareOptions;
@@ -73,10 +107,10 @@ import org.junit.runners.MethodSorters;
 
 import epmc.error.EPMCException;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
-import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.messages.TimeStampFormatSecondsStarted;
+import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelCheckerResults;
@@ -84,17 +118,19 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.TestHelper.LogType;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.prism.model.ModelPRISM;
 import epmc.propertysolver.ltllazy.OptionsLTLLazy;
 import epmc.value.OptionsValue;
 import epmc.value.Value;
 
 /**
- * Tests for model checking of JANI models.
+ * Tests for model checking of PRISM models; based on the one for JANI models
  * 
+ * @author Andrea Turrini
  * @author Ernst Moritz Hahn
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class CheckExplicitTest {
+public final class CheckSymbolicTest {
 	/** Location of plugin directory in file system. */
 //    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
@@ -107,23 +143,23 @@ public final class CheckExplicitTest {
     }
 
     /**
-     * Prepare options including loading JANI plugin.
+     * Prepare options including loading PRISM plugin.
      * 
-     * @return options usable for JANI model analysis
+     * @return options usable for PRISM model analysis
      * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIOptions() throws EPMCException {
+    private final static Options preparePRISMOptions() throws EPMCException {
 	    try {
 			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} 
-	    Options options = UtilOptionsEPMC.newOptions();
-        prepareOptions(options, LogType.TRANSLATE, ModelJANI.IDENTIFIER);
+		}
+        Options options = UtilOptionsEPMC.newOptions();
+        prepareOptions(options, LogType.TRANSLATE, ModelPRISM.IDENTIFIER);
         options.set(OptionsMessages.TIME_STAMPS, TimeStampFormatSecondsStarted.class);
         options.set(OptionsMessages.TRANSLATE_MESSAGES, "false");
-        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
-        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
+        options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
         options.set(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE, "false");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
@@ -133,28 +169,11 @@ public final class CheckExplicitTest {
     
     
     @Test
-    public void testPRISMExportedTest() throws EPMCException {
+    public void testPRISMTest() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("p", "0.5");
-    	Options options = prepareJANIOptions();
+    	constants.put("N", "4");
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, System.getProperty("user.home") + "/test.jani");
-        
-        ModelCheckerResults result = computeResults(model);
-        int i = 0;
-//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
-//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
-    }
-
-    @Test
-    public void testPRISMTest() throws EPMCException { System.gc();
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
-    	Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, "prism");
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
         
@@ -165,43 +184,68 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBRP() throws EPMCException {
+    public void testPRISMClusterDTMC3() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism", System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prop");
+        
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+    }
+
+    @Test
+    public void testPRISMPeterson() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        options.set(OptionsLTLLazy.LTL_LAZY_USE_BREAKPOINT_SINGLETONS, "true");
+        options.set(OptionsLTLLazy.LTL_LAZY_USE_RABIN, "false");
+        Model model = null;
+        model = loadModel(options, System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP-nostorage-rid.prism", System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP.props");
+        
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+    }
+
+   @Test
+    public void testPRISM_BRP() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("MAX", "4");
     	constants.put("N", "64");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(BRP_MODEL));
+        model = loadModel(options, BRP_MODEL, BRP_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.0000000000000000", result.get("Property_brp_0"), 2.0E-8);
-        assertEquals("0.0000000000000000", result.get("Property_brp_1"), 2.0E-8);
-        assertEquals("0.0000000000000000", result.get("Property_brp_2"), 2.0E-8);
-        assertEquals("0.0000000000000000", result.get("Property_brp_3"), 2.0E-8);
-        assertEquals("0.0000015032933912", result.get("Property_brp_4"), 2.0E-8);
-        assertEquals("0.0000015032933912", result.get("Property_brp_5"), 2.0E-8);
-        assertEquals("0.0000000227728170", result.get("Property_brp_6"), 2.0E-8);
-        assertEquals("0.0000000227728170", result.get("Property_brp_7"), 2.0E-8);
-        assertEquals("0.0000012918248850", result.get("Property_brp_8"), 2.0E-8);
-        assertEquals("0.0000012918248850", result.get("Property_brp_9"), 2.0E-8);
-        assertEquals("0.0000000032000000", result.get("Property_brp_10"), 2.0E-8);
-        assertEquals("0.0000000032000000", result.get("Property_brp_11"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.0000000000000000", result.get("P=?[ F srep=1 & rrep=3 & recv ]"), 2.0E-8);
+        assertEquals("0.0000000000000000", result.get("P=?[ F srep=3 & !(rrep=3) & recv ]"), 2.0E-8);
+        assertEquals("0.0000015032933912", result.get("P=?[ F s=5 ]"), 2.0E-8);
+        assertEquals("0.0000000227728170", result.get("P=?[ F s=5 & srep=2 ]"), 2.0E-8);
+        assertEquals("0.0000012918248850", result.get("P=?[ F s=5 & srep=1 & i>8 ]"), 2.0E-8);
+        assertEquals("0.0000000032000000", result.get("P=?[ F !(srep=0) & !recv ]"), 2.0E-8);
     }
 
     //It fails in computing the S properties as they are not supported yet
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCell() throws EPMCException {
+    public void testPRISM_Cell() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "0.5");
     	constants.put("N", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(CELL_MODEL));
+        model = loadModel(options, CELL_MODEL, CELL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.4345518395101758", result.get("P=?[ true U<=T (n=N) {n<N}{max} ]"), 2.0E-8);
         assertEquals("0.9986990388753094", result.get("P=?[ true U<=T (n>=N*0.8) {n<N*0.8}{max} ]"), 2.0E-8);
         assertEquals("0.7135893078652826", result.get("P=?[ true U<=T (n<N*0.8) {n=N}{min} ]"), 2.0E-8);
@@ -211,18 +255,19 @@ public final class CheckExplicitTest {
     }
 
     //It fails in computing the S properties as they are not supported yet
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCluster() throws EPMCException {
+    public void testPRISM_Cluster() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "10");
     	constants.put("N", "20");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(CLUSTER_MODEL));
+        model = loadModel(options, CLUSTER_MODEL, CLUSTER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.9995511026598302", result.get("S=? [ \"premium\" ]"), 2.0E-8);
         assertEquals("0.0000020960524843", result.get("S=? [ !\"minimum\" ]"), 2.0E-8);
         assertEquals(true, result.get("P>=1 [ true U \"premium\" ]"));
@@ -236,17 +281,19 @@ public final class CheckExplicitTest {
         assertEquals("0.7522776563572369", result.get("R{\"num_repairs\"}=? [ C<=T ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCoin_2() throws EPMCException {
+    public void testPRISM_Coin_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 2)));
+        model = loadModel(options, String.format(COIN_MODEL, 2), COIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.3828124943782572", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
         assertEquals("0.3828124943782572", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
@@ -257,17 +304,19 @@ public final class CheckExplicitTest {
         assertEquals("74.999999973388130", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCoin_4() throws EPMCException {
+    public void testPRISM_Coin_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 4)));
+        model = loadModel(options, String.format(COIN_MODEL, 4), COIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.3173827923614849", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
         assertEquals("0.3173827907363523", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
@@ -278,17 +327,19 @@ public final class CheckExplicitTest {
         assertEquals("362.99999988911920", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCoin_6() throws EPMCException {
+    public void testPRISM_Coin_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 6)));
+        model = loadModel(options, String.format(COIN_MODEL, 6), COIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.2943502833478910", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
         assertEquals("0.2943502833478910", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
@@ -298,20 +349,21 @@ public final class CheckExplicitTest {
         assertEquals("431.99999989136097", result.get("R{\"steps\"}min=? [ F \"finished\" ]"), 2.0E-8);
         assertEquals("866.99999972962950", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
-
+    
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCoin_8() throws EPMCException {
+    public void testPRISM_Coin_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 8)));
+        model = loadModel(options, String.format(COIN_MODEL, 8), COIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
@@ -323,18 +375,19 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCoin_10() throws EPMCException {
+    public void testPRISM_Coin_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 10)));
+        model = loadModel(options, String.format(COIN_MODEL, 10), COIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_1\" ]"), 2.0E-8);
@@ -345,16 +398,18 @@ public final class CheckExplicitTest {
         assertEquals("", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_2_2() throws EPMCException {
+    public void testPRISM_CSMA_2_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,2)));
+        model = loadModel(options, String.format(CSMA_MODEL,2,2), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("66.999322859407130", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("70.665759761897790", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("34.999999997097290", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -367,16 +422,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_2_4() throws EPMCException {
+    public void testPRISM_CSMA_2_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,4)));
+        model = loadModel(options, String.format(CSMA_MODEL,2,4), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("75.650783290506550", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("78.971274954375760", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("35.366666666423505", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -389,16 +446,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_2_6() throws EPMCException {
+    public void testPRISM_CSMA_2_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,6)));
+        model = loadModel(options, String.format(CSMA_MODEL,2,6), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("84.590412972822500", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("89.263941682646360", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("35.377666170634626", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -411,16 +470,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_2() throws EPMCException {
+    public void testPRISM_CSMA_3_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,2)));
+        model = loadModel(options, String.format(CSMA_MODEL,3,2), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("93.624118012828090", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("105.21135383451656", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -433,16 +494,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_4() throws EPMCException {
+    public void testPRISM_CSMA_3_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,4)));
+        model = loadModel(options, String.format(CSMA_MODEL,3,4), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("107.31147849546767", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("116.81825582915883", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -455,18 +518,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_6() throws EPMCException {
+    public void testPRISM_CSMA_3_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,6)));
+        model = loadModel(options, String.format(CSMA_MODEL,3,6), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("136.85667366738778", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("151.80342150757490", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -479,16 +542,18 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_2() throws EPMCException {
+    public void testPRISM_CSMA_4_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,2)));
+        model = loadModel(options, String.format(CSMA_MODEL,4,2), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("124.46349552291959", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("142.21216908512903", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -502,17 +567,18 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_4() throws EPMCException {
+    public void testPRISM_CSMA_4_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,4)));
+        model = loadModel(options, String.format(CSMA_MODEL,4,4), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -526,17 +592,18 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_6() throws EPMCException {
+    public void testPRISM_CSMA_4_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,6)));
+        model = loadModel(options, String.format(CSMA_MODEL,4,6), CSMA_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("30.000000000000000", result.get("Rmin=?[ F \"one_delivered\" ]"), 2.0E-8);
@@ -549,32 +616,36 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Pmax=?[ F max_collisions>=k ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedDice() throws EPMCException {
+    public void testPRISM_Dice() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "3");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(DICE_MODEL));
+        model = loadModel(options, DICE_MODEL, DICE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>0.1 [ F s=7 & d=x ]"));
         assertEquals("0.1666666660457849", result.get("P=? [ F s=7 & d=6 ]"), 2.0E-8);
         assertEquals("0.1666666660457849", result.get("P=? [ F s=7 & d=x ]"), 2.0E-8);
         assertEquals("3.6666666651144624", result.get("R=? [ F s=7 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedTwoDice() throws EPMCException {
+    public void testPRISM_TwoDice() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(TWO_DICE_MODEL));
+        model = loadModel(options, TWO_DICE_MODEL, TWO_DICE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.1111111110221827", result.get("Pmin=? [ F s1=7 & s2=7 & d1+d2=x ]"), 2.0E-8);
         assertEquals("0.1111111110221827", result.get("Pmax=? [ F s1=7 & s2=7 & d1+d2=x ]"), 2.0E-8);
         assertEquals("7.3333333319606030", result.get("Rmin=? [ F s1=7 & s2=7 ]"), 2.0E-8);
@@ -582,175 +653,176 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_3() throws EPMCException {
+    public void testPRISM_DiningCrypt_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 3)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 3), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt3_0"));
-        assertEquals(true, result.get("Property_dining_crypt3_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_4() throws EPMCException {
+    public void testPRISM_DiningCrypt_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 4)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 4), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt4_0"));
-        assertEquals(true, result.get("Property_dining_crypt4_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_5() throws EPMCException {
+    public void testPRISM_DiningCrypt_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 5)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 5), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt5_0"));
-        assertEquals(true, result.get("Property_dining_crypt5_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_6() throws EPMCException {
+    public void testPRISM_DiningCrypt_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 6)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 6), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt6_0"));
-        assertEquals(true, result.get("Property_dining_crypt6_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_7() throws EPMCException {
+    public void testPRISM_DiningCrypt_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 7)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 7), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt7_0"));
-        assertEquals(true, result.get("Property_dining_crypt7_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_8() throws EPMCException {
+    public void testPRISM_DiningCrypt_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 8)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 8), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt8_0"));
-        assertEquals(true, result.get("Property_dining_crypt8_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_9() throws EPMCException {
+    public void testPRISM_DiningCrypt_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 9)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 9), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt9_0"));
-        assertEquals(true, result.get("Property_dining_crypt9_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_10() throws EPMCException {
+    public void testPRISM_DiningCrypt_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 10)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 10), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt10_0"));
-        assertEquals(true, result.get("Property_dining_crypt10_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_15() throws EPMCException {
+    public void testPRISM_DiningCrypt_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 15)));
+        model = loadModel(options, String.format(DINING_CRYPT_MODEL, 15), DINING_CRYPT_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_dining_crypt15_0"));
-        assertEquals(true, result.get("Property_dining_crypt15_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
+        assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
     @Test
-    public void testPRISMExportedFireweireAbs() throws EPMCException {
+    public void testPRISM_FirewireAbs() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "firewire_abs" + JANI_EXTENSION);
+        model = loadModel(options, FIREWIRE_ABST_MODEL, FIREWIRE_ABST_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_firewire_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("P>=1 [ F (s=9) ]"));
     }
 
     @Test
-    public void testPRISMExportedFireweireImpl() throws EPMCException {
+    public void testPRISM_FirewireImpl() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
+        model = loadModel(options, FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_firewire_1"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("P>=1 [ F ((s1=8) & (s2=7)) | ((s1=7) & (s2=8)) ]"));
     }
 
     //No support yet for S
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedFMS() throws EPMCException {
+    public void testPRISM_FMS() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("n", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(FMS_MODEL));
+        model = loadModel(options, FMS_MODEL, FMS_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0731715966472075", result.get("R{\"throughput_m1\"}=? [ S ]"), 2.0E-8);
         assertEquals("0.0365858002883267", result.get("R{\"throughput_m2\"}=? [ S ]"), 2.0E-8);
         assertEquals("0.0705561729026659", result.get("R{\"throughput_m3\"}=? [ S ]"), 2.0E-8);
@@ -759,17 +831,18 @@ public final class CheckExplicitTest {
     }
 
     //No support yet for S
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedKanban() throws EPMCException {
+    public void testPRISM_Kanban() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("t", "4");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(KANBAN_MODEL));
+        model = loadModel(options, KANBAN_MODEL, KANBAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("3.6464073760255790", result.get("R{\"tokens_cell1\"}=? [ S ]"), 2.0E-8);
         assertEquals("2.5129835893535350", result.get("R{\"tokens_cell2\"}=? [ S ]"), 2.0E-8);
         assertEquals("2.5129835893535350", result.get("R{\"tokens_cell3\"}=? [ S ]"), 2.0E-8);
@@ -777,16 +850,18 @@ public final class CheckExplicitTest {
         assertEquals("0.2758897217959078", result.get("R{\"throughput\"}=? [ S ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_3() throws EPMCException {
+    public void testPRISM_LeaderAsync_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-       Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_3" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 3), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -795,16 +870,18 @@ public final class CheckExplicitTest {
         assertEquals("3.3333333290839740", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_4() throws EPMCException {
+    public void testPRISM_LeaderAsync_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_4" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 4), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -813,16 +890,18 @@ public final class CheckExplicitTest {
         assertEquals("4.2857142809989710", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_5() throws EPMCException {
+    public void testPRISM_LeaderAsync_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_5" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 5), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -831,16 +910,18 @@ public final class CheckExplicitTest {
         assertEquals("5.0349206294145750", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_6() throws EPMCException {
+    public void testPRISM_LeaderAsync_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_6" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 6), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -849,16 +930,18 @@ public final class CheckExplicitTest {
         assertEquals("5.6497695795053600", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_7() throws EPMCException {
+    public void testPRISM_LeaderAsync_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_7" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 7), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -867,18 +950,18 @@ public final class CheckExplicitTest {
         assertEquals("6.1724981422030500", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
-    //Fails with OutOfMemoryError with 8G
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_8() throws EPMCException {
+    public void testPRISM_LeaderAsync_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_8" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 8), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -888,17 +971,18 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_9() throws EPMCException {
+    public void testPRISM_LeaderAsync_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_9" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 9), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -908,17 +992,18 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails in generating the results
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_10() throws EPMCException {
+    public void testPRISM_LeaderAsync_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_10" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 10), LEADER_ASYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
         assertEquals("0.0000000000000000", result.get("Pmin=? [ F<=K \"elected\" ]"), 2.0E-8);
@@ -927,384 +1012,432 @@ public final class CheckExplicitTest {
         assertEquals("", result.get("Rmax=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_2() throws EPMCException {
+    public void testPRISM_LeaderSync_3_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_2" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 2), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7500000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.3333333330228925", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_3() throws EPMCException {
+    public void testPRISM_LeaderSync_3_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_3" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 3), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8888888888888884", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.1249999999641502", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_4() throws EPMCException {
+    public void testPRISM_LeaderSync_3_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_4" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 4), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9375000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0666666666511446", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_5() throws EPMCException {
+    public void testPRISM_LeaderSync_3_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_5" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 5), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9600000000000007", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0416666666598398", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_6() throws EPMCException {
+    public void testPRISM_LeaderSync_3_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_6" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 6), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9722222222222251", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.028571428558303", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_8() throws EPMCException {
+    public void testPRISM_LeaderSync_3_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_8" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 8), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9843750000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.015873015858233", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_2() throws EPMCException {
+    public void testPRISM_LeaderSync_4_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_2" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 2), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.5000000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.9999999990686774", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_3() throws EPMCException {
+    public void testPRISM_LeaderSync_4_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_3" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 3), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7407407407407418", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.3499999998541794", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_4() throws EPMCException {
+    public void testPRISM_LeaderSync_4_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_4" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 4), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8437500000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.1851851851459685", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_5() throws EPMCException {
+    public void testPRISM_LeaderSync_4_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_5" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 5), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8960000000000092", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.116071428554253", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_6() throws EPMCException {
+    public void testPRISM_LeaderSync_4_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_6" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 6), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9259259259258992", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0799999999274945", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_8() throws EPMCException {
+    public void testPRISM_LeaderSync_4_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_8" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 8), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9570312500000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0448979591715250", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_2() throws EPMCException {
+    public void testPRISM_LeaderSync_5_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_2" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 2), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.3125000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("3.1999999983029497", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_3() throws EPMCException {
+    public void testPRISM_LeaderSync_5_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_3" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 3), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7407407407407387", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.3499999998541794", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_4() throws EPMCException {
+    public void testPRISM_LeaderSync_5_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_4" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 4), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8789062500000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.1377777776843780", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_5() throws EPMCException {
+    public void testPRISM_LeaderSync_5_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_5" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 5), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9343999999999674", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0702054794279550", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_6() throws EPMCException {
+    public void testPRISM_LeaderSync_5_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_6" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 6), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9606481481480117", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0409638554156673", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_8() throws EPMCException {
+    public void testPRISM_LeaderSync_5_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_8" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 8), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9826660156250000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0176397515523004", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_2() throws EPMCException {
+    public void testPRISM_LeaderSync_6_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_2" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 2), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.1875000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("5.3333333291726870", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_3() throws EPMCException {
+    public void testPRISM_LeaderSync_6_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_3" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 3), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.6666666666666646", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.4999999995698403", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_4() throws EPMCException {
+    public void testPRISM_LeaderSync_6_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_4" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 4), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8378906250000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.1934731934093925", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_5() throws EPMCException {
+    public void testPRISM_LeaderSync_6_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_5" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 5), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9100799999997443", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0988045006652094", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_6() throws EPMCException {
+    public void testPRISM_LeaderSync_6_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_6" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 6), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9452160493824413", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("1.0579591836689612", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
     // PRISM fails with a SIGSEGV in libdd
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_8() throws EPMCException {
+    public void testPRISM_LeaderSync_6_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_8" + JANI_EXTENSION);
+        model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 8), LEADER_SYNC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_rounds\"}=? [ F \"elected\" ]"), 2.0E-8);
     }
 
     //No support for S yet
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedKNACL() throws EPMCException {
+    public void testPRISM_KNACL() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
     	constants.put("T", "0.002");
     	constants.put("i", "0");
     	constants.put("N3", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(KNACL_MODEL));
+        model = loadModel(options, KNACL_MODEL, KNACL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000917430966457", result.get("P=? [ true U[T,T] na=i ]"), 2.0E-8);
         assertEquals("0.0000000000346201", result.get("P=? [ true U[T,T] k=i ]"), 2.0E-8);
         assertEquals("43.312255571305280", result.get("R{\"percentage_na\"}=? [ I=T ]"), 2.0E-8);
@@ -1314,40 +1447,42 @@ public final class CheckExplicitTest {
     }
 
     //No support for S yet
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedNACL() throws EPMCException {
+    public void testPRISM_NACL() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
     	constants.put("T", "0.002");
     	constants.put("i", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(NACL_MODEL));
+        model = loadModel(options, NACL_MODEL, NACL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0006596327782790", result.get("P=? [ true U[T,T] na=i ]"), 2.0E-8);
         assertEquals("35.045319159719730", result.get("R=? [ I=T ]"), 2.0E-8);
         assertEquals("22.622917765527824", result.get("R=? [ S ]"), 2.0E-8);
     }
 
     //No support for S yet
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedMC() throws EPMCException {
+    public void testPRISM_MC() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
     	constants.put("T", "0.002");
     	constants.put("i", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(MC_MODEL));
+        model = loadModel(options, MC_MODEL, MC_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000000000000426", result.get("P=? [ true U[T,T] mg=i ]"), 2.0E-8);
         assertEquals("0.4618841094159586", result.get("P=? [ true U[T,T] mg_p=i ]"), 2.0E-8);
         assertEquals("0.3837632729774285", result.get("P=? [ true U[T,T] N1-(mg_p+mg)=i ]"), 2.0E-8);
@@ -1360,572 +1495,597 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedMutual_3() throws EPMCException {
+    public void testPRISM_Mutual_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 3)));
+        model = loadModel(options, String.format(MUTUAL_MODEL, 3), MUTUAL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_mutual3_0"));
-        assertEquals(false, result.get("Property_mutual3_1"));
-        assertEquals(false, result.get("Property_mutual3_2"));
-        assertEquals(false, result.get("Property_mutual3_3"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
+        assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
+        assertEquals(false, result.get("filter(forall, \"some_4_13\" => P>=1 [ F \"some_14\" ])"));
+        assertEquals(false, result.get("filter(forall, p1=1 => P>=1 [ F p1=10 ])"));
     }
 
     @Test
-    public void testPRISMExportedMutual_4() throws EPMCException {
+    public void testPRISM_Mutual_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 4)));
+        model = loadModel(options, String.format(MUTUAL_MODEL, 4), MUTUAL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_mutual4_0"));
-        assertEquals(false, result.get("Property_mutual4_1"));
-        assertEquals(false, result.get("Property_mutual4_2"));
-        assertEquals(false, result.get("Property_mutual4_3"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
+        assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
+        assertEquals(false, result.get("filter(forall, \"some_4_13\" => P>=1 [ F \"some_14\" ])"));
+        assertEquals(false, result.get("filter(forall, p1=1 => P>=1 [ F p1=10 ])"));
     }
 
     @Test
-    public void testPRISMExportedMutual_5() throws EPMCException {
+    public void testPRISM_Mutual_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 5)));
+        model = loadModel(options, String.format(MUTUAL_MODEL, 5), MUTUAL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_mutual5_0"));
-        assertEquals(false, result.get("Property_mutual5_1"));
-        assertEquals(false, result.get("Property_mutual5_2"));
-        assertEquals(false, result.get("Property_mutual5_3"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
+        assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
+        assertEquals(false, result.get("filter(forall, \"some_4_13\" => P>=1 [ F \"some_14\" ])"));
+        assertEquals(false, result.get("filter(forall, p1=1 => P>=1 [ F p1=10 ])"));
     }
 
-    //Fails with OutOfMemoryError with 8G
+    @Test
+    public void testPRISM_Mutual_8() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, String.format(MUTUAL_MODEL, 8), MUTUAL_PROPERTY);
+        
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
+        assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
+        assertEquals(false, result.get("filter(forall, \"some_4_13\" => P>=1 [ F \"some_14\" ])"));
+        assertEquals(false, result.get("filter(forall, p1=1 => P>=1 [ F p1=10 ])"));
+    }
+
+    @Test
+    public void testPRISM_Mutual_10() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, String.format(MUTUAL_MODEL, 10), MUTUAL_PROPERTY);
+        
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
+        assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
+        assertEquals(false, result.get("filter(forall, \"some_4_13\" => P>=1 [ F \"some_14\" ])"));
+        assertEquals(false, result.get("filter(forall, p1=1 => P>=1 [ F p1=10 ])"));
+    }
+
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedMutual_8() throws EPMCException {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 8)));
-        
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_mutual8_0"));
-        assertEquals(false, result.get("Property_mutual8_1"));
-        assertEquals(false, result.get("Property_mutual8_2"));
-        assertEquals(false, result.get("Property_mutual8_3"));
-    }
-
-    //Fails with OutOfMemoryError with 8G
-    @Ignore
-    @Test
-    public void testPRISMExportedMutual_10() throws EPMCException {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 10)));
-        
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_mutual10_0"));
-        assertEquals(false, result.get("Property_mutual10_1"));
-        assertEquals(false, result.get("Property_mutual10_2"));
-        assertEquals(false, result.get("Property_mutual10_3"));
-    }
-
-    @Test
-    public void testPRISMExportedP2P_4_4() throws EPMCException {
+    public void testPRISM_P2P_4_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 4)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 4), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.968312472221019", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509145874", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedP2P_4_5() throws EPMCException {
+    public void testPRISM_P2P_4_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 5)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 5), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.960548741225345", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509142549", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     //Fails with OutOfMemoryError with 8G
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_6() throws EPMCException {
+    public void testPRISM_P2P_4_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 6)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 6), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.952847258251920", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509157190", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     //Fails with OutOfMemoryError with 8G
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_7() throws EPMCException {
+    public void testPRISM_P2P_4_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 7)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 7), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.945207524172225", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509153018", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     // PRISM fails with SIGSEGV in libprismhybrid
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_8() throws EPMCException {
+    public void testPRISM_P2P_4_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 8)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 8), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedP2P_5_4() throws EPMCException {
+    public void testPRISM_P2P_5_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 4)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 4), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.982662490856506", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.999042710619681", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     //Fails with OutOfMemoryError with 8G
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_5() throws EPMCException {
+    public void testPRISM_P2P_5_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 5)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 5), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.978375285777173", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.9990427106169577", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     // PRISM fails by requiring too much memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_6() throws EPMCException {
+    public void testPRISM_P2P_5_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 6)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 6), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     // PRISM fails by requiring too much memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_7() throws EPMCException {
+    public void testPRISM_P2P_5_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 7)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 7), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     // PRISM fails by requiring too much memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_8() throws EPMCException {
+    public void testPRISM_P2P_5_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 8)));
+        model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 8), PEER2PEER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedPhil_3() throws EPMCException {
+    public void testPRISM_Phil_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 3)));
+        model = loadModel(options, String.format(PHIL_MODEL, 3), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil3_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
-    public void testPRISMExportedPhil_4() throws EPMCException {
+    public void testPRISM_Phil_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 4)));
+        model = loadModel(options, String.format(PHIL_MODEL, 4), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil4_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
-    public void testPRISMExportedPhil_5() throws EPMCException {
+    public void testPRISM_Phil_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 5)));
+        model = loadModel(options, String.format(PHIL_MODEL, 5), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil5_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
-    public void testPRISMExportedPhil_6() throws EPMCException {
+    public void testPRISM_Phil_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 6)));
+        model = loadModel(options, String.format(PHIL_MODEL, 6), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil6_0"));
-    }
-
-    //Fails with OutOfMemoryError with 8G
-    @Ignore
-    @Test
-    public void testPRISMExportedPhil_7() throws EPMCException {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 7)));
-        
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil7_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedPhil_8() throws EPMCException {
+    public void testPRISM_Phil_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 8)));
+        model = loadModel(options, String.format(PHIL_MODEL, 7), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil8_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
+    }
+
+    //Fails with OutOfMemoryError with 8G
+    @Ignore
+    @Test
+    public void testPRISM_Phil_8() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, String.format(PHIL_MODEL, 8), PHIL_PROPERTY);
+        
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_9() throws EPMCException {
+    public void testPRISM_Phil_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 9)));
+        model = loadModel(options, String.format(PHIL_MODEL, 9), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil9_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_10() throws EPMCException {
+    public void testPRISM_Phil_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 10)));
+        model = loadModel(options, String.format(PHIL_MODEL, 10), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil10_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_15() throws EPMCException {
+    public void testPRISM_Phil_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 15)));
+        model = loadModel(options, String.format(PHIL_MODEL, 15), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil15_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_20() throws EPMCException {
+    public void testPRISM_Phil_20() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 20)));
+        model = loadModel(options, String.format(PHIL_MODEL, 20), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil20_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_25() throws EPMCException {
+    public void testPRISM_Phil_25() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 25)));
+        model = loadModel(options, String.format(PHIL_MODEL, 25), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil25_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_30() throws EPMCException {
+    public void testPRISM_Phil_30() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 30)));
+        model = loadModel(options, String.format(PHIL_MODEL, 30), PHIL_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(false, result.get("Property_phil30_0"));
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_3() throws EPMCException {
+    public void testPRISM_PhilNofair_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 3)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 3), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("50.99999997907168", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_4() throws EPMCException {
+    public void testPRISM_PhilNofair_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 4)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 4), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("88.99999997307707", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_5() throws EPMCException {
+    public void testPRISM_PhilNofair_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 5)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 5), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("148.9999999631877", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
     //PRISM fails by out of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_6() throws EPMCException {
+    public void testPRISM_PhilNofair_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 6)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 6), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
     //PRISM fails by out of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_7() throws EPMCException {
+    public void testPRISM_PhilNofair_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 7)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 7), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
     //PRISM fails by out of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_8() throws EPMCException {
+    public void testPRISM_PhilNofair_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 8)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 8), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
     //PRISM fails by out of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_9() throws EPMCException {
+    public void testPRISM_PhilNofair_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 9)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 9), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
     //PRISM fails by out of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_10() throws EPMCException {
+    public void testPRISM_PhilNofair_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 10)));
+        model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 10), PHIL_NOFAIR_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
         assertEquals("", result.get("R{\"num_steps\"}max=? [ F \"eat\" {\"hungry\"}{max} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedPhilLSS_3() throws EPMCException {
+    public void testPRISM_PhilLSS_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_LSS_MODEL, 3)));
+        model = loadModel(options, String.format(PHIL_LSS_MODEL, 3), String.format(PHIL_LSS_PROPERTY, 3));
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"trying\" =>  P>=1 [ true U \"entered\" ])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ true U<=L \"entered\" {\"trying\"}{min} ]"), 2.0E-8);
         assertEquals("23.33333333081100", result.get("Rmax=? [ F \"entered\" {\"trying\"}{max} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedPhilLSS_4() throws EPMCException {
+    public void testPRISM_PhilLSS_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_LSS_MODEL, 4)));
+        model = loadModel(options, String.format(PHIL_LSS_MODEL, 4), String.format(PHIL_LSS_PROPERTY, 4));
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"trying\" =>  P>=1 [ true U \"entered\" ])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=L \"entered\" {\"trying\"}{min} ]"), 2.0E-8);
         assertEquals("28.66666665673256", result.get("Rmax=? [ F \"entered\" {\"trying\"}{max} ]"), 2.0E-8);
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_2() throws EPMCException {
+    public void testPRISM_Polling_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 2)));
+        model = loadModel(options, String.format(POLLING_MODEL, 2), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.102393124417415", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.598404583684670", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -1936,17 +2096,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_3() throws EPMCException {
+    public void testPRISM_Polling_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 3)));
+        model = loadModel(options, String.format(POLLING_MODEL, 3), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.130802036614216", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.651898472199059", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -1957,17 +2118,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_4() throws EPMCException {
+    public void testPRISM_Polling_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 4)));
+        model = loadModel(options, String.format(POLLING_MODEL, 4), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.141190363935943", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.687047708231978", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -1978,17 +2140,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_5() throws EPMCException {
+    public void testPRISM_Polling_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 5)));
+        model = loadModel(options, String.format(POLLING_MODEL, 5), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.144927093830232", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.712560754706577", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -1999,17 +2162,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_6() throws EPMCException {
+    public void testPRISM_Polling_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 6)));
+        model = loadModel(options, String.format(POLLING_MODEL, 6), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.145731911533245", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.732229789559230", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2020,17 +2184,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_7() throws EPMCException {
+    public void testPRISM_Polling_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 7)));
+        model = loadModel(options, String.format(POLLING_MODEL, 7), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.145116735337698", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.748022855342834", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2041,17 +2206,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_8() throws EPMCException {
+    public void testPRISM_Polling_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 8)));
+        model = loadModel(options, String.format(POLLING_MODEL, 8), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.143782770331091", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.761081981009249", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2062,17 +2228,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_9() throws EPMCException {
+    public void testPRISM_Polling_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 9)));
+        model = loadModel(options, String.format(POLLING_MODEL, 9), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.142084805118677", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.772123674065661", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2083,17 +2250,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_10() throws EPMCException {
+    public void testPRISM_Polling_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 10)));
+        model = loadModel(options, String.format(POLLING_MODEL, 10), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.140213283202427", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.781624286322768", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2104,17 +2272,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_11() throws EPMCException {
+    public void testPRISM_Polling_11() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 11)));
+        model = loadModel(options, String.format(POLLING_MODEL, 11), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.138274521224589", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.789915020290501", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2125,17 +2294,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_12() throws EPMCException {
+    public void testPRISM_Polling_12() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 12)));
+        model = loadModel(options, String.format(POLLING_MODEL, 12), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.136329243693625", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.797234542230234", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2146,17 +2316,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_13() throws EPMCException {
+    public void testPRISM_Polling_13() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 13)));
+        model = loadModel(options, String.format(POLLING_MODEL, 13), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.134412372329520", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.803759937898064", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2167,17 +2338,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_14() throws EPMCException {
+    public void testPRISM_Polling_14() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 14)));
+        model = loadModel(options, String.format(POLLING_MODEL, 14), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.132543738937984", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.809625841629950", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2188,17 +2360,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_15() throws EPMCException {
+    public void testPRISM_Polling_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 15)));
+        model = loadModel(options, String.format(POLLING_MODEL, 15), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.130734135591949", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.814936745967935", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2209,17 +2382,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_16() throws EPMCException {
+    public void testPRISM_Polling_16() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 16)));
+        model = loadModel(options, String.format(POLLING_MODEL, 16), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.128988853132277", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.819775193953323", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2230,17 +2404,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_17() throws EPMCException {
+    public void testPRISM_Polling_17() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 17)));
+        model = loadModel(options, String.format(POLLING_MODEL, 17), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.127309796176000", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.824207411969980", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2251,17 +2426,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_18() throws EPMCException {
+    public void testPRISM_Polling_18() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 18)));
+        model = loadModel(options, String.format(POLLING_MODEL, 18), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.127309796176000", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.828287236050775", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2272,17 +2448,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_19() throws EPMCException {
+    public void testPRISM_Polling_19() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 19)));
+        model = loadModel(options, String.format(POLLING_MODEL, 19), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.124148459225022", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.832058960231840", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2293,17 +2470,18 @@ public final class CheckExplicitTest {
     }
 
     //Support for S still missing
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedPolling_20() throws EPMCException {
+    public void testPRISM_Polling_20() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 20)));
+        model = loadModel(options, String.format(POLLING_MODEL, 20), POLLING_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.122663285369220", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.835558675185647", result.get("S=? [ s1=0 ]"), 2.0E-8);
         assertEquals("1.000000000000000", result.get("P=? [ true U (s=1&a=0) {s1=1}{min} ]"), 2.0E-8);
@@ -2314,156 +2492,158 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedRabin_3() throws EPMCException {
+    public void testPRISM_Rabin_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 3)));
+        model = loadModel(options, String.format(RABIN_MODEL, 3), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin3_0"));
-        assertEquals(true, result.get("Property_rabin3_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin3_2"), 2.0E-8);
-        assertEquals("0.030273437500000", result.get("Property_rabin3_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("0.030273437500000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedRabin_4() throws EPMCException {
+    public void testPRISM_Rabin_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 4)));
+        model = loadModel(options, String.format(RABIN_MODEL, 4), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin4_0"));
-        assertEquals(true, result.get("Property_rabin4_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin4_2"), 2.0E-8);
-        assertEquals("0.029327392578125", result.get("Property_rabin4_3"), 2.0E-8);
-    }
-
-    // PRISM fails by out of memory
-    @Ignore
-    @Test
-    public void testPRISMExportedRabin_5() throws EPMCException {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
-    	Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 5)));
-        
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin5_0"));
-        assertEquals(true, result.get("Property_rabin5_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin5_2"), 2.0E-8);
-        assertEquals("0.029109418392181396", result.get("Property_rabin5_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("0.029327392578125", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_6() throws EPMCException {
+    public void testPRISM_Rabin_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 6)));
+        model = loadModel(options, String.format(RABIN_MODEL, 5), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin6_0"));
-        assertEquals(true, result.get("Property_rabin6_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin6_2"), 2.0E-8);
-        assertEquals("0.028432623483240604", result.get("Property_rabin6_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_7() throws EPMCException {
+    public void testPRISM_Rabin_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 7)));
+        model = loadModel(options, String.format(RABIN_MODEL, 6), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin7_0"));
-        assertEquals(true, result.get("Property_rabin7_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin7_2"), 2.0E-8);
-        assertEquals("0.027773339752457105", result.get("Property_rabin7_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_8() throws EPMCException {
+    public void testPRISM_Rabin_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-        Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 8)));
+        model = loadModel(options, String.format(RABIN_MODEL, 7), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin8_0"));
-        assertEquals(true, result.get("Property_rabin8_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin8_2"), 2.0E-8);
-        assertEquals("0.027131076829618905", result.get("Property_rabin8_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_9() throws EPMCException {
+    public void testPRISM_Rabin_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 9)));
+        model = loadModel(options, String.format(RABIN_MODEL, 8), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin9_0"));
-        assertEquals(true, result.get("Property_rabin9_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin9_2"), 2.0E-8);
-        assertEquals("0.02690346169687173", result.get("Property_rabin9_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_10() throws EPMCException {
+    public void testPRISM_Rabin_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 10)));
+        model = loadModel(options, String.format(RABIN_MODEL, 9), RABIN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_rabin10_0"));
-        assertEquals(true, result.get("Property_rabin10_1"));
-        assertEquals("0.000000000000000", result.get("Property_rabin10_2"), 2.0E-8);
-        assertEquals("0.026345380743400343", result.get("Property_rabin10_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
     }
 
+    // PRISM fails by out of memory
+    @Ignore
     @Test
-    public void testPRISMExportedBeauquier_3() throws EPMCException {
+    public void testPRISM_Rabin_10() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	constants.put("k", "5");
+        Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, String.format(RABIN_MODEL, 10), RABIN_PROPERTY);
+        
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
+        assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
+        assertEquals("0.000000000000000", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\"}{min} ]"), 2.0E-8);
+        assertEquals("", result.get("Pmin=?[ !\"one_critical\" U (p1=2) {draw1=1 & !\"one_critical\" & maxb<=k}{min} ]"), 2.0E-8);
+    }
+
+    // No support for R yet
+    @Ignore
+    @Test
+    public void testPRISM_Beauquier_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 3)));
+        model = loadModel(options, String.format(BEAUQUIER_MODEL, 3), BEAUQUIER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("1.999999999985448", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2471,17 +2651,19 @@ public final class CheckExplicitTest {
         assertEquals("0.500000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedBeauquier_5() throws EPMCException {
+    public void testPRISM_Beauquier_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 5)));
+        model = loadModel(options, String.format(BEAUQUIER_MODEL, 5), BEAUQUIER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("11.91666666613991", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2489,17 +2671,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedBeauquier_7() throws EPMCException {
+    public void testPRISM_Beauquier_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 7)));
+        model = loadModel(options, String.format(BEAUQUIER_MODEL, 7), BEAUQUIER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("37.79922368853307", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2507,17 +2691,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedBeauquier_9() throws EPMCException {
+    public void testPRISM_Beauquier_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 9)));
+        model = loadModel(options, String.format(BEAUQUIER_MODEL, 9), BEAUQUIER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("84.44595732630478", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2525,17 +2711,20 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // Fails by out of memory with 8GB
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedBeauquier_11() throws EPMCException {
+    public void testPRISM_Beauquier_11() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 11)));
+        model = loadModel(options, String.format(BEAUQUIER_MODEL, 11), BEAUQUIER_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("162.3429071530966", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2543,17 +2732,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_3() throws EPMCException {
+    public void testPRISM_Herman_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 3)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 3), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("1.333333333309250", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2561,17 +2752,19 @@ public final class CheckExplicitTest {
         assertEquals("0.750000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_5() throws EPMCException {
+    public void testPRISM_Herman_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 5)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 5), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("3.1999999986140972", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2579,17 +2772,19 @@ public final class CheckExplicitTest {
         assertEquals("0.250000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_7() throws EPMCException {
+    public void testPRISM_Herman_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 7)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 7), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("6.857142853627285", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2597,17 +2792,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_9() throws EPMCException {
+    public void testPRISM_Herman_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 9)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 9), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("11.999999993091386", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2615,17 +2812,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_11() throws EPMCException {
+    public void testPRISM_Herman_11() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	constants.put("k", "2");
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 11)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 11), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("17.45454544306863", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2633,19 +2832,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedHerman_13() throws EPMCException {
+    public void testPRISM_Herman_13() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 13)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 13), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("24.615384599734302", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2653,19 +2852,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedHerman_15() throws EPMCException {
+    public void testPRISM_Herman_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 15)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 15), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("33.33333331214026", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2673,19 +2872,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedHerman_17() throws EPMCException {
+    public void testPRISM_Herman_17() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 17)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 17), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("42.35294114861820", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2693,19 +2892,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedHerman_19() throws EPMCException {
+    public void testPRISM_Herman_19() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 19)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 19), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("53.05263154392826", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2714,18 +2913,18 @@ public final class CheckExplicitTest {
     }
 
     //Fails by memory with 8GB
-   @Ignore
+    @Ignore
     @Test
-    public void testPRISMExportedHerman_21() throws EPMCException {
+    public void testPRISM_Herman_21() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 21)));
+        model = loadModel(options, String.format(HERMAN_MODEL, 21), HERMAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("65.33333328973458", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("R=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2733,17 +2932,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("P=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_3() throws EPMCException {
+    public void testPRISM_IJ_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 3)));
+        model = loadModel(options, String.format(IJ_MODEL, 3), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("2.999999999068677", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2751,17 +2952,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_4() throws EPMCException {
+    public void testPRISM_IJ_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 4)));
+        model = loadModel(options, String.format(IJ_MODEL, 4), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("5.999999997206032", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2769,17 +2972,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_5() throws EPMCException {
+    public void testPRISM_IJ_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 5)));
+        model = loadModel(options, String.format(IJ_MODEL, 5), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("9.999999996169460", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2787,17 +2992,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_6() throws EPMCException {
+    public void testPRISM_IJ_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 6)));
+        model = loadModel(options, String.format(IJ_MODEL, 6), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("14.99999999374933", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2805,17 +3012,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_7() throws EPMCException {
+    public void testPRISM_IJ_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 7)));
+        model = loadModel(options, String.format(IJ_MODEL, 7), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("20.99999999114089", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2823,17 +3032,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_8() throws EPMCException {
+    public void testPRISM_IJ_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 8)));
+        model = loadModel(options, String.format(IJ_MODEL, 8), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("27.99999998796762", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2841,17 +3052,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_9() throws EPMCException {
+    public void testPRISM_IJ_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 9)));
+        model = loadModel(options, String.format(IJ_MODEL, 9), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("35.99999998528516", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2859,17 +3072,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_10() throws EPMCException {
+    public void testPRISM_IJ_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 10)));
+        model = loadModel(options, String.format(IJ_MODEL, 10), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("44.99999998145056", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2877,17 +3092,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_11() throws EPMCException {
+    public void testPRISM_IJ_11() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 11)));
+        model = loadModel(options, String.format(IJ_MODEL, 11), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("54.99999997711297", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2895,17 +3112,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_12() throws EPMCException {
+    public void testPRISM_IJ_12() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 12)));
+        model = loadModel(options, String.format(IJ_MODEL, 12), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("65.99999997222197", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2913,17 +3132,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_13() throws EPMCException {
+    public void testPRISM_IJ_13() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 13)));
+        model = loadModel(options, String.format(IJ_MODEL, 13), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("77.99999996713541", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2931,17 +3152,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_14() throws EPMCException {
+    public void testPRISM_IJ_14() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-    	Options options = prepareJANIOptions();
+    	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 14)));
+        model = loadModel(options, String.format(IJ_MODEL, 14), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("90.99999996155174", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2949,17 +3172,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
     
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_15() throws EPMCException {
+    public void testPRISM_IJ_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 15)));
+        model = loadModel(options, String.format(IJ_MODEL, 15), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("104.9999999554272", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2967,19 +3192,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails while computing rewards
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedIJ_16() throws EPMCException {
+    public void testPRISM_IJ_16() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "0");
-    	constants.put("k", "0");
-        Options options = prepareJANIOptions();
+    	constants.put("K", "1");
+    	constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 16)));
+        model = loadModel(options, String.format(IJ_MODEL, 16), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("119.9999999490785", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -2987,17 +3212,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedIJ_17() throws EPMCException {
+    public void testPRISM_IJ_17() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 17)));
+        model = loadModel(options, String.format(IJ_MODEL, 17), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("135.9999999432225", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -3005,19 +3232,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedIJ_18() throws EPMCException {
+    public void testPRISM_IJ_18() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 18)));
+        model = loadModel(options, String.format(IJ_MODEL, 18), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("152.9999999358485", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -3025,19 +3252,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedIJ_19() throws EPMCException {
+    public void testPRISM_IJ_19() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 19)));
+        model = loadModel(options, String.format(IJ_MODEL, 19), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("170.9999999282626", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -3045,19 +3272,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails by memory with 8GB
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedIJ_20() throws EPMCException {
+    public void testPRISM_IJ_20() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 20)));
+        model = loadModel(options, String.format(IJ_MODEL, 20), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("189.9999999201628", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -3065,19 +3292,19 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
-    //Fails with GC overhead with 8G of memory
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedIJ_21() throws EPMCException {
+    public void testPRISM_IJ_21() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 21)));
+        model = loadModel(options, String.format(IJ_MODEL, 21), IJ_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("209.9999999115593", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Rmax=? [ F \"stable\" {\"k_tokens\"}{max} ]"), 2.0E-8);
@@ -3086,18 +3313,19 @@ public final class CheckExplicitTest {
     }
 
     //S not yet supported
+    // No support for R yet
     @Ignore
     @Test
-    public void testPRISMExportedTandem() throws EPMCException {
+    public void testPRISM_Tandem() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("c", "10");
     	constants.put("T", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(TANDEM_MODEL));
+        model = loadModel(options, TANDEM_MODEL, TANDEM_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("10.78050546163251", result.get("R=? [ S ]"), 2.0E-8);
         assertEquals("0.000000018009113", result.get("P=? [ true U<=T sc=c & sm=c & ph=2 ]"), 2.0E-8);
         assertEquals("0.999999855150179", result.get("P=? [ true U<=T sc=c ]"), 2.0E-8);
@@ -3105,17 +3333,19 @@ public final class CheckExplicitTest {
         assertEquals("10.55741515497289", result.get("R=? [ I=T ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_0() throws EPMCException {
+    public void testPRISM_WLAN_0() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 0)));
+        model = loadModel(options, String.format(WLAN_MODEL, 0), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.000000000000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.2248803762736309", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3127,17 +3357,19 @@ public final class CheckExplicitTest {
         assertEquals("25893.14159291617", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_1() throws EPMCException {
+    public void testPRISM_WLAN_1() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 1)));
+        model = loadModel(options, String.format(WLAN_MODEL, 1), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.000000000000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.202368135939365", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3149,17 +3381,19 @@ public final class CheckExplicitTest {
         assertEquals("224850.5432588780", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_2() throws EPMCException {
+    public void testPRISM_WLAN_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 2)));
+        model = loadModel(options, String.format(WLAN_MODEL, 2), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.201459466856799", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3171,17 +3405,19 @@ public final class CheckExplicitTest {
         assertEquals("223953.0307549974", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_3() throws EPMCException {
+    public void testPRISM_WLAN_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 3)));
+        model = loadModel(options, String.format(WLAN_MODEL, 3), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.201439630215977", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3193,17 +3429,19 @@ public final class CheckExplicitTest {
         assertEquals("223934.4084838491", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_4() throws EPMCException {
+    public void testPRISM_WLAN_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 4)));
+        model = loadModel(options, String.format(WLAN_MODEL, 4), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.201439405680254", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3215,17 +3453,19 @@ public final class CheckExplicitTest {
         assertEquals("223934.2427029740", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_5() throws EPMCException {
+    public void testPRISM_WLAN_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 5)));
+        model = loadModel(options, String.format(WLAN_MODEL, 5), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.201439404387566", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3237,17 +3477,19 @@ public final class CheckExplicitTest {
         assertEquals("223934.2428000538", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    // No support for R yet
+    @Ignore
     @Test
-    public void testPRISMExportedWLAN_6() throws EPMCException {
+    public void testPRISM_WLAN_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 6)));
+        model = loadModel(options, String.format(WLAN_MODEL, 6), WLAN_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
         assertEquals("1.201439404383811", result.get("R{\"collisions\"}max=? [ F s1=12 & s2=12 ]"), 2.0E-8);
@@ -3260,265 +3502,241 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_0() throws EPMCException {
+    public void testPRISM_WLANCollide_0() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 0)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 0), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan0_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan0_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_1() throws EPMCException {
+    public void testPRISM_WLANCollide_1() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 1)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 1), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan1_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan1_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_2() throws EPMCException {
+    public void testPRISM_WLANCollide_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 2)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 2), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan2_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan2_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_3() throws EPMCException {
+    public void testPRISM_WLANCollide_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
 		constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 3)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 3), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan3_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan3_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_4() throws EPMCException {
+    public void testPRISM_WLANCollide_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 4)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 4), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan4_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan4_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_5() throws EPMCException {
+    public void testPRISM_WLANCollide_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 5)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 5), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan5_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan5_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_6() throws EPMCException {
+    public void testPRISM_WLANCollide_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 6)));
+        model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 6), WLAN_COLLIDE_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.183593750000000", result.get("Property_wlan6_collide_0"), 2.0E-8);
-        assertEquals("0.183593750000000", result.get("Property_wlan6_collide_1"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_0() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_0() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 0)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 0), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.9090728759765625", result.get("Property_wlan0_time_bounded_0"), 2.0E-8);
-        assertEquals("0.9090728759765625", result.get("Property_wlan0_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9794130921363831", result.get("Property_wlan0_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9794130921363831", result.get("Property_wlan0_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9363574981689453", result.get("Property_wlan0_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9363574981689453", result.get("Property_wlan0_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.9090728759765625", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9794130921363831", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9363574981689453", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_1() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_1() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 1)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 1), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.846221923828125", result.get("Property_wlan1_time_bounded_0"), 2.0E-8);
-        assertEquals("0.846221923828125", result.get("Property_wlan1_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9844965040683746", result.get("Property_wlan1_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9844965040683746", result.get("Property_wlan1_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9004454463720322", result.get("Property_wlan1_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9004454463720322", result.get("Property_wlan1_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9844965040683746", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9004454463720322", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_2() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_2() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 2)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 2), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.846221923828125", result.get("Property_wlan2_time_bounded_0"), 2.0E-8);
-        assertEquals("0.846221923828125", result.get("Property_wlan2_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan2_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan2_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan2_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan2_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_3() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_3() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 3)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 3), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.846221923828125", result.get("Property_wlan3_time_bounded_0"), 2.0E-8);
-        assertEquals("0.846221923828125", result.get("Property_wlan3_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan3_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan3_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan3_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan3_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_4() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_4() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 4)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 4), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.8462219238281250", result.get("Property_wlan4_time_bounded_0"), 2.0E-8);
-        assertEquals("0.8462219238281250", result.get("Property_wlan4_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan4_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan4_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan4_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan4_time_bounded_5"), 2.0E-8);
-    }
-
-    @Test
-    public void testPRISMExportedWLANTimeBounded_5() throws EPMCException {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 5)));
-        
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.8462219238281250", result.get("Property_wlan5_time_bounded_0"), 2.0E-8);
-        assertEquals("0.8462219238281250", result.get("Property_wlan5_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan5_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan5_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan5_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan5_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
     // Fails by out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_6() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 6)));
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 5), WLAN_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.8462219238281250", result.get("Property_wlan6_time_bounded_0"), 2.0E-8);
-        assertEquals("0.8462219238281250", result.get("Property_wlan6_time_bounded_1"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan6_time_bounded_2"), 2.0E-8);
-        assertEquals("0.9836365208029747", result.get("Property_wlan6_time_bounded_3"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan6_time_bounded_4"), 2.0E-8);
-        assertEquals("0.9002140127122402", result.get("Property_wlan6_time_bounded_5"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
+    // Fails by out of memory with 8GB
+    @Ignore
     @Test
-    public void testPRISMExportedZeroconf() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_6() throws EPMCException {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+		constants.put("TRANS_TIME_MAX", "10");
+    	constants.put("DEADLINE", "100");
+        Options options = preparePRISMOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 6), WLAN_TIME_BOUNDED_PROPERTY);
+        
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
+        assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
+        assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
+    }
+
+    // No support for R yet
+    @Ignore
+    @Test
+    public void testPRISM_Zeroconf() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("err", "0");
     	constants.put("K", "4");
     	constants.put("reset", "true");
     	constants.put("N", "1000");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(ZEROCONF_MODEL));
+        model = loadModel(options, ZEROCONF_MODEL, ZEROCONF_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
+        Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000038674394349", result.get("Pmin=?[ true U (l=4 & ip=1) ]"), 2.0E-8);
         assertEquals("0.0000368412345139", result.get("Pmax=?[ true U (l=4 & ip=1) ]"), 2.0E-8);
         assertEquals("13.022753434298028", result.get("Rmin=?[ F l=4 ]"), 2.0E-8);
@@ -3526,23 +3744,21 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedZeroconfTimeBounded() throws EPMCException {
+    public void testPRISM_ZeroconfTimeBounded() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "11");
     	constants.put("K", "1");
     	constants.put("bound", "10");
     	constants.put("reset", "true");
     	constants.put("N", "1000");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(ZEROCONF_TIME_BOUNDED_MODEL));
+        model = loadModel(options, ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);
         
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.0000234477600190", result.get("Property_zeroconf_time_bounded_0"), 2.0E-8);
-        assertEquals("0.0000234477600190", result.get("Property_zeroconf_time_bounded_1"), 2.0E-8);
-        assertEquals("0.0142750542031845", result.get("Property_zeroconf_time_bounded_2"), 2.0E-8);
-        assertEquals("0.0142750542031845", result.get("Property_zeroconf_time_bounded_3"), 2.0E-8);
+        Map<String, Value> result = computeResultsMapDefinition(model);
+        assertEquals("0.0000234477600190", result.get("Pmin=?[ !(l=4 & ip=2) U t>bound ]"), 2.0E-8);
+        assertEquals("0.0142750542031845", result.get("Pmax=?[ !(l=4 & ip=2) U t>bound ]"), 2.0E-8);
     }
 
 }

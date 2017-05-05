@@ -100,8 +100,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import epmc.error.EPMCException;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
@@ -117,6 +119,7 @@ import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.prism.model.ModelPRISM;
 import epmc.propertysolver.ltllazy.OptionsLTLLazy;
+import epmc.value.OptionsValue;
 import epmc.value.Value;
 
 /**
@@ -125,6 +128,7 @@ import epmc.value.Value;
  * @author Andrea Turrini
  * @author Ernst Moritz Hahn
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public final class CheckExplicitTest {
 	/** Location of plugin directory in file system. */
 //    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
@@ -147,12 +151,10 @@ public final class CheckExplicitTest {
 	    try {
 			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, LogType.TRANSLATE, ModelPRISM.IDENTIFIER);
-//        options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         options.set(OptionsMessages.TIME_STAMPS, TimeStampFormatSecondsStarted.class);
         options.set(OptionsMessages.TRANSLATE_MESSAGES, "false");
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
@@ -160,6 +162,7 @@ public final class CheckExplicitTest {
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
         options.set(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE, "false");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
+        options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
         return options;
     }
     
@@ -211,7 +214,6 @@ public final class CheckExplicitTest {
 
    @Test
     public void testPRISM_BRP() throws EPMCException {
-    	// TODO suppport "deadlock" label
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("MAX", "4");
     	constants.put("N", "64");
@@ -682,9 +684,6 @@ public final class CheckExplicitTest {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
-        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
-        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 7), DINING_CRYPT_PROPERTY);
@@ -1841,6 +1840,7 @@ public final class CheckExplicitTest {
     }
 
     //PRISM fails by out of memory
+    @Ignore
     @Test
     public void testPRISM_PhilNofair_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -2341,9 +2341,6 @@ public final class CheckExplicitTest {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
-        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
-        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 20), POLLING_PROPERTY);
@@ -2570,6 +2567,8 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
 
+    // Fails by out of memory with 8GB
+    @Ignore
     @Test
     public void testPRISM_Beauquier_11() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -3280,6 +3279,8 @@ public final class CheckExplicitTest {
         assertEquals("223934.2428000538", result.get("R{\"cost\"}max=? [ F s1=12 ]"), 2.0E-8);
     }
 
+    //Too slow
+    @Ignore
     @Test
     public void testPRISM_WLAN_6() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -3487,6 +3488,8 @@ public final class CheckExplicitTest {
         assertEquals("0.9002140127122402", result.get("Pmin=? [ true U s1=12 ]"), 2.0E-8);
     }
 
+    // Fails by out of memory with 8GB
+    @Ignore
     @Test
     public void testPRISM_WLANTimeBounded_5() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
