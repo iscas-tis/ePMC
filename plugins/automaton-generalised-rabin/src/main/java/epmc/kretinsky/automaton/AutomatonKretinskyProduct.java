@@ -331,7 +331,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     }
 
     private void prepareAcceptance() throws EPMCException {
-        ContextDD contextDD = contextExpression.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         int numAcceptancePairs = 1;
         for (int i = 0; i < slaves.length; i++) {
             int numRanksPlusOne = slaves[i].getMojmir().getNumStates() + 1;
@@ -463,10 +463,6 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return expressionsUnique.getExpressionDD(expression);
     }    
     
-    ContextDD getContextDD() throws EPMCException {
-        return contextExpression.getContextDD();
-    }
-
     public void setExpressionUnique(ExpressionsUnique expressionsUnique) {
         this.expressionsUnique = expressionsUnique;
     }

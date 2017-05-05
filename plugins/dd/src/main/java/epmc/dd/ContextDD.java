@@ -92,15 +92,13 @@ import epmc.value.ValueInteger;
 // TODO remove entries from Value table if no longer used
 
 public final class ContextDD implements Closeable {
-	private final static Map<ContextValue,ContextDD> MAP = new LinkedHashMap<>();
+	private static ContextDD contextDD;
 	
 	public static ContextDD get() throws EPMCException {
-		ContextDD result = MAP.get(ContextValue.get());
-		if (result == null) {
-			result = new ContextDD();
-			MAP.put(ContextValue.get(), result);
+		if (contextDD == null) {
+			contextDD = new ContextDD();
 		}
-		return result;
+		return contextDD;
 	}
 
 	/** String contain a single space. */
@@ -2008,7 +2006,6 @@ public final class ContextDD implements Closeable {
     void removeDD(DD dd) {
         assert checkDD();
         assert dd != null;
-        assert dd.getContext() == this;
         assert !dd.internalAlive();
         assert invalidateWalkersIfReorder();
         totalTime.start();
@@ -2468,7 +2465,6 @@ public final class ContextDD implements Closeable {
     private boolean assertValidDD(DD dd) {
         assert dd != null;
         assert dd.alive();
-        assert dd.getContext() == this;
         return true;
     }
     

@@ -21,7 +21,6 @@
 package epmc.modelchecker;
 
 import epmc.error.EPMCException;
-import epmc.options.Options;
 
 /**
  * Task which should be performed by EPMC.

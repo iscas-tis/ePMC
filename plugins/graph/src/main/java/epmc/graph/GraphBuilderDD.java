@@ -87,7 +87,6 @@ public final class GraphBuilderDD implements Closeable {
     private int actionDepth = 0;
     private final TIntStack presNumbers = new TIntArrayStack();
     private final TIntStack nextNumbers = new TIntArrayStack();
-    private final ContextDD contextDD;
     private final GraphDD graphDD;
     private boolean uniformise;
     private ValueAlgebra unifRate;
@@ -156,11 +155,7 @@ public final class GraphBuilderDD implements Closeable {
         }
         numNodes = numNodesComputed;
         
-        this.presNumbers.push(0);
-
-        this.contextDD = graphDD.getContextDD();
-
-        
+        this.presNumbers.push(0);        
         DD oldPresNodes = presNodes;
         presNodes = presNodes.andNot(this.sinks);
         oldPresNodes.dispose();
@@ -175,9 +170,9 @@ public final class GraphBuilderDD implements Closeable {
         }
         this.nextNodes = buildSinks(nextNodes, nextSinks, nextRepresentants,
                 nextCube, false);
-        contextDD.dispose(nextRepresentants);
+        ContextDD.get().dispose(nextRepresentants);
         nextNodes.dispose();
-        contextDD.dispose(nextSinks);
+        ContextDD.get().dispose(nextSinks);
         
         this.nextCube = this.presCube.permute(swap);
         lowMapNext = this.nextNodes.newNodeMapInt();
@@ -283,7 +278,7 @@ public final class GraphBuilderDD implements Closeable {
     private static boolean assertSinks(List<DD> sinks, GraphDD graphDD)
             throws EPMCException {
         assert sinks != null;
-        ContextDD contextDD = graphDD.getContextDD();
+        ContextDD contextDD = ContextDD.get();
         DD allSinks = contextDD.newConstant(false);
         for (DD dd : sinks) {
             assert dd.isBoolean();
@@ -705,7 +700,7 @@ public final class GraphBuilderDD implements Closeable {
     
     private DD valuesToDDRec(ValueArray explResult) throws EPMCException {
         if (!isValidValuesToDD()) {
-            return contextDD.newConstant(0);
+            return ContextDD.get().newConstant(0);
         }
         
         if (isLeafValuesToDD()) {
@@ -715,10 +710,10 @@ public final class GraphBuilderDD implements Closeable {
                 if (presNode < explResult.size()) {
                     explResult.get(entry, presNode);
                 }
-                return contextDD.newConstant(entry);
+                return ContextDD.get().newConstant(entry);
             } else {
                 Value value = explResult.getType().getEntryType().newValue();
-                return contextDD.newConstant(value);
+                return ContextDD.get().newConstant(value);
             }
         } else {
             lowValuesToDD();
@@ -727,7 +722,7 @@ public final class GraphBuilderDD implements Closeable {
             highValuesToDD();
             DD high = valuesToDDRec(explResult);
             backValuesToDD();
-            DD result = contextDD.variable(presNodes.variable()).ite(high, low);
+            DD result = ContextDD.get().variable(presNodes.variable()).ite(high, low);
             low.dispose();
             high.dispose();
             return result;
@@ -779,8 +774,12 @@ public final class GraphBuilderDD implements Closeable {
         }
         closed = true;
         cubeDD.dispose();
-        contextDD.dispose(sinks);
-        contextDD.dispose(representants);
+        try {
+			ContextDD.get().dispose(sinks);
+	        ContextDD.get().dispose(representants);
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
     }
     
     private Value newValueWeight() {

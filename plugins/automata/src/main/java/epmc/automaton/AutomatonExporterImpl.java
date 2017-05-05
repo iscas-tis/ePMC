@@ -136,11 +136,8 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         ExpressionToDD checkE2D = new ExpressionToDD(variables);
         
         List<Value[]> values = new ArrayList<>();
-        int maxNumValues = 1;
-        for (Expression expression : expressions) {
-            TypeEnumerable type = TypeBoolean.get();
-            maxNumValues *= type.getNumValues();
-        }
+        int maxNumValues = (int) Math.pow(TypeBoolean.get().getNumValues(),
+        		expressions.length);
         for (int entryNr = 0; entryNr < maxNumValues; entryNr++) {
             int usedNr = entryNr;
             DD check = contextDD.newConstant(true);
