@@ -81,17 +81,15 @@ public final class ExpressionToDD implements Closeable {
         private final Type type;
         private boolean closed;
         
-        Translated(DD singleDD, List<DD> vector, Type type) {
+        Translated(DD singleDD, List<DD> vector, Type type) throws EPMCException {
             assert singleDD != null || vector != null;
-            assert singleDD == null || singleDD.getContext() == contextDD;
             if (vector != null) {
                 for (DD dd : vector) {
                     assert dd != null;
-                    assert dd.getContext() == contextDD;
                 }
             }
             if (vector != null) {
-                this.vector = new ArrayList<>(contextDD.clone(vector));
+                this.vector = new ArrayList<>(ContextDD.get().clone(vector));
                 vectorExternal = Collections.unmodifiableList(this.vector);
             } else {
                 this.vector = null;
@@ -110,7 +108,7 @@ public final class ExpressionToDD implements Closeable {
                     variableDDToType(variableDD));
         }
 
-        Translated(DD singleDD) {
+        Translated(DD singleDD) throws EPMCException {
             this(singleDD, null, singleDD.getType());
         }
         
@@ -130,28 +128,28 @@ public final class ExpressionToDD implements Closeable {
                 int digVal = 1;
                 ValueInteger value = TypeInteger.get()
                         .newValue();
-                singleDD = contextDD.newConstant(0);
+                singleDD = ContextDD.get().newConstant(0);
                 for (int pos = 0; pos < vector.size() - 1; pos++) {
                     value.set(digVal);
-                    DD valueDD = contextDD.newConstant(value);
+                    DD valueDD = ContextDD.get().newConstant(value);
                     DD posDD = vector.get(pos).toMT().multiplyWith(valueDD);
                     singleDD = singleDD.addWith(posDD);
                     digVal *= 2;
                 }
                 DD signConstDD = vector.get(vector.size() - 1).toMT().
-                        multiplyWith(contextDD.newConstant(-digVal));
+                        multiplyWith(ContextDD.get().newConstant(-digVal));
                 singleDD = singleDD.addWith(signConstDD);
             } else if (TypeEnum.isEnum(type)) {
                 TypeEnum typeEnum = TypeEnum.asEnum(type);
                 Enum<?>[] consts = typeEnum.getEnumClass().getEnumConstants();
                 int numBits = typeEnum.getNumBits() + 1;
-                singleDD = contextDD.newConstant(typeEnum.newValue(consts[0]));
+                singleDD = ContextDD.get().newConstant(typeEnum.newValue(consts[0]));
                 for (int constNr = 0; constNr < consts.length; constNr++) {
-                    List<DD> constNrDD = contextDD.twoCplFromInt(constNr, numBits);
-                    DD eq = contextDD.eq(constNrDD, vector);
-                    contextDD.dispose(constNrDD);
+                    List<DD> constNrDD = ContextDD.get().twoCplFromInt(constNr, numBits);
+                    DD eq = ContextDD.get().eq(constNrDD, vector);
+                    ContextDD.get().dispose(constNrDD);
                     Value value = typeEnum.newValue(consts[constNr]);
-                    DD constValDD = contextDD.newConstant(value);
+                    DD constValDD = ContextDD.get().newConstant(value);
                     singleDD = eq.iteWith(constValDD, singleDD);
                 }
 //            } else if (type.isUserEnum()) {
@@ -177,12 +175,12 @@ public final class ExpressionToDD implements Closeable {
             return singleDD;
         }
 
-        boolean hasVector() {
+        boolean hasVector() throws EPMCException {
             assert !closed && alive();
             return vector != null;
         }
         
-        List<DD> getVector() {
+        List<DD> getVector() throws EPMCException {
             assert !closed && alive();
             return vectorExternal;
         }
@@ -197,7 +195,11 @@ public final class ExpressionToDD implements Closeable {
                 singleDD.dispose();
             }
             if (vector != null) {
-                contextDD.dispose(vector);
+            	try {
+					ContextDD.get().dispose(vector);
+				} catch (EPMCException e) {
+					throw new RuntimeException(e);
+				}
             }
         }
 
@@ -248,7 +250,6 @@ public final class ExpressionToDD implements Closeable {
         }
     }
     
-    private final ContextDD contextDD;
     private final Map<Expression,DD> constants;
     private final Map<Expression,VariableDD> variables;
     private final Map<Expression,Translated> translationCache;
@@ -262,9 +263,9 @@ public final class ExpressionToDD implements Closeable {
         } else if (ValueEnum.isEnum(value)) {
             int numBits = ValueNumBitsKnown.getNumBits(value);
             int number = ValueEnum.asEnum(value).getEnum().ordinal();
-            return contextDD.twoCplFromInt(number, numBits);
+            return ContextDD.get().twoCplFromInt(number, numBits);
         } else if (ValueInteger.isInteger(value)) {
-            return contextDD.twoCplFromInt(ValueInteger.asInteger(value).getInt());
+            return ContextDD.get().twoCplFromInt(ValueInteger.asInteger(value).getInt());
         } else {
             return null;
         }
@@ -274,7 +275,7 @@ public final class ExpressionToDD implements Closeable {
         if (useVector && (ValueInteger.isInteger(value) || ValueEnum.isEnum(value))) {
             return null;
         } else {
-            return contextDD.newConstant(value);
+            return ContextDD.get().newConstant(value);
         }
     }
 
@@ -298,13 +299,13 @@ public final class ExpressionToDD implements Closeable {
         if (!useVector || !variableDD.isInteger()) {
             return null;
         }
-        List<DD> origVec = new ArrayList<>(contextDD.clone(variableDD.getDDVariables(copy)));
-        origVec.add(contextDD.newConstant(false));
-        List<DD> add = contextDD.twoCplFromInt(variableDD.getLower());
+        List<DD> origVec = new ArrayList<>(ContextDD.get().clone(variableDD.getDDVariables(copy)));
+        origVec.add(ContextDD.get().newConstant(false));
+        List<DD> add = ContextDD.get().twoCplFromInt(variableDD.getLower());
         
-        List<DD> result = contextDD.twoCplAdd(origVec, add);
-        contextDD.dispose(add);
-        contextDD.dispose(origVec);
+        List<DD> result = ContextDD.get().twoCplAdd(origVec, add);
+        ContextDD.get().dispose(add);
+        ContextDD.get().dispose(origVec);
         
         return result;
     }
@@ -322,9 +323,7 @@ public final class ExpressionToDD implements Closeable {
             Map<Expression,DD> constants) throws EPMCException {
         assert assertConstructorArgs(variables,
             constants);
-        ContextDD contextDD = getContextDD();
         Options options = Options.get();
-        this.contextDD = contextDD;
         this.variables = new HashMap<>();
         this.variables.putAll(variables);
         this.constants = new HashMap<>();
@@ -388,7 +387,6 @@ public final class ExpressionToDD implements Closeable {
         assert copy >= 0;
         assert copy < variable.getNumCopies();
         assert value != null;
-        assert variable.getContext() == contextDD;
         if (assignCache != null) {
             AssignEntry entry = new AssignEntry(variable, copy, value);
             if (assignCache.containsKey(entry)) {
@@ -505,7 +503,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opEq(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD eq = contextDD.twoCplEq(op1.getVector(), op2.getVector());
+            DD eq = ContextDD.get().twoCplEq(op1.getVector(), op2.getVector());
             result = new Translated(eq, null, null);
             eq.dispose();
         } else {
@@ -518,7 +516,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opNe(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD ne = contextDD.twoCplNe(op1.getVector(), op2.getVector());
+            DD ne = ContextDD.get().twoCplNe(op1.getVector(), op2.getVector());
             result = new Translated(ne, null, null);
             ne.dispose();
         } else {
@@ -531,7 +529,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opGe(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD ge = contextDD.twoCplGe(op1.getVector(), op2.getVector());
+            DD ge = ContextDD.get().twoCplGe(op1.getVector(), op2.getVector());
             result = new Translated(ge, null, null);
             ge.dispose();
         } else {
@@ -544,7 +542,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opLe(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD le = contextDD.twoCplLe(op1.getVector(), op2.getVector());
+            DD le = ContextDD.get().twoCplLe(op1.getVector(), op2.getVector());
             result = new Translated(le, null, null);
             le.dispose();
         } else {
@@ -557,7 +555,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opLt(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD lt = contextDD.twoCplLt(op1.getVector(), op2.getVector());
+            DD lt = ContextDD.get().twoCplLt(op1.getVector(), op2.getVector());
             result = new Translated(lt, null, null);
             lt.dispose();
         } else {
@@ -570,7 +568,7 @@ public final class ExpressionToDD implements Closeable {
     private Translated opGt(Translated op1, Translated op2) throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            DD gt = contextDD.twoCplGt(op1.getVector(), op2.getVector());
+            DD gt = ContextDD.get().twoCplGt(op1.getVector(), op2.getVector());
             result = new Translated(gt, null, null);
             gt.dispose();
         } else {
@@ -584,9 +582,9 @@ public final class ExpressionToDD implements Closeable {
     private Translated opAddInverse(Translated op) throws EPMCException {
         Translated result;
         if (op.hasVector()) {
-            List<DD> list = contextDD.twoCplAddInverse(op.getVector());
+            List<DD> list = ContextDD.get().twoCplAddInverse(op.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorAddInverse.IDENTIFIER, op);
         }
@@ -597,9 +595,9 @@ public final class ExpressionToDD implements Closeable {
             throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            List<DD> list = contextDD.twoCplAdd(op1.getVector(), op2.getVector());
+            List<DD> list = ContextDD.get().twoCplAdd(op1.getVector(), op2.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorAdd.IDENTIFIER, op1, op2);
         }
@@ -627,9 +625,9 @@ public final class ExpressionToDD implements Closeable {
             throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            List<DD> list = contextDD.twoCplMax(op1.getVector(), op2.getVector());
+            List<DD> list = ContextDD.get().twoCplMax(op1.getVector(), op2.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorMax.IDENTIFIER, op1, op2);
         }
@@ -641,9 +639,9 @@ public final class ExpressionToDD implements Closeable {
             throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            List<DD> list = contextDD.twoCplMin(op1.getVector(), op2.getVector());
+            List<DD> list = ContextDD.get().twoCplMin(op1.getVector(), op2.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorMin.IDENTIFIER, op1, op2);
         }
@@ -655,9 +653,9 @@ public final class ExpressionToDD implements Closeable {
             throws EPMCException {
         Translated result;
         if (op1.hasVector() && op2.hasVector()) {
-            List<DD> list = contextDD.twoCplSubtract(op1.getVector(), op2.getVector());
+            List<DD> list = ContextDD.get().twoCplSubtract(op1.getVector(), op2.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorSubtract.IDENTIFIER, op1, op2);
         }
@@ -669,9 +667,9 @@ public final class ExpressionToDD implements Closeable {
             throws EPMCException {
         Translated result;
         if (thenT.hasVector() && elseT.hasVector()) {
-            List<DD> list = contextDD.twoCplIte(ifT.getSingleDD(), thenT.getVector(), elseT.getVector());
+            List<DD> list = ContextDD.get().twoCplIte(ifT.getSingleDD(), thenT.getVector(), elseT.getVector());
             result = new Translated(null, list, null);
-            contextDD.dispose(list);
+            ContextDD.get().dispose(list);
         } else {
             result = generalApply(OperatorIte.IDENTIFIER, ifT, thenT, elseT);
         }
@@ -701,7 +699,7 @@ public final class ExpressionToDD implements Closeable {
         for (int index = 0; index < operands.length; index++) {
             innerDD[index] = operands[index].getSingleDD();
         }
-        DD resultDD = contextDD.apply(operator, innerDD);
+        DD resultDD = ContextDD.get().apply(operator, innerDD);
         Translated result = new Translated(resultDD, null, null);
         resultDD.dispose();
 
@@ -719,18 +717,16 @@ public final class ExpressionToDD implements Closeable {
         assert operator != null;
         return generalApply(operator, operands);
     }
-
     
-    public ContextDD getContextDD() {
-        assert alive();
-        return contextDD;
-    }
-
     @Override
     public void close() {
-        if (!alive()) {
-            return;
-        }
+        try {
+			if (!alive()) {
+			    return;
+			}
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         closed = true;
         if (translationCache != null) {
             for (Translated trans : translationCache.values()) {
@@ -751,7 +747,7 @@ public final class ExpressionToDD implements Closeable {
         return expressionLiteral.getValue();
     }
 
-    private boolean alive() {
-        return !closed && contextDD.alive();
+    private boolean alive() throws EPMCException {
+        return !closed && ContextDD.get().alive();
     }
 }
