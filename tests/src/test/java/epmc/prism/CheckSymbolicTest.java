@@ -111,7 +111,6 @@ import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.messages.TimeStampFormatSecondsStarted;
 import epmc.modelchecker.EngineDD;
-import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelCheckerResults;
 import epmc.modelchecker.TestHelper;
@@ -750,8 +749,6 @@ public final class CheckSymbolicTest {
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
-    //Out of memory with 8GB
-    @Ignore
     @Test
     public void testPRISM_DiningCrypt_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -766,8 +763,6 @@ public final class CheckSymbolicTest {
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
-    //Out of memory with 8GB
-    @Ignore
     @Test
     public void testPRISM_DiningCrypt_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1784,8 +1779,6 @@ public final class CheckSymbolicTest {
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
-    //Fails with OutOfMemoryError with 8G
-    @Ignore
     @Test
     public void testPRISM_Phil_7() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1798,8 +1791,6 @@ public final class CheckSymbolicTest {
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
-    //Fails with OutOfMemoryError with 8G
-    @Ignore
     @Test
     public void testPRISM_Phil_8() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1813,7 +1804,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_9() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1827,7 +1817,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_10() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1841,7 +1830,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_15() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1855,7 +1843,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_20() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1869,7 +1856,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_25() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
@@ -1883,7 +1869,6 @@ public final class CheckSymbolicTest {
     }
 
     // PRISM fails by out of memory
-    @Ignore
     @Test
     public void testPRISM_Phil_30() throws EPMCException {
     	Map<String, Object> constants = new LinkedHashMap<>();
