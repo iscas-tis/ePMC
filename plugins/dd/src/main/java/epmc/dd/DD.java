@@ -211,12 +211,12 @@ public final class DD implements Cloneable {
         return getContext().apply(operator, this);
     }
     
-    public DD apply(DD other, Operator Operator) throws EPMCException {
-        return getContext().apply(Operator, this, other);
+    public DD apply(DD other, Operator operator) throws EPMCException {
+        return getContext().apply(operator, this, other);
     }
 
-    public DD apply(DD other1, DD other2, Operator Operator) throws EPMCException {
-        return getContext().apply(Operator, this, other1, other2);
+    public DD apply(DD other1, DD other2, Operator operator) throws EPMCException {
+        return getContext().apply(operator, this, other1, other2);
     }
     
     public DD add(DD other) throws EPMCException {
