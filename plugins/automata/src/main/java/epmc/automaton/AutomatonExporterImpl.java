@@ -46,7 +46,6 @@ import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.OperatorEq;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
@@ -200,7 +199,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
+        	.setOperator(OperatorEq.IDENTIFIER)
         	.setOperands(a, b)
         	.build();
     }

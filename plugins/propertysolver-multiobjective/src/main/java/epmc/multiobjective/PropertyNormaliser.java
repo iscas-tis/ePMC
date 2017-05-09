@@ -39,7 +39,6 @@ import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorSubtract;
@@ -134,7 +133,7 @@ final class PropertyNormaliser {
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getZero());
             } else if (isQuantLe(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newCompare = new ExpressionOperator.Builder()
-                        .setOperator(ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER))
+                        .setOperator(OperatorAddInverse.IDENTIFIER)
                         .setOperands(objectiveQuantifier.getCompare()).build();
                 newCompare = new ExpressionLiteral.Builder()
                 		.setValue(evaluateValue(newCompare))
@@ -183,14 +182,14 @@ final class PropertyNormaliser {
 	
     private Expression subtract(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER))
+    			.setOperator(OperatorSubtract.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
     
     private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(OperatorNot.IDENTIFIER)
         	.setOperands(expression)
         	.build();
     }

@@ -175,7 +175,7 @@ public final class PrismExpressionParser {
 
 	private ExpressionOperator newOperator(String operator, Expression... operands) {
 	  return new ExpressionOperator.Builder()
-	  	.setOperator(ContextValue.get().getOperator(operator))
+	  	.setOperator(operator)
 	  	.setOperands(operands)
 	  	.build();
 	}
@@ -186,35 +186,35 @@ public final class PrismExpressionParser {
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(OperatorNot.IDENTIFIER)
         	.setOperands(expression)
         	.build();
     }
 
   private Expression addInverse(Expression expression) {
     return new ExpressionOperator.Builder()
-      	.setOperator(ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER))
+      	.setOperator(OperatorAddInverse.IDENTIFIER)
       	.setOperands(expression)
       	.build();
   }
 
     private Expression or(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+            .setOperator(OperatorOr.IDENTIFIER)
             .setOperands(a, b)
             .build();
     }
 
     private Expression iff(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(ContextValue.get().getOperator(OperatorIff.IDENTIFIER))
+            .setOperator(OperatorIff.IDENTIFIER)
             .setOperands(a, b)
             .build();
     }
 
     private Expression implies(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(ContextValue.get().getOperator(OperatorImplies.IDENTIFIER))
+            .setOperator(OperatorImplies.IDENTIFIER)
             .setOperands(a, b)
             .build();
     }
@@ -522,7 +522,7 @@ private Expression ExpressionITE(boolean parseExp) throws EPMCException :
 		<COLON>
 		propElse = ExpressionITE(parseExp)
 		{ prop = new ExpressionOperator.Builder()
-			.setOperator(ContextValue.get().getOperator(OperatorIte.IDENTIFIER))
+			.setOperator(OperatorIte.IDENTIFIER)
 			.setOperands(prop, propThen, propElse)
 			.build(); }
 	)?

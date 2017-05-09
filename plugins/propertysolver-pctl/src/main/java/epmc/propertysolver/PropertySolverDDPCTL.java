@@ -63,7 +63,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeInteger;
@@ -460,7 +459,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(OperatorNot.IDENTIFIER)
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();

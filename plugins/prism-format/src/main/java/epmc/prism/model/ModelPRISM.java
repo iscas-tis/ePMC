@@ -81,7 +81,6 @@ import epmc.prism.messages.MessagesPRISM;
 import epmc.prism.model.convert.PRISM2JANIConverter;
 import epmc.prism.options.OptionsPRISM;
 import epmc.time.JANITypeClock;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorMultiply;
@@ -1079,7 +1078,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 	for (Alternative leftAlt : leftCmd.getAlternatives()) {
                 		for (Alternative rightAlt : rightCmd.getAlternatives()) {
                 			Expression newWeight = new ExpressionOperator.Builder()
-                			        .setOperator(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER))
+                			        .setOperator(OperatorMultiply.IDENTIFIER)
                 			        .setOperands(
                 			        		leftAlt.getWeight(),
                 			        		rightAlt.getWeight())
@@ -1312,14 +1311,14 @@ public final class ModelPRISM implements ModelJANIConverter {
 	
     private Expression and(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(OperatorAnd.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
+        	.setOperator(OperatorEq.IDENTIFIER)
         	.setOperands(a, b)
         	.build();
     }
@@ -1346,9 +1345,9 @@ public final class ModelPRISM implements ModelJANIConverter {
                 newOperator(OperatorNot.IDENTIFIER, op2));
     }
     
-    private Expression newOperator(String operatorId, Expression... operands) {
+    private Expression newOperator(String operator, Expression... operands) {
         return new ExpressionOperator.Builder()
-                .setOperator(ContextValue.get().getOperator(operatorId))
+                .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
                 .build();
     }

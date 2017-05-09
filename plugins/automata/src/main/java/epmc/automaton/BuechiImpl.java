@@ -50,7 +50,6 @@ import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorIff;
@@ -471,7 +470,7 @@ public class BuechiImpl implements Buechi {
             return expression.replaceChildren(newChildren);
         } else {
             return not(new ExpressionOperator.Builder()
-                    .setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
+                    .setOperator(OperatorEq.IDENTIFIER)
                     .setOperands(newChildren)
                     .build());
         }
@@ -489,7 +488,7 @@ public class BuechiImpl implements Buechi {
 
     private static Expression not(Expression expression) {
         return new ExpressionOperator.Builder()
-            .setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+            .setOperator(OperatorNot.IDENTIFIER)
             .setOperands(expression)
             .build();
     }

@@ -60,7 +60,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
@@ -430,7 +429,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     				.setType(TemporalType.GLOBALLY)
     				.setPositional(quantified.getPositional())
     				.setChildren(new ExpressionOperator.Builder()
-    						.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+    						.setOperator(OperatorNot.IDENTIFIER)
     						.setOperands(quantifiedOp1.getOperand1())
     						.build(),
     						quantifiedOp1.getChildren().get(1),
@@ -489,7 +488,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(OperatorNot.IDENTIFIER)
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();
