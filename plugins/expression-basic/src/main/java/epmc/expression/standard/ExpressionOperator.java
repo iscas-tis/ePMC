@@ -123,7 +123,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     
     private final Positional positional;
     private final List<Expression> operands = new ArrayList<>();
-    private final Operator operator;
+    private final String operator;
 
     private ExpressionOperator(Builder builder) {
         assert builder != null;
@@ -133,7 +133,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         }
         this.operands.addAll(builder.getOperands());
         if (builder.getOperator() != null) {
-        	this.operator = ContextValue.get().getOperator(builder.getOperator());
+        	this.operator = builder.getOperator();
         } else {
             throw new RuntimeException();
         }
@@ -159,14 +159,14 @@ public final class ExpressionOperator implements ExpressionPropositional {
     }
 
     public Operator getOperator() {
-        return operator;
+        return ContextValue.get().getOperator(operator);
     }    
     
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionOperator.Builder()
                 .setOperands(children)
-                .setOperator(operator.getIdentifier())
+                .setOperator(operator)
                 .setPositional(positional)
                 .build();
     }
@@ -187,7 +187,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             assert childType != null : this + "    in    " + child + " " + child.getClass() + " " + expressionToType;
             opTypes[opNr] = childType;
         }
-        result = this.operator.resultType(opTypes);
+        result = ContextValue.get().getOperator(operator).resultType(opTypes);
         assert result != null : this + " ... " + this.getOperator().getIdentifier() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
         return result;
@@ -205,19 +205,19 @@ public final class ExpressionOperator implements ExpressionPropositional {
     }
     
     public boolean isAdd() {
-        return operator.getIdentifier().equals(OperatorAdd.IDENTIFIER);
+        return operator.equals(OperatorAdd.IDENTIFIER);
     }
     
     public boolean isSubtract() {
-        return operator.getIdentifier().equals(OperatorSubtract.IDENTIFIER);
+        return operator.equals(OperatorSubtract.IDENTIFIER);
     }
     
     public boolean isMultiply() {
-        return operator.getIdentifier().equals(OperatorMultiply.IDENTIFIER);
+        return operator.equals(OperatorMultiply.IDENTIFIER);
     }
     
     public boolean isDivide() {
-        return operator.getIdentifier().equals(OperatorDivide.IDENTIFIER);
+        return operator.equals(OperatorDivide.IDENTIFIER);
     }
     
     @Override
@@ -234,7 +234,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
-        switch (operator.getIdentifier()) {
+        switch (operator) {
         case OperatorNot.IDENTIFIER:
         case OperatorAddInverse.IDENTIFIER:
             builder.append(operator);
@@ -328,7 +328,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
                 return false;
             }
         }
-        return this.operator == other.operator;
+        return this.operator.equals(other.operator);
     }    
     
     @Override
