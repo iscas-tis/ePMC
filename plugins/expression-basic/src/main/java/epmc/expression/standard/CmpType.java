@@ -26,8 +26,6 @@ import epmc.value.OperatorGt;
 import epmc.value.OperatorLe;
 import epmc.value.OperatorLt;
 import epmc.value.OperatorNe;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 
 /**
  * Comparison type, e.g. in quantifiers or reward properties.
