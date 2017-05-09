@@ -7,14 +7,10 @@ options
 
 PARSER_BEGIN(PrismExpressionParser)
 package epmc.prism.expression;
-import epmc.error.UtilError;
 import epmc.prism.error.ProblemsPRISM;
 import epmc.error.Positional;
 import static epmc.error.UtilError.ensure;
 import epmc.error.EPMCException;
-import epmc.value.Operator;
-import epmc.value.Value;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorAddInverse;
@@ -164,13 +160,6 @@ public final class PrismExpressionParser {
 			  ensure(false, ProblemsPRISM.EXPRESSION_PARSER_GENERAL_ERROR, t, t);
 			  return null;
 		}
-	}
-
-	private ExpressionOperator newOperator(Operator operator, Expression... operands) {
-	  return new ExpressionOperator.Builder()
-	  	.setOperator(operator)
-	  	.setOperands(operands)
-	  	.build();
 	}
 
 	private ExpressionOperator newOperator(String operator, Expression... operands) {
@@ -609,7 +598,7 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	Operator type;
+	String type;
 }
 {
 	p = ExpressionROp(parseExp)
@@ -621,16 +610,16 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator EqNe() throws EPMCException :
+private String EqNe() throws EPMCException :
 {
 }
 {
 	(
 		<EQ> 
-		{ return ContextValue.get().getOperator(OperatorEq.IDENTIFIER); }
+		{ return OperatorEq.IDENTIFIER; }
 	| 
 		<NEQ> 
-		{ return ContextValue.get().getOperator(OperatorNe.IDENTIFIER); }
+		{ return OperatorNe.IDENTIFIER; }
 	)
 }
 
@@ -638,7 +627,7 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	Operator type;
+	String type;
 }
 {
 	p = ExpressionPlusMinus(parseExp)
@@ -650,22 +639,22 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator LtGtLeGe() throws EPMCException :
+private String LtGtLeGe() throws EPMCException :
 {
 }
 {
 	(
 		<LT> 
-		{ return ContextValue.get().getOperator(OperatorLt.IDENTIFIER); }
+		{ return OperatorLt.IDENTIFIER; }
 	| 
 		<LEQ> 
-		{ return ContextValue.get().getOperator(OperatorLe.IDENTIFIER); }
+		{ return OperatorLe.IDENTIFIER; }
 	| 
 		<GT> 
-		{ return ContextValue.get().getOperator(OperatorGt.IDENTIFIER); }
+		{ return OperatorGt.IDENTIFIER; }
 	| 
 		<GEQ> 
-		{ return ContextValue.get().getOperator(OperatorGe.IDENTIFIER); }
+		{ return OperatorGe.IDENTIFIER; }
 	)
 }
 
@@ -673,7 +662,7 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	Operator type;
+	String type;
 }
 {
 	p = ExpressionTimesDivide(parseExp)
@@ -686,16 +675,16 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator PlusMinus() throws EPMCException :
+private String PlusMinus() throws EPMCException :
 {
 }
 {
 	(
 		<PLUS> 
-		{ return ContextValue.get().getOperator(OperatorAdd.IDENTIFIER); }
+		{ return OperatorAdd.IDENTIFIER; }
 	| 
 		<MINUS> 
-		{ return ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER); }
+		{ return OperatorSubtract.IDENTIFIER; }
 	)
 }
 
@@ -703,7 +692,7 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 {
 	Expression p;
 	Expression nextProp;
-	Operator type;
+	String type;
 }
 {
 	p = ExpressionUnaryMinus(parseExp)
@@ -715,16 +704,16 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 	{ return p; }
 }
 
-private Operator TimesDivide() throws EPMCException :
+private String TimesDivide() throws EPMCException :
 {
 }
 {
 	(
 		<TIMES> 
-		{ return ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER); }
+		{ return OperatorMultiply.IDENTIFIER; }
 	| 
 		<DIVIDE> 
-		{ return ContextValue.get().getOperator(OperatorDivide.IDENTIFIER); }
+		{ return OperatorDivide.IDENTIFIER; }
 	)
 }
 
@@ -782,7 +771,7 @@ private Expression parseFunction(boolean parseExp) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
-	Operator type;
+	String type;
 }
 {
 	(
@@ -846,13 +835,13 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 	<LPAR>
 	e = parseExp(parseExp)
 	<RPAR>
-	{ return newOperator(ContextValue.get().getOperator(OperatorPRISMPow.IDENTIFIER), e,
+	{ return newOperator(OperatorPRISMPow.IDENTIFIER, e,
 		new ExpressionLiteral.Builder()
 			.setValue(UtilValue.newValue(TypeReal.get(), "0.5"))
 			.build()); }
 }
 
-private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunctionN(boolean parseExp, String type) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
@@ -867,7 +856,7 @@ private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCEx
 	{ return e; }
 }
 
-private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunction2(boolean parseExp, String type) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
@@ -879,7 +868,7 @@ private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCEx
 	{ return newOperator(type, e, ne);}
 }
 
-private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunction1(boolean parseExp, String type) throws EPMCException :
 {
 	Expression e;
 }
@@ -888,20 +877,20 @@ private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCEx
 	{ return newOperator(type, e);}
 }
 
-private Operator functionMultipleParams() throws EPMCException :
+private String functionMultipleParams() throws EPMCException :
 {
 }
 {
 	(
 		<MAX> 
-		{ return ContextValue.get().getOperator(OperatorMax.IDENTIFIER); }
+		{ return OperatorMax.IDENTIFIER; }
 	| 
 		<MIN> 
-		{ return ContextValue.get().getOperator(OperatorMin.IDENTIFIER); }
+		{ return OperatorMin.IDENTIFIER; }
 	)
 }
 
-private Operator functionOneParam() throws EPMCException :
+private String functionOneParam() throws EPMCException :
 {
 }
 {
@@ -910,26 +899,26 @@ private Operator functionOneParam() throws EPMCException :
 //		<SQRT> 
 //	|
 		<FLOOR> 
-		{ return ContextValue.get().getOperator(OperatorFloor.IDENTIFIER); }
+		{ return OperatorFloor.IDENTIFIER; }
 	| 
 		<CEIL> 
-		{ return ContextValue.get().getOperator(OperatorCeil.IDENTIFIER); }
+		{ return OperatorCeil.IDENTIFIER; }
 	)
 }
 
-private Operator functionTwoParams() throws EPMCException :
+private String functionTwoParams() throws EPMCException :
 {
 }
 {
 	(
 		<POW> 
-		{ return ContextValue.get().getOperator(OperatorPRISMPow.IDENTIFIER); }
+		{ return OperatorPRISMPow.IDENTIFIER; }
 	| 
 		<MOD> 
-		{ return ContextValue.get().getOperator(OperatorMod.IDENTIFIER); }
+		{ return OperatorMod.IDENTIFIER; }
 	| 
 		<LOG> 
-		{ return ContextValue.get().getOperator(OperatorLog.IDENTIFIER); }
+		{ return OperatorLog.IDENTIFIER; }
 	)
 }
 
