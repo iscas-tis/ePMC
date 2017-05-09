@@ -83,8 +83,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorNot.IDENTIFIER);
     }
     
@@ -93,8 +92,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorOr.IDENTIFIER);
     }
     

@@ -167,7 +167,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             ExpressionOperator expressionOperator = (ExpressionOperator) prop;
             List<? extends Expression> ops = expressionOperator.getOperands();
             Set<Set<Expr>> set = null;
-            switch(expressionOperator.getOperator().getIdentifier()) {
+            switch(expressionOperator.getOperatorId()) {
             case OperatorNot.IDENTIFIER:case OperatorLt.IDENTIFIER: case OperatorGt.IDENTIFIER: case OperatorGe.IDENTIFIER: case OperatorLe.IDENTIFIER: 
             case OperatorEq.IDENTIFIER:case OperatorNe.IDENTIFIER: //atomic propositions
                 set = new HashSet<>(); 

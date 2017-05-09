@@ -161,6 +161,10 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public Operator getOperator() {
         return ContextValue.get().getOperator(operator);
     }    
+
+    public String getOperatorId() {
+    	return operator;
+    }
     
     @Override
     public Expression replaceChildren(List<Expression> children) {
@@ -188,7 +192,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             opTypes[opNr] = childType;
         }
         result = ContextValue.get().getOperator(operator).resultType(opTypes);
-        assert result != null : this + " ... " + this.getOperator().getIdentifier() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
+        assert result != null : this + " ... " + this.getOperatorId() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
         return result;
     }

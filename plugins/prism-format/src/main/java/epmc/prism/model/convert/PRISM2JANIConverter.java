@@ -704,7 +704,7 @@ public final class PRISM2JANIConverter {
 	
 	private Expression prism2jani(ExpressionOperator expression) throws EPMCException {
 		assert expression != null;
-		String operator = expression.getOperator().getIdentifier();
+		String operator = expression.getOperatorId();
 		switch (operator) {
 		case OperatorAddInverse.IDENTIFIER: {
 			Expression operand = prism2jani(expression.getOperand1());

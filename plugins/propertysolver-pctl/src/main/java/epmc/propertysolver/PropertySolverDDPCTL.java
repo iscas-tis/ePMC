@@ -471,8 +471,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorNot.IDENTIFIER);
     }
     

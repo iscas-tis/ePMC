@@ -46,7 +46,6 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.value.OperatorPRISMPow;
-import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorCeil;
@@ -97,8 +96,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(prefix);
 		}
 		
-		Operator operator = expressionOperator.getOperator();
-		String operatorIdentifier = operator.getIdentifier();
+		String operatorIdentifier = expressionOperator.getOperatorId();
 		
         switch (operatorIdentifier) {
         case OperatorNot.IDENTIFIER:
@@ -240,7 +238,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                }
 	                if (child instanceof ExpressionOperator) {
 	                    ExpressionOperator childOp = (ExpressionOperator) child;
-	                    if (operator == childOp.getOperator()) {
+	                    if (operatorIdentifier.equals(childOp.getOperatorId())) {
 	                        needBraces = false;
 	                    }
 	                    if ((expressionOperator.isAdd() || expressionOperator.isSubtract())

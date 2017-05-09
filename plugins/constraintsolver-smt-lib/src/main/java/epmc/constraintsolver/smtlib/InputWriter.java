@@ -238,8 +238,8 @@ final class InputWriter {
 	}
 
 	private SExpression translateExpressionOperator(ExpressionOperator expression) {
-		SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperator().getIdentifier());
-		assert operator != null : expression.getOperator();
+		SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperatorId());
+		assert operator != null : expression.getOperatorId();
 		SExpression[] result = new SExpression[expression.getChildren().size() + 1];
 		result[0] = newSExpression(operator.getIdentifer());
 		
