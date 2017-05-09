@@ -40,8 +40,6 @@ import epmc.value.OperatorOr;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.expression.Expression;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 
 // TODO probably should get rid of most of these methods
 
@@ -154,8 +152,7 @@ public final class UtilExpressionStandard {
         return expression.replaceChildren(newChildren);
     }
 
-    static Expression newOperator(String operatorId, Expression... operands) {
-        Operator operator = ContextValue.get().getOperator(operatorId);
+    static Expression newOperator(String operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))

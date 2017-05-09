@@ -59,7 +59,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.StopWatch;
-import epmc.value.ContextValue;
 import epmc.value.OperatorNot;
 
 public class PropertySolverDDCoalition implements PropertySolver {
@@ -309,7 +308,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(OperatorNot.IDENTIFIER)
         	.setOperands(expression)
         	.build();
     }

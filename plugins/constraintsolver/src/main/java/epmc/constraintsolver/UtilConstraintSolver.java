@@ -24,8 +24,6 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -42,7 +40,7 @@ public final class UtilConstraintSolver {
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		Operator operator = constraintTypeToOperator(constraintType);
+		String operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        .setOperator(operator)
 		        .setOperands(result, rhsExpression)
@@ -57,7 +55,7 @@ public final class UtilConstraintSolver {
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		Operator operator = constraintTypeToOperator(constraintType);
+		String operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        	.setOperator(operator)
 		        	.setOperands(result, rhsExpression)
@@ -108,18 +106,18 @@ public final class UtilConstraintSolver {
 		return result;
 	}
 	
-	public static Operator constraintTypeToOperator(ConstraintType type) {
+	public static String constraintTypeToOperator(ConstraintType type) {
 		assert type != null;
-		Operator operator = null;
+		String operator = null;
 		switch (type) {
 		case EQ:
-			operator = ContextValue.get().getOperator(OperatorEq.IDENTIFIER);
+			operator = OperatorEq.IDENTIFIER;
 			break;
 		case GE:
-			operator = ContextValue.get().getOperator(OperatorGe.IDENTIFIER);
+			operator = OperatorGe.IDENTIFIER;
 			break;
 		case LE:
-			operator = ContextValue.get().getOperator(OperatorLe.IDENTIFIER);
+			operator = OperatorLe.IDENTIFIER;
 			break;
 		default:
 			break;
@@ -138,14 +136,14 @@ public final class UtilConstraintSolver {
 
     private static Expression times(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-                .setOperator(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER))
+                .setOperator(OperatorMultiply.IDENTIFIER)
                 .setOperands(a, b)
                 .build();
     }
 
     private static Expression plus(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER))
+        	.setOperator(OperatorAdd.IDENTIFIER)
         	.setOperands(a, b)
         	.build();
     }

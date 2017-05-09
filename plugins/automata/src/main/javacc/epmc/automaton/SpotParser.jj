@@ -15,7 +15,6 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionLiteral;
-import epmc.value.ContextValue;
 import epmc.value.OperatorOr;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
@@ -36,21 +35,21 @@ public class SpotParser {
 
   private Expression and(Expression a, Expression b) {
       return new ExpressionOperator.Builder()
-      	.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+      	.setOperator(OperatorAnd.IDENTIFIER)
       	.setOperands(a, b)
       	.build();
   }
 
     private Expression or(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+            .setOperator(OperatorOr.IDENTIFIER)
             .setOperands(a, b)
             .build();
     }
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(OperatorNot.IDENTIFIER)
         	.setOperands(expression)
         	.build();
     }

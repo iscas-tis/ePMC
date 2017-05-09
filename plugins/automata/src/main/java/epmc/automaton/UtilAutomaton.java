@@ -45,7 +45,6 @@ import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorIff;
 import epmc.value.OperatorImplies;
@@ -272,7 +271,7 @@ public final class UtilAutomaton {
 
     private static Expression and(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(OperatorAnd.IDENTIFIER)
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
@@ -280,7 +279,7 @@ public final class UtilAutomaton {
 
     private static Expression or(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+    			.setOperator(OperatorOr.IDENTIFIER)
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
@@ -288,7 +287,7 @@ public final class UtilAutomaton {
 
     private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+    			.setOperator(OperatorNot.IDENTIFIER)
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();

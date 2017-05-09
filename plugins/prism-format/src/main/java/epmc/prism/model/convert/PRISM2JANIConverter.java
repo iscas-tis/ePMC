@@ -90,7 +90,6 @@ import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
 import epmc.prism.value.OperatorPRISMPow;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorCeil;
@@ -714,7 +713,7 @@ public final class PRISM2JANIConverter {
 					.setValue(TypeReal.get().getZero())
 					.build();
 			return new ExpressionOperator.Builder()
-					.setOperator(ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER))
+					.setOperator(OperatorSubtract.IDENTIFIER)
 					.setOperands(zero, operand)
 					.build();
 		}
@@ -731,11 +730,11 @@ public final class PRISM2JANIConverter {
 			if (allInteger) {
 				result = new ExpressionOperator.Builder()
 						.setOperands(newChildren)
-						.setOperator(ContextValue.get().getOperator(OperatorPow.IDENTIFIER))
+						.setOperator(OperatorPow.IDENTIFIER)
 						.build();
 				result = new ExpressionOperator.Builder()
 						.setOperands(result)
-						.setOperator(ContextValue.get().getOperator(OperatorCeil.IDENTIFIER))
+						.setOperator(OperatorCeil.IDENTIFIER)
 						.build();
 			} else {
 				result = expression.replaceChildren(newChildren);

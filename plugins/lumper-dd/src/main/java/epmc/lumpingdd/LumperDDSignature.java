@@ -68,7 +68,6 @@ import epmc.graph.Semantics;
 import epmc.graph.dd.GraphDD;
 import epmc.graphsolver.lumping.LumperDD;
 import epmc.modelchecker.ModelChecker;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -911,7 +910,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+    			.setOperator(OperatorOr.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
@@ -920,7 +919,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorGe.IDENTIFIER))
+    			.setOperator(OperatorGe.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
@@ -929,7 +928,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorLe.IDENTIFIER))
+    			.setOperator(OperatorLe.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
@@ -938,7 +937,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorEq.IDENTIFIER))
+    			.setOperator(OperatorEq.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }
@@ -947,7 +946,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+    			.setOperator(OperatorAnd.IDENTIFIER)
     			.setOperands(a, b)
     			.build();
     }

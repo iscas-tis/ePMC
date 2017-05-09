@@ -60,7 +60,6 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.OperatorNot;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
@@ -454,7 +453,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(ContextValue.get().getOperator(OperatorNot.IDENTIFIER))
+        	.setOperator(OperatorNot.IDENTIFIER)
         	.setOperands(expression)
         	.build();
     }

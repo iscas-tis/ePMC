@@ -30,8 +30,6 @@ import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -354,8 +352,7 @@ public final class UtilLTL {
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
     
-    public static Expression newOperator(String operatorId, Expression... operands) {
-        Operator operator = ContextValue.get().getOperator(operatorId);
+    public static Expression newOperator(String operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
@@ -457,12 +454,12 @@ public final class UtilLTL {
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+				            .setOperator(OperatorOr.IDENTIFIER)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+                            .setOperator(OperatorAnd.IDENTIFIER)
                             .setOperands(exprList)
                             .build();
 				}
@@ -480,12 +477,12 @@ public final class UtilLTL {
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+				            .setOperator(OperatorAnd.IDENTIFIER)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+                            .setOperator(OperatorOr.IDENTIFIER)
                             .setOperands(exprList)
                             .build();
 				}
@@ -520,12 +517,12 @@ public final class UtilLTL {
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(ContextValue.get().getOperator(OperatorOr.IDENTIFIER))
+				            .setOperator(OperatorOr.IDENTIFIER)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER))
+                            .setOperator(OperatorAnd.IDENTIFIER)
                             .setOperands(exprList)
                             .build();
 				}
