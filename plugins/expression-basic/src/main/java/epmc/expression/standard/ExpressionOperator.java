@@ -24,12 +24,8 @@ import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
-import epmc.value.OperatorNot;
-import epmc.value.OperatorPow;
-import epmc.value.OperatorSubtract;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
@@ -37,17 +33,6 @@ import epmc.expression.ExpressionToType;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.OperatorAdd;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorCeil;
-import epmc.value.OperatorDivide;
-import epmc.value.OperatorFloor;
-import epmc.value.OperatorIte;
-import epmc.value.OperatorLog;
-import epmc.value.OperatorMax;
-import epmc.value.OperatorMin;
-import epmc.value.OperatorMod;
-import epmc.value.OperatorMultiply;
 
 /**
  * Expression to store an operator.
@@ -208,22 +193,6 @@ public final class ExpressionOperator implements ExpressionPropositional {
         return true;
     }
     
-    public boolean isAdd() {
-        return operator.equals(OperatorAdd.IDENTIFIER);
-    }
-    
-    public boolean isSubtract() {
-        return operator.equals(OperatorSubtract.IDENTIFIER);
-    }
-    
-    public boolean isMultiply() {
-        return operator.equals(OperatorMultiply.IDENTIFIER);
-    }
-    
-    public boolean isDivide() {
-        return operator.equals(OperatorDivide.IDENTIFIER);
-    }
-    
     @Override
     public List<Expression> getChildren() {
         return operands;
@@ -238,77 +207,15 @@ public final class ExpressionOperator implements ExpressionPropositional {
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
-        switch (operator) {
-        case OperatorNot.IDENTIFIER:
-        case OperatorAddInverse.IDENTIFIER:
-            builder.append(operator);
-            builder.append("(");
-            builder.append(getOperand1());
-            builder.append(")");
-            break;
-        case OperatorIte.IDENTIFIER:
-            builder.append("(");
-            builder.append(getOperand1());
-            builder.append(")");
-            builder.append(" ? ");
-            builder.append("(");
-            builder.append(getOperand2());
-            builder.append(")");
-            builder.append(" : ");
-            builder.append("(");
-            builder.append(getOperand3());
-            builder.append(")");
-            break;
-        case OperatorMin.IDENTIFIER: case OperatorMax.IDENTIFIER: case OperatorPow.IDENTIFIER: case OperatorMod.IDENTIFIER: case OperatorLog.IDENTIFIER:
-            builder.append(operator);
-            builder.append("(");
-            builder.append(getOperand1());
-            builder.append(",");
-            builder.append(getOperand2());
-            builder.append(")");
-            break;
-        case OperatorFloor.IDENTIFIER: case OperatorCeil.IDENTIFIER:
-            builder.append(operator);
-            builder.append("(");
-            builder.append(getOperand1());
-            builder.append(")");
-            break;
-        default: {
-            if (getChildren().size() == 1) {
-                builder.append(operator);
-                builder.append("(");
-                builder.append(getChildren().get(0));
-                builder.append(")");
-            } else {
-            Iterator<Expression> iter = getChildren().iterator();
-            while (iter.hasNext()) {
-                Expression child = iter.next();
-                boolean needBraces = true;
-                if (child instanceof ExpressionOperator) {
-                    ExpressionOperator childOp = (ExpressionOperator) child;
-                    if (operator == childOp.operator) {
-                        needBraces = false;
-                    }
-                    if ((isAdd() || isSubtract())
-                            && (childOp.isMultiply() || childOp.isDivide())) {
-                        needBraces = false;
-                    }
-                }
-                if (needBraces) {
-                    builder.append("(");
-                }
-                builder.append(child);
-                if (needBraces) {
-                    builder.append(")");
-                }
-                if (iter.hasNext()) {
-                    builder.append(" " + operator + " ");
-                }
-            }
-            }
-            break;
+        builder.append(operator);
+        builder.append("(");
+        for (int index = 0; index < operands.size(); index++) {
+        	builder.append(operands.get(index));
+        	if (index < operands.size() - 1) {
+        		builder.append(",");
+        	}
         }
-        }
+        builder.append(")");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
         }

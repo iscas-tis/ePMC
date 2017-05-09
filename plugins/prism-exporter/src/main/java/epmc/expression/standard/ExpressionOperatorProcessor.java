@@ -46,6 +46,7 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.value.OperatorPRISMPow;
+import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorCeil;
@@ -60,11 +61,13 @@ import epmc.value.OperatorLog;
 import epmc.value.OperatorMax;
 import epmc.value.OperatorMin;
 import epmc.value.OperatorMod;
+import epmc.value.OperatorMultiply;
 import epmc.value.OperatorMultiplyInverse;
 import epmc.value.OperatorNe;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorOr;
 import epmc.value.OperatorPow;
+import epmc.value.OperatorSubtract;
 
 public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 
@@ -241,8 +244,10 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                    if (operatorIdentifier.equals(childOp.getOperatorId())) {
 	                        needBraces = false;
 	                    }
-	                    if ((expressionOperator.isAdd() || expressionOperator.isSubtract())
-	                            && (childOp.isMultiply() || childOp.isDivide())) {
+	                    if ((OperatorAdd.IDENTIFIER.equals(expressionOperator.getOperatorId())
+	                    		|| OperatorSubtract.IDENTIFIER.equals(expressionOperator.getOperatorId()))
+	                    		&& (OperatorMultiply.IDENTIFIER.equals(childOp.getOperatorId())
+	                            		|| OperatorDivideIgnoreZero.IDENTIFIER.equals(childOp.getOperatorId()))) {
 	                        needBraces = false;
 	                    }
 	                }
