@@ -90,7 +90,6 @@ import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
 import epmc.prism.value.OperatorPRISMPow;
 import epmc.util.Util;
-import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorCeil;
 import epmc.value.OperatorPow;
@@ -465,7 +464,7 @@ public final class PRISM2JANIConverter {
     		CmpType cmpType = expressionQuantifier.getCompareType();
 	        DirType dirType = expressionQuantifier.getDirType();
 	        Expression quantified = useQuantitativePropertiesOnly(expressionQuantifier.getQuantified());
-	        Operator operator = cmpType.asExOpType();
+	        String operator = cmpType.asExOpType();
         	if (dirType.equals(DirType.NONE)
         			&& SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
         		if (cmpType.equals(CmpType.GE) || cmpType.equals(CmpType.GT)) {

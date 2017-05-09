@@ -20,9 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.value.ContextValue;
-import epmc.value.Operator;
-
 /**
  * JANI operator.
  * 
@@ -193,7 +190,7 @@ public final class JANIOperator {
 	 * 
 	 * @return EPMC operator the operator is mapped to
 	 */
-	public Operator getOperator() {
-		return ContextValue.get().getOperator(iscasMC);
+	public String getOperator() {
+		return iscasMC;
 	}
 }

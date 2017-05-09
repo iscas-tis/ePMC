@@ -38,7 +38,6 @@ import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.Operator;
 
 /**
  * JANI expression for constants, that is zero-ary operators.
@@ -123,7 +122,7 @@ public final class JANIExpressionOperatorConstant implements JANIExpression {
 	public Expression getExpression() throws EPMCException {
 		assert initialized;
 		assert model != null;
-		Operator operator = this.operator.getOperator();
+		String operator = this.operator.getOperator();
 		return new ExpressionOperator.Builder()
 				.setOperator(operator)
 				.setOperands()
