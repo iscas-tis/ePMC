@@ -164,8 +164,8 @@ public enum CmpType {
      * 
      * @return equivalent operator
      */
-    public Operator asExOpType() {
+    public String asExOpType() {
         assert this != IS;
-        return ContextValue.get().getOperator(operator);
+        return operator;
     }
 }

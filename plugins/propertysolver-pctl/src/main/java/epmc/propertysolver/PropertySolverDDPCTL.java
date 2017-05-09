@@ -63,6 +63,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeInteger;
@@ -380,7 +381,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         boolean qualitative = false;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            op = propertyQuantifier.getCompareType().asExOpType();
+            op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
             if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
                     || ValueAlgebra.asAlgebra(compare.getSomeValue()).isOne())) {
                 qualitative = true;

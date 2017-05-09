@@ -60,6 +60,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
@@ -115,7 +116,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, dirType.isMin());
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
             assert op != null;
             result = result.applyWith(op, compare);
         }

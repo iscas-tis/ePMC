@@ -179,7 +179,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionOperator.Builder()
                 .setOperands(children)
-                .setOperator(operator)
+                .setOperator(operator.getIdentifier())
                 .setPositional(positional)
                 .build();
     }

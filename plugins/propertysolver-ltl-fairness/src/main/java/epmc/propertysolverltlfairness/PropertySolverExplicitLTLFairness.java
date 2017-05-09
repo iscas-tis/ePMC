@@ -60,6 +60,7 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
@@ -403,7 +404,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		StateMap result = doSolve(modelGraph, forStates, quantifiedProp);
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
             assert op != null;
             result = result.applyWith(op, compare);
         }
