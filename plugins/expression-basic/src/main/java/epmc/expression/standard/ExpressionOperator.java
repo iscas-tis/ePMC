@@ -58,8 +58,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public final static class Builder {
         private Positional positional;
         private List<Expression> operands;
-        private Operator operator;
-        private String operatorString;
+        private String operator;
 
         public Builder setPositional(Positional positional) {
             this.positional = positional;
@@ -96,22 +95,13 @@ public final class ExpressionOperator implements ExpressionPropositional {
             return this;
         }
         
-        public Builder setOperator(Operator operator) {
-            this.operator = operator;
-            return this;
-        }
-        
-        private Operator getOperator() {
-            return operator;
-        }
-
         public Builder setOperator(String operator) {
-        	this.operatorString = operator;
+        	this.operator = operator;
         	return this;
         }
 
-        public String getOperatorString() {
-        	return operatorString;
+        public String getOperator() {
+        	return operator;
         }
 
         public ExpressionOperator build() {
@@ -137,16 +127,13 @@ public final class ExpressionOperator implements ExpressionPropositional {
 
     private ExpressionOperator(Builder builder) {
         assert builder != null;
-        assert builder.getOperator() != null
-        		|| builder.getOperatorString() != null;
+        assert builder.getOperator() != null;
         for (Expression child : builder.getOperands()) {
             assert child != null;
         }
         this.operands.addAll(builder.getOperands());
         if (builder.getOperator() != null) {
-            this.operator = builder.getOperator();
-        } else if (builder.getOperatorString() != null) {
-        	this.operator = ContextValue.get().getOperator(builder.getOperatorString());
+        	this.operator = ContextValue.get().getOperator(builder.getOperator());
         } else {
             throw new RuntimeException();
         }
