@@ -174,8 +174,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		if (prop instanceof ExpressionOperator) { // AND, OR will be flattened
 			Set<Set<Expression>> set = null;
 			ExpressionOperator expressionOperator = (ExpressionOperator)prop;
-			switch (expressionOperator.getOperator()
-	                .getIdentifier()) {
+			switch (expressionOperator.getOperatorId()) {
 			case OperatorOr.IDENTIFIER:
 				Set<Set<Expression>> op1Set = flatten(expressionOperator.getOperand1());
 				op1Set.addAll(flatten(expressionOperator.getOperand2())); 
@@ -339,7 +338,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			return false;
 		} else {
 			ExpressionOperator expressionOperator = (ExpressionOperator) lit;
-		   switch (expressionOperator.getOperator().getIdentifier()) {
+		   switch (expressionOperator.getOperatorId()) {
 		   case OperatorNot.IDENTIFIER:
 			   return ! checkNode(graph, node, labels, expressionOperator.getOperand1());
 		   case OperatorOr.IDENTIFIER:

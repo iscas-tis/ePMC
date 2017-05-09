@@ -404,8 +404,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorAnd.IDENTIFIER);
     }
 
@@ -414,8 +413,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorOr.IDENTIFIER);
     }
 
@@ -424,8 +422,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorIte.IDENTIFIER);
     }
 
@@ -434,8 +431,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorIff.IDENTIFIER);
     }
 
@@ -444,8 +440,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorImplies.IDENTIFIER);
     }
 
@@ -454,8 +449,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorNot.IDENTIFIER);
     }
 

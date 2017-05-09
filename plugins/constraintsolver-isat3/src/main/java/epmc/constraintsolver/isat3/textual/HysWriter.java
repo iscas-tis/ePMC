@@ -218,8 +218,8 @@ final class HysWriter {
 	}
 
 	private String translateExpressionOperator(ExpressionOperator expression) {
-		ISatOperator operator = EPMC_TO_ISAT3.get(expression.getOperator().getIdentifier());
-		assert operator != null : expression.getOperator();
+		ISatOperator operator = EPMC_TO_ISAT3.get(expression.getOperatorId());
+		assert operator != null : expression.getOperatorId();
 		StringBuilder result = new StringBuilder();
 		if (operator.isPrefix()) {
 			result.append(operator.getIdentifer());

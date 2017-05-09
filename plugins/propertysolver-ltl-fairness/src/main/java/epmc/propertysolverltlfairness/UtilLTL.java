@@ -158,8 +158,7 @@ public final class UtilLTL {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperator()
-                .getIdentifier()
+        return expressionOperator.getOperatorId()
                 .equals(OperatorNot.IDENTIFIER);
     }
 
@@ -446,7 +445,7 @@ public final class UtilLTL {
 			List<? extends Expression> ops = expressionOperator.getOperands();
 			List<Expression> exprList = new ArrayList<>();
 			
-			switch (expressionOperator.getOperator().getIdentifier()) {
+			switch (expressionOperator.getOperatorId()) {
 			case OperatorAnd.IDENTIFIER: // sig
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
