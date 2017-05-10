@@ -313,13 +313,11 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void hermanTest() throws EPMCException {
+    public void hermanQualitativeTest() throws EPMCException {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
         options.set(TestHelper.PRISM_FLATTEN, false);
-        double tolerance = 1E-10;
-        
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "filter(forall, \"init\" => P>=1 [ F \"stable\" ])");
         assertEquals(true, result);
 
@@ -340,11 +338,16 @@ public final class PCTLSolverExplicitTest {
         
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 15), "filter(forall, \"init\" => P>=1 [ F \"stable\" ])");
         assertEquals(true, result);
-
-        Map<String,Object> constants = new HashMap<>();
-        
-        options.set(OptionsModelChecker.CONST, constants);
-
+    }
+    
+    // TODO get tests to provide correct results again
+    @Test
+    public void hermanQuantitativeTest() throws EPMCException {
+        Value result;
+        Options options = prepareOptions();
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
+        options.set(TestHelper.PRISM_FLATTEN, false);
+        double tolerance = 1E-10;
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "P=? [ F<=0 \"stable\" {\"init\"}{min} ]");
         assertEquals("0", result, tolerance * 10);
 
