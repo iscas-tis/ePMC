@@ -23,7 +23,6 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class OperatorLt implements Operator {
@@ -38,7 +37,7 @@ public final class OperatorLt implements Operator {
     @Override
     public Type resultType(Type... types) {
         for (Type type : types) {
-            if (!TypeUnknown.isUnknown(type) && !TypeAlgebra.isAlgebra(type)) {
+            if (!TypeAlgebra.isAlgebra(type)) {
                 return null;
             }
         }

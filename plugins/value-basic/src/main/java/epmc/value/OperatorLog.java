@@ -23,7 +23,6 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class OperatorLog implements Operator {
@@ -38,7 +37,7 @@ public final class OperatorLog implements Operator {
     @Override
     public Type resultType(Type... types) {
         Type upper = UtilValue.upper(types);
-        if (!TypeUnknown.isUnknown(upper) && !TypeReal.isReal(upper)) {
+        if (!TypeReal.isReal(upper)) {
             return null;
         }
         Type result = TypeReal.get();
