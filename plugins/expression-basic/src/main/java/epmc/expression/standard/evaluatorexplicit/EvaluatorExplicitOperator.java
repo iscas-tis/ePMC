@@ -33,7 +33,6 @@ import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.Evaluato
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class EvaluatorExplicitOperator implements EvaluatorExplicit, EvaluatorExplicitBoolean {
@@ -140,8 +139,6 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
         assert operator != null;
         assert operator.resultType(types) != null : operator;
-        assert !TypeUnknown.isUnknown(operator.resultType(types)) : expression.getOperator()
-        + " " + Arrays.toString(types);
         result = operator.resultType(types).newValue();
     }
 

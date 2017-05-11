@@ -24,7 +24,6 @@ import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
@@ -37,7 +36,7 @@ public final class UtilValue {
             return null;
         } else {
             Type result;
-            if (!TypeUnknown.isUnknown(upper) && TypeAlgebra.isAlgebra(upper)) {
+            if (TypeAlgebra.isAlgebra(upper)) {
                 result = upper;
             } else if (TypeArray.isArray(upper)) {
                 // TODO dimensions check
@@ -58,7 +57,7 @@ public final class UtilValue {
             return null;
         } else {
             Type result;
-            if (!TypeUnknown.isUnknown(upper) && TypeAlgebra.isAlgebra(upper)) {
+            if (TypeAlgebra.isAlgebra(upper)) {
                 result = upper;
             } else if (TypeArray.isArray(upper)) {
                 // TODO dimensions check
@@ -90,7 +89,7 @@ public final class UtilValue {
     public static Type booleanResultType(Operator operator,
             Type[] types) {
         for (Type type : types) {
-            if (type == null || !TypeUnknown.isUnknown(type) && !TypeBoolean.isBoolean(type)) {
+            if (type == null || !TypeBoolean.isBoolean(type)) {
                 return null;
             }
         }
@@ -101,7 +100,7 @@ public final class UtilValue {
     public static boolean allTypesKnown(Type... types) {
         boolean allTypesKnown = true;
         for (Type type : types) {
-            if (TypeUnknown.isUnknown(type)) {
+            if (type == null) {
                 allTypesKnown = false;
             }
         }
@@ -143,11 +142,7 @@ public final class UtilValue {
     	assert a != null;
         assert b != null;
         T upper = null;
-        if (TypeUnknown.isUnknown(a)) {
-            upper = a;
-        } else if (TypeUnknown.isUnknown(b)) {
-            upper = b;
-        } else if (TypeInteger.isInteger(a) && TypeInteger.isInteger(b)) {
+        if (TypeInteger.isInteger(a) && TypeInteger.isInteger(b)) {
             int lowerBound = Math.min(TypeInteger.asInteger(a).getLowerInt(),
             		TypeInteger.asInteger(b).getLowerInt());
             int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
@@ -159,7 +154,7 @@ public final class UtilValue {
             } else if (b.canImport(a)) {
                 upper = b;
             } else {
-                upper = (T) TypeUnknown.get();
+                upper = null;
             }
         }
         if (upper != null) {

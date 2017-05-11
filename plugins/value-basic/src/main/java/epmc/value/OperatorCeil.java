@@ -23,7 +23,6 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class OperatorCeil implements Operator {
@@ -37,8 +36,7 @@ public final class OperatorCeil implements Operator {
     @Override
     public Type resultType(Type... types) {
         Type result;
-        if (!TypeUnknown.isUnknown(types[0]) && !(TypeReal.isReal(types[0])
-        		|| TypeInteger.isInteger(types[0]))) {
+        if (!(TypeReal.isReal(types[0]) || TypeInteger.isInteger(types[0]))) {
             return null;
         }
         result = TypeInteger.get();

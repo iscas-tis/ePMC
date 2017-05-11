@@ -80,7 +80,6 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeInteger;
-import epmc.value.TypeUnknown;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -396,7 +395,6 @@ public final class ContextDD implements Closeable {
         }
         Operator operator = ContextValue.get().getOperator(identifier);
         Type type = operator.resultType(types);
-        assert !TypeUnknown.isUnknown(type) : identifier + SPACE + Arrays.toString(types);
         return type;
     }
 

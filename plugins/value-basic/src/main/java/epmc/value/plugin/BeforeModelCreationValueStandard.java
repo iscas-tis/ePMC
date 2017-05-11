@@ -55,7 +55,6 @@ import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
-import epmc.value.TypeUnknown;
 import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
 
@@ -110,7 +109,6 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
     	TypeReal.set(new TypeDouble(null, null));
     	TypeInterval.set(new TypeInterval());
     	TypeBoolean.set(new TypeBoolean());
-    	TypeUnknown.set(new TypeUnknown());
     	TypeInteger.set(new TypeInteger());
 	}
 }

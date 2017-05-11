@@ -23,7 +23,6 @@ package epmc.value;
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
-import epmc.value.TypeUnknown;
 import epmc.value.Value;
 
 public final class OperatorIte implements Operator {
@@ -45,7 +44,7 @@ public final class OperatorIte implements Operator {
         assert types[0] != null;
         assert types[1] != null;
         assert types[2] != null;
-        if (!TypeUnknown.isUnknown(types[0]) && !TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.isBoolean(types[0])) {
             return null;
         }
         Type itUpper = UtilValue.upper(types[1], types[2]);

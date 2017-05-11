@@ -29,7 +29,6 @@ import epmc.util.UtilBitSet;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
-import epmc.value.TypeUnknown;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -297,7 +296,7 @@ public final class SupportWalker {
             for (Value stop : stopWhere) {
                 try {
                 	// TODO check following, probably very inefficient
-                    if (!TypeUnknown.isUnknown(UtilValue.upper(stop.getType(), nodeValue.getType()))
+                    if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
                     		&& stop.isEq(nodeValue)) {
                         stopAt = true;
                         break;
