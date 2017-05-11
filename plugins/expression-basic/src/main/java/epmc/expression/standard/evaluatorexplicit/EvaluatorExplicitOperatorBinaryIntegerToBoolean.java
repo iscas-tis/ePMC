@@ -35,6 +35,7 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -88,7 +89,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String opName = expressionOperator.getOperator().getIdentifier();
+            String opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
@@ -157,7 +158,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-        Operator operator = expression.getOperator();
+        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -169,7 +170,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             opNr++;
         }
         result = operator.resultType(types).newValue();
-        switch (operator.getIdentifier()) {
+        switch (expression.getOperator()) {
         case OperatorEq.IDENTIFIER:
             binaryIntegerToBoolean = (a,b) -> a == b;
             break;

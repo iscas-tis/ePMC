@@ -30,11 +30,6 @@ public final class OperatorLog implements Operator {
     public final static String IDENTIFIER = "log";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
         Value e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
         ValueReal.asReal(result).log(operands[0], e);

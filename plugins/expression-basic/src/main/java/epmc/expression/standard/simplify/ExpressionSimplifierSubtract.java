@@ -60,7 +60,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorSubtract.IDENTIFIER);
     }
 

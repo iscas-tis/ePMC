@@ -35,7 +35,6 @@ import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -227,7 +226,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
     
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(String operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
@@ -235,7 +234,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
             assert assertNonNegInt(operands[opNr]);        	
         }
         int result;
-        switch (operation.getIdentifier()) {
+        switch (operation) {
         case OperatorId.IDENTIFIER:
         	result = (int) operands[0];
         	break;
@@ -553,11 +552,11 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation.getIdentifier()) {
+		switch (operation) {
 		case OperatorId.IDENTIFIER:
 		case OperatorNot.IDENTIFIER:
 		case OperatorAnd.IDENTIFIER:

@@ -36,7 +36,6 @@ import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentParallel;
-import epmc.options.Options;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;

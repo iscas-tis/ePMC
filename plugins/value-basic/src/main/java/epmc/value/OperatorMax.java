@@ -29,11 +29,6 @@ public final class OperatorMax implements Operator {
     public final static String IDENTIFIER = "max";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueAlgebra.asAlgebra(result).max(operands[0], operands[1]);
     }

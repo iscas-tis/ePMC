@@ -44,7 +44,6 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.Variable;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
-import epmc.jani.value.ContextValueJANI;
 import epmc.jani.value.TypeLocation;
 import epmc.jani.value.ValueLocation;
 import epmc.value.Value;
@@ -149,7 +148,7 @@ final class DDComponentAutomaton implements DDComponent {
 	 * @throws EPMCException thrown in case of problems
 	 */
 	private void buildVariables() throws EPMCException {
-		typeLocation = getContextValueJANI().getTypeLocation(automaton.getLocations());
+		typeLocation = TypeLocation.get(automaton.getLocations());
 		locationVariableDD = getContextDD().newVariable(automaton.getLocations().toString(), typeLocation, 2);
 		identifierToDD.putAll(graph.getGlobalIdentifiersToDD());
 		variableToDD.putAll(graph.getGlobalVariablesToDD());
@@ -415,16 +414,6 @@ final class DDComponentAutomaton implements DDComponent {
 		initialNodes.dispose();		
 	}
 
-	/**
-	 * Get JANI value context used for this DD component.
-	 * The context is derived from the graph the DD component belongs to.
-	 * 
-	 * @return JANI value context used for this DD component
-	 */
-	private ContextValueJANI getContextValueJANI() {
-		return graph.getContextValueJANI();
-	}
-	
 	/**
 	 * Get DD context used for this DD component.
 	 * The context is derived from the graph the DD component belongs to.

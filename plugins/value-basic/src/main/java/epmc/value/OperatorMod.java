@@ -30,11 +30,6 @@ public final class OperatorMod implements Operator {
     public final static String IDENTIFIER = "%";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
         ValueInteger.asInteger(result).mod(operands[0], operands[1]);
     }

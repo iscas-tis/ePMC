@@ -39,19 +39,11 @@ import epmc.error.EPMCException;
  */
 public interface Operator {
     /**
-     * Get the identifier of this operator.
-     * The identifier is a user-readable string used e.g. if using the operator
-     * object directly is not possible, or for debugging.
-     * 
-     * @return identifier of this operator
-     */
-    String getIdentifier();
-
-    /**
      * Apply the operator.
      * The type of the result value is computed by calling
-     * {@link #resultType(Value...)} on the operands parameter of this function.
-     * If {@link #resultType(Value...)} returns {@code null}, then the operator
+     * {@link #resultType(Type...)} on the types of the operands parameter of this
+     * function.
+     * If {@link #resultType(Type...)} returns {@code null}, then the operator
      * cannot be applied on the given operands.
      * The result parameter must be a such that a call to the method
      * {@link Type#canImport(Type)} of this type on the result parameter
@@ -88,24 +80,4 @@ public interface Operator {
      * @return type the result parameter of the apply method should have
      */
     Type resultType(Type... types);
-    
-    /**
-     * Compute the result type.
-     * The result is computed by collecting the types of the operands parameter
-     * and calling {@link #resultType(Type...)}.
-     * 
-     * @param operands operands to compute result type of
-     * @return result type
-     */
-    default Type resultType(Value... operands) {
-        assert operands != null;
-        Type[] types = new Type[operands.length];
-        for (int typeNr = 0; typeNr < operands.length; typeNr++) {
-            Value value = operands[typeNr];
-            if (value != null) {
-                types[typeNr] = operands[typeNr].getType();
-            }
-        }
-        return resultType(types);
-    }
 }

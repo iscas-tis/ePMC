@@ -31,7 +31,6 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 
 /**
@@ -63,18 +62,6 @@ public final class ExpressionOperator implements ExpressionPropositional {
             return operands;
         }
         
-        public Expression getOperand1() {
-            return getOperands().get(0);
-        }
-
-        public Expression getOperand2() {
-            return getOperands().get(1);
-        }
-
-        public Expression getOperand3() {
-            return getOperands().get(2);
-        }
-
         public Builder setOperands(Expression... operands) {
             this.operands = Arrays.asList(operands);
             return this;
@@ -143,11 +130,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         return getOperands().get(2);
     }
 
-    public Operator getOperator() {
-        return ContextValue.get().getOperator(operator);
-    }    
-
-    public String getOperatorId() {
+    public String getOperator() {
     	return operator;
     }
     
@@ -177,7 +160,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             opTypes[opNr] = childType;
         }
         result = ContextValue.get().getOperator(operator).resultType(opTypes);
-        assert result != null : this + " ... " + this.getOperatorId() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
+        assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
         return result;
     }

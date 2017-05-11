@@ -355,7 +355,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorAnd.IDENTIFIER);
     }
 
@@ -413,7 +413,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorNot.IDENTIFIER);
     }
     
@@ -422,7 +422,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorIff.IDENTIFIER);
     }
     
@@ -431,7 +431,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorOr.IDENTIFIER);
     }
     
@@ -440,7 +440,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorImplies.IDENTIFIER);
     }
     
@@ -449,7 +449,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorIte.IDENTIFIER);
     }
     
@@ -475,7 +475,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorNe.IDENTIFIER);
     }
 

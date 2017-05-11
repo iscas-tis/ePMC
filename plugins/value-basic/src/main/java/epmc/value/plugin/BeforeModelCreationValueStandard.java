@@ -75,33 +75,33 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
 	}
 
 	private static void addOperators() {
-        ContextValue.get().addOrSetOperator(OperatorAdd.class);
-        ContextValue.get().addOrSetOperator(OperatorAddInverse.class);
-        ContextValue.get().addOrSetOperator(OperatorAnd.class);
-        ContextValue.get().addOrSetOperator(OperatorCeil.class);
-        ContextValue.get().addOrSetOperator(OperatorDivide.class);
-        ContextValue.get().addOrSetOperator(OperatorDivideIgnoreZero.class);
-        ContextValue.get().addOrSetOperator(OperatorEq.class);
-        ContextValue.get().addOrSetOperator(OperatorFloor.class);
-        ContextValue.get().addOrSetOperator(OperatorGe.class);
-        ContextValue.get().addOrSetOperator(OperatorGt.class);
-        ContextValue.get().addOrSetOperator(OperatorId.class);
-        ContextValue.get().addOrSetOperator(OperatorIff.class);
-        ContextValue.get().addOrSetOperator(OperatorImplies.class);
-        ContextValue.get().addOrSetOperator(OperatorIte.class);
-        ContextValue.get().addOrSetOperator(OperatorLe.class);
-        ContextValue.get().addOrSetOperator(OperatorLog.class);
-        ContextValue.get().addOrSetOperator(OperatorLt.class);
-        ContextValue.get().addOrSetOperator(OperatorMax.class);
-        ContextValue.get().addOrSetOperator(OperatorMin.class);
-        ContextValue.get().addOrSetOperator(OperatorMod.class);
-        ContextValue.get().addOrSetOperator(OperatorMultiply.class);
-        ContextValue.get().addOrSetOperator(OperatorMultiplyInverse.class);
-        ContextValue.get().addOrSetOperator(OperatorNe.class);
-        ContextValue.get().addOrSetOperator(OperatorNot.class);
-        ContextValue.get().addOrSetOperator(OperatorOr.class);
-        ContextValue.get().addOrSetOperator(OperatorPow.class);
-        ContextValue.get().addOrSetOperator(OperatorSubtract.class);
+        ContextValue.get().addOrSetOperator(OperatorAdd.IDENTIFIER, OperatorAdd.class);
+        ContextValue.get().addOrSetOperator(OperatorAddInverse.IDENTIFIER, OperatorAddInverse.class);
+        ContextValue.get().addOrSetOperator(OperatorAnd.IDENTIFIER, OperatorAnd.class);
+        ContextValue.get().addOrSetOperator(OperatorCeil.IDENTIFIER, OperatorCeil.class);
+        ContextValue.get().addOrSetOperator(OperatorDivide.IDENTIFIER, OperatorDivide.class);
+        ContextValue.get().addOrSetOperator(OperatorDivideIgnoreZero.IDENTIFIER, OperatorDivideIgnoreZero.class);
+        ContextValue.get().addOrSetOperator(OperatorEq.IDENTIFIER, OperatorEq.class);
+        ContextValue.get().addOrSetOperator(OperatorFloor.IDENTIFIER, OperatorFloor.class);
+        ContextValue.get().addOrSetOperator(OperatorGe.IDENTIFIER, OperatorGe.class);
+        ContextValue.get().addOrSetOperator(OperatorGt.IDENTIFIER, OperatorGt.class);
+        ContextValue.get().addOrSetOperator(OperatorId.IDENTIFIER, OperatorId.class);
+        ContextValue.get().addOrSetOperator(OperatorIff.IDENTIFIER, OperatorIff.class);
+        ContextValue.get().addOrSetOperator(OperatorImplies.IDENTIFIER, OperatorImplies.class);
+        ContextValue.get().addOrSetOperator(OperatorIte.IDENTIFIER, OperatorIte.class);
+        ContextValue.get().addOrSetOperator(OperatorLe.IDENTIFIER, OperatorLe.class);
+        ContextValue.get().addOrSetOperator(OperatorLog.IDENTIFIER, OperatorLog.class);
+        ContextValue.get().addOrSetOperator(OperatorLt.IDENTIFIER, OperatorLt.class);
+        ContextValue.get().addOrSetOperator(OperatorMax.IDENTIFIER, OperatorMax.class);
+        ContextValue.get().addOrSetOperator(OperatorMin.IDENTIFIER, OperatorMin.class);
+        ContextValue.get().addOrSetOperator(OperatorMod.IDENTIFIER, OperatorMod.class);
+        ContextValue.get().addOrSetOperator(OperatorMultiply.IDENTIFIER, OperatorMultiply.class);
+        ContextValue.get().addOrSetOperator(OperatorMultiplyInverse.IDENTIFIER, OperatorMultiplyInverse.class);
+        ContextValue.get().addOrSetOperator(OperatorNe.IDENTIFIER, OperatorNe.class);
+        ContextValue.get().addOrSetOperator(OperatorNot.IDENTIFIER, OperatorNot.class);
+        ContextValue.get().addOrSetOperator(OperatorOr.IDENTIFIER, OperatorOr.class);
+        ContextValue.get().addOrSetOperator(OperatorPow.IDENTIFIER, OperatorPow.class);
+        ContextValue.get().addOrSetOperator(OperatorSubtract.IDENTIFIER, OperatorSubtract.class);
     }
 
     private static void addTypes() {

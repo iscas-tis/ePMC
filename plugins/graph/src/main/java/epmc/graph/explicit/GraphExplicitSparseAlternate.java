@@ -25,7 +25,6 @@ import java.util.Arrays;
 
 import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
-import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;

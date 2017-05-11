@@ -167,12 +167,12 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(String operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
         long result;
-        switch (operation.getIdentifier()) {
+        switch (operation) {
         case OperatorId.IDENTIFIER:
         	result = operands[0];
         	break;
@@ -406,11 +406,11 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation.getIdentifier()) {
+		switch (operation) {
 		case OperatorId.IDENTIFIER:
 		case OperatorNot.IDENTIFIER:
 		case OperatorAnd.IDENTIFIER:

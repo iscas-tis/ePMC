@@ -42,11 +42,6 @@ public final class OperatorPRISMPow implements Operator {
     public final static String IDENTIFIER = "pow-prism";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	if (ValueInteger.isInteger(result)) {
     		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));

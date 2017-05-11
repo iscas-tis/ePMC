@@ -143,8 +143,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             Operator operator = operatorsMap.get(name);
             assert operator != null;
             int number = operatorToNumber.get(operator);
-            assert operators[number].getIdentifier().equals(name) : 
-                operators[number].getIdentifier() + " " + name;
+//            assert operators[number].getIdentifier().equals(name) : 
+  //              operators[number].getIdentifier() + " " + name;
             return number;
         }
     }
@@ -274,6 +274,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private DD_VOP2 vop2;
     private boolean alive = true;
     
+    // TODO make sure mapping of operators still works
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD !=null;
@@ -316,7 +317,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(String operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         this.resultType = type;
@@ -574,11 +575,11 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (operands.length > 3) {
 			return false;
 		}
-		if (operands.length == 3 && !operation.getIdentifier().equals(OperatorIte.IDENTIFIER)) {
+		if (operands.length == 3 && !operation.equals(OperatorIte.IDENTIFIER)) {
 			return false;
 		}
 		return true;

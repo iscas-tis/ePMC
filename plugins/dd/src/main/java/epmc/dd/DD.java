@@ -29,8 +29,6 @@ import java.util.Set;
 
 import epmc.error.EPMCException;
 import epmc.util.Util;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorCeil;
@@ -206,29 +204,29 @@ public final class DD implements Cloneable {
         }
     }
 
-    public DD apply(Operator operator) throws EPMCException {
+    public DD apply(String operator) throws EPMCException {
         assert operator != null;
         return getContext().apply(operator, this);
     }
     
-    public DD apply(DD other, Operator operator) throws EPMCException {
+    public DD apply(DD other, String operator) throws EPMCException {
         return getContext().apply(operator, this, other);
     }
 
-    public DD apply(DD other1, DD other2, Operator operator) throws EPMCException {
+    public DD apply(DD other1, DD other2, String operator) throws EPMCException {
         return getContext().apply(operator, this, other1, other2);
     }
     
     public DD add(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorAdd.IDENTIFIER));
+        return apply(other, OperatorAdd.IDENTIFIER);
     }
 
     public DD multiply(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER));
+        return apply(other, OperatorMultiply.IDENTIFIER);
     }
 
     public DD subtract(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorSubtract.IDENTIFIER));
+        return apply(other, OperatorSubtract.IDENTIFIER);
     }
 
     public DD subtractWith(DD other) throws EPMCException {
@@ -242,41 +240,41 @@ public final class DD implements Cloneable {
     }
     
     public DD divide(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorDivide.IDENTIFIER));
+        return apply(other, OperatorDivide.IDENTIFIER);
     }
 
     public DD divideWith(DD other) throws EPMCException {
-        DD result = apply(other, ContextValue.get().getOperator(OperatorDivide.IDENTIFIER));
+        DD result = apply(other, OperatorDivide.IDENTIFIER);
         dispose();
         other.dispose();
         return result;
     }
 
     public DD eq(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorEq.IDENTIFIER));
+        return apply(other, OperatorEq.IDENTIFIER);
     }
 
     public DD gt(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorGt.IDENTIFIER));
+        return apply(other, OperatorGt.IDENTIFIER);
     }
 
     public DD gtWith(DD other) throws EPMCException {
-        DD result = apply(other, ContextValue.get().getOperator(OperatorGt.IDENTIFIER));
+        DD result = apply(other, OperatorGt.IDENTIFIER);
         dispose();
         other.dispose();
         return result;
     }
 
     public DD ge(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorGe.IDENTIFIER));
+        return apply(other, OperatorGe.IDENTIFIER);
     }
 
     public DD ne(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorNe.IDENTIFIER));
+        return apply(other, OperatorNe.IDENTIFIER);
     }
 
     public DD neWith(DD other) throws EPMCException {
-        DD result = apply(other, ContextValue.get().getOperator(OperatorNe.IDENTIFIER));
+        DD result = apply(other, OperatorNe.IDENTIFIER);
         dispose();
         other.dispose();
         return result;
@@ -290,11 +288,11 @@ public final class DD implements Cloneable {
     }
     
     public DD lt(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorLt.IDENTIFIER));
+        return apply(other, OperatorLt.IDENTIFIER);
     }
 
     public DD le(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorLe.IDENTIFIER));
+        return apply(other, OperatorLe.IDENTIFIER);
     }
     
     public DD leWith(DD other) throws EPMCException {
@@ -309,7 +307,7 @@ public final class DD implements Cloneable {
         assert isBoolean() : this;
         assert assertValidDD(other);
         assert other.isBoolean();
-        return apply(other, ContextValue.get().getOperator(OperatorAnd.IDENTIFIER));
+        return apply(other, OperatorAnd.IDENTIFIER);
     }
     
     public DD and(DD... others) throws EPMCException {
@@ -438,7 +436,7 @@ public final class DD implements Cloneable {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive() : other.alreadyDeadMessage();
-        return apply(other, ContextValue.get().getOperator(OperatorOr.IDENTIFIER));
+        return apply(other, OperatorOr.IDENTIFIER);
     }
     
     public DD orWith(DD other) throws EPMCException {
@@ -539,11 +537,11 @@ public final class DD implements Cloneable {
     }    
 
     public DD not() throws EPMCException {
-        return apply(ContextValue.get().getOperator(OperatorNot.IDENTIFIER));
+        return apply(OperatorNot.IDENTIFIER);
     }
 
     public DD iff(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorIff.IDENTIFIER));
+        return apply(other, OperatorIff.IDENTIFIER);
     }
 
     public DD iffWith(DD other) throws EPMCException {
@@ -555,7 +553,7 @@ public final class DD implements Cloneable {
     }
 
     public DD implies(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorImplies.IDENTIFIER));
+        return apply(other, OperatorImplies.IDENTIFIER);
     }
 
     public DD impliesWith(DD andEx) throws EPMCException {
@@ -570,34 +568,34 @@ public final class DD implements Cloneable {
     }
 
     public DD ceil() throws EPMCException {
-        return apply(ContextValue.get().getOperator(OperatorCeil.IDENTIFIER));
+        return apply(OperatorCeil.IDENTIFIER);
     }
 
     public DD floor() throws EPMCException {
-        return apply(ContextValue.get().getOperator(OperatorFloor.IDENTIFIER));
+        return apply(OperatorFloor.IDENTIFIER);
     }
 
     public DD log(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorLog.IDENTIFIER));
+        return apply(other, OperatorLog.IDENTIFIER);
     }
 
     public DD max(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorMax.IDENTIFIER));
+        return apply(other, OperatorMax.IDENTIFIER);
     }
 
     public DD min(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorMin.IDENTIFIER));
+        return apply(other, OperatorMin.IDENTIFIER);
     }
 
     public DD mod(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorMod.IDENTIFIER));
+        return apply(other, OperatorMod.IDENTIFIER);
     }
 
     public DD pow(DD other) throws EPMCException {
-        return apply(other, ContextValue.get().getOperator(OperatorPow.IDENTIFIER));
+        return apply(other, OperatorPow.IDENTIFIER);
     }
     public DD ite(DD thenNode, DD elseNode) throws EPMCException {
-        return apply(thenNode, elseNode, ContextValue.get().getOperator(OperatorIte.IDENTIFIER));
+        return apply(thenNode, elseNode, OperatorIte.IDENTIFIER);
     }
 
     public DD iteWith(DD constValDD, DD singleDD) throws EPMCException {
@@ -902,15 +900,14 @@ public final class DD implements Cloneable {
         return getContext().divide(this, intValue);
     }
 
-    public Value applyOverSat(Operator operator, DD sat)
-            throws EPMCException {
+    public Value applyOverSat(String operator, DD sat) throws EPMCException {
         assert operator != null;
         assert assertValidDD(sat);
         assert TypeBoolean.isBoolean(sat.getType());
         return getContext().applyOverSat(operator, this, sat);
     }
 
-    public Value applyOverSat(Operator operator, DD support, DD sat)
+    public Value applyOverSat(String operator, DD support, DD sat)
             throws EPMCException {
         assert operator != null;
         assert assertValidDD(sat);
@@ -940,7 +937,7 @@ public final class DD implements Cloneable {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive();
-        return apply(other, ContextValue.get().getOperator(OperatorNe.IDENTIFIER));
+        return apply(other, OperatorNe.IDENTIFIER);
     }
 
     public DD xor(DD... others) throws EPMCException {
@@ -1000,7 +997,7 @@ public final class DD implements Cloneable {
     public DD divideIgnoreZero(DD other) throws EPMCException {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
-        return apply(other, ContextValue.get().getOperator(OperatorDivideIgnoreZero.IDENTIFIER));
+        return apply(other, OperatorDivideIgnoreZero.IDENTIFIER);
     }
 
     public DD divideIgnoreZeroWith(DD other) throws EPMCException {

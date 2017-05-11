@@ -29,11 +29,6 @@ public final class OperatorNe implements Operator {
     public final static String IDENTIFIER = "≠";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueBoolean.asBoolean(result).set(!operands[0].isEq(operands[1]));
     }

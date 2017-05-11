@@ -441,7 +441,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         Expression[] expressions = new Expression[identifiers.size()];
         for (Expression identifier : identifiers) {
             expressions[idNr] = identifier;
-            identifier.setType(ContextValue.get().getTypeBoolean());
+            identifier.setType(TypeBoolean.get());
             idNr++;
         }
         StopWatch watch = Util.newStopWatch();

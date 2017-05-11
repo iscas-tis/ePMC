@@ -37,11 +37,6 @@ public final class OperatorAsinh implements Operator {
 	public final static String IDENTIFIER = "asinh";
 
 	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
-
-	@Override
 	public void apply(Value result, Value... operands) throws EPMCException {
 		assert result != null;
 		assert operands != null;

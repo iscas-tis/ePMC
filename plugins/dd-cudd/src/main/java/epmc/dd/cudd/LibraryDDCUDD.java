@@ -35,7 +35,6 @@ import epmc.dd.cudd.OptionsTypesCUDD.CUDDSubengine;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -318,7 +317,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
     @Override
-    public long apply(Operator operation, Type type, long... operands)
+    public long apply(String operation, Type type, long... operands)
             throws EPMCException {
         assert operation != null;
         assert type != null;
@@ -328,7 +327,7 @@ public final class LibraryDDCUDD implements LibraryDD {
         Pointer resPtr;
         Pointer notOp1Ptr = null;
         if (mtbdd) {
-            switch (operation.getIdentifier()) {
+            switch (operation) {
             case OperatorId.IDENTIFIER:
             	resPtr = op1Ptr;
             	break;
@@ -365,7 +364,7 @@ public final class LibraryDDCUDD implements LibraryDD {
                 break;
             }
         } else {
-            switch (operation.getIdentifier()) {
+            switch (operation) {
             case OperatorId.IDENTIFIER:
             	resPtr = op1Ptr;
             	break;
@@ -418,7 +417,7 @@ public final class LibraryDDCUDD implements LibraryDD {
             throw toThrow;
         }
         CUDD.Cudd_Ref(resPtr);
-        if (operation.getIdentifier().equals(OperatorImplies.IDENTIFIER)) {
+        if (operation.equals(OperatorImplies.IDENTIFIER)) {
             CUDD.Cudd_RecursiveDeref(cuddManager, notOp1Ptr);
         }
         return Pointer.nativeValue(resPtr);
@@ -847,11 +846,11 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation.getIdentifier()) {
+		switch (operation) {
 		case OperatorId.IDENTIFIER:
 		case OperatorNot.IDENTIFIER:
 		case OperatorAnd.IDENTIFIER:

@@ -32,7 +32,6 @@ import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -99,7 +98,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     }
     
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(String operation, Type type, long... operands) throws EPMCException {
         assert alive;
         assert operation != null;
         assert type != null;
@@ -109,7 +108,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         BDD result;
-        switch (operation.getIdentifier()) {
+        switch (operation) {
         case OperatorId.IDENTIFIER:
         	result = uniqueIdTable.get(operands[0]);
         	break;
@@ -408,11 +407,11 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     }
 
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation.getIdentifier()) {
+		switch (operation) {
 		case OperatorId.IDENTIFIER:
 		case OperatorNot.IDENTIFIER:
 		case OperatorAnd.IDENTIFIER:

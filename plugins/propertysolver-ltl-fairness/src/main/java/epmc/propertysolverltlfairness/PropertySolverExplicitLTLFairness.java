@@ -60,8 +60,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorOr;
@@ -174,7 +172,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		if (prop instanceof ExpressionOperator) { // AND, OR will be flattened
 			Set<Set<Expression>> set = null;
 			ExpressionOperator expressionOperator = (ExpressionOperator)prop;
-			switch (expressionOperator.getOperatorId()) {
+			switch (expressionOperator.getOperator()) {
 			case OperatorOr.IDENTIFIER:
 				Set<Set<Expression>> op1Set = flatten(expressionOperator.getOperand1());
 				op1Set.addAll(flatten(expressionOperator.getOperand2())); 
@@ -338,7 +336,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			return false;
 		} else {
 			ExpressionOperator expressionOperator = (ExpressionOperator) lit;
-		   switch (expressionOperator.getOperatorId()) {
+		   switch (expressionOperator.getOperator()) {
 		   case OperatorNot.IDENTIFIER:
 			   return ! checkNode(graph, node, labels, expressionOperator.getOperand1());
 		   case OperatorOr.IDENTIFIER:
@@ -403,7 +401,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		StateMap result = doSolve(modelGraph, forStates, quantifiedProp);
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
+            String op = propertyQuantifier.getCompareType().asExOpType();
             assert op != null;
             result = result.applyWith(op, compare);
         }

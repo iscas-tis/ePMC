@@ -21,6 +21,7 @@
 package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -51,19 +52,19 @@ public final class NodePropertyApply implements NodeProperty {
      * entries.
      * 
      * @param graph graph to which this property belongs
-     * @param operator operator used to generate values of {@link #get()}
+     * @param identifier operator used to generate values of {@link #get()}
      * @param operands node properties providing operands to the operator
      */
-    public NodePropertyApply(GraphExplicit graph, Operator operator, NodeProperty... operands) {
+    public NodePropertyApply(GraphExplicit graph, String identifier, NodeProperty... operands) {
         assert graph != null;
-        assert operator != null;
+        assert identifier != null;
         assert operands != null;
         for (NodeProperty nodeProperty : operands) {
             assert nodeProperty != null;
             assert nodeProperty.getGraph() == graph;
         }
         this.graph = graph;
-        this.operator = operator;
+        this.operator = ContextValue.get().getOperator(identifier);
         this.operands = operands;
         this.callOperands = new Value[operands.length];
         Type[] types = new Type[operands.length];

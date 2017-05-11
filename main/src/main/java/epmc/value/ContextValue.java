@@ -20,11 +20,9 @@
 
 package epmc.value;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import epmc.util.Util;
@@ -41,8 +39,6 @@ public final class ContextValue {
     private final static String UNCHECKED = "unchecked";
     /** Maps each operator to a unique and consecutive number. */
     private final transient HashMap<String,Integer> operatorToNumber = new LinkedHashMap<>();
-    /** Maps each number to an operator. */
-    private final transient List<Operator> numberToOperator = new ArrayList<>();
     /** Map from operator identifier to according operator. */
     private final transient Map<String,Operator> identifierToOperator = new LinkedHashMap<>();
     /** Unmodifiable map from operator identifier to according operator. */
@@ -126,9 +122,7 @@ public final class ContextValue {
     }
     
     /**
-     * Get an operator by its identifier.
-     * The identifier of an operator is obtained by
-     * {@link Operator#getIdentifier()}. 
+     * Get an operator by its identifier. 
      * The identifier parameter must not be {@code null}. The identifier must
      * be one an identifier of one of the operators known to the value context.
      * 
@@ -141,20 +135,6 @@ public final class ContextValue {
         Operator result = identifierToOperator.get(identifier);
         return result;
     }
-
-    /**
-     * Get operator with the given number.
-     * The operator number must be nonnegative and strictly smaller than the
-     * number of operators known to the value context.
-     * 
-     * @param number number the operator to obtain
-     * @return operator with the given number
-     */
-    public Operator getOperator(int number) {
-        assert number >= 0;
-        assert number < this.numberToOperator.size();
-        return this.numberToOperator.get(number);
-    }
     
     /**
      * Get a map from operator identifiers to operators.
@@ -166,56 +146,9 @@ public final class ContextValue {
     public Map<String, Operator> getOperators() {
         return identifierToOperatorExternal;
     }
-    
-    /**
-     * Get the number of a given operator.
-     * The operator parameter must not be {@code null}. Also, it must be known
-     * to this value context. The number returned will be nonnegative and
-     * strictly smaller than the number of operators known by this value
-     * context.
-     * 
-     * @param operator operator to get number of
-     * @return number of the operator requested
-     */
-    public int getOperatorNumber(Operator operator) {
-        assert operator != null;
-        return operatorToNumber.get(operator.getIdentifier());
-    }
-
-    /**
-     * Add or replace operator.
-     * If an operator with the same identifier
-     * (as by {@link Operator#getIdentifier()}) already exists, it will be
-     * replaced by the new operator. It will also be assigned the same number
-     * (as returned by {@link #getOperatorNumber(Operator)}). If an operator
-     * with the same identifier does not already exist, it will be added to the
-     * list of known operators. Its associated number will then become the
-     * number of previously known operators.
-     * The parameter of this method must not be {@code null}.
-     * 
-     * @param operator operator to add or replace existing operator with
-     */
-    public void addOrSetOperator(Operator operator) {
-        assert operator != null;
-        String name = operator.getIdentifier();
-        if (this.identifierToOperator.containsKey(name)) {
-            Operator oldOperator = this.identifierToOperator.get(name);
-            int number = this.operatorToNumber.get(oldOperator.getIdentifier());
-            this.operatorToNumber.put(operator.getIdentifier(), number);
-            this.numberToOperator.set(number, operator);
-            this.identifierToOperator.put(name, operator);
-        } else {
-            this.operatorToNumber.put(operator.getIdentifier(), operatorToNumber.size());
-            assert this.numberToOperator != null;
-            this.numberToOperator.add(operator);
-            this.identifierToOperator.put(name, operator);
-        }
-    }
-    
+        
     /**
      * Get operator number by operator identifier.
-     * The identifier of an operator is obtained by
-     * {@link Operator#getIdentifier()}.
      * The number returned will be nonnegative and strictly smaller than the
      * number of operators known by this value context.
      * The identifier parameter must not be {@code null}. The identifier must
@@ -227,37 +160,23 @@ public final class ContextValue {
     public int getOperatorNumber(String identifier) {
         assert identifier != null;
         assert identifierToOperator.containsKey(identifier) : identifier;
-        return getOperatorNumber(getOperator(identifier));
-    }
-    
-    
-    /**
-     * Add or replace operator.
-     * A new operator will be instantiated from the class paramter using
-     * {@link #newOperator(Class)}.
-     * Afterwards, the method
-     * {@link #addOrSetOperator(Operator)}
-     * will be called on this new operator object.
-     * 
-     * @param clazz class of operator to add or replace
-     * @see {@link #addOrSetOperator(Operator)}
-     */
-    public void addOrSetOperator(Class<? extends Operator> clazz) {
-        Operator operator = newOperator(clazz);
-        addOrSetOperator(operator);
+        return operatorToNumber.get(identifier);
     }
 
     /**
-     * Instantiate given operator class.
-     * The operator class parameter and the value context parameter must not be
-     * {@code null}.
+     * Add or replace operator.
      * 
-     * @param operatorClass operator class to instantiate
-     * @return instantiated operator with value context set
+     * @param clazz class of operator to add or replace
      */
-    private Operator newOperator(Class<? extends Operator> operatorClass) {
-        assert operatorClass != null;
-        Operator operator = Util.getInstance(operatorClass);
-        return operator;
+    public void addOrSetOperator(String name, Class<? extends Operator> clazz) {
+        Operator operator = Util.getInstance(clazz);
+        if (this.identifierToOperator.containsKey(name)) {
+            int number = this.operatorToNumber.get(name);
+            this.operatorToNumber.put(name, number);
+            this.identifierToOperator.put(name, operator);
+        } else {
+            this.operatorToNumber.put(name, operatorToNumber.size());
+            this.identifierToOperator.put(name, operator);
+        }
     }
 }

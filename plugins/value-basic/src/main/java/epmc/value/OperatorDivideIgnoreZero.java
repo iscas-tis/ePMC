@@ -29,11 +29,6 @@ public final class OperatorDivideIgnoreZero implements Operator {
     public final static String IDENTIFIER = "divide-ignore-zero";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	if (ValueAlgebra.asAlgebra(operands[1]).isZero()) {
     		result.set(operands[0]);

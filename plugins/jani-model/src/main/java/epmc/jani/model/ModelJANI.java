@@ -80,7 +80,6 @@ import epmc.jani.model.type.JANITypeBounded;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.jani.plugin.StandardJANIOperators;
-import epmc.jani.value.ContextValueJANI;
 import epmc.modelchecker.Engine;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
@@ -151,8 +150,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 ;
 	/** System specification of this model. */
 	private Component system;
-	/** JANI context value used for the model. */
-	private ContextValueJANI contextValueJANI;
 	/** Silent action used for this model. */
 	private final Action silentAction = prepareSilentAction();
 	/** Name of the model. */
@@ -178,7 +175,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
 	public ModelJANI() {
 		StandardJANIOperators.add(operators);
-		this.contextValueJANI = new ContextValueJANI();
 		Options options = Options.get();
 		janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
 		prepareStandardTypes();
@@ -660,10 +656,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	 */
 	public Component getSystem() {
 		return system;
-	}
-	
-	public ContextValueJANI getContextValueJANI() {
-		return contextValueJANI;
 	}
 	
 	@Override

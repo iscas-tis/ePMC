@@ -31,6 +31,7 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -84,7 +85,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String opName = expressionOperator.getOperator().getIdentifier();
+            String opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
@@ -150,7 +151,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-        Operator operator = expression.getOperator();
+        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -162,7 +163,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             opNr++;
         }
         result = operator.resultType(types).newValue();
-        switch (operator.getIdentifier()) {
+        switch (expression.getOperator()) {
         case OperatorAddInverse.IDENTIFIER:
             unaryIntegerToInteger = a -> -a;
             break;
