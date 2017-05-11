@@ -70,7 +70,7 @@ public final class LibraryDDJDD implements LibraryDD {
     private final TIntList variables = new TIntArrayList();
     
     @Override
-    public long apply(Operator operator, Type type, long... operands)
+    public long apply(String operator, Type type, long... operands)
             throws EPMCException {
         assert alive;
         assert operator != null;
@@ -80,7 +80,7 @@ public final class LibraryDDJDD implements LibraryDD {
         	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         int result;
-        switch (operator.getIdentifier()) {
+        switch (operator) {
         case OperatorId.IDENTIFIER:
         	result = (int) operands[0];
         	break;
@@ -381,11 +381,11 @@ public final class LibraryDDJDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation.getIdentifier()) {
+		switch (operation) {
 		case OperatorId.IDENTIFIER:
 		case OperatorNot.IDENTIFIER:
 		case OperatorAnd.IDENTIFIER:

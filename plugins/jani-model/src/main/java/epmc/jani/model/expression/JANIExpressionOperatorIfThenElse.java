@@ -136,7 +136,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
 			return null;
 		}
 		ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-		if (!expressionOperator.getOperator().getIdentifier().equals(ITE)) {
+		if (!expressionOperator.getOperator().equals(ITE)) {
 			return null;
 		}
 		ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);

@@ -30,11 +30,6 @@ public final class OperatorFloor implements Operator {
     public final static String IDENTIFIER = "floor";//"⌊⌋";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).floorInt());
     }

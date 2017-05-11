@@ -85,7 +85,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorNot.IDENTIFIER);
     }
     
@@ -94,7 +94,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorAnd.IDENTIFIER);
     }
     

@@ -64,8 +64,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -167,7 +165,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             ExpressionOperator expressionOperator = (ExpressionOperator) prop;
             List<? extends Expression> ops = expressionOperator.getOperands();
             Set<Set<Expr>> set = null;
-            switch(expressionOperator.getOperatorId()) {
+            switch(expressionOperator.getOperator()) {
             case OperatorNot.IDENTIFIER:case OperatorLt.IDENTIFIER: case OperatorGt.IDENTIFIER: case OperatorGe.IDENTIFIER: case OperatorLe.IDENTIFIER: 
             case OperatorEq.IDENTIFIER:case OperatorNe.IDENTIFIER: //atomic propositions
                 set = new HashSet<>(); 
@@ -530,7 +528,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
+            String op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

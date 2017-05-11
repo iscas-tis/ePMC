@@ -245,7 +245,7 @@ public final class UtilCoalition {
     public static CmpType getCompareType(ExpressionOperator expression) {
     	assert expression != null;
     	boolean invert = ExpressionQuantifier.isQuantifier(expression.getOperand2());
-    	switch (expression.getOperatorId()) {
+    	switch (expression.getOperator()) {
     	case OperatorEq.IDENTIFIER:
     		return CmpType.EQ;
     	case OperatorNe.IDENTIFIER:

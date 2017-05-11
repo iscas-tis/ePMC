@@ -30,11 +30,6 @@ public final class OperatorIff implements Operator {
     public final static String IDENTIFIER = "iff";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueBoolean.asBoolean(result).iff(operands[0], operands[1]);
     }

@@ -63,8 +63,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
@@ -377,11 +375,11 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         DirType dirType = ExpressionQuantifier.computeQuantifierDirType(propertyQuantifier);
         boolean min = dirType == DirType.MIN;
         StateMap compare = null;
-        Operator op = null;
+        String op = null;
         boolean qualitative = false;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
+            op = propertyQuantifier.getCompareType().asExOpType();
             if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
                     || ValueAlgebra.asAlgebra(compare.getSomeValue()).isOne())) {
                 qualitative = true;
@@ -471,7 +469,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorNot.IDENTIFIER);
     }
     

@@ -29,11 +29,6 @@ public final class OperatorPow implements Operator {
     public final static String IDENTIFIER = "pow";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
         ValueReal.asReal(result).pow(operands[0], operands[1]);
     }

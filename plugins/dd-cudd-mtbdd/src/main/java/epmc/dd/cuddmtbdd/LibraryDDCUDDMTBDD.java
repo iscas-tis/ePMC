@@ -182,9 +182,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             String name = OPERATOR_TO_MTBDD.get(cuddName);
             Operator operator = operatorsMap.get(name);
             assert operator != null : name;
-            int number = operatorToNumber.get(operator);
-            assert operators[number].getIdentifier().equals(name) : 
-                operators[number].getIdentifier() + " " + name;
+            int number = operatorToNumber.get(name);
+//            assert operators[number].getIdentifier().equals(name) : 
+//                operators[number].getIdentifier() + " " + name;
             return number;
         }
     }
@@ -411,8 +411,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private Type resultType;
     private Operator[] operators;
     private Map<String,Operator> operatorsMap;
-    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
-    private Operator opId;
+    private TObjectIntCustomHashMap<String> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
+    private String opId;
     private int opIdNr;
     
     @Override
@@ -420,14 +420,17 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
+        Collection<String> identifiers = ContextValue.get().getOperators().keySet();
         Collection<Operator> operators = ContextValue.get().getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
         this.operatorsMap = ContextValue.get().getOperators();
-        for (int i = 0; i < this.operators.length; i++) {
-            this.operatorToNumber.put(this.operators[i], i);
+        int index = 0;
+        for (String operator : identifiers) {
+            this.operatorToNumber.put(operator, index);
+        	index++;
         }
-        opId = ContextValue.get().getOperator(OperatorId.IDENTIFIER);
+        opId = OperatorId.IDENTIFIER;
         opIdNr = operatorToNumber.get(opId);
         
         this.numberToValue = new TLongObjectHashMap<>();
@@ -470,7 +473,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-    public long apply(Operator operation, Type type, long... operands)
+    public long apply(String operation, Type type, long... operands)
             throws EPMCException {
         assert operation != null;
         assert type != null;
@@ -890,7 +893,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
+	public boolean canApply(String operation, Type resultType, long... operands) {
 		if (operands.length > 3) {
 			return false;
 		}

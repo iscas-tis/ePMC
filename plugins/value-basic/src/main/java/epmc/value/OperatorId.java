@@ -29,11 +29,6 @@ public final class OperatorId implements Operator {
     public final static String IDENTIFIER = "id";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
         result.set(operands[0]);
     }

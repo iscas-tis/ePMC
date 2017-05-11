@@ -35,8 +35,8 @@ public final class BeforeModelCreationJANIDerivedOperators implements BeforeMode
 
 	@Override
 	public void process() throws EPMCException {
-		ContextValue.get().addOrSetOperator(OperatorSgn.class);
-		ContextValue.get().addOrSetOperator(OperatorAbs.class);
-		ContextValue.get().addOrSetOperator(OperatorTrunc.class);
+		ContextValue.get().addOrSetOperator(OperatorSgn.IDENTIFIER, OperatorSgn.class);
+		ContextValue.get().addOrSetOperator(OperatorAbs.IDENTIFIER, OperatorAbs.class);
+		ContextValue.get().addOrSetOperator(OperatorTrunc.IDENTIFIER, OperatorTrunc.class);
 	}
 }

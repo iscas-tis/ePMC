@@ -37,7 +37,6 @@ import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentSynchronisationVectors;
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.SynchronisationVectorSync;
-import epmc.options.Options;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;

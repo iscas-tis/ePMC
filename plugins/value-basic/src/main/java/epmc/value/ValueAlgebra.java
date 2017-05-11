@@ -109,7 +109,7 @@ public interface ValueAlgebra extends Value {
     
     // TODO move?
     default boolean isLt(Value other) throws EPMCException {
-        UtilValue.failUnsupported(this);
+    	assert false;
         return false;
     }
     

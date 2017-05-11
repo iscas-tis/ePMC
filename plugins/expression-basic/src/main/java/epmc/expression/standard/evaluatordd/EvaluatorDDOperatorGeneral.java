@@ -29,7 +29,6 @@ import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.value.Operator;
 
 public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-general";
@@ -75,7 +74,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
 
     @Override
     public void build() throws EPMCException {
-        Operator operator = expressionOperator.getOperator();
+        String operator = expressionOperator.getOperator();
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
             Expression operand = expressionOperator.getOperands().get(i);

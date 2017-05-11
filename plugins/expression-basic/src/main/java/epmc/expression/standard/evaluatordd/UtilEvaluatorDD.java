@@ -169,7 +169,7 @@ public final class UtilEvaluatorDD {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        if (!expressionOperator.getOperatorId().equals(operator)) {
+        if (!expressionOperator.getOperator().equals(operator)) {
             return false;
         }
         Options options = Options.get();

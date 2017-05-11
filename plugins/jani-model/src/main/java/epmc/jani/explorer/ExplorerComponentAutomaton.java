@@ -48,9 +48,7 @@ import epmc.jani.model.Variable;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.type.JANIType;
-import epmc.jani.value.ContextValueJANI;
 import epmc.jani.value.TypeLocation;
-import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -197,7 +195,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
 		weightZero = TypeWeightTransition.get().getZero();
 		automaton = componentAutomaton.getAutomaton();
-		typeLocation = getContextValueJANI().getTypeLocation(automaton.getLocations());
+		typeLocation = TypeLocation.get(automaton.getLocations());
 		buildTypeEdge();
 		probabilitySum = TypeWeightTransition.get().newValue();
 		weightValue = TypeWeightTransition.get().newValue();
@@ -382,15 +380,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		label = new PropertyEdgeAction(explorer);
 	}
 
- 	/**
-	 * Obtain JANI value context (from model).
-	 * 
-	 * @return JANI value context
-	 */
-	private ContextValueJANI getContextValueJANI() {
-		return explorer.getModel().getContextValueJANI();
-	}
-	
 	@Override
 	public Value getGraphProperty(Object property) {
 		assert property != null;

@@ -175,11 +175,12 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public StateMap apply(Operator operator, StateMap operand)
+    public StateMap apply(String identifier, StateMap operand)
             throws EPMCException {
         assert !closed();
-        assert operator != null;
+        assert identifier != null;
         assert operand != null;
+        Operator operator = ContextValue.get().getOperator(identifier);
         StateMapExplicit operandExplicit = (StateMapExplicit) operand;
         StateMap result = null;
         Type resultType = operator.resultType(getType(), operand.getType());
@@ -248,9 +249,9 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public Value applyOver(Operator operator, StateSet over)
+    public Value applyOver(String identifier, StateSet over)
             throws EPMCException {
-        assert operator != null;
+        assert identifier != null;
         assert over != null;
         assert over instanceof StateSetExplicit;
         StateSetExplicit overExplicit = (StateSetExplicit) over;
@@ -267,6 +268,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                     values[1] = valuesExplicit.getType().getEntryType().newValue();
                 } else {
                     valuesExplicit.get(values[1], stateNr);
+                    Operator operator = ContextValue.get().getOperator(identifier);
                     operator.apply(result, values);
                 }
             }
@@ -276,19 +278,19 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     
     @Override
     public void getRange(Value range, StateSet of) throws EPMCException {
-        Value min = applyOver(ContextValue.get().getOperator(OperatorMin.IDENTIFIER), of);
-        Value max = applyOver(ContextValue.get().getOperator(OperatorMax.IDENTIFIER), of);
+        Value min = applyOver(OperatorMin.IDENTIFIER, of);
+        Value max = applyOver(OperatorMax.IDENTIFIER, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
     
     private boolean isAllTrue(StateSet of) throws EPMCException {
-        Value result = applyOver(ContextValue.get().getOperator(OperatorAnd.IDENTIFIER), of);
+        Value result = applyOver(OperatorAnd.IDENTIFIER, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
     
     @Override
     public void getSomeValue(Value to, StateSet of) throws EPMCException {
-        Value result = applyOver(ContextValue.get().getOperator(OperatorId.IDENTIFIER), of);
+        Value result = applyOver(OperatorId.IDENTIFIER, of);
         to.set(result);
     }
     

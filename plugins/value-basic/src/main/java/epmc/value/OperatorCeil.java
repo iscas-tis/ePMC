@@ -30,11 +30,6 @@ public final class OperatorCeil implements Operator {
     public final static String IDENTIFIER = "ceil"; //"⌈⌉";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
         ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).ceilInt());
     }

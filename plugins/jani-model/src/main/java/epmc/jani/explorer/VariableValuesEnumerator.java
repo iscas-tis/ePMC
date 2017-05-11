@@ -471,7 +471,7 @@ public final class VariableValuesEnumerator {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return expressionOperator.getOperatorId()
+        return expressionOperator.getOperator()
                 .equals(OperatorAnd.IDENTIFIER);
     }
     
@@ -505,6 +505,6 @@ public final class VariableValuesEnumerator {
     		return false;
     	}
     	ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-    	return expressionOperator.getOperatorId().equals(OperatorEq.IDENTIFIER);
+    	return expressionOperator.getOperator().equals(OperatorEq.IDENTIFIER);
     }
 }

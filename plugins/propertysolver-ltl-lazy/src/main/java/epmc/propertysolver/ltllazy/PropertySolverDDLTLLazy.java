@@ -77,8 +77,6 @@ import epmc.propertysolver.ltllazy.automata.AutomatonDDBreakpoint;
 import epmc.propertysolver.ltllazy.automata.AutomatonDDSubset;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -959,7 +957,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            Operator op = ContextValue.get().getOperator(propertyQuantifier.getCompareType().asExOpType());
+            String op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

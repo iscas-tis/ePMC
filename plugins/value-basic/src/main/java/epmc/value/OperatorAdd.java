@@ -29,12 +29,9 @@ public final class OperatorAdd implements Operator {
     public final static String IDENTIFIER = "+";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
+    	assert operands != null;
+    	assert operands.length >= 2;
         ValueAlgebra.asAlgebra(result).add(operands[0], operands[1]);
     }
 

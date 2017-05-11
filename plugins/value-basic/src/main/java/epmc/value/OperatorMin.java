@@ -29,11 +29,6 @@ public final class OperatorMin implements Operator {
     public final static String IDENTIFIER = "min";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueAlgebra.asAlgebra(result).min(operands[0], operands[1]);
     }

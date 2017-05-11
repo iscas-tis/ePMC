@@ -30,6 +30,7 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeUnknown;
@@ -125,7 +126,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         assert builder.getVariables() != null;
         variables = builder.getVariables();
         expression = (ExpressionOperator) builder.getExpression();
-        operator = expression.getOperator();
+        operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicit[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -139,7 +140,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
         assert operator != null;
         assert operator.resultType(types) != null : operator;
-        assert !TypeUnknown.isUnknown(operator.resultType(types)) : operator.getIdentifier()
+        assert !TypeUnknown.isUnknown(operator.resultType(types)) : expression.getOperator()
         + " " + Arrays.toString(types);
         result = operator.resultType(types).newValue();
     }

@@ -31,11 +31,6 @@ public final class OperatorIte implements Operator {
     public final static String IDENTIFIER = "ite"; //"?:";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
     		result.set(operands[1]);

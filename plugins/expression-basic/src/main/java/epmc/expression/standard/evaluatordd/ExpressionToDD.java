@@ -43,8 +43,6 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
-import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.TypeBoolean;
@@ -429,13 +427,13 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(getValue(expression));
         } else if (expression instanceof ExpressionOperator) {
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            Operator operator = expressionOperator.getOperator();
+            String operator = expressionOperator.getOperator();
             List<Translated> inner = new ArrayList<>();
             
             for (Expression op : expressionOperator.getOperands()) {
                 inner.add(transRec(op));
             }
-            switch (operator.getIdentifier()) {
+            switch (operator) {
             case OperatorAdd.IDENTIFIER:
                 result = opAdd(inner.get(0), inner.get(1));
                 break;
@@ -677,7 +675,7 @@ public final class ExpressionToDD implements Closeable {
         return result;
     }
     
-    private Translated generalApply(Operator operator, List<Translated> operands)
+    private Translated generalApply(String operator, List<Translated> operands)
             throws EPMCException {
         assert operator != null;
         assert operands != null;
@@ -688,7 +686,7 @@ public final class ExpressionToDD implements Closeable {
         return generalApply(operator, array);
     }
     
-    private Translated generalApply(Operator operator, Translated... operands)
+    private Translated generalApply(String operator, Translated... operands)
             throws EPMCException {
         assert operator != null;
         assert operands != null;
@@ -706,18 +704,6 @@ public final class ExpressionToDD implements Closeable {
         return result;
     }
 
-    private Translated generalApply(String operatorString, Translated... operands)
-            throws EPMCException {
-        assert operatorString != null;
-        assert operands != null;
-        for (Translated operand : operands) {
-            assert operand != null;
-        }
-        Operator operator = ContextValue.get().getOperator(operatorString);
-        assert operator != null;
-        return generalApply(operator, operands);
-    }
-    
     @Override
     public void close() {
         try {

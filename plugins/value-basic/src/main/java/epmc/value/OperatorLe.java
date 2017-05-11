@@ -31,11 +31,6 @@ public final class OperatorLe implements Operator {
     public final static String IDENTIFIER = "≤";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueBoolean.asBoolean(result).set(ValueAlgebra.asAlgebra(operands[0]).isLe(operands[1]));
     }

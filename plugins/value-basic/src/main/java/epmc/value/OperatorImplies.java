@@ -30,11 +30,6 @@ public final class OperatorImplies implements Operator {
     public final static String IDENTIFIER = "implies";
 
     @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) throws EPMCException {
     	ValueBoolean.asBoolean(result).implies(operands[0], operands[1]);
     }

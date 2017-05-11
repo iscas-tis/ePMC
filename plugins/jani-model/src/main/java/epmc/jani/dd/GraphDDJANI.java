@@ -49,7 +49,6 @@ import epmc.jani.model.ModelJANI;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.Variable;
-import epmc.jani.value.ContextValueJANI;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeEnum;
@@ -607,9 +606,5 @@ public final class GraphDDJANI implements GraphDD {
 	 */
 	Map<Variable, Expression> getGlobalVariableToIdentifier() {
 		return globalVariableToIdentifierExternal;
-	}
-	
-	ContextValueJANI getContextValueJANI() {
-		return model.getContextValueJANI();
 	}
 }

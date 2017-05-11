@@ -30,6 +30,7 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -83,7 +84,7 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            if (!expressionOperator.getOperator().getIdentifier().equals(OperatorAnd.IDENTIFIER)) {
+            if (!expressionOperator.getOperator().equals(OperatorAnd.IDENTIFIER)) {
                 return false;
             }
             for (Expression variable : variables) {
@@ -125,7 +126,7 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
         assert builder.getVariables() != null;
         variables = builder.getVariables();
         expression = (ExpressionOperator) builder.getExpression();
-        Operator operator = expression.getOperator();
+        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operandLeft = (EvaluatorExplicitBoolean) UtilEvaluatorExplicit.newEvaluator(null, expression.getOperand1(), variables, builder.getCache(), builder.getExpressionType());
         operandRight = (EvaluatorExplicitBoolean) UtilEvaluatorExplicit.newEvaluator(null, expression.getOperand2(), variables, builder.getCache(), builder.getExpressionType());
         Type[] types = new Type[expression.getOperands().size()];

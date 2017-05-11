@@ -99,7 +99,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(prefix);
 		}
 		
-		String operatorIdentifier = expressionOperator.getOperatorId();
+		String operatorIdentifier = expressionOperator.getOperator();
 		
         switch (operatorIdentifier) {
         case OperatorNot.IDENTIFIER:
@@ -241,13 +241,13 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                }
 	                if (child instanceof ExpressionOperator) {
 	                    ExpressionOperator childOp = (ExpressionOperator) child;
-	                    if (operatorIdentifier.equals(childOp.getOperatorId())) {
+	                    if (operatorIdentifier.equals(childOp.getOperator())) {
 	                        needBraces = false;
 	                    }
-	                    if ((OperatorAdd.IDENTIFIER.equals(expressionOperator.getOperatorId())
-	                    		|| OperatorSubtract.IDENTIFIER.equals(expressionOperator.getOperatorId()))
-	                    		&& (OperatorMultiply.IDENTIFIER.equals(childOp.getOperatorId())
-	                            		|| OperatorDivideIgnoreZero.IDENTIFIER.equals(childOp.getOperatorId()))) {
+	                    if ((OperatorAdd.IDENTIFIER.equals(expressionOperator.getOperator())
+	                    		|| OperatorSubtract.IDENTIFIER.equals(expressionOperator.getOperator()))
+	                    		&& (OperatorMultiply.IDENTIFIER.equals(childOp.getOperator())
+	                            		|| OperatorDivideIgnoreZero.IDENTIFIER.equals(childOp.getOperator()))) {
 	                        needBraces = false;
 	                    }
 	                }

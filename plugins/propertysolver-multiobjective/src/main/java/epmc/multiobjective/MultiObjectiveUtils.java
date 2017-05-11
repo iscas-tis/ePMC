@@ -42,7 +42,6 @@ import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiv
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
 import epmc.options.Options;
 import epmc.propertysolver.PropertySolverExplicitReward;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
 import epmc.value.TypeArray;
@@ -112,8 +111,8 @@ final class MultiObjectiveUtils {
                 NodeProperty nodeProp = mcGraph.getNodeProperty(((ExpressionReward) quantified).getReward());
                 EdgeProperty edgeProp = mcGraph.getEdgeProperty(((ExpressionReward) quantified).getReward());
                 if (invert) {
-                    nodeProp = new NodePropertyApply(mcGraph, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), nodeProp);
-                    edgeProp = new EdgePropertyApply(mcGraph, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), edgeProp);
+                    nodeProp = new NodePropertyApply(mcGraph, OperatorAddInverse.IDENTIFIER, nodeProp);
+                    edgeProp = new EdgePropertyApply(mcGraph, OperatorAddInverse.IDENTIFIER, edgeProp);
                 }
                 numMinValue = newValueWeight();
 //                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);

@@ -30,7 +30,6 @@ import epmc.graph.CommonProperties;
 import epmc.jani.model.Action;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentRename;
-import epmc.options.Options;
 import epmc.value.Value;
 import epmc.value.ValueObject;
 

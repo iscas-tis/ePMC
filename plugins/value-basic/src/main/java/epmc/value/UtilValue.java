@@ -21,8 +21,6 @@
 package epmc.value;
 
 import epmc.error.EPMCException;
-import epmc.error.UtilError;
-import epmc.util.Util;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
@@ -140,32 +138,6 @@ public final class UtilValue {
         return value;
     }
     
-    public static void failUnsupported(Value value) throws EPMCException {
-        assert value != null;
-        String operation = Thread.currentThread().getStackTrace()[2].getMethodName();
-        Class<?> clazz = null;
-        String identifier = null;
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (int i = 2; i < stackTrace.length; i++) {
-            try {
-                clazz = Class.forName(stackTrace[i].getClassName(), true,
-                        Thread.currentThread().getContextClassLoader());
-                if (Operator.class.isAssignableFrom(clazz)) {
-                    Operator operator = (Operator) Util.getInstance(clazz);
-                    identifier = operator.getIdentifier();
-                    break;
-                }
-
-            } catch (ClassNotFoundException e) {
-            }
-        }
-        if (identifier != null) {
-            operation = identifier;
-        }
-        UtilError.fail(ProblemsValueBasic.VALUES_UNSUPPORTED_OPERATION,
-                operation, value.getType());
-    }
-
     @SuppressWarnings("unchecked")
 	public static <T extends Type> T upper(T a, T b) {
     	assert a != null;

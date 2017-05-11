@@ -37,11 +37,6 @@ public final class OperatorAcos implements Operator {
 	public final static String IDENTIFIER = "acos";
 
 	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
-
-	@Override
 	public void apply(Value result, Value... operands) throws EPMCException {
 		assert result != null;
 		assert operands != null;

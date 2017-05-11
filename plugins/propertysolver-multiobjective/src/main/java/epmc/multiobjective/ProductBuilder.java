@@ -63,7 +63,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
@@ -219,8 +218,8 @@ final class ProductBuilder {
                 transRewards[propNr] = new EdgePropertyConstant(prodWrapper, zero);
             }
             if (invertedRewards.get(propNr)) {
-                stateRewards[propNr] = new NodePropertyApply(prodWrapper, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), stateRewards[propNr]);
-                transRewards[propNr] = new EdgePropertyApply(prodWrapper, ContextValue.get().getOperator(OperatorAddInverse.IDENTIFIER), transRewards[propNr]);
+                stateRewards[propNr] = new NodePropertyApply(prodWrapper, OperatorAddInverse.IDENTIFIER, stateRewards[propNr]);
+                transRewards[propNr] = new EdgePropertyApply(prodWrapper, OperatorAddInverse.IDENTIFIER, transRewards[propNr]);
             }
             propNr++;
         }

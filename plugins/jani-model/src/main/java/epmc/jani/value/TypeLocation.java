@@ -44,6 +44,12 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
+	public static TypeLocation get(Locations locations) {
+		assert locations != null;
+		TypeLocation type = new TypeLocation(locations);
+		return ContextValue.get().makeUnique(type);
+	}
+	
 	/** String used for the {@link #toString()} method. */
 	private final static String LOCATION = "location";
 
