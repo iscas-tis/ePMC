@@ -165,7 +165,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 		return null;
 	}
 	
-	private PropertyNodeSMGPlayer getPRISMGamesPlayer(SMGPlayer player) {
+	private PropertyNodeSMGPlayer getPRISMGamesPlayer(SMGPlayer player) throws EPMCException {
         assert player != null;
         Expression expression = player.getExpression();
         assert expression != null;

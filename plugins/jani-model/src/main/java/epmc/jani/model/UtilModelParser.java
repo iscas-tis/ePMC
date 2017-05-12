@@ -31,7 +31,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
-import epmc.value.ContextValue;
 import epmc.value.OperatorGe;
 import epmc.value.OperatorLe;
 import epmc.value.TypeBoolean;
@@ -212,6 +211,7 @@ public final class UtilModelParser {
 		}
 	}
 	
+	// TODO is this the right place for this function?
 	public static Expression restrictToVariableRange(Iterable<Variable> variables) throws EPMCException {
 		assert variables != null;
 		Expression result = null;

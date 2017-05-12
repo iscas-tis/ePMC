@@ -136,9 +136,13 @@ public final class ExpressionQuantifier implements Expression {
         assert builder.getDirType() != null;
         assert builder.getCmpType() != null;
         assert builder.getQuantified() != null;
-        assert builder.getCmpType() != CmpType.IS
-                || isTrue(builder.getCompare());
-        assert isTrue(builder.getCondition());
+        try {
+			assert builder.getCmpType() != CmpType.IS
+			        || isTrue(builder.getCompare());
+	        assert isTrue(builder.getCondition());
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         this.positional = builder.getPositional();
         this.dirType = builder.getDirType();
         this.cmpType = builder.getCmpType();
@@ -234,9 +238,13 @@ public final class ExpressionQuantifier implements Expression {
             builder.append("P");
         }
         
-        if (rewardStructure != null && !isTrue(rewardStructure)) {
-            builder.append("{" + rewardStructure + "}");
-        }
+        try {
+			if (rewardStructure != null && !isTrue(rewardStructure)) {
+			    builder.append("{" + rewardStructure + "}");
+			}
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         builder.append(dirType);
         builder.append(cmpType);
         if (cmpType != CmpType.IS) {
@@ -244,10 +252,14 @@ public final class ExpressionQuantifier implements Expression {
         }
         builder.append("[");
         builder.append(getQuantified());
-        if (!isTrue(getCondition())) {
-            builder.append(" given ");
-            builder.append(getCondition());
-        }
+        try {
+			if (!isTrue(getCondition())) {
+			    builder.append(" given ");
+			    builder.append(getCondition());
+			}
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         builder.append("]");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -288,7 +300,7 @@ public final class ExpressionQuantifier implements Expression {
         return hash;
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -297,7 +309,7 @@ public final class ExpressionQuantifier implements Expression {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

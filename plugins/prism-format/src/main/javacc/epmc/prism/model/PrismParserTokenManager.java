@@ -31,6 +31,7 @@ import epmc.jani.model.type.JANITypeReal;
 import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBounded;
 import epmc.time.JANITypeClock;
+import epmc.prism.expression.UtilPrismExpressionParser;
 import java.io.StringReader;
 import java.util.List;
 import java.util.ArrayList;

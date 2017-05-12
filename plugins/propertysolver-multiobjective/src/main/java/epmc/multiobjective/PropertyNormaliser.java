@@ -226,7 +226,7 @@ final class PropertyNormaliser {
         return expressionQuantifier.getCompareType() == CmpType.IS;
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

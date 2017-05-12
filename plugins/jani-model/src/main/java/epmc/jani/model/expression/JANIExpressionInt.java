@@ -93,7 +93,7 @@ public final class JANIExpressionInt implements JANIExpression {
 	}
 
 	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
 		assert expression != null;
 		assert model != null;
 		initialized = false;
@@ -113,9 +113,8 @@ public final class JANIExpressionInt implements JANIExpression {
 	public Expression getExpression() {
 		assert initialized;
 		assert model != null;
-		TypeInteger typeInteger = TypeInteger.get();
 		return new ExpressionLiteral.Builder()
-				.setValue(UtilValue.newValue(typeInteger, number))
+				.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), number))
 				.build();
 	}
 

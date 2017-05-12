@@ -164,7 +164,7 @@ final class InputWriter {
 		version = Options.get().get(OptionsSMTLib.SMTLIB_VERSION);
 	}
 
-	void write() {
+	void write() throws EPMCException {
 		try (PrintStream out = new PrintStream(outStream);) {
 			setOption(out, PRINT_SUCCESS, FALSE);
 			setOption(out, PRODUCE_MODELS, TRUE);
@@ -179,7 +179,7 @@ final class InputWriter {
 		}		
 	}
 
-	private void writeVariableDeclarations(PrintStream out) {
+	private void writeVariableDeclarations(PrintStream out) throws EPMCException  {
 		for (SMTLibVariable variable : solver.getVariables()) {
 			String typeString = typeToString(variable.getType());
 			String name = variable.getName();
@@ -216,13 +216,13 @@ final class InputWriter {
 		}
 	}
 	
-	private void writeConstraints(PrintStream out) {
+	private void writeConstraints(PrintStream out) throws EPMCException {
 		for (Expression expression : solver.getConstraints()) {
 			command(out, ASSERT, expression);
 		}
 	}
 	
-	private SExpression translateExpression(Expression expression) {
+	private SExpression translateExpression(Expression expression) throws EPMCException {
 		assert expression != null;
 		if (expression instanceof ExpressionIdentifier) {
 			ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
@@ -237,7 +237,8 @@ final class InputWriter {
 		}
 	}
 
-	private SExpression translateExpressionOperator(ExpressionOperator expression) {
+	private SExpression translateExpressionOperator(ExpressionOperator expression)
+			throws EPMCException {
 		SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperator());
 		assert operator != null : expression.getOperator();
 		SExpression[] result = new SExpression[expression.getChildren().size() + 1];
@@ -260,7 +261,8 @@ final class InputWriter {
 		out.println(RANGLE);
 	}
 	
-	private void command(PrintStream out, String command, Object... parameters) {
+	private void command(PrintStream out, String command, Object... parameters)
+			throws EPMCException {
 		assert command != null;
 		assert parameters != null;
 		out.print(LANGLE);
@@ -277,7 +279,8 @@ final class InputWriter {
 		out.println(RANGLE);
 	}
 	
-	private void writeObject(PrintStream out, Object object) {
+	private void writeObject(PrintStream out, Object object)
+			throws EPMCException {
 		if (object instanceof Object[]) {
 			out.print(LANGLE);
 			Object[] array = (Object[]) object;
@@ -325,7 +328,7 @@ final class InputWriter {
 		}
 	}
 	
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

@@ -65,7 +65,7 @@ public class LTLHelper {
         System.out.println(" }");
     }
     // must have P[max,min][>= k,=?,<=] [LTL-prop form]
-    public static boolean canHandle(Expression property) {
+    public static boolean canHandle(Expression property) throws EPMCException {
         // TODO Auto-generated method stub
         assert(!(property instanceof ExpressionQuantifier));  //if quantifiers are stripped out
         return isFairLTL(property,false,false);
@@ -77,7 +77,7 @@ public class LTLHelper {
      * return true means it is in fainess-LTL
      */
     private static boolean isFairLTL(Expression prop, boolean isStable,
-            boolean isAbsolute) {
+            boolean isAbsolute) throws EPMCException {
         // TODO Auto-generated method stub
         if (prop instanceof ExpressionIdentifier || prop instanceof ExpressionLiteral) {
             return (isStable && isAbsolute);       //if it is s op value,like s = 2
@@ -109,7 +109,7 @@ public class LTLHelper {
         return false;
     }
     
-    private static boolean isFalse(Expression expression) {
+    private static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -118,7 +118,7 @@ public class LTLHelper {
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

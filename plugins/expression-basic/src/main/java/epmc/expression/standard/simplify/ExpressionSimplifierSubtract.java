@@ -64,7 +64,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
                 .equals(OperatorSubtract.IDENTIFIER);
     }
 
-    private boolean isZero(Expression expression) {
+    private boolean isZero(Expression expression) throws EPMCException {
         assert expression != null;
         return expression instanceof ExpressionLiteral
                 && ValueAlgebra.asAlgebra(((ExpressionLiteral) expression).getValue()).isZero();

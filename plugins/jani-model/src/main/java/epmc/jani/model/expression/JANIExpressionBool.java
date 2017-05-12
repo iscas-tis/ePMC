@@ -96,7 +96,7 @@ public final class JANIExpressionBool implements JANIExpression {
 	}
 
 	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
 		assert expression != null;
 		resetFields();
 		if (!(expression instanceof ExpressionLiteral)) {
@@ -113,9 +113,8 @@ public final class JANIExpressionBool implements JANIExpression {
 	
 	@Override
 	public Expression getExpression() {
-		TypeBoolean typeBoolean = TypeBoolean.get();
 		return new ExpressionLiteral.Builder()
-				.setValue(value ? typeBoolean.getTrue() : typeBoolean.getFalse())
+				.setValueProvider(() -> value ? TypeBoolean.get().getTrue() : TypeBoolean.get().getFalse())
 				.build();
 	}
 

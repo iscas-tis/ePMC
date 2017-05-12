@@ -320,7 +320,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 
 	private Map<Expression, Expression> computeConstants() throws EPMCException {
-		Map<Expression,Expression> result = new LinkedHashMap<>();	
+		Map<Expression,Expression> result = new LinkedHashMap<>();
 		Map<Expression,Expression> externalConstants = computeExternalConstants();
 		if (modelConstants != null) {
 			for (Constant constant : modelConstants) {
@@ -368,7 +368,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
 	private Expression parseConstant(String valueString) throws EPMCException {
 		assert valueString != null;
-		Value value = null;
+		ExpressionLiteral.ValueProvider valueProvider = () -> {
+			Value value = null;
 		try {
 			value = UtilValue.newValue(TypeBoolean.get(), valueString);
 		} catch (EPMCException e) {
@@ -386,14 +387,13 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 			}
 		}
 		if (value == null) {
-			try {
-				value = UtilValue.newValue(TypeWeight.get(), valueString);
-			} catch (EPMCException e) {
-			}
+			value = UtilValue.newValue(TypeWeight.get(), valueString);
 		}
 		assert value != null; // TODO
+		return value;
+		};
 		return new ExpressionLiteral.Builder()
-				.setValue(value)
+				.setValueProvider(valueProvider)
 				.build();
 	}
 

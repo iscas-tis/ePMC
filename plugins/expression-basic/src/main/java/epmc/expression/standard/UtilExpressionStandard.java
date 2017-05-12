@@ -63,7 +63,7 @@ public final class UtilExpressionStandard {
         TypeInteger typeInteger = TypeInteger.get();
         
         Expression op2Expr = new ExpressionLiteral.Builder()
-        		.setValue(UtilValue.newValue(typeInteger, op2))
+        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
         		.build();
         return newOperator(OperatorAdd.IDENTIFIER, op1, op2Expr);
     }
@@ -101,7 +101,7 @@ public final class UtilExpressionStandard {
         assert op2 != null;
         TypeInteger typeInteger = TypeInteger.get();
         Expression op1Expr = new ExpressionLiteral.Builder()
-                .setValue(UtilValue.newValue(typeInteger, op1))
+                .setValueProvider(() -> UtilValue.newValue(typeInteger, op1))
                 .build();
         return newOperator(OperatorMin.IDENTIFIER, op1Expr, op2);
     }
@@ -130,7 +130,7 @@ public final class UtilExpressionStandard {
         assert op2 != null;
         TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
-        		.setValue(UtilValue.newValue(typeInteger, op3))
+        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
         		.build();
         return newOperator(OperatorIte.IDENTIFIER, op1, op2, op3Expr);
     }

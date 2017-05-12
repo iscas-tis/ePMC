@@ -901,12 +901,12 @@ public final class ModelPRISM implements ModelJANIConverter {
         	JANITypeBounded typeBounded = (JANITypeBounded) type;
             Expression lower = typeBounded.getLowerBound();
             value = new ExpressionLiteral.Builder()
-                    .setValue(evaluateValue(lower))
+                    .setValueProvider(() -> evaluateValue(lower))
                     .setPositional(lower.getPositional())
                     .build();
         } else if (type instanceof JANITypeInt) {
             value = new ExpressionLiteral.Builder()
-                    .setValue(TypeInteger.get().getZero())
+                    .setValueProvider(() -> TypeInteger.get().getZero())
                     .build();
         } else if (type instanceof JANITypeClock) {
         	value = new ExpressionLiteral.Builder()
@@ -1177,7 +1177,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return system;
     }
     
-    int getPRISMGamesPlayer(SMGPlayer player) {
+    int getPRISMGamesPlayer(SMGPlayer player) throws EPMCException {
         assert player != null;
         Expression expression = player.getExpression();
         assert expression != null;
@@ -1329,7 +1329,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return evaluator.evaluate();
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

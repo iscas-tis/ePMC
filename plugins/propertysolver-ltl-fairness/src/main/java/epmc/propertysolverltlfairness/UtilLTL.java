@@ -21,6 +21,7 @@
 package epmc.propertysolverltlfairness;
 
 
+import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -333,7 +334,7 @@ public final class UtilLTL {
 		return true;
 	}
 	
-	public static boolean isFalse(Expression expression) {
+	public static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -342,7 +343,7 @@ public final class UtilLTL {
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
     
-    public static boolean isTrue(Expression expression) {
+    public static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
