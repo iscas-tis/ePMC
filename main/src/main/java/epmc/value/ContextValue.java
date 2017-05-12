@@ -23,6 +23,8 @@ package epmc.value;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import epmc.util.Util;
@@ -37,12 +39,12 @@ import epmc.util.Util;
 public final class ContextValue {
     /** String to indicate unchecked method. */
     private final static String UNCHECKED = "unchecked";
-    /** Maps each operator to a unique and consecutive number. */
-    private final transient HashMap<String,Integer> operatorToNumber = new LinkedHashMap<>();
     /** Map from operator identifier to according operator. */
-    private final transient Map<String,Operator> identifierToOperator = new LinkedHashMap<>();
+    private final Map<String,Operator> identifierToOperator = new LinkedHashMap<>();
     /** Unmodifiable map from operator identifier to according operator. */
-    private final transient Map<String,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
+    private final Map<String,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
+    private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
+    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluators);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -121,6 +123,7 @@ public final class ContextValue {
         return result;
     }
     
+    // TODO get rid of this function
     /**
      * Get an operator by its identifier. 
      * The identifier parameter must not be {@code null}. The identifier must
@@ -136,6 +139,7 @@ public final class ContextValue {
         return result;
     }
     
+    // TODO get rid of this function
     /**
      * Get a map from operator identifiers to operators.
      * The map returned is write protected, any attempt to modify it will lead
@@ -146,37 +150,44 @@ public final class ContextValue {
     public Map<String, Operator> getOperators() {
         return identifierToOperatorExternal;
     }
-        
-    /**
-     * Get operator number by operator identifier.
-     * The number returned will be nonnegative and strictly smaller than the
-     * number of operators known by this value context.
-     * The identifier parameter must not be {@code null}. The identifier must
-     * be one an identifier of one of the operators known to the value context.
-     * 
-     * @param identifier identifier of operator to get number of
-     * @return number of operator with given identifier
-     */
-    public int getOperatorNumber(String identifier) {
-        assert identifier != null;
-        assert identifierToOperator.containsKey(identifier) : identifier;
-        return operatorToNumber.get(identifier);
-    }
 
+    // TODO get rid of this function
     /**
      * Add or replace operator.
      * 
      * @param clazz class of operator to add or replace
      */
     public void addOrSetOperator(String name, Class<? extends Operator> clazz) {
+    	assert clazz != null;
         Operator operator = Util.getInstance(clazz);
         if (this.identifierToOperator.containsKey(name)) {
-            int number = this.operatorToNumber.get(name);
-            this.operatorToNumber.put(name, number);
             this.identifierToOperator.put(name, operator);
         } else {
-            this.operatorToNumber.put(name, operatorToNumber.size());
             this.identifierToOperator.put(name, operator);
         }
+    }
+    
+    public void addOperatorEvaluator(Class<? extends OperatorEvaluator> clazz) {
+    	assert clazz != null;
+    	OperatorEvaluator evaluator = Util.getInstance(clazz);
+    	operatorEvaluators.add(evaluator);
+    }
+    
+    public List<OperatorEvaluator> getOperatorEvaluators() {
+		return operatorEvaluatorsExternal;
+	}
+    
+    public OperatorEvaluator findOperatorEvaluator(String operator, Type...types) {
+    	assert operator != null;
+    	assert types != null;
+    	for (Type type : types) {
+    		assert type != null;
+    	}
+    	for (OperatorEvaluator evaluator : operatorEvaluators) {
+    		if (evaluator.canApply(operator, types)) {
+    			return evaluator;
+    		}
+    	}
+    	return null;
     }
 }
