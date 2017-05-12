@@ -36,6 +36,7 @@ import epmc.value.OperatorFloor;
 import epmc.value.OperatorLog;
 import epmc.value.OperatorMod;
 import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -208,7 +209,7 @@ public final class PrismExpressionParser {
             .build();
     }
 
-    private static boolean isPosInf(Expression expression) {
+    private static boolean isPosInf(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -837,7 +838,7 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 	<RPAR>
 	{ return newOperator(OperatorPRISMPow.IDENTIFIER, e,
 		new ExpressionLiteral.Builder()
-			.setValue(UtilValue.newValue(TypeReal.get(), "0.5"))
+			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal("0.5"))
 			.build()); }
 }
 
@@ -968,7 +969,7 @@ private Expression parseReal() throws EPMCException :
 {
 	real = <NUM_REAL>
 	{ return new ExpressionLiteral.Builder()
-		.setValue(UtilValue.newValue(TypeReal.get(), real.toString()))
+		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal(real.toString()))
 		.build(); }
 }
 
@@ -979,7 +980,7 @@ private Expression parseInt() throws EPMCException :
 {
 	intg = <NUM_INT>
 	{ return new ExpressionLiteral.Builder()
-		.setValue(newValueInteger(intg.toString()))
+		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderInteger(intg.toString()))
 		.build(); }
 }
 

@@ -551,9 +551,8 @@ public final class ConvertTest {
 			
 			@Override
 			public Expression getExpression() {
-				TypeInteger typeInteger = TypeInteger.get();
 				return new ExpressionLiteral.Builder()
-						.setValue(UtilValue.newValue(typeInteger, i))
+						.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), i))
 						.build();
 			}
 			

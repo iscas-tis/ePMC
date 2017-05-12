@@ -58,7 +58,7 @@ import epmc.value.ValueBoolean;
 
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,
-            int[] numAPs) {
+            int[] numAPs) throws EPMCException {
         Options options = Options.get();
         return expr2string(expression, expr2str, numAPs, options.getBoolean(OptionsAutomaton.AUTOMATON_SUBSUME_APS));
     }
@@ -323,7 +323,7 @@ public final class UtilAutomaton {
     }
 
     private static String expr2string(Expression expression, Map<Expression, String> expr2str,
-            int[] numAPs, boolean subsumeAPs) {
+            int[] numAPs, boolean subsumeAPs) throws EPMCException {
         String result = expr2str.get(expression);
         if (result != null) {
             return result;
@@ -374,7 +374,7 @@ public final class UtilAutomaton {
         return result;
     }
 
-    private static boolean isFalse(Expression expression) {
+    private static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -383,7 +383,7 @@ public final class UtilAutomaton {
         return ValueBoolean.isFalse(getValue(expressionLiteral));
     }
 
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -392,7 +392,7 @@ public final class UtilAutomaton {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

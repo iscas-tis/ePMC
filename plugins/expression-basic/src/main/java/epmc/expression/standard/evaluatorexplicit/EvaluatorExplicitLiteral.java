@@ -87,7 +87,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
     private final Value value;
     private final boolean booleanValue;
 
-    private EvaluatorExplicitLiteral(Builder builder) {
+    private EvaluatorExplicitLiteral(Builder builder) throws EPMCException {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -128,7 +128,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         return value;
     }
 
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

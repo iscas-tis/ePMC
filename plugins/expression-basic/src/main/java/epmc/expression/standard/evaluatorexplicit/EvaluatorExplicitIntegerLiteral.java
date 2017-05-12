@@ -95,7 +95,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
     private final Value value;
     private final int valueInteger;
     
-    private EvaluatorExplicitIntegerLiteral(Builder builder) {
+    private EvaluatorExplicitIntegerLiteral(Builder builder) throws EPMCException {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -131,7 +131,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         return valueInteger;
     }
     
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

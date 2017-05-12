@@ -250,7 +250,7 @@ public class BuechiImpl implements Buechi {
         return trueState;
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -259,7 +259,7 @@ public class BuechiImpl implements Buechi {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
@@ -267,7 +267,7 @@ public class BuechiImpl implements Buechi {
     }
     
     public static String expr2spot(Expression expression,
-            Map<Expression, String> expr2str) {
+            Map<Expression, String> expr2str) throws EPMCException  {
         assert expression != null;
         assert expr2str != null;
         for (Entry<Expression, String> entry : expr2str.entrySet()) {
@@ -399,7 +399,7 @@ public class BuechiImpl implements Buechi {
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
 
-    private static boolean isFalse(Expression expression) {
+    private static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;

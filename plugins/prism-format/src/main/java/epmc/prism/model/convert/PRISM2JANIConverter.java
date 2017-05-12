@@ -709,7 +709,7 @@ public final class PRISM2JANIConverter {
 		case OperatorAddInverse.IDENTIFIER: {
 			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
-					.setValue(TypeReal.get().getZero())
+					.setValueProvider(() -> TypeReal.get().getZero())
 					.build();
 			return new ExpressionOperator.Builder()
 					.setOperator(OperatorSubtract.IDENTIFIER)
@@ -754,7 +754,7 @@ public final class PRISM2JANIConverter {
 		return tauAction;
 	}
 	
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

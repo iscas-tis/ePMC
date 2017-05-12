@@ -481,7 +481,7 @@ public final class VariableValuesEnumerator {
         return evaluator.evaluate();
     }
     
-    private static boolean isFalse(Expression expression) {
+    private static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -490,7 +490,7 @@ public final class VariableValuesEnumerator {
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

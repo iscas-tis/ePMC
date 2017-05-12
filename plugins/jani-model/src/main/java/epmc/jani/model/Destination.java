@@ -165,10 +165,9 @@ public final class Destination implements JANINode {
 	}
 	
 	public Expression getProbabilityExpressionOrOne() {
-		TypeInteger typeInteger = TypeInteger.get();
 		if (probability == null) {
 			return new ExpressionLiteral.Builder()
-			        .setValue(UtilValue.newValue(typeInteger, 1))
+			        .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 1))
 			        .build();
 		} else {
 			return probability.getExp();

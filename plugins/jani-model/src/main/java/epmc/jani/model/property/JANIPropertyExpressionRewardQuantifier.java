@@ -394,7 +394,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
     	return expressionReward.getRewardType().isReachability();
     }
     
-    private static boolean isPosInf(Expression expression) {
+    private static boolean isPosInf(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

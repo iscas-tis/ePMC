@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -115,14 +116,14 @@ public final class UtilCoalition {
         return computeQuantifierDirType(expression) == DirType.MIN;
     }
 
-    public static boolean isTrivialTrue(ExpressionCoalition property) {
+    public static boolean isTrivialTrue(ExpressionCoalition property) throws EPMCException {
     	assert property != null;
 	    ValueAlgebra compareTo = getValue(property);
 	    return isQuantGe(property) && compareTo.isZero()
 	    		|| isQuantLe(property) && compareTo.isOne();
     }
 
-    public static boolean isTrivialFalse(ExpressionCoalition property) {
+    public static boolean isTrivialFalse(ExpressionCoalition property) throws EPMCException {
     	assert property != null;
 	    ValueAlgebra compareTo = getValue(property);
 	    return isQuantLt(property) && compareTo.isZero()
@@ -134,7 +135,7 @@ public final class UtilCoalition {
 	    return !isQuantGt(property) && !isQuantLt(property);
     }
 
-    public static boolean isQualitative(ExpressionCoalition property) {
+    public static boolean isQualitative(ExpressionCoalition property) throws EPMCException {
     	assert property != null;
 	    ValueAlgebra compareTo = getValue(property);
 	    return compareTo != null && (compareTo.isZero() || compareTo.isOne());
@@ -163,7 +164,7 @@ public final class UtilCoalition {
     	return getCompareType(expression).isLt();
     }
 
-    private static ValueAlgebra getValue(Expression expression) {
+    private static ValueAlgebra getValue(Expression expression) throws EPMCException {
         assert expression != null;
         ExpressionLiteral expressionLiteral = getLiteral(expression);
         return ValueAlgebra.asAlgebra(expressionLiteral.getValue());

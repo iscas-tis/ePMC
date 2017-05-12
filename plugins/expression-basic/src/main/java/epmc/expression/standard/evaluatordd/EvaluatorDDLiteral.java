@@ -94,7 +94,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
         return vector;
     }
 
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

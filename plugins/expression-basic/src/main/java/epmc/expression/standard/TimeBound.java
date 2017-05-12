@@ -121,18 +121,22 @@ public final class TimeBound {
         if (leftOpen == null) {
             leftOpen = false;
         }
-        if (rightOpen == null && isPosInf(right)) {
-            rightOpen = true;
-        } else if (rightOpen == null) {
-            rightOpen = false;
-        }
+        try {
+			if (rightOpen == null && isPosInf(right)) {
+			    rightOpen = true;
+			} else if (rightOpen == null) {
+			    rightOpen = false;
+			}
+		} catch (EPMCException e) {
+			throw new RuntimeException(e);
+		}
         this.left = left;
         this.right = right;
         this.leftOpen = leftOpen;
         this.rightOpen = rightOpen;
     }
 
-    private boolean isPosInf(Expression expression) {
+    private boolean isPosInf(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -254,8 +258,9 @@ public final class TimeBound {
      * That is, the right time bound is &lt; &infin;.
      * 
      * @return check whether time bound is right bounded
+     * @throws EPMCException 
      */
-    public boolean isRightBounded() {
+    public boolean isRightBounded() throws EPMCException {
         if (!(getRight() instanceof ExpressionLiteral)) {
             return true;
         }
@@ -339,7 +344,7 @@ public final class TimeBound {
         return ValueAlgebra.asAlgebra(evaluator.evaluate());
     }
     
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

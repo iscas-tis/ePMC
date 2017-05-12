@@ -385,31 +385,40 @@ public final class ExpressionTemporal implements Expression {
             break;
         }
         case UNTIL: case RELEASE:
-            if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
-                builder.append("F");
-                builder.append("(");
-                builder.append(getOperand2());
-                builder.append(")");
-            } else if (type == TemporalType.RELEASE && getNumOps() == 2
-                    && isFalse(getOperand2())) {
-                builder.append("G");
-                builder.append("(");
-                builder.append(getOperand1());
-                builder.append(")");
-            } else {
-                opIter = getOperands().iterator();
-                while (opIter.hasNext()) {
-                    Expression child = opIter.next();
-                    builder.append("(");
-                    builder.append(child);
-                    builder.append(")");
-                    if (opIter.hasNext()) {
-                        builder.append(type);
-                        //TODO
+            try {
+				if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
+				    builder.append("F");
+				    builder.append("(");
+				    builder.append(getOperand2());
+				    builder.append(")");
+				} else
+					try {
+						if (type == TemporalType.RELEASE && getNumOps() == 2
+						        && isFalse(getOperand2())) {
+						    builder.append("G");
+						    builder.append("(");
+						    builder.append(getOperand1());
+						    builder.append(")");
+						} else {
+						    opIter = getOperands().iterator();
+						    while (opIter.hasNext()) {
+						        Expression child = opIter.next();
+						        builder.append("(");
+						        builder.append(child);
+						        builder.append(")");
+						        if (opIter.hasNext()) {
+						            builder.append(type);
+						            //TODO
 //                        builder.append(getTimeBound(null, timeBoundIndex));
-                    }
-                }
-            }
+						        }
+						    }
+						}
+					} catch (EPMCException e) {
+						throw new RuntimeException(e);
+					}
+			} catch (EPMCException e) {
+				throw new RuntimeException(e);
+			}
             break;
         default:
             assert (false);
@@ -459,7 +468,7 @@ public final class ExpressionTemporal implements Expression {
         return hash;
     }
     
-    private static boolean isFalse(Expression expression) {
+    private static boolean isFalse(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -468,7 +477,7 @@ public final class ExpressionTemporal implements Expression {
         return ValueBoolean.isFalse(getValue(expressionLiteral));
     }
     
-    private static boolean isTrue(Expression expression) {
+    private static boolean isTrue(Expression expression) throws EPMCException {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -477,7 +486,7 @@ public final class ExpressionTemporal implements Expression {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) {
+    private static Value getValue(Expression expression) throws EPMCException {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
