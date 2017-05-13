@@ -54,7 +54,8 @@ public final class OperatorEvaluatorExp implements OperatorEvaluator {
 	}
 	
 	@Override
-	public TypeReal resultType(Type... types) {
+	public TypeReal resultType(String operator, Type... types) {
+		assert operator != null;
 		assert types != null;
 		assert types.length >= 1;
 		assert types[0] != null;
@@ -62,8 +63,9 @@ public final class OperatorEvaluatorExp implements OperatorEvaluator {
 	}
 	
 	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
+	public void apply(Value result, String operator, Value... operands) throws EPMCException {
 		assert result != null;
+		assert operator != null;
 		assert operands != null;
 		assert operands.length >= 1;
 		assert operands[0] != null;

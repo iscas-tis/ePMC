@@ -22,9 +22,6 @@ package epmc.value;
 
 import epmc.error.EPMCException;
 
-// TODO change to using builder pattern such that the value context cannot be
-// changed after creation
-
 /**
  * Operator on values.
  * Classes implementing this interface are used to manipulate values by

@@ -21,33 +21,47 @@
 package epmc.jani.extensions.hyperbolicfunctions;
 
 import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeTrigonometric;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueTrigonometric;
 
-/**
- * Operator to compute sinus of a value.
- * 
- * @author Ernst Moritz Hahn
- */
-public final class OperatorTanh implements Operator {
-	/** Identifier of the operator. */
-	public final static String IDENTIFIER = "tanh";
-
+public final class OperatorEvaluatorAtanh implements OperatorEvaluator {
 	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		ValueTrigonometric.asTrigonometric(result).tanh(operands[0]);
+	public boolean canApply(String operator, Type... types) {
+		assert operator != null;
+		assert types != null;
+		for (Type type : types) {
+			assert type != null;
+		}
+		if (!operator.equals(OperatorAtanh.IDENTIFIER)) {
+			return false;
+		}
+		if (types.length != 1) {
+			return false;
+		}
+		if (!TypeTrigonometric.isTrigonometric(types[0])) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
-	public Type resultType(Type... types) {
+	public Type resultType(String operator, Type... types) {
+		assert operator != null;
 		assert types != null;
 		return UtilValue.algebraicResultNonIntegerType(types);
+	}
+	
+	@Override
+	public void apply(Value result, String operator, Value... operands) throws EPMCException {
+		assert result != null;
+		assert operator != null;
+		assert operands != null;
+		assert operands.length >= 1;
+		assert operands[0] != null;
+		ValueTrigonometric.asTrigonometric(result).atanh(operands[0]);
 	}
 }

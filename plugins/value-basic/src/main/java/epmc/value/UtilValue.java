@@ -30,7 +30,7 @@ import epmc.value.ValueArray;
 public final class UtilValue {
 	public final static String LOG = "2.71828182845904523536028";
 
-    public static Type algebraicResultNonIntegerType(Operator op, Type[] types) {
+    public static Type algebraicResultNonIntegerType(Type[] types) {
         Type upper = upper(types);
         if (allTypesKnown(types) && upper == null) {
             return null;
