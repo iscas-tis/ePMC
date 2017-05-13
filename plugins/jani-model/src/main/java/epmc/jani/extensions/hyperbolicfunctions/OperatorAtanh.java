@@ -48,6 +48,6 @@ public final class OperatorAtanh implements Operator {
 	@Override
 	public Type resultType(Type... types) {
 		assert types != null;
-		return UtilValue.algebraicResultNonIntegerType(this, types);
+		return UtilValue.algebraicResultNonIntegerType(types);
 	}
 }

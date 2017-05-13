@@ -18,19 +18,18 @@
 
 *****************************************************************************/
 
-package epmc.jani.extensions.derivedoperators;
+package epmc.prism.value;
 
 import epmc.error.EPMCException;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
-import epmc.value.TypeNumber;
+import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
+import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
 
-public final class OperatorEvaluatorTrunc implements OperatorEvaluator {
-
+public final class OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;
@@ -38,34 +37,44 @@ public final class OperatorEvaluatorTrunc implements OperatorEvaluator {
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorTrunc.IDENTIFIER)) {
+		if (!operator.equals(OperatorPRISMPow.IDENTIFIER)) {
 			return false;
 		}
-		if (types.length != 1) {
+		if (types.length != 2) {
 			return false;
 		}
-		if (!TypeNumber.isNumber(types[0])) {
+		if (!TypeInteger.isInteger(types[0]) && !TypeReal.isReal(types[0])) {
+			return false;
+		}
+		if (!TypeInteger.isInteger(types[1]) && !TypeReal.isReal(types[1])) {
 			return false;
 		}
 		return true;
 	}
 
-	@Override
-	public Type resultType(String operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return TypeInteger.get();
-	}
-
-	@Override
-	public void apply(Value result, String operator, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operator != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).intcastInt());
-	}
+    @Override
+    public Type resultType(String operator, Type... types) {
+        assert types != null;
+        assert types.length == 2 : types.length;
+        boolean allInteger = true;
+        for (Type type : types) {
+        	allInteger &= TypeInteger.isInteger(type);
+        }
+        if (allInteger) {
+        	return TypeInteger.get();
+        } else {
+        	return TypeReal.get();
+        }
+    }
+    
+    @Override
+    public void apply(Value result, String operator, Value... operands) throws EPMCException {
+    	if (ValueInteger.isInteger(result)) {
+    		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
+    	} else if (ValueReal.isReal(result)) {
+    		ValueReal.asReal(result).pow(operands[0], operands[1]);
+    	} else {
+    		assert false : result.getType();
+    	}
+    }
 }
