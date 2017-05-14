@@ -40,6 +40,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -85,9 +86,11 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
             innerResults.add(innerResult);
         }
         Value[] operands = new Value[innerResults.size()];
+        Type[] types = new Type[innerResults.size()];
         for (int operandNr = 0; operandNr < innerResults.size(); operandNr++) {
             Type opType = innerResults.get(operandNr).getType();
             operands[operandNr] = opType.newValue();
+            types[operandNr] = opType;
         }
         ValueArray resultValues;
 
@@ -99,13 +102,13 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
         Value res = propertyOperator.getType(modelChecker.getLowLevel()).newValue();
         int forStatesSize = forStates.size();
         int innerResultsSize = innerResults.size();
+        ExpressionOperator expressionOperator = (ExpressionOperator) property;
+        OperatorEvaluator evaluator = ContextValue.get().findOperatorEvaluator(expressionOperator.getOperator(), types);
         for (int node = 0; node < forStatesSize; node++) {
             for (int operandNr = 0; operandNr < innerResultsSize; operandNr++) {
                 innerResults.get(operandNr).getExplicitIthValue(operands[operandNr], node);
             }
-            ExpressionOperator expressionOperator = (ExpressionOperator) property;
-            Operator operator = ContextValue.get().getOperator(expressionOperator.getOperator());
-            operator.apply(res, operands);
+            evaluator.apply(res, expressionOperator.getOperator(), operands);
             resultValues.set(res, node);
         }
         StateMap result = UtilGraph.newStateMap((StateSetExplicit) forStates.clone(), resultValues);
