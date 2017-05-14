@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.error.EPMCException;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
@@ -51,7 +50,7 @@ public final class UtilValue {
         }
     }
 
-    public static Type algebraicResultType(Operator op, Type[] types) {
+    public static Type algebraicResultType(Type[] types) {
         Type upper = upper(types);
         if (allTypesKnown(types) && upper == null) {
             return null;
@@ -86,8 +85,7 @@ public final class UtilValue {
         return upper;
     }
 
-    public static Type booleanResultType(Operator operator,
-            Type[] types) {
+    public static Type booleanResultType(Type[] types) {
         for (Type type : types) {
             if (type == null || !TypeBoolean.isBoolean(type)) {
                 return null;

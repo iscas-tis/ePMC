@@ -36,7 +36,7 @@ public final class OperatorNot implements Operator {
 
     @Override
     public Type resultType(Type... types) {
-        return UtilValue.booleanResultType(this, types);
+        return UtilValue.booleanResultType(types);
     }
 
     @Override

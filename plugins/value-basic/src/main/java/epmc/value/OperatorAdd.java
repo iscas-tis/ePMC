@@ -37,7 +37,7 @@ public final class OperatorAdd implements Operator {
 
     @Override
     public Type resultType(Type... types) {
-        return UtilValue.algebraicResultType(this, types);
+        return UtilValue.algebraicResultType(types);
     }
 
     @Override
