@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import epmc.util.Util;
 
 /**
@@ -44,7 +46,8 @@ public final class ContextValue {
     /** Unmodifiable map from operator identifier to according operator. */
     private final Map<String,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
-    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluators);
+    private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
+    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -183,7 +186,7 @@ public final class ContextValue {
     	for (Type type : types) {
     		assert type != null;
     	}
-    	for (OperatorEvaluator evaluator : operatorEvaluators) {
+    	for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
     		if (evaluator.canApply(operator, types)) {
     			return evaluator;
     		}
