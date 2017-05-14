@@ -41,5 +41,12 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 		ContextValue.get().addOrSetOperator(OperatorAsinh.IDENTIFIER, OperatorAsinh.class);
 		ContextValue.get().addOrSetOperator(OperatorAcosh.IDENTIFIER, OperatorAcosh.class);
 		ContextValue.get().addOrSetOperator(OperatorAtanh.IDENTIFIER, OperatorAtanh.class);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsinh.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcosh.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtanh.INSTANCE);
+
 	}
 }

@@ -38,5 +38,9 @@ public final class BeforeModelCreationJANIDerivedOperators implements BeforeMode
 		ContextValue.get().addOrSetOperator(OperatorSgn.IDENTIFIER, OperatorSgn.class);
 		ContextValue.get().addOrSetOperator(OperatorAbs.IDENTIFIER, OperatorAbs.class);
 		ContextValue.get().addOrSetOperator(OperatorTrunc.IDENTIFIER, OperatorTrunc.class);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSgn.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAbs.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTrunc.INSTANCE);
+
 	}
 }
