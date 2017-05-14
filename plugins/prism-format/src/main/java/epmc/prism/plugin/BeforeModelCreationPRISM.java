@@ -2,6 +2,7 @@ package epmc.prism.plugin;
 
 import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
+import epmc.prism.value.OperatorEvaluatorPRISMPow;
 import epmc.prism.value.OperatorPRISMPow;
 import epmc.value.ContextValue;
 
@@ -16,6 +17,7 @@ public final class BeforeModelCreationPRISM implements BeforeModelCreation {
 	@Override
 	public void process() throws EPMCException {
 		ContextValue.get().addOrSetOperator(OperatorPRISMPow.IDENTIFIER, OperatorPRISMPow.class);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
 	}
 
 }

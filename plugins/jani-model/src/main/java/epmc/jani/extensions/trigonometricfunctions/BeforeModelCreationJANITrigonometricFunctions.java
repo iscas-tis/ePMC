@@ -41,5 +41,11 @@ public final class BeforeModelCreationJANITrigonometricFunctions implements Befo
 		ContextValue.get().addOrSetOperator(OperatorAsin.IDENTIFIER, OperatorAsin.class);
 		ContextValue.get().addOrSetOperator(OperatorAcos.IDENTIFIER, OperatorAcos.class);
 		ContextValue.get().addOrSetOperator(OperatorAtan.IDENTIFIER, OperatorAtan.class);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsin.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcos.INSTANCE);
+		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtan.INSTANCE);
 	}
 }
