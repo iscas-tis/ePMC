@@ -170,9 +170,8 @@ public final class ContextValue {
         }
     }
     
-    public void addOperatorEvaluator(Class<? extends OperatorEvaluator> clazz) {
-    	assert clazz != null;
-    	OperatorEvaluator evaluator = Util.getInstance(clazz);
+    public void addOperatorEvaluator(OperatorEvaluator evaluator) {
+    	assert evaluator != null;
     	operatorEvaluators.add(evaluator);
     }
     

@@ -28,7 +28,9 @@ import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
-public final class OperatorEvaluatorSgn implements OperatorEvaluator {
+public enum OperatorEvaluatorSgn implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

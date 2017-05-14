@@ -28,7 +28,9 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueTrigonometric;
 
-public final class OperatorEvaluatorTanh implements OperatorEvaluator {
+public enum OperatorEvaluatorTanh implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

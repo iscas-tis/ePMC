@@ -32,8 +32,9 @@ import epmc.value.ValueNumber;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorEvaluatorAbs implements OperatorEvaluator {
-
+public enum OperatorEvaluatorAbs implements OperatorEvaluator {
+	INSTANCE;
+	
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

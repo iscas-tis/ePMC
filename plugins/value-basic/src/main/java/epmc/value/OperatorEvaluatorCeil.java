@@ -24,7 +24,9 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class OperatorEvaluatorCeil implements OperatorEvaluator {
+public enum OperatorEvaluatorCeil implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;
