@@ -21,26 +21,51 @@
 package epmc.value;
 
 import epmc.error.EPMCException;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class OperatorIff implements Operator {
-    /** Logical if-and-only-if, unary operator. */
-    public final static String IDENTIFIER = "iff";
+public final class OperatorEvaluatorOr implements OperatorEvaluator {
+	@Override
+	public boolean canApply(String operator, Type... types) {
+		assert operator != null;
+		assert types != null;
+		for (Type type : types) {
+			assert type != null;
+		}
+		if (!operator.equals(OperatorOr.IDENTIFIER)) {
+			return false;
+		}
+		if (types.length != 2) {
+			return false;
+		}
+		for (Type type : types) {
+			if (!TypeBoolean.isBoolean(type)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueBoolean.asBoolean(result).iff(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
+    public Type resultType(String operator, Type... types) {
+    	assert operator != null;
+    	assert operator.equals(OperatorOr.IDENTIFIER);
+    	assert types != null;
+    	for (Type type : types) {
+    		assert type != null;
+    	}
         return UtilValue.booleanResultType(types);
     }
 
     @Override
-    public String toString() {
-        return IDENTIFIER;
+    public void apply(Value result, String operator, Value... operands) throws EPMCException {
+    	assert result != null;
+    	assert operator != null;
+    	assert operator.equals(OperatorOr.IDENTIFIER);
+    	assert operands != null;
+    	for (Value operand : operands) {
+    		assert operand != null;
+    	}
+    	ValueBoolean.asBoolean(result).or(operands[0], operands[1]);
     }
 }

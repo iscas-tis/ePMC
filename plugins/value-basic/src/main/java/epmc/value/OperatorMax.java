@@ -35,7 +35,7 @@ public final class OperatorMax implements Operator {
 
     @Override
     public Type resultType(Type... types) {
-        return UtilValue.algebraicResultType(this, types);
+        return UtilValue.algebraicResultType(types);
     }
 
     @Override

@@ -21,26 +21,46 @@
 package epmc.value;
 
 import epmc.error.EPMCException;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class OperatorAddInverse implements Operator {
-    /** Additive inverse, -a, unary operator. */
-    public final static String IDENTIFIER = "--";
+public final class OperatorEvaluatorId implements OperatorEvaluator {
+	@Override
+	public boolean canApply(String operator, Type... types) {
+		assert operator != null;
+		assert types != null;
+		for (Type type : types) {
+			assert type != null;
+		}
+		if (!operator.equals(OperatorId.IDENTIFIER)) {
+			return false;
+		}
+		if (types.length != 1) {
+			return false;
+		}
+		return true;
+	}
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueAlgebra.asAlgebra(result).addInverse(operands[0]);
+    public Type resultType(String operator, Type... types) {
+    	assert operator != null;
+    	assert operator.equals(OperatorId.IDENTIFIER);
+    	assert types != null;
+    	for (Type type : types) {
+    		assert type != null;
+    	}
+        return types[0];
     }
 
     @Override
-    public Type resultType(Type... types) {
-        return UtilValue.algebraicResultType(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
+    public void apply(Value result, String operator, Value... operands) throws EPMCException {
+    	assert result != null;
+    	assert operator != null;
+    	assert operator.equals(OperatorId.IDENTIFIER);
+    	assert operands != null;
+    	for (Value operand : operands) {
+    		assert operand != null;
+    	}
+        result.set(operands[0]);
     }
 }
