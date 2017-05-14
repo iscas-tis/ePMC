@@ -27,7 +27,9 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueReal;
 
-public final class OperatorEvaluatorPi implements OperatorEvaluator {
+public enum OperatorEvaluatorPi implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

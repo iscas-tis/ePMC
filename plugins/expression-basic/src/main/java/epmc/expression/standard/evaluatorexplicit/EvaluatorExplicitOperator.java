@@ -20,7 +20,6 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;

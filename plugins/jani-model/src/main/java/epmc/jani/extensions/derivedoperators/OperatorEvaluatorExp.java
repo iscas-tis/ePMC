@@ -33,7 +33,9 @@ import epmc.value.ValueReal;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorEvaluatorExp implements OperatorEvaluator {
+public enum OperatorEvaluatorExp implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

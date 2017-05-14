@@ -88,7 +88,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
             if (!graph.getNodeProperties().contains(expression)) {
                 assert expression.isNot();
                 Expression inner = expression.getOperand1();
-                NodeProperty neg = modelChecker.newNodePropertyApply(graph.getNodeProperty(inner), contextValue.getOperator(OperatorNames.NOT));
+                NodeProperty neg = modelChecker.newNodePropertyApply(graph.getNodeProperty(inner), ContextValue.get().getOperator(OperatorNot.IDENTIFIER));
                 graph.registerNodeProperty(expression, neg);
             }
         }

@@ -33,7 +33,9 @@ import epmc.value.ValueTrigonometric;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorEvaluatorAcosh implements OperatorEvaluator {
+public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

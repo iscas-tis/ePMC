@@ -29,7 +29,9 @@ import epmc.value.Value;
 import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 
-public final class OperatorEvaluatorPRISMPow implements OperatorEvaluator {
+public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
+	INSTANCE;
+
 	@Override
 	public boolean canApply(String operator, Type... types) {
 		assert operator != null;

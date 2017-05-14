@@ -29,7 +29,8 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
 
-public final class OperatorEvaluatorTrunc implements OperatorEvaluator {
+public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
+	INSTANCE;
 
 	@Override
 	public boolean canApply(String operator, Type... types) {
