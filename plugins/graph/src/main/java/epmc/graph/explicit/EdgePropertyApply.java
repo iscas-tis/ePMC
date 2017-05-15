@@ -23,12 +23,13 @@ package epmc.graph.explicit;
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 /**
  * Edge property obtaining values using the apply method of an operator.
- * The property is constructed with an {@link Operator} and a variable number of
+ * The property is constructed with an operator and a variable number of
  * {@link NodeProperty} objects, the number of which should fit the arity of the
  * operator of the edge property.
  * 
@@ -38,10 +39,11 @@ public final class EdgePropertyApply implements EdgeProperty {
     /** Graph to which this edge property belongs. */
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get(int)}. */
-    private final Operator operator;
+    private final OperatorEvaluator evaluator;
+    private final String operator;
     /** Node properties {@link #get(int)} of which {@link #operator} is applied. */
     private final EdgeProperty[] operands;
-    /** Values used to perform {@link Operator#apply(Value, Value...)}. */
+    /** Values used to perform apply. */
     private final Value[] callOperands;
     /** Value returned by {@link #get(int)}. */
     private final Value value;
@@ -64,15 +66,17 @@ public final class EdgePropertyApply implements EdgeProperty {
             assert edgeProperty.getGraph() == graph;
         }
         this.graph = graph;
-        Operator operator = ContextValue.get().getOperator(identifier);
-        this.operator = operator;
-        this.operands = operands;
-        this.callOperands = new Value[operands.length];
+//        Operator operator = ContextValue.get().getOperator(identifier);
         Type[] types = new Type[operands.length];
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
         }
-        Type type = operator.resultType(operator.resultType(types));
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        this.operator = identifier;
+        this.evaluator = evaluator;
+        this.operands = operands;
+        this.callOperands = new Value[operands.length];
+        Type type = evaluator.resultType(operator, types);
         this.value = type.newValue();
     }
     
@@ -80,7 +84,7 @@ public final class EdgePropertyApply implements EdgeProperty {
      * {@inheritDoc}
      * For this property type, the result of this function is computed as
      * follows. For each operand, a value is obtained using {@link #get(int)}.
-     * Afterwards, the {@link Operator#apply(Value, Value...)} method of the
+     * Afterwards, the apply method of the
      * operator of this property is used to transform these values into the
      * resulting value.
      */
@@ -91,7 +95,7 @@ public final class EdgePropertyApply implements EdgeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node, successor);
         }
-        operator.apply(value, callOperands);
+        evaluator.apply(value, operator, callOperands);
         return value;
     }
 
@@ -110,7 +114,7 @@ public final class EdgePropertyApply implements EdgeProperty {
     /**
      * {@inheritDoc}
      * The type of the node property will be computed by
-     * {@link Operator#resultType(Type...)} call with the results of the
+     * apply call with the results of the
      * {@link NodeProperty#getType()} of the node properties used.
      */
     @Override

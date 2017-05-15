@@ -23,12 +23,10 @@ package epmc.dd.sylvanmtbdd;
 import static epmc.error.UtilError.ensure;
 
 import java.util.Collection;
-import java.util.Map;
 
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
+import gnu.trove.map.hash.TObjectIntHashMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
-import gnu.trove.strategy.IdentityHashingStrategy;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
@@ -140,9 +138,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         @Override
         public int invoke(String name) {
             assert name != null;
-            Operator operator = operatorsMap.get(name);
-            assert operator != null;
-            int number = operatorToNumber.get(operator);
+            int number = operatorToNumber.get(name);
 //            assert operators[number].getIdentifier().equals(name) : 
   //              operators[number].getIdentifier() + " " + name;
             return number;
@@ -260,8 +256,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     /** maps Value object to its number */
     private TObjectLongHashMap<Value> valueToNumber;
     private Operator[] operators;
-    private Map<String,Operator> operatorsMap;
-    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
+    private TObjectIntHashMap<String> operatorToNumber = new TObjectIntHashMap<>();
 
     private long valueToNumberTime;
     private long valueToNumberCalled;
@@ -284,9 +279,10 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         Collection<Operator> operators = ContextValue.get().getOperators().values();
         this.operators = new Operator[operators.size()];
         this.operators = operators.toArray(this.operators);
-        this.operatorsMap = ContextValue.get().getOperators();
-        for (int i = 0; i < this.operators.length; i++) {
-            this.operatorToNumber.put(this.operators[i], i);
+        int opNr = 0;
+        for (String operator : ContextValue.get().getOperators().keySet()) {
+            this.operatorToNumber.put(operator, opNr);
+        	opNr++;
         }
         this.numberToValue = new TLongObjectHashMap<>();
         this.valueToNumber = new TObjectLongHashMap<>();
@@ -335,9 +331,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 idOp3 = operands[2];
             } else {
                 // Call the identity operator to convert all the terminals to the same type.
-                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(ContextValue.get().getOperator(OperatorId.IDENTIFIER)));
+                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(OperatorId.IDENTIFIER));
                 Sylvan.mtbdd_ref(idOp2);
-                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(ContextValue.get().getOperator(OperatorId.IDENTIFIER)));
+                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(OperatorId.IDENTIFIER));
                 Sylvan.mtbdd_ref(idOp3);
                 doFree = true;
             }
@@ -463,7 +459,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractSum(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorAdd.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.IDENTIFIER));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -473,7 +469,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMultiply.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.IDENTIFIER));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -483,7 +479,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMax(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMax.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.IDENTIFIER));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -493,7 +489,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMin(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(ContextValue.get().getOperator(OperatorMin.IDENTIFIER)));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.IDENTIFIER));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;

@@ -34,14 +34,14 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorAnd.IDENTIFIER)) {
+		if (!operator.equals(OperatorSubtract.IDENTIFIER)) {
 			return false;
 		}
 		if (types.length != 2) {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeBoolean.isBoolean(type)) {
+			if (!TypeAlgebra.isAlgebra(type)) {
 				return false;
 			}
 		}

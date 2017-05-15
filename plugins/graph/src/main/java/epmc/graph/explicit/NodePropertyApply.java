@@ -23,12 +23,13 @@ package epmc.graph.explicit;
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 /**
  * Node property obtaining values using the apply method of an operator.
- * The property is constructed with an {@link Operator} and a variable number of
+ * The property is constructed with an operator and a variable number of
  * {@link NodeProperty} objects, the number of which should fit the arity of the
  * operator of the edge property.
  * 
@@ -38,13 +39,14 @@ public final class NodePropertyApply implements NodeProperty {
     /** Graph to which this node property belongs. */
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get()}. */
-    private final Operator operator;
+    private final String operator;
     /** Node properties {@link #get()} of which {@link #operator} is applied. */
     private final NodeProperty[] operands;
-    /** Values used to perform {@link Operator#apply(Value, Value...)}. */
+    /** Values used to perform apply. */
     private final Value[] callOperands;
     /** Value returned by {@link #get()}. */
     private final Value value;
+	private OperatorEvaluator evaluator;
     
     /**
      * Construct a new apply node property.
@@ -64,14 +66,16 @@ public final class NodePropertyApply implements NodeProperty {
             assert nodeProperty.getGraph() == graph;
         }
         this.graph = graph;
-        this.operator = ContextValue.get().getOperator(identifier);
+        this.operator = identifier;
         this.operands = operands;
         this.callOperands = new Value[operands.length];
         Type[] types = new Type[operands.length];
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
         }
-        Type type = operator.resultType(operator.resultType(types));
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+        Type type = evaluator.resultType(operator, types);
+        this.evaluator = evaluator;
         this.value = type.newValue();
     }
     
@@ -79,7 +83,7 @@ public final class NodePropertyApply implements NodeProperty {
      * {@inheritDoc}
      * For this property type, the result of this function is computed as
      * follows. For each operand, a value is obtained using {@link #get()}.
-     * Afterwards, the {@link Operator#apply(Value, Value...)} method of the
+     * Afterwards, the apply method of the
      * operator of this property is used to transform these values into the
      * resulting value.
      */
@@ -88,7 +92,7 @@ public final class NodePropertyApply implements NodeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node);
         }
-        operator.apply(value, callOperands);
+        evaluator.apply(value, operator, callOperands);
         return value;
     }
 
@@ -105,7 +109,7 @@ public final class NodePropertyApply implements NodeProperty {
     /**
      * {@inheritDoc}
      * The type of the node property will be computed by
-     * {@link Operator#resultType(Type...)} call with the results of the
+     * apply call with the results of the
      * {@link NodeProperty#getType()} of the node properties used.
      */
     @Override

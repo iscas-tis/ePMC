@@ -23,6 +23,7 @@ package epmc.expression.standard.evaluatorexplicit;
 import java.util.Map;
 
 import epmc.value.OperatorEq;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorGe;
 import epmc.value.OperatorGt;
 import epmc.value.OperatorLe;
@@ -36,7 +37,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -149,8 +149,8 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     private final Value result;
     private final BinaryIntegerToBoolean binaryIntegerToBoolean;
 
-    private Operator operator;
-
+    private final String operator;
+    private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) throws EPMCException {
         assert builder != null;
@@ -158,7 +158,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -169,7 +168,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        result = operator.resultType(types).newValue();
         switch (expression.getOperator()) {
         case OperatorEq.IDENTIFIER:
             binaryIntegerToBoolean = (a,b) -> a == b;
@@ -193,7 +191,9 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             binaryIntegerToBoolean = null;
             break;
         }
-        this.operator = operator;
+        this.operator = expression.getOperator();
+        this.evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
+        result = evaluator.resultType(expression.getOperator(), types).newValue();
     }
 
     @Override
@@ -215,7 +215,8 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate(values);
         }
-        operator.apply(result, operandValues);
+
+        evaluator.apply(result, operator, operandValues);
         return result;
     }
     

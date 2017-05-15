@@ -32,7 +32,7 @@ import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorIte;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -113,16 +113,16 @@ final class GenericOperations {
      */
     private final static class Caches {
         /** Map from DD libraries to map of operators to caches. */
-        private final Map<LibraryDD, Map<Operator,Cache>> caches;
+        private final Map<LibraryDD, Map<OperatorEvaluator,Cache>> caches;
         
         Caches() {
             caches = new THashMap<>();
         }
         
-        Cache get(LibraryDD lowLevel, Operator operation) {
+        Cache get(LibraryDD lowLevel, OperatorEvaluator operation) {
             assert lowLevel != null;
             assert operation != null;
-            Map<Operator,Cache> lowLevelCaches = caches.get(lowLevel);
+            Map<OperatorEvaluator,Cache> lowLevelCaches = caches.get(lowLevel);
             if (lowLevelCaches == null) {
                 lowLevelCaches = new THashMap<>();
                 caches.put(lowLevel, lowLevelCaches);
@@ -153,7 +153,7 @@ final class GenericOperations {
         this.llVariables = contextDD.getLowLevelVariables();
     }
 
-    long apply(Operator operator, Type type, LibraryDD lowLevel, long... operands)
+    long apply(OperatorEvaluator operator, String identifier, Type type, LibraryDD lowLevel, long... operands)
             throws EPMCException {
         assert operator != null;
         assert lowLevel != null;
@@ -169,7 +169,7 @@ final class GenericOperations {
         for (int entryNr = 0; entryNr < back.length; entryNr++) {
             back[entryNr] = UtilBitSet.newBitSetUnbounded();
         }
-        long result = lowLevel.clone(apply(operator, type, lowLevel, cache, entry, walkers, 0, back));
+        long result = lowLevel.clone(apply(operator, identifier, type, lowLevel, cache, entry, walkers, 0, back));
         // if it turns out that this class is used for expensive operations,
         // make cache persistent
         cache.clear();
@@ -193,7 +193,7 @@ final class GenericOperations {
      * @return
      * @throws EPMCException
      */
-    private long apply(Operator operator, Type type, LibraryDD libraryDD,
+    private long apply(OperatorEvaluator operator, String identifier, Type type, LibraryDD libraryDD,
             Cache cache, long[] cacheEntry, Walker[] operands, int recursionDepth, BitSet[] backSets)
             throws EPMCException {
         /* Check whether result has already been compute before. */
@@ -220,7 +220,7 @@ final class GenericOperations {
                 leafValues[index] = operands[index].value();
             }
             Value resultValue = type.newValue();
-            operator.apply(resultValue, leafValues);
+            operator.apply(resultValue, identifier, leafValues);
             result = libraryDD.newConstant(resultValue);
         } else {
             BitSet back = backSets[recursionDepth];
@@ -232,7 +232,7 @@ final class GenericOperations {
                     back.set(index);
                 }
             }
-            long highResult = apply(operator, type, libraryDD, cache, cacheEntry, operands, recursionDepth + 1, backSets);
+            long highResult = apply(operator, identifier, type, libraryDD, cache, cacheEntry, operands, recursionDepth + 1, backSets);
             for (int index = 0; index < operands.length; index++) {
                 Walker dd = operands[index];
                 if (back.get(index)) {
@@ -247,7 +247,7 @@ final class GenericOperations {
                     back.set(index);
                 }
             }
-            long lowResult = apply(operator, type, libraryDD, cache, cacheEntry, operands, recursionDepth + 1, backSets);
+            long lowResult = apply(operator, identifier, type, libraryDD, cache, cacheEntry, operands, recursionDepth + 1, backSets);
             for (int index = 0; index < operands.length; index++) {
                 Walker dd = operands[index];
                 if (back.get(index)) {

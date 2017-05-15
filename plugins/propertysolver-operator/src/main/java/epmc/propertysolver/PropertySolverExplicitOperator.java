@@ -39,7 +39,6 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -103,7 +102,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
         int forStatesSize = forStates.size();
         int innerResultsSize = innerResults.size();
         ExpressionOperator expressionOperator = (ExpressionOperator) property;
-        OperatorEvaluator evaluator = ContextValue.get().findOperatorEvaluator(expressionOperator.getOperator(), types);
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expressionOperator.getOperator(), types);
         for (int node = 0; node < forStatesSize; node++) {
             for (int operandNr = 0; operandNr < innerResultsSize; operandNr++) {
                 innerResults.get(operandNr).getExplicitIthValue(operands[operandNr], node);
