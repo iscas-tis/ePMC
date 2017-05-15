@@ -23,6 +23,7 @@ package epmc.expression.standard.evaluatorexplicit;
 import java.util.Map;
 
 import epmc.value.OperatorAddInverse;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorMultiplyInverse;
 import epmc.value.TypeInteger;
 import epmc.error.EPMCException;
@@ -32,7 +33,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -142,8 +142,8 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final Value result;
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
-    private final Operator operator;
-
+    private final String operator;
+    private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) throws EPMCException {
         assert builder != null;
@@ -151,7 +151,6 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -162,7 +161,6 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        result = operator.resultType(types).newValue();
         switch (expression.getOperator()) {
         case OperatorAddInverse.IDENTIFIER:
             unaryIntegerToInteger = a -> -a;
@@ -174,7 +172,9 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             unaryIntegerToInteger = null;
             break;
         }
-        this.operator = operator;
+        this.operator = expression.getOperator();
+        evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
+        result = evaluator.resultType(expression.getOperator(), types).newValue();
     }
 
     @Override
@@ -196,7 +196,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate(values);
         }
-        operator.apply(result, operandValues);
+        evaluator.apply(result, operator, operandValues);
         return result;
     }
     

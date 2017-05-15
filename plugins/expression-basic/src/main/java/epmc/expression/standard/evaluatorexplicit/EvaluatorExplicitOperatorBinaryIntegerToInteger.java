@@ -23,6 +23,7 @@ package epmc.expression.standard.evaluatorexplicit;
 import java.util.Map;
 
 import epmc.value.OperatorAdd;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorMax;
 import epmc.value.OperatorMin;
 import epmc.value.OperatorMod;
@@ -37,7 +38,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -152,8 +152,8 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
     private final Value result;
     private final BinaryIntegerToInteger binaryIntegerToInteger;
 
-    private Operator operator;
-
+    private final String operator;
+    private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorBinaryIntegerToInteger(Builder builder) throws EPMCException {
         assert builder != null;
@@ -161,7 +161,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-        Operator operator = ContextValue.get().getOperator(expression.getOperator());
+//        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -172,7 +172,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        result = operator.resultType(types).newValue();
         switch (expression.getOperator()) {
         case OperatorAdd.IDENTIFIER:
             binaryIntegerToInteger = (a,b) -> a+b;
@@ -199,7 +198,9 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             binaryIntegerToInteger = null;
             break;
         }
-        this.operator = operator;
+        this.operator = expression.getOperator();
+        evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+        result = evaluator.resultType(operator, types).newValue();
     }
 
     @Override
@@ -221,7 +222,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate(values);
         }
-        operator.apply(result, operandValues);
+        evaluator.apply(result, operator, operandValues);
         return result;
     }
     

@@ -37,7 +37,7 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
 		if (!operator.equals(OperatorId.IDENTIFIER)) {
 			return false;
 		}
-		if (types.length != 1) {
+		if (types.length < 1) {
 			return false;
 		}
 		return true;

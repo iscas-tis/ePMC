@@ -20,6 +20,7 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
@@ -30,13 +31,12 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class EvaluatorExplicitOperator implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
-
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
@@ -113,7 +113,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     
     private final Expression[] variables;
     private final ExpressionOperator expression;
-    private final Operator operator;
+    private final String operator;
+    private final OperatorEvaluator evaluator;
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;
     private final Value result;
@@ -124,7 +125,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         assert builder.getVariables() != null;
         variables = builder.getVariables();
         expression = (ExpressionOperator) builder.getExpression();
-        operator = ContextValue.get().getOperator(expression.getOperator());
+        operator = expression.getOperator();
         operands = new EvaluatorExplicit[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -136,9 +137,10 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        assert operator != null;
-        assert operator.resultType(types) != null : operator;
-        result = operator.resultType(types).newValue();
+        evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+        assert evaluator != null : operator + " " + Arrays.toString(types) + " " + operands[0];
+        assert evaluator.resultType(operator, types) != null : operator;
+        result = evaluator.resultType(operator, types).newValue();
     }
 
     @Override
@@ -160,7 +162,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate(values);
         }
-        operator.apply(result, operandValues);
+        evaluator.apply(result, operator, operandValues);
         return result;
     }
     

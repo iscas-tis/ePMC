@@ -61,11 +61,11 @@ import epmc.options.UtilOptions;
 import epmc.util.RecursiveStopWatch;
 import epmc.util.Util;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorDivide;
 import epmc.value.OperatorEq;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorGe;
 import epmc.value.OperatorGt;
 import epmc.value.OperatorIte;
@@ -325,21 +325,20 @@ public final class ContextDD implements Closeable {
             opAssNr++;
         }
         
-        // TODO the low level interfaces should rather have some method to ask
-        // whether they can apply a certain operation, say
-        // canApply(Operator operator, long... ops)
-        // Also, having three different apply functions in the low level was
-        // also no great design decision
         long result;
         long[] opsLong = new long[ops.length];
         for (int opNr = 0; opNr < ops.length; opNr++) {
             opsLong[opNr] = ops[opNr].uniqueId();
         }
-        Operator operator = ContextValue.get().getOperator(identifier);
+        Type types[] = new Type[ops.length];
+        for (int i = 0; i < ops.length; i++) {
+        	types[i] = ops[i].getType();
+        }
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
         if (ops.length == 0) {
-            Type resultType = operator.resultType(new Type[0]);
+            Type resultType = evaluator.resultType(identifier, types);
             Value resultValue = resultType.newValue();
-            operator.apply(resultValue, new Value[0]);
+            evaluator.apply(resultValue, identifier, new Value[0]);
             result = lowLevel.newConstant(resultValue);
         } else if (lowLevel.canApply(identifier, type, opsLong)) {
             result = lowLevel.apply(identifier, type, opsLong);
@@ -348,7 +347,7 @@ public final class ContextDD implements Closeable {
             for (int index = 0; index < ops.length; index++) {
                 operands[index] = ops[index].uniqueId();
             }
-            result = genericApply(operator, type, lowLevel, operands);
+            result = genericApply(evaluator, identifier, type, lowLevel, operands);
         }
         DD resultDD = toDD(result, lowLevel);
 
@@ -393,8 +392,8 @@ public final class ContextDD implements Closeable {
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        Operator operator = ContextValue.get().getOperator(identifier);
-        Type type = operator.resultType(types);
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        Type type = evaluator.resultType(identifier, types);
         return type;
     }
 
@@ -406,9 +405,9 @@ public final class ContextDD implements Closeable {
         return result;
     }
     
-    private long genericApply(Operator operator, Type type, LibraryDD lowLevel, long... ops)
+    private long genericApply(OperatorEvaluator operator, String identifier, Type type, LibraryDD lowLevel, long... ops)
             throws EPMCException {
-        return this.genericApply.apply(operator, type, lowLevel, ops);
+        return this.genericApply.apply(operator, identifier, type, lowLevel, ops);
     }
         
     private boolean assertValidDDArray(DD... dds) {
@@ -433,8 +432,6 @@ public final class ContextDD implements Closeable {
 
     private boolean assertOperatorCompatible(String identifier, Type... types)
     		throws EPMCException {
-    	Operator operator = ContextValue.get().getOperator(identifier);
-        Type resultType = operator.resultType(types);
         return true;
     }
 
@@ -445,8 +442,9 @@ public final class ContextDD implements Closeable {
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        Operator operator = ContextValue.get().getOperator(identifier);
-        Type resultType = operator.resultType(types);
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        assert evaluator != null : identifier + " " + Arrays.toString(types);
+        Type resultType = evaluator.resultType(identifier, types);
         assert resultType != null : identifier + SPACE + Arrays.toString(types);
         return true;
     }
@@ -1657,8 +1655,8 @@ public final class ContextDD implements Closeable {
         assert applyOverSatSupportOK(dd, support, sat);
         totalTime.start();
         Type ddType = dd.getType();
-        Operator operator = ContextValue.get().getOperator(identifier);
-        Type type = operator.resultType(ddType, ddType);
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, ddType, ddType);
+        Type type = evaluator.resultType(identifier, ddType, ddType);
         Map<LongTriple,Value> known = new THashMap<>();
         Value value = applyOverSat(identifier, dd.walker(), support.walker(), known, type, sat.walker());
         totalTime.stop();
@@ -1697,7 +1695,7 @@ public final class ContextDD implements Closeable {
     private Value applyOverSat(String identifier, Walker dd, Walker support,
             Map<LongTriple,Value> known,
             Type type, Walker sat) throws EPMCException {
-    	Operator operator = ContextValue.get().getOperator(identifier);
+    	OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, type, type);
         LongTriple triple = new LongTriple(dd.uniqueId(), sat.uniqueId(), support.uniqueId());
         if (known.containsKey(triple)) {
             return known.get(triple);
@@ -1749,7 +1747,7 @@ public final class ContextDD implements Closeable {
                 result = UtilValue.clone(left);
             } else {
                 result = type.newValue();
-                operator.apply(result, left, right);
+                evaluator.apply(result, identifier, left, right);
             }
             known.put(triple, result);
             return result;

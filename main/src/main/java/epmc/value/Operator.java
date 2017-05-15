@@ -27,7 +27,7 @@ import epmc.error.EPMCException;
  * Classes implementing this interface are used to manipulate values by
  * performing a certain operation such as addition, multiplication, logical AND,
  * etc. on a several operand values. The most important method of operators is
- * {@link #apply(Value, Value...)}, which performs the actual operation of the
+ * apply, which performs the actual operation of the
  * operator. For efficiency, so as to avoid creating new objects frequently, the
  * method operates by changing the result value rather than creating and
  * returning a new one.
@@ -63,7 +63,7 @@ public interface Operator {
     /**
      * Computes the result type.
      * The result type is the type the result parameter of
-     * {@link #apply(Value, Value...)} should have when applying it on operand
+     * apply should have when applying it on operand
      * parameters of the given types.
      * None of the parameters may be {@code null}. The length of the types
      * parameter array needs not match exactly the arity of the operator.

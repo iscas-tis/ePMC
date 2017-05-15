@@ -29,8 +29,8 @@ import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAnd;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorId;
 import epmc.value.OperatorMax;
 import epmc.value.OperatorMin;
@@ -180,10 +180,11 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert !closed();
         assert identifier != null;
         assert operand != null;
-        Operator operator = ContextValue.get().getOperator(identifier);
+        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, getType(), operand.getType());
+        assert evaluator != null;
         StateMapExplicit operandExplicit = (StateMapExplicit) operand;
         StateMap result = null;
-        Type resultType = operator.resultType(getType(), operand.getType());
+        Type resultType = evaluator.resultType(identifier, getType(), operand.getType());
         TypeArray resultTypeArray = resultType.getTypeArray();
         assert states.equals(operand.getStateSet());
         ValueArray resultValues = UtilValue.newArray(resultTypeArray, states.size());
@@ -193,7 +194,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         for (int i = 0; i < size(); i++) {
             getExplicitIthValue(op1, i);
             operandExplicit.getExplicitIthValue(op2, i);
-            operator.apply(res, op1, op2);
+            evaluator.apply(res, identifier, op1, op2);
             resultValues.set(res, i);
         }
         result = new StateMapExplicit(states.clone(), resultValues);
@@ -268,8 +269,12 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                     values[1] = valuesExplicit.getType().getEntryType().newValue();
                 } else {
                     valuesExplicit.get(values[1], stateNr);
-                    Operator operator = ContextValue.get().getOperator(identifier);
-                    operator.apply(result, values);
+                    Type[] types = new Type[values.length];
+                    for (int i = 0; i < values.length; i++) {
+                    	types[i] = values[i].getType();
+                    }
+                    OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+                    evaluator.apply(result, identifier, values);
                 }
             }
         }

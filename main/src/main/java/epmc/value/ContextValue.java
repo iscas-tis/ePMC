@@ -125,23 +125,7 @@ public final class ContextValue {
         }
         return result;
     }
-    
-    // TODO get rid of this function
-    /**
-     * Get an operator by its identifier. 
-     * The identifier parameter must not be {@code null}. The identifier must
-     * be one an identifier of one of the operators known to the value context.
-     * 
-     * @param identifier identifier to obtain operator of
-     * @return operator with the given identifier
-     */
-    public Operator getOperator(String identifier) {
-        assert identifier != null;
-        assert identifierToOperator.containsKey(identifier) : identifier;
-        Operator result = identifierToOperator.get(identifier);
-        return result;
-    }
-    
+        
     // TODO get rid of this function
     /**
      * Get a map from operator identifiers to operators.
@@ -179,7 +163,7 @@ public final class ContextValue {
 		return operatorEvaluatorsExternal;
 	}
     
-    public OperatorEvaluator findOperatorEvaluator(String operator, Type...types) {
+    public OperatorEvaluator getOperatorEvaluator(String operator, Type...types) {
     	assert operator != null;
     	assert types != null;
     	for (Type type : types) {
