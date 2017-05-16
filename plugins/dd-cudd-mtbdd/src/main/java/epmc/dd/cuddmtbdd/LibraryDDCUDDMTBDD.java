@@ -49,6 +49,7 @@ import epmc.value.OperatorAdd;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorDivide;
 import epmc.value.OperatorEq;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorId;
 import epmc.value.OperatorIff;
 import epmc.value.OperatorImplies;
@@ -106,8 +107,11 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
-                operator.apply(result, opValue);
+                String operator = operators[op];
+                Type[] types = new Type[1];
+                types[0] = opValue.getType();
+                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                evaluator.apply(result, operator, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -121,10 +125,14 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            String operator = operators[op];
             try {
                 Value result = resultType.newValue();
-                operator.apply(result, op1Value, op2Value);
+                Type[] types = new Type[2];
+                types[0] = op1Value.getType();
+                types[1] = op2Value.getType();
+                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                evaluator.apply(result, operator, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -136,13 +144,18 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private class DD_VOP3Impl implements DD_VOP3 {
         @Override
         public long invoke(int op, long f, long g, long h) {
-            Operator operator = operators[op];
+            String operator = operators[op];
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
             Value op3Value = numberToValue(h);
             try {
                 Value result = resultType.newValue();
-                operator.apply(result, op1Value, op2Value, op3Value);
+                Type[] types = new Type[3];
+                types[0] = op1Value.getType();
+                types[1] = op2Value.getType();
+                types[2] = op3Value.getType();
+                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                evaluator.apply(result, operator, op1Value, op2Value, op3Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -409,7 +422,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private GetOperatorNumberImpl getOperatorNumber;
     private GetNumberOfOperators getNumberOfOperators;
     private Type resultType;
-    private Operator[] operators;
+    private String[] operators;
     private Map<String,Operator> operatorsMap;
     private TObjectIntCustomHashMap<String> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
     private String opId;
@@ -421,9 +434,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
         Collection<String> identifiers = ContextValue.get().getOperators().keySet();
-        Collection<Operator> operators = ContextValue.get().getOperators().values();
-        this.operators = new Operator[operators.size()];
-        this.operators = operators.toArray(this.operators);
+        this.operators = identifiers.toArray(new String[0]);
         this.operatorsMap = ContextValue.get().getOperators();
         int index = 0;
         for (String operator : identifiers) {

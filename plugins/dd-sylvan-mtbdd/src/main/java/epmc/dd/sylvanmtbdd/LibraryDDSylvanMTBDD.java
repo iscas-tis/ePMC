@@ -39,8 +39,8 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAdd;
+import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorId;
 import epmc.value.OperatorIte;
 import epmc.value.OperatorMax;
@@ -94,8 +94,11 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
-                operator.apply(result, opValue);
+                String operator = operators[op];
+                Type[] types = new Type[1];
+                types[0] = opValue.getType();
+                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                evaluator.apply(result, operator, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -109,10 +112,14 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            String operator = operators[op];
             try {
                 Value result = resultType.newValue();
-                operator.apply(result, op1Value, op2Value);
+                Type[] types = new Type[2];
+                types[0] = op1Value.getType();
+                types[1] = op2Value.getType();
+                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                evaluator.apply(result, operator, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -255,7 +262,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private TLongObjectHashMap<Value> numberToValue;
     /** maps Value object to its number */
     private TObjectLongHashMap<Value> valueToNumber;
-    private Operator[] operators;
+    private String[] operators;
     private TObjectIntHashMap<String> operatorToNumber = new TObjectIntHashMap<>();
 
     private long valueToNumberTime;
@@ -276,9 +283,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
         this.contextDD = contextDD;
-        Collection<Operator> operators = ContextValue.get().getOperators().values();
-        this.operators = new Operator[operators.size()];
-        this.operators = operators.toArray(this.operators);
+        Collection<String> identifiers = ContextValue.get().getOperators().keySet();
+        this.operators = identifiers.toArray(new String[0]);
         int opNr = 0;
         for (String operator : ContextValue.get().getOperators().keySet()) {
             this.operatorToNumber.put(operator, opNr);
