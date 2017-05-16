@@ -20,27 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
+/** Logical if-and-only-if, unary operator. */
 public final class OperatorIff implements Operator {
-    /** Logical if-and-only-if, unary operator. */
     public final static String IDENTIFIER = "iff";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueBoolean.asBoolean(result).iff(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.booleanResultType(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

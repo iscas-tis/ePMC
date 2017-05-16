@@ -31,7 +31,8 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
 	
 	@Override
 	public Type getEntryType() {
-		return operator.resultType(getOperandsEntryTypes());
+		return null;
+		/// TODO
 	}
 
 	private Type[] getOperandsEntryTypes() {

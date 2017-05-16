@@ -20,14 +20,7 @@
 
 package epmc.prism.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.Value;
-import epmc.value.ValueInteger;
-import epmc.value.ValueReal;
 
 /**
  * Operator "pow" of PRISM.
@@ -40,35 +33,4 @@ import epmc.value.ValueReal;
  */
 public final class OperatorPRISMPow implements Operator {
     public final static String IDENTIFIER = "pow-prism";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	if (ValueInteger.isInteger(result)) {
-    		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
-    	} else if (ValueReal.isReal(result)) {
-    		ValueReal.asReal(result).pow(operands[0], operands[1]);
-    	} else {
-    		assert false : result.getType();
-    	}
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length == 2 : types.length;
-        boolean allInteger = true;
-        for (Type type : types) {
-        	allInteger &= TypeInteger.isInteger(type);
-        }
-        if (allInteger) {
-        	return TypeInteger.get();
-        } else {
-        	return TypeReal.get();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

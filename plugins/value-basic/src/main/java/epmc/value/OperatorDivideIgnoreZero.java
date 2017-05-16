@@ -20,30 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorDivideIgnoreZero implements Operator {
     public final static String IDENTIFIER = "divide-ignore-zero";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	if (ValueAlgebra.asAlgebra(operands[1]).isZero()) {
-    		result.set(operands[0]);
-    	} else {
-    		ValueAlgebra.asAlgebra(result).divide(operands[0], operands[1]);
-    	}
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.upper(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

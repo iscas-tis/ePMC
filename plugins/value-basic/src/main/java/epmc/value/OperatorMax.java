@@ -20,26 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorMax implements Operator {
     public final static String IDENTIFIER = "max";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueAlgebra.asAlgebra(result).max(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.algebraicResultType(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

@@ -286,7 +286,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         Collection<String> identifiers = ContextValue.get().getOperators().keySet();
         this.operators = identifiers.toArray(new String[0]);
         int opNr = 0;
-        for (String operator : ContextValue.get().getOperators().keySet()) {
+        for (String operator : identifiers) {
             this.operatorToNumber.put(operator, opNr);
         	opNr++;
         }

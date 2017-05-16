@@ -20,32 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorLog implements Operator {
     public final static String IDENTIFIER = "log";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        Value e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
-        ValueReal.asReal(result).log(operands[0], e);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        Type upper = UtilValue.upper(types);
-        if (!TypeReal.isReal(upper)) {
-            return null;
-        }
-        Type result = TypeReal.get();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

@@ -44,7 +44,6 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorDivide;
@@ -193,8 +192,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             assert cuddName != null;
             assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
             String name = OPERATOR_TO_MTBDD.get(cuddName);
-            Operator operator = operatorsMap.get(name);
-            assert operator != null : name;
             int number = operatorToNumber.get(name);
 //            assert operators[number].getIdentifier().equals(name) : 
 //                operators[number].getIdentifier() + " " + name;
@@ -423,7 +420,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private GetNumberOfOperators getNumberOfOperators;
     private Type resultType;
     private String[] operators;
-    private Map<String,Operator> operatorsMap;
     private TObjectIntCustomHashMap<String> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
     private String opId;
     private int opIdNr;
@@ -435,7 +431,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         this.contextDD = contextDD;
         Collection<String> identifiers = ContextValue.get().getOperators().keySet();
         this.operators = identifiers.toArray(new String[0]);
-        this.operatorsMap = ContextValue.get().getOperators();
         int index = 0;
         for (String operator : identifiers) {
             this.operatorToNumber.put(operator, index);

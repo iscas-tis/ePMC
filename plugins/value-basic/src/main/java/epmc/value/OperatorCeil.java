@@ -20,31 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorCeil implements Operator {
     public final static String IDENTIFIER = "ceil"; //"⌈⌉";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).ceilInt());
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        Type result;
-        if (!(TypeReal.isReal(types[0]) || TypeInteger.isInteger(types[0]))) {
-            return null;
-        }
-        result = TypeInteger.get();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }
