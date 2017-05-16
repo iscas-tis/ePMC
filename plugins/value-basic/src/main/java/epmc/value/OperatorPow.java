@@ -20,28 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorPow implements Operator {
     public final static String IDENTIFIER = "pow";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueReal.asReal(result).pow(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length == 2 : types.length;
-        return TypeReal.get();
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

@@ -20,27 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorDivide implements Operator {
     /** Division, a / b, binary operator. */
     public final static String IDENTIFIER = "/";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueAlgebra.asAlgebra(result).divide(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.upper(UtilValue.upper(types), TypeReal.get());
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

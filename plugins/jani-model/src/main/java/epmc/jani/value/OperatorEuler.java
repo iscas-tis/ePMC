@@ -20,11 +20,7 @@
 
 package epmc.jani.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.TypeReal;
-import epmc.value.Value;
 
 /**
  * Operator representing the constant π (Pi).
@@ -32,22 +28,5 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class OperatorEuler implements Operator {
-	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "e"; //"π";
-
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length == 0;
-		// TODO
-//		ValueReal.asReal(result).pi();
-	}
-
-	@Override
-	public Type resultType(Type... types) {
-		assert types != null;
-		assert types.length == 0;
-		return TypeReal.get();
-	}
 }

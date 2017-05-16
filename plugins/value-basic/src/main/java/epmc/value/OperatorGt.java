@@ -20,33 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
+/** Greater than, a > b, binary operator. */
 public final class OperatorGt implements Operator {
-    /** Greater than, a > b, binary operator. */
     public final static String IDENTIFIER = ">";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueBoolean.asBoolean(result).set(ValueAlgebra.asAlgebra(operands[0]).isGt(operands[1]));
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
-                return null;
-            }
-        }
-        Type result = TypeBoolean.get();
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

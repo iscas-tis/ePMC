@@ -20,32 +20,8 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorMod implements Operator {
     public final static String IDENTIFIER = "%";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueInteger.asInteger(result).mod(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        Type result;
-        if (!TypeInteger.isInteger(types[0]) || !TypeInteger.isInteger(types[1])) {
-            return null;
-        } else {
-            result = TypeInteger.get();
-        }
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

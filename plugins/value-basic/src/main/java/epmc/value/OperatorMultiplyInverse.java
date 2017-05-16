@@ -20,27 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
+/** Multiplicative inverse, 1/a, unary operator. */
 public final class OperatorMultiplyInverse implements Operator {
-    /** Multiplicative inverse, 1/a, unary operator. */
     public final static String IDENTIFIER = "multiply-inverse";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueAlgebra.asAlgebra(result).multInverse(operands[0]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.upper(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

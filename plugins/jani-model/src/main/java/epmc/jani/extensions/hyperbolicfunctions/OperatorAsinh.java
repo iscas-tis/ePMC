@@ -33,21 +33,5 @@ import epmc.value.ValueTrigonometric;
  * @author Ernst Moritz Hahn
  */
 public final class OperatorAsinh implements Operator {
-	/** Identifier of the operator. */
 	public final static String IDENTIFIER = "asinh";
-
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		ValueTrigonometric.asTrigonometric(result).asinh(operands[0]);
-	}
-
-	@Override
-	public Type resultType(Type... types) {
-		assert types != null;
-		return UtilValue.algebraicResultNonIntegerType(types);
-	}
 }

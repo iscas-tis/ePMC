@@ -20,24 +20,10 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public final class OperatorId implements Operator {
     public final static String IDENTIFIER = "id";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        result.set(operands[0]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return types[0];
-    }
-
     @Override
     public String toString() {
         return IDENTIFIER;

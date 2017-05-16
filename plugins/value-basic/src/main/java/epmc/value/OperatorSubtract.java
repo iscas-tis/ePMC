@@ -20,27 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
+/** Subtraction, a - b, binary operator. */
 public final class OperatorSubtract implements Operator {
-    /** Subtraction, a - b, binary operator. */
     public final static String IDENTIFIER = "-";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-        ValueAlgebra.asAlgebra(result).subtract(operands[0], operands[1]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.algebraicResultType(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }

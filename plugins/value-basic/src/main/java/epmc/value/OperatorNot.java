@@ -20,27 +20,9 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
+/** Logical NOT, unary operator. */
 public final class OperatorNot implements Operator {
-    /** Logical NOT, unary operator. */
     public final static String IDENTIFIER = "!";
-
-    @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	ValueBoolean.asBoolean(result).not(operands[0]);
-    }
-
-    @Override
-    public Type resultType(Type... types) {
-        return UtilValue.booleanResultType(types);
-    }
-
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
 }
