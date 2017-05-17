@@ -35,12 +35,6 @@ import epmc.value.OperatorCeil;
 import epmc.value.OperatorFloor;
 import epmc.value.OperatorLog;
 import epmc.value.OperatorMod;
-import epmc.value.ValueInteger;
-import epmc.value.ValueReal;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.UtilValue;
-import epmc.value.ValueAlgebra;
 import epmc.expression.*;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionFilter;
@@ -209,15 +203,6 @@ public final class PrismExpressionParser {
             .build();
     }
 
-    private static boolean isPosInf(Expression expression) throws EPMCException {
-        assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
-            return false;
-        }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueAlgebra.asAlgebra(expressionLiteral.getValue()).isPosInf();
-    }
-
     private ExpressionReward newRewardSteadyState(Expression structure) {
         return new ExpressionReward.Builder()
                 .setReward(structure)
@@ -306,11 +291,6 @@ public final class PrismExpressionParser {
         assert bound != null;
         return new ExpressionTemporal
                 (op1, op2, type, bound, null);
-    }
-
-    private ValueInteger newValueInteger(String string) throws EPMCException {
-      assert string != null;
-      return UtilValue.newValue(TypeInteger.get(), string);
     }
 
     private static Positional newPositional(long line, long column) {
@@ -1283,7 +1263,7 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 		<C> 
 		{
 		  timebound = ExpressionLiteral.getPosInf();
-		  discount = ExpressionLiteral.getPosInf();
+		  discount = null;
 		}
 		(
 			<LEQ> 
@@ -1294,7 +1274,7 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 			discount = parseExpTemporal(parseExp)
 		)?
 		{
-			if (isPosInf(discount)) {
+			if (discount == null) {
 				return newRewardCumulative(rewardStructure, timebound);			} else {
 				return newRewardDiscounted(rewardStructure, timebound, discount);			}
 		}
