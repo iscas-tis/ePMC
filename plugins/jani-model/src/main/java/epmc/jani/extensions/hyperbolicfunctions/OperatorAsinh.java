@@ -20,12 +20,7 @@
 
 package epmc.jani.extensions.hyperbolicfunctions;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.UtilValue;
-import epmc.value.Value;
-import epmc.value.ValueTrigonometric;
 
 /**
  * Operator to compute sinus of a value.

@@ -70,7 +70,7 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
     }
     
     @Override
-    public void apply(Value result, String operator, Value... operands) throws EPMCException {
+    public void apply(Value result, Value... operands) throws EPMCException {
     	if (ValueInteger.isInteger(result)) {
     		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
     	} else if (ValueReal.isReal(result)) {

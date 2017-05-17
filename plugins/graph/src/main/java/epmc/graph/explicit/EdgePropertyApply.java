@@ -22,7 +22,6 @@ package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -95,7 +94,7 @@ public final class EdgePropertyApply implements EdgeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node, successor);
         }
-        evaluator.apply(value, operator, callOperands);
+        evaluator.apply(value, callOperands);
         return value;
     }
 

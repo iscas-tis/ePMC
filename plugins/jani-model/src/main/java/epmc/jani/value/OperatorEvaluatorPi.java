@@ -48,7 +48,7 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
 	}
 
 	@Override
-	public void apply(Value result, String operator, Value... operands) throws EPMCException {
+	public void apply(Value result, Value... operands) throws EPMCException {
 		assert result != null;
 		assert operands != null;
 		assert operands.length == 0;

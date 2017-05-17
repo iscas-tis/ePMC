@@ -110,7 +110,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
                 OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
-                evaluator.apply(result, operator, opValue);
+                evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -131,7 +131,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
                 OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
-                evaluator.apply(result, operator, op1Value, op2Value);
+                evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
@@ -154,7 +154,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 types[1] = op2Value.getType();
                 types[2] = op3Value.getType();
                 OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
-                evaluator.apply(result, operator, op1Value, op2Value, op3Value);
+                evaluator.apply(result, op1Value, op2Value, op3Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;

@@ -162,7 +162,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate(values);
         }
-        evaluator.apply(result, operator, operandValues);
+        evaluator.apply(result, operandValues);
         return result;
     }
     
