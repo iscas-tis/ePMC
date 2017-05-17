@@ -32,11 +32,15 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import epmc.dd.ContextDD;
+import epmc.dd.DD;
+import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.value.TypeInteger;
 import epmc.value.Value;
 
 public class PCTLSolverDDTest {
@@ -150,6 +154,90 @@ public class PCTLSolverDDTest {
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         Value result1 = computeResult(options, ModelNamesPRISM.TWO_DICE_MODEL, "Pmin=? [ F s1=7 & s2=7 & d1+d2=2 ]");
         assertEquals("1/36", result1, tolerance);
+        close(options);
+    }
+    
+    @Test
+    public void ddTest() throws EPMCException {
+        Options options = prepareOptions();
+        Map<String,Object> constants = new HashMap<>();
+        Value result;
+        options.set(OptionsModelChecker.ENGINE, EngineDD.class);
+        TypeInteger piecePositionType = TypeInteger.get(-2, 15);
+        VariableDD player1Pos3 = ContextDD.get().newVariable("player1Pos3", piecePositionType, 1);
+        VariableDD player2Pos3 = ContextDD.get().newVariable("player1Pos3", piecePositionType, 1);
+        VariableDD player1Pos2 = ContextDD.get().newVariable("player1Pos2", piecePositionType, 1);
+        VariableDD player2Pos2 = ContextDD.get().newVariable("player1Pos2", piecePositionType, 1);
+        VariableDD player1Pos1 = ContextDD.get().newVariable("player1Pos1", piecePositionType, 1);
+        VariableDD player2Pos1 = ContextDD.get().newVariable("player1Pos1", piecePositionType, 1);
+        VariableDD turn = ContextDD.get().newBoolean("turn", 1);
+        DD player2Pos3Enc = player2Pos3.getValueEncoding(0);
+        DD player2Pos2Enc = player2Pos2.getValueEncoding(0);
+        DD player2Pos1Enc = player2Pos1.getValueEncoding(0);
+        DD player1Pos3Enc = player1Pos3.getValueEncoding(0);
+        DD player1Pos2Enc = player1Pos2.getValueEncoding(0);
+        DD player1Pos1Enc = player1Pos1.getValueEncoding(0);
+        DD turnEnc = turn.getValueEncoding(0);
+        DD support = ContextDD.get().newConstant(true);
+        support = support.andWith(player1Pos1.newCube(0));
+        support = support.andWith(player1Pos2.newCube(0));
+        support = support.andWith(player1Pos3.newCube(0));
+        support = support.andWith(player2Pos1.newCube(0));
+        support = support.andWith(player2Pos2.newCube(0));
+        support = support.andWith(player2Pos3.newCube(0));
+        support = support.andWith(turn.newCube(0));
+        
+        DD valid = ContextDD.get().newConstant(true);
+        
+        valid = valid.andWith(player1Pos1Enc.le(ContextDD.get().newConstant(15)));
+        valid = valid.andWith(player1Pos2Enc.le(ContextDD.get().newConstant(15)));
+        valid = valid.andWith(player1Pos3Enc.le(ContextDD.get().newConstant(15)));
+
+        valid = valid.andWith(player1Pos1Enc.le(player1Pos2Enc));
+        valid = valid.andWith(player1Pos2Enc.le(player1Pos3Enc));
+        
+        valid = valid.andWith(player1Pos1Enc.clone().geWith(ContextDD.get().newConstant(0))
+        		.impliesWith(player1Pos1Enc.ne(player1Pos2Enc)));
+        valid = valid.andWith(player1Pos2Enc.clone().geWith(ContextDD.get().newConstant(0))
+        		.impliesWith(player1Pos2Enc.ne(player1Pos3Enc)));
+
+        valid = valid.andWith(player2Pos1Enc.le(ContextDD.get().newConstant(15)));
+        valid = valid.andWith(player2Pos2Enc.le(ContextDD.get().newConstant(15)));
+        valid = valid.andWith(player2Pos3Enc.le(ContextDD.get().newConstant(15)));
+        valid = valid.andWith(player2Pos1Enc.le(player2Pos2Enc));
+        valid = valid.andWith(player2Pos2Enc.le(player2Pos3Enc));
+        valid = valid.andWith(player2Pos1Enc.clone().geWith(ContextDD.get().newConstant(0))
+        		.impliesWith(player2Pos1Enc.ne(player2Pos2Enc)));
+        valid = valid.andWith(player2Pos2Enc.clone().geWith(ContextDD.get().newConstant(0))
+        		.impliesWith(player2Pos2Enc.ne(player2Pos3Enc)));
+
+        valid = valid.andWith(player1Pos1Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos1Enc.ne(player2Pos1Enc)));
+        valid = valid.andWith(player1Pos1Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos1Enc.ne(player2Pos2Enc)));
+        valid = valid.andWith(player1Pos1Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos1Enc.ne(player2Pos3Enc)));
+
+        valid = valid.andWith(player1Pos2Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos2Enc.ne(player2Pos1Enc)));
+        valid = valid.andWith(player1Pos2Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos2Enc.ne(player2Pos2Enc)));
+        valid = valid.andWith(player1Pos2Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos2Enc.ne(player2Pos3Enc)));
+
+        valid = valid.andWith(player1Pos3Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos3Enc.ne(player2Pos1Enc)));
+        valid = valid.andWith(player1Pos3Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos3Enc.ne(player2Pos2Enc)));
+        valid = valid.andWith(player1Pos3Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos3Enc.ne(player2Pos3Enc)));
+
+        valid = valid.andWith(
+        		(player1Pos1Enc.eq(ContextDD.get().newConstant(-2))
+        		.andWith(player1Pos2Enc.eq(ContextDD.get().newConstant(-2)))
+        		.andWith(player1Pos3Enc.eq(ContextDD.get().newConstant(-2))))
+        		.implies(turnEnc.eq(ContextDD.get().newConstant(false))));
+
+        valid = valid.andWith(
+        		(player2Pos1Enc.eq(ContextDD.get().newConstant(-2))
+        		.andWith(player2Pos2Enc.eq(ContextDD.get().newConstant(-2)))
+        		.andWith(player2Pos3Enc.eq(ContextDD.get().newConstant(-2))))
+        		.implies(turnEnc.eq(ContextDD.get().newConstant(true))));
+
+        ContextDD.get().reorder();
+        System.out.println(valid.countSat(support));
+        System.out.println(valid.countNodes());
         close(options);
     }
 }

@@ -107,7 +107,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
             for (int operandNr = 0; operandNr < innerResultsSize; operandNr++) {
                 innerResults.get(operandNr).getExplicitIthValue(operands[operandNr], node);
             }
-            evaluator.apply(res, expressionOperator.getOperator(), operands);
+            evaluator.apply(res, operands);
             resultValues.set(res, node);
         }
         StateMap result = UtilGraph.newStateMap((StateSetExplicit) forStates.clone(), resultValues);

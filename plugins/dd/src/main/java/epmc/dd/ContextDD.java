@@ -338,7 +338,7 @@ public final class ContextDD implements Closeable {
         if (ops.length == 0) {
             Type resultType = evaluator.resultType(identifier, types);
             Value resultValue = resultType.newValue();
-            evaluator.apply(resultValue, identifier, new Value[0]);
+            evaluator.apply(resultValue, new Value[0]);
             result = lowLevel.newConstant(resultValue);
         } else if (lowLevel.canApply(identifier, type, opsLong)) {
             result = lowLevel.apply(identifier, type, opsLong);
@@ -1747,7 +1747,7 @@ public final class ContextDD implements Closeable {
                 result = UtilValue.clone(left);
             } else {
                 result = type.newValue();
-                evaluator.apply(result, identifier, left, right);
+                evaluator.apply(result, left, right);
             }
             known.put(triple, result);
             return result;

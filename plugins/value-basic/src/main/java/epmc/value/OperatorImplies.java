@@ -20,10 +20,7 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 /** Logical IMPLIES, unary operator. */
 public final class OperatorImplies implements Operator {

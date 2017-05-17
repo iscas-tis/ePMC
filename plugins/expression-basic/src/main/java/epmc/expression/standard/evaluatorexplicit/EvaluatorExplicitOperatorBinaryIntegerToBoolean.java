@@ -149,7 +149,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     private final Value result;
     private final BinaryIntegerToBoolean binaryIntegerToBoolean;
 
-    private final String operator;
     private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) throws EPMCException {
@@ -191,7 +190,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             binaryIntegerToBoolean = null;
             break;
         }
-        this.operator = expression.getOperator();
         this.evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(expression.getOperator(), types).newValue();
     }
@@ -216,7 +214,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             operand.evaluate(values);
         }
 
-        evaluator.apply(result, operator, operandValues);
+        evaluator.apply(result, operandValues);
         return result;
     }
     

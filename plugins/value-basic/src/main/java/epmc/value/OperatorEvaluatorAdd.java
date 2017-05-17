@@ -60,10 +60,8 @@ public enum OperatorEvaluatorAdd implements OperatorEvaluator {
     }
 
     @Override
-    public void apply(Value result, String operator, Value... operands) throws EPMCException {
+    public void apply(Value result, Value... operands) throws EPMCException {
     	assert result != null;
-    	assert operator != null;
-    	assert operator.equals(OperatorAdd.IDENTIFIER);
     	assert operands != null;
     	for (Value operand : operands) {
     		assert operand != null;

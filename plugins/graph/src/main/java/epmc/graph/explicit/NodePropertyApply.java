@@ -92,7 +92,7 @@ public final class NodePropertyApply implements NodeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node);
         }
-        evaluator.apply(value, operator, callOperands);
+        evaluator.apply(value, callOperands);
         return value;
     }
 

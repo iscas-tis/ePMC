@@ -220,7 +220,7 @@ final class GenericOperations {
                 leafValues[index] = operands[index].value();
             }
             Value resultValue = type.newValue();
-            operator.apply(resultValue, identifier, leafValues);
+            operator.apply(resultValue, leafValues);
             result = libraryDD.newConstant(resultValue);
         } else {
             BitSet back = backSets[recursionDepth];

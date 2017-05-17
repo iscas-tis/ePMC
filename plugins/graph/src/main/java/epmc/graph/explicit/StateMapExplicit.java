@@ -194,7 +194,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         for (int i = 0; i < size(); i++) {
             getExplicitIthValue(op1, i);
             operandExplicit.getExplicitIthValue(op2, i);
-            evaluator.apply(res, identifier, op1, op2);
+            evaluator.apply(res, op1, op2);
             resultValues.set(res, i);
         }
         result = new StateMapExplicit(states.clone(), resultValues);
@@ -274,7 +274,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                     	types[i] = values[i].getType();
                     }
                     OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
-                    evaluator.apply(result, identifier, values);
+                    evaluator.apply(result, values);
                 }
             }
         }

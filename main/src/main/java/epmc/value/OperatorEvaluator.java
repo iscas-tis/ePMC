@@ -8,5 +8,5 @@ public interface OperatorEvaluator {
 
     Type resultType(String operator, Type... types);
 
-    void apply(Value result, String operator, Value... operands) throws EPMCException;
+    void apply(Value result, Value... operands) throws EPMCException;
 }
