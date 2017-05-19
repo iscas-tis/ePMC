@@ -56,7 +56,7 @@ public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorMin.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorMin.MIN, variables);
     }
 
     @Override

@@ -35,6 +35,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.value.Operator;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
 import epmc.value.OperatorGt;
@@ -246,18 +247,18 @@ public final class UtilCoalition {
     public static CmpType getCompareType(ExpressionOperator expression) {
     	assert expression != null;
     	boolean invert = ExpressionQuantifier.isQuantifier(expression.getOperand2());
-    	switch (expression.getOperator()) {
-    	case OperatorEq.IDENTIFIER:
+    	Operator operator = expression.getOperator();
+    	if (operator.equals(OperatorEq.EQ)) {
     		return CmpType.EQ;
-    	case OperatorNe.IDENTIFIER:
+    	} else if (operator.equals(OperatorNe.NE)) {
     		return CmpType.NE;
-    	case OperatorLt.IDENTIFIER:
+    	} else if (operator.equals(OperatorLt.LT)) {
     		return invert ? CmpType.GT : CmpType.LT;
-    	case OperatorGt.IDENTIFIER:
+    	} else if (operator.equals(OperatorGt.GT)) {
     		return invert ? CmpType.LT : CmpType.GT;
-    	case OperatorLe.IDENTIFIER:
+    	} else if (operator.equals(OperatorLe.LE)) {
     		return invert ? CmpType.GE : CmpType.LE;
-    	case OperatorGe.IDENTIFIER:
+    	} else if (operator.equals(OperatorGe.GE)) {
     		return invert ? CmpType.LE : CmpType.GE;
     	}
     	throw new RuntimeException(expression.toString());

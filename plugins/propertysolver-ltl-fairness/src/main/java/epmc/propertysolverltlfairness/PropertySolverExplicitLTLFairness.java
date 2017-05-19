@@ -60,6 +60,7 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorOr;
@@ -172,12 +173,12 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		if (prop instanceof ExpressionOperator) { // AND, OR will be flattened
 			Set<Set<Expression>> set = null;
 			ExpressionOperator expressionOperator = (ExpressionOperator)prop;
-			switch (expressionOperator.getOperator()) {
-			case OperatorOr.IDENTIFIER:
+			Operator operator = expressionOperator.getOperator();
+			if (operator.equals(OperatorOr.OR)) {
 				Set<Set<Expression>> op1Set = flatten(expressionOperator.getOperand1());
 				op1Set.addAll(flatten(expressionOperator.getOperand2())); 
 				return op1Set;
-			case OperatorAnd.IDENTIFIER:
+			} else if (operator.equals(OperatorAnd.AND)) {
 				set = new HashSet<>();
 				Set<Set<Expression>> set1 = flatten(expressionOperator.getOperand1());
 				Set<Set<Expression>> set2 = flatten(expressionOperator.getOperand2());
@@ -190,8 +191,8 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 					}
 				} 
 				return set;
-			default:
-				assert (false);
+			} else {
+				assert false;
 			}
 		}
 		// Temporal operators
@@ -216,7 +217,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 					} else {
 						conjs = conjs == null ?
 								// conjunction
-						p : UtilLTL.newOperator(OperatorAnd.IDENTIFIER, conjs, p); 
+						p : UtilLTL.newOperator(OperatorAnd.AND, conjs, p); 
 					}
 				}
 				if(conjs != null) tmp.add(UtilLTL.newFinally(conjs));
@@ -237,7 +238,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 					} else {
 						disjs = disjs == null ?
 						// disjunction
-						p : UtilLTL.newOperator(OperatorOr.IDENTIFIER, disjs, p); 
+						p : UtilLTL.newOperator(OperatorOr.OR, disjs, p); 
 					}
 				}
 				if (disjs != null)
@@ -336,16 +337,16 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 			return false;
 		} else {
 			ExpressionOperator expressionOperator = (ExpressionOperator) lit;
-		   switch (expressionOperator.getOperator()) {
-		   case OperatorNot.IDENTIFIER:
-			   return ! checkNode(graph, node, labels, expressionOperator.getOperand1());
-		   case OperatorOr.IDENTIFIER:
-			   return checkNode(graph, node, labels, expressionOperator.getOperand1())
-					   || checkNode(graph, node, labels, expressionOperator.getOperand2());
-		   case OperatorAnd.IDENTIFIER:
-			   return checkNode(graph, node, labels, expressionOperator.getOperand1())
-			   && checkNode(graph, node, labels, expressionOperator.getOperand2());
-		   default:
+			Operator operator = expressionOperator.getOperator();
+			if (operator.equals(OperatorNot.NOT)) {
+				return !checkNode(graph, node, labels, expressionOperator.getOperand1());
+			} else if (operator.equals(OperatorOr.OR)) {
+				return checkNode(graph, node, labels, expressionOperator.getOperand1())
+						|| checkNode(graph, node, labels, expressionOperator.getOperand2());
+			} else if (operator.equals(OperatorAnd.AND)) {
+				return checkNode(graph, node, labels, expressionOperator.getOperand1())
+						&& checkNode(graph, node, labels, expressionOperator.getOperand2());
+			} else {
 				assert false : "ERROR literal not in labels";   
 		   }
 		}
@@ -401,7 +402,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 		StateMap result = doSolve(modelGraph, forStates, quantifiedProp);
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            String op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             assert op != null;
             result = result.applyWith(op, compare);
         }

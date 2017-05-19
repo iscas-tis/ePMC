@@ -308,7 +308,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.IDENTIFIER)
+        	.setOperator(OperatorNot.NOT)
         	.setOperands(expression)
         	.build();
     }

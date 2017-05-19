@@ -271,7 +271,7 @@ public final class UtilAutomaton {
 
     private static Expression and(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorAnd.IDENTIFIER)
+    			.setOperator(OperatorAnd.AND)
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
@@ -279,7 +279,7 @@ public final class UtilAutomaton {
 
     private static Expression or(Expression a, Expression b, Positional positional) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorOr.IDENTIFIER)
+    			.setOperator(OperatorOr.OR)
     			.setPositional(positional)
     			.setOperands(a, b)
     			.build();
@@ -287,7 +287,7 @@ public final class UtilAutomaton {
 
     private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorNot.IDENTIFIER)
+    			.setOperator(OperatorNot.NOT)
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();
@@ -405,7 +405,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorAnd.IDENTIFIER);
+                .equals(OperatorAnd.AND);
     }
 
     private static boolean isOr(Expression expression) {
@@ -414,7 +414,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorOr.IDENTIFIER);
+                .equals(OperatorOr.OR);
     }
 
     private static boolean isIte(Expression expression) {
@@ -423,7 +423,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorIte.IDENTIFIER);
+                .equals(OperatorIte.ITE);
     }
 
     private static boolean isIff(Expression expression) {
@@ -432,7 +432,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorIff.IDENTIFIER);
+                .equals(OperatorIff.IFF);
     }
 
     private static boolean isImplies(Expression expression) {
@@ -441,7 +441,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorImplies.IDENTIFIER);
+                .equals(OperatorImplies.IMPLIES);
     }
 
     private static boolean isNot(Expression expression) {
@@ -450,7 +450,7 @@ public final class UtilAutomaton {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNot.IDENTIFIER);
+                .equals(OperatorNot.NOT);
     }
 
     private static boolean isNext(Expression expression) {

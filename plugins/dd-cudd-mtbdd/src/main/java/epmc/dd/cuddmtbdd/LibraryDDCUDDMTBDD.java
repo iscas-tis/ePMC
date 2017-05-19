@@ -44,6 +44,7 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorDivide;
@@ -106,7 +107,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                String operator = operators[op];
+                Operator operator = operators[op];
+                assert operator != null;
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
                 OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
@@ -124,7 +126,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            String operator = operators[op];
+            Operator operator = operators[op];
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
@@ -143,7 +145,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private class DD_VOP3Impl implements DD_VOP3 {
         @Override
         public long invoke(int op, long f, long g, long h) {
-            String operator = operators[op];
+            Operator operator = operators[op];
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
             Value op3Value = numberToValue(h);
@@ -191,7 +193,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         public int invoke(String cuddName) {
             assert cuddName != null;
             assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
-            String name = OPERATOR_TO_MTBDD.get(cuddName);
+            Operator name = OPERATOR_TO_MTBDD.get(cuddName);
             int number = operatorToNumber.get(name);
 //            assert operators[number].getIdentifier().equals(name) : 
 //                operators[number].getIdentifier() + " " + name;
@@ -328,22 +330,22 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     final static int MTR_FIXED = 0x00000004;
     final static int MTR_NEWNODE = 0x00000008;
     
-    private static final Map<String,String> OPERATOR_TO_MTBDD;
+    private static final Map<String,Operator> OPERATOR_TO_MTBDD;
     static {
-    	Map<String,String> mtbddToOperatorName = new LinkedHashMap<>();
-    	mtbddToOperatorName.put("add", OperatorAdd.IDENTIFIER);
-    	mtbddToOperatorName.put("subtract", OperatorSubtract.IDENTIFIER);
-    	mtbddToOperatorName.put("multiply", OperatorMultiply.IDENTIFIER);
-    	mtbddToOperatorName.put("divide", OperatorDivide.IDENTIFIER);
-    	mtbddToOperatorName.put("max", OperatorMax.IDENTIFIER);
-    	mtbddToOperatorName.put("min", OperatorMin.IDENTIFIER);
-    	mtbddToOperatorName.put("and", OperatorAnd.IDENTIFIER);
-    	mtbddToOperatorName.put("or", OperatorOr.IDENTIFIER);
-    	mtbddToOperatorName.put("not", OperatorNot.IDENTIFIER);
-    	mtbddToOperatorName.put("iff", OperatorIff.IDENTIFIER);
-    	mtbddToOperatorName.put("implies", OperatorImplies.IDENTIFIER);
-    	mtbddToOperatorName.put("eq", OperatorEq.IDENTIFIER);
-    	mtbddToOperatorName.put("ne", OperatorNe.IDENTIFIER);
+    	Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
+    	mtbddToOperatorName.put("add", OperatorAdd.ADD);
+    	mtbddToOperatorName.put("subtract", OperatorSubtract.SUBTRACT);
+    	mtbddToOperatorName.put("multiply", OperatorMultiply.MULTIPLY);
+    	mtbddToOperatorName.put("divide", OperatorDivide.DIVIDE);
+    	mtbddToOperatorName.put("max", OperatorMax.MAX);
+    	mtbddToOperatorName.put("min", OperatorMin.MIN);
+    	mtbddToOperatorName.put("and", OperatorAnd.AND);
+    	mtbddToOperatorName.put("or", OperatorOr.OR);
+    	mtbddToOperatorName.put("not", OperatorNot.NOT);
+    	mtbddToOperatorName.put("iff", OperatorIff.IFF);
+    	mtbddToOperatorName.put("implies", OperatorImplies.IMPLIES);
+    	mtbddToOperatorName.put("eq", OperatorEq.EQ);
+    	mtbddToOperatorName.put("ne", OperatorNe.NE);
     	OPERATOR_TO_MTBDD = Collections.unmodifiableMap(mtbddToOperatorName);
     }
     
@@ -419,9 +421,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private GetOperatorNumberImpl getOperatorNumber;
     private GetNumberOfOperators getNumberOfOperators;
     private Type resultType;
-    private String[] operators;
-    private TObjectIntCustomHashMap<String> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
-    private String opId;
+    private Operator[] operators;
+    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
+    private Operator opId;
     private int opIdNr;
     
     @Override
@@ -429,14 +431,14 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Collection<String> identifiers = ContextValue.get().getOperators().keySet();
-        this.operators = identifiers.toArray(new String[0]);
+        Collection<Operator> identifiers = ContextValue.get().getOperators().values();
+        this.operators = identifiers.toArray(new Operator[0]);
         int index = 0;
-        for (String operator : identifiers) {
+        for (Operator operator : identifiers) {
             this.operatorToNumber.put(operator, index);
         	index++;
         }
-        opId = OperatorId.IDENTIFIER;
+        opId = OperatorId.ID;
         opIdNr = operatorToNumber.get(opId);
         
         this.numberToValue = new TLongObjectHashMap<>();
@@ -479,7 +481,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-    public long apply(String operation, Type type, long... operands)
+    public long apply(Operator operation, Type type, long... operands)
             throws EPMCException {
         assert operation != null;
         assert type != null;
@@ -899,7 +901,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (operands.length > 3) {
 			return false;
 		}

@@ -199,7 +199,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorEq.IDENTIFIER)
+        	.setOperator(OperatorEq.EQ)
         	.setOperands(a, b)
         	.build();
     }

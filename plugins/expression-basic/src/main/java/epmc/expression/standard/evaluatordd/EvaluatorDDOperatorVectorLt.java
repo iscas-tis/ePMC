@@ -55,7 +55,7 @@ public final class EvaluatorDDOperatorVectorLt implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorLt.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorLt.LT, variables);
     }
 
     @Override

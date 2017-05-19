@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Greater than, a > b, binary operator. */
-public final class OperatorGt implements Operator {
-    public final static String IDENTIFIER = ">";
+public enum OperatorGt implements Operator {
+    GT
 }

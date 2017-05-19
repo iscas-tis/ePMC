@@ -31,6 +31,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
@@ -70,44 +71,44 @@ final class HysWriter {
 	private final static String TYPE_INT = "int";
 	private final static String TYPE_BOOLE = "boole";
 
-	private final static Map<String,ISatOperator> EPMC_TO_ISAT3;
+	private final static Map<Operator,ISatOperator> EPMC_TO_ISAT3;
 	static {
-		Map<String,ISatOperator> iscasMCToISat3 = new HashMap<>();
-		iscasMCToISat3.put(OperatorAnd.IDENTIFIER, newOperator()
+		Map<Operator,ISatOperator> iscasMCToISat3 = new HashMap<>();
+		iscasMCToISat3.put(OperatorAnd.AND, newOperator()
 				.setIdentifier("and").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorOr.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorOr.OR, newOperator()
 				.setIdentifier("or").setType(ISatOperator.Type.INFIX).build());
 		/* "nand" not supported */ 
 		/* "nor" not supported */ 
 		/* "xor" not supported */ 
-		iscasMCToISat3.put(OperatorIff.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorIff.IFF, newOperator()
 				.setIdentifier("nxor").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorImplies.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorImplies.IMPLIES, newOperator()
 				.setIdentifier("impl").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorNot.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorNot.NOT, newOperator()
 				.setIdentifier("not").setType(ISatOperator.Type.PREFIX).build());
 
-		iscasMCToISat3.put(OperatorAddInverse.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorAddInverse.ADD_INVERSE, newOperator()
 				.setIdentifier("-").setType(ISatOperator.Type.PREFIX).build());
-		iscasMCToISat3.put(OperatorAdd.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorAdd.ADD, newOperator()
 				.setIdentifier("+").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorSubtract.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorSubtract.SUBTRACT, newOperator()
 				.setIdentifier("-").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorMultiply.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorMultiply.MULTIPLY, newOperator()
 				.setIdentifier("*").setType(ISatOperator.Type.INFIX).build());
 		// does this work?
-		iscasMCToISat3.put(OperatorDivide.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorDivide.DIVIDE, newOperator()
 				.setIdentifier("/").setType(ISatOperator.Type.INFIX).build());
 
 		/* "abs" not supported */ 
-		iscasMCToISat3.put(OperatorMin.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorMin.MIN, newOperator()
 				.setIdentifier("min").setType(ISatOperator.Type.PREFIX).build());
-		iscasMCToISat3.put(OperatorMax.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorMax.MAX, newOperator()
 				.setIdentifier("max").setType(ISatOperator.Type.PREFIX).build());
 		/* "exp" not supported */
 		/* "exp2" not supported */
 		/* "exp10" not supported */
-		iscasMCToISat3.put(OperatorLog.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorLog.LOG, newOperator()
 				.setIdentifier("log").setType(ISatOperator.Type.PREFIX).build());
 		/* "log2" not supported */
 		/* "log10" not supported */
@@ -116,17 +117,17 @@ final class HysWriter {
 		/* "pow" not supported */
 		/* "nrt" not supported */
 		
-		iscasMCToISat3.put(OperatorLt.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorLt.LT, newOperator()
 				.setIdentifier("<").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorLe.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorLe.LE, newOperator()
 				.setIdentifier("<=").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorEq.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorEq.EQ, newOperator()
 				.setIdentifier("=").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorNe.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorNe.NE, newOperator()
 				.setIdentifier("!=").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorGt.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorGt.GT, newOperator()
 				.setIdentifier(">").setType(ISatOperator.Type.INFIX).build());
-		iscasMCToISat3.put(OperatorGe.IDENTIFIER, newOperator()
+		iscasMCToISat3.put(OperatorGe.GE, newOperator()
 				.setIdentifier(">=").setType(ISatOperator.Type.INFIX).build());
 
 		EPMC_TO_ISAT3 = Collections.unmodifiableMap(iscasMCToISat3);

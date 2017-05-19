@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorDivideIgnoreZero implements Operator {
-    public final static String IDENTIFIER = "divide-ignore-zero";
+public enum OperatorDivideIgnoreZero implements Operator {
+    DIVIDE_IGNORE_ZERO
 }

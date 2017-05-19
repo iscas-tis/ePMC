@@ -20,6 +20,7 @@
 
 package epmc.expression.standard;
 
+import epmc.value.Operator;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
 import epmc.value.OperatorGt;
@@ -36,21 +37,21 @@ public enum CmpType {
     /** Compute and return value without comparing it. */
     IS("=?", null),
     /** Check whether value computed equals given value. */
-    EQ("=", OperatorEq.IDENTIFIER),
+    EQ("=", OperatorEq.EQ),
     /** Check whether value computed does not equal given value. */
-    NE("!=", OperatorNe.IDENTIFIER),
+    NE("!=", OperatorNe.NE),
     /** Check whether value computed is larger than given value. */
-    GT(">", OperatorGt.IDENTIFIER),
+    GT(">", OperatorGt.GT),
     /** Check whether value computed is larger or equal than given value. */
-    GE(">=", OperatorGe.IDENTIFIER),
+    GE(">=", OperatorGe.GE),
     /** Check whether value computed is smaller than given value. */
-    LT("<", OperatorLt.IDENTIFIER),
+    LT("<", OperatorLt.LT),
     /** Check whether value computed is smaller or equal than given value. */
-    LE("<=", OperatorLe.IDENTIFIER);
+    LE("<=", OperatorLe.LE);
     
     /** User-readable {@link String} representing the comparism. */
     private final String string;
-    private final String operator;
+    private final Operator operator;
 
     /**
      * Construct new comparison type.
@@ -58,7 +59,7 @@ public enum CmpType {
      * 
      * @param string string representing comparison type.
      */
-    private CmpType(String string, String operator) {
+    private CmpType(String string, Operator operator) {
         assert string != null;
         this.string = string;
         this.operator = operator;
@@ -135,34 +136,34 @@ public enum CmpType {
      * </tr>
      * <tr>
      * <td>{@link CmpType#EQ}</td>
-     * <td>{@link OperatorEq#IDENTIFIER}</td>
+     * <td>{@link OperatorEq#EQ}</td>
      * </tr>
      * <tr>
      * <td>{@link CmpType#NE}</td>
-     * <td>{@link OperatorNe#IDENTIFIER}</td>
+     * <td>{@link OperatorNe#NE}</td>
      * </tr>
      * <tr>
      * <td>{@link CmpType#GT}</td>
-     * <td>{@link OperatorGt#IDENTIFIER}</td>
+     * <td>{@link OperatorGt#GT}</td>
      * </tr>
      * <tr>
      * <td>{@link CmpType#GE}</td>
-     * <td>{@link OperatorGe#IDENTIFIER}</td>
+     * <td>{@link OperatorGe#GE}</td>
      * </tr>
      * <tr>
      * <td>{@link CmpType#LT}</td>
-     * <td>{@link OperatorLe#IDENTIFIER}</td>
+     * <td>{@link OperatorLe#LE}</td>
      * </tr>
      * <tr>
      * <td>{@link CmpType#LE}</td>
-     * <td>{@link OperatorLe#IDENTIFIER}</td>
+     * <td>{@link OperatorLe#LE}</td>
      * </tr>
      * </table>
      * The parameter of this function must not be {@code null}.
      * 
      * @return equivalent operator
      */
-    public String asExOpType() {
+    public Operator asExOpType() {
         assert this != IS;
         return operator;
     }

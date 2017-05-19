@@ -48,6 +48,7 @@ import epmc.value.Value;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeInteger;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorEq;
@@ -70,7 +71,9 @@ import epmc.value.OperatorSubtract;
 // TODO documentation
 // TODO functionality to support range checks
 // TODO still needed?
-
+// TODO BDD vector functionality should be used to DD nodes, such that
+// speedup would appear for all cases where applicable, not only
+// during expression translation
 public final class ExpressionToDD implements Closeable {
     private final class Translated implements Closeable {
         private DD singleDD = null;
@@ -427,60 +430,38 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(getValue(expression));
         } else if (expression instanceof ExpressionOperator) {
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String operator = expressionOperator.getOperator();
+            Operator operator = expressionOperator.getOperator();
             List<Translated> inner = new ArrayList<>();
             
             for (Expression op : expressionOperator.getOperands()) {
                 inner.add(transRec(op));
             }
-            switch (operator) {
-            case OperatorAdd.IDENTIFIER:
+            if (operator.equals(OperatorAdd.ADD)) {
                 result = opAdd(inner.get(0), inner.get(1));
-                break;
-            case OperatorAddInverse.IDENTIFIER:
+            } else if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
                 result = opAddInverse(inner.get(0));
-                break;
-            case OperatorEq.IDENTIFIER:
+            } else if (operator.equals(OperatorEq.EQ)) {
                 result = opEq(inner.get(0), inner.get(1));
-                break;
-            case OperatorGe.IDENTIFIER:
+            } else if (operator.equals(OperatorGe.GE)) {
                 result = opGe(inner.get(0), inner.get(1));
-                break;
-            case OperatorGt.IDENTIFIER:
+            } else if (operator.equals(OperatorGt.GT)) {
                 result = opGt(inner.get(0), inner.get(1));
-                break;
-            case OperatorIte.IDENTIFIER:
+            } else if (operator.equals(OperatorIte.ITE)) {
                 result = opIte(inner.get(0), inner.get(1), inner.get(2));
-                break;
-            case OperatorLe.IDENTIFIER:
+            } else if (operator.equals(OperatorLe.LE)) {
                 result = opLe(inner.get(0), inner.get(1));
-                break;
-            case OperatorLt.IDENTIFIER:
+            }  else if (operator.equals(OperatorLt.LT)) {
                 result = opLt(inner.get(0), inner.get(1));
-                break;
-            case OperatorMax.IDENTIFIER:
+            } else if (operator.equals(OperatorMax.MAX)) {
                 result = opMax(inner.get(0), inner.get(1));
-                break;
-            case OperatorMin.IDENTIFIER:
+            } else if (operator.equals(OperatorMin.MIN)) {
                 result = opMin(inner.get(0), inner.get(1));
-                break;
-            case OperatorNe.IDENTIFIER:
+            } else if (operator.equals(OperatorNe.NE)) {
                 result = opNe(inner.get(0), inner.get(1));
-                break;
-            case OperatorSubtract.IDENTIFIER:
+            } else if (operator.equals(OperatorSubtract.SUBTRACT)) {
                 result = opSubtract(inner.get(0), inner.get(1));
-                break;
-                // TODO multiply needs work
-//            case MULTIPLY:
-  //              result = opMultiply(inner.get(0), inner.get(1));
-    //            break;
-//            case MOD:
-//            case MULTIPLY_INVERSE:
-//            case DIVIDE
-//                break;
-            default:
+            } else {
                 result = generalApply(operator, inner);
-                break;
             }
             if (translationCache == null) {
                 for (Translated op : inner) {
@@ -505,7 +486,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(eq, null, null);
             eq.dispose();
         } else {
-            result = generalApply(OperatorEq.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorEq.EQ, op1, op2);
         }
         
         return result;
@@ -518,7 +499,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(ne, null, null);
             ne.dispose();
         } else {
-            result = generalApply(OperatorNe.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorNe.NE, op1, op2);
         }
         
         return result;
@@ -531,7 +512,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(ge, null, null);
             ge.dispose();
         } else {
-            result = generalApply(OperatorGe.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorGe.GE, op1, op2);
         }
         
         return result;
@@ -544,7 +525,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(le, null, null);
             le.dispose();
         } else {
-            result = generalApply(OperatorLe.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorLe.LE, op1, op2);
         }
         
         return result;
@@ -557,7 +538,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(lt, null, null);
             lt.dispose();
         } else {
-            result = generalApply(OperatorLt.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorLt.LT, op1, op2);
         }
         
         return result;
@@ -570,7 +551,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(gt, null, null);
             gt.dispose();
         } else {
-            result = generalApply(OperatorGt.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorGt.GT, op1, op2);
         }
         
         return result;
@@ -584,7 +565,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorAddInverse.IDENTIFIER, op);
+            result = generalApply(OperatorAddInverse.ADD_INVERSE, op);
         }
         return result;
     }
@@ -597,7 +578,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorAdd.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorAdd.ADD, op1, op2);
         }
         
         return result;
@@ -627,7 +608,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorMax.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorMax.MAX, op1, op2);
         }
         
         return result;
@@ -641,7 +622,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorMin.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorMin.MIN, op1, op2);
         }
         
         return result;
@@ -655,7 +636,7 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorSubtract.IDENTIFIER, op1, op2);
+            result = generalApply(OperatorSubtract.SUBTRACT, op1, op2);
         }
         
         return result;
@@ -669,13 +650,13 @@ public final class ExpressionToDD implements Closeable {
             result = new Translated(null, list, null);
             ContextDD.get().dispose(list);
         } else {
-            result = generalApply(OperatorIte.IDENTIFIER, ifT, thenT, elseT);
+            result = generalApply(OperatorIte.ITE, ifT, thenT, elseT);
         }
         
         return result;
     }
     
-    private Translated generalApply(String operator, List<Translated> operands)
+    private Translated generalApply(Operator operator, List<Translated> operands)
             throws EPMCException {
         assert operator != null;
         assert operands != null;
@@ -686,7 +667,7 @@ public final class ExpressionToDD implements Closeable {
         return generalApply(operator, array);
     }
     
-    private Translated generalApply(String operator, Translated... operands)
+    private Translated generalApply(Operator operator, Translated... operands)
             throws EPMCException {
         assert operator != null;
         assert operands != null;

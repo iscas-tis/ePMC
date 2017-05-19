@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorTrunc implements Operator {
-	public final static String IDENTIFIER = "trunc";
+public enum OperatorTrunc implements Operator {
+	TRUNC
 }

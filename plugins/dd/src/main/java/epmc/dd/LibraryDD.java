@@ -23,6 +23,7 @@ package epmc.dd;
 import java.io.Closeable;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -40,9 +41,9 @@ public interface LibraryDD extends Closeable {
 
     ContextDD getContextDD();
     
-    boolean canApply(String operation, Type resultType, long...operands);
+    boolean canApply(Operator operation, Type resultType, long...operands);
     
-    long apply(String operator, Type resultType, long... operands) throws EPMCException;
+    long apply(Operator operator, Type resultType, long... operands) throws EPMCException;
 
     long newConstant(Value value) throws EPMCException;
 

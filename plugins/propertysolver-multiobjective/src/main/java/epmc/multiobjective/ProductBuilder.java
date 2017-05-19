@@ -218,8 +218,8 @@ final class ProductBuilder {
                 transRewards[propNr] = new EdgePropertyConstant(prodWrapper, zero);
             }
             if (invertedRewards.get(propNr)) {
-                stateRewards[propNr] = new NodePropertyApply(prodWrapper, OperatorAddInverse.IDENTIFIER, stateRewards[propNr]);
-                transRewards[propNr] = new EdgePropertyApply(prodWrapper, OperatorAddInverse.IDENTIFIER, transRewards[propNr]);
+                stateRewards[propNr] = new NodePropertyApply(prodWrapper, OperatorAddInverse.ADD_INVERSE, stateRewards[propNr]);
+                transRewards[propNr] = new EdgePropertyApply(prodWrapper, OperatorAddInverse.ADD_INVERSE, transRewards[propNr]);
             }
             propNr++;
         }

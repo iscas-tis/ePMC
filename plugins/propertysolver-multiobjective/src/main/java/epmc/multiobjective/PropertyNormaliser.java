@@ -133,7 +133,7 @@ final class PropertyNormaliser {
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getZero());
             } else if (isQuantLe(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newCompare = new ExpressionOperator.Builder()
-                        .setOperator(OperatorAddInverse.IDENTIFIER)
+                        .setOperator(OperatorAddInverse.ADD_INVERSE)
                         .setOperands(objectiveQuantifier.getCompare()).build();
                 newCompare = new ExpressionLiteral.Builder()
                 		.setValue(evaluateValue(newCompare))
@@ -182,14 +182,14 @@ final class PropertyNormaliser {
 	
     private Expression subtract(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorSubtract.IDENTIFIER)
+    			.setOperator(OperatorSubtract.SUBTRACT)
     			.setOperands(a, b)
     			.build();
     }
     
     private static Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.IDENTIFIER)
+        	.setOperator(OperatorNot.NOT)
         	.setOperands(expression)
         	.build();
     }

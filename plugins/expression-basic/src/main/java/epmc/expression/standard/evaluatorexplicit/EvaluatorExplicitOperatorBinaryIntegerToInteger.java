@@ -38,6 +38,7 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -90,19 +91,19 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String opName = expressionOperator.getOperator();
+            Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
                 }
             }
-            if (!opName.equals(OperatorAdd.IDENTIFIER)
-                    && !opName.equals(OperatorMax.IDENTIFIER)
-                    && !opName.equals(OperatorMin.IDENTIFIER)
-                    && !opName.equals(OperatorMod.IDENTIFIER)
-                    && !opName.equals(OperatorMultiply.IDENTIFIER)
-                    && !opName.equals(OperatorPow.IDENTIFIER)
-                    && !opName.equals(OperatorSubtract.IDENTIFIER)) {
+            if (!opName.equals(OperatorAdd.ADD)
+                    && !opName.equals(OperatorMax.MAX)
+                    && !opName.equals(OperatorMin.MIN)
+                    && !opName.equals(OperatorMod.MOD)
+                    && !opName.equals(OperatorMultiply.MULTIPLY)
+                    && !opName.equals(OperatorPow.POW)
+                    && !opName.equals(OperatorSubtract.SUBTRACT)) {
                 return false;
             }
             for (Expression child : expressionOperator.getOperands()) {
@@ -152,7 +153,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
     private final Value result;
     private final BinaryIntegerToInteger binaryIntegerToInteger;
 
-    private final String operator;
     private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorBinaryIntegerToInteger(Builder builder) throws EPMCException {
@@ -172,33 +172,24 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        switch (expression.getOperator()) {
-        case OperatorAdd.IDENTIFIER:
-            binaryIntegerToInteger = (a,b) -> a+b;
-            break;
-        case OperatorMax.IDENTIFIER:
+        Operator operator = expression.getOperator();
+        if (operator.equals(OperatorAdd.ADD)) {
+            binaryIntegerToInteger = (a,b) -> a+b;        	
+        } else if (operator.equals(OperatorMax.MAX)) {
             binaryIntegerToInteger = (a,b) -> Math.max(a, b);
-            break;
-        case OperatorMin.IDENTIFIER:
+        } else if (operator.equals(OperatorMin.MIN)) {
             binaryIntegerToInteger = (a,b) -> Math.min(a, b);
-            break;
-        case OperatorMod.IDENTIFIER:
+        } else if (operator.equals(OperatorMod.MOD)) {
             binaryIntegerToInteger = (a,b) -> a % b;
-            break;
-        case OperatorMultiply.IDENTIFIER:
+        } else if (operator.equals(OperatorMultiply.MULTIPLY)) {
             binaryIntegerToInteger = (a,b) -> a * b;
-            break;
-        case OperatorPow.IDENTIFIER:
+        } else if (operator.equals(OperatorPow.POW)) {
             binaryIntegerToInteger = (a,b) -> (int) Math.pow(a, b);
-            break;
-        case OperatorSubtract.IDENTIFIER:
+        } else if (operator.equals(OperatorSubtract.SUBTRACT)) {
             binaryIntegerToInteger = (a,b) -> a - b;
-            break;
-        default:
+        } else {
             binaryIntegerToInteger = null;
-            break;
         }
-        this.operator = expression.getOperator();
         evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
         result = evaluator.resultType(operator, types).newValue();
     }

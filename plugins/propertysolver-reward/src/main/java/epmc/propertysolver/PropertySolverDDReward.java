@@ -110,7 +110,7 @@ public final class PropertySolverDDReward implements PropertySolver {
 //        StateMap result = doSolve(quantifiedProp, forStates, min);
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            String op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
 //            result = result.applyWith(op, compare);
         }
   //      return result;

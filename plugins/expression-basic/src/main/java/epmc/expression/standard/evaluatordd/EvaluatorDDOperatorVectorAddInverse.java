@@ -56,7 +56,7 @@ public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorAddInverse.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorAddInverse.ADD_INVERSE, variables);
     }
 
     @Override

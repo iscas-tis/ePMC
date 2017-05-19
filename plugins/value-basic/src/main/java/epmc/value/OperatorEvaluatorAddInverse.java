@@ -28,13 +28,13 @@ public enum OperatorEvaluatorAddInverse implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorAddInverse.IDENTIFIER)) {
+		if (!operator.equals(OperatorAddInverse.ADD_INVERSE)) {
 			return false;
 		}
 		if (types.length != 1) {
@@ -49,9 +49,9 @@ public enum OperatorEvaluatorAddInverse implements OperatorEvaluator {
 	}
 
     @Override
-    public Type resultType(String operator, Type... types) {
+    public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorAddInverse.IDENTIFIER);
+    	assert operator.equals(OperatorAddInverse.ADD_INVERSE);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;

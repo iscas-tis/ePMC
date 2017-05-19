@@ -39,6 +39,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 import epmc.sexpression.SExpression;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
@@ -89,42 +90,42 @@ final class InputWriter {
 	private final static String QF_NRA = "QF_NRA";
 	private final static String QF_NIA = "QF_NIA";
 	private final static String AUFLIRA = "AUFLIRA";
-	private final static Map<String,SMTLibOperator> EPMC_TO_SMTLIB;
+	private final static Map<Operator,SMTLibOperator> EPMC_TO_SMTLIB;
 	static {
-		Map<String,SMTLibOperator> iscasMCToISMTLib = new HashMap<>();
-		iscasMCToISMTLib.put(OperatorAnd.IDENTIFIER, newOperator()
+		Map<Operator,SMTLibOperator> iscasMCToISMTLib = new HashMap<>();
+		iscasMCToISMTLib.put(OperatorAnd.AND, newOperator()
 				.setIdentifier("and").build());
-		iscasMCToISMTLib.put(OperatorOr.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorOr.OR, newOperator()
 				.setIdentifier("or").build());
 		/* "nand" not supported */ 
 		/* "nor" not supported */ 
 		/* "xor" not supported */ 
-		iscasMCToISMTLib.put(OperatorIff.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorIff.IFF, newOperator()
 				.setIdentifier("nxor").build());
-		iscasMCToISMTLib.put(OperatorImplies.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorImplies.IMPLIES, newOperator()
 				.setIdentifier("impl").build());
-		iscasMCToISMTLib.put(OperatorNot.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorNot.NOT, newOperator()
 				.setIdentifier("not").build());
 
-		iscasMCToISMTLib.put(OperatorAddInverse.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorAddInverse.ADD_INVERSE, newOperator()
 				.setIdentifier("-").build());
-		iscasMCToISMTLib.put(OperatorAdd.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorAdd.ADD, newOperator()
 				.setIdentifier("+").build());
-		iscasMCToISMTLib.put(OperatorSubtract.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorSubtract.SUBTRACT, newOperator()
 				.setIdentifier("-").build());
-		iscasMCToISMTLib.put(OperatorMultiply.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorMultiply.MULTIPLY, newOperator()
 				.setIdentifier("*").build());
-		iscasMCToISMTLib.put(OperatorDivide.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorDivide.DIVIDE, newOperator()
 				.setIdentifier("/").build());
 		/* "abs" not supported */ 
-		iscasMCToISMTLib.put(OperatorMin.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorMin.MIN, newOperator()
 				.setIdentifier("min").build());
-		iscasMCToISMTLib.put(OperatorMax.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorMax.MAX, newOperator()
 				.setIdentifier("max").build());
 		/* "exp" not supported */
 		/* "exp2" not supported */
 		/* "exp10" not supported */
-		iscasMCToISMTLib.put(OperatorLog.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorLog.LOG, newOperator()
 				.setIdentifier("log").build());
 		/* "log2" not supported */
 		/* "log10" not supported */
@@ -133,17 +134,17 @@ final class InputWriter {
 		/* "pow" not supported */
 		/* "nrt" not supported */
 		
-		iscasMCToISMTLib.put(OperatorLt.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorLt.LT, newOperator()
 				.setIdentifier("<").build());
-		iscasMCToISMTLib.put(OperatorLe.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorLe.LE, newOperator()
 				.setIdentifier("<=").build());
-		iscasMCToISMTLib.put(OperatorEq.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorEq.EQ, newOperator()
 				.setIdentifier("=").build());
-		iscasMCToISMTLib.put(OperatorNe.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorNe.NE, newOperator()
 				.setIdentifier("!=").build());
-		iscasMCToISMTLib.put(OperatorGt.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorGt.GT, newOperator()
 				.setIdentifier(">").build());
-		iscasMCToISMTLib.put(OperatorGe.IDENTIFIER, newOperator()
+		iscasMCToISMTLib.put(OperatorGe.GE, newOperator()
 				.setIdentifier(">=").build());
 
 		EPMC_TO_SMTLIB = Collections.unmodifiableMap(iscasMCToISMTLib);

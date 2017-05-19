@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Subtraction, a - b, binary operator. */
-public final class OperatorSubtract implements Operator {
-    public final static String IDENTIFIER = "-";
+public enum OperatorSubtract implements Operator {
+    SUBTRACT
 }

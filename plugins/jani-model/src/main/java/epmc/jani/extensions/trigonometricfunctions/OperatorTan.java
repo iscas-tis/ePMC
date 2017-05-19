@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorTan implements Operator {
-	public final static String IDENTIFIER = "tan";
+public enum OperatorTan implements Operator {
+	TAN
 }

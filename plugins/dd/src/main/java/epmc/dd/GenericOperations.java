@@ -32,6 +32,7 @@ import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorIte;
 import epmc.value.Type;
@@ -153,7 +154,7 @@ final class GenericOperations {
         this.llVariables = contextDD.getLowLevelVariables();
     }
 
-    long apply(OperatorEvaluator operator, String identifier, Type type, LibraryDD lowLevel, long... operands)
+    long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD lowLevel, long... operands)
             throws EPMCException {
         assert operator != null;
         assert lowLevel != null;
@@ -193,7 +194,7 @@ final class GenericOperations {
      * @return
      * @throws EPMCException
      */
-    private long apply(OperatorEvaluator operator, String identifier, Type type, LibraryDD libraryDD,
+    private long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD libraryDD,
             Cache cache, long[] cacheEntry, Walker[] operands, int recursionDepth, BitSet[] backSets)
             throws EPMCException {
         /* Check whether result has already been compute before. */
@@ -256,7 +257,7 @@ final class GenericOperations {
                 back.set(index, false);
             }
             long variable = llVariables.get(libraryDD).get(lowestVar).uniqueId();
-            result = libraryDD.apply(OperatorIte.IDENTIFIER, type, variable, highResult, lowResult);
+            result = libraryDD.apply(OperatorIte.ITE, type, variable, highResult, lowResult);
         }
         for (int index = 0; index < operands.length; index++) {
             cacheEntry[index] = operands[index].uniqueId();

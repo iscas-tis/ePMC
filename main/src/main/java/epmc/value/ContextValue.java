@@ -29,8 +29,6 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-import epmc.util.Util;
-
 /**
  * Value context.
  * This class is used to obtain and store {@link Type}s, to maintain shortcuts
@@ -42,9 +40,9 @@ public final class ContextValue {
     /** String to indicate unchecked method. */
     private final static String UNCHECKED = "unchecked";
     /** Map from operator identifier to according operator. */
-    private final Map<String,Operator> identifierToOperator = new LinkedHashMap<>();
+    private final Map<Operator,Operator> identifierToOperator = new LinkedHashMap<>();
     /** Unmodifiable map from operator identifier to according operator. */
-    private final Map<String,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
+    private final Map<Operator,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
     private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
     private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
@@ -134,7 +132,7 @@ public final class ContextValue {
      * 
      * @return map from operator identifiers to operators
      */
-    public Map<String, Operator> getOperators() {
+    public Map<Operator, Operator> getOperators() {
         return identifierToOperatorExternal;
     }
 
@@ -144,14 +142,9 @@ public final class ContextValue {
      * 
      * @param clazz class of operator to add or replace
      */
-    public void addOrSetOperator(String name, Class<? extends Operator> clazz) {
+    public void addOrSetOperator(Operator name, Class<? extends Operator> clazz) {
     	assert clazz != null;
-        Operator operator = Util.getInstance(clazz);
-        if (this.identifierToOperator.containsKey(name)) {
-            this.identifierToOperator.put(name, operator);
-        } else {
-            this.identifierToOperator.put(name, operator);
-        }
+        this.identifierToOperator.put(name, name);
     }
     
     public void addOperatorEvaluator(OperatorEvaluator evaluator) {
@@ -163,7 +156,7 @@ public final class ContextValue {
 		return operatorEvaluatorsExternal;
 	}
     
-    public OperatorEvaluator getOperatorEvaluator(String operator, Type...types) {
+    public OperatorEvaluator getOperatorEvaluator(Operator operator, Type...types) {
     	assert operator != null;
     	assert types != null;
     	for (Type type : types) {

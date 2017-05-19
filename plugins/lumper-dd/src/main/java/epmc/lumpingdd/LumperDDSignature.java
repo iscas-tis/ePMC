@@ -910,7 +910,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorOr.IDENTIFIER)
+    			.setOperator(OperatorOr.OR)
     			.setOperands(a, b)
     			.build();
     }
@@ -919,7 +919,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorGe.IDENTIFIER)
+    			.setOperator(OperatorGe.GE)
     			.setOperands(a, b)
     			.build();
     }
@@ -928,7 +928,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorLe.IDENTIFIER)
+    			.setOperator(OperatorLe.LE)
     			.setOperands(a, b)
     			.build();
     }
@@ -937,7 +937,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorEq.IDENTIFIER)
+    			.setOperator(OperatorEq.EQ)
     			.setOperands(a, b)
     			.build();
     }
@@ -946,7 +946,7 @@ public class LumperDDSignature implements LumperDD {
     	assert a != null;
     	assert b != null;
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorAnd.IDENTIFIER)
+    			.setOperator(OperatorAnd.AND)
     			.setOperands(a, b)
     			.build();
     }

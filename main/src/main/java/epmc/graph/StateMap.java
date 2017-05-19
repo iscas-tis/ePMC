@@ -23,6 +23,7 @@ package epmc.graph;
 import java.io.Closeable;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -40,11 +41,11 @@ public interface StateMap extends Closeable, Cloneable {
 
     StateMap restrict(StateSet to) throws EPMCException;
 
-    StateMap apply(String operator, StateMap other) throws EPMCException;
+    StateMap apply(Operator operator, StateMap other) throws EPMCException;
 
     StateMap clone();
     
-    Value applyOver(String operator, StateSet over) throws EPMCException;
+    Value applyOver(Operator operator, StateSet over) throws EPMCException;
     
     boolean isConstant() throws EPMCException;
 
@@ -57,7 +58,7 @@ public interface StateMap extends Closeable, Cloneable {
         getSomeValue(to, getStateSet());
     }
     
-    default StateMap applyWith(String operator, StateMap operand)
+    default StateMap applyWith(Operator operator, StateMap operand)
             throws EPMCException {
         StateMap result = apply(operator, operand);
         close();

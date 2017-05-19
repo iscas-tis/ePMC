@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Logical NOT, unary operator. */
-public final class OperatorNot implements Operator {
-    public final static String IDENTIFIER = "!";
+public enum OperatorNot implements Operator {
+    NOT
 }

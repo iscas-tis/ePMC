@@ -74,21 +74,21 @@ public final class ModelExtensionDerivedOperators implements ModelExtension {
 			return;
 		}
 		JANIOperators operators = model.getJANIOperators();
-		operators.add().setJANI(OPERATOR_IMPLIES).setEPMC(OperatorImplies.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_IMPLIES).setEPMC(OperatorImplies.IMPLIES)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_GT).setEPMC(OperatorGt.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_GT).setEPMC(OperatorGt.GT)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_GE).setEPMC(OperatorGe.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_GE).setEPMC(OperatorGe.GE)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_MIN).setEPMC(OperatorMin.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_MIN).setEPMC(OperatorMin.MIN)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_MAX).setEPMC(OperatorMax.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_MAX).setEPMC(OperatorMax.MAX)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_ABS).setEPMC(OperatorAbs.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_ABS).setEPMC(OperatorAbs.ABS)
 			.setArity(1).build();
-		operators.add().setJANI(OPERATOR_SGN).setEPMC(OperatorSgn.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_SGN).setEPMC(OperatorSgn.SGN)
 			.setArity(1).build();
-		operators.add().setJANI(OPERATOR_TRUNCATION).setEPMC(OperatorTrunc.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_TRUNCATION).setEPMC(OperatorTrunc.TRUNC)
 			.setArity(1).build();
 	}
 }

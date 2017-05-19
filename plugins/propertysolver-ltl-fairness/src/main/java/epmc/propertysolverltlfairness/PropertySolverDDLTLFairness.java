@@ -64,6 +64,7 @@ import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -165,19 +166,24 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             ExpressionOperator expressionOperator = (ExpressionOperator) prop;
             List<? extends Expression> ops = expressionOperator.getOperands();
             Set<Set<Expr>> set = null;
-            switch(expressionOperator.getOperator()) {
-            case OperatorNot.IDENTIFIER:case OperatorLt.IDENTIFIER: case OperatorGt.IDENTIFIER: case OperatorGe.IDENTIFIER: case OperatorLe.IDENTIFIER: 
-            case OperatorEq.IDENTIFIER:case OperatorNe.IDENTIFIER: //atomic propositions
+            Operator operator = expressionOperator.getOperator();
+            if (operator.equals(OperatorNot.NOT)
+            		|| operator.equals(OperatorLt.LT)
+            		|| operator.equals(OperatorGt.GT)
+            		|| operator.equals(OperatorGe.GE)
+            		|| operator.equals(OperatorLe.LE)
+            		|| operator.equals(OperatorEq.EQ)
+            		|| operator.equals(OperatorNe.NE)) {
                 set = new HashSet<>(); 
                 Set<Expr> inSet = new HashSet<>();
                 inSet.add(new Expr(Mod.UNDEF, expressionToDD.translate(prop)));
                 set.add(inSet);
                 return set;
-            case OperatorOr.IDENTIFIER:
+            } else if (operator.equals(OperatorOr.OR)) {
                 Set<Set<Expr>> op1 = flatten(ops.get(0),labels);
                 op1.addAll(flatten(ops.get(1),labels));  //should be disjunction
                 return op1;
-            case OperatorAnd.IDENTIFIER:
+            } else if (operator.equals(OperatorAnd.AND)) {
                 set = new HashSet<>();
                 Set<Set<Expr>> op11 = flatten(ops.get(0),labels);
                 Set<Set<Expr>> op12 = flatten(ops.get(1),labels);
@@ -189,7 +195,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                     }
                 } //cartesian
                 return set;
-            default:
+            } else {
                 assert(false);
             }
         }
@@ -528,7 +534,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            String op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

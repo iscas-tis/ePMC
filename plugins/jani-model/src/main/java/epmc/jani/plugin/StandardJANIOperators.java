@@ -96,43 +96,43 @@ public final class StandardJANIOperators {
 	 */
 	public static void add(JANIOperators operators) {
 		assert operators != null;
-		operators.add().setJANI(OPERATOR_ITE).setEPMC(OperatorIte.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_ITE).setEPMC(OperatorIte.ITE)
 			.setArity(3).build();
-		operators.add().setJANI(OPERATOR_OR).setEPMC(OperatorOr.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_OR).setEPMC(OperatorOr.OR)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_AND).setEPMC(OperatorAnd.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_AND).setEPMC(OperatorAnd.AND)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_NOT).setEPMC(OperatorNot.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_NOT).setEPMC(OperatorNot.NOT)
 		.setArity(1).build();
-		operators.add().setJANI(OPERATOR_EQ).setEPMC(OperatorEq.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_EQ).setEPMC(OperatorEq.EQ)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_NE).setEPMC(OperatorNe.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_NE).setEPMC(OperatorNe.NE)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_LT).setEPMC(OperatorLt.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_LT).setEPMC(OperatorLt.LT)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_LE).setEPMC(OperatorLe.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_LE).setEPMC(OperatorLe.LE)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_PLUS).setEPMC(OperatorAdd.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_PLUS).setEPMC(OperatorAdd.ADD)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_MINUS).setEPMC(OperatorSubtract.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_MINUS).setEPMC(OperatorSubtract.SUBTRACT)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_MULTIPLY).setEPMC(OperatorMultiply.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_MULTIPLY).setEPMC(OperatorMultiply.MULTIPLY)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_MOD).setEPMC(OperatorMod.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_MOD).setEPMC(OperatorMod.MOD)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_DIV).setEPMC(OperatorDivide.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_DIV).setEPMC(OperatorDivide.DIVIDE)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_POW).setEPMC(OperatorPow.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_POW).setEPMC(OperatorPow.POW)
 			.setArity(2).build();
-		operators.add().setJANI(OPERATOR_LOG).setEPMC(OperatorLog.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_LOG).setEPMC(OperatorLog.LOG)
 		.setArity(1).build();
-		operators.add().setJANI(OPERATOR_CEIL).setEPMC(OperatorCeil.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_CEIL).setEPMC(OperatorCeil.CEIL)
 			.setArity(1).build();
-		operators.add().setJANI(OPERATOR_FLOOR).setEPMC(OperatorFloor.IDENTIFIER)
+		operators.add().setJANI(OPERATOR_FLOOR).setEPMC(OperatorFloor.FLOOR)
 			.setArity(1).build();
-		operators.add().setJANI(CONSTANT_E).setEPMC(OperatorEuler.IDENTIFIER)
+		operators.add().setJANI(CONSTANT_E).setEPMC(OperatorEuler.EULER)
 			.setArity(0).build();
-		operators.add().setJANI(CONSTANT_PI).setEPMC(OperatorPi.IDENTIFIER)
+		operators.add().setJANI(CONSTANT_PI).setEPMC(OperatorPi.PI)
 			.setArity(0).build();
 	}
 

@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorDivide implements Operator {
-    /** Division, a / b, binary operator. */
-    public final static String IDENTIFIER = "/";
+/** Division, a / b, binary operator. */
+public enum OperatorDivide implements Operator {
+    DIVIDE
 }

@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorIte implements Operator {
-    /** If-then-else, ternary operator. */
-    public final static String IDENTIFIER = "ite"; //"?:";
+/** If-then-else, ternary operator. */
+public enum OperatorIte implements Operator {
+    ITE
 }

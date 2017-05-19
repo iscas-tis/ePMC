@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorAdd implements Operator {
-    public final static String IDENTIFIER = "+";
+public enum OperatorAdd implements Operator {
+    ADD
 }

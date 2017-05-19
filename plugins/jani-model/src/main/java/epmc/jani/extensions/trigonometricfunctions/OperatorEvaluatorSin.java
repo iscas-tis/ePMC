@@ -21,6 +21,7 @@
 package epmc.jani.extensions.trigonometricfunctions;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeTrigonometric;
@@ -36,13 +37,14 @@ import epmc.value.ValueTrigonometric;
 public enum OperatorEvaluatorSin implements OperatorEvaluator {
 	INSTANCE;
 
-	public boolean canApply(String operator, Type... types) {
+	@Override
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorSin.IDENTIFIER)) {
+		if (!operator.equals(OperatorSin.SIN)) {
 			return false;
 		}
 		if (types.length != 1) {
@@ -64,7 +66,7 @@ public enum OperatorEvaluatorSin implements OperatorEvaluator {
 	}
 
 	@Override
-	public Type resultType(String operator, Type... types) {
+	public Type resultType(Operator operator, Type... types) {
 		assert types != null;
 		return UtilValue.algebraicResultNonIntegerType(types);
 	}

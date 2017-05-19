@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorPi implements Operator {
-	public final static String IDENTIFIER = "π";
+public enum OperatorPi implements Operator {
+	PI
 }

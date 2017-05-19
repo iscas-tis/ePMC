@@ -31,6 +31,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorPRISMPow implements Operator {
-    public final static String IDENTIFIER = "pow-prism";
+public enum OperatorPRISMPow implements Operator {
+    PRISM_POW
 }

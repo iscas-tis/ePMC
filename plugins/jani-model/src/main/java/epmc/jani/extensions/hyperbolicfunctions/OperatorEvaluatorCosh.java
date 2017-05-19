@@ -21,6 +21,7 @@
 package epmc.jani.extensions.hyperbolicfunctions;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeTrigonometric;
@@ -32,13 +33,13 @@ public enum OperatorEvaluatorCosh implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorCosh.IDENTIFIER)) {
+		if (!operator.equals(OperatorCosh.COSH)) {
 			return false;
 		}
 		if (types.length != 1) {
@@ -51,7 +52,7 @@ public enum OperatorEvaluatorCosh implements OperatorEvaluator {
 	}
 
 	@Override
-	public Type resultType(String operator, Type... types) {
+	public Type resultType(Operator operator, Type... types) {
 		assert types != null;
 		return UtilValue.algebraicResultNonIntegerType(types);
 	}

@@ -61,7 +61,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorSubtract.IDENTIFIER);
+                .equals(OperatorSubtract.SUBTRACT);
     }
 
     private boolean isZero(Expression expression) throws EPMCException {

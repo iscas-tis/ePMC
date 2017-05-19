@@ -22,6 +22,7 @@ package epmc.graph.explicit;
 
 import epmc.error.EPMCException;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -39,7 +40,7 @@ public final class EdgePropertyApply implements EdgeProperty {
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get(int)}. */
     private final OperatorEvaluator evaluator;
-    private final String operator;
+    private final Operator operator;
     /** Node properties {@link #get(int)} of which {@link #operator} is applied. */
     private final EdgeProperty[] operands;
     /** Values used to perform apply. */
@@ -56,7 +57,7 @@ public final class EdgePropertyApply implements EdgeProperty {
      * @param identifier operator used to generate values of {@link #get(int)}
      * @param operands node properties providing operands to the operator
      */
-    public EdgePropertyApply(GraphExplicit graph, String identifier, EdgeProperty... operands) {
+    public EdgePropertyApply(GraphExplicit graph, Operator identifier, EdgeProperty... operands) {
         assert graph != null;
         assert identifier != null;
         assert operands != null;

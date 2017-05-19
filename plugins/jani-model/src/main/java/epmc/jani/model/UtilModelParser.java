@@ -223,7 +223,7 @@ public final class UtilModelParser {
 						.setValue(lowerValue)
 						.build();
 				lower = new ExpressionOperator.Builder()
-						.setOperator(OperatorGe.IDENTIFIER)
+						.setOperator(OperatorGe.GE)
 						.setOperands(variable.getIdentifier(), lowerValueExpr)
 						.build();
 			}
@@ -234,7 +234,7 @@ public final class UtilModelParser {
 						.setValue(upperValue)
 						.build();
 				upper = new ExpressionOperator.Builder()
-						.setOperator(OperatorLe.IDENTIFIER)
+						.setOperator(OperatorLe.LE)
 						.setOperands(variable.getIdentifier(), upperValueExpr)
 						.build();
 			}

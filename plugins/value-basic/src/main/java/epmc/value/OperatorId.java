@@ -22,10 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorId implements Operator {
-    public final static String IDENTIFIER = "id";
-    @Override
-    public String toString() {
-        return IDENTIFIER;
-    }
+public enum OperatorId implements Operator {
+    ID
 }

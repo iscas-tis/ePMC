@@ -46,6 +46,7 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.value.OperatorPRISMPow;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
@@ -99,23 +100,19 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 			prism.append(prefix);
 		}
 		
-		String operatorIdentifier = expressionOperator.getOperator();
-		
-        switch (operatorIdentifier) {
-        case OperatorNot.IDENTIFIER:
-        case OperatorFloor.IDENTIFIER: 
-        case OperatorCeil.IDENTIFIER:
-        	prism.append(operatorIdentifier);
+		Operator operator = expressionOperator.getOperator();
+		if (operator.equals(OperatorNot.NOT)
+			|| operator.equals(OperatorFloor.FLOOR)
+			|| operator.equals(OperatorCeil.CEIL)) {
+        	prism.append(operator);
             prism.append("(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
     		prism.append(")");
-        	break;
-        case OperatorAddInverse.IDENTIFIER:
+		} else if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
             prism.append("-(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(")");
-            break;
-        case OperatorIte.IDENTIFIER:
+		} else if (operator.equals(OperatorIte.ITE)) {
         	boolean needBraces = true;
             prism.append("(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
@@ -145,69 +142,59 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
             if (needBraces) {
             	prism.append(")");
             }
-            break;
-        case OperatorMin.IDENTIFIER: 
-        case OperatorMax.IDENTIFIER: 
-        case OperatorPow.IDENTIFIER: 
-        case OperatorLog.IDENTIFIER:
-            prism.append(operatorIdentifier);
+		} else if (operator.equals(OperatorMin.MIN)
+				|| operator.equals(OperatorMax.MAX)
+				|| operator.equals(OperatorPow.POW)
+				|| operator.equals(OperatorLog.LOG)) {
+            prism.append(operator);
             prism.append("(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-            break;
-        case OperatorPRISMPow.IDENTIFIER:
+		} else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
             prism.append("pow(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-            break;
-        case OperatorMod.IDENTIFIER: 
+		} else if (operator.equals(OperatorMod.MOD)) {
             prism.append("mod(");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
     		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-            break;
-        default:
+		} else {
         	List<Expression> children = expressionOperator.getChildren();
         	String operatorSymbol = null;
-        	switch (operatorIdentifier) {
-    		case OperatorAnd.IDENTIFIER:
+        	if (operator.equals(OperatorAnd.AND)) {
     			operatorSymbol = "&";
-    			break;
-    		case OperatorDivideIgnoreZero.IDENTIFIER:
+        	} else if (operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO)) {
     			operatorSymbol = "/";
-    			break;
-    		case OperatorGe.IDENTIFIER:
+        	} else if (operator.equals(OperatorGe.GE)) {
     			operatorSymbol = ">=";
-    			break;
-    		case OperatorLe.IDENTIFIER:
+        	} else if (operator.equals(OperatorLe.LE)) {
     			operatorSymbol = "<=";
-    			break;
-    		case OperatorIff.IDENTIFIER:
+        	} else if (operator.equals(OperatorIff.IFF)) {
     			operatorSymbol = "<=>";
-    			break;
-    		case OperatorImplies.IDENTIFIER:
+        	} else if (operator.equals(OperatorImplies.IMPLIES)) {
     			operatorSymbol = "=>";
-    			break;
-    		case OperatorOr.IDENTIFIER:
+        	} else if (operator.equals(OperatorOr.OR)) {
     			operatorSymbol = "|";
-    			break;
-    		case OperatorMultiplyInverse.IDENTIFIER:
+        	} else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
     			operatorSymbol = "1/";
-    			break;
-    		case OperatorNe.IDENTIFIER:
+        	} else if (operator.equals(OperatorNe.NE)) {
     			operatorSymbol = "!=";
-    			break;
+        	} else {
     			//TODO: Maybe the following operators can be recovered
+        		/*
     		case OperatorAbs.IDENTIFIER:
     		case OperatorExp.IDENTIFIER:
     		case OperatorSgn.IDENTIFIER:
     		case OperatorTrunc.IDENTIFIER:
+    		*/
     			//these no.
+        		/*
     		case OperatorAcosh.IDENTIFIER:
     		case OperatorAsinh.IDENTIFIER:
     		case OperatorAtanh.IDENTIFIER:
@@ -220,10 +207,9 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		case OperatorCos.IDENTIFIER:
     		case OperatorSin.IDENTIFIER:
     		case OperatorTan.IDENTIFIER:
-    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operatorIdentifier);
-    		default:
-    			operatorSymbol = operatorIdentifier;
-    			break;
+    			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operator);
+    			*/
+    			operatorSymbol = operator.toString();
         	}
             if (children.size() == 1) {
                 prism.append(operatorSymbol)
@@ -233,7 +219,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
             } else {
             	boolean remaining = false;
 	            for (Expression child : children) {
-	                needBraces = true;
+	                boolean needBraces = true;
 	                if (remaining) {
 	                    prism.append(" " + operatorSymbol + " ");
 	                } else {
@@ -241,13 +227,13 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                }
 	                if (child instanceof ExpressionOperator) {
 	                    ExpressionOperator childOp = (ExpressionOperator) child;
-	                    if (operatorIdentifier.equals(childOp.getOperator())) {
+	                    if (operator.equals(childOp.getOperator())) {
 	                        needBraces = false;
 	                    }
-	                    if ((OperatorAdd.IDENTIFIER.equals(expressionOperator.getOperator())
-	                    		|| OperatorSubtract.IDENTIFIER.equals(expressionOperator.getOperator()))
-	                    		&& (OperatorMultiply.IDENTIFIER.equals(childOp.getOperator())
-	                            		|| OperatorDivideIgnoreZero.IDENTIFIER.equals(childOp.getOperator()))) {
+	                    if ((OperatorAdd.ADD.equals(expressionOperator.getOperator())
+	                    		|| OperatorSubtract.SUBTRACT.equals(expressionOperator.getOperator()))
+	                    		&& (OperatorMultiply.MULTIPLY.equals(childOp.getOperator())
+	                            		|| OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO.equals(childOp.getOperator()))) {
 	                        needBraces = false;
 	                    }
 	                }
@@ -264,7 +250,6 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	                }
 	            }
             }
-            break;
         }
 
         return prism.toString();

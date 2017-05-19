@@ -167,40 +167,31 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long apply(String operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
         long result;
-        switch (operation) {
-        case OperatorId.IDENTIFIER:
-        	result = operands[0];
-        	break;
-        case OperatorNot.IDENTIFIER:
-            result = Sylvan.Sylvan_not(operands[0]);
-        	break;
-        case OperatorAnd.IDENTIFIER:
+        if (operation.equals(OperatorId.ID)) {
+        	result = operands[0];        	
+        } else if (operation.equals(OperatorNot.NOT)) {
+            result = Sylvan.Sylvan_not(operands[0]);        	
+        } else if (operation.equals(OperatorAnd.AND)) {
             result = Sylvan.Sylvan_and(operands[0], operands[1]);
-            break;
-        case OperatorEq.IDENTIFIER: case OperatorIff.IDENTIFIER:
+        } else if (operation.equals(OperatorEq.EQ)
+        		|| operation.equals(OperatorIff.IFF)) {
             result = Sylvan.Sylvan_equiv(operands[0], operands[1]);
-            break;
-        case OperatorImplies.IDENTIFIER:
+        } else if (operation.equals(OperatorImplies.IMPLIES)) {
             result = Sylvan.Sylvan_imp(operands[0], operands[1]);
-            break;
-        case OperatorNe.IDENTIFIER:
+        } else if (operation.equals(OperatorNe.NE)) {
             result = Sylvan.Sylvan_xor(operands[0], operands[1]);
-            break;
-        case OperatorOr.IDENTIFIER:
+        } else if (operation.equals(OperatorOr.OR)) {
             result = Sylvan.Sylvan_or(operands[0], operands[1]);
-            break;
-        case OperatorIte.IDENTIFIER:
+        } else if (operation.equals(OperatorIte.ITE)) {
             result = Sylvan.Sylvan_ite(operands[0], operands[1], operands[2]);
-            break;
-        default:
+        } else {
             assert false;
             result = -1;
-            break;
         }
         Sylvan.sylvan_ref(result);
         return result;
@@ -406,24 +397,18 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation) {
-		case OperatorId.IDENTIFIER:
-		case OperatorNot.IDENTIFIER:
-		case OperatorAnd.IDENTIFIER:
-		case OperatorEq.IDENTIFIER:
-		case OperatorIff.IDENTIFIER:
-		case OperatorImplies.IDENTIFIER:
-		case OperatorNe.IDENTIFIER:
-		case OperatorOr.IDENTIFIER:
-		case OperatorIte.IDENTIFIER:
-			break;
-		default:
-			return false;
-		}
-		return true;
+		return operation.equals(OperatorId.ID)
+				|| operation.equals(OperatorNot.NOT)
+				|| operation.equals(OperatorAnd.AND)
+				|| operation.equals(OperatorEq.EQ)
+				|| operation.equals(OperatorIff.IFF)
+				|| operation.equals(OperatorImplies.IMPLIES)
+				|| operation.equals(OperatorNe.NE)
+				|| operation.equals(OperatorOr.OR)
+				|| operation.equals(OperatorIte.ITE);
 	}
 }

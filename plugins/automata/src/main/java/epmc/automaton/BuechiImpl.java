@@ -356,7 +356,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorAnd.IDENTIFIER);
+                .equals(OperatorAnd.AND);
     }
 
     private static boolean isNext(Expression expression) {
@@ -414,7 +414,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNot.IDENTIFIER);
+                .equals(OperatorNot.NOT);
     }
     
     private static boolean isIff(Expression expression) {
@@ -423,7 +423,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorIff.IDENTIFIER);
+                .equals(OperatorIff.IFF);
     }
     
     private static boolean isOr(Expression expression) {
@@ -432,7 +432,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorOr.IDENTIFIER);
+                .equals(OperatorOr.OR);
     }
     
     private static boolean isImplies(Expression expression) {
@@ -441,7 +441,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorImplies.IDENTIFIER);
+                .equals(OperatorImplies.IMPLIES);
     }
     
     private static boolean isIte(Expression expression) {
@@ -450,7 +450,7 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorIte.IDENTIFIER);
+                .equals(OperatorIte.ITE);
     }
     
     public static Expression replaceNeOperator(Expression expression)
@@ -464,7 +464,7 @@ public class BuechiImpl implements Buechi {
             return expression.replaceChildren(newChildren);
         } else {
             return not(new ExpressionOperator.Builder()
-                    .setOperator(OperatorEq.IDENTIFIER)
+                    .setOperator(OperatorEq.EQ)
                     .setOperands(newChildren)
                     .build());
         }
@@ -476,12 +476,12 @@ public class BuechiImpl implements Buechi {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNe.IDENTIFIER);
+                .equals(OperatorNe.NE);
     }
 
     private static Expression not(Expression expression) {
         return new ExpressionOperator.Builder()
-            .setOperator(OperatorNot.IDENTIFIER)
+            .setOperator(OperatorNot.NOT)
             .setOperands(expression)
             .build();
     }

@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Multiplication, a * b, binary operator. */
-public final class OperatorMultiply implements Operator {
-    public final static String IDENTIFIER = "*";
+public enum OperatorMultiply implements Operator {
+    MULTIPLY
 }

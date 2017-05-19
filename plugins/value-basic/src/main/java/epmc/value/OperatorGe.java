@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorGe implements Operator {
-    /** Greater or equal, a >= b, binary operator. */
-    public final static String IDENTIFIER = "≥";
+/** Greater or equal, a >= b, binary operator. */
+public enum OperatorGe implements Operator {
+    GE
 }

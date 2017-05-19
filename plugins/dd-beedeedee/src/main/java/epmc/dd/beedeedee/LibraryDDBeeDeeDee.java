@@ -32,6 +32,7 @@ import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -98,9 +99,9 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     }
     
     @Override
-    public long apply(String operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operator, Type type, long... operands) throws EPMCException {
         assert alive;
-        assert operation != null;
+        assert operator != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
         assert operands != null;
@@ -108,37 +109,27 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         BDD result;
-        switch (operation) {
-        case OperatorId.IDENTIFIER:
+        if (operator.equals(OperatorId.ID)) {
         	result = uniqueIdTable.get(operands[0]);
-        	break;
-        case OperatorNot.IDENTIFIER:
+        } else if (operator.equals(OperatorNot.NOT)) {
         	result = uniqueIdTable.get(operands[0]).not();
-        	break;
-        case OperatorAnd.IDENTIFIER:
+        } else if (operator.equals(OperatorAnd.AND)) {
             result = uniqueIdTable.get(operands[0]).and(uniqueIdTable.get(operands[1]));
-            break;
-        case OperatorEq.IDENTIFIER:
+        } else if (operator.equals(OperatorEq.EQ)) {
+        	result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
+        } else if (operator.equals(OperatorIff.IFF)) {
             result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
-            break;
-        case OperatorIff.IDENTIFIER:
-            result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
-            break;
-        case OperatorImplies.IDENTIFIER:
-            result = uniqueIdTable.get(operands[0]).imp(uniqueIdTable.get(operands[1])); 
-            break;
-        case OperatorNe.IDENTIFIER:
+        } else if (operator.equals(OperatorImplies.IMPLIES)) {
+        	result = uniqueIdTable.get(operands[0]).imp(uniqueIdTable.get(operands[1]));
+        } else if (operator.equals(OperatorNe.NE)) {
             result = uniqueIdTable.get(operands[0]).xor(uniqueIdTable.get(operands[1]));
-            break;
-        case OperatorOr.IDENTIFIER:
+        } else if (operator.equals(OperatorOr.OR)) {
             result = uniqueIdTable.get(operands[0]).or(uniqueIdTable.get(operands[1]));
-            break;
-        case OperatorIte.IDENTIFIER:
-            result = uniqueIdTable.get(operands[0]).ite(uniqueIdTable.get(operands[1]), uniqueIdTable.get(operands[2]));
-            break;
-        default:
-            assert false;
-            return -1;
+        } else if (operator.equals(OperatorIte.ITE)) {
+            result = uniqueIdTable.get(operands[0]).ite(uniqueIdTable.get(operands[1]), uniqueIdTable.get(operands[2]));        	
+        } else {
+        	assert false;
+        	return -1;
         }
         ref(result);
         return result.hashCodeAux();
@@ -407,24 +398,18 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     }
 
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operator, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation) {
-		case OperatorId.IDENTIFIER:
-		case OperatorNot.IDENTIFIER:
-		case OperatorAnd.IDENTIFIER:
-		case OperatorEq.IDENTIFIER:
-		case OperatorIff.IDENTIFIER:
-		case OperatorImplies.IDENTIFIER:
-		case OperatorNe.IDENTIFIER:
-		case OperatorOr.IDENTIFIER:
-		case OperatorIte.IDENTIFIER:
-			break;
-		default:
-			return false;
-		}
-		return true;
+		return operator.equals(OperatorId.ID)
+				|| operator.equals(OperatorNot.NOT)
+				|| operator.equals(OperatorAnd.AND)
+				|| operator.equals(OperatorEq.EQ)
+				|| operator.equals(OperatorIff.IFF)
+				|| operator.equals(OperatorImplies.IMPLIES)
+				|| operator.equals(OperatorNe.NE)
+				|| operator.equals(OperatorOr.OR)
+				|| operator.equals(OperatorIte.ITE);
 	}
 }

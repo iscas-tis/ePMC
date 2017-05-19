@@ -29,6 +29,7 @@ import epmc.error.EPMCException;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorId;
 import epmc.value.OperatorMax;
@@ -127,7 +128,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public StateMap apply(String operator, StateMap operand)
+    public StateMap apply(Operator operator, StateMap operand)
             throws EPMCException {
         assert !closed();
         assert operator != null;
@@ -166,7 +167,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public Value applyOver(String operator, StateSet over) throws EPMCException {
+    public Value applyOver(Operator operator, StateSet over) throws EPMCException {
         assert !closed();
         assert operator != null;
         assert over != null;
@@ -177,19 +178,19 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     
     @Override
     public void getRange(Value range, StateSet of) throws EPMCException {
-        Value min = applyOver(OperatorMin.IDENTIFIER, of);
-        Value max = applyOver(OperatorMax.IDENTIFIER, of);
+        Value min = applyOver(OperatorMin.MIN, of);
+        Value max = applyOver(OperatorMax.MAX, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
     
     private boolean isAllTrue(StateSet of) throws EPMCException {
-        Value result = applyOver(OperatorAnd.IDENTIFIER, of);
+        Value result = applyOver(OperatorAnd.AND, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
     
     @Override
     public void getSomeValue(Value to, StateSet of) throws EPMCException {
-        Value result = applyOver(OperatorId.IDENTIFIER, of);
+        Value result = applyOver(OperatorId.ID, of);
         to.set(result);
     }
 

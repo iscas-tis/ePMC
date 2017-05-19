@@ -39,6 +39,7 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorId;
@@ -94,7 +95,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                String operator = operators[op];
+                Operator operator = operators[op];
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
                 OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
@@ -112,7 +113,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            String operator = operators[op];
+            Operator operator = operators[op];
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
@@ -262,8 +263,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private TLongObjectHashMap<Value> numberToValue;
     /** maps Value object to its number */
     private TObjectLongHashMap<Value> valueToNumber;
-    private String[] operators;
-    private TObjectIntHashMap<String> operatorToNumber = new TObjectIntHashMap<>();
+    private Operator[] operators;
+    private TObjectIntHashMap<Operator> operatorToNumber = new TObjectIntHashMap<>();
 
     private long valueToNumberTime;
     private long valueToNumberCalled;
@@ -283,10 +284,10 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
         this.contextDD = contextDD;
-        Collection<String> identifiers = ContextValue.get().getOperators().keySet();
-        this.operators = identifiers.toArray(new String[0]);
+        Collection<Operator> identifiers = ContextValue.get().getOperators().values();
+        this.operators = identifiers.toArray(new Operator[0]);
         int opNr = 0;
-        for (String operator : identifiers) {
+        for (Operator operator : identifiers) {
             this.operatorToNumber.put(operator, opNr);
         	opNr++;
         }
@@ -319,7 +320,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(String operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         this.resultType = type;
@@ -337,9 +338,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 idOp3 = operands[2];
             } else {
                 // Call the identity operator to convert all the terminals to the same type.
-                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(OperatorId.IDENTIFIER));
+                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(OperatorId.ID));
                 Sylvan.mtbdd_ref(idOp2);
-                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(OperatorId.IDENTIFIER));
+                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(OperatorId.ID));
                 Sylvan.mtbdd_ref(idOp3);
                 doFree = true;
             }
@@ -465,7 +466,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractSum(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.IDENTIFIER));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.ADD));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -475,7 +476,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.IDENTIFIER));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.MULTIPLY));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -485,7 +486,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMax(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.IDENTIFIER));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.MAX));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -495,7 +496,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMin(Type type, long dd, long cube) throws EPMCException {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.IDENTIFIER));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.MIN));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -577,11 +578,11 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (operands.length > 3) {
 			return false;
 		}
-		if (operands.length == 3 && !operation.equals(OperatorIte.IDENTIFIER)) {
+		if (operands.length == 3 && !operation.equals(OperatorIte.ITE)) {
 			return false;
 		}
 		return true;

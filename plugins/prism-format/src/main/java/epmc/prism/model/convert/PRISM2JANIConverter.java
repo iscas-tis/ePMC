@@ -90,6 +90,7 @@ import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
 import epmc.prism.value.OperatorPRISMPow;
 import epmc.util.Util;
+import epmc.value.Operator;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorCeil;
 import epmc.value.OperatorPow;
@@ -464,7 +465,7 @@ public final class PRISM2JANIConverter {
     		CmpType cmpType = expressionQuantifier.getCompareType();
 	        DirType dirType = expressionQuantifier.getDirType();
 	        Expression quantified = useQuantitativePropertiesOnly(expressionQuantifier.getQuantified());
-	        String operator = cmpType.asExOpType();
+	        Operator operator = cmpType.asExOpType();
         	if (dirType.equals(DirType.NONE)
         			&& SemanticsNonDet.isNonDet(modelPRISM.getSemantics())) {
         		if (cmpType.equals(CmpType.GE) || cmpType.equals(CmpType.GT)) {
@@ -704,19 +705,17 @@ public final class PRISM2JANIConverter {
 	
 	private Expression prism2jani(ExpressionOperator expression) throws EPMCException {
 		assert expression != null;
-		String operator = expression.getOperator();
-		switch (operator) {
-		case OperatorAddInverse.IDENTIFIER: {
+		Operator operator = expression.getOperator();
+		if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
 			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
 					.setValueProvider(() -> TypeReal.get().getZero())
 					.build();
 			return new ExpressionOperator.Builder()
-					.setOperator(OperatorSubtract.IDENTIFIER)
+					.setOperator(OperatorSubtract.SUBTRACT)
 					.setOperands(zero, operand)
 					.build();
-		}
-		case OperatorPRISMPow.IDENTIFIER: {
+		} else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
 			boolean allInteger = true;
 			for (Expression operand : expression.getOperands()) {
 				allInteger &= TypeInteger.isInteger(operand.getType(expressionToType));
@@ -729,24 +728,22 @@ public final class PRISM2JANIConverter {
 			if (allInteger) {
 				result = new ExpressionOperator.Builder()
 						.setOperands(newChildren)
-						.setOperator(OperatorPow.IDENTIFIER)
+						.setOperator(OperatorPow.POW)
 						.build();
 				result = new ExpressionOperator.Builder()
 						.setOperands(result)
-						.setOperator(OperatorCeil.IDENTIFIER)
+						.setOperator(OperatorCeil.CEIL)
 						.build();
 			} else {
 				result = expression.replaceChildren(newChildren);
 			}
 			return result;
-		}
-		default: {
+		} else {
 			List<Expression> newChildren = new ArrayList<>();
 			for (Expression child : expression.getChildren()) {
 				newChildren.add(prism2jani(child));
 			}
 			return expression.replaceChildren(newChildren);
-		}
 		}
 	}
 	
