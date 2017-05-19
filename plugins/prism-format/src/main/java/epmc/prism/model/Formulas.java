@@ -405,15 +405,15 @@ public final class Formulas {
         }
     }
     
-    private Expression parse(Reader reader) throws EPMCException {
+    private Expression parse(Reader reader, String string) throws EPMCException {
         assert reader != null;
         PrismExpressionParser parser = new PrismExpressionParser(reader);
-        return parser.parseExpressionAsProperty();
+        return parser.parseExpressionAsProperty(1, 1, string);
     }
 
     private Expression parse(String string) throws EPMCException {
         assert string != null;
         StringReader reader = new StringReader(string);
-        return parse(reader);
+        return parse(reader, string);
     }
 }

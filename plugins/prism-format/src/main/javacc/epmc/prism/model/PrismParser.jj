@@ -1219,7 +1219,7 @@ private Expression parseExpSemicolon() throws EPMCException :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1251,7 +1251,7 @@ private Expression parseExpParenth() throws EPMCException :
 	)+
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1283,7 +1283,7 @@ private Expression parseExpBrack() throws EPMCException :
 	)+
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1329,7 +1329,7 @@ private Expression parseExpColon(Token old) throws EPMCException :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1348,7 +1348,7 @@ private Expression parseExpInvariant() throws EPMCException :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1369,7 +1369,7 @@ private Expression parseExpInit() throws EPMCException :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1383,7 +1383,7 @@ private Expression parseExpSepinterval() throws EPMCException :
 	content = <SEPINTERVAL_ARG>
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1397,7 +1397,7 @@ private Expression parseExpArrow() throws EPMCException :
 	content = <ARROW_ARG>
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn); 
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
