@@ -72,6 +72,7 @@ import epmc.propertysolver.ltllazy.automata.AutomatonSubsetState;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
@@ -822,7 +823,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, min);
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            String op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             result = result.applyWith(op, compare);
         }
         return result;

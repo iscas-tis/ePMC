@@ -11,6 +11,7 @@ import epmc.prism.error.ProblemsPRISM;
 import epmc.error.Positional;
 import static epmc.error.UtilError.ensure;
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorAddInverse;
@@ -157,7 +158,7 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	private ExpressionOperator newOperator(String operator, Expression... operands) {
+	private ExpressionOperator newOperator(Operator operator, Expression... operands) {
 	  return new ExpressionOperator.Builder()
 	  	.setOperator(operator)
 	  	.setOperands(operands)
@@ -579,7 +580,7 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	String type;
+	Operator type;
 }
 {
 	p = ExpressionROp(parseExp)
@@ -591,7 +592,7 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private String EqNe() throws EPMCException :
+private Operator EqNe() throws EPMCException :
 {
 }
 {
@@ -608,7 +609,7 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	String type;
+	Operator type;
 }
 {
 	p = ExpressionPlusMinus(parseExp)
@@ -620,7 +621,7 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private String LtGtLeGe() throws EPMCException :
+private Operator LtGtLeGe() throws EPMCException :
 {
 }
 {
@@ -643,7 +644,7 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	String type;
+	Operator type;
 }
 {
 	p = ExpressionTimesDivide(parseExp)
@@ -656,7 +657,7 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private String PlusMinus() throws EPMCException :
+private Operator PlusMinus() throws EPMCException :
 {
 }
 {
@@ -673,7 +674,7 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 {
 	Expression p;
 	Expression nextProp;
-	String type;
+	Operator type;
 }
 {
 	p = ExpressionUnaryMinus(parseExp)
@@ -685,7 +686,7 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 	{ return p; }
 }
 
-private String TimesDivide() throws EPMCException :
+private Operator TimesDivide() throws EPMCException :
 {
 }
 {
@@ -752,7 +753,7 @@ private Expression parseFunction(boolean parseExp) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
-	String type;
+	Operator type;
 }
 {
 	(
@@ -822,7 +823,7 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 			.build()); }
 }
 
-private Expression parseFunctionN(boolean parseExp, String type) throws EPMCException :
+private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
@@ -837,7 +838,7 @@ private Expression parseFunctionN(boolean parseExp, String type) throws EPMCExce
 	{ return e; }
 }
 
-private Expression parseFunction2(boolean parseExp, String type) throws EPMCException :
+private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
@@ -849,7 +850,7 @@ private Expression parseFunction2(boolean parseExp, String type) throws EPMCExce
 	{ return newOperator(type, e, ne);}
 }
 
-private Expression parseFunction1(boolean parseExp, String type) throws EPMCException :
+private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCException :
 {
 	Expression e;
 }
@@ -858,7 +859,7 @@ private Expression parseFunction1(boolean parseExp, String type) throws EPMCExce
 	{ return newOperator(type, e);}
 }
 
-private String functionMultipleParams() throws EPMCException :
+private Operator functionMultipleParams() throws EPMCException :
 {
 }
 {
@@ -871,7 +872,7 @@ private String functionMultipleParams() throws EPMCException :
 	)
 }
 
-private String functionOneParam() throws EPMCException :
+private Operator functionOneParam() throws EPMCException :
 {
 }
 {
@@ -887,7 +888,7 @@ private String functionOneParam() throws EPMCException :
 	)
 }
 
-private String functionTwoParams() throws EPMCException :
+private Operator functionTwoParams() throws EPMCException :
 {
 }
 {

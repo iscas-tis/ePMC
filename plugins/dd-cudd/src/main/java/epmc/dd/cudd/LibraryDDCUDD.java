@@ -35,6 +35,7 @@ import epmc.dd.cudd.OptionsTypesCUDD.CUDDSubengine;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -317,7 +318,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
     @Override
-    public long apply(String operation, Type type, long... operands)
+    public long apply(Operator operation, Type type, long... operands)
             throws EPMCException {
         assert operation != null;
         assert type != null;
@@ -327,82 +328,58 @@ public final class LibraryDDCUDD implements LibraryDD {
         Pointer resPtr;
         Pointer notOp1Ptr = null;
         if (mtbdd) {
-            switch (operation) {
-            case OperatorId.IDENTIFIER:
+        	if (operation.equals(OperatorId.ID)) {
             	resPtr = op1Ptr;
-            	break;
-            case OperatorNot.IDENTIFIER:
+        	} else if (operation.equals(OperatorNot.NOT)) {
                 resPtr = CUDD.Cudd_addApplyNot(cuddManager, op1Ptr);
-                break;
-            case OperatorAnd.IDENTIFIER:
-                resPtr = CUDD.Cudd_addApplyAnd(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorEq.IDENTIFIER:
+        	} else if (operation.equals(OperatorAnd.AND)) {
+                resPtr = CUDD.Cudd_addApplyAnd(cuddManager, op1Ptr, op2Ptr);        		
+        	} else if (operation.equals(OperatorEq.EQ)) {
+                resPtr = CUDD.Cudd_addApplyEq(cuddManager, op1Ptr, op2Ptr);        		
+        	} else if (operation.equals(OperatorIff.IFF)) {
                 resPtr = CUDD.Cudd_addApplyEq(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorIff.IDENTIFIER:
-                resPtr = CUDD.Cudd_addApplyEq(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorImplies.IDENTIFIER: {
+        	} else if (operation.equals(OperatorImplies.IMPLIES)) {
                 notOp1Ptr = CUDD.Cudd_addApplyNot(cuddManager, op1Ptr);
                 CUDD.Cudd_Ref(notOp1Ptr);
                 resPtr = CUDD.Cudd_addApplyOr(cuddManager, notOp1Ptr, op2Ptr);
-                break;
-            }
-            case OperatorNe.IDENTIFIER:
+        	} else if (operation.equals(OperatorNe.NE)) {
                 resPtr = CUDD.Cudd_addApplyNe(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorOr.IDENTIFIER:
+        	} else if (operation.equals(OperatorOr.OR)) {
                 resPtr = CUDD.Cudd_addApplyOr(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorIte.IDENTIFIER:
+        	} else if (operation.equals(OperatorIte.ITE)) {
                 resPtr = CUDD.Cudd_addIte(cuddManager, op1Ptr, op2Ptr, op3Ptr);
-                break;
-            default:
+        	} else {
+                assert false : operation; 
                 resPtr = null;
-                assert false;
-                break;
-            }
+        	}
         } else {
-            switch (operation) {
-            case OperatorId.IDENTIFIER:
-            	resPtr = op1Ptr;
-            	break;
-            case OperatorNot.IDENTIFIER:
+        	if (operation.equals(OperatorId.ID)) {
+            	resPtr = op1Ptr;        		
+        	} else if (operation.equals(OperatorNot.NOT)) {
                 resPtr = new Pointer(0);
                 complement(op1Ptr, resPtr);
-                break;
-            case OperatorAnd.IDENTIFIER:
+        	} else if (operation.equals(OperatorAnd.AND)) {
                 resPtr = CUDD.Cudd_bddAnd(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorEq.IDENTIFIER:
+        	} else if (operation.equals(OperatorEq.EQ)) {
+        		resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
+        	} else if (operation.equals(OperatorIff.IFF)) {
                 resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorIff.IDENTIFIER:
-                resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorImplies.IDENTIFIER: {
+        	} else if (operation.equals(OperatorImplies.IMPLIES)) {
                 notOp1Ptr = new Pointer(0);
                 complement(op1Ptr, notOp1Ptr);
                 CUDD.Cudd_Ref(notOp1Ptr);
                 resPtr = CUDD.Cudd_bddOr(cuddManager, notOp1Ptr, op2Ptr);
                 CUDD.Cudd_RecursiveDeref(cuddManager, notOp1Ptr);
-                break;
-            }
-            case OperatorNe.IDENTIFIER:
+        	} else if (operation.equals(OperatorNe.NE)) {
                 resPtr = CUDD.Cudd_bddXor(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorOr.IDENTIFIER:
+        	} else if (operation.equals(OperatorOr.OR)) {
                 resPtr = CUDD.Cudd_bddOr(cuddManager, op1Ptr, op2Ptr);
-                break;
-            case OperatorIte.IDENTIFIER:
+        	} else if (operation.equals(OperatorIte.ITE)) {
                 resPtr = CUDD.Cudd_bddIte(cuddManager, op1Ptr, op2Ptr, op3Ptr);
-                break;
-            default:
-                resPtr = null;
+        	} else {
                 assert false;
-                break;
-            }
+                resPtr = null;
+        	}
         }
         if (resPtr == null) {
             if (badProblem != null) {
@@ -417,7 +394,7 @@ public final class LibraryDDCUDD implements LibraryDD {
             throw toThrow;
         }
         CUDD.Cudd_Ref(resPtr);
-        if (operation.equals(OperatorImplies.IDENTIFIER)) {
+        if (operation.equals(OperatorImplies.IMPLIES)) {
             CUDD.Cudd_RecursiveDeref(cuddManager, notOp1Ptr);
         }
         return Pointer.nativeValue(resPtr);
@@ -846,24 +823,18 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation) {
-		case OperatorId.IDENTIFIER:
-		case OperatorNot.IDENTIFIER:
-		case OperatorAnd.IDENTIFIER:
-		case OperatorEq.IDENTIFIER:
-		case OperatorIff.IDENTIFIER:
-		case OperatorImplies.IDENTIFIER:
-		case OperatorNe.IDENTIFIER:
-		case OperatorOr.IDENTIFIER:
-		case OperatorIte.IDENTIFIER:
-			break;
-		default:
-			return false;
-		}
-		return true;
+		return operation.equals(OperatorId.ID)
+				|| operation.equals(OperatorNot.NOT)
+				|| operation.equals(OperatorAnd.AND)
+				|| operation.equals(OperatorEq.EQ)
+				|| operation.equals(OperatorIff.IFF)
+				|| operation.equals(OperatorImplies.IMPLIES)
+				|| operation.equals(OperatorNe.NE)
+				|| operation.equals(OperatorOr.OR)
+				|| operation.equals(OperatorIte.ITE);
 	}
 }

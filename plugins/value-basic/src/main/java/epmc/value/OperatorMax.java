@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorMax implements Operator {
-    public final static String IDENTIFIER = "max";
+public enum OperatorMax implements Operator {
+    MAX
 }

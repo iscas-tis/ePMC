@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorLog implements Operator {
-    public final static String IDENTIFIER = "log";
+public enum OperatorLog implements Operator {
+    LOG
 }

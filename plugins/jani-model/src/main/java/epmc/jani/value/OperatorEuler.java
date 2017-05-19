@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorEuler implements Operator {
-	public final static String IDENTIFIER = "e"; //"π";
+public enum OperatorEuler implements Operator {
+	EULER
 }

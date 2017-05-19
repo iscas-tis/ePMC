@@ -176,7 +176,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     		break;
     	case AVG: {
     		DD checkFor = reachableStates.and(states);
-    		Value avg = property.applyOverSat(OperatorAdd.IDENTIFIER, getModel().getPresCube(), checkFor);
+    		Value avg = property.applyOverSat(OperatorAdd.ADD, getModel().getPresCube(), checkFor);
     		int numStates = checkFor.countSat(getModel().getPresCube()).intValue();
             Value numStatesValue = UtilValue.newValue(TypeInteger.get(), numStates);
     		ValueAlgebra.asAlgebra(avg).divide(avg, numStatesValue);
@@ -249,7 +249,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     	}
     	case SUM: {
     		DD checkFor = reachableStates.and(states);
-    		Value sum = property.applyOverSat(OperatorAdd.IDENTIFIER, getModel().getPresCube(), checkFor);
+    		Value sum = property.applyOverSat(OperatorAdd.ADD, getModel().getPresCube(), checkFor);
     		checkFor.dispose();
     		result = getContextDD().newConstant(sum);
     		break;

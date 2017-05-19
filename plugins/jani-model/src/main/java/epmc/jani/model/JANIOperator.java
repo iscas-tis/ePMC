@@ -20,6 +20,8 @@
 
 package epmc.jani.model;
 
+import epmc.value.Operator;
+
 /**
  * JANI operator.
  * 
@@ -38,8 +40,8 @@ public final class JANIOperator {
 		private JANIOperators operators;
 		/** Name of JANI operator. */
 		private String jani;
-		/** Name of the EPMC operator the operator will map to. */
-		private String iscasMC;
+		/** EPMC operator the operator will map to. */
+		private Operator iscasMC;
 		/** Arity the operator will have. */
 		private int arity;
 
@@ -89,7 +91,7 @@ public final class JANIOperator {
 		 * @param iscasMC
 		 * @return {@code this} builder, for setter method chaining
 		 */
-		public Builder setEPMC(String iscasMC) {
+		public Builder setEPMC(Operator iscasMC) {
 			assert !built;
 			this.iscasMC = iscasMC;
 			return this;
@@ -100,7 +102,7 @@ public final class JANIOperator {
 		 * 
 		 * @return name of the EPMC operator the operator will be mapped to
 		 */
-		private String getEPMC() {
+		private Operator getEPMC() {
 			return iscasMC;
 		}
 		
@@ -143,7 +145,7 @@ public final class JANIOperator {
 	/** Name of JANI operator. */
 	private final String jani;
 	/** Name of the EPMC operator the operator will map to. */
-	private final String iscasMC;
+	private final Operator iscasMC;
 	/** Arity of the operator. */
 	private final int arity;
 
@@ -171,7 +173,7 @@ public final class JANIOperator {
 	 * 
 	 * @return name of the EPMC operator the operator is mapped to
 	 */
-	public String getEPMC() {
+	public Operator getEPMC() {
 		return iscasMC;
 	}
 
@@ -190,7 +192,7 @@ public final class JANIOperator {
 	 * 
 	 * @return EPMC operator the operator is mapped to
 	 */
-	public String getOperator() {
+	public Operator getOperator() {
 		return iscasMC;
 	}
 }

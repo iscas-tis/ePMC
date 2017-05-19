@@ -60,6 +60,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.Operator;
 import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
@@ -114,7 +115,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         StateMap result = doSolve(quantifiedProp, forStates, dirType.isMin());
         if (!propertyQuantifier.getCompareType().isIs()) {
             StateMap compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
-            String op = propertyQuantifier.getCompareType().asExOpType();
+            Operator op = propertyQuantifier.getCompareType().asExOpType();
             assert op != null;
             result = result.applyWith(op, compare);
         }
@@ -428,7 +429,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     				.setType(TemporalType.GLOBALLY)
     				.setPositional(quantified.getPositional())
     				.setChildren(new ExpressionOperator.Builder()
-    						.setOperator(OperatorNot.IDENTIFIER)
+    						.setOperator(OperatorNot.NOT)
     						.setOperands(quantifiedOp1.getOperand1())
     						.build(),
     						quantifiedOp1.getChildren().get(1),
@@ -487,7 +488,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
     
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorNot.IDENTIFIER)
+    			.setOperator(OperatorNot.NOT)
     			.setPositional(expression.getPositional())
     			.setOperands(expression)
     			.build();
@@ -499,7 +500,7 @@ public final class PropertySolverExplicitPCTL implements PropertySolver {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNot.IDENTIFIER);
+                .equals(OperatorNot.NOT);
     }
     
     private static boolean isNext(Expression expression) {

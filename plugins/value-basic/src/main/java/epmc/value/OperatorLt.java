@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Less than, a < b, binary operator. */
-public final class OperatorLt implements Operator {
-    public final static String IDENTIFIER = "<";
+public enum OperatorLt implements Operator {
+    LT
 }

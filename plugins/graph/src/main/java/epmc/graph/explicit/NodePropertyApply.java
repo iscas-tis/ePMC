@@ -39,7 +39,7 @@ public final class NodePropertyApply implements NodeProperty {
     /** Graph to which this node property belongs. */
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get()}. */
-    private final String operator;
+    private final Operator operator;
     /** Node properties {@link #get()} of which {@link #operator} is applied. */
     private final NodeProperty[] operands;
     /** Values used to perform apply. */
@@ -57,7 +57,7 @@ public final class NodePropertyApply implements NodeProperty {
      * @param identifier operator used to generate values of {@link #get()}
      * @param operands node properties providing operands to the operator
      */
-    public NodePropertyApply(GraphExplicit graph, String identifier, NodeProperty... operands) {
+    public NodePropertyApply(GraphExplicit graph, Operator identifier, NodeProperty... operands) {
         assert graph != null;
         assert identifier != null;
         assert operands != null;

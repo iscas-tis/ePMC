@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorSinh implements Operator {
-	public final static String IDENTIFIER = "sinh";
+public enum OperatorSinh implements Operator {
+	SINH
 }

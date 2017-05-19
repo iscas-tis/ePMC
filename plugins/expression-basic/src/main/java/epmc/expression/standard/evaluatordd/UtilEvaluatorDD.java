@@ -38,6 +38,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
 import epmc.util.Util;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -158,7 +159,7 @@ public final class UtilEvaluatorDD {
         return singleDD;
     }
     
-    public static boolean canVectorOperator(Expression expression, String operator, Map<Expression, VariableDD> variables) throws EPMCException {
+    public static boolean canVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) throws EPMCException {
         assert expression != null;
         assert operator != null;
         assert variables != null;
@@ -179,7 +180,7 @@ public final class UtilEvaluatorDD {
         return true;
     }
 
-    public static boolean canIntegerVectorOperator(Expression expression, String operator, Map<Expression, VariableDD> variables) throws EPMCException {
+    public static boolean canIntegerVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) throws EPMCException {
         assert expression != null;
         assert operator != null;
         assert variables != null;

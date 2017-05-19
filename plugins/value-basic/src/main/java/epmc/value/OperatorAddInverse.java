@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Additive inverse, -a, unary operator. */
-public final class OperatorAddInverse implements Operator {
-    public final static String IDENTIFIER = "--";
+public enum OperatorAddInverse implements Operator {
+    ADD_INVERSE
 }

@@ -55,7 +55,7 @@ public final class EvaluatorDDOperatorVectorNe implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canVectorOperator(expression, OperatorNe.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canVectorOperator(expression, OperatorNe.NE, variables);
     }
 
     @Override

@@ -31,6 +31,7 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -113,7 +114,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     
     private final Expression[] variables;
     private final ExpressionOperator expression;
-    private final String operator;
+    private final Operator operator;
     private final OperatorEvaluator evaluator;
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;

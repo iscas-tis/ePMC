@@ -36,6 +36,7 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
+import epmc.value.OperatorIte;
 
 /**
  * JANI expression for the if-then-else (ITE) operator
@@ -162,7 +163,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
 		assert model != null;
 		assert validIdentifiers != null;
 		return new ExpressionOperator.Builder()
-				.setOperator(ITE)
+				.setOperator(OperatorIte.ITE)
 				.setOperands(ifExpr.getExpression(),
 						thenExpr.getExpression(),
 						elseExpr.getExpression())

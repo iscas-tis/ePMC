@@ -31,6 +31,7 @@ import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -160,7 +161,7 @@ public final class UtilLTL {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNot.IDENTIFIER);
+                .equals(OperatorNot.NOT);
     }
 
 //	/**
@@ -352,7 +353,7 @@ public final class UtilLTL {
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
     
-    public static Expression newOperator(String operator, Expression... operands) {
+    public static Expression newOperator(Operator operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
@@ -413,7 +414,7 @@ public final class UtilLTL {
 				return prop;
 			}
 			// NOT has been pushed down here
-			return newOperator(OperatorNot.IDENTIFIER, prop);
+			return newOperator(OperatorNot.NOT, prop);
 		}
 
 		if (prop instanceof ExpressionTemporal) { //
@@ -445,123 +446,119 @@ public final class UtilLTL {
 			ExpressionOperator expressionOperator = (ExpressionOperator) prop;
 			List<? extends Expression> ops = expressionOperator.getOperands();
 			List<Expression> exprList = new ArrayList<>();
-			
-			switch (expressionOperator.getOperator()) {
-			case OperatorAnd.IDENTIFIER: // sig
+			Operator operator = expressionOperator.getOperator();
+			if (operator.equals(OperatorAnd.AND)) {
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
 					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(OperatorOr.IDENTIFIER)
+				            .setOperator(OperatorOr.OR)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(OperatorAnd.IDENTIFIER)
+                            .setOperator(OperatorAnd.AND)
                             .setOperands(exprList)
                             .build();
 				}
-			case OperatorNot.IDENTIFIER:
+			} else if (operator.equals(OperatorNot.NOT)) {
 				// Assert.notNull(ops[0]);
 				if (sig) {
 					return getNormForm(ops.get(0), stateLabels, false);
 				} else {
 					return getNormForm(ops.get(0), stateLabels, true);
 				}
-			case OperatorOr.IDENTIFIER:
+			} else if (operator.equals(OperatorOr.OR)) {
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
 					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(OperatorAnd.IDENTIFIER)
+				            .setOperator(OperatorAnd.AND)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(OperatorOr.IDENTIFIER)
+                            .setOperator(OperatorOr.OR)
                             .setOperands(exprList)
                             .build();
 				}
-			default:
+			} else {
 				assert false;
 			}
 			ExpressionOperator propOp = (ExpressionOperator) prop;
-			switch (propOp.getOperator()) {
-			case OperatorGt.IDENTIFIER: // >
+			operator = propOp.getOperator();
+			if (operator.equals(OperatorGt.GT)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorLe.IDENTIFIER, ops.get(0), ops.get(1));
-
-			case OperatorGe.IDENTIFIER:
+				return newOperator(OperatorLe.LE, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorGe.GE)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorLt.IDENTIFIER, ops.get(0), ops.get(1));
-
-			case OperatorLt.IDENTIFIER:
+				return newOperator(OperatorLt.LT, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorLt.LT)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorGe.IDENTIFIER, ops.get(0), ops.get(1));
-
-			case OperatorLe.IDENTIFIER:
+				return newOperator(OperatorGe.GE, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorLe.LE)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorGt.IDENTIFIER, ops.get(0), ops.get(1));
-			case OperatorAnd.IDENTIFIER: // sig
+				return newOperator(OperatorGt.GT, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorAnd.AND)) {
 				exprList.clear();
 				for (int i = 0; i < ops.size(); i++) {
 					exprList.add(getNormForm(ops.get(i), stateLabels, sig));
 				}
 				if (sig) {
 				    return new ExpressionOperator.Builder()
-				            .setOperator(OperatorOr.IDENTIFIER)
+				            .setOperator(OperatorOr.OR)
 				            .setOperands(exprList)
 				            .build();
 				} else {
                     return new ExpressionOperator.Builder()
-                            .setOperator(OperatorAnd.IDENTIFIER)
+                            .setOperator(OperatorAnd.AND)
                             .setOperands(exprList)
                             .build();
 				}
-			case OperatorNot.IDENTIFIER:
+			} else if (operator.equals(OperatorNot.NOT)) {
 				// Assert.notNull(ops[0]);
 				if (sig) {
 					return getNormForm(ops.get(0), stateLabels, false);
 				} else {
 					return getNormForm(ops.get(0), stateLabels, true);
 				}
-			case OperatorEq.IDENTIFIER: //
+			} else if (operator.equals(OperatorEq.EQ)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorNe.IDENTIFIER, ops.get(0), ops.get(1));
-			case OperatorNe.IDENTIFIER: //
+				return newOperator(OperatorNe.NE, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorNe.NE)) {
 				if (!sig)
 					return prop;
-				return newOperator(OperatorEq.IDENTIFIER, ops.get(0), ops.get(1));
-			case OperatorIff.IDENTIFIER: // a <-> b = a->b & b -> a
-				Expression front = newOperator(OperatorImplies.IDENTIFIER, ops.get(0),
+				return newOperator(OperatorEq.EQ, ops.get(0), ops.get(1));
+			} else if (operator.equals(OperatorIff.IFF)) {
+				Expression front = newOperator(OperatorImplies.IMPLIES, ops.get(0),
 						ops.get(1));
-				Expression back = newOperator(OperatorImplies.IDENTIFIER, ops.get(1),
+				Expression back = newOperator(OperatorImplies.IMPLIES, ops.get(1),
 						ops.get(0));
 				if (sig) { // !(a->b) | !(b->a)
-					return newOperator(OperatorOr.IDENTIFIER, getNormForm(front, stateLabels, true),
+					return newOperator(OperatorOr.OR, getNormForm(front, stateLabels, true),
 							getNormForm(back, stateLabels, true));
 				} else { // a->b and b->a
-					return newOperator(OperatorAnd.IDENTIFIER, getNormForm(front, stateLabels, false),
+					return newOperator(OperatorAnd.AND, getNormForm(front, stateLabels, false),
 							getNormForm(back, stateLabels, false));
 				}
-			case OperatorImplies.IDENTIFIER: // a -> b = !a | b
+			} else if (operator.equals(OperatorImplies.IMPLIES)) {
 				if (sig) { // a & !b
-					return newOperator(OperatorAnd.IDENTIFIER, getNormForm(ops.get(0), stateLabels, false),
+					return newOperator(OperatorAnd.AND, getNormForm(ops.get(0), stateLabels, false),
 							getNormForm(ops.get(1), stateLabels, true));
 				} else { // !a | b
-					return newOperator(OperatorOr.IDENTIFIER, getNormForm(ops.get(0), stateLabels, true),
+					return newOperator(OperatorOr.OR, getNormForm(ops.get(0), stateLabels, true),
 							getNormForm(ops.get(1), stateLabels, false));
 				}
-			default:
+			} else {
 				return prop;
 			}
 

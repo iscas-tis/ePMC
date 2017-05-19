@@ -36,6 +36,7 @@ import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorId;
@@ -179,41 +180,32 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(String operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
         Pointer result;
-        switch (operation) {
-        case OperatorNot.IDENTIFIER:
-        	result = CacBDD.cacwrapper_not(new Pointer(operands[0]));
-        	break;
-        case OperatorAnd.IDENTIFIER:
+        if (operation.equals(OperatorNot.NOT)) {
+        	result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
+        } else if (operation.equals(OperatorAnd.AND)) {
             result = CacBDD.cacwrapper_and(new Pointer(operands[0]), new Pointer(operands[1]));
-            break;
-        case OperatorEq.IDENTIFIER: case OperatorIff.IDENTIFIER:
-            result = CacBDD.cacwrapper_xnor(new Pointer(operands[0]), new Pointer(operands[1]));
-            break;
-        case OperatorImplies.IDENTIFIER: {
+        } else if (operation.equals(OperatorEq.EQ)
+        		|| operation.equals(OperatorIff.IFF)) {
+            result = CacBDD.cacwrapper_xnor(new Pointer(operands[0]), new Pointer(operands[1]));        	
+        } else if (operation.equals(OperatorImplies.IMPLIES)) {
             Pointer np1 = CacBDD.cacwrapper_not(new Pointer(operands[0]));
             ensure(np1 != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
             result = CacBDD.cacwrapper_or(np1, new Pointer(operands[1]));
             CacBDD.cacwrapper_free_bdd(np1);
-            break;
-        }
-        case OperatorNe.IDENTIFIER:
+        } else if (operation.equals(OperatorNe.NE)) {
             result = CacBDD.cacwrapper_xor(new Pointer(operands[0]), new Pointer(operands[1]));
-            break;
-        case OperatorOr.IDENTIFIER:
+        } else if (operation.equals(OperatorOr.OR)) {
             result = CacBDD.cacwrapper_or(new Pointer(operands[0]), new Pointer(operands[1]));
-            break;
-        case OperatorIte.IDENTIFIER:
+        } else if (operation.equals(OperatorIte.ITE)) {
         	result = CacBDD.cacwrapper_ite(xbddmanager, new Pointer(operands[0]), new Pointer(operands[1]), new Pointer(operands[2]));
-        	break;
-        default:
-            assert false;
-            result = null;
-            break;
+        } else {
+        	assert false;
+        	result = null;
         }
         ensure(result != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         return Pointer.nativeValue(result);
@@ -490,24 +482,18 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation) {
-		case OperatorId.IDENTIFIER:
-		case OperatorNot.IDENTIFIER:
-		case OperatorAnd.IDENTIFIER:
-		case OperatorEq.IDENTIFIER:
-		case OperatorIff.IDENTIFIER:
-		case OperatorImplies.IDENTIFIER:
-		case OperatorNe.IDENTIFIER:
-		case OperatorOr.IDENTIFIER:
-		case OperatorIte.IDENTIFIER:
-			break;
-		default:
-			return false;
-		}
-		return true;
+		return operation.equals(OperatorId.ID)
+				|| operation.equals(OperatorNot.NOT)
+				|| operation.equals(OperatorAnd.AND)
+				|| operation.equals(OperatorEq.EQ)
+				|| operation.equals(OperatorIff.IFF)
+				|| operation.equals(OperatorImplies.IMPLIES)
+				|| operation.equals(OperatorNe.NE)
+				|| operation.equals(OperatorOr.OR)
+				|| operation.equals(OperatorIte.ITE);
 	}
 }

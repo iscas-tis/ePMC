@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Logical if-and-only-if, unary operator. */
-public final class OperatorIff implements Operator {
-    public final static String IDENTIFIER = "iff";
+public enum OperatorIff implements Operator {
+    IFF
 }

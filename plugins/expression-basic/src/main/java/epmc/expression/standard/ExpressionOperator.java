@@ -31,6 +31,7 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 
@@ -43,7 +44,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public final static class Builder {
         private Positional positional;
         private List<Expression> operands;
-        private String operator;
+        private Operator operator;
 
         public Builder setPositional(Positional positional) {
             this.positional = positional;
@@ -68,12 +69,12 @@ public final class ExpressionOperator implements ExpressionPropositional {
             return this;
         }
         
-        public Builder setOperator(String operator) {
+        public Builder setOperator(Operator operator) {
         	this.operator = operator;
         	return this;
         }
 
-        public String getOperator() {
+        public Operator getOperator() {
         	return operator;
         }
 
@@ -96,7 +97,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     
     private final Positional positional;
     private final List<Expression> operands = new ArrayList<>();
-    private final String operator;
+    private final Operator operator;
 
     private ExpressionOperator(Builder builder) {
         assert builder != null;
@@ -131,7 +132,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         return getOperands().get(2);
     }
 
-    public String getOperator() {
+    public Operator getOperator() {
     	return operator;
     }
     

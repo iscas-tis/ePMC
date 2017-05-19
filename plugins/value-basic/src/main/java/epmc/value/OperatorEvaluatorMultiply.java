@@ -28,13 +28,13 @@ public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorMultiply.IDENTIFIER)) {
+		if (!operator.equals(OperatorMultiply.MULTIPLY)) {
 			return false;
 		}
 		if (types.length != 2) {
@@ -49,9 +49,9 @@ public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
 	}
 
     @Override
-    public Type resultType(String operator, Type... types) {
+    public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorMultiply.IDENTIFIER);
+    	assert operator.equals(OperatorMultiply.MULTIPLY);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;

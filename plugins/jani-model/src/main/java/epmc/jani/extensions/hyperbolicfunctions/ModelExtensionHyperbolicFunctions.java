@@ -54,34 +54,34 @@ public final class ModelExtensionHyperbolicFunctions implements ModelExtension {
 		JANIOperators operators = model.getJANIOperators();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorSinh.IDENTIFIER)
-			.setJANI(OperatorSinh.IDENTIFIER)
+			.setEPMC(OperatorSinh.SINH)
+			.setJANI("sinh")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorCosh.IDENTIFIER)
-			.setJANI(OperatorCosh.IDENTIFIER)
+			.setEPMC(OperatorCosh.COSH)
+			.setJANI("cosh")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorTanh.IDENTIFIER)
-			.setJANI(OperatorTanh.IDENTIFIER)
+			.setEPMC(OperatorTanh.TANH)
+			.setJANI("tanh")
 			.build();
 		
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAsinh.IDENTIFIER)
-			.setJANI(OperatorAsinh.IDENTIFIER)
+			.setEPMC(OperatorAsinh.ASINH)
+			.setJANI("asinh")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAcosh.IDENTIFIER)
-			.setJANI(OperatorAcosh.IDENTIFIER)
+			.setEPMC(OperatorAcosh.ACOSH)
+			.setJANI("acosh")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAtanh.IDENTIFIER)
-			.setJANI(OperatorAtanh.IDENTIFIER)
+			.setEPMC(OperatorAtanh.ATANH)
+			.setJANI("atanh")
 			.build();
 	}
 }

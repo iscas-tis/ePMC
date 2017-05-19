@@ -85,7 +85,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorNot.IDENTIFIER);
+                .equals(OperatorNot.NOT);
     }
     
     private static boolean isOr(Expression expression) {
@@ -94,7 +94,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorOr.IDENTIFIER);
+                .equals(OperatorOr.OR);
     }
     
     private static boolean isFalse(Expression expression) throws EPMCException {

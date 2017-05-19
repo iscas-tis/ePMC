@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorExp implements Operator {
-	public final static String IDENTIFIER = "exp";
+public enum OperatorExp implements Operator {
+	EXP
 }

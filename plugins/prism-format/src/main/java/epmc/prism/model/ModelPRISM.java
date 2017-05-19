@@ -81,6 +81,7 @@ import epmc.prism.messages.MessagesPRISM;
 import epmc.prism.model.convert.PRISM2JANIConverter;
 import epmc.prism.options.OptionsPRISM;
 import epmc.time.JANITypeClock;
+import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorMultiply;
@@ -1078,7 +1079,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 	for (Alternative leftAlt : leftCmd.getAlternatives()) {
                 		for (Alternative rightAlt : rightCmd.getAlternatives()) {
                 			Expression newWeight = new ExpressionOperator.Builder()
-                			        .setOperator(OperatorMultiply.IDENTIFIER)
+                			        .setOperator(OperatorMultiply.MULTIPLY)
                 			        .setOperands(
                 			        		leftAlt.getWeight(),
                 			        		rightAlt.getWeight())
@@ -1311,14 +1312,14 @@ public final class ModelPRISM implements ModelJANIConverter {
 	
     private Expression and(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorAnd.IDENTIFIER)
+    			.setOperator(OperatorAnd.AND)
     			.setOperands(a, b)
     			.build();
     }
     
     private Expression eq(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorEq.IDENTIFIER)
+        	.setOperator(OperatorEq.EQ)
         	.setOperands(a, b)
         	.build();
     }
@@ -1341,11 +1342,11 @@ public final class ModelPRISM implements ModelJANIConverter {
     public Expression opAndNot(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorAnd.IDENTIFIER, op1,
-                newOperator(OperatorNot.IDENTIFIER, op2));
+        return newOperator(OperatorAnd.AND, op1,
+                newOperator(OperatorNot.NOT, op2));
     }
     
-    private Expression newOperator(String operator, Expression... operands) {
+    private Expression newOperator(Operator operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))

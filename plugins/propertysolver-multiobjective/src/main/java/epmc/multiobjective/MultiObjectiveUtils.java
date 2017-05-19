@@ -111,8 +111,8 @@ final class MultiObjectiveUtils {
                 NodeProperty nodeProp = mcGraph.getNodeProperty(((ExpressionReward) quantified).getReward());
                 EdgeProperty edgeProp = mcGraph.getEdgeProperty(((ExpressionReward) quantified).getReward());
                 if (invert) {
-                    nodeProp = new NodePropertyApply(mcGraph, OperatorAddInverse.IDENTIFIER, nodeProp);
-                    edgeProp = new EdgePropertyApply(mcGraph, OperatorAddInverse.IDENTIFIER, edgeProp);
+                    nodeProp = new NodePropertyApply(mcGraph, OperatorAddInverse.ADD_INVERSE, nodeProp);
+                    edgeProp = new EdgePropertyApply(mcGraph, OperatorAddInverse.ADD_INVERSE, edgeProp);
                 }
                 numMinValue = newValueWeight();
 //                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);

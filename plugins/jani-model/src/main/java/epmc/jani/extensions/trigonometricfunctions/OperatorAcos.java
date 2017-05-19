@@ -27,6 +27,6 @@ import epmc.value.Operator;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class OperatorAcos implements Operator {
-	public final static String IDENTIFIER = "acos";
+public enum OperatorAcos implements Operator {
+	ACOS
 }

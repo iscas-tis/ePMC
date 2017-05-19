@@ -21,6 +21,7 @@
 package epmc.prism.value;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -33,13 +34,13 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorPRISMPow.IDENTIFIER)) {
+		if (!operator.equals(OperatorPRISMPow.PRISM_POW)) {
 			return false;
 		}
 		if (types.length != 2) {
@@ -55,7 +56,7 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 	}
 
     @Override
-    public Type resultType(String operator, Type... types) {
+    public Type resultType(Operator operator, Type... types) {
         assert types != null;
         assert types.length == 2 : types.length;
         boolean allInteger = true;

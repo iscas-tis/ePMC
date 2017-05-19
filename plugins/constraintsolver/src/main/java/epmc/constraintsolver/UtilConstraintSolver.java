@@ -24,6 +24,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorGe;
@@ -40,7 +41,7 @@ public final class UtilConstraintSolver {
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		String operator = constraintTypeToOperator(constraintType);
+		Operator operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        .setOperator(operator)
 		        .setOperands(result, rhsExpression)
@@ -55,7 +56,7 @@ public final class UtilConstraintSolver {
 		Expression rhsExpression = new ExpressionLiteral.Builder()
 				.setValue(rightHandSide)
 				.build();
-		String operator = constraintTypeToOperator(constraintType);
+		Operator operator = constraintTypeToOperator(constraintType);
 		result = new ExpressionOperator.Builder()
 		        	.setOperator(operator)
 		        	.setOperands(result, rhsExpression)
@@ -106,18 +107,18 @@ public final class UtilConstraintSolver {
 		return result;
 	}
 	
-	public static String constraintTypeToOperator(ConstraintType type) {
+	public static Operator constraintTypeToOperator(ConstraintType type) {
 		assert type != null;
-		String operator = null;
+		Operator operator = null;
 		switch (type) {
 		case EQ:
-			operator = OperatorEq.IDENTIFIER;
+			operator = OperatorEq.EQ;
 			break;
 		case GE:
-			operator = OperatorGe.IDENTIFIER;
+			operator = OperatorGe.GE;
 			break;
 		case LE:
-			operator = OperatorLe.IDENTIFIER;
+			operator = OperatorLe.LE;
 			break;
 		default:
 			break;
@@ -136,14 +137,14 @@ public final class UtilConstraintSolver {
 
     private static Expression times(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-                .setOperator(OperatorMultiply.IDENTIFIER)
+                .setOperator(OperatorMultiply.MULTIPLY)
                 .setOperands(a, b)
                 .build();
     }
 
     private static Expression plus(Expression a, Expression b) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorAdd.IDENTIFIER)
+        	.setOperator(OperatorAdd.ADD)
         	.setOperands(a, b)
         	.build();
     }

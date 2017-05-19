@@ -21,6 +21,7 @@
 package epmc.jani.extensions.derivedoperators;
 
 import epmc.error.EPMCException;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -33,13 +34,13 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorTrunc.IDENTIFIER)) {
+		if (!operator.equals(OperatorTrunc.TRUNC)) {
 			return false;
 		}
 		if (types.length != 1) {
@@ -52,7 +53,7 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
 	}
 
 	@Override
-	public Type resultType(String operator, Type... types) {
+	public Type resultType(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		assert types.length >= 1;

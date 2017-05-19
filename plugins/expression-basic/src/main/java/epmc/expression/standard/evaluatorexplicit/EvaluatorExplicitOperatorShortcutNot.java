@@ -83,7 +83,7 @@ public final class EvaluatorExplicitOperatorShortcutNot implements EvaluatorExpl
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            if (!expressionOperator.getOperator().equals(OperatorNot.IDENTIFIER)) {
+            if (!expressionOperator.getOperator().equals(OperatorNot.NOT)) {
                 return false;
             }
             for (Expression variable : variables) {

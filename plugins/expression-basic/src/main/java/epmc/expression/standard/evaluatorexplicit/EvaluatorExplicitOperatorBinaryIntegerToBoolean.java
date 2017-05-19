@@ -37,6 +37,7 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -89,18 +90,18 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String opName = expressionOperator.getOperator();
+            Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
                 }
             }
-            if (!opName.equals(OperatorEq.IDENTIFIER)
-                    && !opName.equals(OperatorGe.IDENTIFIER)
-                    && !opName.equals(OperatorGt.IDENTIFIER)
-                    && !opName.equals(OperatorLe.IDENTIFIER)
-                    && !opName.equals(OperatorLt.IDENTIFIER)
-                    && !opName.equals(OperatorNe.IDENTIFIER)) {
+            if (!opName.equals(OperatorEq.EQ)
+                    && !opName.equals(OperatorGe.GE)
+                    && !opName.equals(OperatorGt.GT)
+                    && !opName.equals(OperatorLe.LE)
+                    && !opName.equals(OperatorLt.LT)
+                    && !opName.equals(OperatorNe.NE)) {
                 return false;
             }
             for (Expression child : expressionOperator.getOperands()) {
@@ -167,28 +168,21 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        switch (expression.getOperator()) {
-        case OperatorEq.IDENTIFIER:
-            binaryIntegerToBoolean = (a,b) -> a == b;
-            break;
-        case OperatorGe.IDENTIFIER:
-            binaryIntegerToBoolean = (a,b) -> a >= b;
-            break;
-        case OperatorGt.IDENTIFIER:
+        Operator operator = expression.getOperator();
+        if (operator.equals(OperatorEq.EQ)) {
+            binaryIntegerToBoolean = (a,b) -> a == b;        	
+        } else if (operator.equals(OperatorGe.GE)) {
+            binaryIntegerToBoolean = (a,b) -> a >= b;        	
+        } else if (operator.equals(OperatorGt.GT)) {
             binaryIntegerToBoolean = (a,b) -> a > b;
-            break;
-        case OperatorLe.IDENTIFIER:
+        } else if (operator.equals(OperatorLe.LE)) {
             binaryIntegerToBoolean = (a,b) -> a <= b;
-            break;
-        case OperatorLt.IDENTIFIER:
+        } else if (operator.equals(OperatorLt.LT)) {
             binaryIntegerToBoolean = (a,b) -> a < b;
-            break;
-        case OperatorNe.IDENTIFIER:
+        } else if (operator.equals(OperatorNe.NE)) {
             binaryIntegerToBoolean = (a,b) -> a != b;
-            break;
-        default:
-            binaryIntegerToBoolean = null;
-            break;
+        } else {
+        	binaryIntegerToBoolean = null;
         }
         this.evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(expression.getOperator(), types).newValue();

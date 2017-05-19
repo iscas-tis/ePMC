@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorFloor implements Operator {
-    public final static String IDENTIFIER = "floor";//"⌊⌋";
+public enum OperatorFloor implements Operator {
+	FLOOR
 }

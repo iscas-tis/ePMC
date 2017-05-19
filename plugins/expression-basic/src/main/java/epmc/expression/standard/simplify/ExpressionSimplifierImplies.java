@@ -45,6 +45,6 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorImplies.IDENTIFIER);
+                .equals(OperatorImplies.IMPLIES);
     }
 }

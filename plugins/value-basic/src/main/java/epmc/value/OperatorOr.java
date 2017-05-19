@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Logical OR, binary operator. */
-public final class OperatorOr implements Operator {
-    public final static String IDENTIFIER = "∨";
+public enum OperatorOr implements Operator {
+    OR
 }

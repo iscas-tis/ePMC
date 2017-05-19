@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorEq implements Operator {
-    public final static String IDENTIFIER = "=";
+public enum OperatorEq implements Operator {
+    EQ
 }

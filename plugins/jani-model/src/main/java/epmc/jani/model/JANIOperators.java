@@ -23,9 +23,11 @@ package epmc.jani.model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import epmc.value.Operator;
+
 public final class JANIOperators {
 	private Map<String,JANIOperator> janiToOperator = new LinkedHashMap<>();
-	private Map<String,JANIOperator> iscasMCToOperator = new LinkedHashMap<>();
+	private Map<Operator,JANIOperator> iscasMCToOperator = new LinkedHashMap<>();
 	
 	public JANIOperator.Builder add() {
 		JANIOperator.Builder builder = new JANIOperator.Builder();
@@ -41,7 +43,7 @@ public final class JANIOperators {
 		iscasMCToOperator.put(operator.getEPMC(), operator);
 	}
 	
-	public String janiToEPMCName(String jani) {
+	public Operator janiToEPMCName(String jani) {
 		assert jani != null;
 		assert janiToOperator.containsKey(jani);
 		return janiToOperator.get(jani).getEPMC();
@@ -58,7 +60,7 @@ public final class JANIOperators {
 		return janiToOperator.get(jani);
 	}
 
-	public JANIOperator getOperator(String operator) {
+	public JANIOperator getOperator(Operator operator) {
 		assert operator != null;
 		assert iscasMCToOperator.containsKey(operator) :
 			operator;

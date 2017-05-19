@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Logical IMPLIES, unary operator. */
-public final class OperatorImplies implements Operator {
-    public final static String IDENTIFIER = "implies";
+public enum OperatorImplies implements Operator {
+    IMPLIES
 }

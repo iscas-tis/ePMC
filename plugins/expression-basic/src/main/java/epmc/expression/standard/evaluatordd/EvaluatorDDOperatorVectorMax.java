@@ -56,7 +56,7 @@ public final class EvaluatorDDOperatorVectorMax implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorMax.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorMax.MAX, variables);
     }
 
     @Override

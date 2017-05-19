@@ -28,13 +28,13 @@ public enum OperatorEvaluatorImplies implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorImplies.IDENTIFIER)) {
+		if (!operator.equals(OperatorImplies.IMPLIES)) {
 			return false;
 		}
 		if (types.length != 2) {
@@ -49,9 +49,9 @@ public enum OperatorEvaluatorImplies implements OperatorEvaluator {
 	}
 
     @Override
-    public Type resultType(String operator, Type... types) {
+    public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorImplies.IDENTIFIER);
+    	assert operator.equals(OperatorImplies.IMPLIES);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;

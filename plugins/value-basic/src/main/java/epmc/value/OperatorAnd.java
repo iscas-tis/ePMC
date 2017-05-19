@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorAnd implements Operator {
-    /** Logical AND, binary operator. */
-    public final static String IDENTIFIER = "∧";
+/** Logical AND, binary operator. */
+public enum OperatorAnd implements Operator {
+    AND
 }

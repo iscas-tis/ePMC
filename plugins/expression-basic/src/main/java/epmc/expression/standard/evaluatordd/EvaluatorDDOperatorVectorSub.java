@@ -56,7 +56,7 @@ public final class EvaluatorDDOperatorVectorSub implements EvaluatorDD {
 
     @Override
     public boolean canHandle() throws EPMCException {
-        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorSubtract.IDENTIFIER, variables);
+        return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorSubtract.SUBTRACT, variables);
     }
 
     @Override

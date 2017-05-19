@@ -22,6 +22,6 @@ package epmc.value;
 
 import epmc.value.Operator;
 
-public final class OperatorMin implements Operator {
-    public final static String IDENTIFIER = "min";
+public enum OperatorMin implements Operator {
+    MIN
 }

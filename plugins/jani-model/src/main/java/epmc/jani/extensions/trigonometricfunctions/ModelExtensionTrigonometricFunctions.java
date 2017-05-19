@@ -54,34 +54,34 @@ public final class ModelExtensionTrigonometricFunctions implements ModelExtensio
 		JANIOperators operators = model.getJANIOperators();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorSin.IDENTIFIER)
-			.setJANI(OperatorSin.IDENTIFIER)
+			.setEPMC(OperatorSin.SIN)
+			.setJANI("sin")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorCos.IDENTIFIER)
-			.setJANI(OperatorCos.IDENTIFIER)
+			.setEPMC(OperatorCos.COS)
+			.setJANI("cos")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorTan.IDENTIFIER)
-			.setJANI(OperatorTan.IDENTIFIER)
+			.setEPMC(OperatorTan.TAN)
+			.setJANI("tan")
 			.build();
 		
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAsin.IDENTIFIER)
-			.setJANI(OperatorAsin.IDENTIFIER)
+			.setEPMC(OperatorAsin.ASIN)
+			.setJANI("asin")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAcos.IDENTIFIER)
-			.setJANI(OperatorAcos.IDENTIFIER)
+			.setEPMC(OperatorAcos.ACOS)
+			.setJANI("acos")
 			.build();
 		operators.add()
 			.setArity(1)
-			.setEPMC(OperatorAtan.IDENTIFIER)
-			.setJANI(OperatorAtan.IDENTIFIER)
+			.setEPMC(OperatorAtan.ATAN)
+			.setJANI("atan")
 			.build();
 	}
 }

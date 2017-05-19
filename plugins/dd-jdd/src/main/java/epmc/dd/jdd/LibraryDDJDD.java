@@ -70,7 +70,7 @@ public final class LibraryDDJDD implements LibraryDD {
     private final TIntList variables = new TIntArrayList();
     
     @Override
-    public long apply(String operator, Type type, long... operands)
+    public long apply(Operator operator, Type type, long... operands)
             throws EPMCException {
         assert alive;
         assert operator != null;
@@ -80,36 +80,28 @@ public final class LibraryDDJDD implements LibraryDD {
         	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         int result;
-        switch (operator) {
-        case OperatorId.IDENTIFIER:
+        if (operator.equals(OperatorId.ID)) {
         	result = (int) operands[0];
-        	break;
-        case OperatorNot.IDENTIFIER:
+        } else if (operator.equals(OperatorNot.NOT)) {
             result = bdd.not((int) operands[0]);
-        	break;
-        case OperatorAnd.IDENTIFIER:
+        } else if (operator.equals(OperatorAnd.AND)) {
             result = bdd.and((int) operands[0], (int) operands[1]);
-            break;
-        case OperatorEq.IDENTIFIER:
+        } else if (operator.equals(OperatorEq.EQ)) {
+            result = bdd.biimp((int) operands[0], (int) operands[1]);        	
+        } else if (operator.equals(OperatorIff.IFF)) {
             result = bdd.biimp((int) operands[0], (int) operands[1]);
-            break;
-        case OperatorIff.IDENTIFIER:
-            result = bdd.biimp((int) operands[0], (int) operands[1]);
-            break;
-        case OperatorImplies.IDENTIFIER:
+        } else if (operator.equals(OperatorImplies.IMPLIES)) {
             result = bdd.imp((int) operands[0], (int) operands[1]); 
-            break;
-        case OperatorNe.IDENTIFIER:
+        } else if (operator.equals(OperatorNe.NE)) {
             result = bdd.xor((int) operands[0], (int) operands[1]);
-            break;
-        case OperatorOr.IDENTIFIER:
+        } else if (operator.equals(OperatorOr.OR)) {
             result = bdd.or((int) operands[0], (int) operands[1]);
-            break;
-        case OperatorIte.IDENTIFIER:
+        } else if (operator.equals(OperatorOr.OR)) {
+            result = bdd.or((int) operands[0], (int) operands[1]);
+        } else if (operator.equals(OperatorIte.ITE)) {
             result = bdd.ite((int) operands[0], (int) operands[1], (int) operands[2]);
-            break;
-        default:
-            assert false;
+        } else {
+        	assert false;
             return -1;
         }
         bdd.ref(result);
@@ -381,24 +373,19 @@ public final class LibraryDDJDD implements LibraryDD {
     }
     
 	@Override
-	public boolean canApply(String operation, Type resultType, long... operands) {
+	public boolean canApply(Operator operation, Type resultType, long... operands) {
 		if (!TypeBoolean.isBoolean(resultType)) {
 			return false;
 		}
-		switch (operation) {
-		case OperatorId.IDENTIFIER:
-		case OperatorNot.IDENTIFIER:
-		case OperatorAnd.IDENTIFIER:
-		case OperatorEq.IDENTIFIER:
-		case OperatorIff.IDENTIFIER:
-		case OperatorImplies.IDENTIFIER:
-		case OperatorNe.IDENTIFIER:
-		case OperatorOr.IDENTIFIER:
-		case OperatorIte.IDENTIFIER:
-			break;
-		default:
-			return false;
-		}
-		return true;
+		return operation.equals(OperatorId.ID)
+				|| operation.equals(OperatorNot.NOT)
+				|| operation.equals(OperatorAnd.AND)
+				|| operation.equals(OperatorEq.EQ)
+				|| operation.equals(OperatorEq.EQ)
+				|| operation.equals(OperatorIff.IFF)
+				|| operation.equals(OperatorImplies.IMPLIES)
+				|| operation.equals(OperatorNe.NE)
+				|| operation.equals(OperatorOr.OR)
+				|| operation.equals(OperatorIte.ITE);
 	}
 }

@@ -472,7 +472,7 @@ public final class VariableValuesEnumerator {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
-                .equals(OperatorAnd.IDENTIFIER);
+                .equals(OperatorAnd.AND);
     }
     
     private Value evaluateValue(Expression expression) throws EPMCException {
@@ -505,6 +505,6 @@ public final class VariableValuesEnumerator {
     		return false;
     	}
     	ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-    	return expressionOperator.getOperator().equals(OperatorEq.IDENTIFIER);
+    	return expressionOperator.getOperator().equals(OperatorEq.EQ);
     }
 }

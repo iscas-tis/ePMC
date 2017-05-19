@@ -23,6 +23,6 @@ package epmc.value;
 import epmc.value.Operator;
 
 /** Multiplicative inverse, 1/a, unary operator. */
-public final class OperatorMultiplyInverse implements Operator {
-    public final static String IDENTIFIER = "multiply-inverse";
+public enum OperatorMultiplyInverse implements Operator {
+    MULTIPLY_INVERSE
 }

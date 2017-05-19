@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import epmc.value.Operator;
 import epmc.value.OperatorAdd;
 import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorAnd;
@@ -55,7 +56,7 @@ public final class UtilExpressionStandard {
     public static Expression opAdd(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorAdd.IDENTIFIER, op1, op2);
+        return newOperator(OperatorAdd.ADD, op1, op2);
     }
 
     public static Expression opAdd(Expression op1, int op2) {
@@ -65,36 +66,36 @@ public final class UtilExpressionStandard {
         Expression op2Expr = new ExpressionLiteral.Builder()
         		.setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
         		.build();
-        return newOperator(OperatorAdd.IDENTIFIER, op1, op2Expr);
+        return newOperator(OperatorAdd.ADD, op1, op2Expr);
     }
 
     public static Expression opAddInverse(Expression operand) {
         assert operand != null;
-        return newOperator(OperatorAddInverse.IDENTIFIER, operand);
+        return newOperator(OperatorAddInverse.ADD_INVERSE, operand);
     }
 
     public static Expression opDivide(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorDivide.IDENTIFIER, op1, op2);
+        return newOperator(OperatorDivide.DIVIDE, op1, op2);
     }
 
     public static Expression opAnd(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorAnd.IDENTIFIER, op1, op2);
+        return newOperator(OperatorAnd.AND, op1, op2);
     }
 
     public static Expression opOr(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorOr.IDENTIFIER, op1, op2);
+        return newOperator(OperatorOr.OR, op1, op2);
     }
 
     public static Expression opMin(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorMin.IDENTIFIER, op1, op2);
+        return newOperator(OperatorMin.MIN, op1, op2);
     }
 
     public static Expression opMin(int op1, Expression op2) {
@@ -103,26 +104,26 @@ public final class UtilExpressionStandard {
         Expression op1Expr = new ExpressionLiteral.Builder()
                 .setValueProvider(() -> UtilValue.newValue(typeInteger, op1))
                 .build();
-        return newOperator(OperatorMin.IDENTIFIER, op1Expr, op2);
+        return newOperator(OperatorMin.MIN, op1Expr, op2);
     }
 
     public static Expression opMax(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorMax.IDENTIFIER, op1, op2);
+        return newOperator(OperatorMax.MAX, op1, op2);
     }
 
     public static Expression opEq(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
-        return newOperator(OperatorEq.IDENTIFIER, op1, op2);
+        return newOperator(OperatorEq.EQ, op1, op2);
     }
 
     public static Expression opIte(Expression op1, Expression op2, Expression op3) {
         assert op1 != null;
         assert op2 != null;
         assert op3 != null;
-        return newOperator(OperatorIte.IDENTIFIER, op1, op2, op3);
+        return newOperator(OperatorIte.ITE, op1, op2, op3);
     }
 
     public static Expression opIte(Expression op1, Expression op2, int op3) {
@@ -132,12 +133,12 @@ public final class UtilExpressionStandard {
         Expression op3Expr = new ExpressionLiteral.Builder()
         		.setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
         		.build();
-        return newOperator(OperatorIte.IDENTIFIER, op1, op2, op3Expr);
+        return newOperator(OperatorIte.ITE, op1, op2, op3Expr);
     }
 
     public static Expression opNot(Expression operand) {
         assert operand != null;
-        return newOperator(OperatorNot.IDENTIFIER, operand);
+        return newOperator(OperatorNot.NOT, operand);
     }
 
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
@@ -152,7 +153,7 @@ public final class UtilExpressionStandard {
         return expression.replaceChildren(newChildren);
     }
 
-    static Expression newOperator(String operator, Expression... operands) {
+    static Expression newOperator(Operator operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))

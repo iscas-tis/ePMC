@@ -33,6 +33,7 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -85,14 +86,14 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
                 return false;
             }
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-            String opName = expressionOperator.getOperator();
+            Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
                 }
             }
-            if (!opName.equals(OperatorAddInverse.IDENTIFIER)
-                    && !opName.equals(OperatorMultiplyInverse.IDENTIFIER)) {
+            if (!opName.equals(OperatorAddInverse.ADD_INVERSE)
+                    && !opName.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
                 return false;
             }
             for (Expression child : expressionOperator.getOperands()) {
@@ -142,7 +143,6 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final Value result;
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
-    private final String operator;
     private final OperatorEvaluator evaluator;
     
     private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) throws EPMCException {
@@ -161,18 +161,14 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        switch (expression.getOperator()) {
-        case OperatorAddInverse.IDENTIFIER:
-            unaryIntegerToInteger = a -> -a;
-            break;
-        case OperatorMultiplyInverse.IDENTIFIER:
+        Operator operator = expression.getOperator();
+        if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
+            unaryIntegerToInteger = a -> -a;        	
+        } else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
             unaryIntegerToInteger = a -> 1/a;
-            break;
-        default:
+        } else {
             unaryIntegerToInteger = null;
-            break;
         }
-        this.operator = expression.getOperator();
         evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(expression.getOperator(), types).newValue();
     }

@@ -28,13 +28,13 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(String operator, Type... types) {
+	public boolean canApply(Operator operator, Type... types) {
 		assert operator != null;
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorSubtract.IDENTIFIER)) {
+		if (!operator.equals(OperatorSubtract.SUBTRACT)) {
 			return false;
 		}
 		if (types.length != 2) {
@@ -49,9 +49,9 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
 	}
 
     @Override
-    public Type resultType(String operator, Type... types) {
+    public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorSubtract.IDENTIFIER);
+    	assert operator.equals(OperatorSubtract.SUBTRACT);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;
