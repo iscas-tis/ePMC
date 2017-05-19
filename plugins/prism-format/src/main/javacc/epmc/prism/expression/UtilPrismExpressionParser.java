@@ -1,7 +1,11 @@
 package epmc.prism.expression;
 
 import epmc.error.EPMCException;
+import epmc.error.Positional;
+import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionOperator;
+import epmc.value.OperatorAnd;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -44,6 +48,14 @@ public final class UtilPrismExpressionParser {
 	public static ExpressionLiteral.ValueProvider newParseValueProviderInteger(String string) {
 		assert string != null;
 		return new ParseValueProviderInteger(string);
+	}
+
+	public static Expression and(Expression a, Expression b, Positional positional) {
+		return new ExpressionOperator.Builder()
+				.setOperator(OperatorAnd.AND)
+				.setOperands(a, b)
+				.setPositional(positional)
+				.build();
 	}
 
 	private UtilPrismExpressionParser() {

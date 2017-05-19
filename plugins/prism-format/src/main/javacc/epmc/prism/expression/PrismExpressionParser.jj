@@ -3,6 +3,8 @@ options
   JDK_VERSION = "1.8";
   LOOKAHEAD = 1;
   STATIC = false;
+  COMMON_TOKEN_ACTION = true;
+  TOKEN_EXTENDS = "MyToken";
 }
 
 PARSER_BEGIN(PrismExpressionParser)
@@ -53,6 +55,7 @@ import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.RewardType;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
+import static epmc.prism.expression.UtilPrismExpressionParser.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +73,7 @@ public final class PrismExpressionParser {
 		WEAK
 	};
 
-	private static class OldSchoolFilter {
+	private final static class OldSchoolFilter {
 		private final FilterType type;
 		private final Expression states;
 
@@ -90,6 +93,7 @@ public final class PrismExpressionParser {
 
 	private int initialLine;
 	private int initialColumn;
+	private String string;
 	private int errorLine;
 	private int errorColumn;
 
@@ -102,12 +106,17 @@ public final class PrismExpressionParser {
 	}
 
 	public Expression parseExpression() throws EPMCException {
-		return parseExpression(1, 1);
+		return parseExpression(1, 1, null);
 	}
 
 	public Expression parseExpression(int line, int column) throws EPMCException {
+		return parseExpression(line, column, null);	  
+    }
+    
+	public Expression parseExpression(int line, int column, String string) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
+		this.string = string;
 
 		try {
 			return parseCompleteExp();
@@ -131,10 +140,14 @@ public final class PrismExpressionParser {
 	}
 
 	public Expression parseExpressionAsProperty() throws EPMCException {
-		return parseExpressionAsProperty(1, 1);
+		return parseExpressionAsProperty(1, 1, null);
 	}
 
 	public Expression parseExpressionAsProperty(int line, int column) throws EPMCException {
+		return parseExpressionAsProperty(line, column, null);
+    }
+    
+	public Expression parseExpressionAsProperty(int line, int column, String string) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
 
@@ -164,10 +177,6 @@ public final class PrismExpressionParser {
 	  	.setOperands(operands)
 	  	.build();
 	}
-
-  private Expression and(Expression a, Expression b) {
-      return newOperator(OperatorAnd.AND, a, b);
-  }
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
@@ -302,6 +311,21 @@ public final class PrismExpressionParser {
                 .setColumn(column)
                 .build();
     }
+
+    private int getExpressionStart() {
+      return getToken(1).offset;
+    }
+
+    private int getExpressionEnd() {
+	  return getToken(0).offset + getToken(0).toString().length();
+    }
+
+    private String getExpressionText(int start, int end) {
+        if (string == null) {
+          return null;
+        }
+		return string.substring(start, end);
+    }
 }
 
 PARSER_END(PrismExpressionParser)
@@ -431,6 +455,15 @@ TOKEN :
 	< UNEXPECTED_CHAR : ~[] >
 }
 
+TOKEN_MGR_DECLS:
+{
+    void CommonTokenAction(Token t)
+    {
+        MyToken token = (MyToken) t;
+        token.offset = input_stream.tokenBegin;
+    }
+}
+
 private Expression parseCompleteExp() throws EPMCException :
 {
 	Expression e;
@@ -549,13 +582,21 @@ private Expression ExpressionAnd(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
+	int exprStart;
+	int exprEnd;
 }
 {
+  { exprStart = getExpressionStart(); }
 	p = ExpressionNot(parseExp)
 	(
 		<AND>
 		nextProp = ExpressionNot(parseExp)
-		{ p = and(p, nextProp); }
+       { exprEnd = getExpressionEnd();
+         Positional positional = new Positional.Builder()
+           .setContent(getExpressionText(exprStart, exprEnd))
+           .build();
+          p = and(p, nextProp, positional);
+          }
 	)*
 	{ return p; }
 }
