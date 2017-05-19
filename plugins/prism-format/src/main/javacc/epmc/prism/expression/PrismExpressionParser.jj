@@ -166,40 +166,40 @@ public final class PrismExpressionParser {
 	}
 
   private Expression and(Expression a, Expression b) {
-      return newOperator(OperatorAnd.IDENTIFIER, a, b);
+      return newOperator(OperatorAnd.AND, a, b);
   }
 
     private Expression not(Expression expression) {
     	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.IDENTIFIER)
+        	.setOperator(OperatorNot.NOT)
         	.setOperands(expression)
         	.build();
     }
 
   private Expression addInverse(Expression expression) {
     return new ExpressionOperator.Builder()
-      	.setOperator(OperatorAddInverse.IDENTIFIER)
+      	.setOperator(OperatorAddInverse.ADD_INVERSE)
       	.setOperands(expression)
       	.build();
   }
 
     private Expression or(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(OperatorOr.IDENTIFIER)
+            .setOperator(OperatorOr.OR)
             .setOperands(a, b)
             .build();
     }
 
     private Expression iff(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(OperatorIff.IDENTIFIER)
+            .setOperator(OperatorIff.IFF)
             .setOperands(a, b)
             .build();
     }
 
     private Expression implies(Expression a, Expression b) {
         return new ExpressionOperator.Builder()
-            .setOperator(OperatorImplies.IDENTIFIER)
+            .setOperator(OperatorImplies.IMPLIES)
             .setOperands(a, b)
             .build();
     }
@@ -493,7 +493,7 @@ private Expression ExpressionITE(boolean parseExp) throws EPMCException :
 		<COLON>
 		propElse = ExpressionITE(parseExp)
 		{ prop = new ExpressionOperator.Builder()
-			.setOperator(OperatorIte.IDENTIFIER)
+			.setOperator(OperatorIte.ITE)
 			.setOperands(prop, propThen, propElse)
 			.build(); }
 	)?
@@ -598,10 +598,10 @@ private Operator EqNe() throws EPMCException :
 {
 	(
 		<EQ> 
-		{ return OperatorEq.IDENTIFIER; }
+		{ return OperatorEq.EQ; }
 	| 
 		<NEQ> 
-		{ return OperatorNe.IDENTIFIER; }
+		{ return OperatorNe.NE; }
 	)
 }
 
@@ -627,16 +627,16 @@ private Operator LtGtLeGe() throws EPMCException :
 {
 	(
 		<LT> 
-		{ return OperatorLt.IDENTIFIER; }
+		{ return OperatorLt.LT; }
 	| 
 		<LEQ> 
-		{ return OperatorLe.IDENTIFIER; }
+		{ return OperatorLe.LE; }
 	| 
 		<GT> 
-		{ return OperatorGt.IDENTIFIER; }
+		{ return OperatorGt.GT; }
 	| 
 		<GEQ> 
-		{ return OperatorGe.IDENTIFIER; }
+		{ return OperatorGe.GE; }
 	)
 }
 
@@ -663,10 +663,10 @@ private Operator PlusMinus() throws EPMCException :
 {
 	(
 		<PLUS> 
-		{ return OperatorAdd.IDENTIFIER; }
+		{ return OperatorAdd.ADD; }
 	| 
 		<MINUS> 
-		{ return OperatorSubtract.IDENTIFIER; }
+		{ return OperatorSubtract.SUBTRACT; }
 	)
 }
 
@@ -692,10 +692,10 @@ private Operator TimesDivide() throws EPMCException :
 {
 	(
 		<TIMES> 
-		{ return OperatorMultiply.IDENTIFIER; }
+		{ return OperatorMultiply.MULTIPLY; }
 	| 
 		<DIVIDE> 
-		{ return OperatorDivide.IDENTIFIER; }
+		{ return OperatorDivide.DIVIDE; }
 	)
 }
 
@@ -817,7 +817,7 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 	<LPAR>
 	e = parseExp(parseExp)
 	<RPAR>
-	{ return newOperator(OperatorPRISMPow.IDENTIFIER, e,
+	{ return newOperator(OperatorPRISMPow.PRISM_POW, e,
 		new ExpressionLiteral.Builder()
 			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal("0.5"))
 			.build()); }
@@ -865,10 +865,10 @@ private Operator functionMultipleParams() throws EPMCException :
 {
 	(
 		<MAX> 
-		{ return OperatorMax.IDENTIFIER; }
+		{ return OperatorMax.MAX; }
 	| 
 		<MIN> 
-		{ return OperatorMin.IDENTIFIER; }
+		{ return OperatorMin.MIN; }
 	)
 }
 
@@ -881,10 +881,10 @@ private Operator functionOneParam() throws EPMCException :
 //		<SQRT> 
 //	|
 		<FLOOR> 
-		{ return OperatorFloor.IDENTIFIER; }
+		{ return OperatorFloor.FLOOR; }
 	| 
 		<CEIL> 
-		{ return OperatorCeil.IDENTIFIER; }
+		{ return OperatorCeil.CEIL; }
 	)
 }
 
@@ -894,13 +894,13 @@ private Operator functionTwoParams() throws EPMCException :
 {
 	(
 		<POW> 
-		{ return OperatorPRISMPow.IDENTIFIER; }
+		{ return OperatorPRISMPow.PRISM_POW; }
 	| 
 		<MOD> 
-		{ return OperatorMod.IDENTIFIER; }
+		{ return OperatorMod.MOD; }
 	| 
 		<LOG> 
-		{ return OperatorLog.IDENTIFIER; }
+		{ return OperatorLog.LOG; }
 	)
 }
 
