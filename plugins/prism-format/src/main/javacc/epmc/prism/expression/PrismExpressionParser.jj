@@ -10,16 +10,9 @@ options
 PARSER_BEGIN(PrismExpressionParser)
 package epmc.prism.expression;
 import epmc.prism.error.ProblemsPRISM;
-import epmc.error.Positional;
 import static epmc.error.UtilError.ensure;
 import epmc.error.EPMCException;
 import epmc.value.Operator;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorImplies;
-import epmc.value.OperatorIff;
-import epmc.value.OperatorOr;
 import epmc.value.OperatorIte;
 import epmc.value.OperatorEq;
 import epmc.value.OperatorNe;
@@ -52,7 +45,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.RewardType;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import static epmc.prism.expression.UtilPrismExpressionParser.*;
@@ -171,161 +163,15 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	private ExpressionOperator newOperator(Operator operator, Expression... operands) {
-	  return new ExpressionOperator.Builder()
-	  	.setOperator(operator)
-	  	.setOperands(operands)
-	  	.build();
+	private void beginExpression(InfoExpression info) {
+	  assert info != null;
+	  info.setStart(getToken(1).offset);
 	}
 
-    private Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.NOT)
-        	.setOperands(expression)
-        	.build();
-    }
-
-  private Expression addInverse(Expression expression) {
-    return new ExpressionOperator.Builder()
-      	.setOperator(OperatorAddInverse.ADD_INVERSE)
-      	.setOperands(expression)
-      	.build();
-  }
-
-    private Expression or(Expression a, Expression b) {
-        return new ExpressionOperator.Builder()
-            .setOperator(OperatorOr.OR)
-            .setOperands(a, b)
-            .build();
-    }
-
-    private Expression iff(Expression a, Expression b) {
-        return new ExpressionOperator.Builder()
-            .setOperator(OperatorIff.IFF)
-            .setOperands(a, b)
-            .build();
-    }
-
-    private Expression implies(Expression a, Expression b) {
-        return new ExpressionOperator.Builder()
-            .setOperator(OperatorImplies.IMPLIES)
-            .setOperands(a, b)
-            .build();
-    }
-
-    private ExpressionReward newRewardSteadyState(Expression structure) {
-        return new ExpressionReward.Builder()
-                .setReward(structure)
-                .setRewardType(RewardType.STEADYSTATE)
-                .build();
-    }
-
-    private TimeBound newTimeBound(Expression left, Expression right,
-            boolean leftOpen, boolean rightOpen) {
-        return new TimeBound.Builder()
-                .setLeft(left)
-                .setRight(right)
-                .setLeftOpen(leftOpen)
-                .setRightOpen(rightOpen)
-                .build();
-    }
-
-    private TimeBound newTimeBound() {
-        return new TimeBound.Builder()
-                .build();
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, List<Expression> operands,
-            List<TimeBound> timeBounds) {
-        assert type != null;
-        assert operands != null;
-        assert operands != null;
-        assert timeBounds != null;
-        for (TimeBound timeBound : timeBounds) {
-            assert timeBound != null;
-        }
-        return new ExpressionTemporal
-                (operands, type, timeBounds, null);
-    }
-
-    private ExpressionReward newRewardInstantaneous
-    (Expression structure, Expression time) {
-        return new ExpressionReward.Builder()
-                .setRewardType(RewardType.INSTANTANEOUS)
-                .setReward(structure)
-                .setTime(time)
-                .build();
-    }
-
-    private ExpressionReward newRewardReachability
-    (Expression structure, Expression reachSet) {
-        return new ExpressionReward.Builder()
-                .setRewardType(RewardType.REACHABILITY)
-                .setReward(structure)
-                .setReachSet(reachSet)
-                .build();
-    }
-
-    private ExpressionReward newRewardCumulative
-    (Expression structure, Expression time) {
-        return new ExpressionReward.Builder()
-                .setRewardType(RewardType.CUMULATIVE)
-                .setReward(structure)
-                .setTime(time)
-                .build();
-    }
-
-    private ExpressionReward newRewardDiscounted
-    (Expression structure, Expression timebound, Expression discount) {
-        return new ExpressionReward.Builder()
-                .setRewardType(RewardType.DISCOUNTED)
-                .setReward(structure)
-                .setTime(timebound)
-                .setDiscount(discount)
-                .build();
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression operand, TimeBound bound) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (operand, type, bound, null);
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, null);
-    }
-
-    private static Positional newPositional(long line, long column) {
-        assert line >= 0;
-        assert column >= 0;
-        return new Positional.Builder()
-                .setLine(line)
-                .setColumn(column)
-                .build();
-    }
-
-    private int getExpressionStart() {
-      return getToken(1).offset;
-    }
-
-    private int getExpressionEnd() {
-	  return getToken(0).offset + getToken(0).toString().length();
-    }
-
-    private String getExpressionText(int start, int end) {
-        if (string == null) {
-          return null;
-        }
-		return string.substring(start, end);
-    }
+	private void endExpression(InfoExpression info) {
+	  assert info != null;
+	  info.setEnd(getToken(0).offset + getToken(0).toString().length());
+	}
 }
 
 PARSER_END(PrismExpressionParser)
@@ -517,17 +363,21 @@ private Expression ExpressionITE(boolean parseExp) throws EPMCException :
 	Expression prop;
 	Expression propThen;
 	Expression propElse;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	prop = ExpressionImplies(parseExp)
 	(
 		<QUESTION>
 		propThen = ExpressionImplies(parseExp)
 		<COLON>
 		propElse = ExpressionITE(parseExp)
+    	{ endExpression(info); }
 		{ prop = new ExpressionOperator.Builder()
 			.setOperator(OperatorIte.ITE)
 			.setOperands(prop, propThen, propElse)
+			.setPositional(info.toPositional())
 			.build(); }
 	)?
 	{ return prop; }
@@ -537,13 +387,16 @@ private Expression ExpressionImplies(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	p = ExpressionIff(parseExp)
 	(
 		<IMPLIES> 
 		nextProp = ExpressionIff(parseExp)
-		{ p = implies(p, nextProp); }
+		{ endExpression(info); }
+		{ p = implies(p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -552,13 +405,16 @@ private Expression ExpressionIff(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	p = ExpressionOr(parseExp)
 	(
 		<IFF> 
 		nextProp = ExpressionOr(parseExp)
-		{ p = iff(p, nextProp); }
+		{ endExpression(info);
+		  p = iff(p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -567,13 +423,16 @@ private Expression ExpressionOr(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+   { beginExpression(info); }
 	p = ExpressionAnd(parseExp)
 	(
 		<OR> 
 		nextProp = ExpressionAnd(parseExp)
-		{ p = or(p, nextProp); }
+		{ endExpression(info);
+		  p = or(p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -582,21 +441,17 @@ private Expression ExpressionAnd(boolean parseExp) throws EPMCException :
 {
 	Expression p;
 	Expression nextProp;
-	int exprStart;
-	int exprEnd;
-}
+	InfoExpression info = new InfoExpression(string);
+	}
 {
-  { exprStart = getExpressionStart(); }
+  { beginExpression(info); }
 	p = ExpressionNot(parseExp)
 	(
 		<AND>
 		nextProp = ExpressionNot(parseExp)
-       { exprEnd = getExpressionEnd();
-         Positional positional = new Positional.Builder()
-           .setContent(getExpressionText(exprStart, exprEnd))
-           .build();
-          p = and(p, nextProp, positional);
-          }
+       { endExpression(info);
+          p = and(p, nextProp, info);
+       }
 	)*
 	{ return p; }
 }
@@ -604,12 +459,15 @@ private Expression ExpressionAnd(boolean parseExp) throws EPMCException :
 private Expression ExpressionNot(boolean parseExp) throws EPMCException :
 {
 	  Expression p;
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	(
+	   { beginExpression(info); }
 		<NOT>
 		p = ExpressionNot(parseExp)
-		{ p = not(p); }
+	   { endExpression(info);
+	     p = not(p, info); }
 	| 
 		p = ExpressionEqNe(parseExp)
 //		p = parseTemporalBinary(parseExp)
@@ -622,13 +480,16 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 	Expression p;
 	Expression nextProp;
 	Operator type;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	p = ExpressionROp(parseExp)
 	(
 		type = EqNe() 
 		nextProp = ExpressionROp(parseExp)
-		{ p = newOperator(type, p, nextProp); }
+        { endExpression(info);
+         p = newOperator(type, p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -651,13 +512,16 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 	Expression p;
 	Expression nextProp;
 	Operator type;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	p = ExpressionPlusMinus(parseExp)
 	(
 		type = LtGtLeGe()
 		nextProp = ExpressionPlusMinus(parseExp)
-		{ p = newOperator(type, p, nextProp); }
+        { endExpression(info); }
+		{ p = newOperator(type, p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -1770,7 +1634,7 @@ private Expression parseTemporalBinary(boolean parseExp) throws EPMCException :
 			case UNTIL:
 				return newTemporal(TemporalType.UNTIL, expressions, timeBounds);
 			case WEAK: {
-				Expression or = or(expressions.get(0), expressions.get(1));
+				Expression or = or(expressions.get(0), expressions.get(1), null);
 				return newTemporal(TemporalType.RELEASE, expressions.get(1), or, timeBounds.get(0));
 			}
 			default:
