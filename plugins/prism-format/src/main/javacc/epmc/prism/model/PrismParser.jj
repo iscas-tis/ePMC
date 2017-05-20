@@ -20,15 +20,12 @@ import epmc.graph.SemanticsIMC;
 import epmc.graph.SemanticsMA;
 import epmc.graph.SemanticsCTMDP;
 import epmc.graph.SemanticsPTA;
-import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.prism.expression.PrismExpressionParser;
 import epmc.prism.options.OptionsPRISM;
 import epmc.options.Options;
-import epmc.value.OptionsValue;
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
 import epmc.value.UtilValue;
@@ -61,24 +58,6 @@ final class PrismParser {
 
 	public void setModel(ModelPRISM model) {
 		this.model = model;
-	}
-
-	private void privSyntaxCheckModel() throws EPMCException, ParseException {
-		SystemDefinition[] sd = new SystemDefinition[1]; 
-		sd[0] = null;
-		Semantics model[] = new Semantics[1];
-		model[0] = SemanticsMDP.MDP;
-		Expression[] init = new Expression[1];
-		init[0] = null;
-		Formulas formulae = new Formulas();
-		List<Module> modules = new ArrayList<Module>();
-		Map<Expression, JANIType> globalVariables = new HashMap<Expression,JANIType>();
-		Map<Expression, Expression> globalInitValues = new HashMap<Expression,Expression>();
-		List<RewardStructure> rewards = new ArrayList<RewardStructure>();
-		List<PlayerDefinition> players = new ArrayList<PlayerDefinition>();
-
-		Token t = actualParser(sd, model, init, formulae, modules, globalVariables, globalInitValues, rewards, players);
-		ensure(!modules.isEmpty(), ProblemsPRISM.PRISM_PARSER_NO_MODULE, newPositional(t.beginLine, t.beginColumn));
 	}
 
 	public ModelPRISM parseModel() throws EPMCException {
