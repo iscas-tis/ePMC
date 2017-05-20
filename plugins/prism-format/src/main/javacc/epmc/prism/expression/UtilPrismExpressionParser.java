@@ -19,6 +19,7 @@ import epmc.value.OperatorIff;
 import epmc.value.OperatorImplies;
 import epmc.value.OperatorNot;
 import epmc.value.OperatorOr;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -93,6 +94,20 @@ public final class UtilPrismExpressionParser {
 		}
 	}
 
+	private static final class ParseValueProviderBoolean implements ExpressionLiteral.ValueProvider {
+		private final String string;
+
+		private ParseValueProviderBoolean(String string) {
+			assert string != null;
+			this.string = string;
+		}
+		
+		@Override
+		public Value provideValue() throws EPMCException {
+			return UtilValue.newValue(TypeBoolean.get(), string);
+		}
+	}
+
 	public static ExpressionLiteral.ValueProvider newParseValueProviderReal(String string) {
 		assert string != null;
 		return new ParseValueProviderReal(string);
@@ -101,6 +116,11 @@ public final class UtilPrismExpressionParser {
 	public static ExpressionLiteral.ValueProvider newParseValueProviderInteger(String string) {
 		assert string != null;
 		return new ParseValueProviderInteger(string);
+	}
+
+	public static ExpressionLiteral.ValueProvider newParseValueProviderBoolean(String string) {
+		assert string != null;
+		return new ParseValueProviderBoolean(string);
 	}
 
     static ExpressionOperator newOperator(Operator operator, Expression... operands) {
@@ -201,11 +221,13 @@ public final class UtilPrismExpressionParser {
     }
 
     static ExpressionReward newRewardReachability
-    (Expression structure, Expression reachSet) {
+    (Expression structure, Expression reachSet, InfoExpression info) {
+		Positional positional = info != null ? info.toPositional() : null;
         return new ExpressionReward.Builder()
                 .setRewardType(RewardType.REACHABILITY)
                 .setReward(structure)
                 .setReachSet(reachSet)
+                .setPositional(positional)
                 .build();
     }
 
@@ -254,6 +276,15 @@ public final class UtilPrismExpressionParser {
                 .build();
     }
 
+    static ExpressionLiteral getTrue() {
+    	return new ExpressionLiteral.Builder()
+    			.setPositional(new Positional.Builder()
+    					.setContent("true")
+    					.build())
+    			.setValueProvider(new ParseValueProviderBoolean("true"))
+    			.build();
+    }
+    
 	private UtilPrismExpressionParser() {
 	}
 }

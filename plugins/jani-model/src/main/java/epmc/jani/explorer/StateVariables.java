@@ -91,7 +91,7 @@ public final class StateVariables {
 
 	public StateVariable get(Expression expression) {
 		assert expression != null;
-		assert numberMap.containsKey(expression) : expression;
+		assert numberMap.containsKey(expression) : expression + " " + numberMap;
 		int number = numberMap.get(expression);
 		return variables.get(number);
 	}

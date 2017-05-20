@@ -36,8 +36,6 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionCoalition;
-import epmc.expression.standard.ExpressionTemporal;
-import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.ExpressionLiteral;
@@ -68,10 +66,12 @@ public final class PrismExpressionParser {
 	private final static class OldSchoolFilter {
 		private final FilterType type;
 		private final Expression states;
+		private final InfoExpression info;
 
-		OldSchoolFilter(FilterType type, Expression states) {
+		OldSchoolFilter(FilterType type, Expression states, InfoExpression info) {
 			this.type = type;
 			this.states = states;
+			this.info = info;
 		}
 
 		FilterType getType() {
@@ -80,6 +80,10 @@ public final class PrismExpressionParser {
 
 		Expression getStates() {
 			return states;
+		}
+
+		InfoExpression getInfo() {
+		  return info;
 		}
 	};
 
@@ -97,14 +101,6 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpression() throws EPMCException {
-		return parseExpression(1, 1, null);
-	}
-
-	public Expression parseExpression(int line, int column) throws EPMCException {
-		return parseExpression(line, column, null);	  
-    }
-    
 	public Expression parseExpression(int line, int column, String string) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
@@ -131,14 +127,6 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpressionAsProperty() throws EPMCException {
-		return parseExpressionAsProperty(1, 1, null);
-	}
-
-	public Expression parseExpressionAsProperty(int line, int column) throws EPMCException {
-		return parseExpressionAsProperty(line, column, null);
-    }
-    
 	public Expression parseExpressionAsProperty(int line, int column, String string) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
@@ -520,8 +508,8 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 	(
 		type = LtGtLeGe()
 		nextProp = ExpressionPlusMinus(parseExp)
-        { endExpression(info); }
-		{ p = newOperator(type, p, nextProp, info); }
+        { endExpression(info);
+          p = newOperator(type, p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -550,14 +538,17 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 	Expression p;
 	Expression nextProp;
 	Operator type;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	p = ExpressionTimesDivide(parseExp)
 	(
 		LOOKAHEAD((<PLUS>|<MINUS>))
 		type = PlusMinus()
 		nextProp = ExpressionTimesDivide(parseExp)
-		{ p = newOperator(type, p, nextProp); }
+		{ endExpression(info);
+		  p = newOperator(type, p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -580,13 +571,16 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 	Expression p;
 	Expression nextProp;
 	Operator type;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+    { beginExpression(info); }
 	p = ExpressionUnaryMinus(parseExp)
 	(
 		type = TimesDivide()
 		nextProp = ExpressionUnaryMinus(parseExp)
-		{ p = newOperator(type, p, nextProp); }
+		{ endExpression(info);
+		  p = newOperator(type, p, nextProp, info); }
 	)*
 	{ return p; }
 }
@@ -606,13 +600,15 @@ private Operator TimesDivide() throws EPMCException :
 
 private Expression ExpressionUnaryMinus(boolean parseExp) throws EPMCException :
 {
-	  Expression p;
+	Expression p;
+	InfoExpression info = new InfoExpression(string);
 }
 {
-	(
+	( { beginExpression(info); }
 		<MINUS> 
 		p = ExpressionUnaryMinus(parseExp)
-		{ p = addInverse(p); }
+		{ endExpression(info);
+		  p = addInverse(p); }
 	| 
 		p = parseBasic(parseExp)
 	)
@@ -715,30 +711,36 @@ private Expression parseSpecialFunction(boolean parseExp) throws EPMCException :
 private Expression parseSqrt(boolean parseExp) throws EPMCException :
 {
 	Expression e;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	//sqrt(e) is just pow(e, 0.5), but it has to be managed independently...
 	<SQRT>
 	<LPAR>
 	e = parseExp(parseExp)
 	<RPAR>
-	{ return newOperator(OperatorPRISMPow.PRISM_POW, e,
+	{ endExpression(info);
+	  return newOperator(OperatorPRISMPow.PRISM_POW, e,
 		new ExpressionLiteral.Builder()
 			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal("0.5"))
-			.build()); }
+			.build(), info); }
 }
 
 private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCException :
 {
 	Expression e;
 	Expression ne;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	e = parseExp(parseExp)
 	(
 		<COMMA>
 		ne = parseExp(parseExp)
-		{ e = newOperator(type, e, ne);}
+		{ endExpression(info);
+		  e = newOperator(type, e, ne, info);}
 	)+
 	{ return e; }
 }
@@ -747,12 +749,15 @@ private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCEx
 {
 	Expression e;
 	Expression ne;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	e = parseExp(parseExp)
 	<COMMA>
 	ne = parseExp(parseExp)
-	{ return newOperator(type, e, ne);}
+	{ endExpression(info);
+	  return newOperator(type, e, ne, info);}
 }
 
 private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCException :
@@ -823,10 +828,13 @@ private Expression parseParenth(boolean parseExp) throws EPMCException :
 private Expression parseIdentifier() throws EPMCException :
 {
 	Token literal;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	literal = <IDENTIFIER>
-	{ return new ExpressionIdentifierStandard.Builder()
+	{ endExpression(info);
+	  return new ExpressionIdentifierStandard.Builder()
 		.setName(literal.toString())
 		.build(); }
 }
@@ -834,8 +842,10 @@ private Expression parseIdentifier() throws EPMCException :
 private Expression parseLabel() throws EPMCException :
 {
 	Token literal;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	<QUOTE> 
 	(
 		literal = <IDENTIFIER> 
@@ -843,73 +853,74 @@ private Expression parseLabel() throws EPMCException :
 		literal = <INIT>
 	)
 	<QUOTE>
+  { endExpression(info); }
 	{ return new ExpressionIdentifierStandard.Builder()
 		.setName("\"" + literal.toString() + "\"")
+//		.setPositional(info.toPositional())
 		.build(); }
 }
 
 private Expression parseReal() throws EPMCException :
 {
 	Token real;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	real = <NUM_REAL>
-	{ return new ExpressionLiteral.Builder()
+	{ endExpression(info);
+	return new ExpressionLiteral.Builder()
 		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal(real.toString()))
+		.setPositional(info.toPositional())
 		.build(); }
 }
 
 private Expression parseInt() throws EPMCException :
 {
 	Token intg;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	intg = <NUM_INT>
-	{ return new ExpressionLiteral.Builder()
+	{ endExpression(info);
+	    return new ExpressionLiteral.Builder()
 		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderInteger(intg.toString()))
+		.setPositional(info.toPositional())
 		.build(); }
-}
-
-private List<Expression> parseList(boolean parseExp) throws EPMCException : 
-{
-	List<Expression> vector = new ArrayList<Expression>();
-	Expression element;
-}
-{
-	element = parseExp(parseExp)
-	{ vector.add(element); }
-	(
-		<COMMA>
-		element = parseExp(parseExp)
-		{ vector.add(element); }
-	)*
-	{ return vector; }
 }
 
 private Expression parseBoolean() throws EPMCException :
 {
+	InfoExpression info = new InfoExpression(string);
 }
 {
-	(
+	( { beginExpression(info); }
 		<TRUE> 
-		{ return ExpressionLiteral.getTrue(); } 
-	|
+		{ endExpression(info);
+		  return new ExpressionLiteral.Builder()
+			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderBoolean("true"))
+			.setPositional(info.toPositional())
+			.build();  } 
+	| { beginExpression(info); }
 		<FALSE> 
-		{ return ExpressionLiteral.getFalse(); }
+		{ endExpression(info);
+		return new ExpressionLiteral.Builder()
+			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderBoolean("false"))
+			.setPositional(info.toPositional())
+			.build(); }
 	)
 }
-
-
-
-
 
 private OldSchoolFilter OldSchoolFilter() throws EPMCException :
 {
 	Expression states;
 	boolean min = false;
 	boolean max = false;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	<LCURL> 
 	states = parseExpTemporal(false) 
 	<RCURL>
@@ -932,6 +943,7 @@ private OldSchoolFilter OldSchoolFilter() throws EPMCException :
 		)  
 	)?
 	{
+		endExpression(info);
 		FilterType type = null;
 		if (!min && !max) {
 			type = FilterType.STATE;
@@ -942,7 +954,7 @@ private OldSchoolFilter OldSchoolFilter() throws EPMCException :
 		} else if (min && max) {
 			type = FilterType.RANGE;
 		}
-		return new OldSchoolFilter(type, states);
+		return new OldSchoolFilter(type, states, info);
 	}
 }
 
@@ -952,7 +964,10 @@ private Expression parseCoalition(boolean parseExp) throws EPMCException :
 	List<Expression> players = new ArrayList<Expression>();
 	Token coal;
 	Expression player;
-}{
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
 	coal = <COALITION_OPEN>
 	(
 		player = parseIdentifier()
@@ -975,8 +990,10 @@ private Expression parseCoalition(boolean parseExp) throws EPMCException :
 	| 
 		innerFormula = parseRewQuant(parseExp)
 	)
-	{ return new ExpressionCoalition.Builder()
+	{ endExpression(info);
+	  return new ExpressionCoalition.Builder()
 		.setQuantifier(innerFormula).setPlayers(players)
+		.setPositional(info.toPositional())
 		.build();
 	}
 }
@@ -985,10 +1002,11 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue();
+	Expression cond = getTrue();
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	{ 
@@ -998,6 +1016,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 			ensure(false, ProblemsPRISM.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken);
 			return null;
 		}
+		beginExpression(info);
 	}
 	dirType = PropQuantProbDirType()
 	(
@@ -1007,7 +1026,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 				<QUESTION> 
 				{ 
 					cmpType = CmpType.IS;
-					cmp = ExpressionLiteral.getTrue(); 
+					cmp = getTrue(); 
 				}
 			|
 				cmp = parseExpTemporal(parseExp)
@@ -1039,18 +1058,21 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 		<RBRACKET>
 	)
 	{
+	    endExpression(info);
 		Expression result = new ExpressionQuantifier.Builder()
 			.setDirType(dirType)
 			.setCmpType(cmpType)
 			.setQuantified(prop)
 			.setCompare(cmp)
 			.setCondition(cond)
+			.setPositional(info.toPositional())
 			.build();
 		if (filter != null) {
 		  result = new ExpressionFilter.Builder()
 		  		.setFilterType(filter.getType())
 		  		.setProp(result)
 		  		.setStates(filter.getStates())
+		  		.setPositional(filter.getInfo().toPositional())
 		  		.build();
 		}
 		return result;
@@ -1061,10 +1083,11 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue();
+	Expression cond = getTrue();
 	DirType dirType;
 	CmpType cmpType;
 	OldSchoolFilter filter = null;
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	{ 
@@ -1074,6 +1097,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			ensure(false, ProblemsPRISM.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
 			return null;
 		}
+		beginExpression(info);
 	}
 	dirType = SteadyQuantProbDirType()
 	(
@@ -1082,7 +1106,7 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS;
-				cmp = ExpressionLiteral.getTrue(); 
+				cmp = getTrue(); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp)
@@ -1122,12 +1146,14 @@ private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
 			.setQuantified(prop)
 			.setCompare(cmp)
 			.setCondition(cond)
+			.setPositional(info.toPositional())
 			.build();
 		if (filter != null) {
 			result = new ExpressionFilter.Builder()
 				.setFilterType(filter.getType())
 				.setProp(result)
 				.setStates(filter.getStates())
+				.setPositional(filter.getInfo().toPositional())
 				.build();
 		}
 		return result;
@@ -1159,12 +1185,14 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 	Expression prop;
 	Expression timebound;
 	Expression discount;
+	InfoExpression info = new InfoExpression(string);
 }
 {
-	(
+	( { beginExpression(info); }
 		<F> 
 		prop = parseExpTemporal(parseExp)
-		{ return newRewardReachability(rewardStructure, prop); }
+		{ endExpression(info);
+		  return newRewardReachability(rewardStructure, prop, info); }
 	| 
 		<C> 
 		{
@@ -1222,10 +1250,10 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 {
 	Expression prop;
 	Expression cmp;
-	Expression cond = ExpressionLiteral.getTrue();
+	Expression cond = getTrue();
 	DirType dirType;
 	CmpType cmpType;
-	Expression rewardStructure = ExpressionLiteral.getTrue();
+	Expression rewardStructure = getTrue();
 	OldSchoolFilter filter = null;
 	Token oper;
 }
@@ -1260,14 +1288,14 @@ private Expression parseRewQuant(boolean parseExp) throws EPMCException :
 	(
 		{ 
 			cmpType = CmpType.IS;
-			cmp = ExpressionLiteral.getTrue(); 
+			cmp = getTrue(); 
 		}
 		<EQ>
 		(
 			<QUESTION> 
 			{ 
 				cmpType = CmpType.IS; 
-				cmp = ExpressionLiteral.getTrue(); 
+				cmp = getTrue(); 
 			}
 		|
 			cmp = parseExpTemporal(parseExp) 
@@ -1412,7 +1440,8 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 {
 	FilterType type;
 	Expression prop;
-	Expression states = ExpressionLiteral.getTrue();
+	Expression states = getTrue();
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	{ 
@@ -1422,6 +1451,7 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 			ensure(false, ProblemsPRISM.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
 		}
 	}
+	{ beginExpression(info); }
 	<FILTER>
 	<LPAR>
 	type = ExpressionFilterType()
@@ -1432,10 +1462,12 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 		states = parseExpTemporal(parseExp)
 	)?
 	<RPAR>
-	{ return new ExpressionFilter.Builder()
+	{ endExpression(info);
+	  return new ExpressionFilter.Builder()
 		.setFilterType(type)
 		.setProp(prop)
 		.setStates(states)
+		.setPositional(info.toPositional())
 		.build(); }
 }
 

@@ -21,12 +21,15 @@
 package epmc.prism.model;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
@@ -64,8 +67,15 @@ public final class PropertyPRISM implements Property {
 	@Override
 	public Expression parseExpression(InputStream stream) throws EPMCException {
 		assert stream != null;
+		String string = null;
+		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
+            string = buffer.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+        	throw new RuntimeException(e);
+		}
+		stream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
 		PrismExpressionParser parser = new PrismExpressionParser(stream);
-        return parser.parseExpressionAsProperty();
+        return parser.parseExpressionAsProperty(1, 1, string);
 	}
 
 	@Override
