@@ -32,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.error.EPMCException;
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.CmpType;
@@ -706,6 +707,7 @@ public final class PRISM2JANIConverter {
 	private Expression prism2jani(ExpressionOperator expression) throws EPMCException {
 		assert expression != null;
 		Operator operator = expression.getOperator();
+		Positional positional = expression.getPositional();
 		if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
 			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
@@ -714,6 +716,7 @@ public final class PRISM2JANIConverter {
 			return new ExpressionOperator.Builder()
 					.setOperator(OperatorSubtract.SUBTRACT)
 					.setOperands(zero, operand)
+					.setPositional(positional)
 					.build();
 		} else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
 			boolean allInteger = true;
@@ -729,10 +732,12 @@ public final class PRISM2JANIConverter {
 				result = new ExpressionOperator.Builder()
 						.setOperands(newChildren)
 						.setOperator(OperatorPow.POW)
+						.setPositional(positional)
 						.build();
 				result = new ExpressionOperator.Builder()
 						.setOperands(result)
 						.setOperator(OperatorCeil.CEIL)
+						.setPositional(positional)
 						.build();
 			} else {
 				result = expression.replaceChildren(newChildren);

@@ -29,6 +29,8 @@ import java.util.Set;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
+import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.filter.error.ProblemsFilter;
 import epmc.filter.messages.MessagesFilter;
 import epmc.graph.CommonProperties;
@@ -117,7 +119,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 numStatesInFilter++;
             }
         }
-        getLog().send(MessagesFilter.NUM_STATES_IN_FILTER, numStatesInFilter, propertyFilter.getStates());
+        getLog().send(MessagesFilter.NUM_STATES_IN_FILTER, numStatesInFilter, UtilExpressionStandard.niceForm(propertyFilter.getStates()));
         if (propertyFilter.isPrint()) {
             getLog().send(MessagesFilter.PRINTING_FILTER_RESULTS);            
         } else if (propertyFilter.isPrintAll()) {

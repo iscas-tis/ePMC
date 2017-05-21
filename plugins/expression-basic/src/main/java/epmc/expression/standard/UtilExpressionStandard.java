@@ -171,6 +171,24 @@ public final class UtilExpressionStandard {
         }
         return result;
     }
+
+    /**
+     * Return a representation of the expression which is well readable for
+     * humans. If possible, this function returns the string the expression
+     * was parsed from. The expression parameter must not be {@code null}.
+     * 
+     * @param expression expression to get human-readable string of
+     * @return human-readable representation of expression
+     */
+    public static String niceForm(Expression expression) {
+    	assert expression != null;
+    	if (expression.getPositional() == null
+    			|| expression.getPositional().getContent() == null) {
+    		return expression.toString();
+    	} else {
+    		return expression.getPositional().getContent();
+    	}
+    }
     
     /**
      * Private constructor to prevent instantiation of this class.
