@@ -117,9 +117,11 @@ public final class Positional implements Serializable {
         this.line = builder.getLine();
         this.column = builder.getColumn();
         String content = builder.getContent();
+        /*
         if (content == null) {
             content = part + COMMA + line + COMMA + column;
         }
+        */
         this.content = content;
     }
 

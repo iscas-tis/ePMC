@@ -130,6 +130,7 @@ public final class PrismExpressionParser {
 	public Expression parseExpressionAsProperty(int line, int column, String string) throws EPMCException {
 		this.initialLine = line;
 		this.initialColumn = column;
+		this.string = string;
 
 		try {
 			return parseCompleteProp();
