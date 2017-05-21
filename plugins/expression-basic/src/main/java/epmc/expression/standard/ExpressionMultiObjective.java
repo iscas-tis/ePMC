@@ -62,6 +62,7 @@ public final class ExpressionMultiObjective implements Expression {
     
     private final Positional positional;
     private final List<Expression> children = new ArrayList<>();
+    private final List<Expression> childrenExternal = Collections.unmodifiableList(children);
 
     private ExpressionMultiObjective(Builder builder) {
         assert builder != null;
@@ -89,11 +90,7 @@ public final class ExpressionMultiObjective implements Expression {
     }
 
     public List<Expression> getOperands() {
-        List<Expression> operands = new ArrayList<>();
-        for (Expression child : getChildren()) {
-            operands.add(child);
-        }
-        return Collections.unmodifiableList(operands);
+    	return childrenExternal;
     }
     
     @Override
@@ -183,4 +180,12 @@ public final class ExpressionMultiObjective implements Expression {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType().isEq();
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionMultiObjective.Builder()
+				.setOperands(children)
+				.setPositional(positional)
+				.build();
+	}
 }

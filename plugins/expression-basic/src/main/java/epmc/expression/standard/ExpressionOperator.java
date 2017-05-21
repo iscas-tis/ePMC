@@ -239,4 +239,13 @@ public final class ExpressionOperator implements ExpressionPropositional {
         hash = operator.hashCode() + (hash << 6) + (hash << 16) - hash;            
         return hash;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionOperator.Builder()
+				.setOperands(operands)
+				.setOperator(operator)
+				.setPositional(positional)
+				.build();
+	}
 }

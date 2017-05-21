@@ -492,4 +492,15 @@ public final class ExpressionTemporal implements Expression {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return expressionLiteral.getValue();
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionTemporal.Builder()
+				.setChildren(children)
+				.setLeftOpen(leftOpen)
+				.setRightOpen(rightOpen)
+				.setType(type)
+				.setPositional(positional)
+				.build();
+	}
 }

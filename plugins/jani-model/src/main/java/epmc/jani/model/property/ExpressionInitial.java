@@ -94,4 +94,9 @@ public final class ExpressionInitial implements ExpressionIdentifier {
     public String getName() {
     	return INITIAL;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionInitial(positional);
+	}
 }

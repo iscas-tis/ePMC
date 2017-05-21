@@ -291,4 +291,18 @@ public final class ExpressionLiteral implements ExpressionPropositional {
                 .build();
         return falseExpr;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		Builder builder = new ExpressionLiteral.Builder();
+		if (value != null) {
+			builder.setValue(value);
+		} else if (valueProvider != null) {
+			builder.setValueProvider(valueProvider);
+		} else {
+			assert false;
+		}
+		builder.setPositional(positional);
+		return builder.build();
+	}
 }

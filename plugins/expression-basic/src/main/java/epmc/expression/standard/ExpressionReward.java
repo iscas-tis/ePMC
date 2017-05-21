@@ -311,4 +311,16 @@ public final class ExpressionReward implements Expression {
         hash = type.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionReward.Builder()
+				.setDiscount(discount)
+				.setReachSet(reachSet)
+				.setReward(reward)
+				.setRewardType(type)
+				.setTime(time)
+				.setPositional(positional)
+				.build();
+	}
 }
