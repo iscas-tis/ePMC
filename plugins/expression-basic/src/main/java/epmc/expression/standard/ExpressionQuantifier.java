@@ -341,4 +341,16 @@ public final class ExpressionQuantifier implements Expression {
     
         return dirType;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionQuantifier.Builder()
+				.setCmpType(cmpType)
+				.setCompare(compare)
+				.setCondition(condition)
+				.setDirType(dirType)
+				.setQuantified(quantified)
+				.setPositional(positional)
+				.build();
+	}
 }

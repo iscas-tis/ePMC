@@ -144,13 +144,13 @@ public final class UtilExpressionStandard {
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
         assert expression != null;
         if (replacement.containsKey(expression)) {
-            return replacement.get(expression);
+            return replacement.get(expression).replacePositional(expression.getPositional());
         }
         ArrayList<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
             newChildren.add(replace(child, replacement));
         }
-        return expression.replaceChildren(newChildren);
+        return expression.replaceChildren(newChildren).replacePositional(expression.getPositional());
     }
 
     static Expression newOperator(Operator operator, Expression... operands) {

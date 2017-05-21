@@ -84,4 +84,9 @@ public final class ExpressionDeadlock implements Expression {
         
         return hash;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionDeadlock(positional);
+	}
 }

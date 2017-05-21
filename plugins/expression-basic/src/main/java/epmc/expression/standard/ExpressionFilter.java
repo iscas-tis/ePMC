@@ -405,4 +405,14 @@ public final class ExpressionFilter implements Expression {
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
         return expressionLiteral.getValue();
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionFilter.Builder()
+				.setFilterType(type)
+				.setProp(prop)
+				.setStates(states)
+				.setPositional(positional)
+				.build();
+	}
 }

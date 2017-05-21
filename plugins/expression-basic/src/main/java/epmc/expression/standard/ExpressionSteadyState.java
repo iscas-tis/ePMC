@@ -149,4 +149,12 @@ public final class ExpressionSteadyState implements Expression {
         }        
         return hash;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionSteadyState.Builder()
+				.setStates(operand)
+				.setPositional(positional)
+				.build();
+	}
 }

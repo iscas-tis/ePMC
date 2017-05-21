@@ -191,4 +191,13 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
         }
         return builder.toString();        
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionIdentifierStandard.Builder()
+				.setName(name)
+				.setScope(scope)
+				.setPositional(positional)
+				.build();
+	}
 }

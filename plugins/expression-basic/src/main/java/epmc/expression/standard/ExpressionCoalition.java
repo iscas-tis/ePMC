@@ -199,4 +199,13 @@ public final class ExpressionCoalition implements Expression {
         
         return hash;
     }
+
+	@Override
+	public Expression replacePositional(Positional positional) {
+		return new ExpressionCoalition.Builder()
+				.setPlayers(players)
+				.setQuantifier(quantifier)
+				.setPositional(positional)
+				.build();
+	}
 }

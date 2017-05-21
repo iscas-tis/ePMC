@@ -58,6 +58,8 @@ public interface Expression {
      * @return expression in which expression
      */
     Expression replaceChildren(List<Expression> newChildren);
+
+    Expression replacePositional(Positional positional);
     
     // TODO it might later be useful to attach more general information to
     // expressions which do not influence equality of two expressions. For
