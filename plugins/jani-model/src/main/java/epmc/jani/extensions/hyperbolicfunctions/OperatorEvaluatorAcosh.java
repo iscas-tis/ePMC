@@ -24,10 +24,12 @@ import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeTrigonometric;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueTrigonometric;
+import epmc.value.ValueDouble;
+import epmc.value.ValueNumber;
 
 /**
  * Operator to compute sinus of a value.
@@ -50,7 +52,7 @@ public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
 		if (types.length != 1) {
 			return false;
 		}
-		if (!TypeTrigonometric.isTrigonometric(types[0])) {
+		if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
 			return false;
 		}
 		return true;
@@ -69,6 +71,9 @@ public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
 		assert operands != null;
 		assert operands.length >= 1;
 		assert operands[0] != null;
-		ValueTrigonometric.asTrigonometric(result).acosh(operands[0]);
+		ValueDouble resultDouble = ValueDouble.asDouble(result);
+		ValueNumber operandNumber = ValueNumber.asNumber(operands[0]);
+		// TODO
+		assert false;
 	}
 }
