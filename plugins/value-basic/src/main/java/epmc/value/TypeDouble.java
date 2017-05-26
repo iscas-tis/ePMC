@@ -24,7 +24,7 @@ import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeHasNativeArray, TypeNumBitsKnown, TypeTrigonometric {
+public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeHasNativeArray, TypeNumBitsKnown {
     public static boolean isDouble(Type type) {
     	return type instanceof TypeDouble;
     }

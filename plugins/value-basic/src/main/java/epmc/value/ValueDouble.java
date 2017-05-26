@@ -26,7 +26,7 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.value.Value;
 
-public final class ValueDouble implements ValueReal, ValueTrigonometric {
+public final class ValueDouble implements ValueReal {
 	public static boolean isDouble(Value value) {
 		return value instanceof ValueDouble;
 	}
@@ -298,79 +298,7 @@ public final class ValueDouble implements ValueReal, ValueTrigonometric {
         double op2Double = castOrImport(operand);
         return getDouble() < op2Double;
     }
-
-    @Override
-    public void cos(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double opDouble = castOrImport(op);
-        set(Math.cos(opDouble));
-    }
     
-    @Override
-    public void sin(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double opDouble = castOrImport(op);
-        set(Math.sin(opDouble));
-    }
-    
-    @Override
-    public void tanh(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.tanh(opDouble));
-    }
-
-    @Override
-    public void cosh(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.cosh(opDouble));
-    }
-    
-    @Override
-    public void sinh(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.sinh(opDouble));
-    }
-    
-    @Override
-    public void atan(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.atan(opDouble));
-    }
-
-    @Override
-    public void acos(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.acos(opDouble));
-    }
-
-    @Override
-    public void asin(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.asin(opDouble));
-    }
-
-    @Override
-    public void tan(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.tan(opDouble));
-    }
-
     @Override
     public void sqrt(Value operand) throws EPMCException {
         assert !isImmutable();
@@ -457,24 +385,6 @@ public final class ValueDouble implements ValueReal, ValueTrigonometric {
     public boolean isImmutable() {
         return immutable;
     }
-
-	@Override
-	public void acosh(Value operand) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void atanh(Value operand) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void asinh(Value operand) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public boolean isNegInf() {
