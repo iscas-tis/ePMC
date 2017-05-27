@@ -127,27 +127,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public int intcastInt() {
-        return getInt();
-    }
-
-    @Override
-    public int signInt() {
-        return (int) Math.signum((double) getInt());
-    }
-    
-    public void mod(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueInteger.isInteger(op1);
-        assert ValueInteger.isInteger(op2);
-        int intOp1 = ValueInteger.asInteger(op1).getInt();
-        int intOp2 = ValueInteger.asInteger(op2).getInt();
-        set((((intOp1 % intOp2)) + intOp2) % intOp2);
-    }
-
-    @Override
     public void addInverse(Value op) {
         assert !isImmutable();
         assert op != null;
@@ -279,14 +258,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
     
     @Override
-    public void abs(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        assert ValueInteger.isInteger(operand);
-        set(Math.abs(ValueInteger.asInteger(operand).getInt()));
-    }
-        
-    @Override
     public void set(String value) throws EPMCException {
         assert value != null;
         try {
@@ -329,16 +300,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
         set(type.getLowerInt() + number);
     }
 
-	@Override
-	public int floorInt() throws EPMCException {
-		return value;
-	}
-
-	@Override
-	public int ceilInt() throws EPMCException {
-		return value;
-	}
-	
 	public void pow(ValueInteger a, ValueInteger b) {
 		value = (int) Math.pow(a.value, b.value);
 	}

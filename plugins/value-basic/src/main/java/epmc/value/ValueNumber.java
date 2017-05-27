@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public interface ValueNumber extends ValueAlgebra {
@@ -37,16 +36,6 @@ public interface ValueNumber extends ValueAlgebra {
 		}
 	}
 	
-	int floorInt() throws EPMCException;
-	
-    int ceilInt() throws EPMCException;
-    
-    int signInt() throws EPMCException;
-    
-    void abs(Value operand) throws EPMCException;
-    
-    int intcastInt() throws EPMCException;
-    
     double getDouble();
     
     int getInt();
