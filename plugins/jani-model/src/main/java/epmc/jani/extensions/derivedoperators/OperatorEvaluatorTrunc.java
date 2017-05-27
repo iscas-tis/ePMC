@@ -68,6 +68,7 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
 		assert operands != null;
 		assert operands.length >= 1;
 		assert operands[0] != null;
-		ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).intcastInt());
+		double opValue = ValueNumber.asNumber(operands[0]).getDouble();
+		ValueAlgebra.asAlgebra(result).set((int) opValue);
 	}
 }

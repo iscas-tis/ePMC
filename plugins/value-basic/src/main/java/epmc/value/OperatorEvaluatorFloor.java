@@ -73,6 +73,8 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-    	ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).floorInt());
+    	double value = ValueNumber.asNumber(operands[0]).getDouble();
+    	int floor = (int) Math.floor(value);
+    	ValueAlgebra.asAlgebra(result).set(floor);
     }
 }

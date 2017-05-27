@@ -72,6 +72,8 @@ public enum OperatorEvaluatorCeil implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-        ValueAlgebra.asAlgebra(result).set(ValueNumber.asNumber(operands[0]).ceilInt());
+    	double value = ValueNumber.asNumber(operands[0]).getDouble();
+    	int ceil = (int) Math.ceil(value);
+    	ValueAlgebra.asAlgebra(result).set(ceil);
     }
 }

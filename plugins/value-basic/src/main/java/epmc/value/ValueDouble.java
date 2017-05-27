@@ -166,26 +166,6 @@ public final class ValueDouble implements ValueReal {
     }
 
     @Override
-    public int ceilInt() {
-        return (int) Math.ceil(getDouble());
-    }
-
-    @Override
-    public int floorInt() {
-        return (int) Math.floor(getDouble());
-    }
-    
-    @Override
-    public int intcastInt() {
-        return (int) getDouble();
-    }
-    
-    @Override
-    public int signInt() {
-        return (int) Math.signum(getDouble());
-    }
-
-    @Override
     public void log(Value op1, Value op2) {
         assert !isImmutable();
         assert op1 != null;
@@ -307,14 +287,6 @@ public final class ValueDouble implements ValueReal {
         set(Math.sqrt(opDouble));
     }
     
-    @Override
-    public void abs(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.abs(opDouble));
-    }
-
     @Override
     public void set(int operand) {
         assert !isImmutable();

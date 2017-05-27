@@ -24,7 +24,7 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public enum OperatorEvaluatorMod implements OperatorEvaluator {
+public enum OperatorEvaluatorIntegerMod implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
@@ -73,6 +73,9 @@ public enum OperatorEvaluatorMod implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-        ValueInteger.asInteger(result).mod(operands[0], operands[1]);
+    	int intOp1 = ValueInteger.asInteger(operands[0]).getInt();
+    	int intOp2 = ValueInteger.asInteger(operands[1]).getInt();
+        int resultInt = (((intOp1 % intOp2)) + intOp2) % intOp2;
+        ValueInteger.asInteger(result).set(resultInt);
     }
 }

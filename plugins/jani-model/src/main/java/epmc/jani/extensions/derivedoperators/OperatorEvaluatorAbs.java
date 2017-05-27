@@ -26,6 +26,8 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeNumber;
 import epmc.value.Value;
+import epmc.value.ValueDouble;
+import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
 
 /**
@@ -71,6 +73,14 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
 		assert operands != null;
 		assert operands.length >= 1;
 		assert operands[0] != null;
-		ValueNumber.asNumber(result).abs(operands[0]);
+		if (ValueDouble.isDouble(result)) {
+			double value = ValueNumber.asNumber(operands[0]).getDouble();
+			ValueDouble.asDouble(result).set(Math.abs(value));
+		} else if (ValueInteger.isInteger(result)) {
+			int value = ValueNumber.asNumber(operands[0]).getInt();
+			ValueInteger.asInteger(result).set(Math.abs(value));			
+		} else {
+			assert false;
+		}
 	}
 }

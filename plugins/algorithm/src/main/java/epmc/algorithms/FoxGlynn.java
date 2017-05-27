@@ -24,6 +24,10 @@ import epmc.error.EPMCException;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
+import epmc.value.ContextValue;
+import epmc.value.OperatorCeil;
+import epmc.value.OperatorEvaluator;
+import epmc.value.OperatorFloor;
 import epmc.value.TypeArray;
 import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeReal;
@@ -73,6 +77,8 @@ public final class FoxGlynn {
     private ValueReal totalWeight;
 
     private void finder(int m) throws EPMCException {
+        OperatorEvaluator ceil = ContextValue.get().getOperatorEvaluator(OperatorCeil.CEIL, typeReal);
+        OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
     	ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
         ValueReal e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
@@ -109,7 +115,7 @@ public final class FoxGlynn {
                 kReal.set(k);
                 ceiled.multiply(kReal, sqrtLambda);
                 ceiled.add(ceiled, oneHalf);
-                ceiled.set(ceiled.ceilInt());
+                ceil.apply(ceiled, ceiled);
                 left = m - ceiled.getInt();
                 if (left <= 0) {
                     left = 0;
@@ -164,12 +170,12 @@ public final class FoxGlynn {
         rightAdd.pow(rightAdd, oneHalf);
         rightAdd.multiply(kReal, rightAdd);
         rightAdd.add(rightAdd, oneHalf);
-        rightAdd.set(rightAdd.ceilInt());
+        ceil.apply(rightAdd, rightAdd);
         right = m_max + rightAdd.getInt();
         ValueReal checkValueReal = typeReal.newValue();
         checkValueReal.add(lambda_max, one);
         checkValueReal.multiply(checkValueReal, oneHalf);
-        checkValueReal.set(checkValueReal.ceilInt());
+        ceil.apply(checkValueReal, checkValueReal);
         if (right > checkValueReal.getInt() + m_max) {
             log.send(MessagesAlgorithm.FOX_GLYNN_UNRELIABLE_CANT_BOUND_RIGHT, right, lambda_max);
         }
@@ -218,7 +224,7 @@ public final class FoxGlynn {
             if (result.isLt(tau)) {
                 ValueReal log10_result = typeReal.newValue();
                 log10_result.multiply(result, log10_e);
-                log10_result.set(log10_result.floorInt());
+                floor.apply(log10_result, log10_result);
                 ValueReal exprRL10 = typeReal.newValue();
                 exprRL10.divide(log10_result, log10_e);
                 exprRL10.subtract(result, exprRL10);
@@ -234,7 +240,7 @@ public final class FoxGlynn {
                 if (result.isLt(tau)) {
                     ValueReal log10_result = typeReal.newValue();
                     log10_result.multiply(result, log10_e);
-                    log10_result.set(log10_result.floorInt());
+                    floor.apply(log10_result, log10_result);
                     ValueReal exprRL10 = typeReal.newValue();
                     exprRL10.divide(log10_result, log10_e);
                     exprRL10.subtract(result, exprRL10);
@@ -386,9 +392,10 @@ public final class FoxGlynn {
             totalWeight = UtilValue.clone(one);
             startValue = typeReal.newValue();
         } else {
-            ValueReal floor = typeReal.newValue();
-            floor.set(this.lambda.floorInt());
-            int m = floor.getInt();
+            OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
+            ValueReal floorReal = typeReal.newValue();
+            floor.apply(floorReal, this.lambda);
+            int m = floorReal.getInt();
             finder(m);
             weighter(m);
         }
