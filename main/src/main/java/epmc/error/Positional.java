@@ -94,7 +94,6 @@ public final class Positional implements Serializable {
         }
     }
     
-    private final static String COMMA = ",";
     /** Serial version UID - 1L, as I don't know any better. */
     private static final long serialVersionUID = 1L;
     // TODO change to String? Otherwise, might not be clear whether referring

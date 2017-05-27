@@ -35,14 +35,15 @@ public enum OperatorEvaluatorTanh implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorTanh.TANH;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorTanh.TANH)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

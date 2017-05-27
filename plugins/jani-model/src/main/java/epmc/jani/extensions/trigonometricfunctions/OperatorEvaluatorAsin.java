@@ -40,14 +40,15 @@ public enum OperatorEvaluatorAsin implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorAsin.ASIN;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorAsin.ASIN)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

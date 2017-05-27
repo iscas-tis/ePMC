@@ -35,14 +35,15 @@ public enum OperatorEvaluatorAtan implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorAtan.ATAN;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorAtan.ATAN)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

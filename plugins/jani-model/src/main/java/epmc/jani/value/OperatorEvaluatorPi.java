@@ -32,19 +32,19 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorPi.PI;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (!operator.equals(OperatorPi.PI)) {
-			return false;
-		}
 		if (types.length != 0) {
 			return false;
 		}
-		// TODO Auto-generated method stub
 		return true;
 	}
 

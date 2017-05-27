@@ -22,7 +22,6 @@ package epmc.value;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -39,10 +38,7 @@ import com.google.common.collect.Lists;
 public final class ContextValue {
     /** String to indicate unchecked method. */
     private final static String UNCHECKED = "unchecked";
-    /** Map from operator identifier to according operator. */
-    private final Map<Operator,Operator> identifierToOperator = new LinkedHashMap<>();
     /** Unmodifiable map from operator identifier to according operator. */
-    private final Map<Operator,Operator> identifierToOperatorExternal = Collections.unmodifiableMap(identifierToOperator);
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
     private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
     private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
@@ -51,14 +47,14 @@ public final class ContextValue {
     /** Map used to make types unique. */
     private final Map<Type,Type> typesUnique = new HashMap<>();
     /** The value context used in the model checking process. */
-	private static ContextValue contextValue;
+	private static ContextValue CONTEXT_VALUE;
 
     public static void set(ContextValue contextValue) {
-    	ContextValue.contextValue = contextValue;
+    	ContextValue.CONTEXT_VALUE = contextValue;
     }
     
     public static ContextValue get() {
-    	return contextValue;
+    	return CONTEXT_VALUE;
     }
     
     /**
@@ -123,29 +119,6 @@ public final class ContextValue {
         }
         return result;
     }
-        
-    // TODO get rid of this function
-    /**
-     * Get a map from operator identifiers to operators.
-     * The map returned is write protected, any attempt to modify it will lead
-     * to an exception.
-     * 
-     * @return map from operator identifiers to operators
-     */
-    public Map<Operator, Operator> getOperators() {
-        return identifierToOperatorExternal;
-    }
-
-    // TODO get rid of this function
-    /**
-     * Add or replace operator.
-     * 
-     * @param clazz class of operator to add or replace
-     */
-    public void addOrSetOperator(Operator name, Class<? extends Operator> clazz) {
-    	assert clazz != null;
-        this.identifierToOperator.put(name, name);
-    }
     
     public void addOperatorEvaluator(OperatorEvaluator evaluator) {
     	assert evaluator != null;
@@ -163,7 +136,8 @@ public final class ContextValue {
     		assert type != null;
     	}
     	for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
-    		if (evaluator.canApply(operator, types)) {
+    		if (evaluator.getOperator().equals(operator)
+    				&& evaluator.canApply(types)) {
     			return evaluator;
     		}
     	}
