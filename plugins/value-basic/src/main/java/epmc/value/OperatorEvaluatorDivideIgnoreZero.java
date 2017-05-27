@@ -28,14 +28,15 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO)) {
-			return false;
 		}
 		if (types.length != 2) {
 			return false;

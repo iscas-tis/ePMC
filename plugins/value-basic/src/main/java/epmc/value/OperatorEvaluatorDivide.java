@@ -28,14 +28,15 @@ public enum OperatorEvaluatorDivide implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorDivide.DIVIDE;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorDivide.DIVIDE)) {
-			return false;
 		}
 		if (types.length != 2) {
 			return false;

@@ -35,12 +35,6 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 
 	@Override
 	public void process() throws EPMCException {
-		ContextValue.get().addOrSetOperator(OperatorSinh.SINH, OperatorSinh.class);
-		ContextValue.get().addOrSetOperator(OperatorCosh.COSH, OperatorCosh.class);
-		ContextValue.get().addOrSetOperator(OperatorTanh.TANH, OperatorTanh.class);
-		ContextValue.get().addOrSetOperator(OperatorAsinh.ASINH, OperatorAsinh.class);
-		ContextValue.get().addOrSetOperator(OperatorAcosh.ACOSH, OperatorAcosh.class);
-		ContextValue.get().addOrSetOperator(OperatorAtanh.ATANH, OperatorAtanh.class);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);

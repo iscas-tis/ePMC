@@ -23,6 +23,8 @@ package epmc.dd.sylvanmtbdd;
 import static epmc.error.UtilError.ensure;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -277,6 +279,16 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private DD_VOP2 vop2;
     private boolean alive = true;
     
+    private Operator[] collectOperators() {
+    	Set<Operator> operators = new LinkedHashSet<>();
+        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
+        for (OperatorEvaluator evaluator : identifiers) {
+        	operators.add(evaluator.getOperator());
+        }
+        return operators.toArray(new Operator[0]);
+    }
+    
+    
     // TODO make sure mapping of operators still works
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
@@ -284,10 +296,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
         this.contextDD = contextDD;
-        Collection<Operator> identifiers = ContextValue.get().getOperators().values();
-        this.operators = identifiers.toArray(new Operator[0]);
+        this.operators = collectOperators();
         int opNr = 0;
-        for (Operator operator : identifiers) {
+        for (Operator operator : operators) {
             this.operatorToNumber.put(operator, opNr);
         	opNr++;
         }

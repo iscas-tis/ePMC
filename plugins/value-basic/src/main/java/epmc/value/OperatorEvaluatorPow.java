@@ -26,16 +26,17 @@ import epmc.value.Value;
 
 public enum OperatorEvaluatorPow implements OperatorEvaluator {
 	INSTANCE;
+	
+	@Override
+	public Operator getOperator() {
+		return OperatorPow.POW;
+	}
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorLog.LOG)) {
-			return false;
 		}
 		if (types.length != 2) {
 			return false;

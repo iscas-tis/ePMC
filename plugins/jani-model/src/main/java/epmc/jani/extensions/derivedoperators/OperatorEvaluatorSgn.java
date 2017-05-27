@@ -33,14 +33,15 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorSgn.SGN;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorSgn.SGN)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

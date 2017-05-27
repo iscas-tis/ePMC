@@ -34,14 +34,15 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorPRISMPow.PRISM_POW;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorPRISMPow.PRISM_POW)) {
-			return false;
 		}
 		if (types.length != 2) {
 			return false;

@@ -33,16 +33,17 @@ import epmc.value.ValueNumber;
 
 public enum OperatorEvaluatorAtanh implements OperatorEvaluator {
 	INSTANCE;
+	
+	@Override
+	public Operator getOperator() {
+		return OperatorAtanh.ATANH;
+	}
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorAtanh.ATANH)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

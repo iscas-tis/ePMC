@@ -28,14 +28,15 @@ public enum OperatorEvaluatorCeil implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorCeil.CEIL;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorCeil.CEIL)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;

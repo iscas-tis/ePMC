@@ -27,8 +27,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Memory;
@@ -426,15 +428,23 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private Operator opId;
     private int opIdNr;
     
+    private Operator[] collectOperators() {
+    	Set<Operator> operators = new LinkedHashSet<>();
+        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
+        for (OperatorEvaluator evaluator : identifiers) {
+        	operators.add(evaluator.getOperator());
+        }
+        return operators.toArray(new Operator[0]);
+    }
+    
     @Override
     public void setContextDD(ContextDD contextDD) throws EPMCException {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        Collection<Operator> identifiers = ContextValue.get().getOperators().values();
-        this.operators = identifiers.toArray(new Operator[0]);
+        this.operators = collectOperators();
         int index = 0;
-        for (Operator operator : identifiers) {
+        for (Operator operator : operators) {
             this.operatorToNumber.put(operator, index);
         	index++;
         }

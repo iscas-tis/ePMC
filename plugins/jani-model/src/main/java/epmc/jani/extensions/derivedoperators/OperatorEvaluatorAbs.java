@@ -37,14 +37,15 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
 	INSTANCE;
 	
 	@Override
-	public boolean canApply(Operator operator, Type... types) {
-		assert operator != null;
+	public Operator getOperator() {
+		return OperatorAbs.ABS;
+	}
+	
+	@Override
+	public boolean canApply(Type... types) {
 		assert types != null;
 		for (Type type : types) {
 			assert type != null;
-		}
-		if (!operator.equals(OperatorAbs.ABS)) {
-			return false;
 		}
 		if (types.length != 1) {
 			return false;
