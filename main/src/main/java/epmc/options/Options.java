@@ -168,6 +168,10 @@ public final class Options implements Serializable, Cloneable {
         options.put(Options.COMMAND, commandOption);
     }
 
+    public Options(Enum<?> defaultResourceFileName) {
+    	this(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, defaultResourceFileName.name()));
+    }
+    
     /**
      * Add command to this options set.
      * No parameters may be {@code null}. The options obtained by the method

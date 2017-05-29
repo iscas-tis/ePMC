@@ -442,8 +442,6 @@ public final class Option implements Serializable, Cloneable {
             options.addOption(option);
             return option;
         }
-
-
     }
     
     /** Serial version UID - 1L, as I don't know any better. */
