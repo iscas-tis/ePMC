@@ -26,6 +26,8 @@ import java.util.ResourceBundle;
 
 import com.google.common.base.CaseFormat;
 
+import epmc.options.Command.Builder;
+
 // TODO complete documentation
 
 /**
@@ -130,6 +132,11 @@ public final class Command implements Serializable, Cloneable {
             options.addCommand(result);
             return result;
         }
+
+		public Builder setIdentifier(Enum<?> identifier) {
+            this.identifier = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());
+            return this;
+		}
     }
     
     /** Serial version UID - 1L as I don't know any better. */
