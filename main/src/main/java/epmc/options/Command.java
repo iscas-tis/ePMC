@@ -26,8 +26,6 @@ import java.util.ResourceBundle;
 
 import com.google.common.base.CaseFormat;
 
-import epmc.options.Command.Builder;
-
 // TODO complete documentation
 
 /**
