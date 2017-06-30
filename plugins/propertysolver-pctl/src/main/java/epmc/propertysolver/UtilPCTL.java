@@ -56,7 +56,25 @@ public final class UtilPCTL {
         
         return true;
     }
-    
+
+    public static boolean isPCTLPathUntil(Expression pathProp) {
+    	if (!isPCTLPath(pathProp)) {
+    		return false;
+    	}
+        ExpressionTemporal asTemporal = (ExpressionTemporal) pathProp;
+        switch (asTemporal.getTemporalType()) {
+		case FINALLY:
+		case GLOBALLY:
+		case RELEASE:
+		case UNTIL:
+			break;
+		default:
+			return false;
+        	
+        }
+        return true;
+    }
+
 	private UtilPCTL() {
 	}
 }
