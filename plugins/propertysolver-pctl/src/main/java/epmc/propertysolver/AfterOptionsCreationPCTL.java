@@ -39,7 +39,8 @@ public final class AfterOptionsCreationPCTL implements AfterOptionsCreation {
 	public void process(Options options) throws EPMCException {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
-		solvers.put(PropertySolverExplicitPCTL.IDENTIFIER, PropertySolverExplicitPCTL.class);
+		solvers.put(PropertySolverExplicitPCTLUntil.IDENTIFIER, PropertySolverExplicitPCTLUntil.class);
+		solvers.put(PropertySolverExplicitPCTLNext.IDENTIFIER, PropertySolverExplicitPCTLNext.class);
 		solvers.put(PropertySolverDDPCTL.IDENTIFIER, PropertySolverDDPCTL.class);
 	}
 }
