@@ -257,7 +257,8 @@ public final class PCTLSolverExplicitTest {
         options.set(OptionsModelChecker.CONST, constants);
         options.set(TestHelper.PRISM_FLATTEN, false);
 
-        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (  ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13)) | ((p4>7) & (p4<13))  ) ]");
         assertEquals(0, result, tolerance);
         close(options);
     }
@@ -278,6 +279,8 @@ public final class PCTLSolverExplicitTest {
         close(options);
     }
     
+    @Ignore
+    // TODO where is the "RP" label specified?
     @Test
     public void clusterGTest() throws EPMCException {
         Options options = prepareOptions();
@@ -558,8 +561,6 @@ public final class PCTLSolverExplicitTest {
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(TestHelper.PRISM_FLATTEN, false);
-        Map<String,Object> constants = new HashMap<>();
-        options.set(OptionsModelChecker.CONST, constants);
 
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "filter(forall, num_procs_in_crit<=1)");
         assertEquals(true, result);
@@ -570,39 +571,27 @@ public final class PCTLSolverExplicitTest {
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"}{min} ]");
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "0");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        
+        String paramProp = "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=%d}{min} ]";
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 0));
         assertEquals("0.237457275390625", result, tolerance * 10);
         
-        constants.put("k", "1");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 1));
         assertEquals("0.237457275390625", result, tolerance * 10);
 
-        constants.put("k", "2");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 2));
         assertEquals("0.2080078125", result, tolerance * 10);
 
-        constants.put("k", "3");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 3));
         assertEquals("0.1142578125", result, tolerance * 10);
 
-        constants.put("k", "4");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 4));
         assertEquals("0.0595703125", result, tolerance * 10);
 
-        constants.put("k", "5");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 5));
         assertEquals("0.0302734375", result, tolerance * 10);
 
-        constants.put("k", "6");
-        options.set(OptionsModelChecker.CONST, constants);
-        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
+        result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 6));
         assertEquals("0", result, tolerance * 10);
         close(options);
     }
