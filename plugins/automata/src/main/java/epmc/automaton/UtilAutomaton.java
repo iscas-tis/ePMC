@@ -330,7 +330,8 @@ public final class UtilAutomaton {
         }
         if (ExpressionLiteral.isLiteral(expression)) {
             assert isTrue(expression) || isFalse(expression);
-            result = expression.toString();
+        	ExpressionLiteral literal = ExpressionLiteral.asLiteral(expression);
+        	result = literal.getValue().toString();
         } else if (expression instanceof ExpressionOperator) {
             ExpressionOperator op = (ExpressionOperator) expression;
             if (isAnd(op) || isOr(op) || isIff(op) || isImplies(op)

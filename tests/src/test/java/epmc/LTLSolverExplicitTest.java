@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import epmc.error.EPMCException;
@@ -91,7 +92,9 @@ public class LTLSolverExplicitTest {
         close(options);
     }
 
+    // TODO ignored because labels not defined in PRISM file
     @Test
+    @Ignore
     public void firewireImplPatternTest() throws EPMCException {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
