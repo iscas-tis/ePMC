@@ -270,6 +270,10 @@ public final class NodeJANI implements ExplorerNode {
 		builder.append(numSet + "\n");
 		return builder.toString();
 	}
+
+	public String toStringValuesOnly() {
+		return Arrays.toString(values);
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -277,15 +281,25 @@ public final class NodeJANI implements ExplorerNode {
 			return false;
 		}
 		NodeJANI other = (NodeJANI) obj;
-		if (!Arrays.equals(this.values, other.values)) {
-			return false;
+		for (int varNr = 0; varNr < values.length; varNr++) {
+			if (storeVariables[varNr]) {
+				if (!this.values[varNr].equals(other.values[varNr])) {
+					return false;
+				}
+			}
 		}
 		return true;
 	}
 	
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(values);
+		int hash = 0;
+		for (int varNr = 0; varNr < values.length; varNr++) {
+			if (storeVariables[varNr]) {
+				hash = values[varNr].hashCode() + (hash << 6) + (hash << 16) - hash;
+			}
+		}
+		return hash;
 	}
 
 	public void setNotSet(NodeJANI nodeAutomaton) {
