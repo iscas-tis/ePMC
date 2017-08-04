@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import epmc.dd.ContextDD;
@@ -62,6 +63,7 @@ public class PCTLSolverDDTest {
         constants.put("K", "16");
         options.set(OptionsModelChecker.CONST, constants);
         options.set("prism-flatten", true);
+        // TODO why does this take so long?
         result = computeResult(options, String.format(ModelNamesPRISM.COIN_MODEL, 6), "P>=1 [ F (\"finished\") ]");
         assertEquals(true, result);
         close(options);
@@ -77,7 +79,8 @@ public class PCTLSolverDDTest {
         constants.put("K", "3");
         options.set(OptionsModelChecker.CONST, constants);
 
-        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (\"entered\") ]");
+//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (\"entered\") ]");
+        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (   ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13))      ) ]");
         assertEquals(0, result, tolerance);
         close(options);
     }
@@ -92,12 +95,15 @@ public class PCTLSolverDDTest {
         constants.put("K", "3");
         options.set(OptionsModelChecker.CONST, constants);
 
-        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+      result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (   ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13)) | ((p4>7) & (p4<13))    ) ]");
         assertEquals(0, result, tolerance);
         close(options);
     }
 
     @Test
+    // TODO ignored because "RP" not in PRISM file; 
+    @Ignore
     public void clusterGTest() throws EPMCException {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
