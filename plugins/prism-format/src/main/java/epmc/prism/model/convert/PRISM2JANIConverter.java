@@ -554,7 +554,7 @@ public final class PRISM2JANIConverter {
 		variable.setIdentifier(identifier);
 		variable.setAutomaton(null);
 		variable.setType(type);
-		variable.setInitial(varInit);
+		variable.setInitial(varInit == null ? null : prism2jani(varInit));
 		return variable;
 	}
 
