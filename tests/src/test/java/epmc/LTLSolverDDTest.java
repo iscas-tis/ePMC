@@ -139,6 +139,8 @@ public class LTLSolverDDTest {
     }
 
     @Test
+    // TODO define custom labels
+    @Ignore
     public void philLss3PatternRabinTest() throws EPMCException {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
