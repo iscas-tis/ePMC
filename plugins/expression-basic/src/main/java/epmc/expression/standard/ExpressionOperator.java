@@ -162,6 +162,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             opTypes[opNr] = childType;
         }
         OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, opTypes);
+        assert evaluator != null : operator;
         result = evaluator.resultType(operator, opTypes);
         assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
