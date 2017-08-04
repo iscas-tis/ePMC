@@ -711,7 +711,7 @@ public final class PRISM2JANIConverter {
 		if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
 			Expression operand = prism2jani(expression.getOperand1());
 			Expression zero = new ExpressionLiteral.Builder()
-					.setValueProvider(() -> TypeReal.get().getZero())
+					.setValueProvider(() -> TypeInteger.get().getZero())
 					.build();
 			return new ExpressionOperator.Builder()
 					.setOperator(OperatorSubtract.SUBTRACT)
