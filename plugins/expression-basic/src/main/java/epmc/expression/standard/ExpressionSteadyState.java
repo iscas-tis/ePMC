@@ -37,6 +37,17 @@ import epmc.value.TypeWeight;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionSteadyState implements Expression {
+    public static boolean isSteadyState(Expression expression) {
+    	return expression instanceof ExpressionSteadyState;
+    }
+
+    public static ExpressionSteadyState asSteadyState(Expression expression) {
+    	if (!isSteadyState(expression)) {
+    		return null;
+    	}
+    	return (ExpressionSteadyState) expression;
+    }
+
     public final static class Builder {
         private Positional positional;
         private Expression states;
