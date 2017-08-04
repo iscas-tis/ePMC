@@ -42,7 +42,7 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeReal.isReal(type)) {
+			if (!TypeReal.isReal(type) && !TypeInteger.isInteger(type)) {
 				return false;
 			}
 		}
