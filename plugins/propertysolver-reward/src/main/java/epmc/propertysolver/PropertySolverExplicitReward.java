@@ -415,7 +415,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         assert values != null;
         assert states != null;
         Type typeWeight = TypeWeight.get();
-        ValueArray resultValues = newValueArrayWeight(states.size());
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
+        ValueArray resultValues = UtilValue.newArray(typeArray, states.size());
         Value entry = typeWeight.newValue();
         for (int i = 0; i < states.size(); i++) {
             values.get(entry, i);
@@ -451,11 +452,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
-    }
-    
-    private ValueArray newValueArrayWeight(int size) {
-        TypeArray typeArray = TypeWeight.get().getTypeArray();
-        return UtilValue.newArray(typeArray, size);
     }
     
     private ValueAlgebra newValueWeight() {
