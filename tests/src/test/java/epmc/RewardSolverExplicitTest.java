@@ -508,47 +508,38 @@ public final class RewardSolverExplicitTest {
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(TestHelper.PRISM_FLATTEN, false);
-        Map<String,Object> constants = new HashMap<>();
-        options.set(OptionsModelChecker.CONST, constants);
 
-        constants.put("T", "0");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}min=?[I=T]");
+        String prop_min = "R{\"max_path_len\"}min=?[I=%d]";
+        String prop_max = "R{\"max_path_len\"}max=?[I=%d]";
+        
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 0));
         assertEquals("4", result, tolerance * 10);
         
-        constants.put("T", "1");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}min=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 1));
         assertEquals("4", result, tolerance * 10);
 
-        constants.put("T", "100");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}min=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 100));
         assertEquals("2.5224609375", result, tolerance * 10);
 
-        constants.put("T", "500");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}min=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 500));
         assertEquals("2.0002606653354573", result, tolerance * 10);
 
-        constants.put("T", "2342");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}min=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 2342));
         assertEquals("2.0", result, tolerance * 10);
         
-        constants.put("T", "0");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}max=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 0));
         assertEquals("4", result, tolerance * 10);
         
-        constants.put("T", "1");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}max=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 1));
         assertEquals("4", result, tolerance * 10);
 
-        constants.put("T", "100");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}max=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 100));
         assertEquals("3.765625", result, tolerance * 10);
 
-        constants.put("T", "500");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}max=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 500));
         assertEquals("3.2876948298313122", result, tolerance * 10);
 
-        constants.put("T", "2342");
-        result = computeResult(options, String.format(GOSSIP_MODEL, 4), "R{\"max_path_len\"}max=?[I=T]");
+        result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 2342));
         assertEquals("2.0817980708028925", result, tolerance * 100);
         
         close(options);
