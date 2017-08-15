@@ -24,7 +24,7 @@ import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeHasNativeArray, TypeNumBitsKnown {
+public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
     public static boolean isDouble(Type type) {
     	return type instanceof TypeDouble;
     }
@@ -132,12 +132,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-    }
-    
-    @Override
-    public TypeArrayDoubleNative getTypeArrayNative() {
-        TypeArrayDoubleNative arrayType = new TypeArrayDoubleNative(this);
-        return ContextValue.get().makeUnique(arrayType);
     }
     
     @Override

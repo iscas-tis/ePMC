@@ -23,7 +23,6 @@ package epmc.graph.explicit;
 import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeArray;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -54,19 +53,16 @@ public final class NodePropertyGeneral implements NodeProperty {
      * 
      * @param graph graph to which the property shall belong
      * @param defaultValue value for nodes for which no value was set
-     * @param forNative whether to store values in native memory if possible
      */
-    public NodePropertyGeneral(GraphExplicit graph, Value defaultValue, boolean forNative) {
+    public NodePropertyGeneral(GraphExplicit graph, Value defaultValue) {
         assert graph != null;
         assert defaultValue != null;
         Type type = defaultValue.getType();
         this.graph = graph;
         this.value = type.newValue();
         this.defaultValue = UtilValue.clone(defaultValue);
-        TypeArray typeArray = forNative
-                ? TypeHasNativeArray.getTypeNativeArray(type)
-                        : type.getTypeArray();
-                this.content = UtilValue.newArray(typeArray, 1);
+        TypeArray typeArray = type.getTypeArray();
+        this.content = UtilValue.newArray(typeArray, 1);
     }
 
     /**
@@ -76,17 +72,14 @@ public final class NodePropertyGeneral implements NodeProperty {
      * 
      * @param graph graph to which the property shall belong
      * @param type type of the node property
-     * @param forNative whether to store values in native memory if possible
      */
-    public NodePropertyGeneral(GraphExplicit graph, Type type, boolean forNative) {
+    public NodePropertyGeneral(GraphExplicit graph, Type type) {
         assert graph != null;
         assert type != null;
         this.graph = graph;
         this.value = type.newValue();
         this.defaultValue = type.newValue();
-        TypeArray typeArray = forNative
-                ? TypeHasNativeArray.getTypeNativeArray(type)
-                : type.getTypeArray();
+        TypeArray typeArray = type.getTypeArray();
         if (typeArray == null) {
             typeArray = type.getTypeArray();
         }

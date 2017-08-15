@@ -365,7 +365,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             property = new DummyName();
         }
         assert type != null;
-        NodeProperty result = new NodePropertyGeneral(this, type, false);
+        NodeProperty result = new NodePropertyGeneral(this, type);
         registerNodeProperty(property, result);
         return result;
     }

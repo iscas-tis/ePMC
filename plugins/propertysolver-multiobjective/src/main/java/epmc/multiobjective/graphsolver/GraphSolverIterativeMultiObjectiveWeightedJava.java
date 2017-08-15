@@ -35,8 +35,6 @@ import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.options.Options;
-import epmc.value.Type;
-import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -74,12 +72,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Type typeWeight = TypeWeight.get();
-        if (Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeDouble.isDouble(typeWeight)) {
-        	return false;
-        }
-
         return true;
     }
 
@@ -97,7 +89,6 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
-        builder.setForNative(false);
         builder.setReorder();
         builder.build();
         this.iterGraph = builder.getOutputGraph();
@@ -160,8 +151,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         if (!SemanticsMDP.isMDP(semantics)) {
             return false;
         }
-        GraphExplicitSparseAlternate sparseNondet = asSparseNondet(graph);
-        return !sparseNondet.isNative();
+        return true;
     }
     
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {

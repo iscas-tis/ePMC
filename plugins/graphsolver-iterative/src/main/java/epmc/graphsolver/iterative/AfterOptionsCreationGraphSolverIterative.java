@@ -25,7 +25,6 @@ import java.util.Map;
 import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.options.Category;
-import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeEnum;
 import epmc.options.OptionTypeRealNonnegative;
 import epmc.options.Options;
@@ -48,14 +47,7 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         		.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_CATEGORY)
         		.setParent(OptionsGraphsolver.GRAPHSOLVER_CATEGORY)
         		.build();
-        OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();        
         OptionTypeRealNonnegative typeRealNonnegative = OptionTypeRealNonnegative.getInstance();
-        options.addOption().setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
-        	.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-        	.setType(typeBoolean)
-        	.setDefault(true)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
 
         options.addOption().setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
         	.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD)
@@ -77,6 +69,7 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         	.setCategory(category).build();
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
-        graphSolverMap.put(GraphSolverIterative.IDENTIFIER, GraphSolverIterative.class);
+        graphSolverMap.put(GraphSolverIterativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
+        graphSolverMap.put(GraphSolverIterativeNative.IDENTIFIER, GraphSolverIterativeNative.class);
     }
 }

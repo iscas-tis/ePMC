@@ -58,16 +58,11 @@ import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.NodePropertyApply;
 import epmc.graph.explicit.NodePropertyConstant;
 import epmc.graph.explicit.StateSetExplicit;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.modelchecker.ModelChecker;
-import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.OperatorAddInverse;
-import epmc.value.Type;
-import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
-import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import gnu.trove.map.hash.THashMap;
@@ -114,12 +109,7 @@ final class ProductBuilder {
         builder.addDerivedNodeProperty(CommonProperties.STATE);
         builder.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         builder.addDerivedEdgeProperty(CommonProperties.WEIGHT);
-        Options options = Options.get();
-        Type typeWeight = TypeWeightTransition.get();
-        boolean useNative = options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeDouble.isDouble(typeWeight);
         builder.setReorder();
-        builder.setForNative(useNative);
         builder.build();
         GraphExplicit iterGraph = builder.getOutputGraph();
         IterationRewards rewards = computeRewards(builder);
@@ -202,8 +192,6 @@ final class ProductBuilder {
     	GraphExplicit prodWrapper = builder.getInputGraph();
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
         EdgeProperty[] transRewards = new EdgeProperty[property.getOperands().size()];
-        EdgeProperty weights = prodWrapper.getEdgeProperty(CommonProperties.WEIGHT);
-        Value weight = weights.getType().newValue();
         int propNr = 0;
         Value zero = TypeWeight.get().getZero();
         for (Expression objective : property.getOperands()) {

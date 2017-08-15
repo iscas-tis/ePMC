@@ -29,7 +29,6 @@ import epmc.value.OperatorCeil;
 import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorFloor;
 import epmc.value.TypeArray;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.ValueArrayAlgebra;
@@ -332,7 +331,7 @@ public final class FoxGlynn {
     }
     
     private FoxGlynn(ValueReal lambda, ValueReal tau,
-    		ValueReal omega, ValueReal epsilon, boolean useNative) throws EPMCException {
+    		ValueReal omega, ValueReal epsilon) throws EPMCException {
         assert lambda != null;
         assert tau != null;
         assert omega != null;
@@ -357,9 +356,7 @@ public final class FoxGlynn {
         this.epsilon = typeReal.newValue();
         this.epsilon.set(epsilon);
         
-        this.typeArray = useNative
-                ? TypeHasNativeArray.asHasNativeArray(TypeReal.get()).getTypeArrayNative()
-                : TypeReal.get().getTypeArray();
+        this.typeArray = TypeReal.get().getTypeArray();
 
         /* set constants */
         this.zero = UtilValue.newValue(typeReal, 0);
@@ -401,9 +398,9 @@ public final class FoxGlynn {
         }
     }
     
-    public FoxGlynn(ValueReal lambda, ValueReal epsilon, boolean useNative)
+    public FoxGlynn(ValueReal lambda, ValueReal epsilon)
             throws EPMCException {
-        this(lambda, getUnderflow(lambda), getOverflow(lambda), epsilon, useNative);
+        this(lambda, getUnderflow(lambda), getOverflow(lambda), epsilon);
     }
 
     private static ValueReal getUnderflow(ValueReal value) {

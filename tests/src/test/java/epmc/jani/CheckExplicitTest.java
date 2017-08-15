@@ -72,7 +72,6 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import epmc.error.EPMCException;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
@@ -125,7 +124,6 @@ public final class CheckExplicitTest {
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
-        options.set(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE, "false");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
         return options;

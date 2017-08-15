@@ -427,9 +427,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                 .setClazz(SettableParityLabel.class)
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build();
-    	NodeProperty newLabelProp = new NodePropertyGeneral(induced, typeLabel, false);
+    	NodeProperty newLabelProp = new NodePropertyGeneral(induced, typeLabel);
     	NodeProperty oldPlayerProp = induced.getNodeProperty(CommonProperties.PLAYER);
-    	NodePropertyGeneral newPlayerProp = new NodePropertyGeneral(induced, oldPlayerProp.getType(), false);
+    	NodePropertyGeneral newPlayerProp = new NodePropertyGeneral(induced, oldPlayerProp.getType());
     	int numNodes = induced.getNumNodes();
 
     	int numPrios = 0;

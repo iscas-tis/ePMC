@@ -145,10 +145,10 @@ public final class GraphBuilderExplorer {
         
         int numStates = lastNumber + 1;
         if (nondet) {
-            graphAlter = new GraphExplicitSparseAlternate(false);
+            graphAlter = new GraphExplicitSparseAlternate();
             this.graph = graphAlter;
         } else {
-            graphStoch = new GraphExplicitSparse(false);
+            graphStoch = new GraphExplicitSparse();
             this.graph = graphStoch;
         }
         for (Object property : graphProperties) {

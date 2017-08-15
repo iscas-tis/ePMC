@@ -160,7 +160,6 @@ public final class CheckSymbolicTest {
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
-        options.set(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE, "false");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
         return options;
