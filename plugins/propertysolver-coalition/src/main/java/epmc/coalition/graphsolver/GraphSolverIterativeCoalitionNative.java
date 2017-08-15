@@ -20,7 +20,6 @@
 
 package epmc.coalition.graphsolver;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,26 +54,22 @@ import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.ValueContentMemory;
+import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueObject;
-
-// TODO divide into Java and C based parts
 
 /**
  * Iterative solver to solve game-related graph problems.
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeCoalition implements GraphSolverExplicit {
+public final class GraphSolverIterativeCoalitionNative implements GraphSolverExplicit {
 	/** Identifier of the iteration-based graph game solver. */
-    public static String IDENTIFIER = "graph-solver-iterative-coalition";
+    public static String IDENTIFIER = "graph-solver-iterative-coalition-native";
     
     /**
      * Class to interface with native code implementing value iteration.
@@ -84,13 +79,13 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
     private static final class IterationNative {
         native static int double_tpg_unbounded_gaussseidel(int relative,
                 double precision, int maxEnd, int minEnd,
-                ByteBuffer stateBounds, ByteBuffer nondetBounds,
-                ByteBuffer targets, ByteBuffer weights, ByteBuffer values);
+                int[] stateBounds, int[] nondetBounds,
+                int[] targets, double[] weights, double[] values);
         
         native static int double_tpg_unbounded_jacobi(int relative,
                 double precision, int maxEnd, int minEnd,
-                ByteBuffer stateBounds, ByteBuffer nondetBounds,
-                ByteBuffer targets, ByteBuffer weights, ByteBuffer values);
+                int[] stateBounds, int[] nondetBounds,
+                int[] targets, double[] weights, double[] values);
         
         private final static String NATIVE_LIBRARY_NAME = "valueiterationcoalition";
         private final static boolean LOADED =
@@ -99,7 +94,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         /** Return code indicating success of a native method. */
         private final static int EPMC_ERROR_SUCCESS = 0;
         /** Return code indicating failure of a native method. */
-        private final static int EPMC_ERROR_OUT_OF_ByteBuffer = 1;
+        private final static int EPMC_ERROR_OUT_OF_MEMORY = 1;
     }
 
     /** Original graph. */
@@ -179,9 +174,6 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         builder.setParts(parts);
-        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
-        builder.setForNative(useNative);
         builder.setReorder();
         builder.build();
         this.iterGraph = builder.getOutputGraph();
@@ -193,9 +185,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         }
         assert this.inputValues == null;
         int numStates = iterGraph.computeNumStates();
-        this.inputValues = useNative
-        		? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
-        		: UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
+        this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
         	int iterNode = builder.inputToOutputNode(origNode);
         	if (iterNode < 0) {
@@ -255,12 +245,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         numIterations = 0;
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        if (isSparseTPGJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            tpgUnboundedJacobiJava(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseTPGNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
+        if (isSparseTPGNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
             tpgUnboundedJacobiNative(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseTPGJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            tpgUnboundedGaussseidelJava(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
         } else if (isSparseTPGNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
 //        	System.out.println(iterGraph);
             tpgUnboundedGaussseidelNative(asSparseNondet(iterGraph), inputValues, stopCriterion, precision);
@@ -273,35 +259,8 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
 
     /* auxiliary methods */
     
-    private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
-        if (stopCriterion == null) {
-            return;
-        }
-        double thisDistance = previous.distance(current);
-        if (stopCriterion == IterationStopCriterion.RELATIVE) {
-            double presNorm = previous.norm();
-            if (presNorm != 0.0) {
-                thisDistance /= presNorm;
-            }
-        }
-        distance[0] = Math.max(distance[0], thisDistance);
-    }
-    
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
-    }
-    
-    private static boolean isSparseTPGJava(GraphExplicit graph) {
-        if (!isSparseNondet(graph)) {
-            return false;
-        }
-        Semantics semantics = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-        if (!SemanticsSMG.isSMG(semantics)) {
-            return false;
-        }
-        GraphExplicitSparseAlternate sparseNondet = asSparseNondet(graph);
-        return !sparseNondet.isNative();
     }
     
     private static boolean isSparseTPGNative(GraphExplicit graph) {
@@ -312,8 +271,7 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
         if (!SemanticsSMG.isSMG(semantics)) {
             return false;
         }
-        GraphExplicitSparseAlternate sparseNondet = asSparseNondet(graph);
-        return sparseNondet.isNative();
+        return true;
     }
 
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
@@ -328,15 +286,15 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             double precision) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
-        ByteBuffer stateBounds = graph.getStateBoundsNative();
-        ByteBuffer nondetBounds = graph.getNondetBoundsNative();
-        ByteBuffer targets = graph.getTargetsNative();
-        ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
+        int[] stateBounds = graph.getStateBoundsJava();
+        int[] nondetBounds = graph.getNondetBoundsJava();
+        int[] targets = graph.getTargetsJava();
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
 
         int code = IterationNative.double_tpg_unbounded_gaussseidel(relative, precision, maxEnd,
                 numStates, stateBounds, nondetBounds, targets, weights, valuesMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
 
@@ -346,161 +304,17 @@ public final class GraphSolverIterativeCoalition implements GraphSolverExplicit 
             double precision) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
-        ByteBuffer stateBounds = graph.getStateBoundsNative();
-        ByteBuffer nondetBounds = graph.getNondetBoundsNative();
-        ByteBuffer targets = graph.getTargetsNative();
-        ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
+        int[] stateBounds = graph.getStateBoundsJava();
+        int[] nondetBounds = graph.getNondetBoundsJava();
+        int[] targets = graph.getTargetsJava();
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
 
         int code = IterationNative.double_tpg_unbounded_jacobi(relative, precision, maxEnd,
                 numStates, stateBounds, nondetBounds, targets, weights,
                 valuesMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
-    }
-
-    private void tpgUnboundedGaussseidelJava(
-            GraphExplicitSparseAlternate graph,
-            ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
-    	
-        int minEnd = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArray weights = ValueArray.asArray(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
-        Value zero = values.getType().getEntryType().getZero();
-        Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < maxEnd; state++) {
-                values.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(negInf);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weighted, stateSucc);
-                        int succState = targets[stateSucc];
-                        values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    nextStateProb.max(nextStateProb, choiceNextStateProb);
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                values.set(nextStateProb, state);
-            }
-            for (int state = maxEnd; state < minEnd; state++) {
-                values.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(posInf);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    nextStateProb.min(nextStateProb, choiceNextStateProb);
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                values.set(nextStateProb, state);
-            }
-        } while (distance[0] > precision / 2);
-    }
-
-    private void tpgUnboundedJacobiJava(
-            GraphExplicitSparseAlternate graph,
-            ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
-        int minEnd = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
-        Value zero = values.getType().getEntryType().getZero();
-        ValueArrayAlgebra presValues = values;
-        ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
-        Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < maxEnd; state++) {
-                presValues.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(negInf);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    nextStateProb.max(nextStateProb, choiceNextStateProb);
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                nextValues.set(nextStateProb, state);
-            }
-            for (int state = maxEnd; state < minEnd; state++) {
-                presValues.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(posInf);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    nextStateProb.min(nextStateProb, choiceNextStateProb);
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = nextValues;
-            nextValues = presValues;
-            presValues = swap;
-        } while (distance[0] > precision / 2);
-        for (int state = 0; state < minEnd; state++) {
-            presValues.get(presStateProb, state);
-            values.set(presStateProb, state);
-        }
     }
 
     private void computeStrategy(SchedulerSimpleSettable strategy,

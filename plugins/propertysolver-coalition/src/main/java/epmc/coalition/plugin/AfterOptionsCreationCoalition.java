@@ -28,7 +28,8 @@ import epmc.coalition.explicit.SolverNonStochasticJurdzinski;
 import epmc.coalition.explicit.SolverNonStochasticMcNaughton;
 import epmc.coalition.explicit.SolverQualitativeGadget;
 import epmc.coalition.explicit.SolverQualitativeMcNaughton;
-import epmc.coalition.graphsolver.GraphSolverIterativeCoalition;
+import epmc.coalition.graphsolver.GraphSolverIterativeCoalitionJava;
+import epmc.coalition.graphsolver.GraphSolverIterativeCoalitionNative;
 import epmc.coalition.options.OptionsCoalition;
 import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
@@ -110,7 +111,8 @@ public final class AfterOptionsCreationCoalition implements AfterOptionsCreation
         
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
-        graphSolverMap.put(GraphSolverIterativeCoalition.IDENTIFIER, GraphSolverIterativeCoalition.class);
+        graphSolverMap.put(GraphSolverIterativeCoalitionJava.IDENTIFIER, GraphSolverIterativeCoalitionJava.class);
+        graphSolverMap.put(GraphSolverIterativeCoalitionNative.IDENTIFIER, GraphSolverIterativeCoalitionNative.class);
         options.addOption().setBundleName(OptionsCoalition.OPTIONS_COALITION)
         	.setIdentifier(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_SILENCE_INTERNAL)
         	.setType(typeBoolean).setDefault(true)

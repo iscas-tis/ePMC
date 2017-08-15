@@ -20,8 +20,6 @@
 
 package epmc.graph.explicit;
 
-import java.nio.ByteBuffer;
-
 import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
@@ -29,7 +27,6 @@ import epmc.util.UtilBitSet;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -37,7 +34,6 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentIntArray;
-import epmc.value.ValueContentMemory;
 
 /**
  * Sparse graph for DTMCs, CTMCs, interval DTMCs, interval CTMDs, or automata.
@@ -59,10 +55,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
             assert type != null;
             this.graph = graph;
             this.value = type.newValue();
-            TypeArray typeArray = forNative
-                    ? TypeHasNativeArray.getTypeNativeArray(type)
-                    : type.getTypeArray();
-            assert typeArray != null : type + " " + forNative;
+            TypeArray typeArray = type.getTypeArray();
             this.content = UtilValue.newArray(typeArray, numTotalOut > 0 ? numTotalOut : 1);
         }
         
@@ -95,12 +88,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         }
     }
 
-    /**
-     * Whether to store the parts of this graph in native memory.
-     * Doing so allows the graph to be accessed by native functions, e.g. for
-     * fast value iteration algorithms.
-     */
-    private final boolean forNative;
     /** Number of nodes of this graph. */
     private int numNodes;
     /** Sum of fanout of all nodes. */
@@ -118,31 +105,22 @@ public final class GraphExplicitSparse implements GraphExplicit {
 
     /**
      * Create graph so that the number of nodes and edges can be extended later.
-     * 
-     * @param forNative whether to build the graph with native data structures
      */
-    public GraphExplicitSparse(boolean forNative) {
+    public GraphExplicitSparse() {
         initNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);
-        this.forNative = forNative;
-        TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get().getTypeArrayNative()
-                : TypeInteger.get().getTypeArray();
+        TypeArray typeArrayInteger = TypeInteger.get().getTypeArray();
         bounds = UtilValue.newArray(typeArrayInteger, 1);
         successors = UtilValue.newArray(typeArrayInteger, 1);
     }
     
-    public GraphExplicitSparse(boolean forNative,
-            int numNodes, int numTotalOut) {
+    public GraphExplicitSparse(int numNodes, int numTotalOut) {
         initNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);
         this.fixedMode = true;
-        this.forNative = forNative;
         this.numNodes = numNodes;
         this.numTotalOut = numTotalOut;
-        TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get().getTypeArrayNative()
-                : TypeInteger.get().getTypeArray();
+        TypeArray typeArrayInteger = TypeInteger.get().getTypeArray();
         bounds = UtilValue.newArray(typeArrayInteger, numNodes + 1);
         successors = UtilValue.newArray(typeArrayInteger, numTotalOut);
         
@@ -176,7 +154,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
         if (getNodeProperties().contains(name)) {
             return getNodeProperty(name);
         }
-        NodePropertyGeneral property = new NodePropertyGeneral(this, type, forNative);
+        NodePropertyGeneral property = new NodePropertyGeneral(this, type);
         registerNodeProperty(name, property);
         return property;
     }
@@ -228,14 +206,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
         return ValueContentIntArray.getContent(successors);
     }
     
-    public ByteBuffer getBoundsNative() {
-        return ValueContentMemory.getMemory(bounds);
-    }
-    
-    public ByteBuffer getTargetsNative() {
-        return ValueContentMemory.getMemory(successors);
-    }
-    
     @Override
     public void setSuccessorNode(int currentNode, int succNr, int succNode) {
         assert succNr >= 0;
@@ -276,10 +246,6 @@ public final class GraphExplicitSparse implements GraphExplicit {
     
     public void setNumStates(int numStates) {
         this.numNodes = numStates;
-    }
-    
-    public boolean isNative() {
-        return forNative;
     }
     
     @Override

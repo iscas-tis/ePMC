@@ -198,7 +198,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 			priorities[priority] = new SettableParityLabel(priority);
 		}
 		/* construct new game */
-		qualitativeGame = new GraphExplicitSparse(false, nextMappedNodeQualitative, numTotalOut);
+		qualitativeGame = new GraphExplicitSparse(nextMappedNodeQualitative, numTotalOut);
         NodeProperty qualitativeLabels = qualitativeGame.addSettableNodeProperty(CommonProperties.AUTOMATON_LABEL, stochasticLabels.getType());
         NodeProperty qualitativePlayer = qualitativeGame.addSettableNodeProperty(CommonProperties.PLAYER, propertyPlayer.getType());
 		for (int stochasticNode = 0; stochasticNode < numStochasticGameNodes; stochasticNode++) {

@@ -72,12 +72,6 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Options options = Options.get();
-        Type typeWeight = TypeWeight.get();
-        if (options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeDouble.isDouble(typeWeight)) {
-        	return false;
-        }
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
         if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
         	return false;
@@ -99,7 +93,6 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
-        builder.setForNative(false);
         builder.setReorder();
         builder.build();
         this.iterGraph = builder.getOutputGraph();
@@ -161,8 +154,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         if (!SemanticsMDP.isMDP(semantics)) {
             return false;
         }
-        GraphExplicitSparseAlternate sparseNondet = asSparseNondet(graph);
-        return !sparseNondet.isNative();
+        return true;
     }
     
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {

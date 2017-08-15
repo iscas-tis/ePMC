@@ -79,6 +79,9 @@ public interface ValueArray extends Value {
     @Override
     default void set(Value op) {
         assert !isImmutable();
+        if (this == op) {
+        	return;
+        }
         ValueArray opArray = ValueArray.asArray(op);
         setSize(opArray.size());
         int totalSize = opArray.size();

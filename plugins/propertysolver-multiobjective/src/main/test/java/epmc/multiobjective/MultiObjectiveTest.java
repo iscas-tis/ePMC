@@ -34,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.error.EPMCException;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
@@ -57,7 +56,6 @@ public class MultiObjectiveTest {
         prepareOptions(options);
         // TODO HACK because loading of native libraries seems not to work correctly
         // when loading native files from other plugins
-        options.set(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE, false);
         return options;
     }
 

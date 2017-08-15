@@ -166,8 +166,6 @@ public class PCTLSolverDDTest {
     @Test
     public void ddTest() throws EPMCException {
         Options options = prepareOptions();
-        Map<String,Object> constants = new HashMap<>();
-        Value result;
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         TypeInteger piecePositionType = TypeInteger.get(-2, 15);
         VariableDD player1Pos3 = ContextDD.get().newVariable("player1Pos3", piecePositionType, 1);

@@ -240,7 +240,7 @@ public final class EquivalenceWeakCTMC implements Equivalence {
         ValueAlgebra[] quotWeightsArr = new ValueAlgebra[maxOrigFanout];
         int[] quotSuccStatesArr = new int[maxOrigFanout];
         TypeAlgebra typeWeight = TypeWeight.get();
-        quotient = new GraphExplicitSparse(false, numStates, numTotalOut);
+        quotient = new GraphExplicitSparse(numStates, numTotalOut);
         EdgeProperty quotWeight = quotient.addSettableEdgeProperty(CommonProperties.WEIGHT, typeWeight);
         for (int i = 0; i < quotWeightsArr.length; i++) {
             quotWeightsArr[i] = typeWeight.newValue();

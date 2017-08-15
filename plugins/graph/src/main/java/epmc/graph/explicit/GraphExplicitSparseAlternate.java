@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 import epmc.error.EPMCException;
@@ -29,7 +28,6 @@ import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;
 import epmc.value.TypeArray;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -37,7 +35,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentIntArray;
-import epmc.value.ValueContentMemory;
 
 // for MDPs, CTMDPs, EDTMCs, ECTMCs, turn-based two-player games;
 // for value iteration
@@ -152,9 +149,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             assert type != null;
             this.graph = graph;
             this.value = type.newValue();
-            TypeArray typeArray = forNative
-                    ? TypeHasNativeArray.getTypeNativeArray(type)
-                    : type.getTypeArray();
+            TypeArray typeArray = type.getTypeArray();
             this.content = UtilValue.newArray(typeArray, 1);
             this.contentND = UtilValue.newArray(typeArray, 1);
         }
@@ -227,10 +222,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             assert type != null;
             this.graph = graph;
             this.value = type.newValue();
-            TypeArray typeArray = forNative
-                    ? TypeHasNativeArray.getTypeNativeArray(type)
-                    : type.getTypeArray();
-            assert typeArray != null : type + " " + forNative;
+            TypeArray typeArray = type.getTypeArray();
             this.content = UtilValue.newArray(typeArray, numProb);
         }
         
@@ -295,7 +287,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
     }
     
-    private final boolean forNative;
     private int numStates;
     private int numNondet;
     private int numProb;
@@ -309,13 +300,10 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     private final GraphExplicitProperties properties;
     private boolean fixedMode;
 
-    public GraphExplicitSparseAlternate(boolean forNative) {
+    public GraphExplicitSparseAlternate() {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);
-        this.forNative = forNative;
-        TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get().getTypeArrayNative()
-                : TypeInteger.get().getTypeArray();
+        TypeArray typeArrayInteger = TypeInteger.get().getTypeArray();
         stateBounds = UtilValue.newArray(typeArrayInteger, 2);
         nondetBounds = UtilValue.newArray(typeArrayInteger, 2);
         successors = UtilValue.newArray(typeArrayInteger, 1);
@@ -326,18 +314,14 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
     }
     
-    public GraphExplicitSparseAlternate(boolean forNative,
-            int numStates, int numNondet, int numProb) {
+    public GraphExplicitSparseAlternate(int numStates, int numNondet, int numProb) {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);
         this.fixedMode = true;
-        this.forNative = forNative;
         this.numStates = numStates;
         this.numNondet = numNondet;
         this.numProb = numProb;
-        TypeArray typeArrayInteger = forNative
-                ? TypeInteger.get().getTypeArrayNative()
-                : TypeInteger.get().getTypeArray();
+        TypeArray typeArrayInteger = TypeInteger.get().getTypeArray();
         stateBounds = UtilValue.newArray(typeArrayInteger, numStates + 1);
         nondetBounds = UtilValue.newArray(typeArrayInteger, numNondet + 1);
         successors = UtilValue.newArray(typeArrayInteger, numProb);
@@ -449,7 +433,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 //        if (fixedMode && property == CommonProperties.STATE) {
   //          nodeProperty = new NodePropertySparseNondetRanged(this, new int[]{numStates, numStates + numNondet}, type);
     //    } else {
-            nodeProperty = new NodePropertyGeneral(this, type, forNative);
+            nodeProperty = new NodePropertyGeneral(this, type);
      //   }
         registerNodeProperty(property, nodeProperty);
         return nodeProperty;
@@ -476,10 +460,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         return numNondet;
     }
     
-    public boolean isNative() {
-        return forNative;
-    }
-
     public ValueArrayInteger getStateBounds() {
         return stateBounds;
     }
@@ -488,16 +468,8 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         return ValueContentIntArray.getContent(stateBounds);
     }
     
-    public ByteBuffer getStateBoundsNative() {
-        return ValueContentMemory.getMemory(stateBounds);
-    }
-    
     public int[] getNondetBoundsJava() {
         return ValueContentIntArray.getContent(nondetBounds);
-    }
-    
-    public ByteBuffer getNondetBoundsNative() {
-        return ValueContentMemory.getMemory(nondetBounds);
     }
     
     public Value getTargets() {
@@ -506,10 +478,6 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     
     public int[] getTargetsJava() {
         return ValueContentIntArray.getContent(successors);
-    }
-    
-    public ByteBuffer getTargetsNative() {
-        return ValueContentMemory.getMemory(successors);
     }
     
     @Override

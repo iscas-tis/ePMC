@@ -20,8 +20,6 @@
 
 package epmc.multiobjective.graphsolver;
 
-import java.nio.ByteBuffer;
-
 import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
@@ -43,7 +41,7 @@ import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import epmc.value.ValueContentMemory;
+import epmc.value.ValueContentDoubleArray;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledNative implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-native";
@@ -51,27 +49,27 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     private static final class IterationNative {
         native static int double_mdp_multiobjectivescheduled_jacobi(int relative,
                 double precision, int numStates,
-                ByteBuffer stateBounds, ByteBuffer nondetBounds, ByteBuffer targets,
-                ByteBuffer weights, ByteBuffer stopRewards, ByteBuffer transRewardsMem,
-                ByteBuffer values, ByteBuffer scheduler);
+                int[] stateBounds, int[] nondetBounds, int[] targets,
+                double[] weights, double[] stopRewards, double[] transRewardsMem,
+                double[] values, int[] scheduler);
 
         native static int double_mdp_multiobjectivescheduled_gaussseidel(int relative,
                 double precision, int numStates,
-                ByteBuffer stateBounds, ByteBuffer nondetBounds, ByteBuffer targets,
-                ByteBuffer weights, ByteBuffer stopRewards, ByteBuffer transRewards,
-                ByteBuffer values, ByteBuffer scheduler);
+                int[] stateBounds, int[] nondetBounds, int[] targets,
+                double[] weights, double[] stopRewards, double[] transRewards,
+                double[] values, int[] scheduler);
         private final static boolean loaded =
                 JNATools.registerLibrary(IterationNative.class, "valueiteration");
         
         private final static int EPMC_ERROR_SUCCESS = 0;
-        private final static int EPMC_ERROR_OUT_OF_ByteBuffer = 1;
+        private final static int EPMC_ERROR_OUT_OF_MEMORY = 1;
     }
 
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
     private ValueArray outputValues;
-    private SchedulerSimpleMultiobjectiveNative scheduler;
+    private SchedulerSimpleMultiobjectiveJava scheduler;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -95,14 +93,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     	if (!SemanticsMDP.isMDP(semantics)) {
     		return false;
     	}
-        Options options = Options.get();
         Type typeWeight = TypeWeight.get();
-        if (!(options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeDouble.isDouble(typeWeight))) {
+        if (TypeDouble.isDouble(typeWeight)) {
         	return false;
         }
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
-        if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveNative)) {
+        if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
         	return false;
         }
         return true;
@@ -122,7 +118,6 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
-        builder.setForNative(true);
         builder.setReorder();
         builder.build();
         this.iterGraph = builder.getOutputGraph();
@@ -142,7 +137,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveMultiObjectiveScheduled = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
-        scheduler = (SchedulerSimpleMultiobjectiveNative) objectiveMultiObjectiveScheduled.getScheduler();
+        scheduler = (SchedulerSimpleMultiobjectiveJava) objectiveMultiObjectiveScheduled.getScheduler();
         Value stopStateRewards = objectiveMultiObjectiveScheduled.getStopStateRewards();
         Value cumulativeTransitionRewards = objectiveMultiObjectiveScheduled.getTransitionRewards();
         inputValues = objectiveMultiObjectiveScheduled.getValues();
@@ -167,8 +162,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         if (!SemanticsMDP.isMDP(semantics)) {
             return false;
         }
-        GraphExplicitSparseAlternate sparseNondet = asSparseNondet(graph);
-        return sparseNondet.isNative();
+        return true;
     }
 
     
@@ -182,23 +176,23 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveNative scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
-        ByteBuffer stateBounds = graph.getStateBoundsNative();
-        ByteBuffer nondetBounds = graph.getNondetBoundsNative();
-        ByteBuffer targets = graph.getTargetsNative();
-        ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
-        ByteBuffer stopRewardsMem = ValueContentMemory.getMemory(stopRewards);
-        ByteBuffer schedulerMem = scheduler.getDecisions();
-        ByteBuffer transRewardsMem = ValueContentMemory.getMemory(transRewards);
+        int[] stateBounds = graph.getStateBoundsJava();
+        int[] nondetBounds = graph.getNondetBoundsJava();
+        int[] targets = graph.getTargetsJava();
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
+        double[] stopRewardsMem = ValueContentDoubleArray.getContent(stopRewards);
+        int[] schedulerMem = scheduler.getDecisions();
+        double[] transRewardsMem = ValueContentDoubleArray.getContent(transRewards);
 
         int code = IterationNative.double_mdp_multiobjectivescheduled_jacobi(
                 relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
                 stopRewardsMem, transRewardsMem, valuesMem, schedulerMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;        
     }
     
@@ -206,22 +200,22 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveNative scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
-        ByteBuffer stateBounds = graph.getStateBoundsNative();
-        ByteBuffer nondetBounds = graph.getNondetBoundsNative();
-        ByteBuffer targets = graph.getTargetsNative();
-        ByteBuffer weights = ValueContentMemory.getMemory(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ByteBuffer valuesMem = ValueContentMemory.getMemory(values);
-        ByteBuffer stopRewardsMem = ValueContentMemory.getMemory(stopRewards);
-        ByteBuffer schedulerMem = scheduler.getDecisions();
-        ByteBuffer transRewardsMem = ValueContentMemory.getMemory(transRewards);
+        int[] stateBounds = graph.getStateBoundsJava();
+        int[] nondetBounds = graph.getNondetBoundsJava();
+        int[] targets = graph.getTargetsJava();
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
+        double[] stopRewardsMem = ValueContentDoubleArray.getContent(stopRewards);
+        int[] schedulerMem = scheduler.getDecisions();
+        double[] transRewardsMem = ValueContentDoubleArray.getContent(transRewards);
 
         int code = IterationNative.double_mdp_multiobjectivescheduled_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
                 stopRewardsMem, transRewardsMem, valuesMem, schedulerMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;        
     }
 }

@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 
-public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerable, TypeHasNativeArray, TypeNumBitsKnown {
+public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerable, TypeNumBitsKnown {
     public static TypeInteger get(int lowerBound, int upperBound) {
         return ContextValue.get().makeUnique(new TypeInteger(lowerBound, upperBound));
     }
@@ -202,12 +202,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
             return Integer.MAX_VALUE;
         }
         return getUpperInt() + 1 - getLowerInt();
-    }
-    
-    @Override
-    public TypeArrayInteger getTypeArrayNative() {
-        TypeArrayIntegerNative arrayType = new TypeArrayIntegerNative(this);
-        return ContextValue.get().makeUnique(arrayType);
     }
     
     @Override

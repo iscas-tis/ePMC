@@ -36,16 +36,13 @@ import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.NodePropertyApply;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.UtilGraphSolver;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.modelchecker.ModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
-import epmc.options.Options;
 import epmc.propertysolver.PropertySolverExplicitReward;
 import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
 import epmc.value.TypeArray;
-import epmc.value.TypeHasNativeArray;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -153,12 +150,7 @@ final class MultiObjectiveUtils {
         int[] choice = new int[graph.computeNumStates()];
         ValueArrayAlgebra weightedCombinations = combinationsToWeighted(rewards, choice, weights);
         ValueArrayAlgebra weightedRewards = rewardsToWeighted(rewards, weights);
-        Type typeWeight = TypeWeight.get();
-        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(typeWeight) != null;
-        ValueArrayAlgebra iterResult = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), graph.computeNumStates())
-                : UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
+        ValueArrayAlgebra iterResult = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
 
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objective = new GraphSolverObjectiveExplicitMultiObjectiveWeighted();
@@ -220,11 +212,7 @@ final class MultiObjectiveUtils {
         assert weights.size() == rewards.getNumObjectives();
         int numNondet = rewards.getNumNondet();
         int numObjectives = rewards.getNumObjectives();
-        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
-        ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numNondet)
-                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numNondet);
+        ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numNondet);
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra objWeight = newValueWeight();
         ValueAlgebra objRew = newValueWeight();
@@ -251,11 +239,7 @@ final class MultiObjectiveUtils {
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
         
-        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
-        ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
-                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
+        ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra max = newValueWeight();
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
@@ -293,11 +277,7 @@ final class MultiObjectiveUtils {
         assert weights.size() == combinations.getNumObjectives();
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
-        boolean useNative = Options.get().getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)
-                && TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()) != null;
-        ValueArrayAlgebra result = useNative
-                ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get()), numStates)
-                : UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
+        ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
         for (int state = 0; state < numStates; state++) {

@@ -56,7 +56,6 @@ public final class GraphBuilderExplicit {
     private boolean uniformise;
     private boolean reorder;
     private boolean backward;
-    private GraphBuilderMode graphBuilderMode;
     private boolean built;
     private List<BitSet> parts;
 
@@ -117,20 +116,6 @@ public final class GraphBuilderExplicit {
         return this;
     }
 
-    public GraphBuilderExplicit setGraphBuilderMode(GraphBuilderMode mode) {
-        assert !isBuilt();
-        assert mode != null;
-        this.graphBuilderMode = mode;
-        return this;
-    }
-
-    public GraphBuilderExplicit setForNative(boolean useNative) {
-        assert !isBuilt();
-        setGraphBuilderMode(useNative
-                ? GraphBuilderMode.SPARSE_NATIVE : GraphBuilderMode.SPARSE);
-        return this;
-    }
-
     public GraphBuilderExplicit build() throws EPMCException {
         assert !built;
         built = true;
@@ -148,7 +133,7 @@ public final class GraphBuilderExplicit {
         this.outputToInputNodes = TypeInteger.get().getTypeArray().newValue();
         prepareInputToOutputNodes(inputGraph, parts, sinks, inputToOutputNodes, outputToInputNodes, partsBegin);
         prepareOutputToInputNodes(inputGraph, parts, sinks, inputToOutputNodes, outputToInputNodes, partsBegin);
-        this.outputGraph = prepareGraph(inputGraph, sinks, inputToOutputNodes, uniformise, graphBuilderMode);
+        this.outputGraph = prepareGraph(inputGraph, sinks, inputToOutputNodes, uniformise);
         prepareProperties(outputGraph, inputGraph, derivedGraphProperties, derivedNodeProperties, derivedEdgeProperties);
         prepareInitialNodes(outputGraph, inputGraph, inputToOutputNodes);
         prepareGraphProperties(outputGraph, inputGraph, derivedGraphProperties);
@@ -202,7 +187,7 @@ public final class GraphBuilderExplicit {
         }
     }
 
-    private GraphExplicit prepareGraph(GraphExplicit inputGraph, List<BitSet> sinkList, ValueArrayInteger inputToOutputNodes, boolean uniformise, GraphBuilderMode graphBuilderMode)
+    private GraphExplicit prepareGraph(GraphExplicit inputGraph, List<BitSet> sinkList, ValueArrayInteger inputToOutputNodes, boolean uniformise)
             throws EPMCException {
         GraphExplicit outputGraph = null;
         Semantics semanticsType = inputGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
@@ -219,7 +204,7 @@ public final class GraphBuilderExplicit {
             }
             numStates += sinkList.size();
             numTotalOut += sinkList.size();
-            outputGraph = new GraphExplicitSparse(graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalOut);
+            outputGraph = new GraphExplicitSparse(numStates, numTotalOut);
         } else {
             int numStates = 0;
             int numTotalNondet = 0;
@@ -245,7 +230,7 @@ public final class GraphBuilderExplicit {
             numStates += sinkList.size();
             numTotalNondet += sinkList.size() * parts.size();
             numTotalProb += sinkList.size() * parts.size();
-            outputGraph = new GraphExplicitSparseAlternate(graphBuilderMode == GraphBuilderMode.SPARSE_NATIVE, numStates, numTotalNondet, numTotalProb);
+            outputGraph = new GraphExplicitSparseAlternate(numStates, numTotalNondet, numTotalProb);
         }
         return outputGraph;
     }

@@ -98,10 +98,6 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         if (!TypeDouble.isDouble(typeWeight)) {
         	return false;
         }
-        Options options = Options.get();
-        if (options.getBoolean(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE)) {
-        	return false;
-        }
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
         if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
         	return false;
@@ -124,7 +120,6 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
-        builder.setForNative(false);
         builder.setReorder();
         builder.build();
         this.iterGraph = builder.getOutputGraph();
