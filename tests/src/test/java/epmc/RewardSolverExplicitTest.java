@@ -249,62 +249,49 @@ public final class RewardSolverExplicitTest {
         result = computeResult(options, String.format(IJ_MODEL, 3), "Rmax=? [ F \"stable\" {\"init\"}{max} ]");
         assertEquals("2.999999999998181", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        String propMax = "Rmax=? [ F \"stable\" {num_tokens=%d}{max} ]";
+        String propMin = "Rmin=? [ F \"stable\" {num_tokens=%d}{min} ]";
+        
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "2");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMax, 2));
         assertEquals("1.9999999999990905", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMax, 3));
         assertEquals("2.999999999998181", result, tolerance * 10);
         
-        constants.put("k", "1");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "2");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMin, 2));
         assertEquals("1.9999999999990905", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMin, 3));
         assertEquals("2.999999999998181", result, tolerance * 10);
 
-        result = computeResult(options, String.format(IJ_MODEL, 3), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("2.999999999998181", result, tolerance * 10);
-        
         result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {\"init\"}{max} ]");
         assertEquals("20.999999999813085", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "2");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMax, 2));
         assertEquals("11.999999999927763", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMax, 3));
         assertEquals("15.999999999889033", result, tolerance * 10);
 
-        constants.put("k", "4");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMax, 4));
         assertEquals("17.999999999862926", result, tolerance * 10);
 
-        constants.put("k", "5");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmax=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMax, 5));
         assertEquals("18.99999999984827", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "5");
-        result = computeResult(options, String.format(IJ_MODEL, 7), "Rmin=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMin, 5));
         assertEquals("17.999999999874547", result, tolerance * 10);
         
         close(options);
