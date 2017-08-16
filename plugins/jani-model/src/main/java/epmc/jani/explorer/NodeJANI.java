@@ -39,6 +39,9 @@ import epmc.value.ValueObject;
 import epmc.value.ValueRange;
 
 public final class NodeJANI implements ExplorerNode {
+	private final static String SPACE = " ";
+	private final static String NEWLINE = "\n";
+	private final static String SEP = "-----\n";
 	private final ExplorerJANI explorer;
 	private final Value[] values;
 	private final boolean[] variablesSetMarks;
@@ -121,7 +124,7 @@ public final class NodeJANI implements ExplorerNode {
 		assert node instanceof NodeJANI;
 		NodeJANI other = (NodeJANI) node;
 		assert this.values.length == other.values.length :
-			this.values.length + " " + other.values.length;
+			this.values.length + SPACE + other.values.length;
 		for (int varNr = 0; varNr < values.length; varNr++) {
 			values[varNr].set(other.values[varNr]);
 		}
@@ -258,16 +261,16 @@ public final class NodeJANI implements ExplorerNode {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("-----\n");
+		builder.append(SEP);
 		builder.append(this.stateVariables.getVariableIdentifiers());
-		builder.append("\n");
+		builder.append(NEWLINE);
 		builder.append(Arrays.toString(storeVariables));
-		builder.append("\n");
+		builder.append(NEWLINE);
 		builder.append(Arrays.toString(this.values));
-		builder.append("\n");
+		builder.append(NEWLINE);
 		builder.append(Arrays.toString(variablesSetMarks));
-		builder.append("\n");
-		builder.append(numSet + "\n");
+		builder.append(NEWLINE);
+		builder.append(numSet + NEWLINE);
 		return builder.toString();
 	}
 
