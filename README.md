@@ -4,7 +4,7 @@ EPMC is a successor of the model checker IscasMC which only focuses on PLTL mode
 
 Compared to IscasMC, EPMC supports a richer set of probabilistic models including
 
-Discrete Time Markov Chains (DTMCs)
+* Discrete Time Markov Chains (DTMCs)
 * Markov Decision Processes (MDPs)
 * Continuous Time Markov Chains (CTMCs)
 * Stochastic Multi-player games (SMGs)
