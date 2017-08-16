@@ -39,7 +39,7 @@ epmc_error_t double_dtmc_unbounded_cumulative_gaussseidel(int relative,
                 double succStateProb = values[succState];
                 nextStateProb += weight * succStateProb;
             }
-            double diff = abs(nextStateProb - values[state]);
+            double diff = fabs(nextStateProb - values[state]);
             if (relative && values[state] != 0.0) {
                 diff /= values[state];
             }

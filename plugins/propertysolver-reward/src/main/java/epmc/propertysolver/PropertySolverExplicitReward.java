@@ -54,7 +54,6 @@ import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.UtilGraphSolver;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
@@ -67,6 +66,7 @@ import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -171,60 +171,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         assert states != null;
         assert stateReward != null;
         assert transReward != null;
-        RewardType rewardType = ((ExpressionReward) property).getRewardType();
-        switch (rewardType) {
-		case CUMULATIVE:
-		case DISCOUNTED:
-		case REACHABILITY:
-			return solveCumulativeOrReachability(property, states, min, stateReward, transReward);
-		case INSTANTANEOUS:
-			return solveInstantaneous(property, states, min, stateReward, transReward);
-		case STEADYSTATE:
-			// TODO
-			assert false;
-			break;
-		default:
-			assert false;
-			break;
-        }
-        return null;
-    }
-
-    public StateMapExplicit solveInstantaneous(Expression property, StateSetExplicit states, boolean min,
-            NodeProperty stateReward, EdgeProperty transReward)
-                    throws EPMCException {
         assert property != null;
-        assert states != null;
-        assert stateReward != null;
-        assert transReward != null;
-        ExpressionReward propertyReward = (ExpressionReward) property;
-        ValueAlgebra time = ValueAlgebra.asAlgebra(evaluateValue(propertyReward.getTime()));
-        ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
-        for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
-        	Value reward = stateReward.get(graphNode);
-        	values.set(reward, graphNode);
-        }
-        GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
-        GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
-        objective.setGraph(graph);
-        objective.setMin(min);
-        objective.setValues(values);
-        objective.setTime(time);
-        configuration.setObjective(objective);
-        configuration.solve();
-        values = objective.getResult();
-        StateMapExplicit result = valuesToResult(values, states);
-        
-        return result;
-    }
-
-    public StateMapExplicit solveCumulativeOrReachability(Expression property, StateSetExplicit states, boolean min,
-            NodeProperty stateReward, EdgeProperty transReward)
-                    throws EPMCException {
-        assert property != null;
-        assert states != null;
-        assert stateReward != null;
-        assert transReward != null;
         BitSet reachSink = computeReachSink(property);
         BitSet reachNotOneSink = computeReachNotOneSink(property, reachSink, min);
         ExpressionReward propertyReward = (ExpressionReward) property;
@@ -299,39 +246,21 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     private ValueArrayAlgebra buildCumulativeRewardsMC(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) throws EPMCException {
     	ValueArrayAlgebra cumulRewards = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
         ValueAlgebra acc = newValueWeight();
-        ValueAlgebra acc2 = newValueWeight();
-        NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
-        int cumulRewIdx = 0;
-        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
-        RewardType rewardType = quantifiedReward.getRewardType();
-        if (rewardType.isReachability()) {
-        	cumulRewIdx = sinks.size();
-        }
-        for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
+        ValueAlgebra weighted = newValueWeight();
+        int numNodes = graph.getNumNodes();
+        for (int graphNode = 0; graphNode < numNodes; graphNode++) {
         	if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
         		continue;
         	}
         	int numSuccessors = graph.getNumSuccessors(graphNode);
         	Value nodeRew = stateReward.get(graphNode);
-        	Player player = playerProp.getEnum(graphNode);
         	EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-        	acc.set(nodeRew);                        
+        	acc.set(nodeRew);
         	for (int succNr = 0; succNr < numSuccessors; succNr++) {
         		Value succWeight = weight.get(graphNode, succNr);
         		ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
-        		if (player == Player.STOCHASTIC) {
-        			// TODO hack for imdps
-  //                      acc2.multiply(succWeight, transRew);
-//	                        acc.add(acc, acc2);
-        			if (!transRew.isZero()) {
-        			}
-        		} else {
-        			acc.add(acc, transRew);
-        			int succ = graph.getSuccessorNode(graphNode, succNr);
-        			ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(succ, 0));
-        			acc.add(acc2, r);
-        		}
+        		weighted.multiply(succWeight, transRew);
+        		acc.add(acc, weighted);
         	}
         	cumulRewards.set(acc, graphNode);
         }
@@ -446,6 +375,10 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         		allStates.close();
         	}
         }
+        RewardType rewardType = quantifiedReward.getRewardType();
+        if (rewardType == RewardType.INSTANTANEOUS) {
+        	return false;
+        }
         return true;
     }
 
@@ -455,7 +388,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     }
     
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+    	return TypeWeightTransition.get().newValue();
     }
     
     private Value evaluateValue(Expression expression) throws EPMCException {

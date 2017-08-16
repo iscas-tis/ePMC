@@ -40,5 +40,6 @@ public final class AfterOptionsCreationReward implements AfterOptionsCreation {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
 		solvers.put(PropertySolverExplicitReward.IDENTIFIER, PropertySolverExplicitReward.class);
+		solvers.put(PropertySolverExplicitRewardInstantaneous.IDENTIFIER, PropertySolverExplicitRewardInstantaneous.class);
 	}
 }
