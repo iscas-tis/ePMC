@@ -28,7 +28,6 @@ import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelExtensionSemantics;
 import epmc.jani.model.OptionsJANIModel;
-import epmc.options.OptionTypeBoolean;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
@@ -44,15 +43,6 @@ public class AfterOptionsCreationJANIDTMC implements AfterOptionsCreation {
 	@Override
 	public void process(Options options) throws EPMCException {
 		assert options != null;
-        OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
-
-        options.addOption().setBundleName(OptionsJANIDTMC.OPTIONS_JANI_DTMC)
-        	.setIdentifier(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION)
-        	.setType(typeBoolean)
-        	.setDefault(false)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(OptionsJANIModel.JANI_MODEL_CATEGORY).build();
-
         Map<String,Class<ModelExtension>> modelExtensions = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {
         	modelExtensions = new OrderedMap<>();

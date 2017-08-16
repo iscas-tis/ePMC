@@ -30,24 +30,24 @@ import epmc.jani.explorer.ExplorerComponentAutomaton;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.ExplorerJANI;
 import epmc.jani.explorer.NodeJANI;
-import epmc.jani.explorer.PropertyEdge;
+import epmc.jani.explorer.PropertyEdgeGeneral;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
-import epmc.options.Options;
 import epmc.value.TypeEnum;
-import epmc.value.TypeWeight;
-import epmc.value.Value;
+import epmc.value.TypeWeightTransition;
+import epmc.value.ValueAlgebra;
 
 public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	public final static String IDENTIFIER = "dtmc";
 	private ExplorerJANI explorer;
 	private ExplorerComponent system;
 	private PropertyNodeGeneral player;
-	private PropertyEdge systemWeight;
+	private PropertyEdgeGeneral systemWeight;
 	private NodeJANI[] noNondetHelperNode;
-	private boolean allowMulti;
-	private Value dtmcSum;
-	private Value dtmcAligned;
+	private ValueAlgebra dtmcSum;
+	private ValueAlgebra dtmcAligned;
+	private ValueAlgebra zero;
+	private ValueAlgebra one;
 
 	@Override
 	public String getIdentifier() {
@@ -64,10 +64,11 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 		player.set(Player.STOCHASTIC);
 		noNondetHelperNode = new NodeJANI[1];
 		noNondetHelperNode[0] = system.newNode();
-		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-		allowMulti = Options.get().getBoolean(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
-		dtmcSum = TypeWeight.get().newValue();
-		dtmcAligned = TypeWeight.get().newValue();
+		systemWeight = (PropertyEdgeGeneral) system.getEdgeProperty(CommonProperties.WEIGHT);
+		dtmcSum = TypeWeightTransition.get().newValue();
+		dtmcAligned = TypeWeightTransition.get().newValue();
+		zero = TypeWeightTransition.get().getZero();
+		one = TypeWeightTransition.get().getOne();
 	}
 	
 	@Override
@@ -99,5 +100,20 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) throws EPMCException {
 		assert automaton != null;
 		UtilExplorer.checkAutomatonProbabilitySum(automaton);
+	}
+	
+	@Override
+	public void afterQuerySystem(NodeJANI node) throws EPMCException {
+		int numSuccessors = explorer.getNumSuccessors();
+		dtmcSum.set(zero);
+		for (int succ = 0; succ < numSuccessors; succ++) {
+			dtmcSum.add(dtmcSum, systemWeight.get(succ));
+		}
+		if (!dtmcSum.isEq(one)) {
+			for (int succ = 0; succ < numSuccessors; succ++) {
+				dtmcAligned.divide(systemWeight.get(succ), dtmcSum);
+				systemWeight.set(succ, dtmcAligned);
+			}
+		}
 	}
 }
