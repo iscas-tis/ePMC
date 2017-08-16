@@ -76,6 +76,7 @@ public final class Analyse {
         }
         sendAssertionsMessage(log);
         try {
+            ContextValue.set(new ContextValue());
             processBeforeModelCreations();
         } catch (EPMCException e) {
             log.send(e);
