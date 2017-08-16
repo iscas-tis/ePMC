@@ -315,6 +315,7 @@ public final class ExplorerJANI implements Explorer {
 		assert node instanceof NodeJANI;
 		NodeJANI nodeJANI = (NodeJANI) node;
 		this.queriedNode = nodeJANI;
+		nodeJANI.unmark();
 		for (PropertyNodeExpression prop : this.expressionProperties.values()) {
 			prop.setVariableValues(nodeJANI.getValues());
 		}
