@@ -26,7 +26,6 @@ import epmc.options.Options;
 
 public class CommandTaskHelp implements CommandTask {
     public final static String IDENTIFIER = "help";
-    private Options options;
 
     @Override
     public String getIdentifier() {
@@ -39,7 +38,7 @@ public class CommandTaskHelp implements CommandTask {
 
     @Override
 	public void executeOnClient() {
-        System.out.println(UsagePrinter.getUsage(options));
+        System.out.println(UsagePrinter.getUsage());
     }
     
     @Override

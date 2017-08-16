@@ -107,8 +107,9 @@ final class UsagePrinter {
      * @param options options to get usage information of
      * @return usage information of the given options set
      */
-    static String getUsage(Options options) {
-        assert options != null;
+    static String getUsage() {
+    	Options options = Options.get();
+    	assert options != null;
         StringBuilder builder = new StringBuilder();
         appendCommands(builder, options);
         appendOptions(builder, options);        

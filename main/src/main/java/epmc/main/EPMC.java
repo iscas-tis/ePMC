@@ -60,6 +60,7 @@ public final class EPMC {
             assert arg != null;
         }
         Options options = UtilOptionsEPMC.newOptions();
+        Options.set(options);
         try {
             options = prepareOptions(args);
             startInConsole(options);
