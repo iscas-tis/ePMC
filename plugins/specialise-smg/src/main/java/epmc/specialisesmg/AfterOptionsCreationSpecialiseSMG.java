@@ -124,7 +124,6 @@ public final class AfterOptionsCreationSpecialiseSMG implements AfterOptionsCrea
 		options.disableOption(OptionsGraph.STATE_STORAGE);
 		options.disableOption(OptionsGraph.WRAPPER_GRAPH_SUCCESSORS_SIZE);
 		options.disableOption("prism-flatten");
-		options.disableOption(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_NATIVE);
 		options.disableOption(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
 		options.setToolName("EPMC SMG");
 		options.setToolDescription("Distribution of EPMC specialised to solving stochastic parity games.");
