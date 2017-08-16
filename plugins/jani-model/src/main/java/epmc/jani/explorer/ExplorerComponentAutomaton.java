@@ -526,7 +526,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 			int edgeNr = 0;
 			int lastAction = 0;
 			actionFromTo[0] = 0;
-			node.unmark();
 			locationEvaluators[location].apply(node, node);
 			for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
 				evaluator.setVariableValues(nodeValues);
