@@ -72,165 +72,63 @@ public final class RewardSolverExplicitTest {
         result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {\"init\"}{max} ]");
         assertEquals("17.45454545434597", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 3), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        String propMax = "R=? [ F \"stable\" {num_tokens=%d}{max} ]";
+        String propMin = "R=? [ F \"stable\" {num_tokens=%d}{min} ]";
+
+        result = computeResult(options, String.format(HERMAN_MODEL, 3), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 3), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 3), String.format(propMax, 3));
         assertEquals("1.333333333333263", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 3), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 3), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 3), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 3), String.format(propMin, 3));
         assertEquals("1.333333333333263", result, tolerance * 10);
         
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMax, 3));
         assertEquals("3.199999999994394", result, tolerance * 10);
 
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMax, 5));
         assertEquals("2.93333333332863", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMin, 3));
         assertEquals("2.3999999999965356", result, tolerance * 10);
 
         constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 5), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMin, 5));
         assertEquals("2.93333333332863", result, tolerance * 10);
         
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMax, 3));
         assertEquals("6.857142857113842", result, tolerance * 10);
 
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMax, 5));
         assertEquals("5.97347480103774", result, tolerance * 10);
 
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMax, 7));
         assertEquals("5.493326596754396", result, tolerance * 10);
 
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMin, 3));
         assertEquals("2.857142857135691", result, tolerance * 10);
 
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMin, 5));
         assertEquals("5.0185676392389835", result, tolerance * 10);
 
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 7), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
+        result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMin, 7));
         assertEquals("5.493326596754396", result, tolerance * 10);
-
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("0", result, tolerance * 10);
-
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("11.999999999911205", result, tolerance * 10);
-
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("10.465782097231259", result, tolerance * 10);
-
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("9.436383808009637", result, tolerance * 10);
-
-        constants.put("k", "9");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("8.921607607343546", result, tolerance * 10);
-
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("0", result, tolerance * 10);
-
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("3.111111111100831", result, tolerance * 10);
-
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("6.274896428025171", result, tolerance * 10);
-
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("8.52434890313052", result, tolerance * 10);
-
-        constants.put("k", "9");
-        result = computeResult(options, String.format(HERMAN_MODEL, 9), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("8.921607607343546", result, tolerance * 10);
-        
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("0", result, tolerance * 10);
-
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("17.45454545434597", result, tolerance * 10);
-
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("16.176636511659563", result, tolerance * 10);
-
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("14.675663430690614", result, tolerance * 10);
-
-        constants.put("k", "9");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("13.702267162121155", result, tolerance * 10);
-
-        constants.put("k", "11");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{max} ]");
-        assertEquals("13.205978227919868", result, tolerance * 10);
-
-        constants.put("k", "1");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("0", result, tolerance * 10);
-
-        constants.put("k", "3");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("3.272727272713583", result, tolerance * 10);
-
-        constants.put("k", "5");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("7.081213390188822", result, tolerance * 10);
-
-        constants.put("k", "7");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("10.71648285571693", result, tolerance * 10);
-
-        constants.put("k", "9");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("12.732263512313752", result, tolerance * 10);
-
-        constants.put("k", "11");
-        result = computeResult(options, String.format(HERMAN_MODEL, 11), "R=? [ F \"stable\" {num_tokens=k}{min} ]");
-        assertEquals("13.205978227919868", result, tolerance * 10);
         
         close(options);
     }
