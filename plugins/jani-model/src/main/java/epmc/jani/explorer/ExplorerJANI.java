@@ -359,7 +359,7 @@ public final class ExplorerJANI implements Explorer {
 		System.out.println(queriedNode);
 		System.out.println("BBBBB");
 		for (int succ = 0; succ < getNumSuccessors(); succ++) {
-			System.out.println(getSuccessorNode(succ));
+			System.out.println(getSuccessorNode(succ).toStringValuesOnly());
 		}
 		*/
 	}
