@@ -70,10 +70,12 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
         graphSolverMap.put(GraphSolverIterativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityJava.IDENTIFIER, GraphSolverIterativeUnboundedReachabilityJava.class);
+        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
+        graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityJava.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeJava.class);
         graphSolverMap.put(GraphSolverIterativeBoundedReachabilityJava.IDENTIFIER, GraphSolverIterativeBoundedReachabilityJava.class);
         graphSolverMap.put(GraphSolverIterativeBoundedJava.IDENTIFIER, GraphSolverIterativeBoundedJava.class);
         graphSolverMap.put(GraphSolverIterativeNative.IDENTIFIER, GraphSolverIterativeNative.class);
+        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeNative.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeNative.class);
         graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityNative.IDENTIFIER, GraphSolverIterativeUnboundedReachabilityNative.class);
         graphSolverMap.put(GraphSolverIterativeBoundedReachabilityNative.IDENTIFIER, GraphSolverIterativeBoundedReachabilityNative.class);
         graphSolverMap.put(GraphSolverIterativeBoundedNative.IDENTIFIER, GraphSolverIterativeBoundedNative.class);
