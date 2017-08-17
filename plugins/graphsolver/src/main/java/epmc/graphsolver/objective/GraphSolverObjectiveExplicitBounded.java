@@ -20,10 +20,7 @@
 
 package epmc.graphsolver.objective;
 
-import java.util.List;
-
 import epmc.graph.explicit.GraphExplicit;
-import epmc.util.BitSet;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
@@ -31,7 +28,6 @@ import epmc.value.ValueArrayAlgebra;
 public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
     private boolean min;
-    private List<BitSet> sinks;
     private ValueArrayAlgebra values;
     private Value time;
     private ValueArrayAlgebra result;
@@ -54,14 +50,6 @@ public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObj
         return min;
     }
     
-    public void setSinks(List<BitSet> sinks) {
-        this.sinks = sinks;
-    }
-    
-    public List<BitSet> getSinks() {
-        return sinks;
-    }
-
     public void setValues(ValueArrayAlgebra values) {
         this.values = values;
     }

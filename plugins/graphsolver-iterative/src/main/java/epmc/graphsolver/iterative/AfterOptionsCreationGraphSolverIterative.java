@@ -70,6 +70,8 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
         graphSolverMap.put(GraphSolverIterativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedJava.IDENTIFIER, GraphSolverIterativeBoundedJava.class);
         graphSolverMap.put(GraphSolverIterativeNative.IDENTIFIER, GraphSolverIterativeNative.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedNative.IDENTIFIER, GraphSolverIterativeBoundedNative.class);
     }
 }
