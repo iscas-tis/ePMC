@@ -18,7 +18,7 @@
 
 *****************************************************************************/
 
-package epmc.graphsolver.iterative;
+package epmc.graphsolver.iterative.java;
 
 import java.util.List;
 
@@ -36,6 +36,10 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.IterationMethod;
+import epmc.graphsolver.iterative.IterationStopCriterion;
+import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
+import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.messages.OptionsMessages;
@@ -68,7 +72,7 @@ import epmc.value.ValueObject;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeUnboundedCumulativeJava implements GraphSolverExplicit {
+public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-unbounded-cumulative-java";
     
     private GraphExplicit origGraph;
