@@ -20,7 +20,6 @@
 
 package epmc.graphsolver.iterative;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import epmc.error.EPMCException;
@@ -41,7 +40,6 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
@@ -110,7 +108,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)
     			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)
-    			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)
     			) {
             return false;
         }
@@ -124,8 +121,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         	boundedCumulative();
         } else if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) {
         	boundedCumulativeDiscounted();
-        } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-            unboundedReachability();
         } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
             unboundedCumulative();
         } else {
@@ -138,7 +133,7 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative);
-        boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
+        boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
@@ -148,13 +143,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
         	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
         	sinks = objectiveUnboundedCumulative.getSinks();
-        } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-        	sinks = new ArrayList<>();
-        	GraphSolverObjectiveExplicitUnboundedReachability unbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        	if (unbounded.getZeroSet() != null) {
-        		sinks.add(unbounded.getZeroSet());
-        	}
-        	sinks.add(unbounded.getTarget());
         }
         
         if (sinks != null) {
@@ -170,23 +158,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
             GraphExplicitModifier.embed(iterGraph);
         } else if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
-        }
-        BitSet targets = null;
-        if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-        	GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        	targets = objectiveUnboundedReachability.getTarget();
-        }
-        if (targets != null) {
-            assert this.inputValues == null;
-            int numStates = iterGraph.computeNumStates();
-            this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
-            for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
-                int iterNode = builder.inputToOutputNode(origNode);
-                if (iterNode < 0) {
-                    continue;
-                }
-                this.inputValues.set(targets.get(origNode) ? 1 : 0, iterNode);
-            }
         }
         
         cumulativeStateRewards = null;
@@ -243,32 +214,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
     		origStateNr++;
     	}
     	objective.setResult(outputValues);
-    }
-
-    private void unboundedReachability() throws EPMCException {
-        Options options = Options.get();
-        Log log = options.get(OptionsMessages.LOG);
-        StopWatch timer = new StopWatch(true);
-        log.send(MessagesGraphSolverIterative.ITERATING);
-        IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
-        IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
-        numIterations = 0;
-        GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        boolean min = graphSolverObjectiveUnbounded.isMin();
-        double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-        	dtmcUnboundedJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
-        } else {
-            assert false : iterGraph.getClass();
-        }
-        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations,
-                timer.getTimeSeconds());
     }
 
     private void unboundedCumulative() throws EPMCException {
@@ -388,83 +333,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         return (GraphExplicitSparse) graph;
     }
     
-    /* implementation of iteration algorithms */    
-    
-    private void dtmcUnboundedJacobiJava(GraphExplicitSparse graph,
-            ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
-        int numStates = graph.computeNumStates();
-        ValueArray presValues = values;
-        ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
-        ValueArray swap;
-        int[] stateBounds = graph.getBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
-        double[] distance = new double[1];
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < numStates; state++) {
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                presValues.get(presStateProb, state);
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                nextValues.set(nextStateProb, state);
-            }
-            swap = presValues;
-            presValues = nextValues;
-            nextValues = swap;
-        } while (distance[0] > tolerance / 2);
-        values.set(presValues);
-    }
-
-    private void dtmcUnboundedGaussseidelJava(GraphExplicitSparse graph,
-            ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
-        Value zero = values.getType().getEntryType().getZero();
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < numStates; state++) {
-                values.get(presStateProb, state);
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    values.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                values.set(nextStateProb, state);
-            }
-        } while (distance[0] > tolerance / 2);
-    }
-
     private void dtmcUnboundedCumulativeJacobiJava(GraphExplicitSparse graph,
             ValueArray values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
@@ -611,110 +479,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         values.set(presValues);
     }
     
-    private void mdpUnboundedJacobiJava(
-            GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double tolerance) throws EPMCException {
-        TypeWeight typeWeight = TypeWeight.get();
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
-        Value zero = values.getType().getEntryType().getZero();
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
-        ValueArrayAlgebra presValues = values;
-        ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < numStates; state++) {
-                presValues.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    if (min) {
-                        nextStateProb.min(nextStateProb, choiceNextStateProb);
-                    } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
-                    }
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = nextValues;
-            nextValues = presValues;
-            presValues = swap;
-        } while (distance[0] > tolerance / 2);
-        values.set(presValues);
-    }
-
-    private void mdpUnboundedGaussseidelJava(
-            GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance)
-                    throws EPMCException {
-        TypeWeight typeWeight = TypeWeight.get();
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
-        Value zero = values.getType().getEntryType().getZero();
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
-        do {
-            distance[0] = 0.0;
-            for (int state = 0; state < numStates; state++) {
-                values.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    if (min) {
-                        nextStateProb.min(nextStateProb, choiceNextStateProb);
-                    } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
-                    }
-                }
-                compDiff(distance, presStateProb, nextStateProb, stopCriterion);
-                values.set(nextStateProb, state);
-            }
-        } while (distance[0] > tolerance / 2);
-    }
-        
     private static void mdpUnboundedCumulativeJacobiJava(
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
