@@ -111,7 +111,7 @@ public final class AfterOptionsCreationSpecialiseSMG implements AfterOptionsCrea
 		options.disableOption(OptionsJANICTMC.OPTIONS_JANI_CTMC);
 		options.disableOption(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
 		options.disableOption(OptionsJANIDTMC.OPTIONS_JANI_DTMC);
-		options.disableOption(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
+        // options.disableOption(OptionsJANIDTMC.JANI_DTMC_ALLOW_MULTI_TRANSITION);
 		options.disableOption(OptionsPRISMConverter.PRISM_CONVERTER_OPTIONS);
 		options.disableOption(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
 		options.disableOption(OptionsPRISMConverter.PRISM_CONVERTER_SYSTEM_METHOD);
