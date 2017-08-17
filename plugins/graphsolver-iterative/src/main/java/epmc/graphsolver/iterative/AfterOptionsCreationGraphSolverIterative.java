@@ -69,12 +69,14 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         	.setCategory(category).build();
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
-        graphSolverMap.put(GraphSolverIterativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeJava.IDENTIFIER, GraphSolverIterativeJava.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeJava.IDENTIFIER, GraphSolverIterativeBoundedCumulativeJava.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeDiscountedJava.IDENTIFIER, GraphSolverIterativeBoundedCumulativeDiscountedJava.class);
+        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeJava.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeJava.class);
         graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityJava.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeJava.class);
         graphSolverMap.put(GraphSolverIterativeBoundedReachabilityJava.IDENTIFIER, GraphSolverIterativeBoundedReachabilityJava.class);
         graphSolverMap.put(GraphSolverIterativeBoundedJava.IDENTIFIER, GraphSolverIterativeBoundedJava.class);
-        graphSolverMap.put(GraphSolverIterativeNative.IDENTIFIER, GraphSolverIterativeNative.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeNative.IDENTIFIER, GraphSolverIterativeBoundedCumulativeNative.class);
+        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeDiscountedNative.IDENTIFIER, GraphSolverIterativeBoundedCumulativeDiscountedNative.class);
         graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeNative.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeNative.class);
         graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityNative.IDENTIFIER, GraphSolverIterativeUnboundedReachabilityNative.class);
         graphSolverMap.put(GraphSolverIterativeBoundedReachabilityNative.IDENTIFIER, GraphSolverIterativeBoundedReachabilityNative.class);

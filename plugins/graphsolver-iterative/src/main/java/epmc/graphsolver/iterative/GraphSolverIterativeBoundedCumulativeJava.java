@@ -36,7 +36,6 @@ import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeWeight;
@@ -47,7 +46,6 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
-import epmc.value.ValueReal;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -64,8 +62,8 @@ import epmc.value.ValueReal;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeJava implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-java";
+public final class GraphSolverIterativeBoundedCumulativeJava implements GraphSolverExplicit {
+    public static String IDENTIFIER = "graph-solver-iterative-bounded-cumulative-java";
     
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
@@ -95,10 +93,7 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
          && !SemanticsMDP.isMDP(semantics)) {
         	return false;
         }
-    	if (true 
-    			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)
-    			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)
-    			) {
+    	if (!(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)) {
             return false;
         }
         return true;
@@ -107,13 +102,7 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
     @Override
     public void solve() throws EPMCException {
     	prepareIterGraph();
-        if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative) {
-        	boundedCumulative();
-        } else if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) {
-        	boundedCumulativeDiscounted();
-        } else {
-            assert false;
-        }
+    	boundedCumulative();
         prepareResultValues();
     }
 
@@ -137,13 +126,8 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         }
         
         cumulativeStateRewards = null;
-        if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative) {
-        	GraphSolverObjectiveExplicitBoundedCumulative objectiveBoundedCumulative = (GraphSolverObjectiveExplicitBoundedCumulative) objective;
-        	cumulativeStateRewards = objectiveBoundedCumulative.getStateRewards();
-        } else if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) {
-        	GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        	cumulativeStateRewards = objectiveBoundedCumulativeDiscounted.getStateRewards();
-        }
+        GraphSolverObjectiveExplicitBoundedCumulative objectiveBoundedCumulative = (GraphSolverObjectiveExplicitBoundedCumulative) objective;
+        cumulativeStateRewards = objectiveBoundedCumulative.getStateRewards();
         if (cumulativeStateRewards != null) {
         	if (SemanticsNonDet.isNonDet(semanticsType)) {
         		// TODO
@@ -202,25 +186,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
             mdpBoundedCumulativeJava(time.getInt(), asSparseNondet(iterGraph), min, inputValues, cumulativeStateRewards);
         } else {
             assert false : iterGraph.getClass();
-        }
-    }
-
-    private void boundedCumulativeDiscounted() throws EPMCException {
-        assert iterGraph != null;
-        inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
-        GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulativeDiscounted.getTime());
-        assert time.getInt() >= 0;
-        ValueReal discount = objectiveBoundedCumulativeDiscounted.getDiscount();
-        assert discount != null;
-        assert ValueReal.isReal(discount) || ValueInteger.isInteger(discount);
-        boolean min = objectiveBoundedCumulativeDiscounted.isMin();
-        if (isSparseMarkovJava(iterGraph)) {
-            dtmcBoundedCumulativeDiscountedJava(time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
-        } else if (isSparseMDPJava(iterGraph)) {
-            mdpBoundedCumulativeDiscountedJava(time.getInt(), discount, asSparseNondet(iterGraph), min, inputValues, cumulativeStateRewards);
-        } else {
-            assert false;
         }
     }
 
@@ -296,43 +261,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         values.set(presValues);
     }
 
-    private void dtmcBoundedCumulativeDiscountedJava(int bound,
-            Value discount, GraphExplicitSparse graph, ValueArray values, ValueArray cumul)
-                    throws EPMCException {
-        int numStates = graph.computeNumStates();
-        ValueArray presValues = values;
-        ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
-        int[] stateBounds = graph.getBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        for (int step = 0; step < bound; step++) {
-            for (int state = 0; state < numStates; state++) {
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                cumul.get(nextStateProb, state);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    weighted.multiply(weighted, discount);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                presValues.get(presStateProb, state);
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArray swap = presValues;
-            presValues = nextValues;
-            nextValues = swap;
-        }
-        values.set(presValues);
-    }
-    
     private void mdpBoundedCumulativeJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
@@ -366,57 +294,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    if (min) {
-                        nextStateProb.min(nextStateProb, choiceNextStateProb);
-                    } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
-                    }
-                }
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = nextValues;
-            nextValues = presValues;
-            presValues = swap;
-        }
-        values.set(presValues);
-    }
-
-    private void mdpBoundedCumulativeDiscountedJava(int bound,
-            Value discount, GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
-        TypeWeight typeWeight = TypeWeight.get();
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        ValueAlgebra optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
-        ValueArrayAlgebra presValues = values;
-        ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
-        for (int step = 0; step < bound; step++) {
-            for (int state = 0; state < numStates; state++) {
-                presValues.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    cumul.get(choiceNextStateProb, nondetNr);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        weighted.multiply(weighted, discount);
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
                     if (min) {
