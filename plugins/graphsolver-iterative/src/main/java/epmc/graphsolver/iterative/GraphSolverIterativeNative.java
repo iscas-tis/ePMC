@@ -23,7 +23,6 @@ package epmc.graphsolver.iterative;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.algorithms.FoxGlynn;
 import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
@@ -42,7 +41,6 @@ import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
@@ -54,7 +52,6 @@ import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
-import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -161,7 +158,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
     private int numIterations;
-    private ValueReal lambda;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 	private ValueArrayAlgebra cumulativeStateRewards;
@@ -189,7 +185,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
     	if (true 
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)
-    			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)
     			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)
     			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)
     			) {
@@ -201,14 +196,7 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
     @Override
     public void solve() throws EPMCException {
     	prepareIterGraph();
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-            if (SemanticsContinuousTime.isContinuousTime(semantics)) {
-                ctBoundedReachability();
-            } else {
-                dtBoundedReachability();
-            }
-        } else if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative) {
+        if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative) {
         	boundedCumulative();
         } else if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) {
         	boundedCumulativeDiscounted();
@@ -225,7 +213,7 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
     private void prepareIterGraph() throws EPMCException {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedReachability);
+        boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative);
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -236,13 +224,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
         	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
         	sinks = objectiveUnboundedCumulative.getSinks();
-        } else if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-        	sinks = new ArrayList<>();
-        	GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        	if (bounded.getZeroSet() != null) {
-        		sinks.add(bounded.getZeroSet());
-        	}
-        	sinks.add(bounded.getTarget());
         } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
         	sinks = new ArrayList<>();
         	GraphSolverObjectiveExplicitUnboundedReachability unbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
@@ -266,19 +247,10 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
         } else if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
-        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-            this.lambda = TypeReal.get().newValue();
-            GraphSolverObjectiveExplicitBoundedReachability objectiveBounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-            Value time = objectiveBounded.getTime();
-            this.lambda.multiply(time, unifRate);        	
-        }
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
         	GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         	targets = objectiveUnboundedReachability.getTarget();
-        } else if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-        	GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        	targets = objectiveBoundedReachability.getTarget();
         }
         if (targets != null) {
             assert this.inputValues == null;
@@ -402,22 +374,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
                 timer.getTimeSeconds());
     }
     
-    private void dtBoundedReachability() throws EPMCException {
-        assert iterGraph != null;
-        GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedReachability.getTime());
-        assert time.getInt() >= 0;
-        numIterations = time.getInt();
-        boolean min = objectiveBoundedReachability.isMin();
-        if (isSparseMarkovNative(iterGraph)) {
-            dtmcBoundedNative(time.getInt(), asSparseMarkov(iterGraph), inputValues);            
-        } else if (isSparseMDPNative(iterGraph)) {
-            mdpBoundedNative(time.getInt(), asSparseNondet(iterGraph), min, inputValues);                        
-        } else {
-            assert false : isSparseMarkov(iterGraph) + " " + isSparseNondet(iterGraph);
-        }
-    }
-
     private void boundedCumulative() throws EPMCException {
         assert iterGraph != null;
         GraphSolverObjectiveExplicitBoundedCumulative objectiveBoundedCumulative = (GraphSolverObjectiveExplicitBoundedCumulative) objective;
@@ -455,20 +411,7 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
         }
     }
 
-    private void ctBoundedReachability() throws EPMCException {
-        assert iterGraph != null : "iterGraph == null";
-        assert lambda != null : "lambda == null";
-        assert ValueReal.isReal(lambda) : lambda;
-        assert !lambda.isPosInf() : lambda;
-        Options options = Options.get();
-        ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
-        FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
-        if (isSparseMarkovNative(iterGraph)) {
-            ctmcBoundedNative(asSparseMarkov(iterGraph), inputValues, foxGlynn);
-        } else {
-            assert false;
-        }
-    }
+    
 
     /* auxiliary methods */
     
@@ -568,34 +511,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
         
         int code = IterationNative.double_dtmc_unbounded_cumulative_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
-        assert code == IterationNative.EPMC_ERROR_SUCCESS;
-    }
-    
-    private static void ctmcBoundedNative(GraphExplicitSparse graph,
-            Value values, FoxGlynn foxGlynn) throws EPMCException {
-        int numStates = graph.computeNumStates();
-        double[] fg = ValueContentDoubleArray.getContent(foxGlynn.getArray());
-        int left = foxGlynn.getLeft();
-        int right = foxGlynn.getRight();
-        int[] stateBounds = graph.getBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        int code = IterationNative.double_ctmc_bounded(fg, left, right, numStates, stateBounds, targets, weights, valuesMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
-        assert code == IterationNative.EPMC_ERROR_SUCCESS;
-    }
-    
-    private static void dtmcBoundedNative(int bound,
-            GraphExplicitSparse graph, Value values)
-                    throws EPMCException {
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        int code = IterationNative.double_dtmc_bounded(bound, numStates, stateBounds, targets, weights, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -704,22 +619,6 @@ public final class GraphSolverIterativeNative implements GraphSolverExplicit {
         int code = IterationNative.double_mdp_unbounded_cumulative_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
                 min ? 1 : 0, valuesMem, cumulMem);
-        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
-        assert code == IterationNative.EPMC_ERROR_SUCCESS;
-    }
-    
-    private static void mdpBoundedNative(int bound,
-            GraphExplicitSparseAlternate graph, boolean min,
-            Value values) throws EPMCException {
-        int numStates = graph.computeNumStates();
-        int[] stateBounds = graph.getStateBoundsJava();
-        int[] nondetBounds = graph.getNondetBoundsJava();
-        int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        double[] valuesMem = ValueContentDoubleArray.getContent(values);
-
-        int code = IterationNative.double_mdp_bounded(bound, numStates, stateBounds,
-                nondetBounds, targets, weights, min ? 1 : 0, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
