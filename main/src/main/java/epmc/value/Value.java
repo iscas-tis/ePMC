@@ -55,8 +55,21 @@ public interface Value extends Comparable<Value> {
     
     void set(String value) throws EPMCException;
 
+    /**
+     * Sets value to be immutable.
+     * Attempts to modify immutable values should result in an assertion
+     * failure (if assertions are enabled).
+     * 
+     * @see #isImmutable()
+     */
     void setImmutable();
 
+    /**
+     * Checks whether value is immutable.
+     * 
+     * @see #setImmutable()
+     * @return whether value is immutable
+     */
     boolean isImmutable();
 
     double distance(Value other) throws EPMCException;
