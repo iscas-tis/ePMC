@@ -43,7 +43,6 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnbounded;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
@@ -117,7 +116,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)
     			&& !(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)
-    			&& !(objective instanceof GraphSolverObjectiveExplicitUnbounded)
     			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)
     			&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)
     			) {
@@ -148,8 +146,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         	boundedCumulativeDiscounted();
         } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
             unboundedReachability();
-        } else if (objective instanceof GraphSolverObjectiveExplicitUnbounded) {
-            unbounded();
         } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
             unboundedCumulative();
         } else {
@@ -306,32 +302,6 @@ public final class GraphSolverIterativeJava implements GraphSolverExplicit {
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         numIterations = 0;
         GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        boolean min = graphSolverObjectiveUnbounded.isMin();
-        double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-        	dtmcUnboundedJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
-        } else {
-            assert false : iterGraph.getClass();
-        }
-        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations,
-                timer.getTimeSeconds());
-    }
-
-    private void unbounded() throws EPMCException {
-        Options options = Options.get();
-        Log log = options.get(OptionsMessages.LOG);
-        StopWatch timer = new StopWatch(true);
-        log.send(MessagesGraphSolverIterative.ITERATING);
-        IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
-        IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
-        numIterations = 0;
-        GraphSolverObjectiveExplicitUnbounded graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnbounded) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
