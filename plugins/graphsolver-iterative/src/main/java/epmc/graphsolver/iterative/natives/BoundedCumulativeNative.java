@@ -18,7 +18,7 @@
 
 *****************************************************************************/
 
-package epmc.graphsolver.iterative;
+package epmc.graphsolver.iterative.natives;
 
 import epmc.error.EPMCException;
 import epmc.error.UtilError;
@@ -37,7 +37,6 @@ import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
-import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
@@ -60,87 +59,8 @@ import epmc.value.ValueObject;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeBoundedCumulativeNative implements GraphSolverExplicit {
+public final class BoundedCumulativeNative implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-bounded-cumulative-native";
-    
-    private static final class IterationNative {
-        native static int double_dtmc_bounded(int bound, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values);
-
-        native static int double_dtmc_bounded_cumulative(int bound, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values, double[] cumul);
-
-        native static int double_dtmc_bounded_cumulative_discounted(int bound, double discount, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values, double[] cumul);
-
-        native static int double_dtmc_unbounded_jacobi(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values);
-
-        native static int double_dtmc_unbounded_gaussseidel(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values);
-
-        native static int double_dtmc_unbounded_cumulative_jacobi(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values, double[] cumul);
-
-        native static int double_dtmc_unbounded_cumulative_gaussseidel(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values, double[] cumul);
-
-        native static int double_ctmc_bounded(double[] fg, int left, int right,
-                int numStates, int[] stateBounds, int[] targets,
-                double[] weights, double[] values);
-
-        /*
-        native static int double_ctmc_bounded_cumulative(double[] fg, int left, int right,
-                int numStates, int[] stateBounds, int[] targets,
-                double[] weights, double[] values, double[] cumul);
-        */
-        
-        native static int double_mdp_unbounded_jacobi(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_unbounded_gaussseidel(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_unbounded_cumulative_jacobi(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        native static int double_mdp_unbounded_cumulative_gaussseidel(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-        
-        native static int double_mdp_bounded(int bound, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_bounded_cumulative(int bound, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        native static int double_mdp_bounded_cumulative_discounted(int bound, double discount, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        private final static boolean loaded =
-                JNATools.registerLibrary(IterationNative.class, "valueiteration");
-        
-        private final static int EPMC_ERROR_SUCCESS = 0;
-        private final static int EPMC_ERROR_OUT_OF_MEMORY = 1;
-    }
-
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;

@@ -18,8 +18,9 @@
 
 *****************************************************************************/
 
-package epmc.graphsolver.iterative;
+package epmc.graphsolver.iterative.natives;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import epmc.error.EPMCException;
@@ -31,19 +32,21 @@ import epmc.graph.SemanticsCTMC;
 import epmc.graph.SemanticsContinuousTime;
 import epmc.graph.SemanticsDTMC;
 import epmc.graph.SemanticsMDP;
-import epmc.graph.SemanticsNonDet;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.IterationMethod;
+import epmc.graphsolver.iterative.IterationStopCriterion;
+import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
+import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
+import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.BitSet;
-import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.value.TypeAlgebra;
@@ -65,87 +68,8 @@ import epmc.value.ValueObject;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeUnboundedCumulativeNative implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-unbounded-cumulative-native";
-    
-    private static final class IterationNative {
-        native static int double_dtmc_bounded(int bound, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values);
-
-        native static int double_dtmc_bounded_cumulative(int bound, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values, double[] cumul);
-
-        native static int double_dtmc_bounded_cumulative_discounted(int bound, double discount, int numStates,
-                int[] stateBounds, int[] targets, double[] weights,
-                double[] values, double[] cumul);
-
-        native static int double_dtmc_unbounded_jacobi(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values);
-
-        native static int double_dtmc_unbounded_gaussseidel(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values);
-
-        native static int double_dtmc_unbounded_cumulative_jacobi(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values, double[] cumul);
-
-        native static int double_dtmc_unbounded_cumulative_gaussseidel(int relative,
-                double precision, int numStates, int[] stateBounds,
-                int[] targets, double[] weights, double[] values, double[] cumul);
-
-        native static int double_ctmc_bounded(double[] fg, int left, int right,
-                int numStates, int[] stateBounds, int[] targets,
-                double[] weights, double[] values);
-
-        /*
-        native static int double_ctmc_bounded_cumulative(double[] fg, int left, int right,
-                int numStates, int[] stateBounds, int[] targets,
-                double[] weights, double[] values, double[] cumul);
-        */
-        
-        native static int double_mdp_unbounded_jacobi(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_unbounded_gaussseidel(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_unbounded_cumulative_jacobi(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        native static int double_mdp_unbounded_cumulative_gaussseidel(int relative,
-                double precision, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-        
-        native static int double_mdp_bounded(int bound, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values);
-
-        native static int double_mdp_bounded_cumulative(int bound, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        native static int double_mdp_bounded_cumulative_discounted(int bound, double discount, int numStates,
-                int[] stateBounds, int[] nondetBounds, int[] targets,
-                double[] weights, int min, double[] values, double[] cumul);
-
-        private final static boolean loaded =
-                JNATools.registerLibrary(IterationNative.class, "valueiteration");
-        
-        private final static int EPMC_ERROR_SUCCESS = 0;
-        private final static int EPMC_ERROR_OUT_OF_MEMORY = 1;
-    }
-
+public final class UnboundedReachabilityNative implements GraphSolverExplicit {
+    public static String IDENTIFIER = "graph-solver-iterative-unbounded-reachability-native";
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -153,7 +77,6 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
     private int numIterations;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
-	private ValueArrayAlgebra cumulativeStateRewards;
 
     @Override
     public String getIdentifier() {
@@ -175,7 +98,7 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
          && !SemanticsMDP.isMDP(semantics)) {
         	return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)) {
+    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
             return false;
         }
         return true;
@@ -184,28 +107,26 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
     @Override
     public void solve() throws EPMCException {
     	prepareIterGraph();
-        if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
-            unboundedCumulative();
-        } else {
-            assert false;
-        }
+    	unboundedReachability();
         prepareResultValues();
     }
 
     private void prepareIterGraph() throws EPMCException {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative);
+        boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         List<BitSet> sinks = null;
-        if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
-        	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        	sinks = objectiveUnboundedCumulative.getSinks();
+        sinks = new ArrayList<>();
+        GraphSolverObjectiveExplicitUnboundedReachability unbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+        if (unbounded.getZeroSet() != null) {
+        	sinks.add(unbounded.getZeroSet());
         }
+        sinks.add(unbounded.getTarget());
         
         if (sinks != null) {
             builder.addSinks(sinks);
@@ -218,33 +139,22 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
         if (embed) {
             GraphExplicitModifier.embed(iterGraph);
         }
-        
-        GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        cumulativeStateRewards = objectiveUnboundedCumulative.getStateRewards();
-        if (cumulativeStateRewards != null) {
-        	if (SemanticsNonDet.isNonDet(semanticsType)) {
-        		// TODO
-        	} else {
-        		int size = 0;
-                for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
-                    int iterNode = builder.inputToOutputNode(origNode);
-                    if (iterNode < 0) {
-                        continue;
-                    }
-                    size++;
+        BitSet targets = null;
+        if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
+        	GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+        	targets = objectiveUnboundedReachability.getTarget();
+        }
+        if (targets != null) {
+            assert this.inputValues == null;
+            int numStates = iterGraph.computeNumStates();
+            this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
+            for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
+                int iterNode = builder.inputToOutputNode(origNode);
+                if (iterNode < 0) {
+                    continue;
                 }
-        		ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
-        		Value value = cumulativeStateRewards.getType().getEntryType().newValue();
-                for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
-                    int iterNode = builder.inputToOutputNode(origNode);
-                    if (iterNode < 0) {
-                        continue;
-                    }
-                    cumulativeStateRewards.get(value, origNode);
-                    cumulativeStateRewardsNew.set(value, iterNode);
-                }
-                cumulativeStateRewards = cumulativeStateRewardsNew;
-        	}
+                this.inputValues.set(targets.get(origNode) ? 1 : 0, iterNode);
+            }
         }
     }
 
@@ -266,33 +176,31 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
     	objective.setResult(outputValues);
     }
 
-    private void unboundedCumulative() throws EPMCException {
+    private void unboundedReachability() throws EPMCException {
         Options options = Options.get();
-        IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
-        IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesGraphSolverIterative.ITERATING);
+        IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
+        IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
         numIterations = 0;
-        GraphSolverObjectiveExplicitUnboundedCumulative graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
+        GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            dtmcUnboundedCumulativeJacobiNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
+            dtmcUnboundedJacobiNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
         } else if (isSparseMarkovNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedCumulativeGaussseidelNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
+            dtmcUnboundedGaussseidelNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-        	mdpUnboundedCumulativeJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
+            mdpUnboundedJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedCumulativeGaussseidelNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards);
+            mdpUnboundedGaussseidelNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);  
         } else {
-            assert false;
+            assert false : iterGraph.getClass();
         }
         log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations,
                 timer.getTimeSeconds());
     }
-    
 
     /* auxiliary methods */
     
@@ -332,44 +240,40 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
     
     /* implementation/native call of/to iteration algorithms */    
     
-    private static void dtmcUnboundedCumulativeJacobiNative(GraphExplicitSparse graph,
+    private static void dtmcUnboundedJacobiNative(GraphExplicitSparse graph,
             Value values,
-            IterationStopCriterion stopCriterion, double tolerance, Value cumul)
-                    throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
-        
-        int code = IterationNative.double_dtmc_unbounded_cumulative_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem);
+
+        int code = IterationNative.double_dtmc_unbounded_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
 
-    private static void dtmcUnboundedCumulativeGaussseidelNative(
+    private static void dtmcUnboundedGaussseidelNative(
             GraphExplicitSparse graph, Value values,
-            IterationStopCriterion stopCriterion, double tolerance, Value cumul)
-                    throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
-        
-        int code = IterationNative.double_dtmc_unbounded_cumulative_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem);
+
+        int code = IterationNative.double_dtmc_unbounded_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
     
-    private static void mdpUnboundedCumulativeJacobiNative(
+    private static void mdpUnboundedJacobiNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance, Value cumul) throws EPMCException {
+            double tolerance) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -377,19 +281,17 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
-
-        int code = IterationNative.double_mdp_unbounded_cumulative_jacobi(relative, tolerance,
+        int code = IterationNative.double_mdp_unbounded_jacobi(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem, cumulMem);
+                min ? 1 : 0, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
 
-    private static void mdpUnboundedCumulativeGaussseidelNative(
+    private static void mdpUnboundedGaussseidelNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance, Value cumul) throws EPMCException {
+            double tolerance) throws EPMCException {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -397,11 +299,10 @@ public final class GraphSolverIterativeUnboundedCumulativeNative implements Grap
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
 
-        int code = IterationNative.double_mdp_unbounded_cumulative_gaussseidel(relative, tolerance,
+        int code = IterationNative.double_mdp_unbounded_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem, cumulMem);
+                min ? 1 : 0, valuesMem);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }

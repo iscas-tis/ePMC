@@ -18,13 +18,14 @@
 
 *****************************************************************************/
 
-package epmc.graphsolver.iterative;
+package epmc.graphsolver.iterative.natives;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import epmc.algorithms.FoxGlynn;
 import epmc.error.EPMCException;
+import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -37,10 +38,12 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
 import epmc.options.Options;
 import epmc.util.BitSet;
+import epmc.util.ProblemsUtil;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeReal;
@@ -48,8 +51,8 @@ import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
@@ -58,20 +61,14 @@ import epmc.value.ValueReal;
 
 /**
  * Commonly used routines to solve graph-based problems using value iteration.
- * The implementations provided here should work for any representation of
- * reals, not just doubles. Due to their generality, they are not that
- * efficient. Their purpose is mainly to be used with representations of
- * reals the computations of which are not directly implemented in hardware
- * (e.g. mpfr numbers). Here, the additional overhead does not matter that
- * much: the majority of time is spent in rather slow computations involving
- * real values, such that the additional time added from generality does not
- * contribute too much to the overall runtime.
+ * The routines provided here only work in the case that reals are implemented
+ * using IEEE doubles. They are implemented in native code, and should run
+ * relatively fast.
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeBoundedReachabilityJava implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-bounded-reachability-java";
-    
+public final class BoundedReachabilityNative implements GraphSolverExplicit {
+    public static String IDENTIFIER = "graph-solver-iterative-bounded-reachability-native";
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -128,14 +125,12 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         List<BitSet> sinks = null;
-        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-        	sinks = new ArrayList<>();
-        	GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        	if (bounded.getZeroSet() != null) {
-        		sinks.add(bounded.getZeroSet());
-        	}
-        	sinks.add(bounded.getTarget());
+        sinks = new ArrayList<>();
+        GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+        if (bounded.getZeroSet() != null) {
+        	sinks.add(bounded.getZeroSet());
         }
+        sinks.add(bounded.getTarget());
         
         if (sinks != null) {
             builder.addSinks(sinks);
@@ -198,10 +193,10 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         ValueInteger time = ValueInteger.asInteger(objectiveBoundedReachability.getTime());
         assert time.getInt() >= 0;
         boolean min = objectiveBoundedReachability.isMin();
-        if (isSparseMarkovJava(iterGraph)) {
-            dtmcBoundedJava(time.getInt(), asSparseMarkov(iterGraph), inputValues);
-        } else if (isSparseMDPJava(iterGraph)) {
-            mdpBoundedJava(time.getInt(), asSparseNondet(iterGraph), min, inputValues);            
+        if (isSparseMarkovNative(iterGraph)) {
+            dtmcBoundedNative(time.getInt(), asSparseMarkov(iterGraph), inputValues);            
+        } else if (isSparseMDPNative(iterGraph)) {
+            mdpBoundedNative(time.getInt(), asSparseNondet(iterGraph), min, inputValues);                        
         } else {
             assert false : isSparseMarkov(iterGraph) + " " + isSparseNondet(iterGraph);
         }
@@ -215,8 +210,8 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         Options options = Options.get();
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
-        if (isSparseMarkovJava(iterGraph)) {
-            ctmcBoundedJava(asSparseMarkov(iterGraph), inputValues, foxGlynn);
+        if (isSparseMarkovNative(iterGraph)) {
+            ctmcBoundedNative(asSparseMarkov(iterGraph), inputValues, foxGlynn);
         } else {
             assert false;
         }
@@ -232,7 +227,7 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         return graph instanceof GraphExplicitSparse;
     }
     
-    private static boolean isSparseMDPJava(GraphExplicit graph) {
+    private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
         }
@@ -243,7 +238,7 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         return true;
     }
     
-    private static boolean isSparseMarkovJava(GraphExplicit graph) {
+    private static boolean isSparseMarkovNative(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
         }
@@ -258,151 +253,52 @@ public final class GraphSolverIterativeBoundedReachabilityJava implements GraphS
         return (GraphExplicitSparse) graph;
     }
     
-    /* implementation of iteration algorithms */    
+    /* implementation/native call of/to iteration algorithms */    
     
-    private void ctmcBoundedJava(GraphExplicitSparse graph,
-            ValueArray values, FoxGlynn foxGlynn) throws EPMCException {
-    	ValueArrayAlgebra fg = foxGlynn.getArray();
-        Value fgWeight = foxGlynn.getTypeReal().newValue();
+    private static void ctmcBoundedNative(GraphExplicitSparse graph,
+            Value values, FoxGlynn foxGlynn) throws EPMCException {
         int numStates = graph.computeNumStates();
-        ValueArrayAlgebra presValues = UtilValue.newArray(values.getType(), numStates);
-        ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
+        double[] fg = ValueContentDoubleArray.getContent(foxGlynn.getArray());
+        int left = foxGlynn.getLeft();
+        int right = foxGlynn.getRight();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        ValueAlgebra value = newValueWeight();
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        Value zero = foxGlynn.getTypeReal().getZero();
-        for (int i = foxGlynn.getRight() - foxGlynn.getLeft(); i >= 0; i--) {
-            fg.get(fgWeight, i);
-            for (int state = 0; state < numStates; state++) {
-                values.get(value, state);
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                nextStateProb.multiply(fgWeight, value);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    presValues.get(succStateProb, succState);
-                    weighted.multiply(weight, succStateProb);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = presValues;
-            presValues = nextValues;
-            nextValues = swap;
-        }
-        for (int i = foxGlynn.getLeft() - 1; i >= 0; i--) {
-            for (int state = 0; state < numStates; state++) {
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = presValues;
-            presValues = nextValues;
-            nextValues = swap;            
-        }
-        values.set(presValues);
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
+        int code = IterationNative.double_ctmc_bounded(fg, left, right, numStates, stateBounds, targets, weights, valuesMem);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
-
-    private static void dtmcBoundedJava(int bound,
-            GraphExplicitSparse graph, ValueArrayAlgebra values)
-            		throws EPMCException {
+    
+    private static void dtmcBoundedNative(int bound,
+            GraphExplicitSparse graph, Value values)
+                    throws EPMCException {
         int numStates = graph.computeNumStates();
-        ValueArrayAlgebra presValues = values;
-        ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
-        for (int step = 0; step < bound; step++) {
-            for (int state = 0; state < numStates; state++) {
-                int from = stateBounds[state];
-                int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
-                for (int succ = from; succ < to; succ++) {
-                    weights.get(weight, succ);
-                    int succState = targets[succ];
-                    presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
-                }
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArrayAlgebra swap = presValues;
-            presValues = nextValues;
-            nextValues = swap;
-        }
-        values.set(presValues);
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
+        int code = IterationNative.double_dtmc_bounded(bound, numStates, stateBounds, targets, weights, valuesMem);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
-
-    private void mdpBoundedJava(int bound,
+    
+    private static void mdpBoundedNative(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values) throws EPMCException {
-        TypeWeight typeWeight = TypeWeight.get();
+            Value values) throws EPMCException {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
-        ValueAlgebra weight = newValueWeight();
-        ValueAlgebra weighted = newValueWeight();
-        ValueAlgebra succStateProb = newValueWeight();
-        ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra choiceNextStateProb = newValueWeight();
-        ValueAlgebra presStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
-        ValueArray presValues = values;
-        ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
-        for (int step = 0; step < bound; step++) {
-            for (int state = 0; state < numStates; state++) {
-                presValues.get(presStateProb, state);
-                int stateFrom = stateBounds[state];
-                int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
-                for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                    int nondetFrom = nondetBounds[nondetNr];
-                    int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
-                    for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                        weights.get(weight, stateSucc);
-                        int succState = targets[stateSucc];
-                        presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
-                    }
-                    if (min) {
-                        nextStateProb.min(nextStateProb, choiceNextStateProb);
-                    } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
-                    }
-                }
-                nextValues.set(nextStateProb, state);
-            }
-            ValueArray swap = nextValues;
-            nextValues = presValues;
-            presValues = swap;
-        }
-        values.set(presValues);
-    }
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
 
+        int code = IterationNative.double_mdp_bounded(bound, numStates, stateBounds,
+                nondetBounds, targets, weights, min ? 1 : 0, valuesMem);
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        assert code == IterationNative.EPMC_ERROR_SUCCESS;
+    }
+    
     private static ValueAlgebra newValueWeight() {
     	return TypeWeight.get().newValue();
     }

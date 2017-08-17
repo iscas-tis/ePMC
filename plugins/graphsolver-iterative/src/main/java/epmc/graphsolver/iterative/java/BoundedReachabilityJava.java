@@ -18,7 +18,10 @@
 
 *****************************************************************************/
 
-package epmc.graphsolver.iterative;
+package epmc.graphsolver.iterative.java;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import epmc.algorithms.FoxGlynn;
 import epmc.error.EPMCException;
@@ -34,9 +37,11 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
-import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
+import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
 import epmc.options.Options;
+import epmc.util.BitSet;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeReal;
@@ -65,8 +70,8 @@ import epmc.value.ValueReal;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class GraphSolverIterativeBoundedJava implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-bounded-java";
+public final class BoundedReachabilityJava implements GraphSolverExplicit {
+    public static String IDENTIFIER = "graph-solver-iterative-bounded-reachability-java";
     
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
@@ -96,7 +101,7 @@ public final class GraphSolverIterativeBoundedJava implements GraphSolverExplici
          && !SemanticsMDP.isMDP(semantics)) {
         	return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitBounded)) {
+    	if (!(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)) {
             return false;
         }
         return true;
@@ -106,42 +111,68 @@ public final class GraphSolverIterativeBoundedJava implements GraphSolverExplici
     public void solve() throws EPMCException {
     	prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        if (objective instanceof GraphSolverObjectiveExplicitBounded) {
-            if (SemanticsContinuousTime.isContinuousTime(semantics)) {
-                ctBounded();
-            } else {
-                bounded();
-            }
+        if (SemanticsContinuousTime.isContinuousTime(semantics)) {
+        	ctBoundedReachability();
         } else {
-            assert false;
+        	dtBoundedReachability();
         }
         prepareResultValues();
     }
 
-    // TODO can directly use original graph under certain circumstances
     private void prepareIterGraph() throws EPMCException {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBounded);
+        boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedReachability);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
         builder.addDerivedGraphProperties(origGraph.getGraphProperties());
         builder.addDerivedNodeProperties(origGraph.getNodeProperties());
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
+        List<BitSet> sinks = null;
+        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
+        	sinks = new ArrayList<>();
+        	GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+        	if (bounded.getZeroSet() != null) {
+        		sinks.add(bounded.getZeroSet());
+        	}
+        	sinks.add(bounded.getTarget());
+        }
+        
+        if (sinks != null) {
+            builder.addSinks(sinks);
+        }
         builder.setUniformise(uniformise);
         builder.setReorder();
         builder.build();
-        iterGraph = builder.getOutputGraph();
+        this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
         Value unifRate = newValueWeight();
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
-        lambda = TypeReal.get().newValue();
-        GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
-        Value time = objectiveBounded.getTime();
-        lambda.multiply(time, unifRate);
-        inputValues = objectiveBounded.getValues();
+        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
+            this.lambda = TypeReal.get().newValue();
+            GraphSolverObjectiveExplicitBoundedReachability objectiveBounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+            Value time = objectiveBounded.getTime();
+            this.lambda.multiply(time, unifRate);        	
+        }
+        BitSet targets = null;
+        if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
+        	GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+        	targets = objectiveBoundedReachability.getTarget();
+        }
+        if (targets != null) {
+            assert this.inputValues == null;
+            int numStates = iterGraph.computeNumStates();
+            this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
+            for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
+                int iterNode = builder.inputToOutputNode(origNode);
+                if (iterNode < 0) {
+                    continue;
+                }
+                this.inputValues.set(targets.get(origNode) ? 1 : 0, iterNode);
+            }
+        }        
     }
 
     private void prepareResultValues() throws EPMCException {
@@ -162,14 +193,12 @@ public final class GraphSolverIterativeBoundedJava implements GraphSolverExplici
     	objective.setResult(outputValues);
     }
 
-    private void bounded() throws EPMCException {
+    private void dtBoundedReachability() throws EPMCException {
         assert iterGraph != null;
-        assert inputValues != null;
-        GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBounded.getTime());
+        GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+        ValueInteger time = ValueInteger.asInteger(objectiveBoundedReachability.getTime());
         assert time.getInt() >= 0;
-        time.getInt();
-        boolean min = objectiveBounded.isMin();
+        boolean min = objectiveBoundedReachability.isMin();
         if (isSparseMarkovJava(iterGraph)) {
             dtmcBoundedJava(time.getInt(), asSparseMarkov(iterGraph), inputValues);
         } else if (isSparseMDPJava(iterGraph)) {
@@ -179,14 +208,12 @@ public final class GraphSolverIterativeBoundedJava implements GraphSolverExplici
         }
     }
 
-    private void ctBounded() throws EPMCException {
+    private void ctBoundedReachability() throws EPMCException {
         assert iterGraph != null : "iterGraph == null";
-        assert inputValues != null : "inputValues == null";
         assert lambda != null : "lambda == null";
         assert ValueReal.isReal(lambda) : lambda;
         assert !lambda.isPosInf() : lambda;
         Options options = Options.get();
-        
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
         if (isSparseMarkovJava(iterGraph)) {
@@ -227,13 +254,13 @@ public final class GraphSolverIterativeBoundedJava implements GraphSolverExplici
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-
+    
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-
+    
     /* implementation of iteration algorithms */    
-
+    
     private void ctmcBoundedJava(GraphExplicitSparse graph,
             ValueArray values, FoxGlynn foxGlynn) throws EPMCException {
     	ValueArrayAlgebra fg = foxGlynn.getArray();

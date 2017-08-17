@@ -24,6 +24,18 @@ import java.util.Map;
 
 import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
+import epmc.graphsolver.iterative.java.BoundedCumulativeDiscountedJava;
+import epmc.graphsolver.iterative.java.BoundedCumulativeJava;
+import epmc.graphsolver.iterative.java.BoundedJava;
+import epmc.graphsolver.iterative.java.BoundedReachabilityJava;
+import epmc.graphsolver.iterative.java.UnboundedCumulativeJava;
+import epmc.graphsolver.iterative.java.UnboundedReachabilityJava;
+import epmc.graphsolver.iterative.natives.BoundedCumulativeDiscountedNative;
+import epmc.graphsolver.iterative.natives.BoundedCumulativeNative;
+import epmc.graphsolver.iterative.natives.BoundedNative;
+import epmc.graphsolver.iterative.natives.BoundedReachabilityNative;
+import epmc.graphsolver.iterative.natives.UnboundedCumulativeNative;
+import epmc.graphsolver.iterative.natives.UnboundedReachabilityNative;
 import epmc.options.Category;
 import epmc.options.OptionTypeEnum;
 import epmc.options.OptionTypeRealNonnegative;
@@ -69,17 +81,17 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         	.setCategory(category).build();
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
-        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeJava.IDENTIFIER, GraphSolverIterativeBoundedCumulativeJava.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeDiscountedJava.IDENTIFIER, GraphSolverIterativeBoundedCumulativeDiscountedJava.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeJava.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeJava.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityJava.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeJava.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedReachabilityJava.IDENTIFIER, GraphSolverIterativeBoundedReachabilityJava.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedJava.IDENTIFIER, GraphSolverIterativeBoundedJava.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeNative.IDENTIFIER, GraphSolverIterativeBoundedCumulativeNative.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedCumulativeDiscountedNative.IDENTIFIER, GraphSolverIterativeBoundedCumulativeDiscountedNative.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedCumulativeNative.IDENTIFIER, GraphSolverIterativeUnboundedCumulativeNative.class);
-        graphSolverMap.put(GraphSolverIterativeUnboundedReachabilityNative.IDENTIFIER, GraphSolverIterativeUnboundedReachabilityNative.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedReachabilityNative.IDENTIFIER, GraphSolverIterativeBoundedReachabilityNative.class);
-        graphSolverMap.put(GraphSolverIterativeBoundedNative.IDENTIFIER, GraphSolverIterativeBoundedNative.class);
+        graphSolverMap.put(BoundedCumulativeJava.IDENTIFIER, BoundedCumulativeJava.class);
+        graphSolverMap.put(BoundedCumulativeDiscountedJava.IDENTIFIER, BoundedCumulativeDiscountedJava.class);
+        graphSolverMap.put(UnboundedCumulativeJava.IDENTIFIER, UnboundedCumulativeJava.class);
+        graphSolverMap.put(UnboundedReachabilityJava.IDENTIFIER, UnboundedCumulativeJava.class);
+        graphSolverMap.put(BoundedReachabilityJava.IDENTIFIER, BoundedReachabilityJava.class);
+        graphSolverMap.put(BoundedJava.IDENTIFIER, BoundedJava.class);
+        graphSolverMap.put(BoundedCumulativeNative.IDENTIFIER, BoundedCumulativeNative.class);
+        graphSolverMap.put(BoundedCumulativeDiscountedNative.IDENTIFIER, BoundedCumulativeDiscountedNative.class);
+        graphSolverMap.put(UnboundedCumulativeNative.IDENTIFIER, UnboundedCumulativeNative.class);
+        graphSolverMap.put(UnboundedReachabilityNative.IDENTIFIER, UnboundedReachabilityNative.class);
+        graphSolverMap.put(BoundedReachabilityNative.IDENTIFIER, BoundedReachabilityNative.class);
+        graphSolverMap.put(BoundedNative.IDENTIFIER, BoundedNative.class);
     }
 }
