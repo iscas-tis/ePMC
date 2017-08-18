@@ -32,9 +32,7 @@ import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.ValueInterval;
 import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
@@ -278,51 +276,6 @@ public final class ExpressionFilter implements Expression {
     
     public boolean isPrintAll() {
         return type == FilterType.PRINTALL;
-    }
-
-    public void accumulate(Value resultValue, Value value) throws EPMCException {
-        switch (type) {
-        case ARGMAX: case MAX:
-            ValueAlgebra.asAlgebra(resultValue).max(resultValue, value);
-            break;
-        case ARGMIN: case MIN:
-        	ValueAlgebra.asAlgebra(resultValue).min(resultValue, value);
-            break;
-        case AVG:
-            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
-            break;
-        case COUNT:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
-                    ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
-                            : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
-            break;
-        case EXISTS:
-        	ValueBoolean.asBoolean(resultValue).or(resultValue, value);
-            break;
-        case FIRST:
-            break;
-        case FORALL:
-        	ValueBoolean.asBoolean(resultValue).and(resultValue, value);
-            break;
-        case PRINT:
-            break;
-        case PRINTALL:
-            break;
-        case RANGE: {
-            Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
-            Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
-            ValueAlgebra.asAlgebra(resLo).min(resLo, value);
-            ValueAlgebra.asAlgebra(resUp).max(resUp, value);
-        }
-        break;
-        case STATE:
-            break;
-        case SUM:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
-            break;
-        default:
-            throw new RuntimeException();
-        }
     }
 
     @Override

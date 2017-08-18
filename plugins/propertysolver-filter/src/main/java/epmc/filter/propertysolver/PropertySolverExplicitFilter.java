@@ -29,8 +29,8 @@ import java.util.Set;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
+import epmc.expression.standard.FilterType;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.filter.error.ProblemsFilter;
 import epmc.filter.messages.MessagesFilter;
 import epmc.graph.CommonProperties;
@@ -46,6 +46,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.value.Type;
+import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayConstant;
 import epmc.value.TypeNumber;
 import epmc.value.UtilValue;
@@ -53,6 +54,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInterval;
 
 // TODO complete documentation
 
@@ -132,7 +134,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             prop.getExplicitIthValue(propEntry, i);
             states.getExplicitIthValue(statesEntry, i);
             if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
-            	propertyFilter.accumulate(resultValue, propEntry);
+            	accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
                     if (!ValueAlgebra.asAlgebra(propEntry).isZero()) {
                         getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
@@ -227,6 +229,51 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     	return Collections.unmodifiableSet(required);
     }
 
+    private static void accumulate(FilterType type, Value resultValue, Value value) throws EPMCException {
+        switch (type) {
+        case ARGMAX: case MAX:
+            ValueAlgebra.asAlgebra(resultValue).max(resultValue, value);
+            break;
+        case ARGMIN: case MIN:
+        	ValueAlgebra.asAlgebra(resultValue).min(resultValue, value);
+            break;
+        case AVG:
+            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
+            break;
+        case COUNT:
+        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
+                    ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
+                            : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
+            break;
+        case EXISTS:
+        	ValueBoolean.asBoolean(resultValue).or(resultValue, value);
+            break;
+        case FIRST:
+            break;
+        case FORALL:
+        	ValueBoolean.asBoolean(resultValue).and(resultValue, value);
+            break;
+        case PRINT:
+            break;
+        case PRINTALL:
+            break;
+        case RANGE: {
+            Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
+            Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
+            ValueAlgebra.asAlgebra(resLo).min(resLo, value);
+            ValueAlgebra.asAlgebra(resUp).max(resUp, value);
+        }
+        break;
+        case STATE:
+            break;
+        case SUM:
+        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
+            break;
+        default:
+            throw new RuntimeException();
+        }
+    }
+    
     /**
      * Get log used.
      * 
