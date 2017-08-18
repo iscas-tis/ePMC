@@ -124,7 +124,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
     public void set(Value operand) {
         assert !isImmutable();
         assert operand != null;
-        assert ValueBoolean.isBoolean(operand) || ValueTernary.isTernary(operand) && !ValueTernary.isUnknown(operand)
+        assert ValueBoolean.isBoolean(operand)
         : operand + " " + operand.getType();
         set(ValueBoolean.asBoolean(operand).getBoolean());
     }
@@ -133,8 +133,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
         assert !isImmutable();
         assert op1 != null;
         assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1) && !ValueTernary.isUnknown(op1) : op1 + " " + op1.getType();
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2) && !ValueTernary.isUnknown(op2);
+        assert ValueBoolean.isBoolean(op1) : op1 + " " + op1.getType();
         set(ValueBoolean.asBoolean(op1).getBoolean() && ValueBoolean.asBoolean(op2).getBoolean());
     }
 
@@ -142,15 +141,15 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
         assert !isImmutable();
         assert op1 != null;
         assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1) && !ValueTernary.isUnknown(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2) && !ValueTernary.isUnknown(op2);
+        assert ValueBoolean.isBoolean(op1);
+        assert ValueBoolean.isBoolean(op2);
         set(ValueBoolean.asBoolean(op1).getBoolean() || ValueBoolean.asBoolean(op2).getBoolean());
     }
 
     public void not(Value op) {
         assert !isImmutable();
         assert op != null;
-        assert ValueBoolean.isBoolean(op) || ValueTernary.isTernary(op) && !ValueTernary.isUnknown(op);
+        assert ValueBoolean.isBoolean(op);
         set(!ValueBoolean.asBoolean(op).getBoolean());
     }
 
@@ -158,8 +157,8 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
         assert !isImmutable();
         assert op1 != null;
         assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1) && !ValueTernary.isUnknown(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2) && !ValueTernary.isUnknown(op2);
+        assert ValueBoolean.isBoolean(op1);
+        assert ValueBoolean.isBoolean(op2);
         set(ValueBoolean.asBoolean(op1).getBoolean() == ValueBoolean.asBoolean(op2).getBoolean());
     }
 
@@ -167,16 +166,15 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
         assert !isImmutable();
         assert op1 != null;
         assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1) && !ValueTernary.isUnknown(op1) : op1;
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2) && !ValueTernary.isUnknown(op2) : op2;
+        assert ValueBoolean.isBoolean(op1) : op1;
+        assert ValueBoolean.isBoolean(op2) : op2;
         set(!ValueBoolean.asBoolean(op1).getBoolean() || ValueBoolean.asBoolean(op2).getBoolean());
     }
 
     @Override
     public boolean isEq(Value operand) {
         assert operand != null;
-        assert ValueBoolean.isBoolean(operand) || ValueTernary.isTernary(operand) && !ValueTernary.isUnknown(operand)
-        : operand + " " + operand.getType();
+        assert ValueBoolean.isBoolean(operand) : operand + " " + operand.getType();
         return getBoolean() == ValueBoolean.asBoolean(operand).getBoolean();
     }
     
@@ -196,7 +194,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
     @Override
     public int compareTo(Value other) {
         assert other != null;
-        assert ValueBoolean.isBoolean(other) || ValueTernary.isTernary(other);
+        assert ValueBoolean.isBoolean(other);
         if (!this.value && ValueBoolean.asBoolean(other).getBoolean()) {
             return -1;
         } else if (this.value == ValueBoolean.asBoolean(other).getBoolean()) {

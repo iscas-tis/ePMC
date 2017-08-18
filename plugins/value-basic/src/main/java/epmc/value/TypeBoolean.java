@@ -57,7 +57,7 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     @Override
     public boolean canImport(Type a) {
         assert a != null;
-        return TypeBoolean.isBoolean(a) || TypeTernary.isTernary(a);
+        return TypeBoolean.isBoolean(a);
     }
 
     public ValueBoolean getFalse() {
