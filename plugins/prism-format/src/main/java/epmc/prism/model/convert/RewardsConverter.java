@@ -489,7 +489,7 @@ final class RewardsConverter {
 		for (Entry<Action, Action> entry : system.getRenaming().entrySet()) {
 			Action entryFromAction = entry.getKey();
 			Action entryToAction = entry.getValue();
-			if (entryToAction.getName().equals(toAction)) {
+			if (entryToAction.getName().equals(toAction.getName())) {
 				attachRewards(renamed, entryFromAction, effectOf);
 			}
 		}
