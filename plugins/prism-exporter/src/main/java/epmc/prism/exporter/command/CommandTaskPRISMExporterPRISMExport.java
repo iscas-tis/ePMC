@@ -42,7 +42,6 @@ import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMConverter;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.value.ContextValue;
 import epmc.value.OptionsValue;
 
 /**

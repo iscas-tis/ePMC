@@ -22,7 +22,6 @@ package epmc.command;
 
 import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.ModelChecker;
-import epmc.options.Options;
 
 public class CommandTaskHelp implements CommandTask {
     public final static String IDENTIFIER = "help";
