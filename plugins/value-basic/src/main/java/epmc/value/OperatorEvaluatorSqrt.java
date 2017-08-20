@@ -24,12 +24,12 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public enum OperatorEvaluatorLog implements OperatorEvaluator {
+public enum OperatorEvaluatorSqrt implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
 	public Operator getOperator() {
-		return OperatorLog.LOG;
+		return OperatorSqrt.SQRT;
 	}
 	
 	@Override
@@ -52,17 +52,12 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorLog.LOG);
+    	assert operator.equals(OperatorAddInverse.ADD_INVERSE);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;
     	}
-        Type upper = UtilValue.upper(types);
-        if (!TypeReal.isReal(upper)) {
-            return null;
-        }
-        Type result = TypeReal.get();
-        return result;
+        return TypeReal.get();
     }
 
     @Override
@@ -74,6 +69,6 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
     	}
     	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
     			: ValueInteger.asInteger(operands[0]).getInt();
-        ValueDouble.asDouble(result).set(Math.log(value1));
+    	ValueDouble.asDouble(result).set(Math.sqrt(value1));
     }
 }
