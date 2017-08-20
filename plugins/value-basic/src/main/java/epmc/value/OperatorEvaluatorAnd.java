@@ -67,6 +67,7 @@ public enum OperatorEvaluatorAnd implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-    	ValueBoolean.asBoolean(result).and(operands[0], operands[1]);
+    	ValueBoolean.asBoolean(result).set(ValueBoolean.asBoolean(operands[0]).getBoolean()
+    			&& ValueBoolean.asBoolean(operands[1]).getBoolean());
     }
 }
