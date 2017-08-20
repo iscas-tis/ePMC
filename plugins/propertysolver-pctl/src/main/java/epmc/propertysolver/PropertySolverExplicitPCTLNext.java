@@ -56,11 +56,15 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
+import epmc.value.OperatorExp;
 import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeInteger;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -222,6 +226,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         values = objective.getResult();
         TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
+        	OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, TypeReal.get());
             Value rightValue = timeBound.getRightValue();
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
@@ -239,7 +244,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
                 }
                 jump.multiply(leftValue, sum);
                 jump.addInverse(jump);
-                ValueReal.asReal(jump).exp(jump);
+                exp.apply(jump, jump);
                 values.get(entry, state);
                 entry.multiply(entry, jump);
                 values.set(entry, state);
