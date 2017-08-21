@@ -1,0 +1,125 @@
+// stochastic model of circadian clock based on ODE model of
+// J. Vilar et al. Mechanisms of Noise-Resistance in Genetic Oscillators
+// Proc. National Academy of Sciences of the United States of America, 99(9):5988-5992, 2002
+// dxp/gxn 24/04/08
+
+ctmc
+
+// generic bound (for species with potentially unbounded quantities)
+const int N=1000000; 
+
+//--------------------------------------------------------
+// activator modules
+
+module activator_gene
+	
+	da : [0..1] init 1; // amount of activator gene 
+	da_a : [0..1]; // amount of activator gene with activator protein bound
+	
+	[transc_da]   da=1   -> da   : true; // transcription (gene to mRNA)
+	[transc_da_a] da_a=1 -> da_a : true; // transcription (gene to mRNA) (activator protein bound to gene)
+	[bind_a] da=1 & da_a=0 -> da   : (da'=0) & (da_a'=1); // binds with activator protein
+	[rel_a]  da=0 & da_a=1 -> da_a : (da'=1) & (da_a'=0); // unbinds from activator protein
+	
+endmodule
+
+module activator_mRNA
+	
+	ma : [0..N]; // amount of activator mRNA
+	
+	[transc_da]   ma<N -> (ma'=ma+1); // transcription (gene to mRNA)
+	[transc_da_a] ma<N -> (ma'=ma+1); // transcription (gene to mRNA) (activator protein bound to gene) 
+	[transl_a] ma>0 -> ma : true; // translation (mRNA to protein)
+	[deg_ma] ma>0 -> ma : (ma'=ma-1); // mRNA degrades
+	
+endmodule
+
+module activator_protein
+	
+	a  : [0..N]; // amount of activator protein
+	
+	[transl_a] a<N -> (a'=a+1); // translation (mRNA to protein)
+	[bind_a] a>0 -> a : (a'=a-1); // protein binds with activator gene
+	[bind_r] a>0 -> a : (a'=a-1); // protein binds with repressor gene
+	[rel_a] a<N -> (a'=a+1); // unbinds from activator gene
+	[rel_r] a<N -> (a'=a+1); // unbinds from repressor gene
+	[deg_a]   a>0 ->  a : (a'=a-1); // protein degrades
+	[deactive] a>0 -> a : (a'=a-1); // deactivation (binds with repressor protein)
+	
+endmodule
+
+//--------------------------------------------------------
+// repressor modules
+
+// rename activator gene module
+module repressor_gene = 
+	activator_gene[da=dr, da_a=dr_a, bind_a=bind_r, rel_a=rel_r, transc_da=transc_dr, transc_da_a=transc_dr_a]
+endmodule
+
+// rename activator mRNA module
+module repressor_mRNA =
+	activator_mRNA[ma=mr, transl_a=transl_r, transc_da=transc_dr, transc_da_a=transc_dr_a, deg_ma=deg_mr]
+endmodule
+
+module repressor_protein
+	
+	r  : [0..N]; // amount of repressor protein
+	
+	[transl_r] r<N -> (r'=r+1); // translation (mRNA to protein)
+	[deg_r]   r>0 ->  r : (r'=r-1); // protein degrades
+	[deactive] r>0 -> r : (r'=r-1); // deactivation of activator protein (protein binds with activator protein)
+	[deg_c] r<N -> (r'=r+1); // activator protein degrades (when repressor protein is bound)
+	
+endmodule
+
+//--------------------------------------------------------
+// inactive protein module
+
+module inactive_protein
+	
+	c : [0..N]; // amount of inactivated protein
+	
+	[deactive] c<N -> (c'=c+1); // protein forms (activator and repressor proteins bind)
+	[deg_c] c>0 -> c : (c'=c-1); // activator protein degrades
+	
+endmodule
+
+//--------------------------------------------------------
+// stochastic rates
+
+// rates module
+module rates
+	
+	[transc_da]   true -> 50   : true; // transcription rate of activator gene
+	[transc_da_a] true -> 500  : true; // transcription rate of activator gene (activator protein bound)
+	[transc_dr]   true -> 0.01 : true; // transcription rate of repressor gene
+	[transc_dr_a] true -> 50   : true; // transcription rate of repressor gene (activator protein bound)
+	[transl_a]    true -> 50   : true; // translation rate of activator mRNA
+	[transl_r]    true -> 5    : true; // translation rate of repressor mRNA
+	[bind_a]      true -> 1    : true; // binding rate of activator gene and activator protein
+	[bind_r]      true -> 1    : true; // binding rate of repressor gene and activator protein
+	[deactive]    true -> 2    : true; // binding rate of activator and repressor proteins
+	[rel_a]       true -> 50   : true; // release rate of activator gene and activator protein complex
+	[rel_r]       true -> 100  : true; // release rate of repressor gene and activator protein complex
+	[deg_a]       true -> 1    : true;  // degradation rate of activator protein
+	[deg_c]       true -> 1	   : true; // degradation rate of activator protein
+	[deg_r]       true -> 0.2  : true; // degradation rate of repressor protein
+	[deg_ma]      true -> 10   : true; // degradation rate of activator mRNA
+	[deg_mr]      true -> 0.5  : true; // degradation rate of repressor mRNA
+	
+endmodule
+
+// amount of activator protein
+rewards "activated_protein"
+	true : a;
+endrewards
+
+rewards "repressor_transcriptions"
+		[transc_dr]   true : 1;
+	    [transc_dr_a] true : 1;
+endrewards
+
+// amount of activator protein
+rewards "activated_protein"
+	true : a;
+endrewards

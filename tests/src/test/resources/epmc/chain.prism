@@ -1,7 +1,8 @@
+dtmc
+
 const int N;
 const int M;
 
-dtmc
 
 module chain
   s : [0..N];
