@@ -1,0 +1,10 @@
+const int k = 7;
+
+// states with k tokens
+label "k_tokens" = num_tokens=k;
+
+// stable states - where only one process has the same value as the process to its left
+label "stable" = num_tokens=1;
+
+// maximum expected time to reach a stable state (for all k-token configurations)
+filter(max, R=? [ F "stable" ], "k_tokens");
