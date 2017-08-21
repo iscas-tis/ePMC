@@ -8,6 +8,7 @@ Compared to IscasMC, EPMC supports a richer set of probabilistic models includin
 * Markov Decision Processes (MDPs)
 * Continuous Time Markov Chains (CTMCs)
 * Stochastic Multi-player games (SMGs)
+* Probabilistic Parity Games (PPGs)
 
 All input models can be in the PRISM format and JANI format.
 
