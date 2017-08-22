@@ -1,0 +1,33 @@
+/ Party B knows a pair of A's secrets (i.e. has
+// all L bits for at least one of the secrets)
+label "knowB" = ( (a1_0=L & a2_0=L)
+                | (a1_1=L & a2_1=L)
+                | (a1_2=L & a2_2=L)
+                | (a1_3=L & a2_3=L)
+                | (a1_4=L & a2_4=L)
+                | (a1_5=L & a2_5=L)
+                | (a1_6=L & a2_6=L)
+                | (a1_7=L & a2_7=L)
+                | (a1_8=L & a2_8=L)
+                | (a1_9=L & a2_9=L));
+
+// Party A knows a pair of B's secrets (i.e. has
+// all L bits for at least one of the secrets)
+label "knowA" = ( (b1_0=L & b2_0=L)
+                | (b1_1=L & b2_1=L)
+                | (b1_2=L & b2_2=L)
+                | (b1_3=L & b2_3=L)
+                | (b1_4=L & b2_4=L)
+                | (b1_5=L & b2_5=L)
+                | (b1_6=L & b2_6=L)
+                | (b1_7=L & b2_7=L)
+                | (b1_8=L & b2_8=L)
+                | (b1_9=L & b2_9=L));
+
+// What is the probability (from the initial state)
+// of reaching a state where B knows a pair and A does not?
+P=?[ true U !"knowA" & "knowB" ]
+
+// What is the probability (from the initial state)
+// of reaching a state where B knows a pair and A does not?
+P=?[ true U "knowA" & !"knowB" ]
