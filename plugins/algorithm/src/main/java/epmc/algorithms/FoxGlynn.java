@@ -27,7 +27,10 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorCeil;
 import epmc.value.OperatorEvaluator;
+import epmc.value.OperatorExp;
 import epmc.value.OperatorFloor;
+import epmc.value.OperatorLog;
+import epmc.value.OperatorPow;
 import epmc.value.TypeArray;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -76,12 +79,14 @@ public final class FoxGlynn {
     private ValueReal totalWeight;
 
     private void finder(int m) throws EPMCException {
+    	OperatorEvaluator logOp = ContextValue.get().getOperatorEvaluator(OperatorLog.LOG, TypeReal.get());
         OperatorEvaluator ceil = ContextValue.get().getOperatorEvaluator(OperatorCeil.CEIL, typeReal);
         OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
+        OperatorEvaluator pow = ContextValue.get().getOperatorEvaluator(OperatorPow.POW, typeReal, typeReal);
+        OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, typeReal);
     	ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
-        ValueReal e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
-        tau.log(this.tau, e);
+        logOp.apply(tau, this.tau);
         ValueReal epsilon = typeReal.newValue();
         epsilon.multiply(this.epsilon, sqrt_2_pi);
         ValueReal kReal = typeReal.newValue();
@@ -90,7 +95,7 @@ public final class FoxGlynn {
         	ValueReal minusLambda = typeReal.newValue();
             minusLambda.addInverse(lambda);
             ValueReal expMinusLambda = typeReal.newValue();
-            expMinusLambda.exp(minusLambda);
+            exp.apply(expMinusLambda, minusLambda);
             if (minusLambda.isLt(tau)) {
                 log.send(MessagesAlgorithm.FOX_GLYNN_UNRELIABLE_EXP_BELOW_TAU, lambda, expMinusLambda);
             }
@@ -103,10 +108,10 @@ public final class FoxGlynn {
             onePlusOneDivLambda.add(one, oneDivLambda);
             ValueReal bl = typeReal.newValue();
             bl.multiply(oneDivLambda, oneEights);
-            bl.exp(bl);
+            exp.apply(bl, bl);
             bl.multiply(onePlusOneDivLambda, bl);
             ValueReal sqrtLambda = typeReal.newValue();
-            sqrtLambda.pow(lambda, oneHalf);
+            pow.apply(sqrtLambda, lambda, oneHalf);
             
             ValueReal ceiled = typeReal.newValue();
             ValueReal maxErrorT2 = typeReal.newValue();
@@ -123,7 +128,7 @@ public final class FoxGlynn {
                 maxError.multiply(kReal, kReal);
                 maxError.multiply(oneHalf, maxError);
                 maxError.addInverse(maxError);
-                maxError.exp(maxError);
+                exp.apply(maxError, maxError);
                 maxError.multiply(bl, maxError);
                 maxError.divide(maxError, kReal);
                 maxErrorT2.multiply(two, maxError);
@@ -157,7 +162,7 @@ public final class FoxGlynn {
             maxError.multiply(kReal, kReal);
             maxError.multiply(oneHalf, maxError);
             maxError.addInverse(maxError);
-            maxError.exp(maxError);
+            exp.apply(maxError, maxError);
             kTimesEpsilon.multiply(kReal, epsilon);
             if (kTimesEpsilon.isGt(maxError)) {
                 break;
@@ -166,7 +171,7 @@ public final class FoxGlynn {
         kReal.set(k);        
         ValueReal rightAdd = typeReal.newValue();
         rightAdd.multiply(two, lambda_max);
-        rightAdd.pow(rightAdd, oneHalf);
+        pow.apply(rightAdd, rightAdd, oneHalf);
         rightAdd.multiply(kReal, rightAdd);
         rightAdd.add(rightAdd, oneHalf);
         ceil.apply(rightAdd, rightAdd);
@@ -186,10 +191,10 @@ public final class FoxGlynn {
         if (m >= 25) {
             ValueReal result = typeReal.newValue();
             ValueReal logStartValue = typeReal.newValue();
-            logStartValue.log(startValue, e);
+            logOp.apply(logStartValue, startValue);
             tau.subtract(tau, logStartValue);
             ValueReal log_c_m_inf = UtilValue.newValue(typeReal, m);
-            log_c_m_inf.log(log_c_m_inf, e);
+            logOp.apply(log_c_m_inf, log_c_m_inf);
             log_c_m_inf.multiply(log_c_m_inf, oneHalf);
             log_c_m_inf.subtract(vm1922272, log_c_m_inf);
             int i = m - left;
@@ -211,7 +216,7 @@ public final class FoxGlynn {
                     ValueReal result_1 = UtilValue.newValue(typeReal, m+1);
                     result_1.divide(iReal, result_1);
                     result_1.subtract(one, result_1);
-                    result_1.log(result_1, e);
+                    logOp.apply(result_1, result_1);
                     result_1.multiply(iReal, result_1);
                     result_1.add(log_c_m_inf, result_1);
                     if (result_1.isGt(result)) {
@@ -227,7 +232,7 @@ public final class FoxGlynn {
                 ValueReal exprRL10 = typeReal.newValue();
                 exprRL10.divide(log10_result, log10_e);
                 exprRL10.subtract(result, exprRL10);
-                exprRL10.exp(exprRL10);
+                exp.apply(exprRL10, exprRL10);
                 log.send(MessagesAlgorithm.FOX_GLYNN_UNRELIABLE_25, lambda, left, exprRL10, log10_result);
             }
             if (m >= 400) {
@@ -243,7 +248,7 @@ public final class FoxGlynn {
                     ValueReal exprRL10 = typeReal.newValue();
                     exprRL10.divide(log10_result, log10_e);
                     exprRL10.subtract(result, exprRL10);
-                    exprRL10.exp(exprRL10);
+                    exp.apply(exprRL10, exprRL10);
                     log.send(MessagesAlgorithm.FOX_GLYNN_UNRELIABLE_400, lambda, right, exprRL10, log10_result);
                 }
             }

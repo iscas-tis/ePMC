@@ -45,9 +45,14 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
+import epmc.value.ContextValue;
+import epmc.value.OperatorAnd;
+import epmc.value.OperatorEvaluator;
+import epmc.value.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayConstant;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeNumber;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -230,6 +235,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
 
     private static void accumulate(FilterType type, Value resultValue, Value value) throws EPMCException {
+    	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
+    	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
         switch (type) {
         case ARGMAX: case MAX:
             ValueAlgebra.asAlgebra(resultValue).max(resultValue, value);
@@ -246,12 +253,12 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                             : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
             break;
         case EXISTS:
-        	ValueBoolean.asBoolean(resultValue).or(resultValue, value);
+        	or.apply(resultValue, resultValue, value);
             break;
         case FIRST:
             break;
         case FORALL:
-        	ValueBoolean.asBoolean(resultValue).and(resultValue, value);
+        	and.apply(resultValue, resultValue, value);
             break;
         case PRINT:
             break;

@@ -71,7 +71,6 @@ public final class ValueDouble implements ValueReal {
     public void set(double value) {
         assert !isImmutable();
         this.value = value;
-        
     }
     
     @Override
@@ -166,46 +165,6 @@ public final class ValueDouble implements ValueReal {
     }
 
     @Override
-    public void log(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(Math.log(doubleOp1) / Math.log(doubleOp2));
-    }
-    
-    public void log(Value op) throws EPMCException {
-        assert !isImmutable();
-        assert op != null;
-        double doubleOp1 = castOrImport(op);
-        set(Math.log(doubleOp1));
-    }
-
-    @Override
-    public void exp(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double doubleOp = castOrImport(op);
-        set(Math.exp(doubleOp));
-    }
-
-    @Override
-    public void pi() {
-        set(Math.PI);
-    }
-    
-    @Override
-    public void pow(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(Math.pow(doubleOp1, doubleOp2));
-    }
-
-    @Override
     public void addInverse(Value op) {
         assert !isImmutable();
         assert op != null;
@@ -277,14 +236,6 @@ public final class ValueDouble implements ValueReal {
         assert operand != null;
         double op2Double = castOrImport(operand);
         return getDouble() < op2Double;
-    }
-    
-    @Override
-    public void sqrt(Value operand) throws EPMCException {
-        assert !isImmutable();
-        assert operand != null;
-        double opDouble = castOrImport(operand);
-        set(Math.sqrt(opDouble));
     }
     
     @Override

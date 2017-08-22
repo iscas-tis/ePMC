@@ -26,7 +26,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueReal;
+import epmc.value.ValueDouble;
 
 public enum OperatorEvaluatorPi implements OperatorEvaluator {
 	INSTANCE;
@@ -45,6 +45,11 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
 		if (types.length != 0) {
 			return false;
 		}
+		for (Type type : types) {
+			if (!TypeReal.isReal(type)) {
+				return false;
+			}
+		}
 		return true;
 	}
 
@@ -53,7 +58,7 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
 		assert result != null;
 		assert operands != null;
 		assert operands.length == 0;
-		ValueReal.asReal(result).pi();
+		ValueDouble.asDouble(result).set(Math.PI);
 	}
 
 	@Override

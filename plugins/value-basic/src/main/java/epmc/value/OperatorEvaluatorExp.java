@@ -18,16 +18,13 @@
 
 *****************************************************************************/
 
-package epmc.jani.extensions.derivedoperators;
+package epmc.value;
 
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeNumber;
-import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueReal;
 
 /**
  * Operator to compute absolute value of a value.
@@ -51,7 +48,7 @@ public enum OperatorEvaluatorExp implements OperatorEvaluator {
 		if (types.length != 1) {
 			return false;
 		}
-		if (TypeNumber.isNumber(types[0])) {
+		if (!TypeReal.isReal(types[0]) && !TypeInteger.isInteger(types[0])) {
 			return false;
 		}
 		return true;
@@ -72,6 +69,8 @@ public enum OperatorEvaluatorExp implements OperatorEvaluator {
 		assert operands != null;
 		assert operands.length >= 1;
 		assert operands[0] != null;
-		ValueReal.asReal(result).exp(operands[0]);
+    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+    			: ValueInteger.asInteger(operands[0]).getInt();
+		ValueDouble.asDouble(result).set(Math.exp(value1));
 	}
 }

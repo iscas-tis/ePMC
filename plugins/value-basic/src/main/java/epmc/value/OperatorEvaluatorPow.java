@@ -42,7 +42,7 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeReal.isReal(type) && !TypeInteger.isInteger(type)) {
+			if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
 				return false;
 			}
 		}
@@ -68,6 +68,10 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-        ValueReal.asReal(result).pow(operands[0], operands[1]);
+    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+    			: ValueInteger.asInteger(operands[0]).getInt();
+    	double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
+    			: ValueInteger.asInteger(operands[1]).getInt();
+    	ValueDouble.asDouble(result).set(Math.pow(value1, value2));
     }
 }

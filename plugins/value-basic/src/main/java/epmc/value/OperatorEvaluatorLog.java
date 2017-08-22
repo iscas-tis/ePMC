@@ -42,7 +42,7 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeReal.isReal(type)) {
+			if (!TypeDouble.isDouble(type)) {
 				return false;
 			}
 		}
@@ -72,7 +72,8 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-        Value e = UtilValue.newValue(TypeReal.get(), UtilValue.LOG);
-        ValueReal.asReal(result).log(operands[0], e);
+    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+    			: ValueInteger.asInteger(operands[0]).getInt();
+        ValueDouble.asDouble(result).set(Math.log(value1));
     }
 }

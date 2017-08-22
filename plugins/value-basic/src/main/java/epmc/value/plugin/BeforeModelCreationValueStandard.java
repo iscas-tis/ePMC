@@ -30,6 +30,7 @@ import epmc.value.OperatorEvaluatorCeil;
 import epmc.value.OperatorEvaluatorDivide;
 import epmc.value.OperatorEvaluatorDivideIgnoreZero;
 import epmc.value.OperatorEvaluatorEq;
+import epmc.value.OperatorEvaluatorExp;
 import epmc.value.OperatorEvaluatorFloor;
 import epmc.value.OperatorEvaluatorGe;
 import epmc.value.OperatorEvaluatorGt;
@@ -49,6 +50,7 @@ import epmc.value.OperatorEvaluatorNe;
 import epmc.value.OperatorEvaluatorNot;
 import epmc.value.OperatorEvaluatorOr;
 import epmc.value.OperatorEvaluatorPow;
+import epmc.value.OperatorEvaluatorSqrt;
 import epmc.value.OperatorEvaluatorSubtract;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
@@ -82,6 +84,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDivideIgnoreZero.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEq.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorFloor.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorExp.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGe.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorId.INSTANCE);
@@ -101,6 +104,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorOr.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPow.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtract.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSqrt.INSTANCE);
     }
 
     private static void addTypes() {

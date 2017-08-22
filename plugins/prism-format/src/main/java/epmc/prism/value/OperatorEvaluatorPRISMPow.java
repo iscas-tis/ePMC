@@ -24,9 +24,11 @@ import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.Value;
+import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 
@@ -47,10 +49,10 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 		if (types.length != 2) {
 			return false;
 		}
-		if (!TypeInteger.isInteger(types[0]) && !TypeReal.isReal(types[0])) {
+		if (!TypeInteger.isInteger(types[0]) && !TypeDouble.isDouble(types[0])) {
 			return false;
 		}
-		if (!TypeInteger.isInteger(types[1]) && !TypeReal.isReal(types[1])) {
+		if (!TypeInteger.isInteger(types[1]) && !TypeDouble.isDouble(types[1])) {
 			return false;
 		}
 		return true;
@@ -75,8 +77,15 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
     public void apply(Value result, Value... operands) throws EPMCException {
     	if (ValueInteger.isInteger(result)) {
     		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
+        	int value1 = ValueInteger.asInteger(operands[0]).getInt();
+        	int value2 = ValueInteger.asInteger(operands[1]).getInt();
+        	ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));
     	} else if (ValueReal.isReal(result)) {
-    		ValueReal.asReal(result).pow(operands[0], operands[1]);
+        	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+        			: ValueInteger.asInteger(operands[0]).getInt();
+        	double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
+        			: ValueInteger.asInteger(operands[1]).getInt();
+        	ValueDouble.asDouble(result).set(Math.pow(value1, value2));
     	} else {
     		assert false : result.getType();
     	}
