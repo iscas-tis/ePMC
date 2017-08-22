@@ -5,15 +5,16 @@ TESTDIR="tests/src/test/resources/epmc/"
 : ${EPMC_MEMSIZE:="8G"}
 
 if [ "$1" != "" ]; then
-    java -ea -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar explore --model-input-files $ROOT/$TESTDIR/$1.prism
-    java -ea -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar check --model-input-files $ROOT/$TESTDIR/$1.prism --property-input-files $ROOT/$TESTDIR/$1.pctl
+    java -ea -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar explore --model-input-files $ROOT/$TESTDIR/$1.prism `if [ -e $ROOT/$TESTDIR/$1.clo ]; then cat $ROOT/$TESTDIR/$1.clo; fi`
+    java -ea -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar check --model-input-files $ROOT/$TESTDIR/$1.prism --property-input-files $ROOT/$TESTDIR/$1.pctl `if [ -e $ROOT/$TESTDIR/$1.clo ]; then cat $ROOT/$TESTDIR/$1.clo; fi`
 else
     
     echo 'exploring model:'
     for name in `ls $ROOT/$TESTDIR | grep .prism`
     do
         echo "- $name: "
-        java -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar explore --model-input-files $ROOT/$TESTDIR/$name
+		filename=`basename "$name" .prism`
+        java -Xms${EPMC_MEMSIZE} -Xmx${EPMC_MEMSIZE} -jar epmc-standard.jar explore --model-input-files $ROOT/$TESTDIR/$name `if [ -e $ROOT/$TESTDIR/${filename}.clo ]; then cat $ROOT/$TESTDIR/${filename}.clo; fi`
     done
 
 fi
