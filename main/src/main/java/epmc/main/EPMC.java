@@ -63,6 +63,7 @@ public final class EPMC {
         Options.set(options);
         try {
             options = prepareOptions(args);
+            Options.set(options);
             startInConsole(options);
         } catch (EPMCException e) {
             String message = e.getProblem().getMessage(options.getLocale());
