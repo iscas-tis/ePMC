@@ -67,6 +67,6 @@ public enum OperatorEvaluatorNot implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-    	ValueBoolean.asBoolean(result).not(operands[0]);
+    	ValueBoolean.asBoolean(result).set(!ValueBoolean.asBoolean(operands[0]).getBoolean());
     }
 }

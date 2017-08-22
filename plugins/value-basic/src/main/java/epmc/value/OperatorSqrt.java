@@ -20,23 +20,8 @@
 
 package epmc.value;
 
-import epmc.value.Value;
+import epmc.value.Operator;
 
-public interface ValueReal extends ValueNumber {
-	static boolean isReal(Value value) {
-		return TypeReal.isReal(value.getType());
-	}
-	
-	static ValueReal asReal(Value value) {
-		if (isReal(value)) {
-			return (ValueReal) value;
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	TypeReal getType();
-	
-    void set(double value);
+public enum OperatorSqrt implements Operator {
+    SQRT
 }

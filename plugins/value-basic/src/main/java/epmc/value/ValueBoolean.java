@@ -129,48 +129,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
         set(ValueBoolean.asBoolean(operand).getBoolean());
     }
     
-    public void and(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) : op1 + " " + op1.getType();
-        set(ValueBoolean.asBoolean(op1).getBoolean() && ValueBoolean.asBoolean(op2).getBoolean());
-    }
-
-    public void or(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1);
-        assert ValueBoolean.isBoolean(op2);
-        set(ValueBoolean.asBoolean(op1).getBoolean() || ValueBoolean.asBoolean(op2).getBoolean());
-    }
-
-    public void not(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        assert ValueBoolean.isBoolean(op);
-        set(!ValueBoolean.asBoolean(op).getBoolean());
-    }
-
-    public void iff(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1);
-        assert ValueBoolean.isBoolean(op2);
-        set(ValueBoolean.asBoolean(op1).getBoolean() == ValueBoolean.asBoolean(op2).getBoolean());
-    }
-
-    public void implies(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) : op1;
-        assert ValueBoolean.isBoolean(op2) : op2;
-        set(!ValueBoolean.asBoolean(op1).getBoolean() || ValueBoolean.asBoolean(op2).getBoolean());
-    }
-
     @Override
     public boolean isEq(Value operand) {
         assert operand != null;
@@ -187,7 +145,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
     
     @Override
     public void write(BitStream writer) {
-        assert writer != null;
+    	assert writer != null;
         writer.write(getBoolean());
     }
     

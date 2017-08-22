@@ -24,12 +24,12 @@ import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
-public enum OperatorEvaluatorAnd implements OperatorEvaluator {
+public enum OperatorEvaluatorSqrt implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
 	public Operator getOperator() {
-		return OperatorAnd.AND;
+		return OperatorSqrt.SQRT;
 	}
 	
 	@Override
@@ -38,11 +38,11 @@ public enum OperatorEvaluatorAnd implements OperatorEvaluator {
 		for (Type type : types) {
 			assert type != null;
 		}
-		if (types.length != 2) {
+		if (types.length != 1) {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeBoolean.isBoolean(type)) {
+			if (!TypeDouble.isDouble(type)) {
 				return false;
 			}
 		}
@@ -52,12 +52,12 @@ public enum OperatorEvaluatorAnd implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
     	assert operator != null;
-    	assert operator.equals(OperatorAnd.AND);
+    	assert operator.equals(OperatorAddInverse.ADD_INVERSE);
     	assert types != null;
     	for (Type type : types) {
     		assert type != null;
     	}
-        return UtilValue.booleanResultType(types);
+        return TypeReal.get();
     }
 
     @Override
@@ -67,7 +67,8 @@ public enum OperatorEvaluatorAnd implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-    	ValueBoolean.asBoolean(result).set(ValueBoolean.asBoolean(operands[0]).getBoolean()
-    			&& ValueBoolean.asBoolean(operands[1]).getBoolean());
+    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+    			: ValueInteger.asInteger(operands[0]).getInt();
+    	ValueDouble.asDouble(result).set(Math.sqrt(value1));
     }
 }
