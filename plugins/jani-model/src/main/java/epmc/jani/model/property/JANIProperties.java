@@ -146,6 +146,6 @@ public final class JANIProperties implements JANINode, Properties {
 
 	@Override
 	public Expression getParsedProperty(RawProperty property) {
-		return properties.get(property.getName()).getExpression();
+		return model.replaceConstants(properties.get(property.getName()).getExpression());
 	}
 }
