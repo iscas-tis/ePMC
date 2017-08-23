@@ -199,6 +199,7 @@ public final class PRISM2JANIConverter {
 
 		Variables globalVariables = buildGlobalVariables();
     	modelJANI.setModelConstants(buildConstants());
+    	modelJANI.getConstants().putAll(modelJANI.computeConstants());
 		this.expressionToType = new ExpressionToTypeJANIConverter(globalVariables);
     	modelJANI.setGlobalVariables(globalVariables);
     	Actions actions = computeActions();
