@@ -319,7 +319,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return this;
 	}
 
-	private Map<Expression, Expression> computeConstants() throws EPMCException {
+	public Map<Expression, Expression> computeConstants() throws EPMCException {
 		Map<Expression,Expression> result = new LinkedHashMap<>();
 		Map<Expression,Expression> externalConstants = computeExternalConstants();
 		if (modelConstants != null) {
