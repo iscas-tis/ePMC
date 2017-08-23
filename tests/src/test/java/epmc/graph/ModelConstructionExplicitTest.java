@@ -108,12 +108,6 @@ public class ModelConstructionExplicitTest {
         assertEquals("8", result.getNumNodes());
         assertEquals("28", result.getNumTransitions());
 
-        options.set(TestHelper.PRISM_FLATTEN, false);
-        result = exploreModel(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3));
-        assertEquals("32", result.getNumStates());
-        assertEquals("32", result.getNumNodes());
-        assertEquals("244", result.getNumTransitions());
-
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 5));
         assertEquals("32", result.getNumStates());
