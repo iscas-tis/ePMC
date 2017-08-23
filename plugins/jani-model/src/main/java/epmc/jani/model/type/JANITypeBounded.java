@@ -147,19 +147,23 @@ public final class JANITypeBounded implements JANIType {
         	if (model != null) {
         		lowerBound = UtilExpressionStandard.replace(lowerBound, model.getConstants());
         	}
-            Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty());
-            if (ValueInteger.isInteger(lowerValue)) {
-                lowerInt = ValueInteger.asInteger(lowerValue).getInt();
-            }
+        	if (!model.containsUndefinedConstants()) {
+        		Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty());
+        		if (ValueInteger.isInteger(lowerValue)) {
+        			lowerInt = ValueInteger.asInteger(lowerValue).getInt();
+        		}
+        	}
         }
         if (upperBound != null) {
         	if (model != null) {
         		upperBound = UtilExpressionStandard.replace(upperBound, model.getConstants());
         	}
-            Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty());
-            if (ValueInteger.isInteger(upperValue)) {
-                upperInt = ValueInteger.asInteger(upperValue).getInt();
-            }
+        	if (!model.containsUndefinedConstants()) {
+        		Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty());
+        		if (ValueInteger.isInteger(upperValue)) {
+        			upperInt = ValueInteger.asInteger(upperValue).getInt();
+        		}
+        	}
         }
         return TypeInteger.get(lowerInt, upperInt);
 	}

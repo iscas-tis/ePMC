@@ -198,9 +198,9 @@ public final class PRISM2JANIConverter {
     	convertExtensions();
 
 		Variables globalVariables = buildGlobalVariables();
+    	modelJANI.setModelConstants(buildConstants());
 		this.expressionToType = new ExpressionToTypeJANIConverter(globalVariables);
     	modelJANI.setGlobalVariables(globalVariables);
-    	modelJANI.setModelConstants(buildConstants());
     	Actions actions = computeActions();
     	modelJANI.setActions(actions);
     	modelJANI.setRestrictInitial(computeInitialStates());

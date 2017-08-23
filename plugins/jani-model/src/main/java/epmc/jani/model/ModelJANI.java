@@ -789,7 +789,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
 	public boolean containsUndefinedConstants() {
 		for (Constant constant : getModelConstantsOrEmpty()) {
-			if (!constants.containsKey(constant.getIdentifier())) {
+			if (constants.get(constant.getIdentifier()) == null) {
 				return true;
 			}
 		}
