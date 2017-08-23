@@ -143,7 +143,8 @@ public final class UtilExpressionStandard {
 
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
         assert expression != null;
-        if (replacement.containsKey(expression)) {
+        if (replacement.containsKey(expression)
+        		&& replacement.get(expression) != null) {
             return replacement.get(expression).replacePositional(expression.getPositional());
         }
         ArrayList<Expression> newChildren = new ArrayList<>();
