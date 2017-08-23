@@ -31,8 +31,6 @@ import epmc.error.UtilError;
 public final class ProblemsJANIDTMC {
 	/** Base name of resource file containing plugin problem descriptions. */
     private final static String PROBLEMS_JANI_DTMC = "ProblemsJANIDTMC";
-	/** Edges of DTMC models must not have rate specifications. */
-	public static final Problem JANI_DTMC_EDGE_FORBIDS_RATE = newProblem("jani-dtmc-edge-forbids-rate");
 	/** Multi-transition remain even though disallowed. */
 	public static final Problem JANI_DTMC_DISALLOWED_MULTI_TRANSITIONS = newProblem("jani-dtmc-disallowed-multi-transitions");
 	/** Time progress conditions are disallowed in DTMCs. */
