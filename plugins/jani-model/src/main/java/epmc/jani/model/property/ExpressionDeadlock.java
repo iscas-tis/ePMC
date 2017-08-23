@@ -27,10 +27,11 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
+import epmc.expression.standard.ExpressionIdentifier;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 
-public final class ExpressionDeadlock implements Expression {
+public final class ExpressionDeadlock implements ExpressionIdentifier {
 	private final static String DEADLOCK = "\"deadlock\"";
     private final Positional positional;
     
@@ -88,5 +89,10 @@ public final class ExpressionDeadlock implements Expression {
 	@Override
 	public Expression replacePositional(Positional positional) {
 		return new ExpressionDeadlock(positional);
+	}
+
+	@Override
+	public boolean isPropositional() {
+		return true;
 	}
 }

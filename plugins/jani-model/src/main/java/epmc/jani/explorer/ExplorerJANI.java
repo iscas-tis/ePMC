@@ -49,6 +49,7 @@ import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.model.Variable;
+import epmc.jani.model.property.ExpressionDeadlock;
 import epmc.jani.model.property.ExpressionInitial;
 import epmc.options.Options;
 import epmc.util.Util;
@@ -87,6 +88,7 @@ public final class ExplorerJANI implements Explorer {
 	/** Initial nodes of the model. */
 	private final Collection<NodeJANI> initialNodes;
 	/** Whether to allow and automatically fix deadlocks. */
+	private boolean isDeadlock;
 	private final boolean fixDeadlocks;
 	private final Map<Expression,PropertyNodeExpression> expressionProperties = new LinkedHashMap<>();
 	private final Map<Expression,PropertyNodeConstant> constantProperies = new LinkedHashMap<>();
@@ -104,6 +106,7 @@ public final class ExplorerJANI implements Explorer {
 	private NodeJANI queriedNode;
 	/** Initial nodes property. */
 	private final PropertyNodeInitialNodes initNodesProp;
+	private final PropertyNodeDeadlock deadlockNodesProp;
 	private final PropertyNodeState stateProp;
 
 	private boolean state;
@@ -142,6 +145,7 @@ public final class ExplorerJANI implements Explorer {
 		prepareNodeProperties();
 		prepareEdgeProperties();
 		initNodesProp = new PropertyNodeInitialNodes(this);
+		deadlockNodesProp = new PropertyNodeDeadlock(this);
 		stateProp = new PropertyNodeState(this);
 		this.state = true;
 	}
@@ -316,6 +320,7 @@ public final class ExplorerJANI implements Explorer {
 		NodeJANI nodeJANI = (NodeJANI) node;
 		this.queriedNode = nodeJANI;
 		nodeJANI.unmark();
+		isDeadlock = system.getNumSuccessors() == 0;
 		for (PropertyNodeExpression prop : this.expressionProperties.values()) {
 			prop.setVariableValues(nodeJANI.getValues());
 		}
@@ -368,6 +373,10 @@ public final class ExplorerJANI implements Explorer {
 		return fixDeadlocks;
 	}
 	
+	public boolean isDeadlock() {
+		return isDeadlock;
+	}
+	
 	public ExplorerComponent getExplorerSystem() {
 		return system;
 	}
@@ -416,6 +425,9 @@ public final class ExplorerJANI implements Explorer {
 		}
 		if (property instanceof ExpressionInitial) {
 			return initNodesProp;
+		}
+		if (property instanceof ExpressionDeadlock) {
+			return deadlockNodesProp;
 		}
 		if (property instanceof Expression) {
 			if (model.getConstants().containsKey(property)) {
