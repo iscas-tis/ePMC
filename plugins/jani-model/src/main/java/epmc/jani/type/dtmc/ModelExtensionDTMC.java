@@ -27,7 +27,6 @@ import javax.json.JsonObjectBuilder;
 import epmc.error.EPMCException;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMCStandard;
-import epmc.jani.model.Edge;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.Location;
 import epmc.jani.model.ModelExtensionSemantics;
@@ -58,10 +57,10 @@ public class ModelExtensionDTMC implements ModelExtensionSemantics {
 
 	@Override
 	public void parseAfter() throws EPMCException {
-		if (node instanceof Edge) {
-			Edge edge = (Edge) node;
-			ensure(edge.getRate() == null, ProblemsJANIDTMC.JANI_DTMC_EDGE_FORBIDS_RATE);
-		}
+//		if (node instanceof Edge) {
+	//		Edge edge = (Edge) node;
+		//	ensure(edge.getRate() == null, ProblemsJANIDTMC.JANI_DTMC_EDGE_FORBIDS_RATE);
+	//	}
 		if (node instanceof Location) {
 			Location location = (Location) node;
 			ensure(location.getTimeProgress() == null, ProblemsJANIDTMC.JANI_DTMC_DISALLOWED_TIME_PROGRESSES);
