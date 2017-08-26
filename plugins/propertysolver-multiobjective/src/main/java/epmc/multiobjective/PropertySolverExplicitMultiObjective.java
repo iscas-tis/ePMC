@@ -224,6 +224,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 break;
             }
             IterationResult iterResult = MultiObjectiveUtils.iterate(weights, iterGraph, combinations);
+            if (iterResult.getQ().isEq(bounds)) {
+                feasible = true;
+                break;
+            }
             if (MultiObjectiveUtils.compareProductDistance(weights, iterResult.getQ(), bounds) < 0) {
                 feasible = false;
                 break;
