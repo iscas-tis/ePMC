@@ -1,0 +1,11 @@
+mdp
+
+const int N;
+
+module rw
+	state : [0..N] init floor(N/2);
+	
+	[] state = 0 -> 0.5: (state'=state + 1) + 0.5 : (state'=state);
+	[] state > 0 & state < N -> 0.5: (state'=state + 1) + 0.5 : (state'=state - 1);
+	[] state = N -> 0.5: (state'=state) + 0.5 : (state'=state - 1);
+endmodule

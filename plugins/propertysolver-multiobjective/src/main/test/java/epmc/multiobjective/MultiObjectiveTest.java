@@ -204,4 +204,19 @@ public class MultiObjectiveTest {
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(Pmax=?[ F(X(act = eatPizza)) ])");
         assertEquals("0.95", result, 1E-10);
     }    
+    
+    @Test
+    public void andreaBug() throws EPMCException {
+        Options options = prepareMultiOptions();
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        Map<String,Object> constants = new HashMap<>();
+        constants.put("N", "2");
+        options.set(OptionsModelChecker.CONST, constants);
+
+        Value result;
+
+        result = computeResult(options, ANDREA_BUG, "multi(P>=1[F(state=N)],P>=1[F(state=0)])");
+        System.out.println(result);
+    }
 }
