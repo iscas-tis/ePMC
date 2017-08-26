@@ -2,7 +2,7 @@
 .PHONY : build_all
 .PHONY : clean
 
-LIB_NAME=valueiteration
+LIB_NAME=valueiterationmultiobjective
 
 # specific flags for value iteration library
 DARWIN_XCFLAGS=-g -O3 -Wno-deprecated -fvisibility=hidden
