@@ -60,7 +60,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
                 double[] values, int[] scheduler);
         
         private final static boolean loaded =
-                JNATools.registerLibrary(IterationNative.class, "valueiteration");
+                JNATools.registerLibrary(IterationNative.class, "valueiterationmultiobjective");
         
         private final static int EPMC_ERROR_SUCCESS = 0;
         private final static int EPMC_ERROR_OUT_OF_ByteBuffer = 1;

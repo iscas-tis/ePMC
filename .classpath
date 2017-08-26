@@ -6,12 +6,12 @@
 	<classpathentry kind="lib" path="lib/guava-18.0-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
 	<classpathentry kind="lib" path="lib/javax.json-1.0.jar"/>
-	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/trove-141006211716.jar"/>
 	<classpathentry kind="lib" path="plugins/dd-beedeedee/lib/beedeedee-1.0.7.jar"/>
 	<classpathentry kind="lib" path="plugins/dd-jdd/lib/minijdd-1.04.jar"/>
 	<classpathentry kind="lib" path="plugins/jani-interaction/lib/sqlite-jdbc-3.8.11.2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jna-4.4.0.jar"/>
+	<classpathentry kind="lib" path="lib/jna-platform-4.4.0.jar"/>
 	<classpathentry kind="output" path="main/target/classes"/>
 </classpath>
