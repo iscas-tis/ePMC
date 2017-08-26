@@ -9,7 +9,7 @@ target/
 *.[oa]
 *.so
 *.dylib
-/.DS_Store
+*.DS_Store
 
 
 # IntelliJ IDEA
