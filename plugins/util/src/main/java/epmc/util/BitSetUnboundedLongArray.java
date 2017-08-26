@@ -95,7 +95,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         assert obj != null;
         if (obj instanceof BitSetUnboundedLongArray) {
             BitSetUnboundedLongArray other = (BitSetUnboundedLongArray) obj;
-            int min = Math.min(content.length, other.length());
+            int min = Math.min(content.length, other.content.length);
             for (int i = 0; i < min; i++) {
                 if (content[i] != other.content[i]) {
                     return false;

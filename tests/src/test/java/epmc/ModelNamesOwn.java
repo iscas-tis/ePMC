@@ -43,6 +43,7 @@ public final class ModelNamesOwn {
     public final static String MA_TWOMODULES = PREFIX + "ma-twomodules.prism";
     public final static String MA_DISABLING_RATE = PREFIX + "ma-disabling-rate.prism";
     public final static String POW_TYPE = PREFIX + "pow-type.prism";
+    public final static String NAVIGATION_1 = PREFIX + "navigation_1.prism";
     
     /**
      * Private constructor to prevent instantiation of this class.

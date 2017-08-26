@@ -164,7 +164,29 @@ public class LTLSolverExplicitTest {
         result = computeResult(options, String.format(MUTUAL_MODEL, 3), "filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])");
         assertEquals(false, result);
         System.out.println(result);
-
     }
 
+    @Test
+    public void problemAndreaNavigationTest() throws EPMCException {
+        Options options = prepareOptions();
+        double tolerance = 1E-10;
+        Value result;
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
+        
+
+        /* Check bug found by Andrea Turrini indeed fixed. 
+        	The problem occurring was due to an incorrect computation of the
+        	states which reach target states with a probability one when 
+        	maximising. Due to an incorrect algorithm used, this set was
+        	overestimated, leading to a result of one instead of 0.9510333.
+        */
+        result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[((F(at_goal)))]");
+        assertEquals("0.9510333", result, 1E-7);
+        result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[(F(F(at_goal)))]");
+        assertEquals("0.9510333", result, 1E-7);
+        result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[(G(F(at_goal)))]");
+        assertEquals("0.9510333", result, 1E-7);
+    }
+    
 }

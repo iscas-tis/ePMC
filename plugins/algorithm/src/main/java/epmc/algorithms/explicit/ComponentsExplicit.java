@@ -29,6 +29,7 @@ import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 
 public final class ComponentsExplicit {
+	private final static String SPACE = " ";
 
     public EndComponents endComponents(GraphExplicit graph,
             BitSet existingNodes, boolean mecsOnly) {
@@ -215,34 +216,91 @@ public final class ComponentsExplicit {
         } while (!newNodes.isEmpty());
         return result;
     }
-
-
     
     public BitSet reachPre(GraphExplicit graph,
             BitSet target, boolean min, boolean one) throws EPMCException {
         assert graph != null;
         assert target != null;
-        BitSet nodes = UtilBitSet.newBitSetUnbounded();
-        nodes.set(0, graph.getNumNodes(), true);
-        return reachPre(graph, target, nodes, min, one);
+        if (!min && one) {
+        	return reachMaxOne(graph, target);
+        } else {
+        	BitSet nodes = UtilBitSet.newBitSetUnbounded();
+        	nodes.set(0, graph.getNumNodes(), true);
+        	return reachPre(graph, target, nodes, min, one);
+        }
     }
 
+    /**
+     * Compute nodes which may reach given set of target nodes with certainty.
+	 *
+     * Adapted from
+     * <a href="http://www.prismmodelchecker.org/lectures/pmc/14-mdp%20model%20checking.pdf">
+     * Dave Parker's slides</a>
+     * 
+     * @param graph graph for which to compute set
+     * @param target target nodes
+     * @return set of nodes which may reach target set with probability one
+     * @throws EPMCException
+     */
     public BitSet reachMaxOne(GraphExplicit graph, BitSet target) throws EPMCException {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
-                : target.length() + " " + graph.getNumNodes();
+                : target.length() + SPACE + graph.getNumNodes();
         assert graph.getNodeProperties().contains(CommonProperties.PLAYER);
-        BitSet nodes = UtilBitSet.newBitSetUnbounded();
-        nodes.set(0, graph.getNumNodes(), true);
-        return reachPre(graph, target, nodes, false, true);
+        NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
+        BitSet R = UtilBitSet.newBitSetUnbounded();
+        R.set(0, graph.getNumNodes(), true);
+        boolean done = false;
+        graph.computePredecessors();
+        while (!done) {
+        	BitSet Rprimed = target.clone();
+        	boolean donePrimed = false;
+        	while (!donePrimed) {
+        		BitSet RprimedPrimed = Rprimed.clone();
+        		for (int node = Rprimed.nextSetBit(0); node >= 0; node = Rprimed.nextSetBit(node+1)) {
+        			int numNodePredecessors = graph.getProperties().getNumPredecessors(node);
+        			for (int predNr = 0; predNr < numNodePredecessors; predNr++) {
+        				int predNode = graph.getProperties().getPredecessorNode(node, predNr);
+            			Player player = playerProp.getEnum(predNode);
+            			if (player == Player.ONE) {
+            				RprimedPrimed.set(predNode);
+            			} else if (player == Player.STOCHASTIC) {
+            				boolean include = true;
+            				int numPredNodeSuccessors = graph.getNumSuccessors(predNode);
+            				for (int predSuccNr = 0; predSuccNr < numPredNodeSuccessors; predSuccNr++) {
+            					int predSucc = graph.getSuccessorNode(predNode, predSuccNr);
+            					if (!R.get(predSucc)) {
+            						include = false;
+            						break;
+            					}
+            				}
+            				if (include) {
+            					RprimedPrimed.set(predNode);
+            				}
+            			} else {
+            				assert false : player;
+            			}        				
+        			}
+        		}
+        		if (RprimedPrimed.equals(Rprimed)) {
+        			donePrimed = true;
+        		}
+        		Rprimed = RprimedPrimed;
+        	}
+        	if (Rprimed.equals(R)) {
+        		done = true;
+        	}
+        	R = Rprimed.clone();
+        }
+        return R;
     }
-    
+
     public BitSet reachMinOne(GraphExplicit graph, BitSet target) throws EPMCException {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
-                : target.length() + " " + graph.getNumNodes();
+                : target.length() + SPACE + graph.getNumNodes();
         assert graph.getNodeProperties().contains(CommonProperties.PLAYER);
         BitSet nodes = UtilBitSet.newBitSetUnbounded();
         nodes.set(0, graph.getNumNodes(), true);
