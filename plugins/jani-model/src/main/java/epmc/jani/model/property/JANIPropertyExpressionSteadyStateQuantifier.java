@@ -174,7 +174,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
 				return null;				
 			}
 		} else {
-			ExpressionSteadyState expressionSteadyState = (ExpressionSteadyState) expression;
+			ExpressionSteadyState expressionSteadyState = (ExpressionSteadyState) quantified;
 			exp = parser.matchExpression(model, expressionSteadyState.getOperand1());
 			initialized = true;
 		}
