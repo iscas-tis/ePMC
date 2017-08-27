@@ -90,6 +90,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIte;
 import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorNot;
 import gnu.trove.map.TObjectIntMap;
@@ -386,6 +387,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 for (Alternative alternative : command.getAlternatives()) {
                     Expression weight = alternative.getWeight();
                     weight = new ExpressionOperator.Builder()
+                    		.setOperator(OperatorIte.ITE)
                     		.setOperands(guard, weight, ExpressionLiteral.getZero())
                     		.build();
                     Map<Expression, Expression> effect = alternative.getEffect();
