@@ -84,6 +84,7 @@ import epmc.time.JANITypeClock;
 import epmc.value.Operator;
 import epmc.value.OperatorAnd;
 import epmc.value.OperatorEq;
+import epmc.value.OperatorIte;
 import epmc.value.OperatorMultiply;
 import epmc.value.OperatorNot;
 import epmc.value.Type;
@@ -386,6 +387,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 for (Alternative alternative : command.getAlternatives()) {
                     Expression weight = alternative.getWeight();
                     weight = new ExpressionOperator.Builder()
+                    		.setOperator(OperatorIte.ITE)
                     		.setOperands(guard, weight, ExpressionLiteral.getZero())
                     		.build();
                     Map<Expression, Expression> effect = alternative.getEffect();
