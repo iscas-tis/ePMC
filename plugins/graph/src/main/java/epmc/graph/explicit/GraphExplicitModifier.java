@@ -23,9 +23,12 @@ package epmc.graph.explicit;
 import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorMax;
 
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) throws EPMCException {
@@ -88,6 +91,7 @@ public final class GraphExplicitModifier {
         ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, result.getType(), sumRate.getType());
         for (int inputNode = 0; inputNode < graph.getNumNodes(); inputNode++) {
             Player player = playerProp.getEnum(inputNode);
             if (player == Player.STOCHASTIC) {
@@ -97,7 +101,7 @@ public final class GraphExplicitModifier {
                     Value rate = weight.get(inputNode, succNr);
                     sumRate.add(sumRate, rate);
                 }
-                result.max(result, sumRate);
+                max.apply(result, result, sumRate);
             }
         }
         return result;

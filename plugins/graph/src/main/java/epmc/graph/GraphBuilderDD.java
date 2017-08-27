@@ -43,6 +43,8 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
@@ -56,6 +58,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorMax;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -450,7 +453,7 @@ public final class GraphBuilderDD implements Closeable {
         ArrayList<TIntList> targets = new ArrayList<>(numNodesInclNondet);
         List<List<Value>> probs = new ArrayList<>(numNodesInclNondet);
         BitSet states = UtilBitSet.newBitSetUnbounded();
-
+        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, unifRate.getType(), sum.getType());
         for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
             targets.add(new TIntArrayList());
             probs.add(new ArrayList<Value>());
@@ -470,7 +473,7 @@ public final class GraphBuilderDD implements Closeable {
                 for (Value value : thisProbs) {
                     sum.add(sum, value);
                 }
-                unifRate.max(unifRate, sum);
+                max.apply(unifRate, unifRate, sum);
             }
         }
         NodeProperty nodePropertyState = graph.getNodeProperty(CommonProperties.STATE);

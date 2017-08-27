@@ -59,6 +59,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
 
@@ -239,9 +240,10 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
     	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
         switch (type) {
         case ARGMAX: case MAX:
-            ValueAlgebra.asAlgebra(resultValue).max(resultValue, value);
+        	max.apply(resultValue, resultValue, value);
             break;
         case ARGMIN: case MIN:
         	min.apply(resultValue, resultValue, value);
@@ -270,7 +272,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
             Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
             min.apply(resLo, resLo, value);
-            ValueAlgebra.asAlgebra(resUp).max(resUp, value);
+            max.apply(resUp, resUp, value);
         }
         break;
         case STATE:

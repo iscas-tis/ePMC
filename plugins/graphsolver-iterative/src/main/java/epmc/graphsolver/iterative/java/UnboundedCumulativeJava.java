@@ -58,6 +58,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 
 // TODO reward-based stuff should be moved to rewards plugin
@@ -373,6 +374,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         do {
             distance[0] = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -394,7 +396,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
+                    	maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -426,6 +428,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         double[] distance = new double[1];
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         do {
             distance[0] = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -447,7 +450,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     if (min) {
                     	minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
+                    	maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
