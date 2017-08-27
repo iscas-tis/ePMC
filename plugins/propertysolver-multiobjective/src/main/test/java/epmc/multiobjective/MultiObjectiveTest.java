@@ -235,8 +235,8 @@ public class MultiObjectiveTest {
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Map<String,Object> constants = new HashMap<>();
-        constants.put("N_COLS", "32");
-        constants.put("N_ROWS", "32");
+        constants.put("N_ROWS", "3");
+        constants.put("N_COLS", "4");
         options.set(OptionsModelChecker.CONST, constants);
 
         Value result;
