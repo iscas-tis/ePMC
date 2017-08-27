@@ -24,7 +24,11 @@ public enum Ternary implements Comparable<Ternary> {
     FALSE,
     UNKNOWN,
     TRUE;
-    
+
+	private final static String TRUE_STRING = "true";
+	private final static String FALSE_STRING = "false";
+	private final static String UNKNOWN_STRING = "unknown";
+	
     public boolean isFalse() {
         return this == FALSE;
     }
@@ -56,86 +60,14 @@ public enum Ternary implements Comparable<Ternary> {
     public String toString() {
         switch (this) {
         case FALSE:
-            return "false";
+            return FALSE_STRING;
         case TRUE:
-            return "true";
+            return TRUE_STRING;
         case UNKNOWN:
-            return "unknown";
+            return UNKNOWN_STRING;
         default:
             assert false;
             return null;
         }
     }
-    
-    public boolean up() {
-        if (isTrue() || isUnknown()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    public boolean down() {
-        if (isFalse() || isUnknown()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    
-    public Ternary and(Ternary other) {
-        assert other != null;
-        if (this.isTrue() && other.isTrue()) {
-            return TRUE;
-        } else if (this.isFalse() || other.isFalse()) {
-            return FALSE;
-        } else {
-            return UNKNOWN;
-        }
-    }
-    
-    public Ternary or(Ternary other) {
-        assert other != null;
-        if (this.isTrue() || other.isTrue()) {
-            return TRUE;
-        } else if (this.isFalse() && other.isFalse()) {
-            return FALSE;
-        } else {
-            return UNKNOWN;
-        }
-    }
-
-    public Ternary not() {
-        if (isTrue()) {
-            return FALSE;
-        } else if (isFalse()) {
-            return TRUE;
-        } else if (isUnknown()){
-            return UNKNOWN;
-        } else {
-            assert false;
-            return null;
-        }
-    }
-
-    public Ternary implies(Ternary other) {
-        assert other != null;
-        if (this.isFalse() || other.isTrue()) {
-            return TRUE;
-        } else if (this.isTrue() && other.isFalse()) {
-            return FALSE;
-        } else {
-            return UNKNOWN;
-        }
-    }
-    
-    public Ternary iff(Ternary other) {
-        assert other != null;
-        if (this.isKnown() && other.isKnown()) {
-            return this == other ? TRUE : FALSE;
-        } else {
-            return UNKNOWN;
-        }
-    }
-
 }
