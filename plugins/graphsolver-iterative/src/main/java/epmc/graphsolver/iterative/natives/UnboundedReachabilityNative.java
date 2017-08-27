@@ -145,7 +145,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         	targets = objectiveUnboundedReachability.getTarget();
         }
         if (targets != null) {
-        	System.out.println("TT " + targets);
+//        	System.out.println("TT " + targets);
             assert this.inputValues == null;
             int numStates = iterGraph.computeNumStates();
             this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
