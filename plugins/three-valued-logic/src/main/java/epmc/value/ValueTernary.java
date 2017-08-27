@@ -49,9 +49,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable {
 	}
 
     private Ternary value;
-    private static final int NUM_IMPORT_VALUES = 2;
-    private final ValueTernary importTernaries[]
-            = new ValueTernary[NUM_IMPORT_VALUES];
     private final TypeTernary type;
     private boolean immutable;
     
@@ -127,64 +124,12 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable {
         
     }
     
-    public void and(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2);
-        ValueTernary op1Ternary = castOrImport(op1, 0);
-        ValueTernary op2Ternary = castOrImport(op2, 1);
-        set(op1Ternary.getTernary().and(op2Ternary.getTernary()));
-    }
-
-    public void or(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2);
-        ValueTernary op1Ternary = castOrImport(op1, 0);
-        ValueTernary op2Ternary = castOrImport(op2, 1);
-        set(op1Ternary.getTernary().or(op2Ternary.getTernary()));
-    }
-
-    public void not(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        assert ValueBoolean.isBoolean(op) || ValueTernary.isTernary(op);
-        ValueTernary opTernary = castOrImport(op, 0);
-        set(opTernary.getTernary().not());
-    }
-
-    public void iff(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2);
-        ValueTernary op1Ternary = castOrImport(op1, 0);
-        ValueTernary op2Ternary = castOrImport(op2, 1);
-        set(op1Ternary.getTernary().iff(op2Ternary.getTernary()));
-    }
-
-    public void implies(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueBoolean.isBoolean(op1) || ValueTernary.isTernary(op1);
-        assert ValueBoolean.isBoolean(op2) || ValueTernary.isTernary(op2);
-        ValueTernary op1Ternary = castOrImport(op1, 0);
-        ValueTernary op2Ternary = castOrImport(op2, 1);
-        set(op1Ternary.getTernary().implies(op2Ternary.getTernary()));
-    }
-
     @Override
     public boolean isEq(Value operand) {
         assert operand != null;
         assert ValueBoolean.isBoolean(operand) || ValueTernary.isTernary(operand);
-        ValueTernary operandTernary = castOrImport(operand, 0);
-        return getTernary() == operandTernary.getTernary();
+        Ternary operandTernary = UtilTernary.getTernary(operand);
+        return operandTernary == value;
     }
     
     @Override
@@ -213,30 +158,12 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable {
         return value;
     }
     
-    private ValueTernary castOrImport(Value operand, int number) {
-        assert operand != null;
-        assert number >= 0;
-        assert number < NUM_IMPORT_VALUES;
-        if (ValueTernary.isTernary(operand)) {
-            return (ValueTernary) operand;
-        } else if (ValueBoolean.isBoolean(operand)) {
-            if (importTernaries[number] == null) {
-                importTernaries[number] = getType().newValue();
-            }
-            importTernaries[number].set(ValueBoolean.isBoolean(operand));
-            return importTernaries[number];
-        } else {
-            assert false : operand;
-            return null;
-        }
-    }
-    
     @Override
     public int compareTo(Value other) {
         assert other != null;
         assert ValueBoolean.isBoolean(other) || ValueTernary.isTernary(other);
-        ValueTernary opTernary = castOrImport(other, 0);
-        return value.compareTo(opTernary.getTernary());
+        Ternary otherTernary = UtilTernary.getTernary(other);
+        return value.compareTo(otherTernary);
     }
     
     @Override

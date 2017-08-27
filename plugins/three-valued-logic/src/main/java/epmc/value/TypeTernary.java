@@ -63,7 +63,11 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
         valueTrue.setImmutable();
         valueUnknown.setImmutable();
     }
-    
+
+    public static TypeTernary get() {
+        return ContextValue.get().getType(TypeTernary.class);
+    }    
+
     @Override
     public boolean canImport(Type a) {
         assert a != null;
