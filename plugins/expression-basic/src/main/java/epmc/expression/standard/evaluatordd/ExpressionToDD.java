@@ -33,6 +33,18 @@ import java.util.Map.Entry;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumBitsKnown;
+import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorLe;
+import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorNe;
+import epmc.value.operator.OperatorSubtract;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
@@ -49,18 +61,6 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeInteger;
 import epmc.value.Operator;
-import epmc.value.OperatorAdd;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorGt;
-import epmc.value.OperatorIte;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorLt;
-import epmc.value.OperatorMax;
-import epmc.value.OperatorMin;
-import epmc.value.OperatorNe;
-import epmc.value.OperatorSubtract;
 
 /**
  * Translates expressions to DD-based symbolic representations.

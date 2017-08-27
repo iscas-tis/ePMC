@@ -22,9 +22,7 @@ package epmc.expression.standard.evaluatorexplicit;
 
 import java.util.Map;
 
-import epmc.value.OperatorAddInverse;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorMultiplyInverse;
 import epmc.value.TypeInteger;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
@@ -36,6 +34,8 @@ import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorMultiplyInverse;
 
 public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {

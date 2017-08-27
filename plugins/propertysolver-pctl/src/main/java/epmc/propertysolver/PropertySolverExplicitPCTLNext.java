@@ -59,8 +59,6 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorExp;
-import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeInteger;
@@ -73,6 +71,8 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorExp;
+import epmc.value.operator.OperatorNot;
 
 public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit-next";

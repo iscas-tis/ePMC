@@ -20,9 +20,9 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.value.OperatorSubtract;
 import epmc.value.TypeAlgebra;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorSubtract;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;

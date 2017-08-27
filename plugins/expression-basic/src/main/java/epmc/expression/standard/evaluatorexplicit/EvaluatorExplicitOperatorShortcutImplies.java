@@ -22,8 +22,8 @@ package epmc.expression.standard.evaluatorexplicit;
 
 import java.util.Map;
 
-import epmc.value.OperatorImplies;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorImplies;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;

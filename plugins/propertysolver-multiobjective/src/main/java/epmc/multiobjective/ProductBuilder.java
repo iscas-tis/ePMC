@@ -61,10 +61,10 @@ import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.OperatorAddInverse;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorAddInverse;
 import gnu.trove.map.hash.THashMap;
 
 final class ProductBuilder {

@@ -41,12 +41,12 @@ import epmc.graph.dd.StateSetDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.OperatorAdd;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorAdd;
 
 /**
  * Solver for filter properties for the DD engine.

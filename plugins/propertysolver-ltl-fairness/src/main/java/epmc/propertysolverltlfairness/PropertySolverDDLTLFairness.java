@@ -65,16 +65,16 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Operator;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorGt;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorLt;
-import epmc.value.OperatorNe;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorLe;
+import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorNe;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 
 /**
  * input property should be Limit Linear Time properties

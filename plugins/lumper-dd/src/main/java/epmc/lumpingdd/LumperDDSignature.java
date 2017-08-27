@@ -68,11 +68,6 @@ import epmc.graph.Semantics;
 import epmc.graph.dd.GraphDD;
 import epmc.graphsolver.lumping.LumperDD;
 import epmc.modelchecker.ModelChecker;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
@@ -85,6 +80,11 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorLe;
+import epmc.value.operator.OperatorOr;
 
 public class LumperDDSignature implements LumperDD {
     private final static String BLOCK_INDEX = "%block_index";

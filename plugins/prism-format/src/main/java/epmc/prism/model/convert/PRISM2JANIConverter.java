@@ -92,15 +92,15 @@ import epmc.prism.model.RewardStructure;
 import epmc.prism.value.OperatorPRISMPow;
 import epmc.util.Util;
 import epmc.value.Operator;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorCeil;
-import epmc.value.OperatorPow;
-import epmc.value.OperatorSubtract;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorCeil;
+import epmc.value.operator.OperatorPow;
+import epmc.value.operator.OperatorSubtract;
 
 // TODO optionally use "F" and "G" operators directly using extension
 // TODO maybe make usage of derived operators optional

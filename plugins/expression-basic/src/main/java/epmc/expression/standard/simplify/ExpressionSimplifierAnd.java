@@ -26,9 +26,9 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorNot;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorNot;
 
 public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     public final static String IDENTIFIER = "and";

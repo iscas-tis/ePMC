@@ -39,13 +39,13 @@ import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorSubtract;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSubtract;
 
 /**
  * Class to compute normalised form of multi-objective property.

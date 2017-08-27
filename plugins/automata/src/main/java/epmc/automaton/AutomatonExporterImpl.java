@@ -46,11 +46,11 @@ import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.OperatorEq;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
 import epmc.value.Value;
 import epmc.value.ValueEnumerable;
+import epmc.value.operator.OperatorEq;
 
 public final class AutomatonExporterImpl implements AutomatonExporter {
     private Automaton automaton;

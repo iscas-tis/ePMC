@@ -58,7 +58,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Operator;
-import epmc.value.OperatorNot;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeInteger;
@@ -69,6 +68,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorNot;
 
 public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	public final static String IDENTIFIER = "pctl-explicit";

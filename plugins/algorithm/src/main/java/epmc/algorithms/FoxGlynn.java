@@ -25,17 +25,17 @@ import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.value.ContextValue;
-import epmc.value.OperatorCeil;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorExp;
-import epmc.value.OperatorFloor;
-import epmc.value.OperatorLog;
-import epmc.value.OperatorPow;
 import epmc.value.TypeArray;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorCeil;
+import epmc.value.operator.OperatorExp;
+import epmc.value.operator.OperatorFloor;
+import epmc.value.operator.OperatorLog;
+import epmc.value.operator.OperatorPow;
 
 /**
  * Fox-Glynn algorithm.

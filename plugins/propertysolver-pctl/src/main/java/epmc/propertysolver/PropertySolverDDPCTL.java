@@ -64,7 +64,6 @@ import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Operator;
-import epmc.value.OperatorNot;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -72,6 +71,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorNot;
 
 public final class PropertySolverDDPCTL implements PropertySolver {
     public final static String IDENTIFIER = "pctl-dd";

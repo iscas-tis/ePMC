@@ -34,9 +34,9 @@ import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorIte;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.operator.OperatorIte;
 
 /**
  * Class to allow to execute operations not supported by a certain DD library.

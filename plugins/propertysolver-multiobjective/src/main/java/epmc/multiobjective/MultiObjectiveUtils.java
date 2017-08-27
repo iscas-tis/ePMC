@@ -40,7 +40,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
 import epmc.propertysolver.PropertySolverExplicitReward;
-import epmc.value.OperatorAddInverse;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;
@@ -49,6 +48,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.operator.OperatorAddInverse;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,

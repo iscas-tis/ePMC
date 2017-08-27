@@ -60,7 +60,6 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
-import epmc.value.OperatorNot;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeWeight;
@@ -69,6 +68,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorNot;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 
