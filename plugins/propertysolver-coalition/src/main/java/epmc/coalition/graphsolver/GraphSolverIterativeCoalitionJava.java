@@ -49,6 +49,8 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeWeight;
@@ -58,6 +60,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorMin;
 
 /**
  * Iterative solver to solve game-related graph problems.
@@ -284,7 +287,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         Value zero = values.getType().getEntryType().getZero();
         Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
         Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        
+        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         do {
             distance[0] = 0.0;
             for (int state = 0; state < maxEnd; state++) {
@@ -324,7 +327,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weighted.multiply(weight, succStateProb);
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
-                    nextStateProb.min(nextStateProb, choiceNextStateProb);
+                    min.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
@@ -353,7 +356,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
         Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
         Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        
+        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+
         do {
             distance[0] = 0.0;
             for (int state = 0; state < maxEnd; state++) {
@@ -393,7 +397,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weighted.multiply(weight, succStateProb);
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
-                    nextStateProb.min(nextStateProb, choiceNextStateProb);
+                    min.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 nextValues.set(nextStateProb, state);

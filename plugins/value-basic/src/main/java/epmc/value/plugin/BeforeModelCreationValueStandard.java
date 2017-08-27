@@ -51,6 +51,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorLog;
 import epmc.value.operatorevaluator.OperatorEvaluatorLt;
 import epmc.value.operatorevaluator.OperatorEvaluatorMax;
 import epmc.value.operatorevaluator.OperatorEvaluatorMin;
+import epmc.value.operatorevaluator.OperatorEvaluatorMinDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiply;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorNe;
@@ -96,6 +97,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorLt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMax.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMin.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMinDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIntegerMod.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiply.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInverseDouble.INSTANCE);

@@ -56,20 +56,6 @@ public interface ValueAlgebra extends Value {
         }
     }
     
-    default void min(Value operand1, Value operand2)
-            throws EPMCException {
-        assert !isImmutable();
-        if (ValueAlgebra.asAlgebra(operand1).isLt(operand2)) {
-            set(operand1);
-        } else if (ValueAlgebra.asAlgebra(operand2).isLt(operand1)) {
-            set(operand2);
-        } else if (operand2.isEq(operand1)) {
-            set(operand1);
-        } else {
-            ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
-        }
-    }
-    
     void add(Value operand1, Value operand2) throws EPMCException;
     
     void divide(Value operand1, Value operand2) throws EPMCException;

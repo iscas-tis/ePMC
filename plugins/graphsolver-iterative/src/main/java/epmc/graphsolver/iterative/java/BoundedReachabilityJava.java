@@ -42,6 +42,8 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
 import epmc.options.Options;
 import epmc.util.BitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeReal;
@@ -54,6 +56,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorMin;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -372,6 +375,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
+        OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
@@ -390,7 +394,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
                     if (min) {
-                        nextStateProb.min(nextStateProb, choiceNextStateProb);
+                        minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
                         nextStateProb.max(nextStateProb, choiceNextStateProb);
                     }

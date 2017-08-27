@@ -59,6 +59,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
 
 // TODO complete documentation
@@ -237,12 +238,13 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     private static void accumulate(FilterType type, Value resultValue, Value value) throws EPMCException {
     	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
     	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
         switch (type) {
         case ARGMAX: case MAX:
             ValueAlgebra.asAlgebra(resultValue).max(resultValue, value);
             break;
         case ARGMIN: case MIN:
-        	ValueAlgebra.asAlgebra(resultValue).min(resultValue, value);
+        	min.apply(resultValue, resultValue, value);
             break;
         case AVG:
             ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
@@ -267,7 +269,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case RANGE: {
             Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
             Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
-            ValueAlgebra.asAlgebra(resLo).min(resLo, value);
+            min.apply(resLo, resLo, value);
             ValueAlgebra.asAlgebra(resUp).max(resUp, value);
         }
         break;
