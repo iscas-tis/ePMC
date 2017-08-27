@@ -20,20 +20,18 @@
 
 package epmc.value.operatorevaluator;
 
-import static epmc.error.UtilError.ensure;
-
 import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
-import epmc.value.ProblemsValueBasic;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
-import epmc.value.UtilValue;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueDouble;
+import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMax;
 
-public enum OperatorEvaluatorMax implements OperatorEvaluator {
+public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
@@ -50,10 +48,16 @@ public enum OperatorEvaluatorMax implements OperatorEvaluator {
 		if (types.length != 2) {
 			return false;
 		}
-		for (Type type : types) {
-			if (!TypeAlgebra.isAlgebra(type)) {
-				return false;
-			}
+		if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
+			return false;
+		}
+		if (!TypeDouble.isDouble(types[0])
+				&& !TypeInteger.isInteger(types[0])) {
+			return false;
+		}
+		if (!TypeDouble.isDouble(types[1])
+				&& !TypeInteger.isInteger(types[1])) {
+			return false;
 		}
 		return true;
 	}
@@ -66,7 +70,7 @@ public enum OperatorEvaluatorMax implements OperatorEvaluator {
     	for (Type type : types) {
     		assert type != null;
     	}
-        return UtilValue.algebraicResultType(types);
+    	return TypeDouble.get();
     }
 
     @Override
@@ -76,16 +80,22 @@ public enum OperatorEvaluatorMax implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-    	Value operand1 = operands[0];
-    	Value operand2 = operands[1];
-        if (ValueAlgebra.asAlgebra(operand1).isGt(operand2)) {
-            result.set(operand1);
-        } else if (ValueAlgebra.asAlgebra(operand2).isGt(operand1)) {
-        	result.set(operand2);
-        } else if (operand2.isEq(operand1)) {
-        	result.set(operand1);
-        } else {
-            ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
-        }
+    	double op1 = getDouble(operands[0]);
+    	double op2 = getDouble(operands[1]);
+    	ValueDouble.asDouble(result).set(Math.max(op1, op2));
+    }
+    
+    private static double getDouble(Value value) {
+    	assert value != null;
+    	assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
+    	: value.getType();
+    	if (ValueDouble.isDouble(value)) {
+    		return ValueDouble.asDouble(value).getDouble();
+    	} else if (ValueInteger.isInteger(value)) {
+    		return ValueInteger.asInteger(value).getInt();
+    	} else {
+    		assert false;
+    		return Double.NaN;
+    	}
     }
 }

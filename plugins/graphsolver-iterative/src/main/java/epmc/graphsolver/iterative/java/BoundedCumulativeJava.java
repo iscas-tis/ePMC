@@ -48,6 +48,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 
 // TODO reward-based stuff should be moved to rewards plugin
@@ -283,6 +284,7 @@ public final class BoundedCumulativeJava implements GraphSolverExplicit {
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
@@ -303,7 +305,7 @@ public final class BoundedCumulativeJava implements GraphSolverExplicit {
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
-                        nextStateProb.max(nextStateProb, choiceNextStateProb);
+                        maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
                 }
                 nextValues.set(nextStateProb, state);

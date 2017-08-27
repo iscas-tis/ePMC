@@ -270,17 +270,6 @@ public final class ValueDouble implements ValueReal {
     }
     
     @Override
-    public void max(Value operand1, Value operand2) throws EPMCException {
-        assert !isImmutable();
-        assert operand1 != null;
-        assert operand2 != null;
-        double doubleOp1 = castOrImport(operand1);
-        double doubleOp2 = castOrImport(operand2);
-        this.set(Math.max(doubleOp1, doubleOp2));
-        
-    }
-    
-    @Override
     public void setImmutable() {
         this.immutable = true;
     }

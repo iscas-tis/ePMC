@@ -55,6 +55,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.TypeObject.StorageType;
+import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
@@ -257,6 +258,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		Value succValue = values.getType().getEntryType().newValue();
 		ValueAlgebra weighted = ValueAlgebra.asAlgebra(values.getType().getEntryType().newValue());
 		OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
+		OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
 		for (int node = 0; node < numStates; node++) {
 			values.get(value, node);
 			assert !target.get(node) || value.isOne();
@@ -273,7 +275,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 				int succNode = graph.getSuccessorNode(node, succ);
 				values.get(succValue, succNode);
 				if (player == Player.ONE) {
-					newValue.max(newValue, succValue);
+					max.apply(newValue, newValue, succValue);
 				} else if (player == Player.TWO) {
 					min.apply(newValue, newValue, succValue);
 				} else if (player == Player.STOCHASTIC) {

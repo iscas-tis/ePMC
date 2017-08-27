@@ -30,6 +30,8 @@ import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.error.EPMCException;
 import epmc.options.Options;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeArray;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -38,6 +40,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.operator.OperatorMax;
 
 final class DownClosure {
 	private final static String SLACK_VARIABLE = "v";
@@ -344,7 +347,8 @@ final class DownClosure {
         }
         problem.close();
         current.get(entry, 0);
-        entry.max(entry, opt);
+        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, entry.getType(), opt.getType());
+        max.apply(entry, entry, opt);
         current.set(entry, 0);
     }
 
