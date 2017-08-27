@@ -228,4 +228,20 @@ public class MultiObjectiveTest {
         result = computeResult(options, ANDREA_BUG, "multi(P>=0.999[F(state=N)],P>=0.999[F(state=0)])");
         assertEquals(true, result);
     }
+    
+    @Test
+    public void andreaBugSecond() throws EPMCException {
+        Options options = prepareMultiOptions();
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        Map<String,Object> constants = new HashMap<>();
+        constants.put("N_COLS", "32");
+        constants.put("N_ROWS", "32");
+        options.set(OptionsModelChecker.CONST, constants);
+
+        Value result;
+
+        result = computeResult(options, ANDREA_BUG_SECOND, "multi(P>=0.75[F(halted & at_goal)], P>=1[G(!(row=N_ROWS-1 & col>N_COLS-3))])");
+        System.out.println(result);
+    }
 }

@@ -34,7 +34,8 @@ public final class ModelNames {
     public final static String DINNER_REDUCED_PROB_BOUNDED_1 = PREFIX + "dinnerReducedProb-bounded-1.prism";
     public final static String DINNER_REDUCED_BOUNDED_1 = PREFIX + "dinnerReduced-bounded-1.prism";
     public final static String ANDREA_BUG = PREFIX + "andreabug.prism";
-    
+    public final static String ANDREA_BUG_SECOND = PREFIX + "andreabugsecond.prism";
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

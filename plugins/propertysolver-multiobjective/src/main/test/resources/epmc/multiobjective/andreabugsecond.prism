@@ -1,0 +1,47 @@
+mdp
+
+const int N_ROWS;
+const int N_COLS;
+
+const int GOAL_ROW = N_ROWS;
+const int GOAL_COL = N_COLS;
+
+const int ROBOT_ROW = 1;
+const int ROBOT_COL = N_COLS;
+
+formula at_goal = (col = GOAL_COL) & (row = GOAL_ROW);
+
+formula prob_dis = 
+	row = 1 | row = N_ROWS ? 0 :
+	col/(N_COLS + 1)
+	;
+
+module controller
+	halted : bool init false;
+	
+	[move_left] !halted -> true;
+	[move_right] !halted -> true;
+	[move_up] !halted -> true;
+	[move_down] !halted -> true;
+	
+	[halt] !halted -> (halted'=true);
+	[halted] halted -> true;
+endmodule
+
+module robot
+	row : [1..N_ROWS] init ROBOT_ROW;
+	col : [1..N_COLS] init ROBOT_COL;
+	disappeared : bool init false;
+	
+	[move_left] at_goal | disappeared -> true;
+	[move_left] !(at_goal | disappeared) & col > 1 -> prob_dis : (disappeared'=true) + (1-prob_dis) : (col'=col-1);
+
+	[move_right] at_goal | disappeared -> true;
+	[move_right] !(at_goal | disappeared) & col < N_COLS -> prob_dis : (disappeared'=true) + (1-prob_dis) : (col'=col+1);
+
+	[move_up] at_goal | disappeared -> true;
+	[move_up] !(at_goal | disappeared) & row < N_ROWS -> prob_dis : (disappeared'=true) + (1-prob_dis) : (row'=row+1);
+
+	[move_down] at_goal | disappeared -> true;
+	[move_down] !(at_goal | disappeared) & row > 1 -> prob_dis : (disappeared'=true) + (1-prob_dis) : (row'=row-1);
+endmodule
