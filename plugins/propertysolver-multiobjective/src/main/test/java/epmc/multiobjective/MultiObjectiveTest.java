@@ -204,7 +204,13 @@ public class MultiObjectiveTest {
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(Pmax=?[ F(X(act = eatPizza)) ])");
         assertEquals("0.95", result, 1E-10);
     }    
-    
+
+    /**
+     * Checking absence of bug which had lead to an infinite loop in the
+     * multi-objective property checker.
+     * 
+     * @throws EPMCException thrown in case of problems
+     */
     @Test
     public void andreaBug() throws EPMCException {
         Options options = prepareMultiOptions();
@@ -217,6 +223,9 @@ public class MultiObjectiveTest {
         Value result;
 
         result = computeResult(options, ANDREA_BUG, "multi(P>=1[F(state=N)],P>=1[F(state=0)])");
-        System.out.println(result);
+        assertEquals(true, result);
+        
+        result = computeResult(options, ANDREA_BUG, "multi(P>=0.999[F(state=N)],P>=0.999[F(state=0)])");
+        assertEquals(true, result);
     }
 }
