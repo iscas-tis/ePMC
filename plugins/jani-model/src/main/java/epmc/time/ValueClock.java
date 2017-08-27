@@ -77,12 +77,6 @@ public final class ValueClock implements ValueAlgebra {
 	}
 
 	@Override
-	public void multInverse(Value operand) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public boolean isZero() {
 		// TODO Auto-generated method stub
 		return false;

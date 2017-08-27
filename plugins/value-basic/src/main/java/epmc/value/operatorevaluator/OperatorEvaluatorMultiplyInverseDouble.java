@@ -24,13 +24,12 @@ import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
-import epmc.value.UtilValue;
+import epmc.value.TypeDouble;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorMultiplyInverse;
 
-public enum OperatorEvaluatorMultiplyInverse implements OperatorEvaluator {
+public enum OperatorEvaluatorMultiplyInverseDouble implements OperatorEvaluator {
 	INSTANCE;
 
 	@Override
@@ -48,7 +47,7 @@ public enum OperatorEvaluatorMultiplyInverse implements OperatorEvaluator {
 			return false;
 		}
 		for (Type type : types) {
-			if (!TypeAlgebra.isAlgebra(type)) {
+			if (!TypeDouble.isDouble(type)) {
 				return false;
 			}
 		}
@@ -63,7 +62,7 @@ public enum OperatorEvaluatorMultiplyInverse implements OperatorEvaluator {
     	for (Type type : types) {
     		assert type != null;
     	}
-        return UtilValue.upper(types);
+    	return TypeDouble.get();
     }
 
     @Override
@@ -73,6 +72,6 @@ public enum OperatorEvaluatorMultiplyInverse implements OperatorEvaluator {
     	for (Value operand : operands) {
     		assert operand != null;
     	}
-        ValueAlgebra.asAlgebra(result).multInverse(operands[0]);
+    	ValueDouble.asDouble(result).set(1.0 / ValueDouble.asDouble(operands[0]).getDouble());
     }
 }

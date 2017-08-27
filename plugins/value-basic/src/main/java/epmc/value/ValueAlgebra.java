@@ -80,8 +80,6 @@ public interface ValueAlgebra extends Value {
     
     void addInverse(Value operand) throws EPMCException;
 
-    void multInverse(Value operand) throws EPMCException;
-    
     boolean isZero();
 
     boolean isOne();
