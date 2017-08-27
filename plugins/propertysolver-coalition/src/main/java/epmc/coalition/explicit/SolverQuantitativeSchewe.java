@@ -45,6 +45,8 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeObject;
 import epmc.value.TypeWeight;
@@ -53,6 +55,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.TypeObject.StorageType;
+import epmc.value.operator.OperatorMin;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
 
@@ -253,6 +256,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		ValueAlgebra newValue = objective.getResult().getType().getEntryType().newValue();
 		Value succValue = values.getType().getEntryType().newValue();
 		ValueAlgebra weighted = ValueAlgebra.asAlgebra(values.getType().getEntryType().newValue());
+		OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
 		for (int node = 0; node < numStates; node++) {
 			values.get(value, node);
 			assert !target.get(node) || value.isOne();
@@ -271,7 +275,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 				if (player == Player.ONE) {
 					newValue.max(newValue, succValue);
 				} else if (player == Player.TWO) {
-					newValue.min(newValue, succValue);
+					min.apply(newValue, newValue, succValue);
 				} else if (player == Player.STOCHASTIC) {
 					weighted.multiply(succValue, weightProp.get(node, succ));
 					newValue.add(newValue, weighted);
