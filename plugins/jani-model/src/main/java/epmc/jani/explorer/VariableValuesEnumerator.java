@@ -52,14 +52,14 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
 import epmc.options.Options;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorEq;
 import epmc.value.TypeEnumerable;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnumerable;
 import epmc.value.ValueRange;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorEq;
 
 /**
  * Class to obtain all valid variable assignments for a given expression.

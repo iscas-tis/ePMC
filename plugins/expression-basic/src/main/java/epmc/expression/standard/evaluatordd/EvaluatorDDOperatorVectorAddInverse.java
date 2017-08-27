@@ -23,12 +23,12 @@ package epmc.expression.standard.evaluatordd;
 import java.util.List;
 import java.util.Map;
 
-import epmc.value.OperatorAddInverse;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.value.operator.OperatorAddInverse;
 
 public final class EvaluatorDDOperatorVectorAddInverse implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-addinverse";

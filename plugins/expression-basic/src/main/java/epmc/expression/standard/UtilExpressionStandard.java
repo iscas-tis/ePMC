@@ -28,18 +28,18 @@ import java.util.Map;
 import java.util.Set;
 
 import epmc.value.Operator;
-import epmc.value.OperatorAdd;
-import epmc.value.OperatorAddInverse;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorDivide;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorIte;
-import epmc.value.OperatorMax;
-import epmc.value.OperatorMin;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
+import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 import epmc.expression.Expression;
 
 // TODO probably should get rid of most of these methods

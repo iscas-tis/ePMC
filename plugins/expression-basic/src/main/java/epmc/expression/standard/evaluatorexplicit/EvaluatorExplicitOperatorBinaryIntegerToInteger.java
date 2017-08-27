@@ -22,14 +22,7 @@ package epmc.expression.standard.evaluatorexplicit;
 
 import java.util.Map;
 
-import epmc.value.OperatorAdd;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorMax;
-import epmc.value.OperatorMin;
-import epmc.value.OperatorMod;
-import epmc.value.OperatorMultiply;
-import epmc.value.OperatorPow;
-import epmc.value.OperatorSubtract;
 import epmc.value.TypeInteger;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
@@ -41,6 +34,13 @@ import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMod;
+import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorPow;
+import epmc.value.operator.OperatorSubtract;
 
 public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {

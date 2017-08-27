@@ -26,9 +26,9 @@ import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 
 public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     public final static String IDENTIFIER = "or";

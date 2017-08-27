@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorIte;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -33,6 +32,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.operator.OperatorIte;
 
 public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {

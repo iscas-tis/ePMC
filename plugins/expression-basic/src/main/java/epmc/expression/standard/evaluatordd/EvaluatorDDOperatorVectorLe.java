@@ -23,12 +23,12 @@ package epmc.expression.standard.evaluatordd;
 import java.util.List;
 import java.util.Map;
 
-import epmc.value.OperatorLe;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.value.operator.OperatorLe;
 
 public final class EvaluatorDDOperatorVectorLe implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-le";

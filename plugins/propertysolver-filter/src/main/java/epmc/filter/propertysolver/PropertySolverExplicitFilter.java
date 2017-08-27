@@ -46,9 +46,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.value.ContextValue;
-import epmc.value.OperatorAnd;
 import epmc.value.OperatorEvaluator;
-import epmc.value.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayConstant;
@@ -60,6 +58,8 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorOr;
 
 // TODO complete documentation
 

@@ -30,10 +30,6 @@ import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
 import epmc.value.Operator;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorId;
-import epmc.value.OperatorMax;
-import epmc.value.OperatorMin;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
@@ -43,6 +39,10 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorId;
+import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorMin;
 
 public final class StateMapDD implements StateMap, Closeable, Cloneable {
     private final StateSetDD states;

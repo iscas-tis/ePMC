@@ -36,13 +36,13 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.value.Operator;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorGt;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorLt;
-import epmc.value.OperatorNe;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorLe;
+import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorNe;
 
 // TODO documentation
 

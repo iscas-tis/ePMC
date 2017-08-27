@@ -25,13 +25,13 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.value.Operator;
-import epmc.value.OperatorAdd;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorLe;
-import epmc.value.OperatorMultiply;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorLe;
+import epmc.value.operator.OperatorMultiply;
 
 public final class UtilConstraintSolver {
 	public static Expression linearToExpression(ConstraintSolver solver,

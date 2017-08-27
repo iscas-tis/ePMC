@@ -36,19 +36,19 @@ import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Operator;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorEq;
-import epmc.value.OperatorId;
-import epmc.value.OperatorIff;
-import epmc.value.OperatorImplies;
-import epmc.value.OperatorIte;
-import epmc.value.OperatorNe;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorId;
+import epmc.value.operator.OperatorIff;
+import epmc.value.operator.OperatorImplies;
+import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorNe;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 
 /**
  * CUDD BDD library implementation.

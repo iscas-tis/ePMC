@@ -36,7 +36,7 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.OperatorIte;
+import epmc.value.operator.OperatorIte;
 
 /**
  * JANI expression for the if-then-else (ITE) operator

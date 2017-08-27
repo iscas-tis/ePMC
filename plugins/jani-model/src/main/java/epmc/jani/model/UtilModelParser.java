@@ -31,11 +31,11 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
-import epmc.value.OperatorGe;
-import epmc.value.OperatorLe;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeBounded;
 import epmc.value.Value;
+import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorLe;
 
 /**
  * Auxiliary methods to parse JANI models and properties.

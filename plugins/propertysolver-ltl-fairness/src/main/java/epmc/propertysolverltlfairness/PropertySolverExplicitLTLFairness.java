@@ -61,15 +61,15 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Operator;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 
 /**
  * Input property is fairness in LTL.

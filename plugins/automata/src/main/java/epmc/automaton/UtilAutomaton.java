@@ -45,16 +45,16 @@ import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.Util;
-import epmc.value.OperatorAnd;
-import epmc.value.OperatorIff;
-import epmc.value.OperatorImplies;
-import epmc.value.OperatorIte;
-import epmc.value.OperatorNot;
-import epmc.value.OperatorOr;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorIff;
+import epmc.value.operator.OperatorImplies;
+import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
 
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,
