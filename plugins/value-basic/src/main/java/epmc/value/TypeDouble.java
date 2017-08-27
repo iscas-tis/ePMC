@@ -25,6 +25,15 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
+    public static TypeDouble get() {
+        return ContextValue.get().getType(TypeDouble.class);
+    }
+    
+    public static void set(TypeDouble type) {
+        assert type != null;
+        ContextValue.get().setType(TypeDouble.class, ContextValue.get().makeUnique(type));
+    }
+
     public static boolean isDouble(Type type) {
     	return type instanceof TypeDouble;
     }

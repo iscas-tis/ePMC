@@ -52,7 +52,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorLt;
 import epmc.value.operatorevaluator.OperatorEvaluatorMax;
 import epmc.value.operatorevaluator.OperatorEvaluatorMin;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiply;
-import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInverse;
+import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorNe;
 import epmc.value.operatorevaluator.OperatorEvaluatorNot;
 import epmc.value.operatorevaluator.OperatorEvaluatorOr;
@@ -98,7 +98,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMin.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIntegerMod.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiply.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInverse.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInverseDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorNe.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorNot.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorOr.INSTANCE);
@@ -108,11 +108,13 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
     }
 
     private static void addTypes() {
+    	TypeDouble typeDouble = new TypeDouble(null, null);
     	TypeWeight.set(new TypeDouble(null, null));
     	TypeWeightTransition.set(new TypeDouble(null, null));
-    	TypeReal.set(new TypeDouble(null, null));
+    	TypeReal.set(typeDouble);
     	TypeInterval.set(new TypeInterval());
     	TypeBoolean.set(new TypeBoolean());
     	TypeInteger.set(new TypeInteger());
+    	TypeDouble.set(typeDouble);
 	}
 }

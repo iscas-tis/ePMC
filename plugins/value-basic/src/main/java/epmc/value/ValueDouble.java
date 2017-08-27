@@ -157,14 +157,6 @@ public final class ValueDouble implements ValueReal {
     }
 
     @Override
-    public void multInverse(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double doubleOp = castOrImport(op);
-        set(1.0 / doubleOp);
-    }
-
-    @Override
     public void addInverse(Value op) {
         assert !isImmutable();
         assert op != null;
