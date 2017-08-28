@@ -19,6 +19,7 @@ prepare_plugin command-expression2automaton
 prepare_plugin command-help
 prepare_plugin command-lump
 prepare_plugin constraintsolver
+prepare_plugin constraintsolver-lp-solve
 prepare_plugin propertysolver-propositional
 prepare_plugin propertysolver-operator
 prepare_plugin propertysolver-reward
