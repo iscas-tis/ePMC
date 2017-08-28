@@ -745,6 +745,8 @@ public final class CheckSymbolicTest {
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
+    // TODO commented out because takes too long to run
+    @Ignore
     @Test
     public void testPRISM_DiningCrypt_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -759,6 +761,8 @@ public final class CheckSymbolicTest {
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
+    // TODO commented out because takes too long to run
+    @Ignore
     @Test
     public void testPRISM_DiningCrypt_15() {
         Map<String, Object> constants = new LinkedHashMap<>();

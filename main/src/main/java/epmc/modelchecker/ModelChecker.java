@@ -234,6 +234,7 @@ public final class ModelChecker implements Closeable {
         assert expression != null;
         if (lowLevel != null) {
             lowLevel.close();
+            lowLevel = null;
         }
         lowLevel = prepareLowLevel(expression);
 
