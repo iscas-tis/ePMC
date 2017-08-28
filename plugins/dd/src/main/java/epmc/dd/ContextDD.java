@@ -1568,7 +1568,7 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         TIntSet result = new TIntHashSet();
         if (dd.isLeaf()) {
-            if (ValueAlgebra.asAlgebra(dd.value()).isZero()) {
+            if (ValueAlgebra.isAlgebra(dd.value()) && ValueAlgebra.asAlgebra(dd.value()).isZero()) {
                 totalTime.stop();
                 assert false;
                 return null;

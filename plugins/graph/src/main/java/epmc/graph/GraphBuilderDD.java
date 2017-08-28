@@ -109,8 +109,8 @@ public final class GraphBuilderDD implements Closeable {
         this.nondet = nondet;
         this.stateEncoding = stateEncoding;
         if (nondet) {
-            // TODO HACK
-            sinks = Collections.emptyList();            
+            // TODO following seems not to be necessary anymore
+//            sinks = Collections.emptyList();            
         }
         this.sinks = new DD[sinks.size()];
         for (int i = 0; i < sinks.size(); i++) {
