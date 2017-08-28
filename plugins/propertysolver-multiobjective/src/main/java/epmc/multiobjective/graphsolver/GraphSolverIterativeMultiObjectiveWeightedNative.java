@@ -30,11 +30,15 @@ import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
+import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
+import epmc.messages.OptionsMessages;
+import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
+import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
@@ -50,13 +54,13 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
                 double precision, int numStates,
                 int[] stateBounds, int[] nondetBounds, int[] targets,
                 double[] weights, double[] stopRewards, double[] transRewardsMem,
-                double[] values, int[] scheduler);
+                double[] values, int[] scheduler, int[] numIterations);
 
         native static int double_mdp_multiobjectiveweighted_gaussseidel(int relative,
                 double precision, int numStates,
                 int[] stateBounds, int[] nondetBounds, int[] targets,
                 double[] weights, double[] stopRewards, double[] transRewards,
-                double[] values, int[] scheduler);
+                double[] values, int[] scheduler, int[] numIterations);
 
         private final static boolean loaded =
                 JNATools.registerLibrary(IterationNative.class, "valueiterationmultiobjective");
@@ -132,6 +136,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
+        Log log = options.get(OptionsMessages.LOG);
+        StopWatch timer = new StopWatch(true);
+        log.send(MessagesGraphSolverIterative.ITERATING);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objectiveMultiObjectiveWeighted = (GraphSolverObjectiveExplicitMultiObjectiveWeighted) objective;
         Value cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
@@ -139,13 +146,16 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
         scheduler = new SchedulerSimpleMultiobjectiveJava((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();
+        int[] numIterations = new int[1];
         if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpMultiobjectiveweightedJacobiNative(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectiveweightedJacobiNative(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpMultiobjectiveweightedGaussseidelNative(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectiveweightedGaussseidelNative(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else {
             assert false;
         }
+        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
+                timer.getTimeSeconds());
     }
 
     /* auxiliary methods */
@@ -176,7 +186,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveJava scheduler) {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -190,7 +201,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
 
         int code = IterationNative.double_mdp_multiobjectiveweighted_jacobi(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                stopRewardsMem, transRewardsMem, valuesMem, schedulerMem);
+                stopRewardsMem, transRewardsMem, valuesMem, schedulerMem, numIterationsResult);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -199,7 +210,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveJava scheduler) {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -213,7 +225,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
 
         int code = IterationNative.double_mdp_multiobjectiveweighted_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                stopRewardsMem, transRewardsMem, valuesMem, schedulerMem);
+                stopRewardsMem, transRewardsMem, valuesMem, schedulerMem,
+                numIterationsResult);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_ByteBuffer, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;        
     }

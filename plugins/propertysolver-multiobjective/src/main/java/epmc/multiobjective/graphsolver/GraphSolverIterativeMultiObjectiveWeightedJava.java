@@ -31,9 +31,13 @@ import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
+import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
+import epmc.messages.OptionsMessages;
+import epmc.modelchecker.Log;
 import epmc.options.Options;
+import epmc.util.StopWatch;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -105,6 +109,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
+        Log log = options.get(OptionsMessages.LOG);
+        StopWatch timer = new StopWatch(true);
+        log.send(MessagesGraphSolverIterative.ITERATING);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveWeighted objectiveMultiObjectiveWeighted = (GraphSolverObjectiveExplicitMultiObjectiveWeighted) objective;
         ValueArrayAlgebra cumulativeTransitionRewards = objectiveMultiObjectiveWeighted.getTransitionRewards();
@@ -112,13 +119,16 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         scheduler = new SchedulerSimpleMultiobjectiveJava((GraphExplicitSparseAlternate) iterGraph);
         objectiveMultiObjectiveWeighted.setScheduler(scheduler);
         inputValues = objectiveMultiObjectiveWeighted.getValues();
+        int[] numIterations = new int[1];
         if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpMultiobjectiveweightedJacobiJava(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectiveweightedJacobiJava(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpMultiobjectiveweightedGaussseidelJava(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectiveweightedGaussseidelJava(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else {
             assert false;
         }
+        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
+                timer.getTimeSeconds());
     }
 
     /* auxiliary methods */
@@ -163,7 +173,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -192,6 +203,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         ValueAlgebra transReward = newValueWeight();
+        int iterations = 0;
         do {
             distance[0] = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -231,15 +243,18 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             ValueArrayAlgebra swap = nextValues;
             nextValues = presValues;
             presValues = swap;
+            iterations++;
         } while (distance[0] > tolerance / 2);
         values.set(presValues);
+        numIterationsResult[0] = iterations;
     }
 
     private void mdpMultiobjectiveweightedGaussseidelJava(
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -264,6 +279,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         }
 
         Value transReward = newValueWeight();
+        int iterations = 0;
         do {
             distance[0] = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -300,7 +316,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
+            iterations++;
         } while (distance[0] > tolerance / 2);
+        numIterationsResult[0] = iterations;
     }    
 
     private ValueAlgebra newValueWeight() {

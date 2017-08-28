@@ -27,7 +27,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_mdp_multiobjectiveweighted_gaussseidel(int relative, double precision,
         int numStates, int *stateBounds, int *nondetBounds, int *targets,
-        double *weights, double *stopRewards, double *transRewards, double *values, int *scheduler) {
+        double *weights, double *stopRewards, double *transRewards, double *values, int *scheduler,
+        int *numIterationsResult) {
     double optInitValue = -INFINITY;
     for (int state = 0; state < numStates; state++) {
         values[state] = 0.0;
@@ -36,6 +37,7 @@ epmc_error_t double_mdp_multiobjectiveweighted_gaussseidel(int relative, double 
     for (int state = 0; state < numStates; state++) {
         scheduler[state] = -1;
     }
+    int iterations = 0;
     do {
         maxDiff = 0.0;
         for (int state = 0; state < numStates; state++) {
@@ -74,6 +76,8 @@ epmc_error_t double_mdp_multiobjectiveweighted_gaussseidel(int relative, double 
             maxDiff = diff > maxDiff ? diff : maxDiff;
             values[state] = nextStateProb;
         }
+        iterations++;
     } while (maxDiff > precision / 2);
+    numIterationsResult[0] = iterations;
     return SUCCESS;
 }
