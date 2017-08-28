@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -51,7 +51,7 @@ public final class OptionTypeEnum implements OptionType {
     private final static char UNDERSCORE = '_';
     /** Minus character. */
     private final static char MINUS = '-';
-    
+
     /** Map mapping user-readable string to according enum constant. */
     private final Map<String,Enum<?>> validToConstant = new LinkedHashMap<>();
     private final List<String> keys;
@@ -95,12 +95,12 @@ public final class OptionTypeEnum implements OptionType {
             return null;
         }
     }
-    
+
     @Override
     public String getInfo() {
         StringBuilder result = new StringBuilder();
         result.append(LESS_THAN);
-        
+
         int entryNr = 0;
         for (String key : this.validToConstant.keySet()) {            
             result.append(key);
@@ -112,24 +112,24 @@ public final class OptionTypeEnum implements OptionType {
         result.append(GREATER_THAN);
         return result.toString();
     }    
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         assert value != null;
         assert value instanceof Enum;
         return value.toString().toLowerCase().replace(UNDERSCORE, MINUS);
     }
-    
+
     @Override
     public Object getDefault() {
         return defaultValue;
     }
-    
+
     public List<String> getKeys() {
         return keys;
     }

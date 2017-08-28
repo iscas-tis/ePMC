@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -34,10 +34,10 @@ import gnu.trove.map.hash.TIntIntHashMap;
 
 public final class GraphSolverObjectiveExplicitLump implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
-	private List<Expression> atomics;
-	private NodeProperty[] nodeProperties;
-	private TIntIntMap blockToNumberInt;
-	private int numStates;
+    private List<Expression> atomics;
+    private NodeProperty[] nodeProperties;
+    private TIntIntMap blockToNumberInt;
+    private int numStates;
 
     @Override
     public void setGraph(GraphExplicit graph) {
@@ -57,37 +57,37 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
     public ValueArray getResult() {
         return null;
     }
-    
-	public void setAtomics(Collection<Expression> atomics) {
-		assert atomics != null;
-		for (Expression expression : atomics) {
-			assert expression != null;
-		}
-		this.atomics = new ArrayList<>(atomics);
-	}
-	
-	public void prepare() {
-		this.nodeProperties = computeAtomNodeProperties(graph, atomics);
-		this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
-		int numStates = graph.computeNumStates();
-		for (int state = 0; state < numStates; state++) {
-			int block = 0;
-			int marker = 1;
-			for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
-				if (nodeProperties[atomicNr].getBoolean(state)) {
-					block |= marker;
-				}
-				marker <<= 1;
-			}
-	        int number = blockToNumberInt.get(block);
-	        if (number == -1) {
-	        	number = blockToNumberInt.size();
-	        	blockToNumberInt.put(block, number);
-	        }
-		}
-		this.numStates = numStates;
-	}	
-    
+
+    public void setAtomics(Collection<Expression> atomics) {
+        assert atomics != null;
+        for (Expression expression : atomics) {
+            assert expression != null;
+        }
+        this.atomics = new ArrayList<>(atomics);
+    }
+
+    public void prepare() {
+        this.nodeProperties = computeAtomNodeProperties(graph, atomics);
+        this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
+        int numStates = graph.computeNumStates();
+        for (int state = 0; state < numStates; state++) {
+            int block = 0;
+            int marker = 1;
+            for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
+                if (nodeProperties[atomicNr].getBoolean(state)) {
+                    block |= marker;
+                }
+                marker <<= 1;
+            }
+            int number = blockToNumberInt.get(block);
+            if (number == -1) {
+                number = blockToNumberInt.size();
+                blockToNumberInt.put(block, number);
+            }
+        }
+        this.numStates = numStates;
+    }	
+
     public int getBlock(int state) {
         int block = 0;
         int marker = 1;
@@ -99,9 +99,9 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
         }
         return blockToNumberInt.get(block);
     }
-    
+
     public int size() {
-    	return numStates;
+        return numStates;
     }
 
     private static NodeProperty[] computeAtomNodeProperties(GraphExplicit graph,

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -26,40 +26,40 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 public final class PropertyNodeState implements PropertyNode {
-	/** The explorer to which this property belongs. */
-	private final ExplorerJANI explorer;
-	/** Type of value stored. */
-	private final TypeBoolean type;
-	/** Value of this property for the node queried last. */
-	private final ValueBoolean value;
+    /** The explorer to which this property belongs. */
+    private final ExplorerJANI explorer;
+    /** Type of value stored. */
+    private final TypeBoolean type;
+    /** Value of this property for the node queried last. */
+    private final ValueBoolean value;
 
-	/**
-	 * Construct new node property.
-	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param explorer explorer to which the property shall belong to
-	 * @param type type of the property
-	 */
-	public PropertyNodeState(ExplorerJANI explorer) {
-		assert explorer != null;
-		this.explorer = explorer;
-		this.type = TypeBoolean.get();
-		this.value = type.newValue();
-	}
+    /**
+     * Construct new node property.
+     * None of the parameters may be {@code null}.
+     * 
+     * @param explorer explorer to which the property shall belong to
+     * @param type type of the property
+     */
+    public PropertyNodeState(ExplorerJANI explorer) {
+        assert explorer != null;
+        this.explorer = explorer;
+        this.type = TypeBoolean.get();
+        this.value = type.newValue();
+    }
 
-	@Override
-	public Value get() {
-		value.set(explorer.isState());
-		return value;
-	}
+    @Override
+    public Value get() {
+        value.set(explorer.isState());
+        return value;
+    }
 
-	@Override
-	public boolean getBoolean() {
-		return explorer.isState();
-	}
-	
-	@Override
-	public Type getType() {
-		return type;
-	}
+    @Override
+    public boolean getBoolean() {
+        return explorer.isState();
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
 }

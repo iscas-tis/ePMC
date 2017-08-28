@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.messages;
 
@@ -36,7 +36,7 @@ public final class MessagesJANIInteraction {
     public final static Message JANI_INTERACTION_SERVER_STOPPED = newMessage().setIdentifier("jani-interaction-server-stopped").build();
     public final static Message JANI_INTERACTION_SENT_TO_SERVER = newMessage().setIdentifier("jani-interaction-sent-to-server").build();
     public final static Message JANI_INTERACTION_SENT_BY_SERVER = newMessage().setIdentifier("jani-interaction-sent-by-server").build();
-    
+
     /**
      * Creates a new message with given identifier with this resource bundle.
      * The parameter may not be {@code null}.
@@ -51,6 +51,6 @@ public final class MessagesJANIInteraction {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private MessagesJANIInteraction() {
-	}
+    private MessagesJANIInteraction() {
+    }
 }

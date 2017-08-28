@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -84,7 +84,7 @@ public interface VariableDD extends Closeable {
      * @return DD variables of given copy
      */
     List<DD> getDDVariables(int copy);
-    
+
     /**
      * Obtain the possible values of the type as an MTBDD.
      * The result will be an MTBDD mapping each assignment of variables used to
@@ -99,7 +99,7 @@ public interface VariableDD extends Closeable {
 
     @Override
     void close();
-    
+
     /**
      * Checks whether the variable is alive.
      * After creation of the variable, the method should return {@code true}.
@@ -125,16 +125,16 @@ public interface VariableDD extends Closeable {
     DD newIntValue(int copy, int value);
 
     DD newVariableValue(int copy, Value value);
-    
+
     /* default methods */
 
     default DD newVariableValue(int copy, int valueNr) {
-    	ValueEnumerable value = TypeEnumerable.asEnumerable(getType()).newValue();
-    	value.setValueNumber(valueNr);
+        ValueEnumerable value = TypeEnumerable.asEnumerable(getType()).newValue();
+        value.setValueNumber(valueNr);
         return newVariableValue(copy, value);
     }
 
-    
+
     default List<DD> getDDVariables() {
         List<DD> result = new ArrayList<>();
         for (int copy = 0; copy < getNumCopies(); copy++) {
@@ -152,7 +152,7 @@ public interface VariableDD extends Closeable {
         }
         return result;
     }
-    
+
     // TODO should be changed to getCube(), should not recompute cube each time
     default DD newCube(int copy) {
         assert alive();
@@ -167,7 +167,7 @@ public interface VariableDD extends Closeable {
         }
         return result;
     }
-    
+
     /**
      * Checks whether this variable is of integer type.
      * 
@@ -201,7 +201,7 @@ public interface VariableDD extends Closeable {
         assert TypeInteger.isInteger(getType());
         return TypeInteger.asInteger(getType()).getUpperInt();
     } 
-    
+
     default DD newEqCopies(int copy1, int copy2) {
         DD cube1 = newCube(copy1);
         DD cube2 = newCube(copy2);

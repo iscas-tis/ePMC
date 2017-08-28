@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -31,13 +31,13 @@ import epmc.value.Type;
  * @author Ernst Moritz Hahn
  */
 public interface TypeExact extends Type {
-	/**
-	 * Checks whether type is exact.
-	 * 
-	 * @param type type to be checked
-	 * @return {@code true} iff type is exact
-	 */
-	static boolean isExact(Type type) {
-		return type instanceof TypeExact;
-	}
+    /**
+     * Checks whether type is exact.
+     * 
+     * @param type type to be checked
+     * @return {@code true} iff type is exact
+     */
+    static boolean isExact(Type type) {
+        return type instanceof TypeExact;
+    }
 }

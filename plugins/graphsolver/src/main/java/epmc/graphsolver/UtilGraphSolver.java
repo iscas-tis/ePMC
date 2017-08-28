@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -46,7 +46,7 @@ public final class UtilGraphSolver {
         configuration.setObjective(objective);
         configuration.solve();
     }
-    
+
     /**
      * Create new DD-based sstate graph solver configuration.
      * 
@@ -55,7 +55,7 @@ public final class UtilGraphSolver {
     public static GraphSolverConfigurationDD newGraphSolverConfigurationDD() {
         return new GraphSolverConfigurationDD();
     }
-    
+
     public static BitSet map(int size, StateMap map, BitSet original) {
         assert size >= 0;
         assert map != null;
@@ -63,17 +63,17 @@ public final class UtilGraphSolver {
             return null;
         }
         BitSet result = new BitSetBoundedLongArray(size);
-        
+
         // TODO HACK to make sigref based lumper work
         if (size == 0) {
-        	return result;
+            return result;
         }
         for (int entryNr = 0; entryNr < size; entryNr++) {
             result.set(entryNr, original.get(map.map(entryNr)));
         }
         return result;
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

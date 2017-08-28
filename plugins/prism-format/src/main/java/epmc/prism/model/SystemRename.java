@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -40,7 +40,7 @@ public final class SystemRename implements SystemDefinition {
     private final List<SystemDefinition> children = new ArrayList<>();
 
     private final Map<Expression,Expression> renaming;
-    
+
     public SystemRename(SystemDefinition inner, Map<Expression,Expression> renaming, Positional positional) {
         this.positional = positional;
         assert inner != null;
@@ -57,15 +57,15 @@ public final class SystemRename implements SystemDefinition {
             this.renaming = Collections.emptyMap();
         }
     }
-    
+
     public SystemDefinition getInner() {
         return children.get(0);
     }
-    
+
     public Map<Expression,Expression> getRenaming() {
         return Collections.unmodifiableMap(renaming);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

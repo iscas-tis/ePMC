@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -32,62 +32,62 @@ public final class GraphSolverObjectiveExplicitUnboundedReachability implements 
     private boolean min;
     private BitSet target;
     private ValueArrayAlgebra result;
-	private BitSet zeroSet;
+    private BitSet zeroSet;
 
     @Override
     public void setGraph(GraphExplicit graph) {
         this.graph = graph;
     }
-    
+
     @Override
     public GraphExplicit getGraph() {
         return graph;
     }
-    
+
     public void setComputeScheduler(boolean computeScheduler) {
         this.computeScheduler = computeScheduler;
     }
-    
+
     public boolean isComputeScheduler() {
         return computeScheduler;
     }
-    
+
     public void setMin(boolean min) {
         this.min = min;
     }
-    
+
     public boolean isMin() {
         return min;
     }
-    
+
     public void setTarget(BitSet target) {
         this.target = target;
     }
-    
+
     public BitSet getTarget() {
         return target;
     }
-        
+
     @Override
     public void setResult(ValueArray result) {
         this.result = ValueArrayAlgebra.asArrayAlgebra(result);
     }
-    
+
     @Override
     public ValueArrayAlgebra getResult() {
         return result;
     }
-        
+
     public void setScheduler(Scheduler computeScheduler2) {
         // TODO Auto-generated method stub
-        
+
     }
 
-	public void setZeroSink(BitSet zeroSet) {
-		this.zeroSet = zeroSet;
-	}
-	
-	public BitSet getZeroSet() {
-		return zeroSet;
-	}
+    public void setZeroSink(BitSet zeroSet) {
+        this.zeroSet = zeroSet;
+    }
+
+    public BitSet getZeroSet() {
+        return zeroSet;
+    }
 }

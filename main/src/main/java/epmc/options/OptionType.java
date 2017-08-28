@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -80,7 +80,7 @@ public interface OptionType {
      * @return short description of option type
      */
     String getInfo();
-    
+
     /**
      * Obtain default value for this options type.
      * This value is used as the default value of {@link Option}s in case no

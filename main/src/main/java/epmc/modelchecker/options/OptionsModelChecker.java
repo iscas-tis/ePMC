@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker.options;
 
@@ -32,7 +32,7 @@ import epmc.modelchecker.Engine;
 public enum OptionsModelChecker {
     /** Base name of resource bundle. */
     OPTIONS_MODEL_CHECKER,
-    
+
     /** {@link Engine engine} used for analysis */
     ENGINE,
     /** List of property solvers to be used. */
@@ -48,6 +48,6 @@ public enum OptionsModelChecker {
 
     /** Model input type {@link String}. */
     MODEL_INPUT_TYPE,
-    
+
     COMPUTE_SCHEDULER,
 }

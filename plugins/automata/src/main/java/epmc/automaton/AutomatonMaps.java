@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -58,11 +58,11 @@ public final class AutomatonMaps {
     private final Map<AutomatonLabelUtil,AutomatonLabelUtil> labels = new HashMap<>();
     private int[] successors;
     private int successorsPerEntry;
-    
+
     public int getNumStates() {
         return states.size();
     }
-    
+
     public <T extends AutomatonStateUtil> T makeUnique(T state) {
         assert state != null;
         @SuppressWarnings("unchecked")
@@ -75,7 +75,7 @@ public final class AutomatonMaps {
         }
         return result;
     }
-    
+
     public <T extends AutomatonLabelUtil> T makeUnique(T label) {
         assert label != null;
         @SuppressWarnings("unchecked")
@@ -98,7 +98,7 @@ public final class AutomatonMaps {
         assert number >= 0;
         return numberToLabel.get(number);
     }
-    
+
     public void initialiseCache(Expression[] expressions) {
         assert expressions != null;
         successorsPerEntry = 1;
@@ -106,8 +106,8 @@ public final class AutomatonMaps {
             assert expression != null;
         }
         for (int i = 0; i < expressions.length; i++) {
-        	//                assert TypeBoolean.isBoolean(expressions[i].getType());
-        	successorsPerEntry *= 2;
+            //                assert TypeBoolean.isBoolean(expressions[i].getType());
+            successorsPerEntry *= 2;
         }
         this.successors = new int[1];
         this.successors[0] = -1;
@@ -127,7 +127,7 @@ public final class AutomatonMaps {
         successors[index * 2] = successorState;
         successors[index * 2 + 1] = successorLabel;
     }
-    
+
     public long lookupSuccessorEntry(Value[] modelState, int automatonState) {
         int index = successorsPerEntry * automatonState;
         int indexAdd = 0;
@@ -146,11 +146,11 @@ public final class AutomatonMaps {
         long both = (((long) successorState) << 32) | (successorLabel);
         return both;
     }
-    
+
     public static int getSuccessorState(long combined) {
         return (int) (combined >>>= 32);
     }
-    
+
     public static int getSuccessorLabel(long combined) {
         return (int) (combined & 0xFFFFL);
     }

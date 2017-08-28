@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -54,30 +54,30 @@ public final class Formulas {
     private Map<Expression,Expression> constants;
     private Map<Expression,JANIType> constantTypes;
     private Map<Expression,Expression> labels;
-    
+
     public Formulas() {
         formulas = new HashMap<>();
         constants = new HashMap<>();
         constantTypes = new HashMap<>();
         labels = new HashMap<>();
     }
-    
+
     Map<Expression,Expression> getFormulas() {
         return Collections.unmodifiableMap(formulas);
     }
-    
+
     Map<Expression,Expression> getConstants() {
         return Collections.unmodifiableMap(constants);
     }
-    
+
     Map<Expression,JANIType> getConstantTypes() {
         return Collections.unmodifiableMap(constantTypes);
     }
-    
+
     public Map<Expression,Expression> getLabels() {
         return Collections.unmodifiableMap(labels);
     }
-    
+
     Map<Expression,Expression> getAll() {
         Map<Expression,Expression> result = new HashMap<>();
         result.putAll(formulas);
@@ -85,7 +85,7 @@ public final class Formulas {
         result.putAll(labels);
         return result;
     }
-    
+
     public void addFormula(String name, Expression content) {
         assert name != null;
         assert content != null;
@@ -94,7 +94,7 @@ public final class Formulas {
                 .setPositional(content.getPositional())
                 .build(), content);
     }
-    
+
     void addFormula(String name, String content) {
         assert name != null;
         assert content != null;
@@ -114,9 +114,9 @@ public final class Formulas {
         constants.put(constant, value);
         constantTypes.put(constant, type);
     }
-    
+
     void addConstant(String variable, Object value, JANIType type)
-            {
+    {
         assert variable != null;
         assert value != null;
         assert type != null;
@@ -130,13 +130,13 @@ public final class Formulas {
     }
 
     void addConstant(String variable, String value, JANIType type)
-            {
+    {
         assert variable != null;
         assert value != null;
         assert type != null;
         addConstant(variable, parse(value), type);
     }
-    
+
     public JANIType getConstantType(String variable) {
         assert variable != null;
         Expression constant = new ExpressionIdentifierStandard.Builder()
@@ -144,7 +144,7 @@ public final class Formulas {
                 .build();
         return constantTypes.get(constant);
     }
-    
+
     public void addLabel(String label, Expression value) {
         assert label != null;
         assert value != null;
@@ -157,7 +157,7 @@ public final class Formulas {
                 .setPositional(value.getPositional())
                 .build(), value);
     }
-    
+
     void addLabel(String label, String value) {
         assert label != null;
         assert value != null;
@@ -174,7 +174,7 @@ public final class Formulas {
         checkCyclic();
         checkNonConstantConst();
     }
-            
+
     /**
      * Checks whether there are cyclic const or formula definitions.
      * 
@@ -197,7 +197,7 @@ public final class Formulas {
                     new Object[]{entry.getKey(), pathToString(path)});
         }
     }
-    
+
     private boolean checkCyclic(Expression value, Set<Expression> seen,
             List<Expression> path, Set<Expression> onPath) {
         if (value == null) {
@@ -245,7 +245,7 @@ public final class Formulas {
         }
         return builder.toString();
     }
-    
+
     /**
      * Checks for constant definitions which do not evaluate to constant values.
      * 
@@ -305,7 +305,7 @@ public final class Formulas {
         onPath.remove(value);
         return null;
     }
-    
+
     void expandFormulas() {
         expand(formulas);
     }
@@ -335,7 +335,7 @@ public final class Formulas {
             entry.setValue(newExpr);
         }
     }
-    
+
     private Expression expand(Expression value, Map<Expression,Expression> seen, Map<Expression, Expression> map) {
         if (value == null) {
             return null;
@@ -343,7 +343,7 @@ public final class Formulas {
         if (seen.containsKey(value)) {
             return seen.get(value);
         }
-        
+
         Expression goDeeper = null;
         if (value instanceof ExpressionIdentifier) {
             goDeeper = map.get(value);
@@ -378,7 +378,7 @@ public final class Formulas {
         for (Entry<Expression,Expression> entry : labels.entrySet()) {
             builder.append("  " + entry.getKey() + "=" + entry.getValue() + "\n");
         }
-        
+
         return builder.toString();
     }
 
@@ -394,14 +394,14 @@ public final class Formulas {
                 .build();
         return isConstantDefined(constantExpr);
     }
-    
+
     public void ensureNoUndefinedConstants() {
         for (Entry<Expression,Expression> entry : constants.entrySet()) {
-        	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
+            ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             ensure(entry.getValue() != null, ProblemsPRISM.CONST_UNDEFINED, key.getName());
         }
     }
-    
+
     private Expression parse(Reader reader, String string) {
         assert reader != null;
         PrismExpressionParser parser = new PrismExpressionParser(reader);

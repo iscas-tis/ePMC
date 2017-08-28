@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -70,27 +70,27 @@ public final class Command {
         StringBuilder builder = new StringBuilder();
         builder.append("[" + label + "] ");
         builder.append(guard + " -> ");
-		if (alternatives.isEmpty()) {
-			// this corresponds to a transition with no updates; self-loop
-			// represented in prism as "true" update
-			builder.append("true");
-		}
-		
-		int altNr = 0;
-		for (Alternative alternative : alternatives) {
+        if (alternatives.isEmpty()) {
+            // this corresponds to a transition with no updates; self-loop
+            // represented in prism as "true" update
+            builder.append("true");
+        }
+
+        int altNr = 0;
+        for (Alternative alternative : alternatives) {
             builder.append(alternative);
             if (altNr < alternatives.size() - 1) {
                 builder.append(" + ");
             }
-		    altNr++;
-		}
+            altNr++;
+        }
         return builder.toString();
     }
-    
+
     Expression getLabel() {
         return label;
     }
-    
+
     public Expression getAction() {
         return label;
     }
@@ -98,7 +98,7 @@ public final class Command {
     public Expression getGuard() {
         return guard;
     }
-    
+
     public List<Alternative> getAlternatives() {
         return Collections.unmodifiableList(alternatives);
     }
@@ -122,29 +122,29 @@ public final class Command {
         }
         return new Command(this.label, newGuard, newAlternatives, positional);
     }
-    
+
     public void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
             Map<Expression, JANIType> variables,
             Map<Expression, Type> types)
-                    {    
-    	// TODO
-    	/*
+    {    
+        // TODO
+        /*
         Type guardRing = guard.getType();
         ensure(guardRing == null || TypeBoolean.isBoolean(guardRing),
                 ProblemsPRISM.GUARD_NOT_BOOLEAN, guard);
-                */
+         */
         for (Alternative alternative : alternatives) {
             alternative.checkExpressionConsistency(globalVariables, variables, types);
         }
     }
-    
+
     void setPlayer(int player) {
         assert player >= -1;
         assert this.player == -1;
         this.player = player;
     }
-    
+
     public int getPlayer() {
         return player;
     }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -56,26 +56,26 @@ import epmc.value.operator.OperatorSubtract;
  * @author Ernst Moritz Hahn
  */
 final class PropertyNormaliser {
-	private ExpressionMultiObjective property;
+    private ExpressionMultiObjective property;
     private ValueAlgebra subtractNumericalFrom;
     private BitSet invertedRewards;
-	private ExpressionMultiObjective normalisedProperty;
-	private ExpressionToType expressionToType;
+    private ExpressionMultiObjective normalisedProperty;
+    private ExpressionToType expressionToType;
 
-	PropertyNormaliser() {
-	}
-	
-	PropertyNormaliser setExpressionToType(ExpressionToType expressionToType) {
-		this.expressionToType = expressionToType;
-		return this;
-	}
-	
-	PropertyNormaliser setOriginalProperty(ExpressionMultiObjective property) {
-		this.property = property;
-		return this;
-	}
-	
-	PropertyNormaliser build() {
+    PropertyNormaliser() {
+    }
+
+    PropertyNormaliser setExpressionToType(ExpressionToType expressionToType) {
+        this.expressionToType = expressionToType;
+        return this;
+    }
+
+    PropertyNormaliser setOriginalProperty(ExpressionMultiObjective property) {
+        this.property = property;
+        return this;
+    }
+
+    PropertyNormaliser build() {
         subtractNumericalFrom = newValueWeight();
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
@@ -86,7 +86,7 @@ final class PropertyNormaliser {
         List<Expression> newQuantifiersQualitative = new ArrayList<>();
         Set<Expression> invert = new HashSet<>();
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             assert !isQuantEq(objectiveQuantifier);
             assert !isQuantGt(objectiveQuantifier);
@@ -100,33 +100,33 @@ final class PropertyNormaliser {
                 newQuantifiersQualitative.add(objective);
             } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setDirType(DirType.MAX)
-                		.setCmpType(CmpType.IS)
-                		.setQuantified(not(quantified))
-                		.setCondition(objectiveQuantifier.getCondition())
-                		.build();
+                        .setDirType(DirType.MAX)
+                        .setCmpType(CmpType.IS)
+                        .setQuantified(not(quantified))
+                        .setCondition(objectiveQuantifier.getCondition())
+                        .build();
                 newQuantifiersQuantitative.add(newQuantifier);
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getOne());
             } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
                 newCompare = new ExpressionLiteral.Builder()
-                		.setValue(evaluateValue(newCompare))
-                		.build();
+                        .setValue(evaluateValue(newCompare))
+                        .build();
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setDirType(DirType.NONE)
-                		.setCmpType(CmpType.GE)
-                		.setQuantified(not(quantified))
-                		.setCompare(newCompare)
-                		.setCondition(objectiveQuantifier.getCondition())
-                		.build();
+                        .setDirType(DirType.NONE)
+                        .setCmpType(CmpType.GE)
+                        .setQuantified(not(quantified))
+                        .setCompare(newCompare)
+                        .setCondition(objectiveQuantifier.getCondition())
+                        .build();
                 newQuantifiersQualitative.add(newQuantifier);
             } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setDirType(DirType.MAX)
-                		.setCmpType(CmpType.IS)
-                		.setQuantified(quantified)
-                		.setCondition(objectiveQuantifier.getCondition())
-                		.build();
+                        .setDirType(DirType.MAX)
+                        .setCmpType(CmpType.IS)
+                        .setQuantified(quantified)
+                        .setCondition(objectiveQuantifier.getCondition())
+                        .build();
                 invert.add(newQuantifier);
                 newQuantifiersQuantitative.add(newQuantifier);
                 subtractNumericalFrom.set(subtractNumericalFrom.getType().getZero());
@@ -135,15 +135,15 @@ final class PropertyNormaliser {
                         .setOperator(OperatorAddInverse.ADD_INVERSE)
                         .setOperands(objectiveQuantifier.getCompare()).build();
                 newCompare = new ExpressionLiteral.Builder()
-                		.setValue(evaluateValue(newCompare))
-                		.build();
+                        .setValue(evaluateValue(newCompare))
+                        .build();
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
-                		.setDirType(DirType.NONE)
-                		.setCmpType(CmpType.GE)
-                		.setQuantified(quantified)
-                		.setCompare(newCompare)
-                		.setCondition(objectiveQuantifier.getCondition())
-                		.build();
+                        .setDirType(DirType.NONE)
+                        .setCmpType(CmpType.GE)
+                        .setQuantified(quantified)
+                        .setCompare(newCompare)
+                        .setCondition(objectiveQuantifier.getCondition())
+                        .build();
                 newQuantifiersQualitative.add(newQuantifier);
                 invert.add(newQuantifier);
             }
@@ -161,59 +161,59 @@ final class PropertyNormaliser {
                 .setOperands(newQuantifiers)
                 .build();
         return this;
-	}
-	
-	ExpressionMultiObjective getNormalisedProperty() {
-		return normalisedProperty;
-	}
-	
-	Value getSubtractNumericalFrom() {
-		return subtractNumericalFrom;
-	}
-	
-	BitSet getInvertedRewards() {
-		return invertedRewards;
-	}
-	
-	private ValueAlgebra newValueWeight() {
-		return TypeWeight.get().newValue();
-	}
-	
+    }
+
+    ExpressionMultiObjective getNormalisedProperty() {
+        return normalisedProperty;
+    }
+
+    Value getSubtractNumericalFrom() {
+        return subtractNumericalFrom;
+    }
+
+    BitSet getInvertedRewards() {
+        return invertedRewards;
+    }
+
+    private ValueAlgebra newValueWeight() {
+        return TypeWeight.get().newValue();
+    }
+
     private Expression subtract(Expression a, Expression b) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorSubtract.SUBTRACT)
-    			.setOperands(a, b)
-    			.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorSubtract.SUBTRACT)
+                .setOperands(a, b)
+                .build();
     }
-    
+
     private static Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.NOT)
-        	.setOperands(expression)
-        	.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorNot.NOT)
+                .setOperands(expression)
+                .build();
     }
-    
+
     private static boolean isRewardCumulative(Expression expression) {
-    	if (!(expression instanceof ExpressionReward)) {
-    		return false;
-    	}
-    	ExpressionReward expressionReward = (ExpressionReward) expression;
-    	return expressionReward.getRewardType().isCumulative();
+        if (!(expression instanceof ExpressionReward)) {
+            return false;
+        }
+        ExpressionReward expressionReward = (ExpressionReward) expression;
+        return expressionReward.getRewardType().isCumulative();
     }
-    
+
     private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
         return evaluator.evaluate();
     }
-    
+
     private static boolean isDirMax(Expression expression) {
-    	assert expression != null;
-    	if (!(expression instanceof ExpressionQuantifier)) {
-    		return false;
-    	}
-    	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-    	return expressionQuantifier.getDirType() == DirType.MAX;
+        assert expression != null;
+        if (!(expression instanceof ExpressionQuantifier)) {
+            return false;
+        }
+        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        return expressionQuantifier.getDirType() == DirType.MAX;
     }
 
     private static boolean isIs(Expression expression) {
@@ -224,7 +224,7 @@ final class PropertyNormaliser {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType() == CmpType.IS;
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -233,7 +233,7 @@ final class PropertyNormaliser {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
-    
+
     private static boolean isQuantLe(Expression expression) {
         if (!(expression instanceof ExpressionQuantifier)) {
             return false;
@@ -241,7 +241,7 @@ final class PropertyNormaliser {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType().isLe();
     }
-    
+
     private static boolean isQuantGe(Expression expression) {
         if (!(expression instanceof ExpressionQuantifier)) {
             return false;
@@ -249,7 +249,7 @@ final class PropertyNormaliser {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType().isGe();
     }
-    
+
     private static boolean isQuantGt(Expression expression) {
         if (!(expression instanceof ExpressionQuantifier)) {
             return false;
@@ -257,7 +257,7 @@ final class PropertyNormaliser {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType().isGt();
     }
-    
+
     private static boolean isQuantLt(Expression expression) {
         if (!(expression instanceof ExpressionQuantifier)) {
             return false;

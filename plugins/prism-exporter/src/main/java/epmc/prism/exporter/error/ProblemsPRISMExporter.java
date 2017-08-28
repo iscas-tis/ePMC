@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.error;
 
@@ -29,7 +29,7 @@ import epmc.error.UtilError;
  * @author Andrea Turrini
  */
 public final class ProblemsPRISMExporter {
-	/** Base name of resource file containing plugin problem descriptions. */
+    /** Base name of resource file containing plugin problem descriptions. */
     private final static String ERROR_PRISM_EXPORTER = "ErrorPRISMExporter";
     /** Missing PRISM file name. */
     public final static Problem PRISM_EXPORTER_MISSING_INPUT_MODEL_FILENAMES = newProblem("prism-exporter-missing-input-model-filenames");
@@ -59,19 +59,19 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("prism-exporter-error-unknown-processor");
     public final static Problem PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED = newProblem("prism-exporter-error-extended-syntax-required");
     public final static Problem PRISM_EXPORTER_ERROR_NONPRISM_SYNTAX_REQUIRED = newProblem("prism-exporter-error-nonprism-syntax-required");
-    
-   
-    
-	/**
-	 * Create new problem object using plugin resource file.
-	 * The name parameter must not be {@code null}.
-	 * 
-	 * @param name problem identifier String
-	 * @return newly created problem identifier
-	 */
+
+
+
+    /**
+     * Create new problem object using plugin resource file.
+     * The name parameter must not be {@code null}.
+     * 
+     * @param name problem identifier String
+     * @return newly created problem identifier
+     */
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(ERROR_PRISM_EXPORTER, name);
+        assert name != null;
+        return UtilError.newProblem(ERROR_PRISM_EXPORTER, name);
     }
 
     /**

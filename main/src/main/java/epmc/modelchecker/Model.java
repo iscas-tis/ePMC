@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -44,7 +44,7 @@ public interface Model {
      * @return unique identifier of model type
      */
     String getIdentifier();
-    
+
     /**
      * Reads the model from its input file(s).
      * For some model classes (e.g. RDDL, MRMC), the model might be split into
@@ -67,7 +67,7 @@ public interface Model {
      * @return semantics type of the model
      */
     Semantics getSemantics();
-    
+
     /**
      * Create a low-level representation of the model for analysis.
      * Creating a low-level representation might fail for many reasons. For
@@ -92,7 +92,7 @@ public interface Model {
             Set<Object> graphProperties,
             Set<Object> nodeProperties,
             Set<Object> edgeProperties);
-    
+
     /**
      * Returns the list of properties associated to this model.
      * These properties might be part of the model files itself (e.g.

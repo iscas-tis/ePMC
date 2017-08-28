@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy;
 
@@ -26,16 +26,16 @@ package epmc.propertysolver.ltllazy;
  * @author Ernst Moritz Hahn
  */
 public enum OptionsLTLLazy {
-	/** Base name of resource file for options description. */
-	OPTIONS_LTL_LAZY,
-	LTL_LAZY_CATEGORY,
-	/** Whether the incremental approach shall be used.
-	 * If yes, the subset construction will be used and its components will be
-	 * evaluated by subset, breakpoint, Rabin, or multi-breakpoint criteria.
-	 * Otherwise, the algorithm will try to decide the model using complete
-	 * products of subset, breakpoint, etc. automata, which potentially uses
-	 * more space.
-	 **/
+    /** Base name of resource file for options description. */
+    OPTIONS_LTL_LAZY,
+    LTL_LAZY_CATEGORY,
+    /** Whether the incremental approach shall be used.
+     * If yes, the subset construction will be used and its components will be
+     * evaluated by subset, breakpoint, Rabin, or multi-breakpoint criteria.
+     * Otherwise, the algorithm will try to decide the model using complete
+     * products of subset, breakpoint, etc. automata, which potentially uses
+     * more space.
+     **/
     LTL_LAZY_INCREMENTAL,
     /** Whether to use the subset criterion. */
     LTL_LAZY_USE_SUBSET,

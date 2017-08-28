@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms;
 
 public enum OptionsAlgorithm {
-	OPTIONS_ALGORITHM,
+    OPTIONS_ALGORITHM,
     // TODO should be made pluggable
     /** SCC decomposition algorithm to use for DD engine ({@link OptionsTypesEPMC.DdSccAlgorithm}) */
     DD_SCC_ALGORITHM,

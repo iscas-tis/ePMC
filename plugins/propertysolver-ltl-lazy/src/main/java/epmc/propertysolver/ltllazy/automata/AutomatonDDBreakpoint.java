@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy.automata;
 
@@ -60,7 +60,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
 
     public AutomatonDDBreakpoint(ExpressionToDD expressionToDD, Buechi buechi,
             DD states, DD init, List<VariableDD> subsetVariables)
-            {
+    {
         assert expressionToDD != null;
         assert buechi != null;
         assert states != null;
@@ -70,7 +70,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         this.numLabels = buechi.getNumLabels();
         /* prepare variables */
         if (init == null) {
-        	for (int state = 0; state < automaton.getNumNodes(); state++) {
+            for (int state = 0; state < automaton.getNumNodes(); state++) {
                 VariableDD variable = ContextDD.get().newBoolean("%autstate" + state, 2);
                 rPresVars.addAll(ContextDD.get().clone(variable.getDDVariables(0)));
                 rNextVars.addAll(ContextDD.get().clone(variable.getDDVariables(1)));
@@ -95,17 +95,17 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         nextVars.addAll(rNextVars);
         nextVars.addAll(counterNextVars);
         nextVars.addAll(cNextVars);
-        
+
         /* compute initial state */
         if (init == null) {
             init = ContextDD.get().newConstant(true);
             BitSet bInit = buechi.getGraph().getInitialNodes();
             for (int state = 0; state < automaton.getNumNodes(); state++) {
-            	if (bInit.get(state)) {
+                if (bInit.get(state)) {
                     init = init.andWith(rPresVars.get(state).clone());            		
-            	} else {
+                } else {
                     init = init.andWith(rPresVars.get(state).not());
-            	}
+                }
             }
         }
         DD counterInit = counter.getValueEncoding(0);
@@ -169,7 +169,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         DD tr = transAccept.or(transNonAccept);
         tr = states.clone().andWith(tr).orWith(states.not().andWith(eq(presVars, nextVars)));
         transition = tr;
-        
+
         /* accepting and rejecting conditions */
         /* note that we make transitions with empty R set rejecting rather
          * than removing them completely as in the paper, because complete
@@ -190,12 +190,12 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
         this.nextCube = ContextDD.get().listToCube(nextVars);
         this.labelCube = ContextDD.get().newConstant(true);
     }
-    
+
     public AutomatonDDBreakpoint(ExpressionToDD contextDD, Buechi buechi, DD states)
-            {
+    {
         this(contextDD, buechi, states, null, null);
     }
-    
+
     private DD eq(List<DD> set1, List<DD> set2) {
         assert set1 != null;
         assert set2 != null;
@@ -254,10 +254,10 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
                 guard.dispose();
             }
         }
-        
+
         return nextOns;
     }
-    
+
     private ArrayList<DD> acceptanceSetByCounter() {
         List<List<DD>> acceptanceSets = computeAcceptanceSets();
         ArrayList<DD> result = new ArrayList<>();
@@ -272,14 +272,14 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
             result.add(setDD);
         }
         for (List<DD> free : acceptanceSets) {
-        	ContextDD.get().dispose(free);
+            ContextDD.get().dispose(free);
         }
-        
+
         return result;
     }
 
     private ArrayList<DD> subsetImage(List<DD> presStates)
-                    {
+    {
         ArrayList<DD> nextOns = new ArrayList<>();
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             nextOns.add(ContextDD.get().newConstant(false));
@@ -296,7 +296,7 @@ public final class AutomatonDDBreakpoint implements AutomatonDD {
                 nextOns.set(succ, nextOn);
             }
         }
-        
+
         return nextOns;
     }
 

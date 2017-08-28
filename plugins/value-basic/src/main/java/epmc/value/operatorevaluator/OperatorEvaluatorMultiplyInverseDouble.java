@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -29,48 +29,48 @@ import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorMultiplyInverse;
 
 public enum OperatorEvaluatorMultiplyInverseDouble implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorMultiplyInverse.MULTIPLY_INVERSE;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeDouble.isDouble(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorMultiplyInverse.MULTIPLY_INVERSE;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeDouble.isDouble(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-    	return TypeDouble.get();
+        assert operator != null;
+        assert operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        return TypeDouble.get();
     }
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	ValueDouble.asDouble(result).set(1.0 / ValueDouble.asDouble(operands[0]).getDouble());
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        ValueDouble.asDouble(result).set(1.0 / ValueDouble.asDouble(operands[0]).getDouble());
     }
 }

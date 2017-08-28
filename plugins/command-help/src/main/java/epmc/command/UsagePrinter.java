@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -99,7 +99,7 @@ final class UsagePrinter {
      * length, see {@link #ALIGN_CHARS_REGEXP_FIRST}.
      */
     private static final String ALIGN_CHARS_REGEXP_SECOND = "})";
-    
+
     /**
      * Get usage information of the given options set.
      * The options parameter may not be {@code null}.
@@ -108,8 +108,8 @@ final class UsagePrinter {
      * @return usage information of the given options set
      */
     static String getUsage() {
-    	Options options = Options.get();
-    	assert options != null;
+        Options options = Options.get();
+        assert options != null;
         StringBuilder builder = new StringBuilder();
         appendCommands(builder, options);
         appendOptions(builder, options);        
@@ -166,7 +166,7 @@ final class UsagePrinter {
         }
         builder.append(NEWLINE);
     }
-    
+
     /**
      * Append information about the options of the given options set to builder.
      * None of the parameters may be {@code null}.
@@ -177,15 +177,15 @@ final class UsagePrinter {
     private static void appendOptions(StringBuilder builder, Options options) {
         assert builder != null;
         assert options != null;
-        
+
         Map<Category,Set<Option>> optionsByCategory = buildOptionsByCategory(options);
         Map<Category,Set<Category>> hierarchy = buildHierarchy(options);
-        
+
         Locale locale = Locale.getDefault();
         ResourceBundle poMsg = ResourceBundle.getBundle(options.getResourceFileName(), locale);
         builder.append(poMsg.getString(AVAILABLE_PROGRAM_OPTIONS) + COLON + NEWLINE);
         Collection<Option> nonCategorisedOptions = optionsByCategory.get(null);
-        
+
         for (Option option : nonCategorisedOptions) {
             if (!option.isCommandLine()) {
                 continue;
@@ -290,7 +290,7 @@ final class UsagePrinter {
         String typeInfo = resourceBundle.getString(TYPE) + COLON + SPACE + option.getTypeInfo() + NEWLINE;
         return typeInfo;
     }
-    
+
     /**
      * Build string describing default value of given option.
      * The internationalization information will read from resource bundle with
@@ -350,7 +350,7 @@ final class UsagePrinter {
         assert numSpaces >= 0;
         return new String(new char[numSpaces]).replace(NULL_STRING, SPACE);        
     }
-    
+
     /**
      * Align lines by prefixing them by the given number of spaces.
      * The input string parameter may not be {@code null}, and the number of
@@ -428,7 +428,7 @@ final class UsagePrinter {
         }
         return result.toString();
     }
-    
+
     /**
      * Private constructor to prevent instantiation.
      */

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumpingdd.transrepresentation;
 
@@ -32,18 +32,18 @@ import epmc.graph.dd.GraphDD;
  */
 public class DoubleRepresentation implements TransitionRepresentation {
 
-	private GraphDD original;
+    private GraphDD original;
 
-	@Override
-	public void setOriginal(GraphDD original) {
-		this.original = original;
-	}
-	
-	@Override
-	public DD fromTransWeights() {
-		// We are not interested in actions
-		return original.getEdgeProperty(CommonProperties.WEIGHT)
-    			.abstractSum(original.getActionCube());
-	}
+    @Override
+    public void setOriginal(GraphDD original) {
+        this.original = original;
+    }
+
+    @Override
+    public DD fromTransWeights() {
+        // We are not interested in actions
+        return original.getEdgeProperty(CommonProperties.WEIGHT)
+                .abstractSum(original.getActionCube());
+    }
 
 }

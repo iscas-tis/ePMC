@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -26,22 +26,22 @@ import epmc.options.Options;
 import epmc.value.Value;
 
 public final class ValueDouble implements ValueReal {
-	public static boolean isDouble(Value value) {
-		return value instanceof ValueDouble;
-	}
-	
-	public static ValueDouble asDouble(Value value) {
-		if (isDouble(value)) {
-			return (ValueDouble) value;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isDouble(Value value) {
+        return value instanceof ValueDouble;
+    }
+
+    public static ValueDouble asDouble(Value value) {
+        if (isDouble(value)) {
+            return (ValueDouble) value;
+        } else {
+            return null;
+        }
+    }
+
     private final static String NAN = "NaN";
     private final static String SPACE = " ";
     private final static String DIVIDED = "/";
-    
+
     private final TypeDouble type;
     private double value;
     private boolean immutable;
@@ -55,12 +55,12 @@ public final class ValueDouble implements ValueReal {
     ValueDouble(TypeDouble type) {
         this(type, 0.0);
     }    
-    
+
     @Override
     public TypeDouble getType() {
         return type;
     }
-    
+
     @Override
     public double getDouble() {
         return value;
@@ -70,7 +70,7 @@ public final class ValueDouble implements ValueReal {
         assert !isImmutable();
         this.value = value;
     }
-    
+
     @Override
     public ValueDouble clone() {
         return new ValueDouble(getType(), value);
@@ -114,26 +114,26 @@ public final class ValueDouble implements ValueReal {
         if (Double.isNaN(value)) {
             return NAN;
         } else {
-        	Options options = Options.get();
-        	if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
-        		return String.valueOf(value);
-        	} else {
-	            String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
-	            assert format != null;
-	            return String.format(format, value);
-        	}
+            Options options = Options.get();
+            if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
+                return String.valueOf(value);
+            } else {
+                String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
+                assert format != null;
+                return String.format(format, value);
+            }
         }
     }
-    
+
     @Override
     public void set(Value op) {
         assert !isImmutable();
         assert op != null;
         double opDouble = castOrImport(op);
         this.value = opDouble;
-        
+
     }
-    
+
     @Override
     public void add(Value op1, Value op2) {
         assert !isImmutable();
@@ -195,7 +195,7 @@ public final class ValueDouble implements ValueReal {
         ValueNumber opNumber = ValueNumber.asNumber(op);
         return Math.abs(value - opNumber.getDouble());
     }
-    
+
     @Override
     public boolean isZero() {
         return getDouble() == 0.0;
@@ -227,13 +227,13 @@ public final class ValueDouble implements ValueReal {
         double op2Double = castOrImport(operand);
         return getDouble() < op2Double;
     }
-    
+
     @Override
     public void set(int operand) {
         assert !isImmutable();
         set((double) operand);
     }
-    
+
     private double castOrImport(Value operand) {
         assert operand != null;
         if (ValueReal.isReal(operand)) {
@@ -242,10 +242,10 @@ public final class ValueDouble implements ValueReal {
             return ValueInteger.asInteger(operand).getInt();
         } else {
             assert false : operand + SPACE + operand.getType();
-            return Double.NaN;
+        return Double.NaN;
         }
     }
-    
+
     @Override
     public void set(String string) {
         assert string != null;
@@ -264,9 +264,9 @@ public final class ValueDouble implements ValueReal {
                 fail(ProblemsValueBasic.VALUES_STRING_INVALID_VALUE, e, value, type);
             }
         }
-        
+
     }
-    
+
     @Override
     public void setImmutable() {
         this.immutable = true;
@@ -277,9 +277,9 @@ public final class ValueDouble implements ValueReal {
         return immutable;
     }
 
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isNegInf() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

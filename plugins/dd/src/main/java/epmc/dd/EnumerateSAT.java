@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -32,7 +32,7 @@ public final class EnumerateSAT {
     public interface EnumerateSATCallback {
         void call(Value[] values);
     }
-    
+
     private DD dd;
     private VariableDD[] variables;
     private EnumerateSATCallback callback;
@@ -44,13 +44,13 @@ public final class EnumerateSAT {
     private ValueEnumerable[] values;
     private int[] highLevelFromTo;
     private int[] highLevelVariables;
-    
+
     public void setBDD(DD dd) {
         assert dd != null;
         assert TypeBoolean.isBoolean(dd.getType());
         this.dd = dd;
     }
-    
+
     public void setVariables(VariableDD[] variables) {
         assert variables != null;
         for (VariableDD variable : variables) {
@@ -58,12 +58,12 @@ public final class EnumerateSAT {
         }
         this.variables = variables;
     }
-    
+
     public void setCallback(EnumerateSATCallback callback) {
         assert callback != null;
         this.callback = callback;
     }
-    
+
     public void enumerate() {
         DD cube = buildCube();
         int cubeMaxSize = cubeMaxSize(cube);
@@ -95,7 +95,7 @@ public final class EnumerateSAT {
         recurse();
         cube.dispose();
     }
-    
+
     private int cubeMaxSize(DD cube) {
         assert cube != null;
         int maxVar = 0;
@@ -155,7 +155,7 @@ public final class EnumerateSAT {
             cubeWalker.back();
         }
     }
-    
+
     private void terminalCase() {
         for (int highNr = 0; highNr < highLevelFromTo.length - 1; highNr++) {
             int from = highLevelFromTo[highNr];

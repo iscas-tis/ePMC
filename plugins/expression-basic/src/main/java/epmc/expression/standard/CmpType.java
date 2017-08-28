@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -48,7 +48,7 @@ public enum CmpType {
     LT("<", OperatorLt.LT),
     /** Check whether value computed is smaller or equal than given value. */
     LE("<=", OperatorLe.LE);
-    
+
     /** User-readable {@link String} representing the comparism. */
     private final String string;
     private final Operator operator;
@@ -64,12 +64,12 @@ public enum CmpType {
         this.string = string;
         this.operator = operator;
     }
-    
+
     @Override
     public String toString() {
         return string;
     }
-    
+
     /**
      * Check whether this comparison type requests to compute a value.
      * 
@@ -114,7 +114,7 @@ public enum CmpType {
     public boolean isGt() {
         return this == GT;
     }
-    
+
     /**
      * Checks whether comparison asks if computed value larger or equal to given one.
      * 

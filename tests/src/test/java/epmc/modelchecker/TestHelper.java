@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -93,14 +93,14 @@ public final class TestHelper {
     private final static String UNKNOWN_HOST = "Unknown";
     private final static String PLUGINLIST_NOT_FOUND = "Plugin list file "
             + "\"%s\" not found.";
-    
+
     public enum LogType {
         TRANSLATE,
         NOTRANSLATE,
         SILENT,
         LIST
     }
-    
+
     public static void prepare() {
         boolean assertionsEnabled = false;
         try {
@@ -118,7 +118,7 @@ public final class TestHelper {
             System.err.println(COULDNTSTARTLTL2TGBA);
         }
     }
-    
+
     public static Model loadModel(Options options,
             List<InputStream> inputs, InputStream propertyStream) {
         assert options != null;
@@ -146,7 +146,7 @@ public final class TestHelper {
             InputStream input, InputStream propertyStream) {
         return loadModel(options, Collections.singletonList(input), propertyStream);
     }
-    
+
     public static Model loadModel(Options options,
             List<String> modelFiles, String propertiesFile) {
         assert options != null;
@@ -173,15 +173,15 @@ public final class TestHelper {
             }
             return loadModel(options, inputs, propertyStream);
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
-    
+
     public static Model loadModel(Options options,
             String modelFile, String propertiesFile) {
         return loadModel(options, Collections.singletonList(modelFile), propertiesFile);
     }
-    
+
     public static Model loadModelFromString(Options options,
             String... modelParts) {
         List<InputStream> inputs = new ArrayList<>();
@@ -201,7 +201,7 @@ public final class TestHelper {
         return loadModel(options, Arrays.asList(modelFiles), null);
     }
 
-    
+
     public static Model loadModel(Options options, String modelFile) {
         assert options != null;
         assert modelFile != null;
@@ -226,10 +226,10 @@ public final class TestHelper {
             properties.parseProperties(new InputStream[]{input});
             assert properties.getRawProperties().size() >= 1;
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
-    
+
     public static Log prepareLog(Options options, LogType logType) {
         assert logType != null;
         return new LogTest(options, logType);
@@ -287,7 +287,7 @@ public final class TestHelper {
         ContextValue.set(new ContextValue());
         processBeforeModelLoading(options);
     }
-    
+
     public static Options prepareOptions(LogType logType,
             String modelInputType) {
         assert logType != null;
@@ -295,7 +295,7 @@ public final class TestHelper {
         prepareOptions(options, logType, modelInputType);
         return options;
     }
-    
+
     public static Options prepareOptions() {
         return prepareOptions(LogType.TRANSLATE, MODEL_INPUT_TYPE_PRISM);
     }
@@ -311,13 +311,13 @@ public final class TestHelper {
     public static Options prepareOptions(String modelInputType) {
         return prepareOptions(LogType.LIST, modelInputType);
     }
-    
+
     private static String prepareMessage(Value expected, Value actual,
             double tolerance) {
         String message = expected + NEQ + actual;
         return message;
     }
-    
+
     private static Value stringToValue(String expected) {
         assert expected != null;
         Value expectedValue = null;
@@ -341,13 +341,13 @@ public final class TestHelper {
             message = prepareMessage(expected, actual, tolerance);
         }
         if (!expected.getType().canImport(actual.getType()) && !actual.getType().canImport(expected.getType())) {
-        	assertTrue("types of expected value \"" + expected + "\" and "
-        			+ " actual value \""+ actual + "\" are incompatible",
-        			false);
+            assertTrue("types of expected value \"" + expected + "\" and "
+                    + " actual value \""+ actual + "\" are incompatible",
+                    false);
         }
         assertTrue(message, expected.distance(actual) < tolerance);
     }
-    
+
     public static void assertEquals(Value expected, Value actual,
             double tolerance) {
         assert expected != null;
@@ -396,20 +396,20 @@ public final class TestHelper {
         Value expectedValue = stringToValue(expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
-    
+
     public static void assertEquals(String message, Value expected,
             Value actual) {
         assert expected != null;
         assert actual != null;
         assertEquals(null, expected, actual, 0.0);
     }
-    
+
     public static void assertEquals(Value expected, Value actual) {
         assert expected != null;
         assert actual != null;
         assertEquals(null, expected, actual, 0.0);
     }
-    
+
     public static void assertEquals(boolean expected, Value actual) {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
@@ -434,7 +434,7 @@ public final class TestHelper {
         addProperty(model, property);
         return computeResults(model);
     }
-    
+
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
         try {
@@ -449,7 +449,7 @@ public final class TestHelper {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static Map<String,Value> computeResultsMapName(Model model) {
         ModelCheckerResults mcr = computeResults(model);
         Map<String,Value> result = new LinkedHashMap<>();
@@ -462,7 +462,7 @@ public final class TestHelper {
         }
         return result;
     }
-    
+
     public static Map<String,Value> computeResultsMapDefinition(Model model) {
         ModelCheckerResults mcr = computeResults(model);
         Map<String,Value> result = new LinkedHashMap<>();
@@ -475,7 +475,7 @@ public final class TestHelper {
         }
         return result;
     }
-    
+
     public static Value computeResult(Options options, String modelFile,
             String property) {
         assert options != null;
@@ -503,7 +503,7 @@ public final class TestHelper {
             }
             return (Value) result;
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -520,12 +520,12 @@ public final class TestHelper {
             }
             return (Value) result;
         } catch (Exception e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
     public static void processAfterCommandExecution()
-            {
+    {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
@@ -541,7 +541,7 @@ public final class TestHelper {
             beforeModelLoading.process();
         }
     }
-    
+
     public static void processAfterModelLoading(Options options) {
         assert options != null;
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
@@ -550,23 +550,23 @@ public final class TestHelper {
             afterModelLoading.process();
         }
     }
-    
+
     public static void close(Options options) {
         assert options != null;
     }
-    
+
     private static Value evaluateValue(Expression expression) {
         assert expression != null;
         return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty());
     }
-    
-    
+
+
     public static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
         value.set(valueString);
         return value;
     }
-    
+
     public static void readProperties(Property property, RawProperties properties, String fileName) {
         try (InputStream input = new FileInputStream(fileName)) {
             property.readProperties(properties, input);

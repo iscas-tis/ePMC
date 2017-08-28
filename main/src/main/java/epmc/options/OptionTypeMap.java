@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -48,11 +48,11 @@ public final class OptionTypeMap<V> implements OptionType {
     private final static String GREATER_THAN = ">";
     /** String containing "|". */
     private final static String PIPE = "|";
-    
+
     /** Choices to choose from. */
     private final Map<String, V> map;
     private final Set<String> keys;
-    
+
     /**
      * Get map option type.
      * The map parameter may not be {@code null} or contain {@code null} keys
@@ -70,7 +70,7 @@ public final class OptionTypeMap<V> implements OptionType {
         this.map = map;
         this.keys = Collections.unmodifiableSet(map.keySet());
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -112,12 +112,12 @@ public final class OptionTypeMap<V> implements OptionType {
         }
         return values.iterator().next();
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         for (Entry<String, V> entry : map.entrySet()) {
@@ -131,7 +131,7 @@ public final class OptionTypeMap<V> implements OptionType {
         assert false : value;
         return null;
     }
-    
+
     /**
      * Add an entry to the map of this type.
      * None of the parameters may be {@code null}.
@@ -144,7 +144,7 @@ public final class OptionTypeMap<V> implements OptionType {
         assert value != null;
         map.put(key, value);
     }
-    
+
     public Set<String> getKeys() {
         return keys;
     }

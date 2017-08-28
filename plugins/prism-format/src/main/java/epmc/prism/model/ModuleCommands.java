@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -52,8 +52,8 @@ public final class ModuleCommands implements Module {
     private final Map<Expression,JANIType> publicVariables;
     private final Map<Expression,Expression> initValues;
     private final ArrayList<Command> commands = new ArrayList<>();
-	private final Positional positional;
-	private Expression invariants;
+    private final Positional positional;
+    private Expression invariants;
 
     /**
      * Constructs a new guarded commands module.
@@ -76,7 +76,7 @@ public final class ModuleCommands implements Module {
         assert variables != null;
         this.positional = positional;
         if (invariants == null) {
-        	invariants = ExpressionLiteral.getTrue();
+            invariants = ExpressionLiteral.getTrue();
         }
         this.invariants = invariants;
         for (Entry<Expression, JANIType> entry : variables.entrySet()) {
@@ -106,7 +106,7 @@ public final class ModuleCommands implements Module {
         this.commands.addAll(commands);
         this.initValues.putAll(initValues);
     }
-    
+
     /**
      * Constructs a new module with a new name in which all parts (variables,
      * synchronisation labels, etc.) are renamed according to <code>map</code>.
@@ -116,7 +116,7 @@ public final class ModuleCommands implements Module {
      * @return new module
      */
     ModuleCommands rename(String name, Map<Expression, Expression> map)
-            {
+    {
         assert name != null;
         assert map != null;
         for (Entry<Expression, Expression> entry : map.entrySet()) {
@@ -127,7 +127,7 @@ public final class ModuleCommands implements Module {
         Map<Expression,Expression> newInitValues = new HashMap<>();
 
         List<Command> newCommands = new ArrayList<>();
-        
+
         for (Entry<Expression,JANIType> entry : this.variables.entrySet()) {
             ensure(map.containsKey(entry.getKey()), ProblemsPRISM.VAR_NOT_RENAMED,
                     entry.getKey(), name);
@@ -138,7 +138,7 @@ public final class ModuleCommands implements Module {
             Expression varReplace = map.get(entry.getKey());
             newInitValues.put(varReplace, UtilExpressionStandard.replace(entry.getValue(), map));
         }
-        
+
         for (Command origCommand : this.commands) {
             Expression newLabel = UtilExpressionStandard.replace(origCommand.getLabel(), map);
             Expression newGuard = UtilExpressionStandard.replace(origCommand.getGuard(), map);
@@ -157,7 +157,7 @@ public final class ModuleCommands implements Module {
             newCommands.add(newCommand);
         }
         Expression newInvariants = UtilExpressionStandard.replace(invariants, map);
-        
+
         return new ModuleCommands(name, newVariables, newInitValues, newCommands, newInvariants, null);
     }
 
@@ -178,7 +178,7 @@ public final class ModuleCommands implements Module {
                 Expression newWeight = UtilExpressionStandard.replace(origAlternative.getWeight(), map);
                 Map<Expression,Expression> newEffects = new HashMap<>();
                 for (Entry<Expression,Expression> entry : origAlternative.getEffect().entrySet()) {
-                   newEffects.put(UtilExpressionStandard.replace(entry.getKey(), map),
+                    newEffects.put(UtilExpressionStandard.replace(entry.getKey(), map),
                             UtilExpressionStandard.replace(entry.getValue(), map));
                 }
                 Alternative newAlternative = new Alternative(newWeight, newEffects, null);
@@ -198,7 +198,7 @@ public final class ModuleCommands implements Module {
             labelNr++;
         }
         nameBuilder.append("_REN_");
-        
+
         return new ModuleCommands(nameBuilder.toString(), this.variables, this.initValues, newCommands, invariants, null);
     }
 
@@ -208,15 +208,15 @@ public final class ModuleCommands implements Module {
             assert label != null;
         }
         Expression tau = new ExpressionIdentifierStandard.Builder()
-        		.setName("")
-        		.build();
+                .setName("")
+                .build();
         Map<Expression,Expression> rename = new HashMap<>();
         for (Expression label : labels) {
             rename.put(label, tau);
         }
         return renameActions(rename);
     }
-    
+
     /**
      * Returns the alphabet of the module, that is all synchronisation labels.
      * 
@@ -224,13 +224,13 @@ public final class ModuleCommands implements Module {
      */
     @Override
     public Set<Expression> getAlphabet() {
-       Set<Expression> result = new HashSet<>();
-       for (Command command : commands) {
-           result.add(command.getLabel());
-       }
-       return Collections.unmodifiableSet(result);
+        Set<Expression> result = new HashSet<>();
+        for (Command command : commands) {
+            result.add(command.getLabel());
+        }
+        return Collections.unmodifiableSet(result);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -255,11 +255,11 @@ public final class ModuleCommands implements Module {
     public String getName() {
         return name;
     }
-    
+
     public List<Command> getCommands() {
         return Collections.unmodifiableList(commands);
     }
-    
+
     @Override
     public Map<Expression,JANIType> getVariables() {
         return publicVariables;
@@ -292,15 +292,15 @@ public final class ModuleCommands implements Module {
         Expression newInvariants = UtilExpressionStandard.replace(invariants, map);
         return new ModuleCommands(this.name, newVariables, newInitValues, newCommands, newInvariants, getPositional());
     }
-    
+
     @Override
     public void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
             Map<Expression, Type> types)
-            {
+    {
         for (Entry<Expression,JANIType> entry : variables.entrySet()) {
-        	// TODO
-//            entry.getValue().checkExpressionConsistency(types);
+            // TODO
+            //            entry.getValue().checkExpressionConsistency(types);
             Expression init = initValues.get(entry.getKey());
             // TODO
             /*
@@ -309,7 +309,7 @@ public final class ModuleCommands implements Module {
                 ensure(initType == null || entry.getValue().toType().canImport(initType),
                         ProblemsPRISM.VAR_INIT_INCONSISTENT, entry.getKey(), init);
             }
-            */
+             */
         }
         for (Command command : commands) {
             command.checkExpressionConsistency(globalVariables, variables, types);
@@ -317,16 +317,16 @@ public final class ModuleCommands implements Module {
     }
 
     ModuleCommands replaceVariables(Map<Expression,JANIType> variables) {
-    	assert variables != null;
-    	return new ModuleCommands(name, variables, initValues, commands, invariants, positional);
+        assert variables != null;
+        return new ModuleCommands(name, variables, initValues, commands, invariants, positional);
     }
-    
-	@Override
-	public Positional getPositional() {
-		return positional;
-	}
-	
-	public Expression getInvariants() {
-		return invariants;
-	}
+
+    @Override
+    public Positional getPositional() {
+        return positional;
+    }
+
+    public Expression getInvariants() {
+        return invariants;
+    }
 }

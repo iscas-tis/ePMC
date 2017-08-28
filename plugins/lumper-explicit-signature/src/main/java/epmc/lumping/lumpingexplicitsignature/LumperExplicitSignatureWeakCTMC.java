@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -26,7 +26,7 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 public final class LumperExplicitSignatureWeakCTMC implements LumperExplicit {
     private LumperExplicitSignature inner = new LumperExplicitSignature(EquivalenceWeakCTMC.class);
     public final static String IDENTIFIER = "lumper-explicit-signature-weak-ctmc";
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -42,18 +42,18 @@ public final class LumperExplicitSignatureWeakCTMC implements LumperExplicit {
         inner.lump();
     }
 
-	@Override
-	public void setOriginal(GraphSolverObjectiveExplicit objective) {
-		inner.setOriginal(objective);
-	}
+    @Override
+    public void setOriginal(GraphSolverObjectiveExplicit objective) {
+        inner.setOriginal(objective);
+    }
 
-	@Override
-	public GraphSolverObjectiveExplicit getQuotient() {
-		return inner.getQuotient();
-	}
+    @Override
+    public GraphSolverObjectiveExplicit getQuotient() {
+        return inner.getQuotient();
+    }
 
-	@Override
-	public void quotientToOriginal() {
-		inner.quotientToOriginal();
-	}
+    @Override
+    public void quotientToOriginal() {
+        inner.quotientToOriginal();
+    }
 }

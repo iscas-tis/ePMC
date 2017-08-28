@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -45,13 +45,13 @@ public final class ModelCheckerResult {
     private final RawProperty property;
     /** Result for this property. */
     private final Object result;
-	private final Scheduler scheduler;
-	private final LowLevel lowLevel;
-    
+    private final Scheduler scheduler;
+    private final LowLevel lowLevel;
+
     public ModelCheckerResult(RawProperty property, Object result) {
-    	this(property, result, null, null);
+        this(property, result, null, null);
     }
-    
+
     /**
      * Construct a new model checker result.
      * The property parameter may be {@code null} in case of a common result,
@@ -68,7 +68,7 @@ public final class ModelCheckerResult {
         this.scheduler = scheduler;
         this.lowLevel = lowLevel;
     }
-    
+
     /**
      * Get the property for which this object provides the result.
      * In case of a common result, {@code null} will be returned.
@@ -78,7 +78,7 @@ public final class ModelCheckerResult {
     public RawProperty getProperty() {
         return property;
     }
-    
+
     /**
      * Get the result of the model checking process.
      * 
@@ -87,15 +87,15 @@ public final class ModelCheckerResult {
     public Object getResult() {
         return result;
     }
-    
+
     public Scheduler getScheduler() {
-    	return scheduler;
+        return scheduler;
     }
 
     public LowLevel getLowLevel() {
-    	return lowLevel;
+        return lowLevel;
     }
-    
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)

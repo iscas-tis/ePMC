@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -36,10 +36,10 @@ public interface GraphSolverExplicit {
      * @return unique identifier of this graph solver.
      */
     String getIdentifier();
-    
+
     void setGraphSolverObjective(GraphSolverObjectiveExplicit objective);
-    
+
     boolean canHandle();
-    
+
     void solve();
 }

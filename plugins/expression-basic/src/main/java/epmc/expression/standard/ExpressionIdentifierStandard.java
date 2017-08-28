@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -29,18 +29,18 @@ import epmc.expression.ExpressionToType;
 import epmc.value.Type;
 
 public final class ExpressionIdentifierStandard implements ExpressionIdentifier {
-	public static boolean isIdentifierStandard(Expression expression) {
-		return expression instanceof ExpressionIdentifierStandard;
-	}
-	
-	public static ExpressionIdentifierStandard asIdentifierStandard(Expression expression) {
-		if (isIdentifierStandard(expression)) {
-			return (ExpressionIdentifierStandard) expression;
-		} else {
-			return null;
-		}
-	}	
-	
+    public static boolean isIdentifierStandard(Expression expression) {
+        return expression instanceof ExpressionIdentifierStandard;
+    }
+
+    public static ExpressionIdentifierStandard asIdentifierStandard(Expression expression) {
+        if (isIdentifierStandard(expression)) {
+            return (ExpressionIdentifierStandard) expression;
+        } else {
+            return null;
+        }
+    }	
+
     public final static class Builder {
         private Positional positional;
         private String name;
@@ -50,34 +50,34 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setName(String name) {
             this.name = name;
             return this;
         }
-        
+
         private String getName() {
             return name;
         }
-        
+
         public Builder setScope(Object scope) {
             this.scope = scope;
             return this;
         }
-        
+
         private Object getScope() {
             return scope;
         }
-        
+
         public ExpressionIdentifierStandard build() {
             return new ExpressionIdentifierStandard(this);
         }
     }
-    
+
     private final Positional positional;
     private final String name;
     private final Object scope;
@@ -97,15 +97,15 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
         this.name = name;
         this.scope = scope;
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public Object getScope() {
         return scope;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         assert children != null;
@@ -115,15 +115,15 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
-    	return expressionToType.getType(this);
+        assert expressionToType != null;
+        return expressionToType.getType(this);
     }
 
     @Override
     public boolean isPropositional() {
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -134,7 +134,7 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
         }
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -162,7 +162,7 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
         if (this.scope != null && !this.scope.equals(other.scope)) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -175,8 +175,8 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
     public Positional getPositional() {
         return positional;
     }
-    
-    
+
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -191,12 +191,12 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
         return builder.toString();        
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionIdentifierStandard.Builder()
-				.setName(name)
-				.setScope(scope)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionIdentifierStandard.Builder()
+                .setName(name)
+                .setScope(scope)
+                .setPositional(positional)
+                .build();
+    }
 }

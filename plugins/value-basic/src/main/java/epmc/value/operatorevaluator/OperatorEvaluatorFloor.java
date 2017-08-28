@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -32,41 +32,41 @@ import epmc.value.ValueNumber;
 import epmc.value.operator.OperatorFloor;
 
 public enum OperatorEvaluatorFloor implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorFloor.FLOOR;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeAlgebra.isAlgebra(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorFloor.FLOOR;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeAlgebra.isAlgebra(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorFloor.FLOOR);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        assert operator != null;
+        assert operator.equals(OperatorFloor.FLOOR);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
         Type result;
         if (!(TypeReal.isReal(types[0])
-        		|| TypeInteger.isInteger(types[0]))) {
+                || TypeInteger.isInteger(types[0]))) {
             return null;
         }
         result = TypeInteger.get();
@@ -75,13 +75,13 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	double value = ValueNumber.asNumber(operands[0]).getDouble();
-    	int floor = (int) Math.floor(value);
-    	ValueAlgebra.asAlgebra(result).set(floor);
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        double value = ValueNumber.asNumber(operands[0]).getDouble();
+        int floor = (int) Math.floor(value);
+        ValueAlgebra.asAlgebra(result).set(floor);
     }
 }

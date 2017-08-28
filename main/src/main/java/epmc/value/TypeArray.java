@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -37,7 +37,7 @@ public interface TypeArray extends Type {
     static boolean isArray(Type type) {
         return type instanceof TypeArray;
     }
-    
+
     /**
      * Cast given type to array type.
      * If the type is not an array type, {@code null} will be returned.
@@ -73,13 +73,13 @@ public interface TypeArray extends Type {
         }
         return false;
     }
-    
+
     @Override
     boolean equals(Object obj);
-        
+
     @Override
     int hashCode();
-    
+
     @Override
     String toString();
 }

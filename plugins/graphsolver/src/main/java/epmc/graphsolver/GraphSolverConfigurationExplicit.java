@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -35,20 +35,20 @@ import epmc.util.Util;
 public final class GraphSolverConfigurationExplicit {
     private GraphSolverObjectiveExplicit objective;
     private GraphSolverExplicit graphSolver;
-	private boolean lumpBeforeGraphSolving;
+    private boolean lumpBeforeGraphSolving;
 
     GraphSolverConfigurationExplicit() {
         this.lumpBeforeGraphSolving = Options.get().getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
     }
-    
+
     public void setLumpBeforeGraphSolving(boolean lumpBeforeGraphSolving) {
-		this.lumpBeforeGraphSolving = lumpBeforeGraphSolving;
-	}
-    
+        this.lumpBeforeGraphSolving = lumpBeforeGraphSolving;
+    }
+
     public boolean isLumpBeforeGraphSolving() {
-		return lumpBeforeGraphSolving;
-	}
-    
+        return lumpBeforeGraphSolving;
+    }
+
     public void setObjective(GraphSolverObjectiveExplicit objective) {
         this.objective = objective;
     }
@@ -58,21 +58,21 @@ public final class GraphSolverConfigurationExplicit {
         LumperExplicit lumper = getLumperExplicit();
         GraphSolverObjectiveExplicit objective;
         if (lumper != null) {
-        	lumper.lump();
-        	objective = lumper.getQuotient();
+            lumper.lump();
+            objective = lumper.getQuotient();
         } else {
-        	objective = this.objective;
+            objective = this.objective;
         }
         doSolve(objective);
         if (lumper != null) {
-        	lumper.quotientToOriginal();
+            lumper.quotientToOriginal();
         }
     }
 
     private LumperExplicit getLumperExplicit() {
-    	if (!lumpBeforeGraphSolving) {
-    		return null;
-    	}
+        if (!lumpBeforeGraphSolving) {
+            return null;
+        }
         Map<String,Class<? extends LumperExplicit>> lumpersExplicit = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
         Collection<String> lumperExplicitt = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
@@ -112,8 +112,8 @@ public final class GraphSolverConfigurationExplicit {
             PreprocessorExplicit preprocessor = Util.getInstance(preprocessorClass);
             preprocessor.setObjective(objective);
             if (preprocessor.canHandle()) {
-            	preprocessor.process();
-            	return;
+                preprocessor.process();
+                return;
             }
         }
     }

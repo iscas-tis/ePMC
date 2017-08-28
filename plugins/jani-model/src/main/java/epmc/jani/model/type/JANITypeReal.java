@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
@@ -32,56 +32,56 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 
 public final class JANITypeReal implements JANIType {
-	public final static String IDENTIFIER = "real";
-	/** Identifier for real type. */
-	private final static String REAL = "real";
-	/** Whether the last try to parse type was successful. */
-	private ModelJANI model;
+    public final static String IDENTIFIER = "real";
+    /** Identifier for real type. */
+    private final static String REAL = "real";
+    /** Whether the last try to parse type was successful. */
+    private ModelJANI model;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIType(value);
-	}
-	
-	@Override 
-	public JANIType parseAsJANIType(JsonValue value) {
-		if (!(value instanceof JsonString)) {
-			return null;
-		}
-		JsonString valueString = (JsonString) value;
-		if (!valueString.getString().equals(REAL)) {
-			return null;
-		}
-		return this;
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIType(value);
+    }
 
-	@Override
-	public JsonValue generate() {
-		return UtilJSON.toStringValue(REAL);
-	}
+    @Override 
+    public JANIType parseAsJANIType(JsonValue value) {
+        if (!(value instanceof JsonString)) {
+            return null;
+        }
+        JsonString valueString = (JsonString) value;
+        if (!valueString.getString().equals(REAL)) {
+            return null;
+        }
+        return this;
+    }
 
-	@Override
-	public TypeReal toType() {
-		return TypeReal.get();
-	}
+    @Override
+    public JsonValue generate() {
+        return UtilJSON.toStringValue(REAL);
+    }
 
-	@Override
-	public Value getDefaultValue() {
-		return UtilValue.newValue(toType(), 0);
-	}
+    @Override
+    public TypeReal toType() {
+        return TypeReal.get();
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public Value getDefaultValue() {
+        return UtilValue.newValue(toType(), 0);
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

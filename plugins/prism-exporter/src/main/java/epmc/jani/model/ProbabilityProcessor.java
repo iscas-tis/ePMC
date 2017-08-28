@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -25,38 +25,38 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 
-	private Probability probability = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Probability; 
-		
-		probability = (Probability) obj;
-		return this;
-	}
+    private Probability probability = null;
 
-	@Override
-	public String toPRISM() {
-		assert probability != null;
-		
-		return ProcessorRegistrar.getProcessor(probability.getExp())
-								 .toPRISM();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert probability != null;
-		
-		ProcessorRegistrar.getProcessor(probability.getExp())
-					      .validateTransientVariables();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Probability; 
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert probability != null;
-		
-		return ProcessorRegistrar.getProcessor(probability.getExp())
-								 .usesTransientVariables();
-	}	
+        probability = (Probability) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert probability != null;
+
+        return ProcessorRegistrar.getProcessor(probability.getExp())
+                .toPRISM();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert probability != null;
+
+        ProcessorRegistrar.getProcessor(probability.getExp())
+        .validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert probability != null;
+
+        return ProcessorRegistrar.getProcessor(probability.getExp())
+                .usesTransientVariables();
+    }	
 }

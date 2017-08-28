@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -29,38 +29,38 @@ import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMod;
 
 public enum OperatorEvaluatorIntegerMod implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorMod.MOD;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeInteger.isInteger(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorMod.MOD;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 2) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeInteger.isInteger(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorMod.MOD);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        assert operator != null;
+        assert operator.equals(OperatorMod.MOD);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
         Type result;
         if (!TypeInteger.isInteger(types[0]) || !TypeInteger.isInteger(types[1])) {
             return null;
@@ -72,13 +72,13 @@ public enum OperatorEvaluatorIntegerMod implements OperatorEvaluator {
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	int intOp1 = ValueInteger.asInteger(operands[0]).getInt();
-    	int intOp2 = ValueInteger.asInteger(operands[1]).getInt();
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        int intOp1 = ValueInteger.asInteger(operands[0]).getInt();
+        int intOp2 = ValueInteger.asInteger(operands[1]).getInt();
         int resultInt = (((intOp1 % intOp2)) + intOp2) % intOp2;
         ValueInteger.asInteger(result).set(resultInt);
     }

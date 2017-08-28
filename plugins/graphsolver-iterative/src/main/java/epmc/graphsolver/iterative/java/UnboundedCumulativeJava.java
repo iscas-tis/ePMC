@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.java;
 
@@ -77,7 +77,7 @@ import epmc.value.operator.OperatorMin;
  */
 public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-unbounded-cumulative-java";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -85,7 +85,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     private int numIterations;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
-	private ValueArrayAlgebra cumulativeStateRewards;
+    private ValueArrayAlgebra cumulativeStateRewards;
 
     @Override
     public String getIdentifier() {
@@ -94,20 +94,20 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
+        assert origGraph != null;
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)) {
             return false;
         }
         return true;
@@ -115,7 +115,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
 
     @Override
     public void solve() {
-    	prepareIterGraph();
+        prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
             unboundedCumulative();
         } else {
@@ -135,10 +135,10 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         List<BitSet> sinks = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
-        	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        	sinks = objectiveUnboundedCumulative.getSinks();
+            GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
+            sinks = objectiveUnboundedCumulative.getSinks();
         }
-        
+
         if (sinks != null) {
             builder.addSinks(sinks);
         }
@@ -150,17 +150,17 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         if (embed) {
             GraphExplicitModifier.embed(iterGraph);
         }
-        
+
         cumulativeStateRewards = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
-        	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        	cumulativeStateRewards = objectiveUnboundedCumulative.getStateRewards();
+            GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
+            cumulativeStateRewards = objectiveUnboundedCumulative.getStateRewards();
         }
         if (cumulativeStateRewards != null) {
-        	if (SemanticsNonDet.isNonDet(semanticsType)) {
-        		// TODO
-        	} else {
-        		int size = 0;
+            if (SemanticsNonDet.isNonDet(semanticsType)) {
+                // TODO
+            } else {
+                int size = 0;
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
@@ -168,8 +168,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     }
                     size++;
                 }
-        		ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
-        		Value value = cumulativeStateRewards.getType().getEntryType().newValue();
+                ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
+                Value value = cumulativeStateRewards.getType().getEntryType().newValue();
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
@@ -179,26 +179,26 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     cumulativeStateRewardsNew.set(value, iterNode);
                 }
                 cumulativeStateRewards = cumulativeStateRewardsNew;
-        	}
+            }
         }
     }
 
     private void prepareResultValues() {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
     private void unboundedCumulative() {
@@ -214,7 +214,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-        	dtmcUnboundedCumulativeJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
+            dtmcUnboundedCumulativeJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
             dtmcUnboundedCumulativeGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards);
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
@@ -229,7 +229,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     }
 
     /* auxiliary methods */
-    
+
     private static void compDiff(double[] distance, ValueAlgebra previous,
             Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
@@ -244,15 +244,15 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         }
         distance[0] = Math.max(distance[0], thisDistance);
     }
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -263,7 +263,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovJava(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -274,11 +274,11 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-    
+
     private void dtmcUnboundedCumulativeJacobiJava(GraphExplicitSparse graph,
             ValueArray values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) {
@@ -320,7 +320,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     }
 
     private void dtmcUnboundedCumulativeGaussseidelJava(GraphExplicitSparse graph,
-    		ValueArrayAlgebra values,
+            ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -351,7 +351,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             }
         } while (distance[0] > tolerance / 2);
     }
-    
+
     private static void mdpUnboundedCumulativeJacobiJava(
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
@@ -395,7 +395,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
-                    	maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -411,7 +411,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     private void mdpUnboundedCumulativeGaussseidelJava(
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul)
-                    {
+    {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -447,9 +447,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
                     if (min) {
-                    	minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
-                    	maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -457,8 +457,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             }
         } while (distance[0] > tolerance / 2);
     }
-    
+
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

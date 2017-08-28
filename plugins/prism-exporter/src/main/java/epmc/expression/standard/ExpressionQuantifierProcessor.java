@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,75 +26,75 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionQuantifier quantifier = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionQuantifier; 
-		
-		quantifier = (ExpressionQuantifier) obj;
-		return this;
-	}
+    private ExpressionQuantifier quantifier = null;
 
-	@Override
-	public String toPRISM() {
-		assert quantifier != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		Expression quantified = quantifier.getQuantified();
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionQuantifier; 
+
+        quantifier = (ExpressionQuantifier) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert quantifier != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        Expression quantified = quantifier.getQuantified();
         if (quantified instanceof ExpressionSteadyState) {
             prism.append("S");
         } else if (quantified instanceof ExpressionReward) {
             prism.append("R");
-            
-			prism.append("{")
-			     .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
-			    		 																.getExpression())
-			    		 				   .toPRISM())
-			     .append("}");
+
+            prism.append("{")
+            .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
+                    .getExpression())
+                    .toPRISM())
+            .append("}");
         } else {
             prism.append("P");
         }
-		
-		prism.append(quantifier.getDirType().toString());
 
-		CmpType cmpType = quantifier.getCompareType();
-		prism.append(cmpType.toString());
-		if (cmpType != CmpType.IS) {
-			prism.append(ProcessorRegistrar.getProcessor(quantifier.getCompare())
-										   .toPRISM());
-		}
-		
-		prism.append("[")
-			 .append(ProcessorRegistrar.getProcessor(quantified)
-					 				   .toPRISM())
-			 .append("]");
-		
-		return prism.toString();
-	}
+        prism.append(quantifier.getDirType().toString());
 
-	@Override
-	public void validateTransientVariables() {
-		assert quantifier != null;
-		
-		for (Expression child : quantifier.getChildren()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert quantifier != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : quantifier.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        CmpType cmpType = quantifier.getCompareType();
+        prism.append(cmpType.toString());
+        if (cmpType != CmpType.IS) {
+            prism.append(ProcessorRegistrar.getProcessor(quantifier.getCompare())
+                    .toPRISM());
+        }
+
+        prism.append("[")
+        .append(ProcessorRegistrar.getProcessor(quantified)
+                .toPRISM())
+        .append("]");
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert quantifier != null;
+
+        for (Expression child : quantifier.getChildren()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert quantifier != null;
+
+        boolean usesTransient = false;
+        for (Expression child : quantifier.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

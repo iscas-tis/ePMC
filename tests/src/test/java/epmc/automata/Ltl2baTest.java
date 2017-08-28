@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata;
 
@@ -25,7 +25,7 @@ package epmc.automata;
 // TODO change to assertThat
 
 public class Ltl2baTest {
-/*
+    /*
     private LtlToBa stringToBa(String string, LtlToBa.AbstractionType absType) {
         string = "P=? [" + string + "];";
         PropertyList list = new PropertyList();
@@ -43,7 +43,7 @@ public class Ltl2baTest {
         }
         return result;
     }
-    
+
     @Test
     public void falseTest() {
         LtlToBa ba = stringToBa("false", AbstractionType.LeaveNonDet);
@@ -67,7 +67,7 @@ public class Ltl2baTest {
         BDDAutomatonState next = ba.succState(0);
         assertEquals(init, next);
     }    
-    
+
     @Test
     public void trueTest() {
         LtlToBa ba = stringToBa("true", AbstractionType.LeaveNonDet);
@@ -143,7 +143,7 @@ public class Ltl2baTest {
         assertEquals(1, ba.stateEnd() - ba.stateBegin());
         assertEquals(next, ba.succState(0));
     }
-    
+
     @Test
     public void nextFalseTest() {
         LtlToBa ba = stringToBa("X(false)", AbstractionType.LeaveNonDet);
@@ -171,7 +171,7 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(1, ba.stateEnd() - ba.stateBegin());        
     }
-    
+
     @Test
     public void notNextFalseTrue() {
         LtlToBa ba = stringToBa("!(X(true))", AbstractionType.LeaveNonDet);
@@ -199,7 +199,7 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(1, ba.stateEnd() - ba.stateBegin());        
     }
-    
+
     @Test
     public void nextNotTrueTest() {
         LtlToBa ba = stringToBa("X(!true)", AbstractionType.LeaveNonDet);
@@ -291,7 +291,7 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(next, ba.succState(0));
     }
-    
+
     @Test
     public void nextNotLabelTest() {
         LtlToBa ba = stringToBa("X(!a)", AbstractionType.LeaveNonDet);
@@ -468,7 +468,7 @@ public class Ltl2baTest {
         assertEquals(1, ba.stateEnd() - ba.stateBegin());
         assertEquals(trueState, ba.succState(0));
     }
-    
+
     @Test
     public void eventuallyAlwaysTest() {
         LtlToBa ba = stringToBa("true U (false R a)", AbstractionType.LeaveNonDet);
@@ -538,5 +538,5 @@ public class Ltl2baTest {
     // also for under and overapproximation
     // transformation to normal negation form
      * */
-     
+
 }

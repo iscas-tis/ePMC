@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.error;
 
@@ -43,9 +43,9 @@ public final class UtilError {
             Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setArguments(arguments)
-                .build();
+            .setProblem(problem)
+            .setArguments(arguments)
+            .build();
         }
     }
 
@@ -61,13 +61,13 @@ public final class UtilError {
             Throwable cause, Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setCause(cause)
-                .setArguments(arguments)
-                .build();
+            .setProblem(problem)
+            .setCause(cause)
+            .setArguments(arguments)
+            .build();
         }
     }
-    
+
     /**
      * Throw new {@link EPMCException} if a condition does not hold.
      * 
@@ -80,13 +80,13 @@ public final class UtilError {
             Positional positional, Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setPositional(positional)
-                .setArguments(arguments)
-                .build();
+            .setProblem(problem)
+            .setPositional(positional)
+            .setArguments(arguments)
+            .build();
         }
     }
-    
+
     /**
      * Throw new {@link EPMCException}.
      * 
@@ -94,11 +94,11 @@ public final class UtilError {
      * @param arguments
      */
     public static void fail(Problem problem, Object... arguments)
-            {
+    {
         throw new EPMCException.Builder()
-            .setProblem(problem)
-            .setArguments(arguments)
-            .build();
+        .setProblem(problem)
+        .setArguments(arguments)
+        .build();
     }
 
     /**
@@ -111,10 +111,10 @@ public final class UtilError {
     public static void fail(Problem problem, Throwable cause,
             Object... arguments) {
         throw new EPMCException.Builder()
-            .setProblem(problem)
-            .setCause(cause)
-            .setArguments(arguments)
-            .build();
+        .setProblem(problem)
+        .setCause(cause)
+        .setArguments(arguments)
+        .build();
     }
 
     /**
@@ -127,12 +127,12 @@ public final class UtilError {
     public static void fail(Problem problem, Positional positional,
             Object... arguments) {
         throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setPositional(positional)
-                .setArguments(arguments)
-                .build();
+        .setProblem(problem)
+        .setPositional(positional)
+        .setArguments(arguments)
+        .build();
     }    
-    
+
     /**
      * Creates a new {@link Problem} description.
      * The problem is described the key {@code name} of the resource bundle

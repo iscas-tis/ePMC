@@ -16,58 +16,58 @@ import epmc.value.UtilValue;
  * @author Ernst Moritz Hahn
  */
 public final class JANITypeClock implements JANIType {
-	public final static String IDENTIFIER = "clock";
-	/** Identifier for boolean type. */
-	private final static String CLOCK = "clock";
-	
-	private boolean initialized = false;
+    public final static String IDENTIFIER = "clock";
+    /** Identifier for boolean type. */
+    private final static String CLOCK = "clock";
 
-	/** Whether the last try to parse type was successful. */
-	private ModelJANI model;
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private boolean initialized = false;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIType(value);
-	}
-	
-	@Override 
-	public JANIType parseAsJANIType(JsonValue value) {
-		assert model != null;
-		initialized = false;
-		if (!(value instanceof JsonString)) {
-			return null;
-		}
-		JsonString valueString = (JsonString) value;
-		if (!valueString.getString().equals(CLOCK)) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    /** Whether the last try to parse type was successful. */
+    private ModelJANI model;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		return UtilJSON.toStringValue(CLOCK);
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public TypeClock toType() {
-		return ContextValue.get().makeUnique(new TypeClock());
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public ValueClock getDefaultValue() {
-		return UtilValue.newValue(toType(), 0);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIType(value);
+    }
+
+    @Override 
+    public JANIType parseAsJANIType(JsonValue value) {
+        assert model != null;
+        initialized = false;
+        if (!(value instanceof JsonString)) {
+            return null;
+        }
+        JsonString valueString = (JsonString) value;
+        if (!valueString.getString().equals(CLOCK)) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        return UtilJSON.toStringValue(CLOCK);
+    }
+
+    @Override
+    public TypeClock toType() {
+        return ContextValue.get().makeUnique(new TypeClock());
+    }
+
+    @Override
+    public ValueClock getDefaultValue() {
+        return UtilValue.newValue(toType(), 0);
+    }
 }

@@ -1,8 +1,8 @@
 package epmc.value;
 
 public interface OperatorEvaluator {
-	Operator getOperator();
-	
+    Operator getOperator();
+
     boolean canApply(Type... types);
 
     Type resultType(Operator operator, Type... types);

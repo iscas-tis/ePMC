@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -44,7 +44,7 @@ import epmc.value.ValueContentDoubleArray;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledNative implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-native";
-    
+
     private static final class IterationNative {
         native static int double_mdp_multiobjectivescheduled_jacobi(int relative,
                 double precision, int numStates,
@@ -59,7 +59,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
                 double[] values, int[] scheduler);
         private final static boolean loaded =
                 JNATools.registerLibrary(IterationNative.class, "valueiterationmultiobjective");
-        
+
         private final static int EPMC_ERROR_SUCCESS = 0;
         private final static int EPMC_ERROR_OUT_OF_MEMORY = 1;
     }
@@ -79,34 +79,34 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveScheduled)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveScheduled)) {
             return false;
         }
-    	Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-    	if (!SemanticsMDP.isMDP(semantics)) {
-    		return false;
-    	}
+        Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsMDP.isMDP(semantics)) {
+            return false;
+        }
         Type typeWeight = TypeWeight.get();
         if (TypeDouble.isDouble(typeWeight)) {
-        	return false;
+            return false;
         }
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
         if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
-        	return false;
+            return false;
         }
         return true;
     }
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	multiobjectiveScheduled();
+        prepareIterGraph();
+        multiobjectiveScheduled();
         prepareResultValues();
     }
 
@@ -126,8 +126,8 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     }
 
     private void prepareResultValues() {
-    	this.outputValues = inputValues;
-    	objective.setResult(outputValues);
+        this.outputValues = inputValues;
+        objective.setResult(outputValues);
     }
 
     private void multiobjectiveScheduled() {
@@ -152,7 +152,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -164,13 +164,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         return true;
     }
 
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* native call to iteration algorithms */    
-    
+
     private static void mdpMultiobjectivescheduledJacobiNative(
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
@@ -194,7 +194,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;        
     }
-    
+
     private static void mdpMultiobjectivescheduledGaussseidelNative(
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.flatten;
 
@@ -24,24 +24,24 @@ import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 
 public final class FlatterComponentAutomaton implements FlatterComponent {
-	private Component component;
+    private Component component;
 
-	@Override
-	public void setComponent(Component component) {
-		this.component = component;
-	}
+    @Override
+    public void setComponent(Component component) {
+        this.component = component;
+    }
 
-	@Override
-	public boolean canHandle() {
-		if (!(component instanceof ComponentAutomaton)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean canHandle() {
+        if (!(component instanceof ComponentAutomaton)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public ComponentAutomaton flatten() {
-		return (ComponentAutomaton) component;
-	}
+    @Override
+    public ComponentAutomaton flatten() {
+        return (ComponentAutomaton) component;
+    }
 
 }

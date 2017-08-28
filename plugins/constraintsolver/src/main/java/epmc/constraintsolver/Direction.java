@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
@@ -26,37 +26,37 @@ package epmc.constraintsolver;
  * @author Ernst Moritz Hahn
  */
 public enum Direction {
-	/** Solution is unspecified (any valid solution suffices). */
-	FEASIBILITY,
-	/** Minimal solution is required. */
+    /** Solution is unspecified (any valid solution suffices). */
+    FEASIBILITY,
+    /** Minimal solution is required. */
     MIN,
     /** Maximal solution is required. */
     MAX
     ;
 
-	/**
-	 * Check whether the direction is unspecified.
-	 * 
-	 * @return whether the direction is unspecified
-	 */
-	public boolean isFeasibility() {
-		return this == FEASIBILITY;
-	}
+    /**
+     * Check whether the direction is unspecified.
+     * 
+     * @return whether the direction is unspecified
+     */
+    public boolean isFeasibility() {
+        return this == FEASIBILITY;
+    }
 
-	/**
-	 * Check whether a maximising solution is required.
-	 * 
-	 * @return whether a maximising solution is required.
-	 */
+    /**
+     * Check whether a maximising solution is required.
+     * 
+     * @return whether a maximising solution is required.
+     */
     public boolean isMax() {
         return this == MAX;
     }
 
-	/**
-	 * Check whether a minimising solution is required.
-	 * 
-	 * @return whether a minimising solution is required.
-	 */
+    /**
+     * Check whether a minimising solution is required.
+     * 
+     * @return whether a minimising solution is required.
+     */
     public boolean isMin() {
         return this == MIN;
     }

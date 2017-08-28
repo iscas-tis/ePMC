@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -33,34 +33,34 @@ import epmc.value.ValueBoolean;
  * @author Ernst Moritz Hahn
  */
 final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
-	/** Explorer to which this property belongs. */
-	private final ExplorerJANI explorer;
-	/** Used to return the value of the property. */
-	private final ValueBoolean value;
-	/** Set of initial nodes of the explorer. */
-	private final Set<NodeJANI> initialNodes;
+    /** Explorer to which this property belongs. */
+    private final ExplorerJANI explorer;
+    /** Used to return the value of the property. */
+    private final ValueBoolean value;
+    /** Set of initial nodes of the explorer. */
+    private final Set<NodeJANI> initialNodes;
 
-	PropertyNodeInitialNodes(ExplorerJANI explorer) {
-		assert explorer != null;
-		this.explorer = explorer;
-		this.initialNodes = new HashSet<>(explorer.getInitialNodes());
-		TypeBoolean type = TypeBoolean.get();
-		value = type.newValue();
-	}
-	
-	@Override
-	public ValueBoolean get() {
-		value.set(initialNodes.contains(explorer.getQueriedNode()));
-		return value;
-	}
-	
-	@Override
-	public boolean getBoolean() {
-		return initialNodes.contains(explorer.getQueriedNode());
-	}
-	
-	@Override
-	public TypeBoolean getType() {
-		return TypeBoolean.get();
-	}
+    PropertyNodeInitialNodes(ExplorerJANI explorer) {
+        assert explorer != null;
+        this.explorer = explorer;
+        this.initialNodes = new HashSet<>(explorer.getInitialNodes());
+        TypeBoolean type = TypeBoolean.get();
+        value = type.newValue();
+    }
+
+    @Override
+    public ValueBoolean get() {
+        value.set(initialNodes.contains(explorer.getQueriedNode()));
+        return value;
+    }
+
+    @Override
+    public boolean getBoolean() {
+        return initialNodes.contains(explorer.getQueriedNode());
+    }
+
+    @Override
+    public TypeBoolean getType() {
+        return TypeBoolean.get();
+    }
 }

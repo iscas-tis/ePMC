@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -38,7 +38,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -50,7 +50,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -60,7 +60,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -70,7 +70,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
@@ -98,20 +98,20 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             return new EvaluatorExplicitOperatorShortcutIfThenElse(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
-    
+
     public final static String IDENTIFIER = "operator-shortcut-if-then-else";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicit[] operands;
@@ -142,12 +142,12 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
     public Value evaluate(Value... values) {
         assert values != null;
@@ -165,21 +165,21 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         }
         return result;
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;
     }
 
-	@Override
-	public boolean evaluateBoolean(Value... values) {
+    @Override
+    public boolean evaluateBoolean(Value... values) {
         for (Value variable : values) {
             assert variable != null;
         }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean(values)) {
-        	return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean(values);
+            return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean(values);
         } else {
-        	return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean(values);
+            return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean(values);
         }
-	}
+    }
 }

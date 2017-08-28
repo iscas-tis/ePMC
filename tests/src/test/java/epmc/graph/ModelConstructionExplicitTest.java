@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -57,7 +57,7 @@ public class ModelConstructionExplicitTest {
         assertEquals("120", result.getNumTransitions());
         close(options);
     }
-    
+
     @Test
     public void er12_1Test() {
         Options options = prepareOptions();
@@ -88,19 +88,19 @@ public class ModelConstructionExplicitTest {
         assertEquals("57", result.getNumTransitions());
         close(options);
     }
-    
+
     @Test
     public void hermanTest() {
         ExploreStatistics result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
         options.set(TestHelper.PRISM_FLATTEN, false);
-        
+
         result = exploreModel(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3));
         assertEquals("8", result.getNumStates());
         assertEquals("8", result.getNumNodes());
         assertEquals("28", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3));
         assertEquals("8", result.getNumStates());
@@ -142,7 +142,7 @@ public class ModelConstructionExplicitTest {
         assertEquals("2048", result.getNumStates());
         assertEquals("2048", result.getNumNodes());
         assertEquals("177148", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 11));
         assertEquals("2048", result.getNumStates());
@@ -155,19 +155,19 @@ public class ModelConstructionExplicitTest {
         assertEquals("8192", result.getNumStates());
         assertEquals("8192", result.getNumNodes());
         assertEquals("1594324", result.getNumTransitions());
-        
+
         options.set(Options.FLATTEN, true);
         result = exploreModel(options, HERMAN13);
         assertEquals("8192", result.getNumStates());
         assertEquals("8192", result.getNumNodes());
         assertEquals("1594324", result.getNumTransitions());
-        
+
         options.set(Options.FLATTEN, false);
         result = exploreModel(options, HERMAN15);
         assertEquals("32768", result.getNumStates());
         assertEquals("32768", result.getNumNodes());
         assertEquals("14348908", result.getNumTransitions());
-        
+
         options.set(Options.FLATTEN, true);
         result = exploreModel(options, HERMAN15);
         assertEquals("32768", result.getNumStates());
@@ -179,7 +179,7 @@ public class ModelConstructionExplicitTest {
         assertEquals("131072", result.getNumStates());
         assertEquals("131072", result.getNumNodes());
         assertEquals("129140164", result.getNumTransitions());
-        
+
         options.set(Options.FLATTEN, true);
         result = exploreModel(options, HERMAN17);
         assertEquals("131072", result.getNumStates());
@@ -191,7 +191,7 @@ public class ModelConstructionExplicitTest {
         assertEquals("524288", result.getNumStates());
         assertEquals("524288", result.getNumNodes());
         assertEquals("1162261468", result.getNumTransitions());
-        
+
         options.set(Options.FLATTEN, true);
         result = exploreModel(options, HERMAN19);
         assertEquals("524288", result.getNumStates());
@@ -209,34 +209,34 @@ public class ModelConstructionExplicitTest {
         assertEquals("2097152", result.getNumStates());
         assertEquals("2097152", result.getNumNodes());
         assertEquals("10460353204", result.getNumTransitions());
-        */
+         */
         close(options);
     }
-    
+
     @Test
     public void ijTest() {
         ExploreStatistics result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        
+
         options.set(TestHelper.PRISM_FLATTEN, false);
         result = exploreModel(options, String.format(ModelNamesPRISM.IJ_MODEL, 3));
         assertEquals("7", result.getNumStates());
         assertEquals("19", result.getNumNodes());
         assertEquals("36", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, String.format(ModelNamesPRISM.IJ_MODEL, 3));
         assertEquals("7", result.getNumStates());
         assertEquals("19", result.getNumNodes());
         assertEquals("36", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, false);
         result = exploreModel(options, String.format(ModelNamesPRISM.IJ_MODEL, 7));
         assertEquals("127", result.getNumStates());
         assertEquals("575", result.getNumNodes());
         assertEquals("1344", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, String.format(ModelNamesPRISM.IJ_MODEL, 7));
         assertEquals("127", result.getNumStates());
@@ -244,19 +244,19 @@ public class ModelConstructionExplicitTest {
         assertEquals("1344", result.getNumTransitions());
         close(options);
     }
-    
+
     @Test
     public void testAndSetTest() {
         Options options = prepareOptions();
         ExploreStatistics result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        
+
         options.set(TestHelper.PRISM_FLATTEN, false);
         result = exploreModel(options, ModelNamesPRISM.TEST_AND_SET_MODEL);
         assertEquals("196", result.getNumStates());
         assertEquals("650", result.getNumNodes());
         assertEquals("920", result.getNumTransitions());
-        
+
         options.set(TestHelper.PRISM_FLATTEN, true);
         result = exploreModel(options, ModelNamesPRISM.TEST_AND_SET_MODEL);
         assertEquals("196", result.getNumStates());
@@ -264,15 +264,15 @@ public class ModelConstructionExplicitTest {
         assertEquals("920", result.getNumTransitions());
         close(options);
     }
-    
+
     @Test
     public void brpTest() {
         Options options = prepareOptions();
         ExploreStatistics result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        
+
         Map<String,Object> constants = new HashMap<>();
-        
+
         constants.put("N", "200");
         constants.put("MAX", "512");
         options.set(OptionsModelChecker.CONST, constants);

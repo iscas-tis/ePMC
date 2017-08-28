@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,22 +24,22 @@ import epmc.util.BitStream;
 import epmc.value.Value;
 
 public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, ValueBitStoreable {
-	public static boolean isEnum(Value value) {
-		return value instanceof ValueEnum;
-	}
-	
-	public static ValueEnum asEnum(Value value) {
-		if (isEnum(value)) {
-			return (ValueEnum) value;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isEnum(Value value) {
+        return value instanceof ValueEnum;
+    }
+
+    public static ValueEnum asEnum(Value value) {
+        if (isEnum(value)) {
+            return (ValueEnum) value;
+        } else {
+            return null;
+        }
+    }
+
     private Enum<?> value;
     private final TypeEnum type;
     private boolean immutable;
-    
+
     ValueEnum(TypeEnum type) {
         assert type != null;
         assert TypeEnum.isEnum(type);
@@ -52,7 +52,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         this.type = other.getType();
         this.value = other.value;
     }
-    
+
     @Override
     public TypeEnum getType() {
         return type;
@@ -66,7 +66,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     public Class<? extends Enum<?>> getEnumClass() {
         return getType().getEnumClass();
     }
-    
+
     public void set(Enum<?> value) {
         assert !isImmutable();
         assert value != null;
@@ -74,7 +74,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
                 + " != " + getType().getEnumClass();
         this.value = value;
     }
-    
+
     @Override
     public ValueEnum clone() {
         return new ValueEnum(this);
@@ -99,7 +99,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     public String toString() {
         return value.toString();
     }
-    
+
     @Override
     public void set(Value op) {
         assert !isImmutable();
@@ -116,7 +116,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         assert this.getType().getEnumClass() == TypeEnum.asEnum(other.getType()).getEnumClass();
         return this.value == ((ValueEnum) other).value;
     }
-    
+
     @Override
     public void write(BitStream writer) {
         assert writer != null;
@@ -127,7 +127,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
             marker <<= 1;
         }
     }
-    
+
     @Override
     public void read(BitStream reader) {
         assert !isImmutable();
@@ -144,7 +144,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         assert value < getType().getEnumClass().getEnumConstants().length;
         this.value = getType().getEnumClass().getEnumConstants()[value];
     }
-    
+
     @Override
     public int compareTo(Value other) {
         assert other != null;
@@ -152,7 +152,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         assert this.getType().getEnumClass() == TypeEnum.asEnum(other.getType()).getEnumClass();
         return Integer.compare(value.ordinal(), ((ValueEnum) other).value.ordinal());
     }
-    
+
     @Override
     public int getValueNumber() {
         return value.ordinal();
@@ -170,10 +170,10 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
 
     @Override
     public double distance(Value other) {
-    	ValueEnum otherEnum = asEnum(other);
-    	return value == otherEnum.value ? 0.0 : 1.0;
+        ValueEnum otherEnum = asEnum(other);
+        return value == otherEnum.value ? 0.0 : 1.0;
     }
-    
+
     @Override
     public void setValueNumber(int number) {
         assert number >= 0 : number;
@@ -181,9 +181,9 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         set(type.getEnumClass().getEnumConstants()[number]);
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
+
+    }
 }

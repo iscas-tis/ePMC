@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cudd;
 
@@ -66,11 +66,11 @@ import epmc.value.operator.OperatorOr;
  * @author Ernst Moritz Hahn
  */
 public final class LibraryDDCUDD implements LibraryDD {
-	/** Identifier of the CUDD DD library. */
+    /** Identifier of the CUDD DD library. */
     public final static String IDENTIFIER = "cudd";
     /** Prefix used for loading the native CUDD dynamic library. */
     private final static String CUDD_LIBRARY_PREFIX = "cudd";
-    
+
     private final static class LowLevelPermutationCUDD
     implements PermutationLibraryDD {
         private Memory memory;
@@ -79,11 +79,11 @@ public final class LibraryDDCUDD implements LibraryDD {
             assert (numVariables == 0) == (memory == null);
             this.memory = memory;
         }
-        
+
         Memory getMemory() {
             return memory;
         }
-        
+
     }
 
     /**
@@ -110,11 +110,11 @@ public final class LibraryDDCUDD implements LibraryDD {
         static native int Cudd_ReduceHeap(Pointer table, int heuristic, int  minsize);
         /** fixing how not to reorder */
         static native Pointer Cudd_MakeTreeNode(Pointer dd, int  low, int size, int type);
-        
+
         static native Pointer Cudd_addIte(Pointer dd, Pointer f, Pointer g, Pointer h);
-        
+
         static native Pointer Cudd_addApplyAnd(Pointer dd, Pointer f,Pointer g);
-        
+
         static native Pointer Cudd_addApplyOr(Pointer dd, Pointer f,Pointer g);
 
         static native Pointer Cudd_addApplyEq(Pointer dd, Pointer f,Pointer g);
@@ -122,7 +122,7 @@ public final class LibraryDDCUDD implements LibraryDD {
         static native Pointer Cudd_addApplyNe(Pointer dd, Pointer f,Pointer g);
 
         static native Pointer Cudd_bddAnd(Pointer dd, Pointer f,Pointer g);
-        
+
         static native Pointer Cudd_bddOr(Pointer dd, Pointer f,Pointer g);
 
         static native Pointer Cudd_bddXnor(Pointer dd, Pointer f,Pointer g);
@@ -137,10 +137,10 @@ public final class LibraryDDCUDD implements LibraryDD {
         static native Pointer Cudd_addIthVar(Pointer dd, int i);
         /** apply monadic function on an MTBDD node */
         static native Pointer Cudd_addApplyNot(Pointer dd, Pointer f);
-        
+
         /** exist abstraction for MTBDDs */
         static native Pointer Cudd_addOrAbstract(Pointer dd, Pointer f, Pointer g);
-        
+
         /** product abstraction for MTBDDs */
         static native Pointer Cudd_addUnivAbstract(Pointer dd, Pointer f, Pointer g);
 
@@ -149,10 +149,10 @@ public final class LibraryDDCUDD implements LibraryDD {
 
         /** obtain variable BDD node (with boolean branches) */
         static native Pointer Cudd_bddIthVar(Pointer dd, int i);
-        
+
         static native Pointer Cudd_bddIte(Pointer dd, Pointer f, Pointer g, Pointer h);
 
-        
+
         /** variable permutations for BDDs */
         static native Pointer Cudd_bddPermute(Pointer manager, Pointer node, Memory permut);
         /** exist abstraction for BDDs */
@@ -161,16 +161,16 @@ public final class LibraryDDCUDD implements LibraryDD {
         static native Pointer Cudd_bddUnivAbstract(Pointer dd, Pointer f, Pointer g);
         /** simultaneous 'and' and existential quantification for BDDs */
         static native Pointer Cudd_bddAndAbstract(Pointer manager, Pointer f, Pointer g, Pointer h);
-        
+
         /** read BDD one (true) constant */
         static native Pointer Cudd_ReadOne(Pointer dd);
-        
+
         /** Obtain number of nodes which are referenced. */
         static native int Cudd_CheckZeroRef(Pointer manager);
 
         /** Consistency check. */
         static native int Cudd_DebugCheck(Pointer table);
-        
+
         /** Control table resizing. */
         static native void Cudd_SetMinHit(Pointer dd, int hr);
 
@@ -182,10 +182,10 @@ public final class LibraryDDCUDD implements LibraryDD {
 
         /** Set fast growth threshold. */
         static native void Cudd_SetLooseUpTo(Pointer dd, int  lut);
-        
+
         /** Set hard limit of cache size. */
         static native void Cudd_SetMaxCacheHard(Pointer dd, int mc);
-        
+
         /** Try to load CUDD library and check whether successful. */
         private final static boolean loaded =
                 JNATools.registerLibrary(CUDD.class, CUDD_LIBRARY_PREFIX);
@@ -194,15 +194,15 @@ public final class LibraryDDCUDD implements LibraryDD {
     /** Maximal number of variables possible. */
     static final long CUDD_MAXINDEX;
     static {
-    	/* The value depends on whether we run EPMC on a 32 bit or 64 bit
-    	 * system. */
+        /* The value depends on whether we run EPMC on a 32 bit or 64 bit
+         * system. */
         if (Pointer.SIZE == 8) {
             CUDD_MAXINDEX = ((~0) >>> 1);
         } else {
             CUDD_MAXINDEX = ((short) ~0);
         }
     };
-    
+
     /** constant to mark that a constant is not a variable but a constant */
     static final long CUDD_CONST_INDEX = CUDD_MAXINDEX;
 
@@ -229,23 +229,23 @@ public final class LibraryDDCUDD implements LibraryDD {
     final static int CUDD_REORDER_LINEAR_CONVERGE = 19;
     final static int CUDD_REORDER_LAZY_SIFT = 20;
     final static int CUDD_REORDER_EXACT = 21;
-    
+
     /** Default value for the number of cache slots. */
     final static String CUDD_CACHE_SLOTS = "262144";
     /** Default value for the number of unique slots. */
     final static String CUDD_UNIQUE_SLOTS = "256";
-    
+
     final static int MTR_DEFAULT = 0x00000000;
     final static int MTR_TERMINAL = 0x00000001;
     final static int MTR_SOFT = 0x00000002;
     final static int MTR_FIXED = 0x00000004;
     final static int MTR_NEWNODE = 0x00000008;
-    
+
     /** pointer to native CUDD manager we are using */
     private Pointer cuddManager;
     /** DD nodes alive just after creation of the manager */
     private int initNodesAlive;
-    
+
     /** current number of variables */
     private int numVariables;
     /** reorder method */
@@ -262,11 +262,11 @@ public final class LibraryDDCUDD implements LibraryDD {
     private Value valueFalse;
     private RuntimeException badProblem;
     private EPMCException valueProblem;
-        
+
     private boolean mtbdd;
     private ContextDD contextDD;
     private boolean alive = true;
-    
+
     @Override
     public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
@@ -287,12 +287,12 @@ public final class LibraryDDCUDD implements LibraryDD {
             fail(ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         }
         if (!options.getString(OptionsDDCUDD.DD_CUDD_MAX_CACHE_HARD).equals(Options.DEFAULT)) {
-        	int hardCacheLimit = options.getInteger(OptionsDDCUDD.DD_CUDD_MAX_CACHE_HARD);
-        	CUDD.Cudd_SetMaxCacheHard(cuddManager, hardCacheLimit);
+            int hardCacheLimit = options.getInteger(OptionsDDCUDD.DD_CUDD_MAX_CACHE_HARD);
+            CUDD.Cudd_SetMaxCacheHard(cuddManager, hardCacheLimit);
         }
         if (!options.getString(OptionsDDCUDD.DD_CUDD_MIN_HIT).equals(Options.DEFAULT)) {
-        	int minHit = options.getInteger(OptionsDDCUDD.DD_CUDD_MIN_HIT);
-        	CUDD.Cudd_SetMinHit(cuddManager, minHit);
+            int minHit = options.getInteger(OptionsDDCUDD.DD_CUDD_MIN_HIT);
+            CUDD.Cudd_SetMinHit(cuddManager, minHit);
         }
         boolean garbageCollect = options.getBoolean(OptionsDDCUDD.DD_CUDD_GARBAGE_COLLECT);
         if (garbageCollect) {
@@ -301,10 +301,10 @@ public final class LibraryDDCUDD implements LibraryDD {
             CUDD.Cudd_DisableGarbageCollection(cuddManager);
         }
         if (!options.getString(OptionsDDCUDD.DD_CUDD_LOOSE_UP_TO).equals(Options.DEFAULT)) {	
-        	int looseUpTo = options.getInteger(OptionsDDCUDD.DD_CUDD_LOOSE_UP_TO);
-        	CUDD.Cudd_SetLooseUpTo(cuddManager, looseUpTo);
+            int looseUpTo = options.getInteger(OptionsDDCUDD.DD_CUDD_LOOSE_UP_TO);
+            CUDD.Cudd_SetLooseUpTo(cuddManager, looseUpTo);
         }
-        
+
         initNodesAlive = CUDD.Cudd_CheckZeroRef(cuddManager);
         this.bddOne = mtbdd ? null : CUDD.Cudd_ReadOne(cuddManager);
         this.bddZero = mtbdd ? null : new Pointer(0);
@@ -316,10 +316,10 @@ public final class LibraryDDCUDD implements LibraryDD {
         this.addZero = mtbdd ? CUDD.Cudd_dd_zero(cuddManager) : null;
         this.addOne = mtbdd ? CUDD.Cudd_dd_one(cuddManager) : null;
     }
-    
+
     @Override
     public long apply(Operator operation, Type type, long... operands)
-            {
+    {
         assert operation != null;
         assert type != null;
         Pointer op1Ptr = operands.length >= 1 ? new Pointer(operands[0]) : null;
@@ -328,58 +328,58 @@ public final class LibraryDDCUDD implements LibraryDD {
         Pointer resPtr;
         Pointer notOp1Ptr = null;
         if (mtbdd) {
-        	if (operation.equals(OperatorId.ID)) {
-            	resPtr = op1Ptr;
-        	} else if (operation.equals(OperatorNot.NOT)) {
+            if (operation.equals(OperatorId.ID)) {
+                resPtr = op1Ptr;
+            } else if (operation.equals(OperatorNot.NOT)) {
                 resPtr = CUDD.Cudd_addApplyNot(cuddManager, op1Ptr);
-        	} else if (operation.equals(OperatorAnd.AND)) {
+            } else if (operation.equals(OperatorAnd.AND)) {
                 resPtr = CUDD.Cudd_addApplyAnd(cuddManager, op1Ptr, op2Ptr);        		
-        	} else if (operation.equals(OperatorEq.EQ)) {
+            } else if (operation.equals(OperatorEq.EQ)) {
                 resPtr = CUDD.Cudd_addApplyEq(cuddManager, op1Ptr, op2Ptr);        		
-        	} else if (operation.equals(OperatorIff.IFF)) {
+            } else if (operation.equals(OperatorIff.IFF)) {
                 resPtr = CUDD.Cudd_addApplyEq(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorImplies.IMPLIES)) {
+            } else if (operation.equals(OperatorImplies.IMPLIES)) {
                 notOp1Ptr = CUDD.Cudd_addApplyNot(cuddManager, op1Ptr);
                 CUDD.Cudd_Ref(notOp1Ptr);
                 resPtr = CUDD.Cudd_addApplyOr(cuddManager, notOp1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorNe.NE)) {
+            } else if (operation.equals(OperatorNe.NE)) {
                 resPtr = CUDD.Cudd_addApplyNe(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorOr.OR)) {
+            } else if (operation.equals(OperatorOr.OR)) {
                 resPtr = CUDD.Cudd_addApplyOr(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorIte.ITE)) {
+            } else if (operation.equals(OperatorIte.ITE)) {
                 resPtr = CUDD.Cudd_addIte(cuddManager, op1Ptr, op2Ptr, op3Ptr);
-        	} else {
+            } else {
                 assert false : operation; 
-                resPtr = null;
-        	}
+            resPtr = null;
+            }
         } else {
-        	if (operation.equals(OperatorId.ID)) {
-            	resPtr = op1Ptr;        		
-        	} else if (operation.equals(OperatorNot.NOT)) {
+            if (operation.equals(OperatorId.ID)) {
+                resPtr = op1Ptr;        		
+            } else if (operation.equals(OperatorNot.NOT)) {
                 resPtr = new Pointer(0);
                 complement(op1Ptr, resPtr);
-        	} else if (operation.equals(OperatorAnd.AND)) {
+            } else if (operation.equals(OperatorAnd.AND)) {
                 resPtr = CUDD.Cudd_bddAnd(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorEq.EQ)) {
-        		resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorIff.IFF)) {
+            } else if (operation.equals(OperatorEq.EQ)) {
                 resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorImplies.IMPLIES)) {
+            } else if (operation.equals(OperatorIff.IFF)) {
+                resPtr = CUDD.Cudd_bddXnor(cuddManager, op1Ptr, op2Ptr);
+            } else if (operation.equals(OperatorImplies.IMPLIES)) {
                 notOp1Ptr = new Pointer(0);
                 complement(op1Ptr, notOp1Ptr);
                 CUDD.Cudd_Ref(notOp1Ptr);
                 resPtr = CUDD.Cudd_bddOr(cuddManager, notOp1Ptr, op2Ptr);
                 CUDD.Cudd_RecursiveDeref(cuddManager, notOp1Ptr);
-        	} else if (operation.equals(OperatorNe.NE)) {
+            } else if (operation.equals(OperatorNe.NE)) {
                 resPtr = CUDD.Cudd_bddXor(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorOr.OR)) {
+            } else if (operation.equals(OperatorOr.OR)) {
                 resPtr = CUDD.Cudd_bddOr(cuddManager, op1Ptr, op2Ptr);
-        	} else if (operation.equals(OperatorIte.ITE)) {
+            } else if (operation.equals(OperatorIte.ITE)) {
                 resPtr = CUDD.Cudd_bddIte(cuddManager, op1Ptr, op2Ptr, op3Ptr);
-        	} else {
+            } else {
                 assert false;
                 resPtr = null;
-        	}
+            }
         }
         if (resPtr == null) {
             if (badProblem != null) {
@@ -400,7 +400,7 @@ public final class LibraryDDCUDD implements LibraryDD {
         return Pointer.nativeValue(resPtr);
     }
 
-    
+
     @Override
     public long newConstant(Value value) {
         assert value != null;
@@ -417,7 +417,7 @@ public final class LibraryDDCUDD implements LibraryDD {
             return result;
         }
     }
-    
+
     @Override
     public Value value(long dd) {
         assert isLeaf(dd);
@@ -432,7 +432,7 @@ public final class LibraryDDCUDD implements LibraryDD {
             }
         }
     }
-    
+
     @Override
     public void close() {
         if (!alive) {
@@ -475,12 +475,12 @@ public final class LibraryDDCUDD implements LibraryDD {
     boolean isLeaf(Pointer node) {
         return variable(node) == CUDD_CONST_INDEX;
     }
-    
+
     @Override
     public boolean isLeaf(long dd) {
         return isLeaf(new Pointer(dd));
     }
-    
+
     private int variable(Pointer node) {
         int index;
         if (Pointer.SIZE == 8) {
@@ -499,7 +499,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     long uniqueId(Pointer node) {
         return Pointer.nativeValue(node);
     }
-          
+
     private long cmplBit(long pointer) {
         if (mtbdd) {
             return 0;
@@ -519,7 +519,7 @@ public final class LibraryDDCUDD implements LibraryDD {
             return Pointer.nativeValue(pointer) & 1;
         }
     }
-    
+
     @Override
     public long walkerLow(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
@@ -537,7 +537,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     void setReorderMethod(int reorderMethod) {
         this.reorderMethod = reorderMethod;
     }
-    
+
     @Override
     public void reorder() {
         assert alive;
@@ -551,7 +551,7 @@ public final class LibraryDDCUDD implements LibraryDD {
 
     @Override
     public long permute(long node, PermutationLibraryDD permutation)
-            {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCUDD;
         LowLevelPermutationCUDD permutationCUDD = (LowLevelPermutationCUDD) permutation;
@@ -610,13 +610,13 @@ public final class LibraryDDCUDD implements LibraryDD {
             return from ^ 1;
         }
     }
-    
+
     @Override
     public void addGroup(int startVariable, int numVariables, boolean fixedOrder) {
         int type = fixedOrder ? MTR_FIXED : MTR_DEFAULT;
         CUDD.Cudd_MakeTreeNode(cuddManager, startVariable, numVariables, type);
     }
-    
+
     @Override
     public long abstractExist(long dd, long cube) {
         Pointer f = new Pointer(dd);
@@ -709,10 +709,10 @@ public final class LibraryDDCUDD implements LibraryDD {
         assert false;
         return -1;
     }
-    
+
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            {
+    {
         Pointer f = new Pointer(dd1);
         Pointer g = new Pointer(dd2);
         Pointer h = new Pointer(cube);
@@ -738,7 +738,7 @@ public final class LibraryDDCUDD implements LibraryDD {
         CUDD.Cudd_Ref(result);
         return Pointer.nativeValue(result);
     }
-    
+
     @Override
     public PermutationLibraryDD newPermutation(int[] permutation) {
         assert permutation != null;
@@ -811,7 +811,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     public boolean hasAndExist() {
         return !mtbdd;
     }
-    
+
     @Override
     public boolean checkConsistent() {
         return CUDD.Cudd_DebugCheck(cuddManager) == 0;
@@ -821,20 +821,20 @@ public final class LibraryDDCUDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.isBoolean(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

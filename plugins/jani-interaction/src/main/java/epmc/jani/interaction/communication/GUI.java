@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication;
 
@@ -40,69 +40,69 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 public final class GUI extends Application {
-	private final static String ADDRESS_LOCALHOST = "http://localhost:";
-	private final static String MENU_COMMAND = "menu-command";
-	private final static String MENU_SERVER = "menu-server";
-	private final static String MENU_ITEM_STARTCONNECT = "menu-item-startconnect";
-	private final static String MENU_ITEM_STOPDISCONNECT = "menu-item-stopdisconnect";
-	private final static String MENU_FILE = "menu-file";
-	private final static String MENU_FILE_EXIT = "menu-file-exit";
-	private final static String MENU_MODEL = "menu-model";
-	private final static String MENU_MODEL_NEW = "menu-model-new";
-	private final static String MENU_MODEL_OPEN = "menu-model-open";
-	private final static String MENU_MODEL_SAVE = "menu-model-save";
-	private final static String MENU_MODEL_SAVE_AS = "menu-model-save-as";
-	private final static String MENU_PROPERTIES = "menu-properties";
-	private final static String MENU_PROPERTIES_NEW = "menu-properties-new";
-	private final static String MENU_PROPERTIES_OPEN = "menu-properties-open";
-	private final static String MENU_PROPERTIES_SAVE = "menu-properties-save";
-	private final static String MENU_PROPERTIES_SAVE_AS = "menu-properties-save-as";
-	private static final String MENU_LOG = "menu-log";
-	private static final String MENU_LOG_SAVE = "menu-log-save";
-	private static final String MENU_LOG_CLEAR = "menu-log-clear";
-	private static final String MENU_OPTIONS = "menu-options";
-	private static final String MENU_OPTIONS_OPTIONS = "menu-options-options";
-	private final static String REVISION = " revision ";
-	private final static String MODEL_CLEAR = "clear()";
-	private static final String MENU_COMMAND_STOP = "menu-command-stop";
-	private static Options options;
-	private WebEngine modelEngine;
-	private MenuItem menuServerStartConnect;
-	private MenuItem menuServerStopDisconnect;
-	private Menu menuCommand;
-//	private GUILabeller labeller;
+    private final static String ADDRESS_LOCALHOST = "http://localhost:";
+    private final static String MENU_COMMAND = "menu-command";
+    private final static String MENU_SERVER = "menu-server";
+    private final static String MENU_ITEM_STARTCONNECT = "menu-item-startconnect";
+    private final static String MENU_ITEM_STOPDISCONNECT = "menu-item-stopdisconnect";
+    private final static String MENU_FILE = "menu-file";
+    private final static String MENU_FILE_EXIT = "menu-file-exit";
+    private final static String MENU_MODEL = "menu-model";
+    private final static String MENU_MODEL_NEW = "menu-model-new";
+    private final static String MENU_MODEL_OPEN = "menu-model-open";
+    private final static String MENU_MODEL_SAVE = "menu-model-save";
+    private final static String MENU_MODEL_SAVE_AS = "menu-model-save-as";
+    private final static String MENU_PROPERTIES = "menu-properties";
+    private final static String MENU_PROPERTIES_NEW = "menu-properties-new";
+    private final static String MENU_PROPERTIES_OPEN = "menu-properties-open";
+    private final static String MENU_PROPERTIES_SAVE = "menu-properties-save";
+    private final static String MENU_PROPERTIES_SAVE_AS = "menu-properties-save-as";
+    private static final String MENU_LOG = "menu-log";
+    private static final String MENU_LOG_SAVE = "menu-log-save";
+    private static final String MENU_LOG_CLEAR = "menu-log-clear";
+    private static final String MENU_OPTIONS = "menu-options";
+    private static final String MENU_OPTIONS_OPTIONS = "menu-options-options";
+    private final static String REVISION = " revision ";
+    private final static String MODEL_CLEAR = "clear()";
+    private static final String MENU_COMMAND_STOP = "menu-command-stop";
+    private static Options options;
+    private WebEngine modelEngine;
+    private MenuItem menuServerStartConnect;
+    private MenuItem menuServerStopDisconnect;
+    private Menu menuCommand;
+    //	private GUILabeller labeller;
 
-	public static void startGUI(Options options) {
-		assert options != null;
-		GUI.options = options;
-		launch(GUI.class);
-	}
-	
-	@Override
+    public static void startGUI(Options options) {
+        assert options != null;
+        GUI.options = options;
+        launch(GUI.class);
+    }
+
+    @Override
     public void start(Stage stage) {
-		assert stage != null;
-		String resourceName = options.getResourceFileName();
-		Locale locale = options.getLocale();
+        assert stage != null;
+        String resourceName = options.getResourceFileName();
+        Locale locale = options.getLocale();
         ResourceBundle poMsg = ResourceBundle.getBundle(resourceName, locale);
         String toolName = poMsg.getString(Options.TOOL_NAME);
         String revision = Util.getManifestEntry(Util.SCM_REVISION);
         String title = toolName;
         if (revision != null) {
-        	title += REVISION + revision;
+            title += REVISION + revision;
         }
         stage.setTitle(title);
-//        this.labeller = new GUILabeller(options);
+        //        this.labeller = new GUILabeller(options);
         Scene scene = new Scene(new VBox(), 400, 350);
         scene.setFill(Color.OLDLACE);
         WebView webView = new WebView();
         int port = options.getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT);
         webView.getEngine().load(ADDRESS_LOCALHOST + port);
-        
- //       MenuBar menuBar = createMenuBar();
-  //      menuBar.useSystemMenuBarProperty().set(true);
-//        labeller.relabel();
+
+        //       MenuBar menuBar = createMenuBar();
+        //      menuBar.useSystemMenuBarProperty().set(true);
+        //        labeller.relabel();
         ((VBox) scene.getRoot()).getChildren().addAll(webView);
-//        ((VBox) scene.getRoot()).getChildren().addAll(menuBar, webView);
+        //        ((VBox) scene.getRoot()).getChildren().addAll(menuBar, webView);
         List<Object> disableIfRunning = new ArrayList<>();
         disableIfRunning.add(menuServerStartConnect);
         List<Object> disableIfNotRunning = new ArrayList<>();
@@ -112,11 +112,11 @@ public final class GUI extends Application {
         stage.show();
     }
 
-	@Override
-	public void stop() throws Exception {
-	}
+    @Override
+    public void stop() throws Exception {
+    }
 
-	/*
+    /*
 	private MenuBar createMenuBar() {
         MenuBar menuBar = new MenuBar();
         Menu menuFile = createMenuFile();
@@ -226,19 +226,19 @@ public final class GUI extends Application {
 	private Menu createMenuModel() {
         Menu menuFile = new Menu();
         labeller.put(MENU_MODEL, menuFile);
-        
+
         MenuItem menuFileNew = new MenuItem();
         labeller.put(MENU_MODEL_NEW, menuFileNew);
         menuFile.getItems().add(menuFileNew);
         menuFileNew.setOnAction(event -> {
         	modelEngine.executeScript(MODEL_CLEAR);        	
         });
-	
-        
+
+
         MenuItem menuFileOpen = new MenuItem();
         labeller.put(MENU_MODEL_OPEN, menuFileOpen);
         menuFile.getItems().add(menuFileOpen);
-        
+
         MenuItem menuFileSave = new MenuItem();
         labeller.put(MENU_MODEL_SAVE, menuFileSave);
         menuFile.getItems().add(menuFileSave);
@@ -249,6 +249,6 @@ public final class GUI extends Application {
 
         return menuFile;
 	}
-*/
+     */
 
 }

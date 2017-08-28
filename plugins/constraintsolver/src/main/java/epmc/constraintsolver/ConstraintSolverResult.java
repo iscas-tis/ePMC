@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
@@ -24,15 +24,15 @@ public enum ConstraintSolverResult {
     SAT,
     UNSAT,
     UNKNOWN;
-    
+
     public boolean isSat() {
         return this == SAT;
     }
-    
+
     public boolean isUnsat() {
         return this == UNSAT;
     }
-    
+
     public boolean isUnknown() {
         return this == UNKNOWN;
     }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.dtmc;
 
@@ -29,23 +29,23 @@ import epmc.error.UtilError;
  * @author Ernst Moritz Hahn
  */
 public final class ProblemsJANIDTMC {
-	/** Base name of resource file containing plugin problem descriptions. */
+    /** Base name of resource file containing plugin problem descriptions. */
     private final static String PROBLEMS_JANI_DTMC = "ProblemsJANIDTMC";
-	/** Multi-transition remain even though disallowed. */
-	public static final Problem JANI_DTMC_DISALLOWED_MULTI_TRANSITIONS = newProblem("jani-dtmc-disallowed-multi-transitions");
-	/** Time progress conditions are disallowed in DTMCs. */
-	public static final Problem JANI_DTMC_DISALLOWED_TIME_PROGRESSES = newProblem("jani-dtmc-disallowed-time-progresses");
+    /** Multi-transition remain even though disallowed. */
+    public static final Problem JANI_DTMC_DISALLOWED_MULTI_TRANSITIONS = newProblem("jani-dtmc-disallowed-multi-transitions");
+    /** Time progress conditions are disallowed in DTMCs. */
+    public static final Problem JANI_DTMC_DISALLOWED_TIME_PROGRESSES = newProblem("jani-dtmc-disallowed-time-progresses");
 
-	/**
-	 * Create new problem object using plugin resource file.
-	 * The name parameter must not be {@code null}.
-	 * 
-	 * @param name problem identifier String
-	 * @return newly created problem identifier
-	 */
+    /**
+     * Create new problem object using plugin resource file.
+     * The name parameter must not be {@code null}.
+     * 
+     * @param name problem identifier String
+     * @return newly created problem identifier
+     */
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(PROBLEMS_JANI_DTMC, name);
+        assert name != null;
+        return UtilError.newProblem(PROBLEMS_JANI_DTMC, name);
     }
 
     /**

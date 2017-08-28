@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -30,48 +30,48 @@ import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorSubtract;
 
 public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorSubtract.SUBTRACT;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeAlgebra.isAlgebra(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorSubtract.SUBTRACT;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 2) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeAlgebra.isAlgebra(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorSubtract.SUBTRACT);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        assert operator != null;
+        assert operator.equals(OperatorSubtract.SUBTRACT);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
         return UtilValue.algebraicResultType(types);
     }
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
         ValueAlgebra.asAlgebra(result).subtract(operands[0], operands[1]);
     }
 }

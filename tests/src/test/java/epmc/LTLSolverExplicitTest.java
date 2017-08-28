@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -60,11 +60,11 @@ public class LTLSolverExplicitTest {
         // U-1
         result = computeResult(options, CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U (right_n!=N)) ]");
         assertEquals("0.5094707891071129", result, tolerance);
-        
+
         // U-2
         result = computeResult(options, CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U (right_n!=N))) ]");
         assertEquals("0.5096360303752221", result, tolerance);
-        
+
         // U-3
         result = computeResult(options, CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U (right_n!=N)))) ]");
         assertEquals("0.5096412753408213", result, tolerance);
@@ -84,7 +84,7 @@ public class LTLSolverExplicitTest {
         // U-7
         result = computeResult(options, CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U ((left_n=N-4) U ((left_n=N-5) U ((left_n=N-6) U ((left_n=N-7) U (right_n!=N)))))))) ]");
         assertEquals("0.5096417890890955", result, tolerance);
-        
+
         // U-8
         result = computeResult(options, CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U ((left_n=N-4) U ((left_n=N-5) U ((left_n=N-6) U ((left_n=N-7) U ((left_n=N-8) U (right_n!=N))))))))) ]");
         assertEquals("0.5096417891616309", result, tolerance);
@@ -120,7 +120,7 @@ public class LTLSolverExplicitTest {
         assertEquals(true, result);
         close(options);
     }
-    
+
     /**
      * Test model provided by Li Yong.
      * The test case helped to detect an issue in the initial state
@@ -154,7 +154,7 @@ public class LTLSolverExplicitTest {
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         result = computeResult(options, String.format(MUTUAL_MODEL, 3), "Pmin=? [ ((G(F(p1!=10))) | (G(F(p1=0))) | (F(G(p1=1)))) & (G(F(p1!=0))) & (G(F(p1=1))) ]");
         System.out.println(result);
-        
+
         result = computeResult(options, String.format(MUTUAL_MODEL, 3), "filter(forall, num_crit <= 1)");
         System.out.println(result);
 
@@ -171,14 +171,14 @@ public class LTLSolverExplicitTest {
         Value result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
-        
+
 
         /* Check bug found by Andrea Turrini indeed fixed. 
         	The problem occurring was due to an incorrect computation of the
         	states which reach target states with a probability one when 
         	maximising. Due to an incorrect algorithm used, this set was
         	overestimated, leading to a result of one instead of 0.9510333.
-        */
+         */
         result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[((F(at_goal)))]");
         assertEquals("0.9510333", result, 1E-7);
         result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[(F(F(at_goal)))]");
@@ -186,5 +186,5 @@ public class LTLSolverExplicitTest {
         result = computeResult(options, ModelNamesOwn.NAVIGATION_1, "Pmax=?[(G(F(at_goal)))]");
         assertEquals("0.9510333", result, 1E-7);
     }
-    
+
 }

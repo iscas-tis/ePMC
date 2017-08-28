@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -68,13 +68,13 @@ public final class GraphExporterDOT {
 
         out.println("}");
     }
-    
+
     public static String toString(GraphExplicit graph) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         export(graph, out);
         return out.toString();
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

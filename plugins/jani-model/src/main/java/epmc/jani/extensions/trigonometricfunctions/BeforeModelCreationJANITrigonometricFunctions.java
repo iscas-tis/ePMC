@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.trigonometricfunctions;
 
@@ -24,21 +24,21 @@ import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 
 public final class BeforeModelCreationJANITrigonometricFunctions implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani-trigonometric-functions";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani-trigonometric-functions";
 
-	@Override
-	public void process() {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsin.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcos.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtan.INSTANCE);
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process() {
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsin.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcos.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtan.INSTANCE);
+    }
 }

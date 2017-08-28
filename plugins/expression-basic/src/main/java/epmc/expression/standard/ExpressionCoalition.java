@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -38,57 +38,57 @@ public final class ExpressionCoalition implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setQuantifier(Expression quantifier) {
             this.quantifier = quantifier;
             return this;
         }
-        
+
         private Expression getQuantifier() {
             return quantifier;
         }
-        
+
         public Builder setPlayers(List<Expression> players) {
             this.players = players;
             return this;
         }
-        
+
         private List<Expression> getPlayers() {
             return players;
         }
-        
+
         public Builder setChildren(List<Expression> children) {
             this.quantifier = children.get(0);
             this.players = new ArrayList<>(children.size() - 1);
             this.players.addAll(children.subList(1, children.size()));
             return this;
         }
-        
+
         public ExpressionCoalition build() {
             return new ExpressionCoalition(this);
         }
     }
 
     public static boolean isCoalition(Expression expression) {
-    	return expression instanceof ExpressionCoalition;
+        return expression instanceof ExpressionCoalition;
     }
 
     public static ExpressionCoalition asCoalition(Expression expression) {
-    	if (!isCoalition(expression)) {
-    		return null;
-    	} else {
-    		return (ExpressionCoalition) expression;
-    	}
+        if (!isCoalition(expression)) {
+            return null;
+        } else {
+            return (ExpressionCoalition) expression;
+        }
     }
-    
+
     private final Positional positional;
     private final Expression quantifier;
     private final List<Expression> players;
-    
+
     private ExpressionCoalition(Builder builder) {
         assert builder != null;
         assert builder.getQuantifier() != null;
@@ -106,7 +106,7 @@ public final class ExpressionCoalition implements Expression {
     public Expression getInner() {
         return quantifier;
     }
-    
+
     public List<SMGPlayer> getPlayers() {
         List<SMGPlayer> players = new ArrayList<>();
         for (Expression playerExpr : this.players) {
@@ -114,24 +114,24 @@ public final class ExpressionCoalition implements Expression {
         }
         return players;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
-//    	System.out.println("A " + this);
-  //  	System.out.println("B " + children);
+        //    	System.out.println("A " + this);
+        //  	System.out.println("B " + children);
         return new Builder().setPositional(positional)
                 .setChildren(children).build();
     }
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	Type type = expressionToType.getType(this);
-    	if (type != null) {
-    		return type;
-    	}
-    	return getInner().getType(expressionToType);
+        Type type = expressionToType.getType(this);
+        if (type != null) {
+            return type;
+        }
+        return getInner().getType(expressionToType);
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         List<Expression> result = new ArrayList<>();
@@ -144,7 +144,7 @@ public final class ExpressionCoalition implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -186,7 +186,7 @@ public final class ExpressionCoalition implements Expression {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -195,16 +195,16 @@ public final class ExpressionCoalition implements Expression {
             assert expression != null;
             hash = expression.hashCode() + (hash << 6) + (hash << 16) - hash;
         }
-        
+
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionCoalition.Builder()
-				.setPlayers(players)
-				.setQuantifier(quantifier)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionCoalition.Builder()
+                .setPlayers(players)
+                .setQuantifier(quantifier)
+                .setPositional(positional)
+                .build();
+    }
 }

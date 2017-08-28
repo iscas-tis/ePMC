@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
@@ -30,44 +30,44 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
 
 public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorTrunc.TRUNC;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeNumber.isNumber(types[0])) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorTrunc.TRUNC;
+    }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return TypeInteger.get();
-	}
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        if (!TypeNumber.isNumber(types[0])) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public void apply(Value result, Value... operands) {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		double opValue = ValueNumber.asNumber(operands[0]).getDouble();
-		ValueAlgebra.asAlgebra(result).set((int) opValue);
-	}
+    @Override
+    public Type resultType(Operator operator, Type... types) {
+        assert operator != null;
+        assert types != null;
+        assert types.length >= 1;
+        assert types[0] != null;
+        return TypeInteger.get();
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        double opValue = ValueNumber.asNumber(operands[0]).getDouble();
+        ValueAlgebra.asAlgebra(result).set((int) opValue);
+    }
 }

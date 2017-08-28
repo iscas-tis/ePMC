@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -47,7 +47,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         private Expression[] getVariables() {
             return variables;
         }
-        
+
         @Override
         public Builder setExpression(Expression expression) {
             this.expression = expression;
@@ -57,7 +57,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         private Expression getExpression() {
             return expression;
         }
-        
+
         @Override
         public boolean canHandle() {
             assert expression != null;
@@ -73,13 +73,13 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
             return new EvaluatorExplicitLiteral(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			return this;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            return this;
+        }
     }
-    
+
     public final static String IDENTIFIER = "literal";
     private final Expression[] variables;
     private final Expression expression;
@@ -116,7 +116,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         assert variables != null;
         return value;
     }
-    
+
     @Override
     public boolean evaluateBoolean(Value... values) {
         return booleanValue;

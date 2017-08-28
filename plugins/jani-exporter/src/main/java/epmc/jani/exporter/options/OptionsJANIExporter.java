@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.exporter.options;
 
@@ -26,16 +26,16 @@ package epmc.jani.exporter.options;
  * @author Andrea Turrini
  */
 public enum OptionsJANIExporter {
-	/** Base name of resource file for options description. */
-	OPTIONS_JANI_EXPORTER,
-	/** Category used for JANI converter options. */
-	JANI_EXPORTER_CATEGORY,
-	/** Name of the generated JANI file. */
-	JANI_EXPORTER_JANI_FILE_NAME,
-	/** Name of the generated JANI model. */
-	JANI_EXPORTER_JANI_MODEL_NAME,
-	/** Whether to print out messages during the export. */
-	JANI_EXPORTER_PRINT_MESSAGES,
-	/** Prefix for reward structure names. */
-	JANI_EXPORTER_REWARD_NAME_PREFIX;
+    /** Base name of resource file for options description. */
+    OPTIONS_JANI_EXPORTER,
+    /** Category used for JANI converter options. */
+    JANI_EXPORTER_CATEGORY,
+    /** Name of the generated JANI file. */
+    JANI_EXPORTER_JANI_FILE_NAME,
+    /** Name of the generated JANI model. */
+    JANI_EXPORTER_JANI_MODEL_NAME,
+    /** Whether to print out messages during the export. */
+    JANI_EXPORTER_PRINT_MESSAGES,
+    /** Prefix for reward structure names. */
+    JANI_EXPORTER_REWARD_NAME_PREFIX;
 }

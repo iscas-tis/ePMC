@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -62,10 +62,10 @@ public final class UtilExpressionStandard {
     public static Expression opAdd(Expression op1, int op2) {
         assert op1 != null;
         TypeInteger typeInteger = TypeInteger.get();
-        
+
         Expression op2Expr = new ExpressionLiteral.Builder()
-        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
-        		.build();
+                .setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
+                .build();
         return newOperator(OperatorAdd.ADD, op1, op2Expr);
     }
 
@@ -131,8 +131,8 @@ public final class UtilExpressionStandard {
         assert op2 != null;
         TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
-        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
-        		.build();
+                .setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
+                .build();
         return newOperator(OperatorIte.ITE, op1, op2, op3Expr);
     }
 
@@ -144,7 +144,7 @@ public final class UtilExpressionStandard {
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
         assert expression != null;
         if (replacement.containsKey(expression)
-        		&& replacement.get(expression) != null) {
+                && replacement.get(expression) != null) {
             return replacement.get(expression).replacePositional(expression.getPositional());
         }
         ArrayList<Expression> newChildren = new ArrayList<>();
@@ -160,7 +160,7 @@ public final class UtilExpressionStandard {
                 .setOperands(Arrays.asList(operands))
                 .build();
     }
-    
+
     public static Set<Expression> collectIdentifiers(Expression expression) {
         assert expression != null;
         if (expression instanceof ExpressionIdentifier) {
@@ -182,15 +182,15 @@ public final class UtilExpressionStandard {
      * @return human-readable representation of expression
      */
     public static String niceForm(Expression expression) {
-    	assert expression != null;
-    	if (expression.getPositional() == null
-    			|| expression.getPositional().getContent() == null) {
-    		return expression.toString();
-    	} else {
-    		return expression.getPositional().getContent();
-    	}
+        assert expression != null;
+        if (expression.getPositional() == null
+                || expression.getPositional().getContent() == null) {
+            return expression.toString();
+        } else {
+            return expression.getPositional().getContent();
+        }
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

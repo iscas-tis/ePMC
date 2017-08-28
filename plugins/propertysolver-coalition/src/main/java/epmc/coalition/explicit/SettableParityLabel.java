@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
@@ -28,22 +28,22 @@ import epmc.automaton.AutomatonParityLabel;
  * @author Ernst Moritz Hahn
  */
 final class SettableParityLabel implements AutomatonParityLabel {
-	/** Priority of the label. */
-	private final int priority;
+    /** Priority of the label. */
+    private final int priority;
 
-	/**
-	 * Construct new settable parity label.
-	 * The priority parameter must be nonnegative.
-	 * 
-	 * @param priority color to set for label
-	 */
-	SettableParityLabel(int priority) {
-		assert priority >= 0;
-		this.priority = priority;
-	}
-	
-	@Override
-	public int getPriority() {
-		return priority;
-	}
+    /**
+     * Construct new settable parity label.
+     * The priority parameter must be nonnegative.
+     * 
+     * @param priority color to set for label
+     */
+    SettableParityLabel(int priority) {
+        assert priority >= 0;
+        this.priority = priority;
+    }
+
+    @Override
+    public int getPriority() {
+        return priority;
+    }
 }

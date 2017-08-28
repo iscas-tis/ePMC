@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -24,12 +24,12 @@ import epmc.value.Value;
 
 public final class ValuesVectorArray implements ValuesVector {
     private Value[] values;
-    
+
     public void setValues(Value[] values) {
         this.values = values;
     }
-    
-    
+
+
     @Override
     public void get(Value result, int index) {
         assert values != null;

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -31,69 +31,69 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended {
 
-	private ExpressionCoalition coalition = null;
+    private ExpressionCoalition coalition = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionCoalition; 
-		
-		coalition = (ExpressionCoalition) obj;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionCoalition; 
 
-	@Override
-	public String toPRISM() {
-		assert coalition != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
+        coalition = (ExpressionCoalition) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert coalition != null;
+
+        StringBuilder prism = new StringBuilder();
+
         prism.append("<<");
-        
+
         boolean remaining = false;
         for (SMGPlayer player : coalition.getPlayers()) {
-        	if (remaining) {
-        		prism.append(", ");
-        	} else {
-        		remaining = true;
-        	}
-    		prism.append(ProcessorRegistrar.getProcessor(player.getExpression())
-    									   .toPRISM());
+            if (remaining) {
+                prism.append(", ");
+            } else {
+                remaining = true;
+            }
+            prism.append(ProcessorRegistrar.getProcessor(player.getExpression())
+                    .toPRISM());
         }
         prism.append(">>")
-        	 .append(ProcessorRegistrar.getProcessor(coalition.getInner())
-        			 				   .toPRISM());
+        .append(ProcessorRegistrar.getProcessor(coalition.getInner())
+                .toPRISM());
 
         return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert coalition != null;
-		
-		for (Expression child : coalition.getChildren()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
+    }
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert coalition != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : coalition.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
-	
-	@Override
-	public List<String> getUnsupportedFeature() {
-		List<String> ll = new LinkedList<>();
-		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SMG_COALITION);
-		return ll;
-	}
+    @Override
+    public void validateTransientVariables() {
+        assert coalition != null;
+
+        for (Expression child : coalition.getChildren()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert coalition != null;
+
+        boolean usesTransient = false;
+        for (Expression child : coalition.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
+
+    @Override
+    public List<String> getUnsupportedFeature() {
+        List<String> ll = new LinkedList<>();
+        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SMG_COALITION);
+        return ll;
+    }
 }

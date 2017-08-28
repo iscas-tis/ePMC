@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -63,30 +63,30 @@ import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
 
 public final class AfterOptionsCreationExpressionStandard implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "after-options-creation-exrpession-standard";
+    private final static String IDENTIFIER = "after-options-creation-exrpession-standard";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
+    @Override
+    public void process(Options options) {
         assert options != null;
         assert options != null;
 
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption().setBundleName(OptionsExpressionBasic.OPTIONS_EXPRESSION_BASIC)
-            .setIdentifier(OptionsExpressionBasic.DD_EXPRESSION_VECTOR)
-            .setType(typeBoolean)
-            .setDefault(true)
-            .setCommandLine().setGui().build();
-        
+        .setIdentifier(OptionsExpressionBasic.DD_EXPRESSION_VECTOR)
+        .setType(typeBoolean)
+        .setDefault(true)
+        .setCommandLine().setGui().build();
+
         options.addOption().setBundleName(OptionsExpressionBasic.OPTIONS_EXPRESSION_BASIC)
-            .setIdentifier(OptionsExpressionBasic.DD_EXPRESSION_CACHE)
-            .setType(typeBoolean)
-            .setDefault(true)
-            .setCommandLine().setGui().build();
+        .setIdentifier(OptionsExpressionBasic.DD_EXPRESSION_CACHE)
+        .setType(typeBoolean)
+        .setDefault(true)
+        .setCommandLine().setGui().build();
 
         Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluatorsExplicit = new OrderedMap<>(true);
         evaluatorsExplicit.put(EvaluatorExplicitVariable.IDENTIFIER, EvaluatorExplicitVariable.Builder.class);
@@ -121,7 +121,7 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
         evaluatorsDD.put(EvaluatorDDOperatorVectorNe.IDENTIFIER, EvaluatorDDOperatorVectorNe.class);
         evaluatorsDD.put(EvaluatorDDOperatorVectorSub.IDENTIFIER, EvaluatorDDOperatorVectorSub.class);
         options.set(OptionsExpressionBasic.EXPRESSION_EVALUTOR_DD_CLASS, evaluatorsDD);
-        
+
         Map<String,Class<? extends ExpressionSimplifier>> simplifiers = new OrderedMap<>(true);
         simplifiers.put(ExpressionSimplifierAnd.IDENTIFIER, ExpressionSimplifierAnd.class);
         simplifiers.put(ExpressionSimplifierConstant.IDENTIFIER, ExpressionSimplifierConstant.class);
@@ -129,6 +129,6 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
         simplifiers.put(ExpressionSimplifierImplies.IDENTIFIER, ExpressionSimplifierImplies.class);
         simplifiers.put(ExpressionSimplifierSubtract.IDENTIFIER, ExpressionSimplifierSubtract.class);
         options.set(OptionsExpressionBasic.EXPRESSION_SIMPLIFIER_CLASS, simplifiers);
-	}
+    }
 
 }

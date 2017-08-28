@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.lts;
 
@@ -32,46 +32,46 @@ import epmc.jani.model.ModelExtensionSemantics;
 import epmc.jani.model.ModelJANI;
 
 public class ModelExtensionLTS implements ModelExtensionSemantics {
-	public final static String IDENTIFIER = "lts";
+    public final static String IDENTIFIER = "lts";
 
-	private ModelJANI model;
-	private JANINode node;
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    private ModelJANI model;
+    private JANINode node;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		assert this.model == null;
-		assert model != null;
-		this.model = model;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setNode(JANINode node) {
-		this.node = node;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        assert this.model == null;
+        assert model != null;
+        this.model = model;
+    }
 
-	@Override
-	public void parseAfter() {
-		if (node instanceof Destinations) {
-			Destinations destinations = (Destinations) node;
-			ensure(destinations.size() == 1, ProblemsJANILTS.JANI_LTS_ONLY_ONE_DESTINATIONS);
-		}
-		if (node instanceof Destination) {
-			Destination destination = (Destination) node;
-			ensure(destination.getProbability() == null, ProblemsJANILTS.JANI_LTS_NO_PROBABILITIES);
-		}
-		if (node instanceof Location) {
-			Location location = (Location) node;
-			ensure(location.getTimeProgress() == null, ProblemsJANILTS.JANI_LTS_DISALLOWED_TIME_PROGRESSES);
-		}
-	}
+    @Override
+    public void setNode(JANINode node) {
+        this.node = node;
+    }
 
-	@Override
-	public Semantics getSemantics() {
-		return SemanticsLTS.LTS;
-	}
+    @Override
+    public void parseAfter() {
+        if (node instanceof Destinations) {
+            Destinations destinations = (Destinations) node;
+            ensure(destinations.size() == 1, ProblemsJANILTS.JANI_LTS_ONLY_ONE_DESTINATIONS);
+        }
+        if (node instanceof Destination) {
+            Destination destination = (Destination) node;
+            ensure(destination.getProbability() == null, ProblemsJANILTS.JANI_LTS_NO_PROBABILITIES);
+        }
+        if (node instanceof Location) {
+            Location location = (Location) node;
+            ensure(location.getTimeProgress() == null, ProblemsJANILTS.JANI_LTS_DISALLOWED_TIME_PROGRESSES);
+        }
+    }
+
+    @Override
+    public Semantics getSemantics() {
+        return SemanticsLTS.LTS;
+    }
 }

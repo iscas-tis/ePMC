@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -90,7 +90,7 @@ public final class Options implements Serializable, Cloneable {
     /** Identifier of the options in which plugin file names will be stored. */
     public final static String PLUGIN = "plugin";
     public final static String PLUGIN_LIST_FILE = "plugin-list-file";
-    
+
     /** Key in the resource file to read the name of the tool. */
     private final static String TOOL_CMD = "toolCmd";
     /** Key in the resource file to read a short description of the tool. */
@@ -113,12 +113,12 @@ public final class Options implements Serializable, Cloneable {
     private final static String SPACE = " ";
     /** tool name entry */
     public final static String TOOL_NAME = "toolName";
-    
+
     public final static String DEFAULT = "default";
-	private static Options optionsUsed;
+    private static Options optionsUsed;
     /** String to disable unchecked warning. */
     private final String UNCHECKED = "unchecked";
-    
+
     /** The available commands for this option set. */
     private transient Map<String,Command> commands = new LinkedHashMap<>();
     /** Write-protected available commands for external usage. */
@@ -141,13 +141,13 @@ public final class Options implements Serializable, Cloneable {
     private String toolDescription;
 
     public static void set(Options options) {
-    	Options.optionsUsed = options;
+        Options.optionsUsed = options;
     }
-    
+
     public static Options get() {
-    	return optionsUsed;
+        return optionsUsed;
     }
-    
+
     /**
      * Creates a new options set.
      * No parameters may be {@code null}.
@@ -164,14 +164,14 @@ public final class Options implements Serializable, Cloneable {
                 .setCommandLine(false).setGui(false).setWeb(false)
                 .setValue(null)
                 .build();
-        
+
         options.put(Options.COMMAND, commandOption);
     }
 
     public Options(Enum<?> defaultResourceFileName) {
-    	this(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, defaultResourceFileName.name()));
+        this(CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, defaultResourceFileName.name()));
     }
-    
+
     /**
      * Add command to this options set.
      * No parameters may be {@code null}. The options obtained by the method
@@ -184,7 +184,7 @@ public final class Options implements Serializable, Cloneable {
         assert command.getOptions() == this;
         commands.put(command.getIdentifier(), command);
     }
-        
+
     public Command.Builder addCommand() {
         Command.Builder result = new Command.Builder();
         result.setOptions(this);
@@ -215,7 +215,7 @@ public final class Options implements Serializable, Cloneable {
             option.setUnparsed(oldValue);
         }
     }
-    
+
     /**
      * Add a new option using a builder.
      * This method will return a {@link Option.Builder} object.
@@ -237,14 +237,14 @@ public final class Options implements Serializable, Cloneable {
         builder.setBundleName(defaultResourceBundle);
         return builder;
     }
-    
+
     public Category.Builder addCategory() {
         Category.Builder builder = new Category.Builder();
         builder.setOptions(this);
         builder.setBundleName(defaultResourceBundle);
         return builder;
     }
-    
+
     /**
      * Parse program options from command-line parameters.
      * Option values will be read from the command line parameters, parsed by
@@ -266,7 +266,7 @@ public final class Options implements Serializable, Cloneable {
         UtilError.ensure(ignoreUnknown || commands.containsKey(commandName),
                 ProblemsOptions.OPTIONS_COMMAND_NOT_VALID, args[0]);
         options.get(Options.COMMAND).set(commandName);
-        
+
         int argNr = 1;
         String option = null;
         String lastOption = null;
@@ -312,7 +312,7 @@ public final class Options implements Serializable, Cloneable {
         UtilError.ensure(lastOption == null,
                 ProblemsOptions.OPTIONS_NO_VALUE_FOR_OPTION, lastOption);
     }
-    
+
     /**
      * Parse the option with the given identifier, thereby setting its value.
      * The option identifier and the value to parse must not be {@code null}.
@@ -331,7 +331,7 @@ public final class Options implements Serializable, Cloneable {
         assert opt != null;
         opt.parse(value);
     }
-    
+
     public void parse(Enum<?> identifier, String value) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
@@ -355,7 +355,7 @@ public final class Options implements Serializable, Cloneable {
         Object[] args = {toolShortHelp};
         return formatter.format(args);
     }
-    
+
     /**
      * Obtain value of a given option as a {@link String}.
      * If there is no according option with the identifier, {@code null} will be
@@ -380,7 +380,7 @@ public final class Options implements Serializable, Cloneable {
         }
         return string;
     }
-    
+
     public String getString(Enum<?> identifier) {
         String identifierName = enumToIdentifier(identifier);
         return getString(identifierName);
@@ -425,7 +425,7 @@ public final class Options implements Serializable, Cloneable {
         assert option != null;
         return option.getDouble();
     }
-    
+
     public double getDouble(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
@@ -448,7 +448,7 @@ public final class Options implements Serializable, Cloneable {
         assert option != null;
         return option.getEnum();
     }
-    
+
     public <T extends Enum<T>> T getEnum(Enum<?> identifier) {
         assert identifier != null;
         String identifierName = enumToIdentifier(identifier);
@@ -478,7 +478,7 @@ public final class Options implements Serializable, Cloneable {
         T t = (T) option.get();
         return t;
     }
-    
+
     public <T> T get(Enum<?> identifier) {
         assert identifier != null;
         String identifierName = enumToIdentifier(identifier);
@@ -506,7 +506,7 @@ public final class Options implements Serializable, Cloneable {
         T t = (T) option.getType();
         return t;
     }
-    
+
     public <T extends OptionType> T getType(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
@@ -514,7 +514,7 @@ public final class Options implements Serializable, Cloneable {
     }
 
 
-    
+
     public String getAndUnparse(String identifier) {
         assert identifier != null;
         Option option = options.get(identifier);
@@ -523,14 +523,14 @@ public final class Options implements Serializable, Cloneable {
         }
         return option.getType().unparse(option.get());
     }
-    
+
 
     public String getAndUnparse(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
         return getAndUnparse(identifierString);
     }
-    
+
     /**
      * Obtain unparsed value of a given option.
      * This function is particularly intended to be used for options which do
@@ -595,13 +595,13 @@ public final class Options implements Serializable, Cloneable {
         assert option != null;
         return option.getInteger();
     }
-    
+
     public int getInteger(Enum<?> identifier) {
         assert identifier != null;
         String identifierName = enumToIdentifier(identifier);
         return getInteger(identifierName);
     }
-    
+
     /**
      * Obtain option value as long.
      * The method tries to obtain a long value from the option with the
@@ -661,14 +661,14 @@ public final class Options implements Serializable, Cloneable {
             option.set(value);
         }
     }
-    
+
     public void set(Enum<?> identifier, Object value) {
         assert identifier != null;
         String identifierName = enumToIdentifier(identifier);
         set(identifierName, value);
     }
 
-    
+
     /**
      * Unset the option with the given identifier.
      * For this, the {@link Option#unset()} method of the option obtained will
@@ -685,14 +685,14 @@ public final class Options implements Serializable, Cloneable {
             options.get(option).unset();
         }
     }
-    
+
     public void unset(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
         unset(identifierString);
     }
 
-    
+
     /**
      * Resets values of all options to default values, except {@link #PLUGIN}.
      * Note that the options are not removed, just reset.
@@ -704,7 +704,7 @@ public final class Options implements Serializable, Cloneable {
             }
         }
     }
-    
+
     /**
      * Obtain option value of option with given identifier as {@link String} {@link List}.
      * None of the parameters may be {@code null}. If the option with the given
@@ -718,7 +718,7 @@ public final class Options implements Serializable, Cloneable {
         List<String> result = get(option);
         return result;
     }
-    
+
     public List<String>  getStringList(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
@@ -736,7 +736,7 @@ public final class Options implements Serializable, Cloneable {
     public Option getOption(String name) {
         return options.get(name);
     }
-    
+
     public Option getOption(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
@@ -744,7 +744,7 @@ public final class Options implements Serializable, Cloneable {
     }
 
 
-    
+
     /**
      * Obtain the locale specified for this options set.
      * 
@@ -753,7 +753,7 @@ public final class Options implements Serializable, Cloneable {
     public Locale getLocale() {
         return Locale.getDefault();
     }
-    
+
     /**
      * Obtain the default resource file name of this options set.
      * 
@@ -762,7 +762,7 @@ public final class Options implements Serializable, Cloneable {
     public String getResourceFileName() {
         return defaultResourceBundle;
     }
-    
+
     /**
      * Remove option with given identifier from the option set.
      * 
@@ -772,13 +772,13 @@ public final class Options implements Serializable, Cloneable {
         assert option != null;
         options.remove(option);
     }
-    
+
     public void removeOption(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
         removeOption(identifierString);
     }
-    
+
     /**
      * Deserialize options.
      * We do not read the commands, as this would lead to problems if they are
@@ -815,7 +815,7 @@ public final class Options implements Serializable, Cloneable {
         }
         return result;
     }    
-    
+
     /**
      * Clears everything in this options set.
      * All options, commands, etc. are removed. Note that this includes the
@@ -825,7 +825,7 @@ public final class Options implements Serializable, Cloneable {
         commands.clear();
         options.clear();
     }
-    
+
     /**
      * Obtain a map from identifiers to commands.
      * The map returned is write-protected. Commands should be added or removed
@@ -837,7 +837,7 @@ public final class Options implements Serializable, Cloneable {
     public Map<String,Command> getCommands() {
         return commandsExternal;
     }
-    
+
     /**
      * Obtain resource bundle in locale set for this option
      * The base name of the resource bundle is given by {@link #BUNDLE_NAME}.
@@ -854,7 +854,7 @@ public final class Options implements Serializable, Cloneable {
                 Thread.currentThread().getContextClassLoader());
         return poMsg;
     }
-    
+
     /**
      * Disable option with given identifier.
      * If there is no option with the given identifier, a call to this method
@@ -883,7 +883,7 @@ public final class Options implements Serializable, Cloneable {
         String identifierString = enumToIdentifier(identifier);
         disableOption(identifierString);
     }
-    
+
     /**
      * Set the name of the tool.
      * 
@@ -893,7 +893,7 @@ public final class Options implements Serializable, Cloneable {
     public void setToolName(String toolName) {
         this.toolName = toolName;
     }
-    
+
     /**
      * Obtain name of the tool.
      * If the name has been set to a non-{@code null} value using
@@ -912,7 +912,7 @@ public final class Options implements Serializable, Cloneable {
             return poMsg.getString(TOOL_NAME);
         }
     }
-    
+
     /**
      * Sets the description of the tool.
      * 
@@ -922,7 +922,7 @@ public final class Options implements Serializable, Cloneable {
     public void setToolDescription(String toolDescription) {
         this.toolDescription = toolDescription;
     }
-    
+
     /**
      * Obtain description of the tool.
      * If the description has been set to a non-{@code null} value using
@@ -941,7 +941,7 @@ public final class Options implements Serializable, Cloneable {
             return poMsg.getString(TOOL_DESCRIPTION);
         }
     }
-    
+
     /**
      * Return command with given identifier.
      * Returns {@code null} if given command cannot be found. The identifier
@@ -954,7 +954,7 @@ public final class Options implements Serializable, Cloneable {
         assert identifier != null;
         return commands.get(identifier);
     }
-    
+
     /**
      * Get map of all options.
      * The result is a map from option names to the according options
@@ -964,7 +964,7 @@ public final class Options implements Serializable, Cloneable {
     public Map<String, Option> getAllOptions() {
         return optionsExternal;
     }
-    
+
     public Map<String,Category> getAllCategories() {
         return categoriesExternal;
     }

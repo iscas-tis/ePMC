@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -65,7 +65,7 @@ public final class EdgePropertyApply implements EdgeProperty {
             assert edgeProperty.getGraph() == graph;
         }
         this.graph = graph;
-//        Operator operator = ContextValue.get().getOperator(identifier);
+        //        Operator operator = ContextValue.get().getOperator(identifier);
         Type[] types = new Type[operands.length];
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
@@ -78,7 +78,7 @@ public final class EdgePropertyApply implements EdgeProperty {
         Type type = evaluator.resultType(operator, types);
         this.value = type.newValue();
     }
-    
+
     /**
      * {@inheritDoc}
      * For this property type, the result of this function is computed as

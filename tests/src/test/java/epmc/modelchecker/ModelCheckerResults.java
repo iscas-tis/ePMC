@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -47,7 +47,7 @@ public final class ModelCheckerResults {
     private final Map<RawProperty,Object> results = new LinkedHashMap<>();
     private final Map<RawProperty, Scheduler> schedulers = new LinkedHashMap<>();
     private final Map<RawProperty, LowLevel> lowLevels = new LinkedHashMap<>();
-    
+
     public void set(ModelCheckerResult result) {
         assert result != null;
         if (result.getProperty() == null) {
@@ -56,20 +56,20 @@ public final class ModelCheckerResults {
             results.put(result.getProperty(), result.getResult());
             Scheduler scheduler = result.getScheduler();
             if (scheduler != null) {
-            	schedulers.put(result.getProperty(), scheduler);
+                schedulers.put(result.getProperty(), scheduler);
             }
             LowLevel lowLevel = result.getLowLevel();
             if (lowLevel != null) {
-            	lowLevels.put(result.getProperty(), lowLevel);
+                lowLevels.put(result.getProperty(), lowLevel);
             }
         }
     }
-    
+
     public void set(Object commonResult) {
         assert commonResult != null;
         this.commonResult = commonResult;
     }
-    
+
     public Object getCommonResult() {
         return commonResult;
     }
@@ -85,7 +85,7 @@ public final class ModelCheckerResults {
         assert property != null;
         return results.get(property);
     }
-    
+
     public String getString(RawProperty property) {
         assert property != null;
         Object get = get(property);
@@ -108,26 +108,26 @@ public final class ModelCheckerResults {
         }
         return builder.toString();
     }
-    
+
     public Collection<RawProperty> getProperties() {
         return results.keySet();
     }
 
     public Object getResult(RawProperty property) {
-    	assert property != null;
-    	return results.get(property);
+        assert property != null;
+        return results.get(property);
     }
-    
+
     public Scheduler getScheduler(RawProperty property) {
-    	assert property != null;
-    	return schedulers.get(property);
+        assert property != null;
+        return schedulers.get(property);
     }
-    
+
     public LowLevel getLowLevel(RawProperty property) {
-    	assert property != null;
-    	return lowLevels.get(property);
+        assert property != null;
+        return lowLevels.get(property);
     }
-    
+
     public void clear() {
         this.commonResult = null;
         this.results.clear();

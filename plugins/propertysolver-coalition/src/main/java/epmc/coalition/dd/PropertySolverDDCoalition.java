@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.dd;
 
@@ -61,23 +61,23 @@ import epmc.util.StopWatch;
 import epmc.value.operator.OperatorNot;
 
 public class PropertySolverDDCoalition implements PropertySolver {
-	/** Identifier of the solver. */
-	public final static String IDENTIFIER = "coalition-dd";
-	/** String containing an opening brace. */
-	final static String BRACE_OPEN = "(";
-	/** String containing a closing brace. */
-	final static String BRACE_CLOSE = ")";
-	/** String containing a comma. */
-	final static String COMMA = ",";
+    /** Identifier of the solver. */
+    public final static String IDENTIFIER = "coalition-dd";
+    /** String containing an opening brace. */
+    final static String BRACE_OPEN = "(";
+    /** String containing a closing brace. */
+    final static String BRACE_CLOSE = ")";
+    /** String containing a comma. */
+    final static String COMMA = ",";
 
     private ModelChecker modelChecker;
     private List<SMGPlayer> playerList;
     private DD playerEven;
     private List<DD> priorities;
-	private Expression property;
-	private ExpressionCoalition propertyCoalition;
-	private StateSet states;
-	private ProductGraphDDExplicit game;
+    private Expression property;
+    private ExpressionCoalition propertyCoalition;
+    private StateSet states;
+    private ProductGraphDDExplicit game;
 
     @Override
     public String getIdentifier() {
@@ -91,93 +91,93 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
 
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionCoalition) {
-			this.propertyCoalition = (ExpressionCoalition) property;
-		}
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionCoalition) {
+            this.propertyCoalition = (ExpressionCoalition) property;
+        }
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.states = forStates;
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.states = forStates;
+    }
 
 
     @Override
     public boolean canHandle() {
-    	assert property != null;
-    	if (!(modelChecker.getEngine() instanceof EngineDD)) {
-    		return false;
-    	}
-    	if (!(property instanceof ExpressionCoalition)) {
-    		return false;
-    	}
-    	if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
-    		return false;
-    	}
-    	if (!ExpressionCoalition.isCoalition(property)) {
-    		return false;
-    	}
-    	ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
-    	Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
-    	StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
-    	for (Expression inner : inners) {
-    		modelChecker.ensureCanHandle(inner, allStates);
-    	}
-    	if (allStates != null) {
-    		allStates.close();
-    	}
-    	return true;
-    }
-
-	@Override
-	public Set<Object> getRequiredGraphProperties() {
-		Set<Object> required = new LinkedHashSet<>();
-		required.add(CommonProperties.EXPRESSION_TO_DD);
-		required.add(CommonProperties.SEMANTICS);
-		return Collections.unmodifiableSet(required);
-	}
-
-	@Override
-	public Set<Object> getRequiredNodeProperties() {
-		Set<Object> required = new LinkedHashSet<>();
-		required.add(CommonProperties.STATE);
+        assert property != null;
+        if (!(modelChecker.getEngine() instanceof EngineDD)) {
+            return false;
+        }
+        if (!(property instanceof ExpressionCoalition)) {
+            return false;
+        }
+        if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
+            return false;
+        }
+        if (!ExpressionCoalition.isCoalition(property)) {
+            return false;
+        }
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
         Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
+        }
+        return true;
+    }
+
+    @Override
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
+    }
+
+    @Override
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
+        Set<Expression> inners = UtilCoalition.collectLTLInner(quantifier.getQuantified());
+        StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
+        for (Expression inner : inners) {
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+        }
+        if (allStates != null) {
+            allStates.close();
         }
         required.addAll(propertyCoalition.getPlayers());
-		return Collections.unmodifiableSet(required);
-	}
+        return Collections.unmodifiableSet(required);
+    }
 
-	@Override
-	public Set<Object> getRequiredEdgeProperties() {
-		Set<Object> required = new LinkedHashSet<>();
-	    if (!UtilCoalition.isQualitative(propertyCoalition)) {
-	    	required.add(CommonProperties.WEIGHT);
-	    }
-		return Collections.unmodifiableSet(required);
-	}
-    
+    @Override
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        if (!UtilCoalition.isQualitative(propertyCoalition)) {
+            required.add(CommonProperties.WEIGHT);
+        }
+        return Collections.unmodifiableSet(required);
+    }
+
     @Override
     public StateMap solve() {
-    	assert states != null;
+        assert states != null;
         StateSetDD forStates = (StateSetDD) states;
-		getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
+        getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
         ExpressionCoalition propertyCoalition = ExpressionCoalition.asCoalition(property);
         this.playerList = propertyCoalition.getPlayers();
         Expression path = quantifier.getQuantified();
-	    if (UtilCoalition.isDirTypeMin(quantifier)) {
-	    	path = not(path);
-	    }
+        if (UtilCoalition.isDirTypeMin(quantifier)) {
+            path = not(path);
+        }
         Set<Expression> inners = UtilCoalition.collectLTLInner(path);
         GraphDD modelGraph = modelChecker.getLowLevel();
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
@@ -191,13 +191,13 @@ public class PropertySolverDDCoalition implements PropertySolver {
         boolean qualitative = UtilCoalition.isQualitative(propertyCoalition);
         boolean trivialTrue = UtilCoalition.isTrivialTrue(propertyCoalition);
         boolean trivialFalse = UtilCoalition.isTrivialFalse(propertyCoalition);
-	    boolean strictEven = UtilCoalition.isStrictEven(propertyCoalition);
+        boolean strictEven = UtilCoalition.isStrictEven(propertyCoalition);
 
         StateMap result = null;
         if (trivialTrue || trivialFalse) {
             result = new StateMapDD(
-            		(StateSetDD) states.clone(),
-            		getContextDD().newConstant(trivialTrue));
+                    (StateSetDD) states.clone(),
+                    getContextDD().newConstant(trivialTrue));
         } else if (qualitative) {
             game = buildGame(forStates, path, qualitative);
             SolverQualitative solver = new SolverQualitativeMcNaughton();
@@ -212,34 +212,34 @@ public class PropertySolverDDCoalition implements PropertySolver {
             DDPair regions = zeroMcNaughton(nodes);
             System.out.println("TIME_SOLVER_SECONDS: " + watch.getTimeSeconds());
             System.out.println("RECURSIVE_CALLS: " + zeroMcNaughtonCalls);
-            */
+             */
             result = toOrig(regions.getSet0(), forStates);
         } else {
-        	assert false;
+            assert false;
         }
-        
+
         return result;
     }
 
     private StateMap toOrig(DD res, StateSetDD forStates) {
-    	assert res != null;
-    	assert forStates != null;
+        assert res != null;
+        assert forStates != null;
         StateMap result;
         if (res.isBoolean()) {
             res = res.and(game.getInitialNodes());
             res = res.abstractExist((game.getAutomatonPresCube().clone()));
             result = new StateMapDD(forStates.clone(), res);
         } else {
-        	assert false;
-        	result = null;
+            assert false;
+            result = null;
         }
-        
+
         return result;
     }
 
     private ProductGraphDDExplicit buildGame(StateSetDD forStates, Expression path, boolean qualitative) {
-		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
-		StopWatch watch = new StopWatch(true);
+        getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
+        StopWatch watch = new StopWatch(true);
         Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
         AutomatonParity automaton = UtilAutomaton.newAutomatonParity(path, expressions);
         List<Object> nodeProperties = new ArrayList<>();
@@ -257,16 +257,16 @@ public class PropertySolverDDCoalition implements PropertySolver {
         for (int i = 0; i < playerList.size(); i++) {
             playerEven = playerEven.orWith(modelGraph.getNodeProperty(playerList.get(i)).clone());
         }        
-        
+
         DD player = playerEven.iteWith
-        		(getContextDD().newConstant(Player.ONE_STOCHASTIC),
-        				getContextDD().newConstant(Player.TWO_STOCHASTIC));
+                (getContextDD().newConstant(Player.ONE_STOCHASTIC),
+                        getContextDD().newConstant(Player.TWO_STOCHASTIC));
         product.registerNodeProperty(CommonProperties.PLAYER, player);
 
         this.priorities = computePriorities(automaton, product.getLabeling());
-	    getLog().send(MessagesCoalition.COALITION_PRODUCT_DONE, watch.getTimeSeconds(), product.getNumNodes());
-	    getLog().send(MessagesCoalition.COALITION_NUMBER_COLORS, priorities.size());
-	    return product;
+        getLog().send(MessagesCoalition.COALITION_PRODUCT_DONE, watch.getTimeSeconds(), product.getNumNodes());
+        getLog().send(MessagesCoalition.COALITION_NUMBER_COLORS, priorities.size());
+        return product;
     }
 
     private List<DD> computePriorities(AutomatonParity automaton,
@@ -276,7 +276,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         List<DD> priorities = new ArrayList<>();
         int numPriorities = automaton.getNumPriorities();
         priorities.clear();
-        
+
         for (int labelNr = 0; labelNr < numPriorities; labelNr++) {
             priorities.add(getContextDD().newConstant(false));
         }
@@ -291,25 +291,25 @@ public class PropertySolverDDCoalition implements PropertySolver {
         }
         return priorities;
     }
-    
+
     private ContextDD getContextDD() {
-    	return ContextDD.get();
-	}
-    
+        return ContextDD.get();
+    }
+
     /**
      * Get log used for analysis.
      * 
      * @return log used for analysis
      */
     private Log getLog() {
-    	return Options.get().get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
     }
-    
+
     private Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorNot.NOT)
-        	.setOperands(expression)
-        	.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorNot.NOT)
+                .setOperands(expression)
+                .build();
     }
 
     /**
@@ -318,6 +318,6 @@ public class PropertySolverDDCoalition implements PropertySolver {
      * @return low level model of model checker
      */
     private GraphDD getLowLevel() {
-    	return modelChecker.getLowLevel();
+        return modelChecker.getLowLevel();
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -53,7 +53,7 @@ public final class HashingStrategyArrayLong implements HashingStrategy<long[]> {
         assert arg1 != null;
         return Arrays.equals(arg0, arg1);
     }
-    
+
     /**
      * Get instance of the hashing strategy.
      * 
@@ -62,7 +62,7 @@ public final class HashingStrategyArrayLong implements HashingStrategy<long[]> {
     public static HashingStrategyArrayLong getInstance() {
         return INSTANCE;
     }
-    
+
     /**
      * Private constructor to ensure that only one instance is created.
      */

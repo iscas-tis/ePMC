@@ -16,27 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Value;
 
 public interface ValueNumber extends ValueAlgebra {
-	
-	static boolean isNumber(Value value) {
-		return value instanceof ValueNumber;
-	}
-	
-	static ValueNumber asNumber(Value value) {
-		if (isNumber(value)) {
-			return (ValueNumber) value;
-		} else {
-			return null;
-		}
-	}
-	
+
+    static boolean isNumber(Value value) {
+        return value instanceof ValueNumber;
+    }
+
+    static ValueNumber asNumber(Value value) {
+        if (isNumber(value)) {
+            return (ValueNumber) value;
+        } else {
+            return null;
+        }
+    }
+
     double getDouble();
-    
+
     int getInt();
 }

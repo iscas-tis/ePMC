@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -60,7 +60,7 @@ public class ModelConstructionDDTest {
         assertEquals(1, result, tolerance);
         close(options);
     }
-    
+
     @Test
     public void clusterTest() {
         Options options = prepareOptions();

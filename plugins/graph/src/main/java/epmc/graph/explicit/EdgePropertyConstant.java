@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -48,7 +48,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
         this.graph = graph;
         this.value = UtilValue.clone(value);
     }
-    
+
     /**
      * {@inheritDoc}
      * In this implementation, the value is the same value for all edges,

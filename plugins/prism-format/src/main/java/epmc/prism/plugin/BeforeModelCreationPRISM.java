@@ -5,16 +5,16 @@ import epmc.prism.value.OperatorEvaluatorPRISMPow;
 import epmc.value.ContextValue;
 
 public final class BeforeModelCreationPRISM implements BeforeModelCreation {
-	public final static String IDENTIFIER = "before-model-creation-prism";
+    public final static String IDENTIFIER = "before-model-creation-prism";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process() {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
-	}
+    @Override
+    public void process() {
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
+    }
 
 }

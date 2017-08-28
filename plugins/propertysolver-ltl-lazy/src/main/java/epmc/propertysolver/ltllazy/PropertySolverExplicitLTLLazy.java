@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy;
 
@@ -94,15 +94,15 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     private Log log;
     private StateSetExplicit forStates;
     private boolean negate;
-	private Expression property;
-	private ExpressionQuantifier propertyQuantifier;
+    private Expression property;
+    private ExpressionQuantifier propertyQuantifier;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
         this.nonDet = SemanticsNonDet.isNonDet(modelChecker.getModel().getSemantics());
         this.options = Options.get();
@@ -110,7 +110,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit checkTemporalLTLNonIncremental(Buechi buechi)
-            {
+    {
         StateMapExplicit result = null;
         if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_USE_SUBSET)) {
             result = computeNonIncremental(DecisionMethod.SUBSET, buechi);
@@ -125,7 +125,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit computeNonIncremental(DecisionMethod method, Buechi buechi)
-            {
+    {
         Automaton automaton = null;
         StopWatch timer = new StopWatch(true);
         switch (method) {
@@ -144,14 +144,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         }
         System.out.println("Done building automaton in " + timer.getTimeSeconds() + " seconds ...");
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
-        		.setModel(graph)
-        		.setModelInitialNodes(forStates.getStatesExplicit())
-        		.setAutomaton(automaton)
-        		.addGraphProperties(graph.getGraphProperties())
-        		.addNodeProperty(CommonProperties.PLAYER)
-        		.addNodeProperty(CommonProperties.STATE)
-        		.addEdgeProperty(CommonProperties.WEIGHT)
-        		.build();
+                .setModel(graph)
+                .setModelInitialNodes(forStates.getStatesExplicit())
+                .setAutomaton(automaton)
+                .addGraphProperties(graph.getGraphProperties())
+                .addNodeProperty(CommonProperties.PLAYER)
+                .addNodeProperty(CommonProperties.STATE)
+                .addEdgeProperty(CommonProperties.WEIGHT)
+                .build();
         GraphExplicitWrapper graph = new GraphExplicitWrapper(prodGraph);
         graph.addDerivedGraphProperties(prodGraph.getGraphProperties());
         graph.addDerivedNodeProperty(CommonProperties.STATE);
@@ -182,7 +182,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
         BitSet initNs = graph.getInitialNodes();
         BitSet init = initNs.clone();
-        
+
         ComponentsExplicit components = UtilAlgorithms.newComponentsExplicit();
         EndComponents endComponents = components.maximalEndComponents(graph);
         int numComponents = 0;
@@ -203,7 +203,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                     break;
                 }
             }
-            
+
             ComponentDecision decision = null;
             switch (method) {
             case SUBSET:
@@ -239,7 +239,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         if (!undecided.isEmpty()) {
             return null;
         }
-        
+
         return prodToOrigResult(prepareAndIterate(graph, acc), graph);
     }
 
@@ -249,14 +249,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         assert iterResult != null;
         assert prodGraph != null;
         Type typeWeight = TypeWeight.get();
-//        Value result = contextValue.newValueArrayWeight(modelGraph.getQueriedNodesLength());
+        //        Value result = contextValue.newValueArrayWeight(modelGraph.getQueriedNodesLength());
         Value entry = typeWeight.newValue();
         BitSet nodes = forStates.getStatesExplicit();
-//        NodeProperty nodeAutomaton = prodGraph.getNodeProperty(CommonProperties.NODE_MODEL);
+        //        NodeProperty nodeAutomaton = prodGraph.getNodeProperty(CommonProperties.NODE_MODEL);
         ValueArray resultValues = UtilValue.newArray(typeWeight.getTypeArray(), forStates.size());
         int i = 0;
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
-//            int modelState = nodeAutomaton.getInt();
+            //            int modelState = nodeAutomaton.getInt();
             iterResult.get(entry, i);
             resultValues.set(entry, i);
             i++;
@@ -265,18 +265,18 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit checkTemporalLTLIncremental(Buechi buechi)
-            {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL);
         AutomatonSubset automaton = new AutomatonSubset.Builder().setBuechi(buechi).build();
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
-        		.setModel(graph)
-        		.setModelInitialNodes(forStates.getStatesExplicit())
-        		.setAutomaton(automaton)
-        		.addGraphProperties(graph.getGraphProperties())
-        		.addNodeProperty(CommonProperties.PLAYER)
-        		.addNodeProperty(CommonProperties.STATE)
-        		.addEdgeProperty(CommonProperties.WEIGHT)
-        		.build();
+                .setModel(graph)
+                .setModelInitialNodes(forStates.getStatesExplicit())
+                .setAutomaton(automaton)
+                .addGraphProperties(graph.getGraphProperties())
+                .addNodeProperty(CommonProperties.PLAYER)
+                .addNodeProperty(CommonProperties.STATE)
+                .addEdgeProperty(CommonProperties.WEIGHT)
+                .build();
         GraphExplicitWrapper prodWrapper = new GraphExplicitWrapper(prodGraph);
         prodWrapper.addDerivedGraphProperties(prodGraph.getGraphProperties());
         prodWrapper.addDerivedNodeProperty(CommonProperties.STATE);
@@ -300,7 +300,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
-            {
+    {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
@@ -346,7 +346,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         }
 
         BitSet targetS = new BitSet(iterGraph.computeNumStates());
-        
+
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);
         for (int node = acc.nextSetBit(0); node >= 0; node = acc.nextSetBit(node+1)) {
             graph.queryNode(node);
@@ -373,7 +373,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             }
         }
         return result;
-        */
+         */
     }
 
     private enum ComponentDecision {
@@ -383,11 +383,11 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     private enum DecisionMethod {
         SUBSET, BREAKPOINT, RABIN
     }
-    
+
     private void decideComponents(Buechi buechi,
             EndComponents endComponents,
             int numLabels, BitSet acc, GraphExplicit graph)
-                    {
+    {
         int numComponents = 0;
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
         BitSet init = graph.getInitialNodes().clone();
@@ -435,7 +435,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                     && options.getBoolean(OptionsLTLLazy.LTL_LAZY_USE_BREAKPOINT_SINGLETONS)) {
                 decision = decideComponentBreakpointSingletons(graph, buechi, ecc, bscc);
             }
-            
+
             if (decision == ComponentDecision.ACCEPT) {
                 if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_REMOVE_DECIDED)) {
                     ComponentsExplicit components  = UtilAlgorithms.newComponentsExplicit();
@@ -457,7 +457,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentSubset(BitSet ecc, GraphExplicit graph, int numLabels)
-            {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_SUBSET);
         BitSet labelsFoundLower = UtilBitSet.newBitSetUnbounded(numLabels);
         BitSet labelsFoundOver = UtilBitSet.newBitSetUnbounded(numLabels);
@@ -481,7 +481,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentBreakpointSingletons(GraphExplicit subsetGraph,
             Buechi buechi, BitSet ecc, boolean bscc)
-                    {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT_SINGLETONS);
         BitSet toCheck = UtilBitSet.newBitSetUnbounded();
         toCheck.or(ecc);
@@ -502,14 +502,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                 AutomatonSubsetState singleton = (AutomatonSubsetState) subsetState.getAutomaton().numberToState(singletonNr);
                 AutomatonBreakpoint breakpoint = new AutomatonBreakpoint.Builder().setBuechi(buechi).setInit(singleton).build();
                 ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
-                		.setModel(graph)
-                		.setModelInitialNode(modelState)
-                		.setAutomaton(breakpoint)
-                		.addGraphProperties(graph.getGraphProperties())
-                		.addNodeProperty(CommonProperties.PLAYER)
-                		.addNodeProperty(CommonProperties.STATE)
-                		.addEdgeProperty(CommonProperties.WEIGHT)
-                		.build();
+                        .setModel(graph)
+                        .setModelInitialNode(modelState)
+                        .setAutomaton(breakpoint)
+                        .addGraphProperties(graph.getGraphProperties())
+                        .addNodeProperty(CommonProperties.PLAYER)
+                        .addNodeProperty(CommonProperties.STATE)
+                        .addEdgeProperty(CommonProperties.WEIGHT)
+                        .build();
                 GraphExplicitWrapper graph = new GraphExplicitWrapper(prodGraph);
                 graph.addDerivedGraphProperties(prodGraph.getGraphProperties());
                 graph.addDerivedNodeProperty(CommonProperties.STATE);
@@ -559,13 +559,13 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT_SINGLETONS_DONE_REJECT);
         return ComponentDecision.REJECT;
     }
-    
+
     private ComponentDecision decideComponentBreakpoint(GraphExplicit subsetGraph,
             BitSet ecc, boolean bscc)
-                    {
+    {
         AutomatonSubset automaton = ValueObject.asObject(subsetGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         Buechi buechi = automaton.getBuechi();
-        
+
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT);
         int pNode = ecc.nextSetBit(0);
         NodeProperty modelStateProp = subsetGraph.getNodeProperty(CommonProperties.NODE_MODEL);
@@ -574,14 +574,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         AutomatonSubsetState subsetState = nodeAutomaton.getObject(pNode);
         AutomatonBreakpoint breakpoint = new AutomatonBreakpoint.Builder().setBuechi(buechi).setInit(subsetState).build();
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
-        		.setModel(graph)
-        		.setModelInitialNode(modelState)
-        		.setAutomaton(breakpoint)
-        		.addGraphProperties(graph.getGraphProperties())
-        		.addNodeProperty(CommonProperties.PLAYER)
-        		.addNodeProperty(CommonProperties.STATE)
-        		.addEdgeProperty(CommonProperties.WEIGHT)
-        		.build();        
+                .setModel(graph)
+                .setModelInitialNode(modelState)
+                .setAutomaton(breakpoint)
+                .addGraphProperties(graph.getGraphProperties())
+                .addNodeProperty(CommonProperties.PLAYER)
+                .addNodeProperty(CommonProperties.STATE)
+                .addEdgeProperty(CommonProperties.WEIGHT)
+                .build();        
         GraphExplicitWrapper graph = new GraphExplicitWrapper(prodGraph);
         graph.addDerivedGraphProperties(prodGraph.getGraphProperties());
         graph.addDerivedNodeProperty(CommonProperties.STATE);
@@ -665,7 +665,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                 existing.set(node);
             }
         }
-        
+
         ComponentsExplicit components = UtilAlgorithms.newComponentsExplicit();
         components.removeLeavingAttr(graph, existing);
         if (existing.cardinality() == 0) {
@@ -687,14 +687,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         AutomatonSubsetState subsetState = nodeAutomaton.getObject(pNode);
         AutomatonRabin rabin = UtilAutomaton.newAutomatonRabinSafra(buechi, subsetState.getStates());
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
-        		.setModel(graph)
-        		.setModelInitialNode(modelState)
-        		.setAutomaton(rabin)
-        		.addGraphProperties(graph.getGraphProperties())
-        		.addNodeProperty(CommonProperties.PLAYER)
-        		.addNodeProperty(CommonProperties.STATE)
-        		.addEdgeProperty(CommonProperties.WEIGHT)
-        		.build();
+                .setModel(graph)
+                .setModelInitialNode(modelState)
+                .setAutomaton(rabin)
+                .addGraphProperties(graph.getGraphProperties())
+                .addNodeProperty(CommonProperties.PLAYER)
+                .addNodeProperty(CommonProperties.STATE)
+                .addEdgeProperty(CommonProperties.WEIGHT)
+                .build();
         GraphExplicitWrapper graph = new GraphExplicitWrapper(prodGraph);
         graph.addDerivedGraphProperties(prodGraph.getGraphProperties());
         graph.addDerivedNodeProperty(CommonProperties.STATE);
@@ -790,20 +790,20 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         }
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionQuantifier) {
-			this.propertyQuantifier = (ExpressionQuantifier) property;
-		}
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionQuantifier) {
+            this.propertyQuantifier = (ExpressionQuantifier) property;
+        }
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		if (forStates != null && (forStates instanceof StateSetExplicit)) {
-			this.forStates = (StateSetExplicit) forStates;
-		}
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        if (forStates != null && (forStates instanceof StateSetExplicit)) {
+            this.forStates = (StateSetExplicit) forStates;
+        }
+    }
 
     @Override
     public StateMap solve() {
@@ -827,9 +827,9 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         }
         return result;
     }
-    
+
     private StateMap doSolve(Expression property, StateSet forStates, boolean min)
-            {
+    {
         this.forStates = (StateSetExplicit) forStates;
         Semantics type = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(type)) {
@@ -845,7 +845,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         } else {
             innerResult = checkTemporalLTLNonIncremental(buechi);
         }
-        
+
         if (negate.getBoolean()) {
             ValueAlgebra entry = TypeAlgebra.asAlgebra(innerResult.getType()).newValue();
             for (int i = 0; i < innerResult.size(); i++) {
@@ -854,10 +854,10 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                 innerResult.setExplicitIthValue(entry, i);
             }
         }
-        
+
         return innerResult;
     }
-    
+
     private boolean isBSCC(GraphExplicit graph, BitSet ecc) {
         boolean isBSCC = true;
         if (nonDet) {
@@ -878,7 +878,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     // leafSCC with probability one (max probability)
     private boolean checkReachOne(GraphExplicit prodWrapperGraph,
             BitSet subsetECC, GraphExplicit leafGraph, BitSet leafSCC)
-                    {
+    {
         ProductGraphExplicit prodGraph = prodWrapperGraph.getGraphPropertyObject(CommonProperties.INNER_GRAPH);
         AutomatonSubset subset = ValueObject.asObject(prodGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         ComponentsExplicit components = UtilAlgorithms.newComponentsExplicit();
@@ -906,7 +906,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         }
         Semantics semantics = modelChecker.getModel().getSemantics();
         if (!SemanticsMarkovChain.isMarkovChain(semantics) && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+            return false;
         }
         if (!(property instanceof ExpressionQuantifier)) {
             return false;
@@ -915,7 +915,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             return false;
         }
         if (!TypeReal.isReal(TypeWeight.get())) {
-        	return false;
+            return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -923,38 +923,38 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
-    
+
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression inner : inners) {
             required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;

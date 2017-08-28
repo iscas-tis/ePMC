@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -59,8 +59,8 @@ public final class PropertiesImpl implements Properties {
     private final Map<String,Type> constantTypes = new LinkedHashMap<>();
     private final Map<String,Expression> formulas = new LinkedHashMap<>();
     private final Map<String,Expression> labels = new LinkedHashMap<>();
-	private final ModelPRISM model;
-    
+    private final ModelPRISM model;
+
     public PropertiesImpl(ModelPRISM model) {
         assert model != null;
         this.model = model;
@@ -73,7 +73,7 @@ public final class PropertiesImpl implements Properties {
             parseProperties(input);
         }
     }
-    
+
     private void parseProperties(InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
@@ -82,7 +82,7 @@ public final class PropertiesImpl implements Properties {
         parseProperties(properties);
         expand();
     }
-    
+
     public void parseProperties(RawProperties rawProperties) {
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
@@ -136,7 +136,7 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addConst(String name, Type type, Expression entry)
-            {
+    {
         assert name != null;
         assert type != null;
         // entry might be null for undefined constants
@@ -145,9 +145,9 @@ public final class PropertiesImpl implements Properties {
         this.constantTypes.put(name, type);
         this.names.add(name);
     }
-    
+
     public void addFormula(String name, Expression entry)
-            {
+    {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
@@ -156,19 +156,19 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addLabel(String name, Expression entry)
-            {
+    {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
         this.labels.put(name, entry);
         this.names.add(name);
     }
-    
+
     @Override
     public Expression getParsedProperty(RawProperty property) {
         return properties.get(property);
     }
-    
+
     public void expandAndCheckWithDefinedCheck() {
         checkCyclic();
         expand();
@@ -176,16 +176,16 @@ public final class PropertiesImpl implements Properties {
         checkUndefinedConst();
         checkTypes();
     }
-    
+
     private void checkTypes() {
-//        for (Entry<Property,Expression> entry : properties.entrySet()) {
-// TODO temporarily disabled
-//            entry.getValue().computeType();
- //       }
+        //        for (Entry<Property,Expression> entry : properties.entrySet()) {
+        // TODO temporarily disabled
+        //            entry.getValue().computeType();
+        //       }
     }
-    
+
     // private methods
-    
+
     private void expand() {
         Map<Expression,Expression> seen = new HashMap<>();
         for (Entry<RawProperty,Expression> entry : properties.entrySet()) {
@@ -193,7 +193,7 @@ public final class PropertiesImpl implements Properties {
             properties.put(entry.getKey(), newExpr);
         }
     }
-    
+
     private Expression expand(Expression value, Map<Expression,Expression> seen) {
         if (value == null) {
             return null;
@@ -201,12 +201,12 @@ public final class PropertiesImpl implements Properties {
         if (seen.containsKey(value)) {
             return seen.get(value);
         }
-        
+
         Expression goDeeper = null;
         if (ExpressionIdentifier.isIdentifier(value)) {
             ExpressionIdentifier valueId = (ExpressionIdentifier) value;
             if (goDeeper == null) {
-            	goDeeper = constants.get(valueId.toString());
+                goDeeper = constants.get(valueId.toString());
             }
             if (goDeeper == null) {
                 goDeeper = formulas.get(valueId.toString());
@@ -242,7 +242,7 @@ public final class PropertiesImpl implements Properties {
             ensure(constDef != null, ProblemsModelChecker.CONST_UNDEFINED, name);
         }
     }
-    
+
     private void findUsedConstants(Expression value, Set<Expression> seen,
             Set<String> usedConstants) {
         if (value == null) {
@@ -350,7 +350,7 @@ public final class PropertiesImpl implements Properties {
                     ProblemsModelChecker.CONST_CYCLIC, entry.getKey(), pathToString(path));
         }
     }
-    
+
     private String pathToString(ArrayList<String> path) {
         StringBuilder builder = new StringBuilder();
         Iterator<String> iter = path.iterator();
@@ -362,7 +362,7 @@ public final class PropertiesImpl implements Properties {
         }
         return builder.toString();
     }
-    
+
     private boolean checkCyclic(Expression value, Set<Expression> seen,
             List<String> path, Set<Expression> onPath) {
         if (value == null) {
@@ -406,7 +406,7 @@ public final class PropertiesImpl implements Properties {
         onPath.remove(value);
         return true;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -428,22 +428,22 @@ public final class PropertiesImpl implements Properties {
         }
         return builder.toString();
     }
-    
+
     public void ensureNoUndefinedConstants() {
         for (Entry<String, Expression> entry : constants.entrySet()) {
             ensure(entry.getValue() != null, ProblemsModelChecker.CONST_UNDEFINED, entry.getKey());
         }
     }
-    
+
     public Map<String, Expression> getConstants() {
         return constants;
     }
-    
+
     public Type getConstantType(String constant) {
         assert constant != null;
         return constantTypes.get(constant);
     }
-    
+
     public Expression getConstantValue(String constant) {
         assert constant != null;
         return constants.get(constant);

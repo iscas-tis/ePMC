@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -33,56 +33,56 @@ import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorMax;
 
 public enum OperatorEvaluatorMax implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorMax.MAX;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeAlgebra.isAlgebra(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorMax.MAX;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 2) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeAlgebra.isAlgebra(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorMax.MAX);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        assert operator != null;
+        assert operator.equals(OperatorMax.MAX);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
         return UtilValue.algebraicResultType(types);
     }
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	Value operand1 = operands[0];
-    	Value operand2 = operands[1];
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        Value operand1 = operands[0];
+        Value operand2 = operands[1];
         if (ValueAlgebra.asAlgebra(operand1).isGt(operand2)) {
             result.set(operand1);
         } else if (ValueAlgebra.asAlgebra(operand2).isGt(operand1)) {
-        	result.set(operand2);
+            result.set(operand2);
         } else if (operand2.isEq(operand1)) {
-        	result.set(operand1);
+            result.set(operand1);
         } else {
             ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
         }

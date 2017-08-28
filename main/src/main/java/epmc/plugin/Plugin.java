@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
@@ -50,7 +50,7 @@ final class Plugin {
     private final List<String> dependencies = new ArrayList<>();
     /** Plugin classes of the plugin. */
     private final List<Class<? extends PluginInterface>> classes = new ArrayList<>();
-    
+
     /**
      * Add a class belonging to this plugin.
      * Classes to be added will be used to execute certain tasks at certain
@@ -63,7 +63,7 @@ final class Plugin {
         assert clazz != null;
         classes.add(clazz);
     }
-    
+
     /**
      * Get plugin interface classes of plugin.
      * 
@@ -72,7 +72,7 @@ final class Plugin {
     List<Class<? extends PluginInterface>> getClasses() {
         return classes;
     }
-    
+
     /**
      * Set the name of the plugin.
      * 
@@ -90,7 +90,7 @@ final class Plugin {
     String getName() {
         return name;
     }
-    
+
     /**
      * Add dependencies of plugin.
      * The dependencies should be a list of the names of plugins this plugin
@@ -107,7 +107,7 @@ final class Plugin {
         }
         this.dependencies.addAll(Arrays.asList(dependencies));
     }
-    
+
     /**
      * Get list of names of plugins this plugin depends on.
      * 
@@ -116,7 +116,7 @@ final class Plugin {
     List<String> getDependencies() {
         return dependencies;
     }
-    
+
     /**
      * Set path of the plugin.
      * The path can be either a directory or a JAR file with a manifest valid

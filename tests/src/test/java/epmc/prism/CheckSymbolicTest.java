@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism;
 
@@ -128,8 +128,8 @@ import epmc.value.Value;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public final class CheckSymbolicTest {
-	/** Location of plugin directory in file system. */
-//    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
+    /** Location of plugin directory in file system. */
+    //    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
      * Set up the tests.
@@ -145,11 +145,11 @@ public final class CheckSymbolicTest {
      * @return options usable for PRISM model analysis
      */
     private final static Options preparePRISMOptions() {
-	    try {
-			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+        try {
+            System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, LogType.TRANSLATE, ModelPRISM.IDENTIFIER);
         options.set(OptionsMessages.TIME_STAMPS, TimeStampFormatSecondsStarted.class);
@@ -161,63 +161,63 @@ public final class CheckSymbolicTest {
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
         return options;
     }
-    
-    
+
+
     @Test
     public void testPRISMTest() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("N", "4");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("N", "4");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
-        
+
         ModelCheckerResults result = computeResults(model);
         int i = 0;
-//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
-//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
     }
 
     @Test
     public void testPRISMClusterDTMC3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism", System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prop");
-        
+
         ModelCheckerResults result = computeResults(model);
         int i = 0;
-//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
-//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
     }
 
     @Test
     public void testPRISMPeterson() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         options.set(OptionsLTLLazy.LTL_LAZY_USE_BREAKPOINT_SINGLETONS, "true");
         options.set(OptionsLTLLazy.LTL_LAZY_USE_RABIN, "false");
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP-nostorage-rid.prism", System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP.props");
-        
+
         ModelCheckerResults result = computeResults(model);
         int i = 0;
-//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
-//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-8);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-8);
     }
 
-   @Test
+    @Test
     public void testPRISM_BRP() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("MAX", "4");
-    	constants.put("N", "64");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("MAX", "4");
+        constants.put("N", "64");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, BRP_MODEL, BRP_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000000000000000", result.get("P=?[ F srep=1 & rrep=3 & recv ]"), 2.0E-8);
         assertEquals("0.0000000000000000", result.get("P=?[ F srep=3 & !(rrep=3) & recv ]"), 2.0E-8);
@@ -232,14 +232,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Cell() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "0.5");
-    	constants.put("N", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "0.5");
+        constants.put("N", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, CELL_MODEL, CELL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.4345518395101758", result.get("P=?[ true U<=T (n=N) {n<N}{max} ]"), 2.0E-8);
         assertEquals("0.9986990388753094", result.get("P=?[ true U<=T (n>=N*0.8) {n<N*0.8}{max} ]"), 2.0E-8);
@@ -254,14 +254,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Cluster() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "10");
-    	constants.put("N", "20");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "10");
+        constants.put("N", "20");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, CLUSTER_MODEL, CLUSTER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.9995511026598302", result.get("S=? [ \"premium\" ]"), 2.0E-8);
         assertEquals("0.0000020960524843", result.get("S=? [ !\"minimum\" ]"), 2.0E-8);
@@ -280,14 +280,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Coin_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "2");
-    	constants.put("k", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "2");
+        constants.put("k", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 2), COIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.3828124943782572", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
@@ -303,14 +303,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Coin_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "2");
-    	constants.put("k", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "2");
+        constants.put("k", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 4), COIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.3173827923614849", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
@@ -326,14 +326,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Coin_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "2");
-    	constants.put("k", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "2");
+        constants.put("k", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 6), COIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("0.2943502833478910", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
@@ -344,20 +344,20 @@ public final class CheckSymbolicTest {
         assertEquals("431.99999989136097", result.get("R{\"steps\"}min=? [ F \"finished\" ]"), 2.0E-8);
         assertEquals("866.99999972962950", result.get("R{\"steps\"}max=? [ F \"finished\" ]"), 2.0E-8);
     }
-    
+
     //PRISM fails in generating the results
     // No support for R yet
     @Ignore
     @Test
     public void testPRISM_Coin_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "2");
-    	constants.put("k", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "2");
+        constants.put("k", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 8), COIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
@@ -374,14 +374,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Coin_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "2");
-    	constants.put("k", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "2");
+        constants.put("k", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 10), COIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F \"finished\" ]"));
         assertEquals("", result.get("Pmin=? [ F \"finished\"&\"all_coins_equal_0\" ]"), 2.0E-8);
@@ -397,13 +397,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_2_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,2), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("66.999322859407130", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("70.665759761897790", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -421,13 +421,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_2_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,4), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("75.650783290506550", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("78.971274954375760", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -445,13 +445,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_2_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,6), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("84.590412972822500", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("89.263941682646360", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -469,13 +469,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_3_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,2), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("93.624118012828090", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("105.21135383451656", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -493,13 +493,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_3_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,4), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("107.31147849546767", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("116.81825582915883", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -517,13 +517,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_3_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,6), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("136.85667366738778", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("151.80342150757490", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -541,13 +541,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_4_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,2), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("124.46349552291959", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("142.21216908512903", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -566,13 +566,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_4_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,4), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -591,13 +591,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_CSMA_4_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,6), CSMA_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("R{\"time\"}min=?[ F \"all_delivered\" ]"), 2.0E-8);
         assertEquals("", result.get("R{\"time\"}max=?[ F \"all_delivered\" ]"), 2.0E-8);
@@ -615,13 +615,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Dice() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("x", "3");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("x", "3");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, DICE_MODEL, DICE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>0.1 [ F s=7 & d=x ]"));
         assertEquals("0.1666666660457849", result.get("P=? [ F s=7 & d=6 ]"), 2.0E-8);
@@ -633,13 +633,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_TwoDice() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("x", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("x", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, TWO_DICE_MODEL, TWO_DICE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.1111111110221827", result.get("Pmin=? [ F s1=7 & s2=7 & d1+d2=x ]"), 2.0E-8);
         assertEquals("0.1111111110221827", result.get("Pmax=? [ F s1=7 & s2=7 & d1+d2=x ]"), 2.0E-8);
@@ -649,13 +649,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 3), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -663,13 +663,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 4), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -677,13 +677,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 5), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -691,13 +691,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 6), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -705,13 +705,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 7), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -719,13 +719,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 8), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -733,13 +733,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 9), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -747,13 +747,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 10), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -761,13 +761,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_DiningCrypt_15() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 15), DINING_CRYPT_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, (pay=0) => P>=1 [ F \"done\" & parity=func(mod, N, 2) ])"));
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
@@ -775,28 +775,28 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_FirewireAbs() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("delay", "36");
-    	constants.put("fast", "0.5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("delay", "36");
+        constants.put("fast", "0.5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FIREWIRE_ABST_MODEL, FIREWIRE_ABST_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F (s=9) ]"));
     }
 
     @Test
     public void testPRISM_FirewireImpl() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("delay", "36");
-    	constants.put("fast", "0.5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("delay", "36");
+        constants.put("fast", "0.5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ F ((s1=8) & (s2=7)) | ((s1=7) & (s2=8)) ]"));
     }
@@ -806,13 +806,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_FMS() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("n", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("n", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FMS_MODEL, FMS_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0731715966472075", result.get("R{\"throughput_m1\"}=? [ S ]"), 2.0E-8);
         assertEquals("0.0365858002883267", result.get("R{\"throughput_m2\"}=? [ S ]"), 2.0E-8);
@@ -826,13 +826,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Kanban() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("t", "4");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("t", "4");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, KANBAN_MODEL, KANBAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("3.6464073760255790", result.get("R{\"tokens_cell1\"}=? [ S ]"), 2.0E-8);
         assertEquals("2.5129835893535350", result.get("R{\"tokens_cell2\"}=? [ S ]"), 2.0E-8);
@@ -845,13 +845,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 3), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -865,13 +865,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 4), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -885,13 +885,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 5), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -905,13 +905,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 6), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -925,13 +925,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 7), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -945,13 +945,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 8), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -966,13 +966,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 9), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -987,13 +987,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderAsync_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 10), LEADER_ASYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, leaders<=1)"));
         assertEquals(true, result.get("P>=1 [ F \"elected\" ]"));
@@ -1007,13 +1007,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 2), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7500000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1024,13 +1024,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 3), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8888888888888884", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1041,13 +1041,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 4), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9375000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1058,13 +1058,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 5), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9600000000000007", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1075,13 +1075,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 6), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9722222222222251", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1092,13 +1092,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_3_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 8), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9843750000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1109,13 +1109,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 2), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.5000000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1126,13 +1126,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 3), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7407407407407418", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1143,13 +1143,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 4), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8437500000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1160,13 +1160,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 5), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8960000000000092", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1177,13 +1177,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 6), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9259259259258992", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1194,13 +1194,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_4_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 8), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9570312500000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1211,13 +1211,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 2), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.3125000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1228,13 +1228,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 3), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.7407407407407387", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1245,13 +1245,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 4), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8789062500000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1262,13 +1262,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 5), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9343999999999674", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1279,13 +1279,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 6), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9606481481480117", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1296,13 +1296,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_5_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 8), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9826660156250000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1313,13 +1313,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 2), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.1875000000000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1330,13 +1330,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 3), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.6666666666666646", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1347,13 +1347,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 4), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.8378906250000000", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1364,13 +1364,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 5), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9100799999997443", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1381,13 +1381,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 6), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("0.9452160493824413", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1399,13 +1399,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_LeaderSync_6_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 8), LEADER_SYNC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("1.0000000000000000", result.get("P=? [ F \"elected\" ]"), 2.0E-8);
         assertEquals("", result.get("P=? [ F<=(L*(N+1)) \"elected\" ]"), 2.0E-8);
@@ -1417,17 +1417,17 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_KNACL() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("N1", "10");
-    	constants.put("N2", "10");
-    	constants.put("T", "0.002");
-    	constants.put("i", "0");
-    	constants.put("N3", "10");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("N1", "10");
+        constants.put("N2", "10");
+        constants.put("T", "0.002");
+        constants.put("i", "0");
+        constants.put("N3", "10");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, KNACL_MODEL, KNACL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000917430966457", result.get("P=? [ true U[T,T] na=i ]"), 2.0E-8);
         assertEquals("0.0000000000346201", result.get("P=? [ true U[T,T] k=i ]"), 2.0E-8);
@@ -1442,16 +1442,16 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_NACL() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("N1", "10");
-    	constants.put("N2", "10");
-    	constants.put("T", "0.002");
-    	constants.put("i", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("N1", "10");
+        constants.put("N2", "10");
+        constants.put("T", "0.002");
+        constants.put("i", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, NACL_MODEL, NACL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0006596327782790", result.get("P=? [ true U[T,T] na=i ]"), 2.0E-8);
         assertEquals("35.045319159719730", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1463,16 +1463,16 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_MC() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("N1", "10");
-    	constants.put("N2", "10");
-    	constants.put("T", "0.002");
-    	constants.put("i", "0");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("N1", "10");
+        constants.put("N2", "10");
+        constants.put("T", "0.002");
+        constants.put("i", "0");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, MC_MODEL, MC_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000000000000426", result.get("P=? [ true U[T,T] mg=i ]"), 2.0E-8);
         assertEquals("0.4618841094159586", result.get("P=? [ true U[T,T] mg_p=i ]"), 2.0E-8);
@@ -1487,12 +1487,12 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Mutual_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 3), MUTUAL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
         assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
@@ -1502,12 +1502,12 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Mutual_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 4), MUTUAL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
         assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
@@ -1517,12 +1517,12 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Mutual_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 5), MUTUAL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
         assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
@@ -1532,12 +1532,12 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Mutual_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 8), MUTUAL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
         assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
@@ -1547,12 +1547,12 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Mutual_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 10), MUTUAL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_crit <= 1)"));
         assertEquals(false, result.get("filter(forall, num_crit > 0 => P>=1 [ F num_crit = 0 ])"));
@@ -1564,13 +1564,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_4_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 4), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.968312472221019", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509145874", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1580,13 +1580,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_4_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 5), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.960548741225345", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509142549", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1597,13 +1597,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_4_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 6), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.952847258251920", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509157190", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1614,13 +1614,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_4_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 7), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.945207524172225", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.997522509153018", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1631,13 +1631,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_4_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 8), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1647,13 +1647,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_5_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 4), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.982662490856506", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.999042710619681", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1664,13 +1664,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_5_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 5), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.978375285777173", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("0.9990427106169577", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1681,13 +1681,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_5_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 6), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1698,13 +1698,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_5_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 7), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1715,13 +1715,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_P2P_5_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "1.1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "1.1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 8), PEER2PEER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("", result.get("P=? [ true U<=T  \"done\"  ]"), 2.0E-8);
         assertEquals("", result.get("R=? [ I=T ]"), 2.0E-8);
@@ -1729,72 +1729,72 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Phil_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 3), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
     public void testPRISM_Phil_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 4), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
     public void testPRISM_Phil_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 5), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
     public void testPRISM_Phil_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 6), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
     public void testPRISM_Phil_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 7), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
 
     @Test
     public void testPRISM_Phil_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 8), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1802,12 +1802,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 9), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1815,12 +1815,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 10), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1828,12 +1828,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_15() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 15), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1841,12 +1841,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_20() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 20), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1854,12 +1854,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_25() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 25), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1867,12 +1867,12 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Test
     public void testPRISM_Phil_30() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
+        Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 30), PHIL_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(false, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\" ])"));
     }
@@ -1881,13 +1881,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 3), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1898,13 +1898,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 4), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1915,13 +1915,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 5), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1933,13 +1933,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 6), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1951,13 +1951,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 7), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1969,13 +1969,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 8), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -1987,13 +1987,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 9), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -2005,13 +2005,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilNofair_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 10), PHIL_NOFAIR_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"hungry\" => P>=1 [ F \"eat\"])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"eat\" {\"hungry\"}{min} ]"), 2.0E-8);
@@ -2022,14 +2022,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilLSS_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "3");
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "3");
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_LSS_MODEL, 3), String.format(PHIL_LSS_PROPERTY, 3));
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"trying\" =>  P>=1 [ true U \"entered\" ])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ true U<=L \"entered\" {\"trying\"}{min} ]"), 2.0E-8);
@@ -2040,14 +2040,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_PhilLSS_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "3");
-    	constants.put("L", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "3");
+        constants.put("L", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_LSS_MODEL, 4), String.format(PHIL_LSS_PROPERTY, 4));
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"trying\" =>  P>=1 [ true U \"entered\" ])"));
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=L \"entered\" {\"trying\"}{min} ]"), 2.0E-8);
@@ -2059,13 +2059,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 2), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.102393124417415", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.598404583684670", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2081,13 +2081,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 3), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.130802036614216", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.651898472199059", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2103,13 +2103,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 4), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.141190363935943", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.687047708231978", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2125,13 +2125,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 5), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.144927093830232", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.712560754706577", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2147,13 +2147,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 6), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.145731911533245", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.732229789559230", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2169,13 +2169,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 7), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.145116735337698", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.748022855342834", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2191,13 +2191,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 8), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.143782770331091", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.761081981009249", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2213,13 +2213,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 9), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.142084805118677", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.772123674065661", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2235,13 +2235,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 10), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.140213283202427", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.781624286322768", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2257,13 +2257,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_11() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 11), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.138274521224589", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.789915020290501", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2279,13 +2279,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_12() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 12), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.136329243693625", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.797234542230234", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2301,13 +2301,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_13() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 13), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.134412372329520", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.803759937898064", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2323,13 +2323,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_14() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 14), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.132543738937984", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.809625841629950", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2345,13 +2345,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_15() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 15), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.130734135591949", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.814936745967935", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2367,13 +2367,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_16() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 16), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.128988853132277", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.819775193953323", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2389,13 +2389,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_17() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 17), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.127309796176000", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.824207411969980", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2411,13 +2411,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_18() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 18), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.127309796176000", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.828287236050775", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2433,13 +2433,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_19() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 19), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.124148459225022", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.832058960231840", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2455,13 +2455,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Polling_20() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "50");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "50");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 20), POLLING_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.122663285369220", result.get("S=? [ s1=1&!(s=1&a=1) ]"), 2.0E-8);
         assertEquals("0.835558675185647", result.get("S=? [ s1=0 ]"), 2.0E-8);
@@ -2474,13 +2474,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Rabin_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 3), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2490,13 +2490,13 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_Rabin_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 4), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2508,13 +2508,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 5), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2526,13 +2526,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 6), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2544,13 +2544,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 7), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2562,13 +2562,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 8), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2580,13 +2580,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 9), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2598,13 +2598,13 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Rabin_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("k", "5");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "5");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 10), RABIN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, num_procs_in_crit <= 1)"));
         assertEquals(true, result.get("filter(forall, \"one_trying\" => P>=1 [ F \"one_critical\" ])"));
@@ -2616,14 +2616,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Beauquier_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 3), BEAUQUIER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("1.999999999985448", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2636,14 +2636,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Beauquier_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 5), BEAUQUIER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("11.91666666613991", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2656,14 +2656,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Beauquier_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 7), BEAUQUIER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("37.79922368853307", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2676,14 +2676,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Beauquier_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 9), BEAUQUIER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("84.44595732630478", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2697,14 +2697,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Beauquier_11() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 11), BEAUQUIER_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("162.3429071530966", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2717,14 +2717,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 3), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("1.333333333309250", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2737,14 +2737,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 5), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("3.1999999986140972", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2757,14 +2757,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 7), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("6.857142853627285", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2777,14 +2777,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 9), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("11.999999993091386", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2797,14 +2797,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_11() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "2");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "2");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 11), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("17.45454544306863", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2817,14 +2817,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_13() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 13), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("24.615384599734302", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2837,14 +2837,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_15() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 15), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("33.33333331214026", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2857,14 +2857,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_17() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 17), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("42.35294114861820", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2877,14 +2877,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_19() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 19), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("53.05263154392826", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2897,14 +2897,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Herman_21() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 21), HERMAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("65.33333328973458", result.get("R=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2917,14 +2917,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 3), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("2.999999999068677", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2937,14 +2937,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 4), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("5.999999997206032", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2957,14 +2957,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 5), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("9.999999996169460", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2977,14 +2977,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 6), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("14.99999999374933", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -2997,14 +2997,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_7() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 7), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("20.99999999114089", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3017,14 +3017,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_8() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 8), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("27.99999998796762", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3037,14 +3037,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_9() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 9), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("35.99999998528516", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3057,14 +3057,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_10() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 10), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("44.99999998145056", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3077,14 +3077,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_11() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 11), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("54.99999997711297", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3097,14 +3097,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_12() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 12), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("65.99999997222197", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3117,14 +3117,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_13() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 13), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("77.99999996713541", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3137,14 +3137,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_14() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
-    	Options options = preparePRISMOptions();
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 14), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("90.99999996155174", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3152,19 +3152,19 @@ public final class CheckSymbolicTest {
         assertEquals("0.000000000000000", result.get("Rmin=? [ F \"stable\" {\"k_tokens\"}{min} ]"), 2.0E-8);
         assertEquals("0.000000000000000", result.get("Pmin=? [ F<=K \"stable\" {\"init\"}{min} ]"), 2.0E-8);
     }
-    
+
     // No support for R yet
     @Ignore
     @Test
     public void testPRISM_IJ_15() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 15), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("104.9999999554272", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3177,14 +3177,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_16() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 16), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("119.9999999490785", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3197,14 +3197,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_17() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 17), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("135.9999999432225", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3217,14 +3217,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_18() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 18), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("152.9999999358485", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3237,14 +3237,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_19() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 19), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("170.9999999282626", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3257,14 +3257,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_20() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 20), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("189.9999999201628", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3277,14 +3277,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_IJ_21() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("K", "1");
-    	constants.put("k", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("K", "1");
+        constants.put("k", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 21), IJ_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("filter(forall, \"init\" => P>=1 [ F \"stable\" ])"));
         assertEquals("209.9999999115593", result.get("Rmax=? [ F \"stable\" {\"init\"}{max} ]"), 2.0E-8);
@@ -3298,14 +3298,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Tandem() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("c", "10");
-    	constants.put("T", "1");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("c", "10");
+        constants.put("T", "1");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, TANDEM_MODEL, TANDEM_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("10.78050546163251", result.get("R=? [ S ]"), 2.0E-8);
         assertEquals("0.000000018009113", result.get("P=? [ true U<=T sc=c & sm=c & ph=2 ]"), 2.0E-8);
@@ -3318,14 +3318,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_0() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 0), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.000000000000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3342,14 +3342,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_1() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 1), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.000000000000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3366,14 +3366,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 2), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3390,14 +3390,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 3), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3414,14 +3414,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 4), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3438,14 +3438,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 5), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3462,14 +3462,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLAN_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 6), WLAN_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals(true, result.get("P>=1 [ true U s1=12 & s2=12 ]"));
         assertEquals("0.183593750000000", result.get("Pmax=? [ true U bc1=k | bc2=k ]"), 2.0E-8);
@@ -3484,119 +3484,119 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_WLANCollide_0() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 0), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_1() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 1), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 2), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-		constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 3), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 4), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 5), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANCollide_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("COL", "2");
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("k", "2");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("COL", "2");
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("k", "2");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 6), WLAN_COLLIDE_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.183593750000000", result.get("Pmax=?[ true U col=k ]"), 2.0E-8);
     }
 
     @Test
     public void testPRISM_WLANTimeBounded_0() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 0), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.9090728759765625", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9794130921363831", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3605,14 +3605,14 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_WLANTimeBounded_1() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 1), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9844965040683746", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3621,14 +3621,14 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_WLANTimeBounded_2() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 2), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3637,14 +3637,14 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_WLANTimeBounded_3() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 3), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3653,14 +3653,14 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_WLANTimeBounded_4() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 4), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3671,14 +3671,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLANTimeBounded_5() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 5), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3689,14 +3689,14 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_WLANTimeBounded_6() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-		constants.put("TRANS_TIME_MAX", "10");
-    	constants.put("DEADLINE", "100");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 6), WLAN_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.8462219238281250", result.get("Pmin=? [ true U s1=12 & s2=12 ]"), 2.0E-8);
         assertEquals("0.9836365208029747", result.get("Pmin=? [ true U s1=12 | s2=12 ]"), 2.0E-8);
@@ -3707,16 +3707,16 @@ public final class CheckSymbolicTest {
     @Ignore
     @Test
     public void testPRISM_Zeroconf() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("err", "0");
-    	constants.put("K", "4");
-    	constants.put("reset", "true");
-    	constants.put("N", "1000");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("err", "0");
+        constants.put("K", "4");
+        constants.put("reset", "true");
+        constants.put("N", "1000");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, ZEROCONF_MODEL, ZEROCONF_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000038674394349", result.get("Pmin=?[ true U (l=4 & ip=1) ]"), 2.0E-8);
         assertEquals("0.0000368412345139", result.get("Pmax=?[ true U (l=4 & ip=1) ]"), 2.0E-8);
@@ -3726,17 +3726,17 @@ public final class CheckSymbolicTest {
 
     @Test
     public void testPRISM_ZeroconfTimeBounded() {
-    	Map<String, Object> constants = new LinkedHashMap<>();
-    	constants.put("T", "11");
-    	constants.put("K", "1");
-    	constants.put("bound", "10");
-    	constants.put("reset", "true");
-    	constants.put("N", "1000");
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("T", "11");
+        constants.put("K", "1");
+        constants.put("bound", "10");
+        constants.put("reset", "true");
+        constants.put("N", "1000");
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);
-        
+
         Map<String, Value> result = computeResultsMapDefinition(model);
         assertEquals("0.0000234477600190", result.get("Pmin=?[ !(l=4 & ip=2) U t>bound ]"), 2.0E-8);
         assertEquals("0.0142750542031845", result.get("Pmax=?[ !(l=4 & ip=2) U t>bound ]"), 2.0E-8);

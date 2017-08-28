@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 public enum SemanticsDTMCStandard implements SemanticsDTMC {
-	/** Singleton element. */
-	DTMC;
+    /** Singleton element. */
+    DTMC;
 }

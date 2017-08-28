@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,15 +24,15 @@ import java.util.Comparator;
 
 public final class ValueAlgebraComparator implements Comparator<ValueAlgebra> {
 
-	@Override
-	public int compare(ValueAlgebra o1, ValueAlgebra o2) {
-		if (o1.isEq(o2)) {
-			return 0;
-		} else if (o1.isLt(o2)) {
-			return -1;
-		} else {
-			assert o1.isGt(o2);
-			return 1;
-		}
-	}
+    @Override
+    public int compare(ValueAlgebra o1, ValueAlgebra o2) {
+        if (o1.isEq(o2)) {
+            return 0;
+        } else if (o1.isLt(o2)) {
+            return -1;
+        } else {
+            assert o1.isGt(o2);
+            return 1;
+        }
+    }
 }

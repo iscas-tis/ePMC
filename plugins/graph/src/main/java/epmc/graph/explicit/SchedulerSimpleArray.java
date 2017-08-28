@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -56,7 +56,7 @@ public final class SchedulerSimpleArray implements SchedulerSimpleSettable {
             Arrays.fill(this.content, -1);
         }
     }
-    
+
     /**
      * Construct a new simple simple scheduler.
      * The graph parameter must not be {@code null}.
@@ -68,7 +68,7 @@ public final class SchedulerSimpleArray implements SchedulerSimpleSettable {
     public SchedulerSimpleArray(GraphExplicit graph) {
         this(graph, null);
     }
-    
+
     @Override
     public void set(int node, int decision) {
         content[node] = decision;
@@ -80,12 +80,12 @@ public final class SchedulerSimpleArray implements SchedulerSimpleSettable {
         assert node < content.length;
         return content[node];
     }
-    
+
     @Override
     public String toString() {
         return Arrays.toString(content);
     }
-    
+
     @Override
     public SchedulerSimple clone() {
         return new SchedulerSimpleArray(graph, content.clone());

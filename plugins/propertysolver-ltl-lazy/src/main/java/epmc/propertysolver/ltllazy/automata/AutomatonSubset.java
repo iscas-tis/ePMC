@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy.automata;
 
@@ -39,31 +39,31 @@ import epmc.util.UtilBitSet;
 import epmc.value.Value;
 
 public final class AutomatonSubset implements Automaton {
-	public final static class Builder implements Automaton.Builder {
-		private Buechi buechi;
+    public final static class Builder implements Automaton.Builder {
+        private Buechi buechi;
 
-		@Override
-		public Builder setBuechi(Buechi buechi) {
-			this.buechi = buechi;
-			return this;
-		}
-		
-		private Buechi getBuechi() {
-			return buechi;
-		}
-		
-		@Override
-		public AutomatonSubset build() {
-			return new AutomatonSubset(this);
-		}
+        @Override
+        public Builder setBuechi(Buechi buechi) {
+            this.buechi = buechi;
+            return this;
+        }
 
-	}
-	
+        private Buechi getBuechi() {
+            return buechi;
+        }
+
+        @Override
+        public AutomatonSubset build() {
+            return new AutomatonSubset(this);
+        }
+
+    }
+
     private final AutomatonMaps automatonMaps = new AutomatonMaps();
     public final static String IDENTIFIER = "subset";
-    
+
     private AutomatonSubset(Builder builder) {
-    	buechi = builder.getBuechi();
+        buechi = builder.getBuechi();
         this.numLabels = buechi.getNumLabels();
         this.automaton = buechi.getGraph();
         BitSet initBitSet = new BitSetUnboundedLongArray();
@@ -72,7 +72,7 @@ public final class AutomatonSubset implements Automaton {
         trueState = buechi.getTrueState();
         this.expressions = buechi.getExpressions();
         guardsValid = UtilBitSet.newBitSetUnbounded();
-	}
+    }
 
     @Override
     public int getNumStates() {
@@ -91,12 +91,12 @@ public final class AutomatonSubset implements Automaton {
     public AutomatonStateUtil numberToState(int number) {
         return automatonMaps.numberToState(number);
     }
-    
+
     private final class AutomatonStateBuechiImpl implements AutomatonSubsetState, AutomatonStateBuechi, AutomatonStateUtil {
         private final AutomatonSubset automaton;
         private final BitSet states;
         private int number;
-        
+
         AutomatonStateBuechiImpl(AutomatonSubset automaton, BitSet states) {
             assert states != null;
             this.automaton = automaton;
@@ -106,22 +106,22 @@ public final class AutomatonSubset implements Automaton {
         AutomatonStateBuechiImpl(AutomatonStateBuechiImpl other) {
             this(other.getAutomaton(), other.states);
         }
-        
+
         @Override
         protected AutomatonStateBuechiImpl clone() {
             return new AutomatonStateBuechiImpl(this);
         }
-        
+
         @Override
         public String toString() {
             return states.toString();
         }
-        
+
         boolean get(int index) {
             assert index >= 0;
             return states.get(index);
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -131,18 +131,18 @@ public final class AutomatonSubset implements Automaton {
             AutomatonStateBuechiImpl other = (AutomatonStateBuechiImpl) obj;
             return this.states.equals(other.states);
         }
-        
+
         @Override
         public int hashCode() {
             return states.hashCode();
         }
-        
+
         @Override
         public
         BitSet getStates() {
             return states;
         }
-        
+
         @Override
         public AutomatonSubset getAutomaton() {
             return automaton;
@@ -159,17 +159,17 @@ public final class AutomatonSubset implements Automaton {
         }
     }
 
-    
+
     private final class AutomatonSubsetLabelImpl implements AutomatonSubsetLabel, AutomatonLabelUtil {
         private final BitSet under;
         private final BitSet over;
         private int number;
-        
+
         AutomatonSubsetLabelImpl(AutomatonSubset ltl2ba, BitSet under, BitSet over) {
             this.under = under;
             this.over = over;
         }
-        
+
         @Override
         public BitSet getUnder() {
             return under;
@@ -198,7 +198,7 @@ public final class AutomatonSubset implements Automaton {
             AutomatonSubsetLabelImpl other = (AutomatonSubsetLabelImpl) obj;
             return this.under.equals(other.under) && this.over.equals(other.over);
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -206,19 +206,19 @@ public final class AutomatonSubset implements Automaton {
             hash = over.hashCode() + (hash << 6) + (hash << 16) - hash;
             return hash;
         }
-        
+
         @Override
         public String toString() {
             return under + " / " + over;
         }
-        
+
 
     }
 
     private final class SubsetCacheKey implements Cloneable {
         private AutomatonSubsetState state;
         private BitSet guards;
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -226,7 +226,7 @@ public final class AutomatonSubset implements Automaton {
             hash = guards.hashCode() + (hash << 6) + (hash << 16) - hash;
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof SubsetCacheKey)) {
@@ -235,7 +235,7 @@ public final class AutomatonSubset implements Automaton {
             SubsetCacheKey other = (SubsetCacheKey) obj;
             return state.equals(other.state) && guards.equals(other.guards);
         }
-        
+
         @Override
         protected SubsetCacheKey clone() {
             SubsetCacheKey result = new SubsetCacheKey();
@@ -244,11 +244,11 @@ public final class AutomatonSubset implements Automaton {
             return result;
         }
     }
-    
+
     private final class SubsetCacheValue {
         private final AutomatonStateBuechiImpl state;
         private final AutomatonSubsetLabelImpl labeling;
-        
+
         SubsetCacheValue(AutomatonStateBuechiImpl state, AutomatonSubsetLabelImpl labeling) {
             this.state = state;
             this.labeling = labeling;
@@ -271,19 +271,19 @@ public final class AutomatonSubset implements Automaton {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	public int getState(BitSet states) {
+
+    public int getState(BitSet states) {
         return makeUnique(new AutomatonStateBuechiImpl(this, states)).getNumber();
     }
-    
+
     @Override
     public int getInitState() {
         return initState.getNumber();
     }
-    
+
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            {
+    {
         AutomatonStateBuechiImpl subsetState = (AutomatonStateBuechiImpl) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(subsetState);
@@ -319,9 +319,9 @@ public final class AutomatonSubset implements Automaton {
         succState = (AutomatonStateBuechiImpl) numberToState(getState(succs));
         insertCache();
     }
-    
+
     private void lookupCache(AutomatonSubsetState rabinState)
-            {
+    {
         int entryNr = 0;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
@@ -365,17 +365,17 @@ public final class AutomatonSubset implements Automaton {
     public int getSuccessorLabel() {
         return succLabel.getNumber();
     }
-    
+
     public int getNumLabels() {
         return numLabels;
     }
-    
+
     GraphExplicit getGraph() {
         return automaton;
     }
-    
+
     @Override
-	public Buechi getBuechi() {
+    public Buechi getBuechi() {
         return buechi;
     }
 

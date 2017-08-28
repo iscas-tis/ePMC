@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication.handler;
 
@@ -30,24 +30,24 @@ import epmc.error.EPMCException;
  * @author Ernst Moritz Hahn
  */
 public interface Handler {
-	/**
-	 * Get the message type the handler shall be used for.
-	 * 
-	 * @return message type the handler shall be used for
-	 */
-	String getType();
+    /**
+     * Get the message type the handler shall be used for.
+     * 
+     * @return message type the handler shall be used for
+     */
+    String getType();
 
-	/**
-	 * Handle the given message.
-	 * None of the parameters may be {@code null}.
-	 * This method is used to handle a message sent by a given client. The
-	 * backend must take care to forward the messages to the correct handler.
-	 * In case this method throws an {@link EPMCException}, the backend is
-	 * supposed to close the connection with the client with the error message
-	 * specified in the exception.
-	 * 
-	 * @param client client which sent the message
-	 * @param message message sent to the backend
-	 */
-	void handle(Object client, JsonObject message);
+    /**
+     * Handle the given message.
+     * None of the parameters may be {@code null}.
+     * This method is used to handle a message sent by a given client. The
+     * backend must take care to forward the messages to the correct handler.
+     * In case this method throws an {@link EPMCException}, the backend is
+     * supposed to close the connection with the client with the error message
+     * specified in the exception.
+     * 
+     * @param client client which sent the message
+     * @param message message sent to the backend
+     */
+    void handle(Object client, JsonObject message);
 }

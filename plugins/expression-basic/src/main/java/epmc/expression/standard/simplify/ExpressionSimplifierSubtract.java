@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -53,7 +53,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         return null;
     }
-    
+
     private static boolean isSubtract(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;

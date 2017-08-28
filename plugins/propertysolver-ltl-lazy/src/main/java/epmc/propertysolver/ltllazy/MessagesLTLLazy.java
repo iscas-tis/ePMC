@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy;
 
 import epmc.messages.Message;
 
 public final class MessagesLTLLazy {
-	public final static String MESSAGES_LTL_LAZY = "MessagesLTLLazy";
-	
+    public final static String MESSAGES_LTL_LAZY = "MessagesLTLLazy";
+
     public final static Message LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL = newMessage().setIdentifier("initialising-automaton-and-product-model").build();
     public final static Message LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL_DONE = newMessage().setIdentifier("initialising-automaton-and-product-model-done").build();
     public final static Message LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL_SUBSET = newMessage().setIdentifier("initialising-automaton-and-product-model-subset").build();
@@ -66,6 +66,6 @@ public final class MessagesLTLLazy {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private MessagesLTLLazy() {
-	}
+    private MessagesLTLLazy() {
+    }
 }

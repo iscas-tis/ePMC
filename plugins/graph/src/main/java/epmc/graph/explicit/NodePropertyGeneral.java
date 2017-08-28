@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -134,10 +134,10 @@ public final class NodePropertyGeneral implements NodeProperty {
      * node values to ensure {@link #content} is large enough.
      */
     private void ensureSize(int queriedNode) {
-    	int oldSize = content.size();
+        int oldSize = content.size();
         content = UtilValue.ensureSize(content, queriedNode + 1);
         for (int i = oldSize; i < content.size(); i++) {
-        	content.set(defaultValue, i);
+            content.set(defaultValue, i);
         }
     }
 }

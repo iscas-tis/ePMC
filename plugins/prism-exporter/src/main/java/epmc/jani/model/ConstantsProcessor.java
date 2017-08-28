@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -25,51 +25,51 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ConstantsProcessor implements JANI2PRISMProcessorStrict {
 
-	private Constants constants = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Constants; 
+    private Constants constants = null;
 
-		constants = (Constants) obj;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Constants; 
 
-	@Override
-	public String toPRISM() {
-		assert constants != null;
+        constants = (Constants) obj;
+        return this;
+    }
 
-		StringBuilder prism = new StringBuilder();
-		
-		for (Constant constant : constants) {
-			prism.append(ProcessorRegistrar.getProcessor(constant)
-										   .toPRISM());
-		}
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert constants != null;
-		
-		for (Constant constant : constants) {
-			ProcessorRegistrar.getProcessor(constant)
-							  .validateTransientVariables();
-		}
-	}
+    @Override
+    public String toPRISM() {
+        assert constants != null;
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert constants != null;
-		
-		boolean usesTransient = false;
-		for (Constant constant : constants) {
-			usesTransient |= ProcessorRegistrar.getProcessor(constant)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        StringBuilder prism = new StringBuilder();
+
+        for (Constant constant : constants) {
+            prism.append(ProcessorRegistrar.getProcessor(constant)
+                    .toPRISM());
+        }
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert constants != null;
+
+        for (Constant constant : constants) {
+            ProcessorRegistrar.getProcessor(constant)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert constants != null;
+
+        boolean usesTransient = false;
+        for (Constant constant : constants) {
+            usesTransient |= ProcessorRegistrar.getProcessor(constant)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

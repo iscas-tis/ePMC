@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
@@ -41,88 +41,88 @@ import epmc.util.UtilBitSet;
 // TODO correct options for strategy computation
 
 public final class SolverQualitativeMcNaughton implements SolverQualitative {
-	public final static String IDENTIFIER = "mcnaughton";
-	
-	/** Stochastic game to be solved. */
-	private GraphExplicit game;
-	/** Use shortcut for subgames where colors either all even or all odd. */
-	private boolean sameColorShortCut;
-	/** Empty bitset. Do not modify this object. */
+    public final static String IDENTIFIER = "mcnaughton";
+
+    /** Stochastic game to be solved. */
+    private GraphExplicit game;
+    /** Use shortcut for subgames where colors either all even or all odd. */
+    private boolean sameColorShortCut;
+    /** Empty bitset. Do not modify this object. */
     private BitSet EMPTY_BIT_SET;
-	/** Empty bitset pair. Do not modify this object. */
+    /** Empty bitset pair. Do not modify this object. */
     private QualitativeResult EMPTY_BIT_SET_PAIR;
-	/** Whether to compute a strategy for the even player. */
-	private boolean computeStrategyP0;
-	/** Whether to compute a strategy for the odd player. */
-	private boolean computeStrategyP1;
-	/** Whether the even player must win with probability 1. */
-	private boolean strictEven;
-	/** Whether the odd player must win with probability 1. */
-	private boolean strictOdd;
-	/** Number of recursive calls to the algorithm. */
-	private int zeroMcNaughtonCalls;
-	/** Nodes which belong to the even or the stochastic player. */
-	private BitSet playerEvenOrStochastic;
-	/** Nodes which belong to the odd or the stochastic player. */
-	private BitSet playerOddOrStochastic;
+    /** Whether to compute a strategy for the even player. */
+    private boolean computeStrategyP0;
+    /** Whether to compute a strategy for the odd player. */
+    private boolean computeStrategyP1;
+    /** Whether the even player must win with probability 1. */
+    private boolean strictEven;
+    /** Whether the odd player must win with probability 1. */
+    private boolean strictOdd;
+    /** Number of recursive calls to the algorithm. */
+    private int zeroMcNaughtonCalls;
+    /** Nodes which belong to the even or the stochastic player. */
+    private BitSet playerEvenOrStochastic;
+    /** Nodes which belong to the odd or the stochastic player. */
+    private BitSet playerOddOrStochastic;
 
-	private NodeProperty propertyPlayer;
+    private NodeProperty propertyPlayer;
 
-	@Override
-	public void setGame(GraphExplicit game) {
-		assert game != null;
-		this.game = game;
-	}
+    @Override
+    public void setGame(GraphExplicit game) {
+        assert game != null;
+        this.game = game;
+    }
 
-	@Override
-	public void setStrictEven(boolean strictEven) {
-		this.strictEven = strictEven;
-		this.strictOdd = !strictEven;
-	}
+    @Override
+    public void setStrictEven(boolean strictEven) {
+        this.strictEven = strictEven;
+        this.strictOdd = !strictEven;
+    }
 
-	@Override
-	public void setComputeStrategies(boolean playerEven, boolean playerOdd) {
-		computeStrategyP0 = playerEven;
-		computeStrategyP1 = playerOdd;
-	}
+    @Override
+    public void setComputeStrategies(boolean playerEven, boolean playerOdd) {
+        computeStrategyP0 = playerEven;
+        computeStrategyP1 = playerOdd;
+    }
 
-	@Override
-	public QualitativeResult solve() {
-		StopWatch watch = new StopWatch(true);
-		getLog().send(MessagesCoalition.COALITION_STOCHASTIC_MCNAUGHTON_START);
-		int numNodes = game.getNumNodes();
-		playerEvenOrStochastic = UtilBitSet.newBitSetBounded(numNodes);
-		playerOddOrStochastic = UtilBitSet.newBitSetBounded(numNodes);
-		propertyPlayer = game.getNodeProperty(CommonProperties.PLAYER);
-		for (int node = 0; node < numNodes; node++) {
-			Player player = propertyPlayer.getEnum(node);
-			if (player == Player.ONE) {
-				playerEvenOrStochastic.set(node);
-			} else if (player == Player.TWO) {
-				playerOddOrStochastic.set(node);				
-			} else if (player == Player.STOCHASTIC) {
-				playerEvenOrStochastic.set(node);
-				playerOddOrStochastic.set(node);
-			} else {
-				assert false;
-			}
-		}
-		sameColorShortCut = Options.get().getBoolean(OptionsCoalition.COALITION_SAME_COLOR_SHORTCUT);
-		EMPTY_BIT_SET = UtilBitSet.newBitSetBounded(game.getNumNodes());
-		SchedulerSimple strategies = null;
-		if (computeStrategyP0 || computeStrategyP1) {
-			strategies = new SchedulerSimpleArray(game);
-		}
-    	EMPTY_BIT_SET_PAIR = new QualitativeResult(UtilBitSet.newBitSetBounded(game.getNumNodes()), UtilBitSet.newBitSetBounded(game.getNumNodes()), strategies);
-		BitSet p = UtilBitSet.newBitSetBounded(game.getNumNodes());
-		p.set(0, game.getNumNodes());
-		QualitativeResult result = zeroMcNaughton(p);
-		getLog().send(MessagesCoalition.COALITION_SCHEWE_MCNAUGHTON_CALLS, getZeroMcNaughtonCalls());
-		getLog().send(MessagesCoalition.COALITION_STOCHASTIC_MCNAUGHTON_DONE, watch.getTimeSeconds());
+    @Override
+    public QualitativeResult solve() {
+        StopWatch watch = new StopWatch(true);
+        getLog().send(MessagesCoalition.COALITION_STOCHASTIC_MCNAUGHTON_START);
+        int numNodes = game.getNumNodes();
+        playerEvenOrStochastic = UtilBitSet.newBitSetBounded(numNodes);
+        playerOddOrStochastic = UtilBitSet.newBitSetBounded(numNodes);
+        propertyPlayer = game.getNodeProperty(CommonProperties.PLAYER);
+        for (int node = 0; node < numNodes; node++) {
+            Player player = propertyPlayer.getEnum(node);
+            if (player == Player.ONE) {
+                playerEvenOrStochastic.set(node);
+            } else if (player == Player.TWO) {
+                playerOddOrStochastic.set(node);				
+            } else if (player == Player.STOCHASTIC) {
+                playerEvenOrStochastic.set(node);
+                playerOddOrStochastic.set(node);
+            } else {
+                assert false;
+            }
+        }
+        sameColorShortCut = Options.get().getBoolean(OptionsCoalition.COALITION_SAME_COLOR_SHORTCUT);
+        EMPTY_BIT_SET = UtilBitSet.newBitSetBounded(game.getNumNodes());
+        SchedulerSimple strategies = null;
+        if (computeStrategyP0 || computeStrategyP1) {
+            strategies = new SchedulerSimpleArray(game);
+        }
+        EMPTY_BIT_SET_PAIR = new QualitativeResult(UtilBitSet.newBitSetBounded(game.getNumNodes()), UtilBitSet.newBitSetBounded(game.getNumNodes()), strategies);
+        BitSet p = UtilBitSet.newBitSetBounded(game.getNumNodes());
+        p.set(0, game.getNumNodes());
+        QualitativeResult result = zeroMcNaughton(p);
+        getLog().send(MessagesCoalition.COALITION_SCHEWE_MCNAUGHTON_CALLS, getZeroMcNaughtonCalls());
+        getLog().send(MessagesCoalition.COALITION_STOCHASTIC_MCNAUGHTON_DONE, watch.getTimeSeconds());
         return result;
-	}
-	
-	QualitativeResult zeroMcNaughton(BitSet p) {
+    }
+
+    QualitativeResult zeroMcNaughton(BitSet p) {
         assert p != null;
         zeroMcNaughtonCalls++;
         if (p.isEmpty()) {
@@ -164,9 +164,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * @param minPriority minimal priority of the subgame
      * @return winning regions of the players and requested strategies
      */
-	private QualitativeResult zeroMcNaughtonIterate(BitSet p, int minPriority) {
-		assert p != null;
-		assert minPriority >= 0;
+    private QualitativeResult zeroMcNaughtonIterate(BitSet p, int minPriority) {
+        assert p != null;
+        assert minPriority >= 0;
         NodeProperty labels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         BitSet mapsToMinPriority = UtilBitSet.newBitSetBounded(game.getNumNodes());
         for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node+1)) {
@@ -177,94 +177,94 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 
         BitSet pPrimed = UtilBitSet.newBitSetBounded(game.getNumNodes());
         BitSet wOther = UtilBitSet.newBitSetBounded(game.getNumNodes());
-		SchedulerSimpleSettable strategies = null;
-		if (computeStrategyP0 || computeStrategyP1) {
-			strategies = new SchedulerSimpleArray(game);
-		}
+        SchedulerSimpleSettable strategies = null;
+        if (computeStrategyP0 || computeStrategyP1) {
+            strategies = new SchedulerSimpleArray(game);
+        }
         do {
-        	pPrimed.clear();
-        	pPrimed.or(p);
-        	BitSet satr = satr(mapsToMinPriority, p, minPriority % 2 == 1);
-        	pPrimed.andNot(satr);
-        	QualitativeResult wPrimed = zeroMcNaughton(pPrimed);
-        	BitSet wPrimedThis = minPriority % 2 == 0 ? wPrimed.getSet0() : wPrimed.getSet1();
-        	BitSet wPrimedOther = minPriority % 2 == 1 ? wPrimed.getSet0() : wPrimed.getSet1();
-        	if (wPrimedOther.isEmpty()) {
-        		BitSet wThis = p.clone();
-        		wThis.andNot(wOther);
-        		if (computeStrategyP0 || computeStrategyP1) {
-        			SchedulerSimple innerStrategies = wPrimed.getStrategies();
-        			for (int node = wPrimedThis.nextSetBit(0); node >= 0; node = wPrimedThis.nextSetBit(node + 1)) {
-        				Player player = this.propertyPlayer.getEnum(node);
-        				if (computeStrategyP0 && player == Player.ONE
-        						|| computeStrategyP1 && player == Player.TWO) {
-        					int decision = innerStrategies.getDecision(node);
-        					assert decision != Scheduler.UNSET;
-        					assert strategies.getDecision(node) == Scheduler.UNSET;
-        					strategies.set(node, decision);
-        				}
-        			}
-        			for (int node = mapsToMinPriority.nextSetBit(0); node >= 0; node = mapsToMinPriority.nextSetBit(node + 1)) {
-        				if (!p.get(node)) {
-        					continue;
-        				}
-        				Player player = this.propertyPlayer.getEnum(node);
-        				if (!(computeStrategyP0 && player == Player.ONE
-        						|| computeStrategyP1 && player == Player.TWO)) {
-        					continue;
-        				}
-        				boolean found = false;
-            			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
-            				if (p.get(game.getSuccessorNode(node, succ))) {
-            					assert strategies.getDecision(node) == Scheduler.UNSET;
-                				strategies.set(node, succ);
-            					found = true;
-            					break;
-            				}
-            			}
-            			assert found;
-        			}
-        			BitSet player = minPriority % 2 == 0 ? playerEvenOrStochastic : playerOddOrStochastic;
-        			computeStrategy(strategies, game, mapsToMinPriority, satr, player);
-        			for (int node = wThis.nextSetBit(0); node >= 0; node = wThis.nextSetBit(node + 1)) {
-        				Player pl = this.propertyPlayer.getEnum(node);
-        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
-        			}
-        			for (int node = wOther.nextSetBit(0); node >= 0; node = wOther.nextSetBit(node + 1)) {
-        				Player pl = this.propertyPlayer.getEnum(node);
-        				assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
-        				assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
-            		}
-        		}
-    			return new QualitativeResult(minPriority % 2 == 0 ? wThis : wOther,
-    					minPriority % 2 == 0 ? wOther : wThis, strategies);
-        	}
-        	BitSet atrOther = null;
-        	if (minPriority % 2 == 0) {
-        		atrOther = strictOdd ? watr1(wPrimedOther, p) : satr1(wPrimedOther, p);
-        	} else {
-        		atrOther = strictEven ? watr0(wPrimedOther, p) : satr0(wPrimedOther, p);
-        	}
-        	wOther.or(atrOther);
-        	p.andNot(atrOther);
-    		if (computeStrategyP0 || computeStrategyP1) {
-    			SchedulerSimple innerStrategies = wPrimed.getStrategies();
-    			for (int node = wPrimedOther.nextSetBit(0); node >= 0; node = wPrimedOther.nextSetBit(node + 1)) {
-    				Player pl = this.propertyPlayer.getEnum(node);
-    				if (computeStrategyP0 && pl == Player.ONE
-    						|| computeStrategyP1 && pl == Player.TWO) {
-    					int decision = innerStrategies.getDecision(node);
-    					assert decision != Scheduler.UNSET : node;
-    					assert strategies.getDecision(node) == Scheduler.UNSET;
-    					strategies.set(node, decision);
-    				}
-    			}
-    			BitSet player = minPriority % 2 == 1 ? playerEvenOrStochastic : playerOddOrStochastic;
-    			computeStrategy(strategies, game, wPrimedOther, atrOther, player);
-    		}
+            pPrimed.clear();
+            pPrimed.or(p);
+            BitSet satr = satr(mapsToMinPriority, p, minPriority % 2 == 1);
+            pPrimed.andNot(satr);
+            QualitativeResult wPrimed = zeroMcNaughton(pPrimed);
+            BitSet wPrimedThis = minPriority % 2 == 0 ? wPrimed.getSet0() : wPrimed.getSet1();
+            BitSet wPrimedOther = minPriority % 2 == 1 ? wPrimed.getSet0() : wPrimed.getSet1();
+            if (wPrimedOther.isEmpty()) {
+                BitSet wThis = p.clone();
+                wThis.andNot(wOther);
+                if (computeStrategyP0 || computeStrategyP1) {
+                    SchedulerSimple innerStrategies = wPrimed.getStrategies();
+                    for (int node = wPrimedThis.nextSetBit(0); node >= 0; node = wPrimedThis.nextSetBit(node + 1)) {
+                        Player player = this.propertyPlayer.getEnum(node);
+                        if (computeStrategyP0 && player == Player.ONE
+                                || computeStrategyP1 && player == Player.TWO) {
+                            int decision = innerStrategies.getDecision(node);
+                            assert decision != Scheduler.UNSET;
+                            assert strategies.getDecision(node) == Scheduler.UNSET;
+                            strategies.set(node, decision);
+                        }
+                    }
+                    for (int node = mapsToMinPriority.nextSetBit(0); node >= 0; node = mapsToMinPriority.nextSetBit(node + 1)) {
+                        if (!p.get(node)) {
+                            continue;
+                        }
+                        Player player = this.propertyPlayer.getEnum(node);
+                        if (!(computeStrategyP0 && player == Player.ONE
+                                || computeStrategyP1 && player == Player.TWO)) {
+                            continue;
+                        }
+                        boolean found = false;
+                        for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
+                            if (p.get(game.getSuccessorNode(node, succ))) {
+                                assert strategies.getDecision(node) == Scheduler.UNSET;
+                                strategies.set(node, succ);
+                                found = true;
+                                break;
+                            }
+                        }
+                        assert found;
+                    }
+                    BitSet player = minPriority % 2 == 0 ? playerEvenOrStochastic : playerOddOrStochastic;
+                    computeStrategy(strategies, game, mapsToMinPriority, satr, player);
+                    for (int node = wThis.nextSetBit(0); node >= 0; node = wThis.nextSetBit(node + 1)) {
+                        Player pl = this.propertyPlayer.getEnum(node);
+                        assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
+                        assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
+                    }
+                    for (int node = wOther.nextSetBit(0); node >= 0; node = wOther.nextSetBit(node + 1)) {
+                        Player pl = this.propertyPlayer.getEnum(node);
+                        assert !(computeStrategyP0 && pl == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET;
+                        assert !(computeStrategyP1 && pl == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET;
+                    }
+                }
+                return new QualitativeResult(minPriority % 2 == 0 ? wThis : wOther,
+                        minPriority % 2 == 0 ? wOther : wThis, strategies);
+            }
+            BitSet atrOther = null;
+            if (minPriority % 2 == 0) {
+                atrOther = strictOdd ? watr1(wPrimedOther, p) : satr1(wPrimedOther, p);
+            } else {
+                atrOther = strictEven ? watr0(wPrimedOther, p) : satr0(wPrimedOther, p);
+            }
+            wOther.or(atrOther);
+            p.andNot(atrOther);
+            if (computeStrategyP0 || computeStrategyP1) {
+                SchedulerSimple innerStrategies = wPrimed.getStrategies();
+                for (int node = wPrimedOther.nextSetBit(0); node >= 0; node = wPrimedOther.nextSetBit(node + 1)) {
+                    Player pl = this.propertyPlayer.getEnum(node);
+                    if (computeStrategyP0 && pl == Player.ONE
+                            || computeStrategyP1 && pl == Player.TWO) {
+                        int decision = innerStrategies.getDecision(node);
+                        assert decision != Scheduler.UNSET : node;
+                        assert strategies.getDecision(node) == Scheduler.UNSET;
+                        strategies.set(node, decision);
+                    }
+                }
+                BitSet player = minPriority % 2 == 1 ? playerEvenOrStochastic : playerOddOrStochastic;
+                computeStrategy(strategies, game, wPrimedOther, atrOther, player);
+            }
         } while (true);
-	}
+    }
 
     /**
      * Compute an arbitrary strategy for a given set of nodes.
@@ -278,47 +278,47 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * @return arbitrary valid strategy in p
      */
     private SchedulerSimple computeArbitraryStrategies(BitSet p) {
-    	assert p != null;
-    	if (!computeStrategyP0 && !computeStrategyP1) {
-    		return null;
-    	}
-    	SchedulerSimpleSettable result = new SchedulerSimpleArray(game);
-    	for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
-    		if (computeStrategyP0 && playerEvenOrStochastic.get(node)
-    				|| computeStrategyP1 && playerOddOrStochastic.get(node)) {
-				Player player = this.propertyPlayer.getEnum(node);
-				if (!(computeStrategyP0 && player == Player.ONE
-						|| computeStrategyP1 && player == Player.TWO)) {
-					continue;
-				}
-    			boolean found = false;
-    			for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
-    				if (p.get(game.getSuccessorNode(node, succ))) {
-    	    			result.set(node, succ);
-    					found = true;
-    					break;
-    				}
-    			}
-    			assert found;
-    		}
-    	}
-		return result;
-	}
+        assert p != null;
+        if (!computeStrategyP0 && !computeStrategyP1) {
+            return null;
+        }
+        SchedulerSimpleSettable result = new SchedulerSimpleArray(game);
+        for (int node = p.nextSetBit(0); node >= 0; node = p.nextSetBit(node + 1)) {
+            if (computeStrategyP0 && playerEvenOrStochastic.get(node)
+                    || computeStrategyP1 && playerOddOrStochastic.get(node)) {
+                Player player = this.propertyPlayer.getEnum(node);
+                if (!(computeStrategyP0 && player == Player.ONE
+                        || computeStrategyP1 && player == Player.TWO)) {
+                    continue;
+                }
+                boolean found = false;
+                for (int succ = 0; succ < game.getNumSuccessors(node); succ++) {
+                    if (p.get(game.getSuccessorNode(node, succ))) {
+                        result.set(node, succ);
+                        found = true;
+                        break;
+                    }
+                }
+                assert found;
+            }
+        }
+        return result;
+    }
 
-	/**
-	 * Compute strong attractor of a given target set.
-	 * TODO continue description
-	 * 
-	 * @param target target set
-	 * @param nodes nodes to restrict area to
-	 * @param odd whether to compute attractor set for player odd (1)
-	 * @return
-	 */
-	private BitSet satr(BitSet target, BitSet nodes, boolean odd)
-            {
+    /**
+     * Compute strong attractor of a given target set.
+     * TODO continue description
+     * 
+     * @param target target set
+     * @param nodes nodes to restrict area to
+     * @param odd whether to compute attractor set for player odd (1)
+     * @return
+     */
+    private BitSet satr(BitSet target, BitSet nodes, boolean odd)
+    {
         return odd ? satr1(target, nodes) : satr0(target, nodes);
     }
-    
+
     private BitSet satr0(BitSet target, BitSet nodes) {
         return attract(game, target, nodes, playerEvenOrStochastic);
     }
@@ -328,7 +328,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     }
 
     private BitSet watr(BitSet target, BitSet nodes, boolean odd)
-            {
+    {
         BitSet satrSame = satr(target, nodes, odd);
         BitSet nodesMSatrSame = UtilBitSet.newBitSetBounded(game.getNumNodes());
         BitSet nodesMTarget = UtilBitSet.newBitSetBounded(game.getNumNodes());
@@ -352,7 +352,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         }
         return satrSame;
     }
-    
+
     private BitSet watr0(BitSet target, BitSet nodes) {
         return watr(target, nodes, false);
     }
@@ -360,10 +360,10 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     private BitSet watr1(BitSet target, BitSet nodes) {
         return watr(target, nodes, true);
     }
-    
+
     int getZeroMcNaughtonCalls() {
-		return zeroMcNaughtonCalls;
-	}
+        return zeroMcNaughtonCalls;
+    }
 
     /**
      * Compute a strategy for a weak or strong attractor.
@@ -376,13 +376,13 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      */
     private void computeStrategy(SchedulerSimpleSettable strategies, GraphExplicit graph,
             BitSet target, BitSet nodes, BitSet exists)
-                    {
-    	assert strategies != null;
+    {
+        assert strategies != null;
         assert graph != null;
         assert target != null;
         assert nodes != null;
         assert exists != null;
-        
+
         graph.computePredecessors();
         int[] remaining = new int[graph.getNumNodes()];
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
@@ -400,7 +400,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         for (int node = target.nextSetBit(0); node >= 0; node = target.nextSetBit(node+1)) {
             remaining[node] = 0;
         }
-        
+
         BitSet newNodes = target.clone();
         BitSet previousNodes = UtilBitSet.newBitSetBounded(game.getNumNodes());
         do {
@@ -420,9 +420,9 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
                         if (remaining[pred] == 0) {
                             Player player = this.propertyPlayer.getEnum(pred);
                             if (computeStrategyP0 && player == Player.ONE
-                            		|| computeStrategyP1 && player == Player.TWO) {
-            					assert strategies.getDecision(node) == Scheduler.UNSET;
-                            	strategies.set(pred, graph.getSuccessorNumber(pred, node));
+                                    || computeStrategyP1 && player == Player.TWO) {
+                                assert strategies.getDecision(node) == Scheduler.UNSET;
+                                strategies.set(pred, graph.getSuccessorNumber(pred, node));
                             }
                             newNodes.set(pred);
                         }
@@ -432,20 +432,20 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         } while (!newNodes.isEmpty());
         /* make sure that we indeed computed the strategy correctly */
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
-        	Player player = propertyPlayer.getEnum(node);
-        	assert !(computeStrategyP0 && player == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
-        	assert !(computeStrategyP1 && player == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
+            Player player = propertyPlayer.getEnum(node);
+            assert !(computeStrategyP0 && player == Player.ONE) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
+            assert !(computeStrategyP1 && player == Player.TWO) || strategies.getDecision(node) != Scheduler.UNSET || target.get(node) : node;
         }
     }
 
     private BitSet attract(GraphExplicit graph,
             BitSet target, BitSet nodes, BitSet exists)
-                    {
+    {
         assert graph != null;
         assert target != null;
         assert nodes != null;
         assert exists != null;
-        
+
         graph.computePredecessors();
         int[] remaining = new int[graph.getNumNodes()];
         for (int node = nodes.nextSetBit(0); node >= 0; node = nodes.nextSetBit(node+1)) {
@@ -465,7 +465,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
             contained.set(node);
             remaining[node] = 0;
         }
-        
+
         BitSet newNodes = target.clone();
         BitSet previousNodes = UtilBitSet.newBitSetBounded(game.getNumNodes());
         do {
@@ -499,11 +499,11 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * @return log to send messages
      */
     private Log getLog() {
-    	return Options.get().get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
     }
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 }

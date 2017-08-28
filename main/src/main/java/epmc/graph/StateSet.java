@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -27,12 +27,12 @@ import java.io.Closeable;
 public interface StateSet extends Closeable, Cloneable {
 
     int size();
- 
+
     @Override
     void close();
 
     boolean isSubsetOf(StateSet states);
-    
+
     StateSet clone();
 
     default boolean isEmpty() {

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
@@ -98,21 +98,21 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     private ContextDD contextDD;
     private Set<Expression> stateLabels;
     private DD nodeSpace;
-	private boolean skipTransient;
-	private Expression property;
-	private ExpressionQuantifier propertyQuantifier;
-	private StateSet forStates;
+    private boolean skipTransient;
+    private Expression property;
+    private ExpressionQuantifier propertyQuantifier;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
-    
+
     private class Expr {
         private Mod op;
         private DD expr;
-        
+
         public Expr(Mod op, DD expr) {
             this.op = op;
             this.expr = expr;
@@ -124,7 +124,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             Expr exp = (Expr)obj;
             return   exp.op == op && this.expr.equals(exp.expr);
         }
-        
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -146,33 +146,33 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
      * flatten operation 
      * */
     public Set<Set<Expr>> flatten(Expression prop, Set<Expression> labels) 
-            {
+    {
         if (prop instanceof ExpressionIdentifier
-        		|| prop instanceof ExpressionLiteral) {   
+                || prop instanceof ExpressionLiteral) {   
             //this should not happen
             Expr expr = new Expr(Mod.UNDEF, expressionToDD.translate(prop));
             Set<Expr> inSet = Collections.singleton(expr);
             return Collections.singleton(inSet);
         }
-        
+
         if (labels.contains(prop)) {
             Expr expr = new Expr(Mod.UNDEF, expressionToDD.translate(prop));
             Set<Expr> inSet = Collections.singleton(expr);
             return Collections.singleton(inSet);
         }
-        
+
         if (prop instanceof ExpressionOperator) { //AND ,OR will be flattened
             ExpressionOperator expressionOperator = (ExpressionOperator) prop;
             List<? extends Expression> ops = expressionOperator.getOperands();
             Set<Set<Expr>> set = null;
             Operator operator = expressionOperator.getOperator();
             if (operator.equals(OperatorNot.NOT)
-            		|| operator.equals(OperatorLt.LT)
-            		|| operator.equals(OperatorGt.GT)
-            		|| operator.equals(OperatorGe.GE)
-            		|| operator.equals(OperatorLe.LE)
-            		|| operator.equals(OperatorEq.EQ)
-            		|| operator.equals(OperatorNe.NE)) {
+                    || operator.equals(OperatorLt.LT)
+                    || operator.equals(OperatorGt.GT)
+                    || operator.equals(OperatorGe.GE)
+                    || operator.equals(OperatorLe.LE)
+                    || operator.equals(OperatorEq.EQ)
+                    || operator.equals(OperatorNe.NE)) {
                 set = new HashSet<>(); 
                 Set<Expr> inSet = new HashSet<>();
                 inSet.add(new Expr(Mod.UNDEF, expressionToDD.translate(prop)));
@@ -212,11 +212,11 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                     if(p.op == Mod.UNDEF) {
                         item = item.andWith(p.expr.clone());
                     }else {
-                    	tmp.add(p);
+                        tmp.add(p);
                     }
                 }
                 if(! item.isTrue()) {
-                	tmp.add(new Expr(Mod.F, item));
+                    tmp.add(new Expr(Mod.F, item));
                 }else item.dispose();
                 set.add(tmp);
             }
@@ -224,10 +224,10 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         case GLOBALLY: // G a = 0 R a,cartesian product
             Set<Set<Expr>> opset = flatten(expr.getOperand1(),labels);
             if (expr.getOperand1() instanceof ExpressionTemporal) {
-            	return opset;
+                return opset;
             }
             Set<Set<Expr>> tmp1 = permute(opset);
-            
+
             for(Set<Expr> inset: tmp1) {
                 Set<Expr> tmp2 = new HashSet<>();
                 DD item = contextDD.newConstant(false);
@@ -239,7 +239,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                     }
                 }
                 if(! item.isFalse()) {
-                	tmp2.add(new Expr(Mod.G, item));
+                    tmp2.add(new Expr(Mod.G, item));
                 }else item.dispose();
                 set.add(tmp2);
             }
@@ -250,101 +250,101 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         assert(false);
         return set;
     }
-    
-	/*
-	 * DNF <=> CNF for Set<Set<Object>>
-	 */
-	public static Set<Set<Expr>> permute(Set<Set<Expr>> sets) {
-		if (sets.size() < 2)
-			return sets;
-		List<Set<Expr>> listOfSets = new ArrayList<>(
-				sets.size());
-		for (Set<Expr> set : sets) {
-			listOfSets.add(set);
-		}
-		Set<Set<Expr>> perms = permute(0, listOfSets);
-		
-		perms.remove(new HashSet<>());
-		
-		// remove redundant/duplicate accepting conditions
-		boolean exitIteration = false;
-		do {
-			Set<Set<Expr>> result = new HashSet<>();
-			for (Set<Expr> c : perms) {//
-				boolean subsumed = false;
-				Set<Expr> replace = null;
 
-				for (Set<Expr> d : result) {
-					if (c.containsAll(d)) {
-						subsumed = true;
-						break;
-					}// c contais d, do not add
-					if (d.containsAll(c)) {
-						replace = d;
-						break;
-					}// d contains c, then remove d, add c
-				}// first check whether d is subsumed by some set in result
-				if (!subsumed) {
-					if (replace != null) {
-						result.remove(replace);
-					}
-					result.add(c);
-				}
-			}// until no more changes
-			exitIteration = result.size() == perms.size();
-			perms = result;
-		} while (!exitIteration);
-		return perms;
-	}
+    /*
+     * DNF <=> CNF for Set<Set<Object>>
+     */
+    public static Set<Set<Expr>> permute(Set<Set<Expr>> sets) {
+        if (sets.size() < 2)
+            return sets;
+        List<Set<Expr>> listOfSets = new ArrayList<>(
+                sets.size());
+        for (Set<Expr> set : sets) {
+            listOfSets.add(set);
+        }
+        Set<Set<Expr>> perms = permute(0, listOfSets);
 
-	/*
-	 * recursive to get product
-	 */
-	public static Set<Set<Expr>> permute(int index,
-			List<Set<Expr>> listOfSets) {
-		Set<Set<Expr>> result = new HashSet<>();
-		if (index == listOfSets.size()) {
-			result.add(new HashSet<Expr>());
-		} else {
-			for (Object list : listOfSets.get(index)) {
-				for (Set set : permute(index + 1, listOfSets)) {
-					Set tmp = new HashSet<>(set);
-					set.add(list);
-					result.add(set);
-					result.add(tmp);
-				}
-			}
-		}
-		return result;
-	}
-//    /**
-//     * cartesion product for Set<Set<expression>>
-//     * */
-//    private static Set<Set<Expr>> cartesian(Set<Set<Expr>> props) {
-//
-//        if(props.size() < 2) return props;
-//       
-//        List<Set<Expr>> listExpr = new ArrayList<Set<Expr>>(props.size());
-//        for(Set<Expr> set: props) {
-//            listExpr.add(set);
-//        }
-//        return cartesian(0, listExpr);
-//    }
-//
-//    private static Set<Set<Expr>> cartesian(int index,List<Set<Expr>> props) {
-//        Set<Set<Expr>> ret = new HashSet<Set<Expr>>();
-//        if(index == props.size()) {
-//            ret.add(new HashSet<Expr>());
-//        }else {
-//            for(Expr expr: props.get(index)) {
-//                for(Set<Expr> set: cartesian(index+1, props)) {
-//                    set.add(expr);
-//                    ret.add(set);
-//                }
-//            }
-//        }
-//        return ret;
-//    }
+        perms.remove(new HashSet<>());
+
+        // remove redundant/duplicate accepting conditions
+        boolean exitIteration = false;
+        do {
+            Set<Set<Expr>> result = new HashSet<>();
+            for (Set<Expr> c : perms) {//
+                boolean subsumed = false;
+                Set<Expr> replace = null;
+
+                for (Set<Expr> d : result) {
+                    if (c.containsAll(d)) {
+                        subsumed = true;
+                        break;
+                    }// c contais d, do not add
+                    if (d.containsAll(c)) {
+                        replace = d;
+                        break;
+                    }// d contains c, then remove d, add c
+                }// first check whether d is subsumed by some set in result
+                if (!subsumed) {
+                    if (replace != null) {
+                        result.remove(replace);
+                    }
+                    result.add(c);
+                }
+            }// until no more changes
+            exitIteration = result.size() == perms.size();
+            perms = result;
+        } while (!exitIteration);
+        return perms;
+    }
+
+    /*
+     * recursive to get product
+     */
+    public static Set<Set<Expr>> permute(int index,
+            List<Set<Expr>> listOfSets) {
+        Set<Set<Expr>> result = new HashSet<>();
+        if (index == listOfSets.size()) {
+            result.add(new HashSet<Expr>());
+        } else {
+            for (Object list : listOfSets.get(index)) {
+                for (Set set : permute(index + 1, listOfSets)) {
+                    Set tmp = new HashSet<>(set);
+                    set.add(list);
+                    result.add(set);
+                    result.add(tmp);
+                }
+            }
+        }
+        return result;
+    }
+    //    /**
+    //     * cartesion product for Set<Set<expression>>
+    //     * */
+    //    private static Set<Set<Expr>> cartesian(Set<Set<Expr>> props) {
+    //
+    //        if(props.size() < 2) return props;
+    //       
+    //        List<Set<Expr>> listExpr = new ArrayList<Set<Expr>>(props.size());
+    //        for(Set<Expr> set: props) {
+    //            listExpr.add(set);
+    //        }
+    //        return cartesian(0, listExpr);
+    //    }
+    //
+    //    private static Set<Set<Expr>> cartesian(int index,List<Set<Expr>> props) {
+    //        Set<Set<Expr>> ret = new HashSet<Set<Expr>>();
+    //        if(index == props.size()) {
+    //            ret.add(new HashSet<Expr>());
+    //        }else {
+    //            for(Expr expr: props.get(index)) {
+    //                for(Set<Expr> set: cartesian(index+1, props)) {
+    //                    set.add(expr);
+    //                    ret.add(set);
+    //                }
+    //            }
+    //        }
+    //        return ret;
+    //    }
 
     public DD solve(Expression path, boolean isMin) {
         this.negate = isMin;              
@@ -352,7 +352,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         //this.stateLabels = path.collectIdentifiers();
         this.nodeSpace = exploreNodeSpace(modelGraph);
         DD innerResult = checkProperty(path);
-        
+
         if (negate) {
             innerResult = contextDD.newConstant(1).subtract(innerResult);
         }
@@ -361,7 +361,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
 
     private boolean isBSCC(GraphDD graph, DD scc)
-            {
+    {
         if (!nonDet) {
             return true;
         }
@@ -376,7 +376,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         trans = trans.permute(nextToPres);
         return trans;
     }//move one , no more states reached
-  
+
     /** find all the accepted BSCCs*/
     private DD checkProperty(Expression property) {
         // TODO Auto-generated method stub
@@ -385,7 +385,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         DD acSCCs = contextDD.newConstant(false);
         int numSCCs = 0;
         ComponentsDD sccs = new ComponentsDD(modelGraph, nodeSpace, skipTransient);
-       
+
         for (DD scc = sccs.next(); scc != null; scc = sccs.next()) {
             if (isBSCC(modelGraph, scc)) {
                 for (Set<Expr> oset : sets) { //find a set satisfied will be enough
@@ -434,7 +434,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     private DD exploreNodeSpace(GraphDD graph) {
         DD sta = graph.getInitialNodes();
         DD pred = contextDD.newConstant(false);
-//        long nano = System.nanoTime();
+        //        long nano = System.nanoTime();
         DD trans = graph.getTransitions().abstractExist(graph.getActionCube());
         while (!sta.equals(pred)) {
             // only exploring new states important for Rabin semi-symbolic mtd
@@ -444,23 +444,23 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         }
         trans.dispose();
         graph.getTransitions();
-//        nano = System.nanoTime() - nano; 
-//        System.out.println("explore graph ,time elapsed: " + nano * 1.0 /1000000 + " ms");
+        //        nano = System.nanoTime() - nano; 
+        //        System.out.println("explore graph ,time elapsed: " + nano * 1.0 /1000000 + " ms");
         return sta;
     }
-    
+
     private DD next(DD trans, DD from, DD pres, Permutation swap) {
         return trans.abstractAndExist(from, pres).permuteWith(swap);
     }
-    
+
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
-            {
-//        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
+    {
+        //        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNot(target);
         DD zeroNodes = nodeSpace.andNot(someNodes).andNot(target);
-        
+
         DD init = graphDD.getInitialNodes();
-        
+
         if (init.andNot(target).isFalse() || init.andNot(zeroNodes).isFalse()) {
             return target.toMT();
         }
@@ -473,7 +473,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         GraphExplicit graph = converter.buildGraph();
         BitSet targets = converter.ddToBitSet(target);
         BitSet targetS = UtilBitSet.newBitSetUnbounded(graph.getNumNodes());
-        
+
         for (int nodeNr = 0; nodeNr < graph.getNumNodes(); nodeNr++) {
             targetS.set(nodeNr, targets.get(nodeNr));
         }
@@ -489,22 +489,22 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         converter.close();
         result = result.multiply(graphDD.getNodeSpace().toMT());
         result = result.add(target.andNot(graphDD.getNodeSpace()).toMT());
-        
+
         return result;
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionQuantifier) {
-			this.propertyQuantifier = (ExpressionQuantifier) property;
-		}
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionQuantifier) {
+            this.propertyQuantifier = (ExpressionQuantifier) property;
+        }
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
     @Override
     public StateMap solve() {
@@ -538,7 +538,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         }
         return result;
     }
-    
+
     private StateMap solve(Expression quantifiedProp, StateSetDD forStates,
             boolean min) {
         DD res = solve(quantifiedProp, min);
@@ -563,32 +563,32 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override

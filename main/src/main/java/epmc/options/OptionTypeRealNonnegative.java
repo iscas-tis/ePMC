@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -41,7 +41,7 @@ public final class OptionTypeRealNonnegative implements OptionType {
     private final static String INFO = "<nonnegative-real>";
     /** Nonnegative real option type. */
     private final static OptionTypeRealNonnegative INSTANCE = new OptionTypeRealNonnegative();
-    
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
@@ -50,7 +50,7 @@ public final class OptionTypeRealNonnegative implements OptionType {
      */
     private OptionTypeRealNonnegative() {
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -67,12 +67,12 @@ public final class OptionTypeRealNonnegative implements OptionType {
             return null;
         }
     }
-    
+
     @Override
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();

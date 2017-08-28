@@ -1351,7 +1351,7 @@ public abstract class NanoHTTPD {
             @Override
             public void write(int b) throws IOException {
                 byte[] data = {
-                    (byte) b
+                        (byte) b
                 };
                 write(data, 0, 1);
             }
@@ -1401,7 +1401,7 @@ public abstract class NanoHTTPD {
         private final Map<String, String> header = new HashMap<String, String>() {
 
             @Override
-			public String put(String key, String value) {
+            public String put(String key, String value) {
                 lowerCaseHeader.put(key == null ? key : key.toLowerCase(), value);
                 return super.put(key, value);
             };

@@ -16,31 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Value;
 
 public final class ValueObject implements Value {
-	public static boolean isObject(Value value) {
-		return value instanceof ValueObject;
-	}
-	
-	public static ValueObject asObject(Value value) {
-		if (isObject(value)) {
-			return (ValueObject) value;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isObject(Value value) {
+        return value instanceof ValueObject;
+    }
+
+    public static ValueObject asObject(Value value) {
+        if (isObject(value)) {
+            return (ValueObject) value;
+        } else {
+            return null;
+        }
+    }
+
     private final static String SPACE = " ";
-    
+
     private Object content;
     private final TypeObject type;
     private boolean immutable;
-    
+
     ValueObject(TypeObject type) {
         assert type != null;
         this.type = type;
@@ -57,7 +57,7 @@ public final class ValueObject implements Value {
     public TypeObject getType() {
         return type;
     }
-    
+
     @SuppressWarnings("unchecked")
     public <T> T getObject() {
         return (T) content;
@@ -69,9 +69,9 @@ public final class ValueObject implements Value {
                 getType().getUsedClass().isInstance(content) :
                     content + SPACE + content.getClass()
                     + SPACE + getType().getUsedClass();
-        this.content = content;
+                this.content = content;
     }
-    
+
     @Override
     public Value clone() {
         return new ValueObject(getType(), content);
@@ -104,7 +104,7 @@ public final class ValueObject implements Value {
         assert ValueObject.isObject(op);
         content = ValueObject.asObject(op).getObject();
     }
-    
+
     @Override
     public void setImmutable() {
         this.immutable = true;
@@ -117,25 +117,25 @@ public final class ValueObject implements Value {
 
     @Override
     public double distance(Value other) {
-    	ValueObject otherObject = asObject(other);
-    	return content.equals(otherObject.content) ? 0.0 : 1.0;
+        ValueObject otherObject = asObject(other);
+        return content.equals(otherObject.content) ? 0.0 : 1.0;
     }
 
-	@Override
-	public int compareTo(Value other) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int compareTo(Value other) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public boolean isEq(Value other) {
-    	ValueObject otherObject = asObject(other);
-    	return content.equals(otherObject.content);
-	}
+    @Override
+    public boolean isEq(Value other) {
+        ValueObject otherObject = asObject(other);
+        return content.equals(otherObject.content);
+    }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
+
+    }
 }

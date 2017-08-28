@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker.error;
 
@@ -44,7 +44,7 @@ public final class ProblemsModelChecker {
     public final static Problem CONST_NON_CONST = newProblem("const-non-const");
     /** There are cyclic dependencies between constants. */
     public final static Problem CONST_CYCLIC = newProblem("const-cyclic");
-    
+
     /**
      * Generate new problem reading descriptions from EPMC property bundle.
      * The parameter must not be {@code null}.

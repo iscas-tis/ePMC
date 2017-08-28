@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -38,7 +38,7 @@ public interface Property {
      * @return unique identifier of property type
      */
     String getIdentifier();
-        
+
     /**
      * Parse a property in the syntax of this property type.
      * An exception might be thrown if the input string is not a valid
@@ -60,7 +60,7 @@ public interface Property {
      * @return parsed expression
      */
     Type parseType(String type);
-    
+
     /**
      * Reads a complete list of properties in the format of this property type.
      * 
@@ -68,7 +68,7 @@ public interface Property {
      * @param stream stream from which to read the properties
      */
     void readProperties(RawProperties properties, InputStream stream);
-    
+
     /**
      * Writes a complete list of properties in the format of this property type.
      * This will only work if all properties are of the property type of this

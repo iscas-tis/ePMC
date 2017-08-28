@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping;
 
@@ -49,7 +49,7 @@ import static epmc.graph.TestHelperGraph.*;
 
 public final class TestHelperLump {
     public static GraphExplicit computeQuotient(Options options, String modelFile,
-    		String property) {
+            String property) {
         Set<Object> nodeProperties = new HashSet<>();
         nodeProperties.add(CommonProperties.STATE);
         Model model = TestHelper.loadModel(options, modelFile);
@@ -64,12 +64,12 @@ public final class TestHelperLump {
         GraphExplicit graph = exploreToGraph(model, nodeProperties);
         GraphSolverObjectiveExplicitLump objective = UtilLump.partitionByAPsObjective(graph, atomics);
         for (Class<? extends LumperExplicit> clazz : lumpersExplicit.values()) {
-        	LumperExplicit instance = Util.getInstance(clazz);
-        	instance.setOriginal(objective);
-        	if (instance.canLump()) {
-        		useInstance = instance;
-        		break;
-        	}	
+            LumperExplicit instance = Util.getInstance(clazz);
+            instance.setOriginal(objective);
+            if (instance.canLump()) {
+                useInstance = instance;
+                break;
+            }	
         }
         useInstance.lump();
         return useInstance.getQuotient().getGraph();
@@ -87,7 +87,7 @@ public final class TestHelperLump {
         Set<Expression> atomics = collectLTLPropositional(expression);
         return atomics;
     }
-    
+
     public static Set<Expression> collectLTLPropositional(Expression expression) {
         if (isPropositional(expression)) {
             return Collections.singleton(expression);
@@ -109,7 +109,7 @@ public final class TestHelperLump {
             return Collections.singleton(expression);           
         }
     }
-	
-	private TestHelperLump() {
-	}
+
+    private TestHelperLump() {
+    }
 }

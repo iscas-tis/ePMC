@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -41,81 +41,81 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class Destinations implements JANINode, Iterable<Destination> {
-	/** List of variables destinations can potentially assign to. */
-	private Map<String, JANIIdentifier> validIdentifiers;
-	/** List of locations destinations can potentially move to. */
-	private Map<String, Location> validLocations;
+    /** List of variables destinations can potentially assign to. */
+    private Map<String, JANIIdentifier> validIdentifiers;
+    /** List of locations destinations can potentially move to. */
+    private Map<String, Location> validLocations;
 
-	/** List of destinations. */
-	private final List<Destination> destinations = new ArrayList<>();;
-	/** Unmodifiable list of destinations. */
-	private final List<Destination> destinationsExternal = Collections.unmodifiableList(destinations);
-	private ModelJANI model;
+    /** List of destinations. */
+    private final List<Destination> destinations = new ArrayList<>();;
+    /** Unmodifiable list of destinations. */
+    private final List<Destination> destinationsExternal = Collections.unmodifiableList(destinations);
+    private ModelJANI model;
 
-	/**
-	 * Set the list if variables which destinations can assign to.
-	 * This method should be called before the parsing phase with a non-{@code
-	 * null} parameter.
-	 */
-	public void setValidIdentifiers(Map<String,JANIIdentifier> variables) {
-		this.validIdentifiers = variables;
-	}
-	
-	public void setValidLocations(Map<String,Location> locations) {
-		this.validLocations = locations;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		JsonArray array = UtilJSON.toArray(value);
-		ensure(!array.isEmpty(), ProblemsJANIParser.JANI_PARSER_DESTINATIONS_NOT_EMPTY);
-		for (JsonValue destValue : array) {
-			Destination destination = new Destination();
-			destination.setValidLocations(validLocations);
-			destination.setValidIdentifiers(validIdentifiers);
-			destination.setModel(model);
-			destination.parse(destValue);
-			destinations.add(destination);
-		}
-		return this;
-	}
+    /**
+     * Set the list if variables which destinations can assign to.
+     * This method should be called before the parsing phase with a non-{@code
+     * null} parameter.
+     */
+    public void setValidIdentifiers(Map<String,JANIIdentifier> variables) {
+        this.validIdentifiers = variables;
+    }
 
-	@Override
-	public JsonValue generate() {
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (Destination destination : destinations) {
-			result.add(destination.generate());
-		}
-		return result.build();
-	}
+    public void setValidLocations(Map<String,Location> locations) {
+        this.validLocations = locations;
+    }
 
-	@Override
-	public Iterator<Destination> iterator() {
-		return destinationsExternal.iterator();
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	public int size() {
-		return destinations.size();
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
-	
-	public void addDestination(Destination destination) {
-		destinations.add(destination);
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        JsonArray array = UtilJSON.toArray(value);
+        ensure(!array.isEmpty(), ProblemsJANIParser.JANI_PARSER_DESTINATIONS_NOT_EMPTY);
+        for (JsonValue destValue : array) {
+            Destination destination = new Destination();
+            destination.setValidLocations(validLocations);
+            destination.setValidIdentifiers(validIdentifiers);
+            destination.setModel(model);
+            destination.parse(destValue);
+            destinations.add(destination);
+        }
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (Destination destination : destinations) {
+            result.add(destination.generate());
+        }
+        return result.build();
+    }
+
+    @Override
+    public Iterator<Destination> iterator() {
+        return destinationsExternal.iterator();
+    }
+
+    public int size() {
+        return destinations.size();
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
+
+    public void addDestination(Destination destination) {
+        destinations.add(destination);
+    }
 }

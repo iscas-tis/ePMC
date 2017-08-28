@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.dd;
 
@@ -35,46 +35,46 @@ import epmc.graph.dd.GraphDD;
 import gnu.trove.map.TObjectIntMap;
 
 public final class SolverQualitativeMcNaughton implements SolverQualitative {
-	public final static String IDENTIFIER = "schewe";
+    public final static String IDENTIFIER = "schewe";
 
     private DDPair EMPTY_BIT_SET_PAIR;
-	private GraphDD game;
-	private boolean strictEven;
+    private GraphDD game;
+    private boolean strictEven;
 
-	private List<DD> priorities;
+    private List<DD> priorities;
 
-	private DD playerEven;
+    private DD playerEven;
 
-	private DD playerOdd;
+    private DD playerOdd;
 
-	private int zeroMcNaughtonCalls;
+    private int zeroMcNaughtonCalls;
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setGame(GraphDD game) {
-		this.game = game;
-	}
+    @Override
+    public void setGame(GraphDD game) {
+        this.game = game;
+    }
 
-	@Override
-	public void setStrictEven(boolean strictEven) {
-		this.strictEven = strictEven;		
-	}
+    @Override
+    public void setStrictEven(boolean strictEven) {
+        this.strictEven = strictEven;		
+    }
 
-	@Override
-	public void setComputeStrategies(boolean playerEven, boolean playerOdd) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void setComputeStrategies(boolean playerEven, boolean playerOdd) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public DDPair solve() {
+    }
+
+    @Override
+    public DDPair solve() {
         this.EMPTY_BIT_SET_PAIR = new DDPair(ContextDD.get().newConstant(false), ContextDD.get().newConstant(false));
-		ProductGraphDDExplicit product = (ProductGraphDDExplicit) game;
-		AutomatonParity automaton = (AutomatonParity) product.getAutomaton();
+        ProductGraphDDExplicit product = (ProductGraphDDExplicit) game;
+        AutomatonParity automaton = (AutomatonParity) product.getAutomaton();
         this.priorities = computePriorities(automaton, product.getLabeling());
         DD player = game.getNodeProperty(CommonProperties.PLAYER);
         playerEven = player.clone().eqWith(ContextDD.get().newConstant(Player.ONE_STOCHASTIC));
@@ -82,17 +82,17 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         DD nodes = game.getNodeSpace().clone();
         DDPair result = zeroMcNaughton(nodes);
         return result;
-	}
-	
+    }
+
     private List<DD> computePriorities(AutomatonParity automaton,
             TObjectIntMap<DD> labelsMap) {
-    	assert automaton != null;
+        assert automaton != null;
         assert labelsMap != null;
 
         List<DD> priorities = new ArrayList<>();
         int numPriorities = automaton.getNumPriorities();
         priorities.clear();
-        
+
         for (int labelNr = 0; labelNr < numPriorities; labelNr++) {
             priorities.add(ContextDD.get().newConstant(false));
         }
@@ -135,10 +135,10 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
             return new DDPair(ContextDD.get().newConstant(false), p);
         }
         DD minPrioDD = priorities.get(minPriority);
-        
+
         DD mapToMinPriority = p.and(minPrioDD);
         DD pPrimed = null;
-        
+
         assert minPriority >= 0 : minPriority;
         if (minPriority % 2 == 0) {
             DD w1 = getContextDD().newConstant(false);
@@ -179,7 +179,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerOdd;
         DD existForall = ContextDD.get().newConstant(false);
-        
+
         DD result = ComponentsDD.attract(game, target, nodes, forall, exist, forallExist, existForall);
         forall.dispose();
         existForall.dispose();
@@ -191,13 +191,13 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerEven;
         DD existForall = ContextDD.get().newConstant(false);
-        
+
         DD result = ComponentsDD.attract(game, target, nodes, forall, exist, forallExist, existForall);
         existForall.dispose();
         forall.dispose();
         return result;
     }
-    
+
     private DD watr0(DD target, DD nodes) {
         return watr(target, nodes, false);
     }
@@ -205,14 +205,14 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     private DD watr1(DD target, DD nodes) {
         return watr(target, nodes, true);
     }
-    
+
     private DD satr(DD target, DD nodes, boolean odd)
-            {
+    {
         return odd ? satr1(target, nodes) : satr0(target, nodes);
     }
 
     private DD watr(DD target, DD nodes, boolean odd)
-            {
+    {
         DD satrSame = satr(target, nodes, odd);
         DD nodesMSatrSame = ContextDD.get().newConstant(false);
         DD nodesMTarget = ContextDD.get().newConstant(false);
@@ -232,6 +232,6 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     }
 
     public ContextDD getContextDD() {
-    	return game.getContextDD();
-	}
+        return game.getContextDD();
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.graphsolver;
 
@@ -68,9 +68,9 @@ import epmc.value.operator.OperatorMin;
  * @author Ernst Moritz Hahn
  */
 public final class GraphSolverIterativeCoalitionJava implements GraphSolverExplicit {
-	/** Identifier of the iteration-based graph game solver. */
+    /** Identifier of the iteration-based graph game solver. */
     public static String IDENTIFIER = "graph-solver-iterative-coalition-java";
-    
+
     /** Original graph. */
     private GraphExplicit origGraph;
     /** Graph used for iteration, derived from original graph. */
@@ -81,7 +81,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     private int numIterations;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
-	private int maxEnd;
+    private int maxEnd;
 
     @Override
     public String getIdentifier() {
@@ -90,7 +90,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
@@ -98,9 +98,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     public boolean canHandle() {
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsSMG.isSMG(semantics)) {
-        	return false;
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame)) {
             return false;
         }
         return true;
@@ -108,16 +108,16 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     @Override
     public void solve() {
-    	prepareIterGraph();
+        prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame) {
-        	unboundedReachability();
+            unboundedReachability();
             prepareResultValues();
-        	GraphSolverObjectiveExplicitUnboundedReachabilityGame objUB = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) objective;
-        	if (objUB.isComputeScheduler()) {
-        		SchedulerSimpleSettable strategy = new SchedulerSimpleArray(origGraph);
-        		computeStrategy(strategy, objUB.getTarget(), outputValues);
-        		objUB.setScheduler(strategy);
-        	}
+            GraphSolverObjectiveExplicitUnboundedReachabilityGame objUB = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) objective;
+            if (objUB.isComputeScheduler()) {
+                SchedulerSimpleSettable strategy = new SchedulerSimpleArray(origGraph);
+                computeStrategy(strategy, objUB.getTarget(), outputValues);
+                objUB.setScheduler(strategy);
+            }
         } else {
             assert false;
         }
@@ -125,7 +125,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     private void prepareIterGraph() {
         assert origGraph != null;
-        
+
         BitSet playerEven = UtilBitSet.newBitSetUnbounded();
         BitSet playerOdd = UtilBitSet.newBitSetUnbounded();
         BitSet playerStochastic = UtilBitSet.newBitSetUnbounded();
@@ -154,60 +154,60 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         assert iterGraph != null;
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame) {
-        	GraphSolverObjectiveExplicitUnboundedReachabilityGame objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) objective;
-        	targets = objectiveUnboundedReachability.getTarget();
+            GraphSolverObjectiveExplicitUnboundedReachabilityGame objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) objective;
+            targets = objectiveUnboundedReachability.getTarget();
         }
         assert this.inputValues == null;
         int numStates = iterGraph.computeNumStates();
         this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
-        	int iterNode = builder.inputToOutputNode(origNode);
-        	if (iterNode < 0) {
-        		continue;
-        	}
-        	this.inputValues.set(targets.get(origNode) ? 1 : 0, iterNode);
+            int iterNode = builder.inputToOutputNode(origNode);
+            if (iterNode < 0) {
+                continue;
+            }
+            this.inputValues.set(targets.get(origNode) ? 1 : 0, iterNode);
         }
     }
 
     private void prepareResultValues() {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());
-    	ValueAlgebra val = typeWeight.newValue();
-    	ValueAlgebra get = typeWeight.newValue();
-    	ValueAlgebra weighted = typeWeight.newValue();
-    	int origNumNodes = origGraph.getNumNodes();
-    	GraphSolverObjectiveExplicitUnboundedReachabilityGame objective = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) this.objective;
-    	NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
-    	EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
-    	for (int origNode = 0; origNode < origNumNodes; origNode++) {
-    		Player player = playerProp.getEnum(origNode);
-    		int iterState = builder.inputToOutputNode(origNode);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origNode);
-    		assert player == Player.STOCHASTIC
-    				|| !objective.getTarget().get(origNode)
-    				|| val.isOne()
-    				: origNode + " " + val + " " + player + " " + objective.getTarget().get(origNode);
-    	}
-    	for (int origNode = 0; origNode < origNumNodes; origNode++) {
-    		Player player = playerProp.getEnum(origNode);
-    		if (player == Player.STOCHASTIC) {
-    			val.set(0);
-    			int numSucc = origGraph.getNumSuccessors(origNode);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());
+        ValueAlgebra val = typeWeight.newValue();
+        ValueAlgebra get = typeWeight.newValue();
+        ValueAlgebra weighted = typeWeight.newValue();
+        int origNumNodes = origGraph.getNumNodes();
+        GraphSolverObjectiveExplicitUnboundedReachabilityGame objective = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) this.objective;
+        NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
+        EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
+        for (int origNode = 0; origNode < origNumNodes; origNode++) {
+            Player player = playerProp.getEnum(origNode);
+            int iterState = builder.inputToOutputNode(origNode);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origNode);
+            assert player == Player.STOCHASTIC
+                    || !objective.getTarget().get(origNode)
+                    || val.isOne()
+                    : origNode + " " + val + " " + player + " " + objective.getTarget().get(origNode);
+        }
+        for (int origNode = 0; origNode < origNumNodes; origNode++) {
+            Player player = playerProp.getEnum(origNode);
+            if (player == Player.STOCHASTIC) {
+                val.set(0);
+                int numSucc = origGraph.getNumSuccessors(origNode);
 
-    			for (int succ = 0; succ < numSucc; succ++) {
-    				outputValues.get(get, origGraph.getSuccessorNode(origNode, succ));
-    				weighted.multiply(get, weightProp.get(origNode, succ));
-    				val.add(val, weighted);
-    			}
-    			outputValues.set(val, origNode);
-    		}
-    	}
-    	objective.setResult(outputValues);
+                for (int succ = 0; succ < numSucc; succ++) {
+                    outputValues.get(get, origGraph.getSuccessorNode(origNode, succ));
+                    weighted.multiply(get, weightProp.get(origNode, succ));
+                    val.add(val, weighted);
+                }
+                outputValues.set(val, origNode);
+            }
+        }
+        objective.setResult(outputValues);
     }
 
     private void unboundedReachability() {
@@ -230,7 +230,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     }
 
     /* auxiliary methods */
-    
+
     private static void compDiff(double[] distance, ValueAlgebra previous,
             Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
@@ -245,11 +245,11 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         }
         distance[0] = Math.max(distance[0], thisDistance);
     }
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseTPGJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -260,18 +260,18 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         }
         return true;
     }
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* implementation/native call of/to iteration algorithms */    
-    
+
     private void tpgUnboundedGaussseidelJava(
             GraphExplicitSparseAlternate graph,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double precision) {
-    	
+
         int minEnd = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -415,13 +415,13 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     private void computeStrategy(SchedulerSimpleSettable strategy,
             BitSet target, ValueArrayAlgebra values)
-                    {
-    	assert strategy != null;
+    {
+        assert strategy != null;
         assert target != null;
         NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
-        
+
         origGraph.computePredecessors();
-        
+
         BitSet newNodes = target.clone();
         BitSet previousNodes = UtilBitSet.newBitSetBounded(origGraph.getNumNodes());
         BitSet seen = UtilBitSet.newBitSetBounded(origGraph.getNumNodes());
@@ -435,7 +435,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
             newNodes = swap;
             newNodes.clear();
             for (int node = previousNodes.nextSetBit(0); node >= 0;
-            		node = previousNodes.nextSetBit(node+1)) {
+                    node = previousNodes.nextSetBit(node+1)) {
                 Player player = playerProperty.getEnum(node);
                 /* player even or odd node - predecessors are distributions */
                 if (player == Player.ONE || player == Player.TWO) {
@@ -448,9 +448,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         }
                     }
                 } else if (player == Player.STOCHASTIC) {
-                	/* distribution node - predecessors and successors are even or odd */
-                	values.get(nodeValue, node);
-                	/*
+                    /* distribution node - predecessors and successors are even or odd */
+                    values.get(nodeValue, node);
+                    /*
                 	nodeValue.set(0);
                 	for (int succNr = 0; succNr < origGraph.getNumSuccessors(); succNr++) {
                 		int succNode = origGraph.getSuccessorNode(succNr);
@@ -459,44 +459,44 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                 		weighted.multiply(weight, succValue);
                 		nodeValue.add(nodeValue, weighted);
                 	}
-                	*/
+                     */
                     for (int predNr = 0; predNr < origGraph.getProperties().getNumPredecessors(node); predNr++) {
                         int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
-                    	values.get(predValue, pred);
-                    	if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
+                        values.get(predValue, pred);
+                        if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
                             strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
                             seen.set(pred);
                             newNodes.set(pred);
-                    	}
+                        }
                     }
                 } else {
-                	assert false;
+                    assert false;
                 }
             }
         } while (!newNodes.isEmpty());
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
-        	Player player = playerProperty.getEnum(node);
-        	if ((player == Player.ONE || player == Player.TWO)
-        			&& !seen.get(node) && !target.get(node)) {
-        		values.get(nodeValue, node);
-        		assert nodeValue.distance(TypeWeight.get().getZero()) < tolerance : node + " " + nodeValue;
-        		strategy.set(node, 0);
-        	}
+            Player player = playerProperty.getEnum(node);
+            if ((player == Player.ONE || player == Player.TWO)
+                    && !seen.get(node) && !target.get(node)) {
+                values.get(nodeValue, node);
+                assert nodeValue.distance(TypeWeight.get().getZero()) < tolerance : node + " " + nodeValue;
+                strategy.set(node, 0);
+            }
         }
         assert assertStrategyOK(strategy, target);
     }
 
     private boolean assertStrategyOK(SchedulerSimple strategy, BitSet target) {
         /* make sure that we indeed computed the strategy correctly */
-    	NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
+        NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < origGraph.getNumNodes(); node++) {
-        	Player player = playerProperty.getEnum(node);
-        	assert player == Player.STOCHASTIC || target.get(node) || strategy.getDecision(node) != Scheduler.UNSET : node;
+            Player player = playerProperty.getEnum(node);
+            assert player == Player.STOCHASTIC || target.get(node) || strategy.getDecision(node) != Scheduler.UNSET : node;
         }
-		return true;
-	}
+        return true;
+    }
 
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -57,14 +57,14 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             return EMPTY;
         }
     }
-    
+
     private final class NodePropertyWrapperDerived implements NodeProperty {
         private final GraphExplicit graph;
         private final Type typeEntry;
         private ValueArray content;
         private final Value helper;
         private final NodeProperty inner;
-        
+
         NodePropertyWrapperDerived(GraphExplicitWrapper graph, NodeProperty inner) {
             assert graph != null;
             assert inner != null;
@@ -78,15 +78,15 @@ public final class GraphExplicitWrapper implements GraphExplicit {
                 update(node, node);
             }
         }
-        
+
         @Override
         public Value get(int currentNode) {
-        	queryNode(currentNode);
-        	content = UtilValue.ensureSize(content, currentNode + 1);
+            queryNode(currentNode);
+            content = UtilValue.ensureSize(content, currentNode + 1);
             content.get(helper, currentNode);
             return helper;
         }
-        
+
         @Override
         public void set(int currentNode, Value value) {
             assert value != null;
@@ -96,7 +96,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
 
         void update(int currentNode, int innerNode) {
-        	set(currentNode, inner.get(innerNode));
+            set(currentNode, inner.get(innerNode));
         }
 
         @Override
@@ -115,7 +115,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         private final Type typeEntry;
         private ValueArray content;
         private final Value helper;
-        
+
         EdgePropertyWrapperSettable(GraphExplicitWrapper graph, Type type) {
             assert graph != null;
             assert type != null;
@@ -128,14 +128,14 @@ public final class GraphExplicitWrapper implements GraphExplicit {
 
         @Override
         public Value get(int currentNode, int successor) {
-        	queryNode(currentNode);
+            queryNode(currentNode);
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             content = UtilValue.ensureSize(content, entryNr + 1);
             content.get(helper, entryNr);
             return helper;
         }
-        
+
         @Override
         public void set(int currentNode, int successor, Value value) {
             assert value != null;
@@ -164,14 +164,14 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             return graph;
         }
     }
-    
+
     private final class EdgePropertyWrapperDerived implements EdgeProperty {
         private final GraphExplicit graph;
         private final Type typeEntry;
         private ValueArray content;
         private final Value helper;
         private final EdgeProperty inner;
-        
+
         EdgePropertyWrapperDerived(GraphExplicitWrapper graph, EdgeProperty inner) {
             assert graph != null;
             assert inner != null;
@@ -194,7 +194,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             content.get(helper, entryNr);
             return helper;
         }
-        
+
         @Override
         public void set(int currentNode, int successor, Value value) {
             assert value != null;
@@ -209,11 +209,11 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         public Type getType() {
             return typeEntry;
         }
-        
+
         void update(int currentNode) {
-           for (int succ = 0 ; succ < numSuccessors; succ++) {
-               set(currentNode, succ, inner.get(currentNode, succ));
-           }
+            for (int succ = 0 ; succ < numSuccessors; succ++) {
+                set(currentNode, succ, inner.get(currentNode, succ));
+            }
         }
 
         @Override
@@ -222,39 +222,39 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
     }
 
-    
+
     private final static int DEFAULT_NUM_SUCCESSORS = 1024;
-    
+
     private final GraphExplicit innerGraph;
 
     private final BitSet queriedNodes;
-    
+
     private boolean cache;
 
     private List<NodePropertyWrapperDerived> derivedNodeProps = new ArrayList<>();
     private List<EdgePropertyWrapperDerived> derivedEdgeProps = new ArrayList<>();
-        
+
     private int currentNode;
     private int numSuccessors;
     private int[] currentSuccessorNodes;
 
     private int maxNumSuccessors = Integer.MAX_VALUE;
-    
+
     private int otfNextSuccessorPlace;
     private final TIntList otfSuccessorsStart = new TIntArrayList();
     private OptionsTypesGraph.WrapperGraphSuccessorsSize sizeType;
     private final TIntArrayList otfSuccorsSizeInt = new TIntArrayList();
     private final TShortArrayList otfSuccorsSizeShort = new TShortArrayList();
     private final TByteArrayList otfSuccorsSizeByte = new TByteArrayList();
-    
+
     private TIntArrayList cachedSuccessorNodes = new TIntArrayList();
-    
+
     private final BitSet initNodes;
-    
+
     private final GraphExplicitProperties properties;
 
     /* constructors */
-    
+
     private GraphExplicitWrapper(GraphExplicit innerGraph, boolean cache) {
         this.initNodes = UtilBitSet.newBitSetUnbounded();
         this.queriedNodes = UtilBitSet.newBitSetUnbounded();
@@ -276,17 +276,17 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             initNodes.or(innerGraph.getInitialNodes());
         }
         this.cache = cache;
-        
+
         numSuccessors = this.maxNumSuccessors;
         if (numSuccessors == Integer.MAX_VALUE) {
             numSuccessors = DEFAULT_NUM_SUCCESSORS;
         }
         currentSuccessorNodes = new int[1];
         ensureSuccessorsSize();
-        
+
 
         sizeType = computeSizeType(maxNumSuccessors);
-        
+
         otfNextSuccessorPlace = 0;
 
         BitSet oldQueried = queriedNodes.clone();
@@ -303,9 +303,9 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     public GraphExplicitWrapper() {
         this(null, true);
     }
-    
+
     /* methods for configuration before start of exploration */
-    
+
     public void addDerivedGraphProperty(Object property) {
         assert property != null;
         assert innerGraph != null;
@@ -314,7 +314,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             registerGraphProperty(property, value);
         }
     }
-    
+
     public void addAllDerivedGraphProperties() {
         assert innerGraph != null;
         for (Object property : innerGraph.getGraphProperties()) {
@@ -328,7 +328,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             addDerivedGraphProperty(property);
         }
     }
-    
+
     @Override
     public Value addSettableGraphProperty(Object property, Type type) {
         assert property != null;
@@ -347,7 +347,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         registerNodeProperty(property, prop);
         return prop;
     }
-    
+
     public EdgeProperty addDerivedEdgeProperty(Object property) {
         assert property != null;
         assert innerGraph != null;
@@ -379,7 +379,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         registerEdgeProperty(property, result);
         return result;
     }
-    
+
     private static OptionsTypesGraph.WrapperGraphSuccessorsSize computeSizeType(int maxNumSuccessors) {
         assert maxNumSuccessors >= 0;
         int numSuccessors = maxNumSuccessors;
@@ -413,7 +413,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         }
         // TODO fix this
         return OptionsTypesGraph.WrapperGraphSuccessorsSize.INT;
-//        return sizeType;
+        //        return sizeType;
     }
 
     private void queryNode(int node) {
@@ -466,7 +466,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             cachedSuccessorNodes.add(-1);
         }
     }
-    
+
     @Override
     public void setSuccessorNode(int currentNode, int succNr, int succState) {
         assert succState >= 0;
@@ -474,7 +474,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         int succEntry = getCachedSuccessorEntry(currentNode, succNr);
         cachedSuccessorNodes.set(succEntry, succState);
     }
-    
+
     private void storeNode() {
         int fromNode = otfSuccessorsStart.get(currentNode);
         while (cachedSuccessorNodes.size() <= fromNode + numSuccessors) {
@@ -540,7 +540,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     private void prepareCachedSuccessors(int node, int numSuccessors) {
-    	assert numSuccessors >= 0;
+        assert numSuccessors >= 0;
         while (otfSuccessorsStart.size() <= node) {
             otfSuccessorsStart.add(-1);
             switch (sizeType) {
@@ -558,7 +558,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
                 break;
             }
         }
-        
+
         int fromNode = otfSuccessorsStart.get(node);
         if (fromNode == -1) {
             otfSuccessorsStart.set(node, otfNextSuccessorPlace);            
@@ -582,13 +582,13 @@ public final class GraphExplicitWrapper implements GraphExplicit {
 
     @Override
     public int getNumSuccessors(int node) {
-    	queryNode(node);
+        queryNode(node);
         return numSuccessors;
     }
 
     @Override
     public int getSuccessorNode(int node, int successorNumber) {
-    	queryNode(node);
+        queryNode(node);
         assert successorNumber < numSuccessors : successorNumber + " " + numSuccessors;
         assert currentSuccessorNodes[successorNumber] >= 0 : currentNode + " " + successorNumber;
         return currentSuccessorNodes[successorNumber];
@@ -610,9 +610,9 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     /* functions to efficiently store entries of different types */
-    
+
     public void addDerivedNodeProperties(Iterable<?> properties)
-            {
+    {
         assert properties != null;
         for (Object property : properties) {
             addDerivedNodeProperty(property);
@@ -620,7 +620,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     public void addDerivedEdgeProperties(Iterable<Object> properties)
-            {
+    {
         assert properties != null;
         for (Object property : properties) {
             addDerivedEdgeProperty(property);
@@ -646,8 +646,8 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     public int getNumNodes() {
         return queriedNodes.length();
     }
-    
-	@Override
-	public void close() {
-	}
+
+    @Override
+    public void close() {
+    }
 }

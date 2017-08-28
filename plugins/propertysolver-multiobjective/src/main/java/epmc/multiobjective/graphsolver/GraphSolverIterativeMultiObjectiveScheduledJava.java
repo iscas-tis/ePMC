@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -56,30 +56,30 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveScheduled)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveScheduled)) {
             return false;
         }
-    	Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-    	if (!SemanticsMDP.isMDP(semantics)) {
-    		return false;
-    	}
+        Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsMDP.isMDP(semantics)) {
+            return false;
+        }
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objMulti = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
         if (!(objMulti.getScheduler() instanceof SchedulerSimpleMultiobjectiveJava)) {
-        	return false;
+            return false;
         }
         return true;
     }
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	multiobjectiveScheduled();
+        prepareIterGraph();
+        multiobjectiveScheduled();
         prepareResultValues();
     }
 
@@ -99,8 +99,8 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     }
 
     private void prepareResultValues() {
-    	this.outputValues = inputValues;
-    	objective.setResult(outputValues);
+        this.outputValues = inputValues;
+        objective.setResult(outputValues);
     }
 
     private void multiobjectiveScheduled() {
@@ -123,7 +123,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     }
 
     /* auxiliary methods */
-    
+
     private static void compDiff(double[] distance, ValueAlgebra previous,
             Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
@@ -138,11 +138,11 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         }
         distance[0] = Math.max(distance[0], thisDistance);
     }
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -153,13 +153,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         }
         return true;
     }
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* implementation of iteration algorithms */    
-    
+
     private void mdpMultiobjectivescheduledJacobiJava(
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
@@ -218,7 +218,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         } while (distance[0] > tolerance / 2);
         values.set(presValues);
     }
-    
+
     private void mdpMultiobjectivescheduledGaussseidelJava(
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
@@ -271,8 +271,8 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             }
         } while (distance[0] > tolerance / 2);
     }
-    
+
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

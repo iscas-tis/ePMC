@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -26,10 +26,10 @@ public interface TypeWeightTransition extends TypeAlgebra {
     static TypeWeightTransition get() {
         return ContextValue.get().getType(TypeWeightTransition.class);
     }
-    
+
     static void set(TypeWeightTransition type) {
         assert type != null;
         ContextValue.get().setType(TypeWeightTransition.class,
-        		ContextValue.get().makeUnique(type));
+                ContextValue.get().makeUnique(type));
     }
 }

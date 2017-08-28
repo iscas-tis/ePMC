@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms;
 
@@ -26,7 +26,7 @@ public final class UtilAlgorithms {
     public static ComponentsExplicit newComponentsExplicit() {
         return new ComponentsExplicit();
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

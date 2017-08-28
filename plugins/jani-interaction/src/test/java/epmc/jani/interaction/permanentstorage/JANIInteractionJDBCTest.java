@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.permanentstorage;
 
@@ -39,7 +39,7 @@ import epmc.plugin.OptionsPlugin;
 
 public final class JANIInteractionJDBCTest {
     private final static String PLUGIN_DIR_JI = System.getProperty("user.dir") + "/../iscasmc-jani-interaction/target/classes/";
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -49,7 +49,7 @@ public final class JANIInteractionJDBCTest {
     public static void initialise() {
         prepare();
     }
-    
+
     /**
      * Prepare options including loading JANI plugin.
      * 
@@ -63,28 +63,28 @@ public final class JANIInteractionJDBCTest {
         return options;
     }
 
-	@Test
-	public void fileTest() throws MalformedURLException {
-		File file = new File("asdf.jar");
-		System.out.println(file.getAbsolutePath());
-		System.out.println(file.toURI().toURL());
-	}
-	
-	@Test
-	public void connectionTest() {
-		Options options = prepareJANIInteractionJDBCOptions();
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
-		
-		Database permanentStorage = new Database();
-		UserManager userManager = new UserManager(permanentStorage);
-		System.out.println(userManager.checkLogin("fdsa", "asdf"));
-		System.out.println(userManager.createUser("fdsa", "asdf"));
-		System.out.println(userManager.checkLogin("fdsa", "asdf"));
-		OptionsManager optionsManager = new OptionsManager(permanentStorage);
-		optionsManager.write(1, false, options);
-	}
+    @Test
+    public void fileTest() throws MalformedURLException {
+        File file = new File("asdf.jar");
+        System.out.println(file.getAbsolutePath());
+        System.out.println(file.toURI().toURL());
+    }
+
+    @Test
+    public void connectionTest() {
+        Options options = prepareJANIInteractionJDBCOptions();
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
+
+        Database permanentStorage = new Database();
+        UserManager userManager = new UserManager(permanentStorage);
+        System.out.println(userManager.checkLogin("fdsa", "asdf"));
+        System.out.println(userManager.createUser("fdsa", "asdf"));
+        System.out.println(userManager.checkLogin("fdsa", "asdf"));
+        OptionsManager optionsManager = new OptionsManager(permanentStorage);
+        optionsManager.write(1, false, options);
+    }
 }

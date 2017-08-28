@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.jdd;
 
@@ -41,24 +41,24 @@ public class AfterOptionsCreationJDD implements AfterOptionsCreation {
     public void process(Options options) {
         assert options != null;
         Category category = options.addCategory()
-        		.setBundleName(OptionsDDJDD.OPTIONS_DD_JDD)
-        		.setIdentifier(OptionsDDJDD.DD_JDD_CATEGORY)
-        		.setParent(OptionsDD.DD_CATEGORY)
-        		.build();
+                .setBundleName(OptionsDDJDD.OPTIONS_DD_JDD)
+                .setIdentifier(OptionsDDJDD.DD_JDD_CATEGORY)
+                .setParent(OptionsDD.DD_CATEGORY)
+                .build();
         Map<String,Class<? extends LibraryDD>> ddLibraryClasses = options.get(OptionsDD.DD_LIBRARY_CLASS);
         assert ddLibraryClasses != null;
         ddLibraryClasses.put(LibraryDDJDD.IDENTIFIER, LibraryDDJDD.class);
         OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         options.addOption().setBundleName(OptionsDDJDD.OPTIONS_DD_JDD)
-        	.setIdentifier(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE)
-        	.setType(typeInteger).setDefault("262144")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE)
+        .setType(typeInteger).setDefault("262144")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsDDJDD.OPTIONS_DD_JDD)
-        	.setIdentifier(OptionsDDJDD.DD_JDD_INIT_NODES)
-        	.setType(typeInteger).setDefault("1000000")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDJDD.DD_JDD_INIT_NODES)
+        .setType(typeInteger).setDefault("1000000")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
     }
 
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -56,9 +56,9 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
 
     public StateMapExplicit(StateSetExplicit states,
             ValueArray valuesExplicit) {
-    	this(states, valuesExplicit, null);
+        this(states, valuesExplicit, null);
     }
-    
+
     // note: consumes arguments states, valuesExplicit, and valuesDD
     public StateMapExplicit(StateSetExplicit states,
             ValueArray valuesExplicit, Scheduler scheduler) {
@@ -76,7 +76,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         refs++;
         return this;
     }
-   
+
     @Override
     public void close() {
         if (closed()) {
@@ -88,13 +88,13 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
         states.close();
     }
-    
+
     public Value getValuesExplicit() {
         assert !closed();
         assert valuesExplicit != null;
         return valuesExplicit;
     }
-    
+
     public void getExplicitIthValue(Value value, int i) {
         assert !closed();
         assert value != null;
@@ -103,7 +103,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert i < valuesExplicit.size();
         valuesExplicit.get(value, i);
     }
-    
+
     public int getExplicitIthState(int i) {
         assert !closed();
         assert i >= 0;
@@ -122,7 +122,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert !closed();
         return type;
     }
-    
+
     @Override
     public StateSet getStateSet() {
         return states;
@@ -153,7 +153,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
         return new StateMapExplicit((StateSetExplicit) to.clone(), resultValues);
     }
-    
+
     @Override
     public String toString() {
         if (closed()) {
@@ -173,10 +173,10 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         builder.append("}");
         return builder.toString();
     }
-    
+
     @Override
     public StateMap apply(Operator identifier, StateMap operand)
-            {
+    {
         assert !closed();
         assert identifier != null;
         assert operand != null;
@@ -219,7 +219,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
         return result;
     }
-    
+
     @Override
     public boolean isConstant() {
         assert !closed();
@@ -235,7 +235,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
         return true;
     }
-    
+
     public void setExplicitIthValue(Value value, int i) {
         assert !closed();
         assert value != null;
@@ -244,20 +244,20 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert i < valuesExplicit.size();
         valuesExplicit.set(value, i);
     }
-    
+
     private boolean closed() {
         return refs == 0;
     }
 
     @Override
     public Value applyOver(Operator identifier, StateSet over)
-            {
+    {
         assert identifier != null;
         assert over != null;
         assert over instanceof StateSetExplicit;
         StateSetExplicit overExplicit = (StateSetExplicit) over;
         Value result = null;
-        
+
         Value[] values = new Value[2];
         for (int stateNr = 0; stateNr < states.size(); stateNr++) {
             int state = states.getExplicitIthState(stateNr);
@@ -271,7 +271,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                     valuesExplicit.get(values[1], stateNr);
                     Type[] types = new Type[values.length];
                     for (int i = 0; i < values.length; i++) {
-                    	types[i] = values[i].getType();
+                        types[i] = values[i].getType();
                     }
                     OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
                     evaluator.apply(result, values);
@@ -280,25 +280,25 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
         return result;
     }
-    
+
     @Override
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
-    
+
     private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
-    
+
     @Override
     public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
         to.set(result);
     }
-    
+
     @Override
     public Value subsumeResult(StateSet initialStates) {
         boolean takeFirstInitState = initialStates.size() == 1;
@@ -313,7 +313,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                 allTrue = isAllTrue(initialStates);
                 return allTrue
                         ? TypeBoolean.get().getTrue()
-                        : TypeBoolean.get().getFalse();
+                                : TypeBoolean.get().getFalse();
             } else if (hasMinAndMaxElements(initialStates)) {
                 Value range = TypeInterval.get().newValue();
                 getRange(range, initialStates);
@@ -324,18 +324,18 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
             }
         }
     }
-    
+
     private boolean hasMinAndMaxElements(StateSet of) {
         if (TypeReal.isReal(getType())) {
             return true;
         }
         getRange(TypeInterval.get().newValue(),
-        		getStateSet());
+                getStateSet());
         return true;
     }
-    
+
     @Override
     public Scheduler getScheduler() {
-    	return scheduler;
+        return scheduler;
     }
 }

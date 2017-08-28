@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -29,7 +29,7 @@ final class BlocksTodoSynchronised implements BlocksTodo {
     private final static int PRESENT = 1;
     private final static int CHECKED_OUT = 2;
     private final static int PENDING = 3;
-    
+
     private final List<int[]> blocks;
     private final PriorityQueue<TodoElem> q;
     private final byte[] todoBs;
@@ -40,7 +40,7 @@ final class BlocksTodoSynchronised implements BlocksTodo {
         this.blocks = blocks;
         this.todoBs = new byte[maxNumBlocks];
     }
-    
+
     @Override
     public void add(int block) {
         synchronized (this) {
@@ -53,7 +53,7 @@ final class BlocksTodoSynchronised implements BlocksTodo {
             }
         }
     }
-    
+
     @Override
     public int popNext() {
         synchronized (this) {
@@ -74,7 +74,7 @@ final class BlocksTodoSynchronised implements BlocksTodo {
             return e.getBlockInt();
         }
     }
-    
+
     @Override
     public String toString() {
         return todoBs.toString();

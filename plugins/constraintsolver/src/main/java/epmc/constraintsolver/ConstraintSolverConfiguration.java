@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
@@ -38,19 +38,19 @@ public class ConstraintSolverConfiguration {
 
     public ConstraintSolverConfiguration() {
     }
-    
+
     public void requireFeature(Feature feature) {
-    	assert feature != null;
-    	features.add(feature);
+        assert feature != null;
+        features.add(feature);
     }
-    
+
     public ConstraintSolver newProblem()
-            {
-    	return buildSolver(features);
+    {
+        return buildSolver(features);
     }
-    
+
     private ConstraintSolver buildSolver(Set<Feature> features) {
-    	Options options = Options.get();
+        Options options = Options.get();
         Map<String,Class<? extends ConstraintSolver>> lumpersExplicit = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
         Collection<String> lumperExplicitt = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
@@ -60,11 +60,11 @@ public class ConstraintSolverConfiguration {
                 continue;
             }
             ConstraintSolver solver = Util.getInstance(solverClass);
-			for (Feature feature : features) {
-	            solver.requireFeature(feature);
+            for (Feature feature : features) {
+                solver.requireFeature(feature);
             }
             if (solver.canHandle()) {
-            	solver.build();
+                solver.build();
                 return solver;
             }
         }
@@ -74,7 +74,7 @@ public class ConstraintSolverConfiguration {
     public ContextDD getContextDD() {
         return ContextDD.get();
     }
-    
+
     public ExpressionToDD getExpressionToDD() {
         return expressionToDD;
     }

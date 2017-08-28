@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -56,14 +56,14 @@ import epmc.value.Value;
  */
 public interface Explorer extends LowLevel {
     /* methods to be implemented by implementing classes. */
-    
+
     /**
      * Get the initial nodes of the explorer.
      * 
      * @return initial nodes of the explorer
      */
     Collection<? extends ExplorerNode> getInitialNodes();
-    
+
     /**
      * <p>
      * Queries a given node.
@@ -89,7 +89,7 @@ public interface Explorer extends LowLevel {
      * @param node node to query
      */
     void queryNode(ExplorerNode node);
-    
+
     /**
      * Obtain number of successor nodes.
      * The number refers to the node on which
@@ -100,7 +100,7 @@ public interface Explorer extends LowLevel {
      * @return number of successor nodes
      */
     int getNumSuccessors();
-    
+
     /**
      * Obtain successor node with the given number.
      * The result refers to the node on which {@link #queryNode(ExplorerNode)}
@@ -126,7 +126,7 @@ public interface Explorer extends LowLevel {
      * @see CommonProperties
      */
     Value getGraphProperty(Object property);
-    
+
     /**
      * Obtain node property with given identifier.
      * The method will return the given node property or {@code null} if there
@@ -175,8 +175,8 @@ public interface Explorer extends LowLevel {
      * @return maximal number of bits needed to store a node of this explorer
      */
     int getNumNodeBits();
-    
-    
+
+
     /* default methods. */
 
     /**
@@ -231,28 +231,28 @@ public interface Explorer extends LowLevel {
         assert getEdgeProperty(property) != null : property;
         return getEdgeProperty(property).getType();
     }
-    
+
     @Override
     default StateSet newInitialStateSet() {
         return new StateSetExplorer<>(this, getInitialNodes());
     }
-    
+
     @Override
     default Type getType(Expression expression) {
-    	assert expression != null;
-    	Type type = null;
-    	type = getGraphPropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	type = getNodePropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	type = getEdgePropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	return null;
+        assert expression != null;
+        Type type = null;
+        type = getGraphPropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        type = getNodePropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        type = getEdgePropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        return null;
     }
 }

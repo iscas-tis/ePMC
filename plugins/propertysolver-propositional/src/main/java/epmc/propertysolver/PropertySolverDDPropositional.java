@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -45,24 +45,24 @@ public final class PropertySolverDDPropositional implements PropertySolver {
     public final static String IDENTIFIER = "propositional-dd";
     private ModelChecker modelChecker;
     private ExpressionToDD expressionToDD;
-	private Expression property;
-	private StateSet forStates;
-    
+    private Expression property;
+    private StateSet forStates;
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
     @Override
     public StateMap solve() {
@@ -70,12 +70,12 @@ public final class PropertySolverDDPropositional implements PropertySolver {
         assert forStates != null;
         DD value;
         if (modelChecker.getEngine() instanceof EngineDD) {
-        	GraphDD graphDD = modelChecker.getLowLevel();
+            GraphDD graphDD = modelChecker.getLowLevel();
             this.expressionToDD = graphDD.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
-        
+
         if (property instanceof ExpressionLiteral) {
-        	ExpressionLiteral propertyLiteral = (ExpressionLiteral) property;
+            ExpressionLiteral propertyLiteral = (ExpressionLiteral) property;
             value = (ContextDD.get()).newConstant(propertyLiteral.getValue());
         } else {
             value = expressionToDD.translate(property);
@@ -83,24 +83,24 @@ public final class PropertySolverDDPropositional implements PropertySolver {
         StateMap result = new StateMapDD((StateSetDD) forStates.clone(), value);
         return result;
     }
-    
+
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
     }
 
     @Override

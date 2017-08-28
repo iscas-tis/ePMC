@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.plugin;
 
@@ -62,21 +62,21 @@ import epmc.value.operatorevaluator.OperatorEvaluatorSqrt;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtract;
 
 public final class BeforeModelCreationValueStandard implements BeforeModelCreation {
-	private final static String IDENTIFIER = "before-model-creation-value-standard";
+    private final static String IDENTIFIER = "before-model-creation-value-standard";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
 
-	@Override
-	public void process() {
-		addOperators();
-		addTypes();
-	}
+    @Override
+    public void process() {
+        addOperators();
+        addTypes();
+    }
 
-	private static void addOperators() {        
+    private static void addOperators() {        
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAdd.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInverse.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAnd.INSTANCE);
@@ -111,13 +111,13 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
     }
 
     private static void addTypes() {
-    	TypeDouble typeDouble = new TypeDouble(null, null);
-    	TypeWeight.set(new TypeDouble(null, null));
-    	TypeWeightTransition.set(new TypeDouble(null, null));
-    	TypeReal.set(typeDouble);
-    	TypeInterval.set(new TypeInterval());
-    	TypeBoolean.set(new TypeBoolean());
-    	TypeInteger.set(new TypeInteger());
-    	TypeDouble.set(typeDouble);
-	}
+        TypeDouble typeDouble = new TypeDouble(null, null);
+        TypeWeight.set(new TypeDouble(null, null));
+        TypeWeightTransition.set(new TypeDouble(null, null));
+        TypeReal.set(typeDouble);
+        TypeInterval.set(new TypeInterval());
+        TypeBoolean.set(new TypeBoolean());
+        TypeInteger.set(new TypeInteger());
+        TypeDouble.set(typeDouble);
+    }
 }

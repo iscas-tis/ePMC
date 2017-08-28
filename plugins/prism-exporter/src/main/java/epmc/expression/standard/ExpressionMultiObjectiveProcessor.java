@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,58 +26,58 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionMultiObjective multiObjective = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionMultiObjective; 
-		
-		multiObjective = (ExpressionMultiObjective) obj;
-		return this;
-	}
+    private ExpressionMultiObjective multiObjective = null;
 
-	@Override
-	public String toPRISM() {
-		assert multiObjective != null;
-		
-		StringBuilder prism = new StringBuilder();
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionMultiObjective; 
 
-		prism.append("multi(");
+        multiObjective = (ExpressionMultiObjective) obj;
+        return this;
+    }
 
-		boolean remaining = false;
-		for (Expression operand : multiObjective.getOperands()) {
-			if (remaining) {
-				prism.append(", ");
-			} else {
-				remaining = true;
-			}
-			prism.append(ProcessorRegistrar.getProcessor(operand).toPRISM());
-		}
-		prism.append(")");
-		
-		return prism.toString();
-	}
-	@Override
-	public void validateTransientVariables() {
-		assert multiObjective != null;
-		
-		for (Expression child : multiObjective.getOperands()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert multiObjective != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : multiObjective.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+    @Override
+    public String toPRISM() {
+        assert multiObjective != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        prism.append("multi(");
+
+        boolean remaining = false;
+        for (Expression operand : multiObjective.getOperands()) {
+            if (remaining) {
+                prism.append(", ");
+            } else {
+                remaining = true;
+            }
+            prism.append(ProcessorRegistrar.getProcessor(operand).toPRISM());
+        }
+        prism.append(")");
+
+        return prism.toString();
+    }
+    @Override
+    public void validateTransientVariables() {
+        assert multiObjective != null;
+
+        for (Expression child : multiObjective.getOperands()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert multiObjective != null;
+
+        boolean usesTransient = false;
+        for (Expression child : multiObjective.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

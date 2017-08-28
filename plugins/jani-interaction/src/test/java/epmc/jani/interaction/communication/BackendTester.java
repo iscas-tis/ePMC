@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication;
 
@@ -31,58 +31,58 @@ import epmc.jani.interaction.communication.BackendFeedback;
 import epmc.options.Options;
 
 final class BackendTester {
-	private final class TestBackendFeedback implements BackendFeedback {
-		@Override
-		public void send(Object client, String message) {
-			assert client != null;
-			assert message != null;
-			assert client == this;
-			pending.add(message);
-		}
+    private final class TestBackendFeedback implements BackendFeedback {
+        @Override
+        public void send(Object client, String message) {
+            assert client != null;
+            assert message != null;
+            assert client == this;
+            pending.add(message);
+        }
 
-		@Override
-		public void logOff(Object who) {
-			assert who != null;
-			alive = false;
-		}
-		
-	}
-	private final TestBackendFeedback feedback = new TestBackendFeedback();
-	private final Backend backend;
-	private final Deque<String> pending = new ArrayDeque<>();
-	private boolean alive = true;
-	
-	BackendTester(Options options) {
-		assert options != null;
-		backend = new Backend(feedback);
-	}
-	
-	void send(JsonObjectBuilder request) {
-		assert request != null;
-		send(request.build());
-	}
+        @Override
+        public void logOff(Object who) {
+            assert who != null;
+            alive = false;
+        }
 
-	
-	void send(JsonValue request) {
-		assert request != null;
-		send(request.toString());
-	}
+    }
+    private final TestBackendFeedback feedback = new TestBackendFeedback();
+    private final Backend backend;
+    private final Deque<String> pending = new ArrayDeque<>();
+    private boolean alive = true;
 
-	void send(String message) {
-		assert message != null;
-		backend.handle(backend, message);
-	}
-	
-	int size() {
-		return pending.size();
-	}
-	
-	String popPending() {
-		return pending.pop();
-	}
-	
-	boolean alive() {
-		return alive;
-	}
+    BackendTester(Options options) {
+        assert options != null;
+        backend = new Backend(feedback);
+    }
+
+    void send(JsonObjectBuilder request) {
+        assert request != null;
+        send(request.build());
+    }
+
+
+    void send(JsonValue request) {
+        assert request != null;
+        send(request.toString());
+    }
+
+    void send(String message) {
+        assert message != null;
+        backend.handle(backend, message);
+    }
+
+    int size() {
+        return pending.size();
+    }
+
+    String popPending() {
+        return pending.pop();
+    }
+
+    boolean alive() {
+        return alive;
+    }
 
 }

@@ -16,29 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Value;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange {
-	public static boolean isInterval(Value value) {
-		return value instanceof ValueInterval;
-	}
-	
-	public static ValueInterval asInterval(Value value) {
-		if (isInterval(value)) {
-			return (ValueInterval) value;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isInterval(Value value) {
+        return value instanceof ValueInterval;
+    }
+
+    public static ValueInterval asInterval(Value value) {
+        if (isInterval(value)) {
+            return (ValueInterval) value;
+        } else {
+            return null;
+        }
+    }
+
     private final static String COMMA = ",";
     private final static String LBRACK = "[";
     private final static String RBRACK = "]";
-    
+
     private final ValueReal lower;
     private final ValueReal upper;
     private final TypeInterval type;
@@ -55,7 +55,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
 
     ValueInterval(TypeInterval type) {
         this(type, UtilValue.clone(TypeReal.get().getZero()),
-        		UtilValue.clone(TypeReal.get().getZero()));
+                UtilValue.clone(TypeReal.get().getZero()));
     }
 
     @Override
@@ -64,15 +64,15 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         lower.setImmutable();
         upper.setImmutable();
     }
-    
+
     public ValueReal getIntervalLower() {
         return lower;
     }
-    
+
     public ValueReal getIntervalUpper() {
         return upper;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ValueInterval)) {
@@ -102,22 +102,22 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         assert operand != null;
         assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
         if (isInterval(operand)) {
-        	ValueInterval opIv = ValueInterval.asInterval(operand);
+            ValueInterval opIv = ValueInterval.asInterval(operand);
             getIntervalLower().set(opIv.getIntervalLower());
             getIntervalUpper().set(opIv.getIntervalUpper());
         } else {
             getIntervalLower().set(operand);
             getIntervalUpper().set(operand);
         }
-        
+
     }
-    
+
     @Override
     public boolean isGe(Value operand) {
         assert operand != null;
         assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
         if (isInterval(operand)) {
-        	ValueInterval opIv = ValueInterval.asInterval(operand);
+            ValueInterval opIv = ValueInterval.asInterval(operand);
             if (!getIntervalLower().isGe(opIv.getIntervalLower())) {
                 return false;
             }
@@ -134,7 +134,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         }
         return true;
     }
-    
+
     @Override
     public void set(int value) {
         lower.set(value);
@@ -160,9 +160,9 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         } else {
             assert false;            
         }
-        
+
     }
-    
+
     @Override
     public boolean isZero() {
         return lower.isZero() && upper.isZero();
@@ -170,41 +170,41 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
 
     @Override
     public boolean isOne() {
-    	return lower.isOne() && upper.isOne();
+        return lower.isOne() && upper.isOne();
     }
 
     @Override
     public boolean isPosInf() {
         return false;
     }
-    
+
     @Override
     public boolean checkRange() {
         return ValueRange.checkRange(lower) && ValueRange.checkRange(upper) && lower.isLe(upper);
     }
-    
+
     @Override
     public double distance(Value other) {
         assert other != null;
         if (isInterval(other)) {
-        	ValueInterval otherInterval = (ValueInterval) other;
-        	double lowerDistance = lower.distance(otherInterval.getIntervalLower());
-        	double upperDistance = upper.distance(otherInterval.getIntervalUpper());
-        	return Math.max(lowerDistance, upperDistance);
+            ValueInterval otherInterval = (ValueInterval) other;
+            double lowerDistance = lower.distance(otherInterval.getIntervalLower());
+            double upperDistance = upper.distance(otherInterval.getIntervalUpper());
+            return Math.max(lowerDistance, upperDistance);
         } else if (ValueInteger.isInteger(other)) {
-        	double lowerDistance = lower.distance(other);
-        	double upperDistance = upper.distance(other);
-        	return Math.max(lowerDistance, upperDistance);        	
+            double lowerDistance = lower.distance(other);
+            double upperDistance = upper.distance(other);
+            return Math.max(lowerDistance, upperDistance);        	
         } else if (ValueReal.isReal(other)) {
-        	double lowerDistance = lower.distance(other);
-        	double upperDistance = upper.distance(other);
-        	return Math.max(lowerDistance, upperDistance);        	
+            double lowerDistance = lower.distance(other);
+            double upperDistance = upper.distance(other);
+            return Math.max(lowerDistance, upperDistance);        	
         } else {
-        	assert false;
-        	return Double.NaN;
+            assert false;
+            return Double.NaN;
         }
     }
-    
+
     @Override
     public int compareTo(Value other) {
         assert !isImmutable();
@@ -218,7 +218,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         int upperCmp = upper.compareTo(otherInterval.getIntervalUpper());
         return upperCmp;
     }
-    
+
     @Override
     public TypeInterval getType() {
         return type;
@@ -228,34 +228,34 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     public boolean isImmutable() {
         return immutable;
     }
-    
+
     @Override
     public void add(Value operand1, Value operand2) {
         lower.add(getLower(operand1), getLower(operand2));
         upper.add(getUpper(operand1), getUpper(operand2));
     }
-    
+
     @Override
     public void subtract(Value operand1, Value operand2)
-            {
+    {
         lower.subtract(getLower(operand1), getLower(operand2));
         upper.subtract(getUpper(operand1), getUpper(operand2));
     }
-    
+
     @Override
     public void multiply(Value operand1, Value operand2)
-            {
+    {
         lower.multiply(getLower(operand1), getLower(operand2));
         upper.multiply(getUpper(operand1), getUpper(operand2));
     }
-    
+
     @Override
     public void divide(Value operand1, Value operand2)
-            {
+    {
         lower.divide(getLower(operand1), getLower(operand2));
         upper.divide(getUpper(operand1), getUpper(operand2));
     }
-    
+
     private Value getLower(Value operand) {
         if (isInterval(operand)) {
             return ValueInterval.asInterval(operand).getIntervalLower();
@@ -263,7 +263,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
             return operand;
         }
     }
-    
+
     private Value getUpper(Value operand) {
         if (isInterval(operand)) {
             return ValueInterval.asInterval(operand).getIntervalUpper();
@@ -272,20 +272,20 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
         }
     }
 
-	@Override
-	public void addInverse(Value operand) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void addInverse(Value operand) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    }
 
-	@Override
-	public double norm() {
-		return Math.max(lower.norm(), upper.norm());
-	}
+    @Override
+    public boolean isNegInf() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public double norm() {
+        return Math.max(lower.norm(), upper.norm());
+    }
 }

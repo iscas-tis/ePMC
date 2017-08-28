@@ -16,25 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Value;
 
 public interface ValueReal extends ValueNumber {
-	static boolean isReal(Value value) {
-		return TypeReal.isReal(value.getType());
-	}
-	
-	static ValueReal asReal(Value value) {
-		if (isReal(value)) {
-			return (ValueReal) value;
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	TypeReal getType();
+    static boolean isReal(Value value) {
+        return TypeReal.isReal(value.getType());
+    }
+
+    static ValueReal asReal(Value value) {
+        if (isReal(value)) {
+            return (ValueReal) value;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    TypeReal getType();
 }

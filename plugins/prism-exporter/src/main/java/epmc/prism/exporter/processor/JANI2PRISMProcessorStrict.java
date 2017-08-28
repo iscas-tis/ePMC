@@ -16,41 +16,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.processor;
 
 import epmc.jani.model.Automaton;
 
 public interface JANI2PRISMProcessorStrict {	
-	default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; }
+    default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; }
 
-	default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; }
+    default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; }
 
-	default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; }
-	
-	JANI2PRISMProcessorStrict setElement(Object obj);
+    default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; }
 
-	/**
-	 * Generate a PRISM representation of the component.
-	 * @return the PRISM representation
-	 */
-	String toPRISM();
-	
-	/**
-	 * Explore the JANI model and identify the variables that are assigned 
-	 * in some edge of the automata labelled with a synchronising action. 
-	 */
-	default void findAssignedVariables() {}
-	
-	/**
-	 * Explore the JANI model and check whether the use of transient variables is compatible with PRISM 
-	 */
-	void validateTransientVariables();
-	
-	/**
-	 * Explore the JANI model and check whether a transient variable is used
-	 * @return whether a transient variable is used
-	 */
-	boolean usesTransientVariables();
+    JANI2PRISMProcessorStrict setElement(Object obj);
+
+    /**
+     * Generate a PRISM representation of the component.
+     * @return the PRISM representation
+     */
+    String toPRISM();
+
+    /**
+     * Explore the JANI model and identify the variables that are assigned 
+     * in some edge of the automata labelled with a synchronising action. 
+     */
+    default void findAssignedVariables() {}
+
+    /**
+     * Explore the JANI model and check whether the use of transient variables is compatible with PRISM 
+     */
+    void validateTransientVariables();
+
+    /**
+     * Explore the JANI model and check whether a transient variable is used
+     * @return whether a transient variable is used
+     */
+    boolean usesTransientVariables();
 }

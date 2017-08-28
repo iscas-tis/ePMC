@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.smtlib;
 
@@ -45,7 +45,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 
 public class SMTLibTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -90,7 +90,7 @@ public class SMTLibTest {
         assertEquals(ConstraintSolverResult.SAT, solver.solve());
         /* multiple solutions possible, don't test result values */
     }
-    
+
     @Test
     public void andreaTest() {
         Options options = prepareISat3Options();
@@ -107,7 +107,7 @@ public class SMTLibTest {
         /*
         commandLine.add("/Users/emhahn/yices.sh");
         commandLine.add("{0}");
-        */
+         */
         options.set(OptionsSMTLib.SMTLIB_COMMAND_LINE, commandLine);
         solver.addVariable("s0", typeReal, newValue(typeReal, 1), newValue(typeInteger, 1));
         solver.addVariable("s1", typeReal, newValue(typeReal, 0), newValue(typeInteger, 1));
@@ -121,7 +121,7 @@ public class SMTLibTest {
         assertEquals("0", solver.getResultVariablesValues()[2], 1E-100);
         assertEquals("2", solver.getResultVariablesValues()[3], 1E-100);
     }
-    
+
     @Test
     public void fractionTest() {
         Options options = prepareISat3Options();
@@ -137,7 +137,7 @@ public class SMTLibTest {
         /*
         commandLine.add("/Users/emhahn/yices.sh");
         commandLine.add("{0}");
-        */
+         */
         options.set(OptionsSMTLib.SMTLIB_COMMAND_LINE, commandLine);
         solver.addVariable("s0", typeReal, newValue(typeReal, 1), newValue(typeReal, 1));
         solver.addVariable("s1", typeReal, newValue(typeReal, 0), newValue(typeReal, 1));
@@ -148,5 +148,5 @@ public class SMTLibTest {
         assertEquals(ConstraintSolverResult.SAT, solver.solve());
         System.out.println(Arrays.toString(solver.getResultVariablesValues()));
     }
-    
+
 }

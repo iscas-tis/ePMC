@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.smg;
 
@@ -39,200 +39,200 @@ import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
 
 public final class PlayersJANI implements JANINode, List<PlayerJANI> {
-	
-	private boolean initialized = false;
-	
-	private ModelJANI model;
-	private final List<PlayerJANI> players = new ArrayList<>();
-	private Actions validActions;
-	private Automata validAutomata;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	public void setValidActions(Actions actions) {
-		this.validActions = actions;
-	}
+    private boolean initialized = false;
 
-	public void setValidAutomata(Automata automata) {
-		this.validAutomata = automata;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert value != null;
-		initialized = false;
-		players.clear();
-		JsonArray array = UtilJSON.toArrayObject(value);
-		for (JsonValue playerValue: array) {
-			PlayerJANI player = new PlayerJANI();
-			player.setModel(model);
-			player.setValidActions(validActions);
-			player.setValidAutomata(validAutomata);
-			player.parse(playerValue);
-			players.add(player);
-		}
-		initialized = true;
-		return this;
-	}
+    private ModelJANI model;
+    private final List<PlayerJANI> players = new ArrayList<>();
+    private Actions validActions;
+    private Automata validAutomata;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (PlayerJANI player : players) {
-			result.add(player.generate());
-		}
-		return result.build();
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public Iterator<PlayerJANI> iterator() {
-		assert players != null;
-		return players.iterator();
-	}
+    public void setValidActions(Actions actions) {
+        this.validActions = actions;
+    }
 
-	@Override
-	public int size() {
-		assert players != null;
-		return players.size();
-	}
+    public void setValidAutomata(Automata automata) {
+        this.validAutomata = automata;
+    }
 
-	@Override
-	public boolean isEmpty() {
-		assert players != null;
-		return players.isEmpty();
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert value != null;
+        initialized = false;
+        players.clear();
+        JsonArray array = UtilJSON.toArrayObject(value);
+        for (JsonValue playerValue: array) {
+            PlayerJANI player = new PlayerJANI();
+            player.setModel(model);
+            player.setValidActions(validActions);
+            player.setValidAutomata(validAutomata);
+            player.parse(playerValue);
+            players.add(player);
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		assert players != null;
-		return players.contains(o);
-	}
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (PlayerJANI player : players) {
+            result.add(player.generate());
+        }
+        return result.build();
+    }
 
-	@Override
-	public Object[] toArray() {
-		assert players != null;
-		return players.toArray();
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 
-	@Override
-	public <T> T[] toArray(T[] a) {
-		assert players != null;
-		return players.toArray(a);
-	}
+    @Override
+    public Iterator<PlayerJANI> iterator() {
+        assert players != null;
+        return players.iterator();
+    }
 
-	@Override
-	public boolean add(PlayerJANI e) {
-		assert players != null;
-		return players.add(e);
-	}
+    @Override
+    public int size() {
+        assert players != null;
+        return players.size();
+    }
 
-	@Override
-	public boolean remove(Object o) {
-		assert players != null;
-		return players.remove(o);
-	}
+    @Override
+    public boolean isEmpty() {
+        assert players != null;
+        return players.isEmpty();
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		assert players != null;
-		return players.containsAll(c);
-	}
+    @Override
+    public boolean contains(Object o) {
+        assert players != null;
+        return players.contains(o);
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends PlayerJANI> c) {
-		assert players != null;
-		return players.addAll(c);
-	}
+    @Override
+    public Object[] toArray() {
+        assert players != null;
+        return players.toArray();
+    }
 
-	@Override
-	public boolean addAll(int index, Collection<? extends PlayerJANI> c) {
-		assert players != null;
-		return players.addAll(index, c);
-	}
+    @Override
+    public <T> T[] toArray(T[] a) {
+        assert players != null;
+        return players.toArray(a);
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		assert players != null;
-		return players.removeAll(c);
-	}
+    @Override
+    public boolean add(PlayerJANI e) {
+        assert players != null;
+        return players.add(e);
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		assert players != null;
-		return players.retainAll(c);
-	}
+    @Override
+    public boolean remove(Object o) {
+        assert players != null;
+        return players.remove(o);
+    }
 
-	@Override
-	public void clear() {
-		assert players != null;
-		players.clear();
-	}
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        assert players != null;
+        return players.containsAll(c);
+    }
 
-	@Override
-	public PlayerJANI get(int index) {
-		assert players != null;
-		return players.get(index);
-	}
+    @Override
+    public boolean addAll(Collection<? extends PlayerJANI> c) {
+        assert players != null;
+        return players.addAll(c);
+    }
 
-	@Override
-	public PlayerJANI set(int index, PlayerJANI element) {
-		assert players != null;
-		return players.set(index, element);
-	}
+    @Override
+    public boolean addAll(int index, Collection<? extends PlayerJANI> c) {
+        assert players != null;
+        return players.addAll(index, c);
+    }
 
-	@Override
-	public void add(int index, PlayerJANI element) {
-		assert players != null;
-		players.add(index, element);
-	}
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        assert players != null;
+        return players.removeAll(c);
+    }
 
-	@Override
-	public PlayerJANI remove(int index) {
-		assert players != null;
-		return players.remove(index);
-	}
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        assert players != null;
+        return players.retainAll(c);
+    }
 
-	@Override
-	public int indexOf(Object o) {
-		assert players != null;
-		return players.indexOf(o);
-	}
+    @Override
+    public void clear() {
+        assert players != null;
+        players.clear();
+    }
 
-	@Override
-	public int lastIndexOf(Object o) {
-		assert players != null;
-		return players.lastIndexOf(o);
-	}
+    @Override
+    public PlayerJANI get(int index) {
+        assert players != null;
+        return players.get(index);
+    }
 
-	@Override
-	public ListIterator<PlayerJANI> listIterator() {
-		assert players != null;
-		return players.listIterator();
-	}
+    @Override
+    public PlayerJANI set(int index, PlayerJANI element) {
+        assert players != null;
+        return players.set(index, element);
+    }
 
-	@Override
-	public ListIterator<PlayerJANI> listIterator(int index) {
-		assert players != null;
-		return players.listIterator(index);
-	}
+    @Override
+    public void add(int index, PlayerJANI element) {
+        assert players != null;
+        players.add(index, element);
+    }
 
-	@Override
-	public List<PlayerJANI> subList(int fromIndex, int toIndex) {
-		assert players != null;
-		return players.subList(fromIndex, toIndex);
-	}
+    @Override
+    public PlayerJANI remove(int index) {
+        assert players != null;
+        return players.remove(index);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        assert players != null;
+        return players.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        assert players != null;
+        return players.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<PlayerJANI> listIterator() {
+        assert players != null;
+        return players.listIterator();
+    }
+
+    @Override
+    public ListIterator<PlayerJANI> listIterator(int index) {
+        assert players != null;
+        return players.listIterator(index);
+    }
+
+    @Override
+    public List<PlayerJANI> subList(int fromIndex, int toIndex) {
+        assert players != null;
+        return players.subList(fromIndex, toIndex);
+    }
 }

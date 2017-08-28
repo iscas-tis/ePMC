@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
@@ -26,12 +26,12 @@ import epmc.automaton.AutomatonRabinLabel;
 import epmc.util.BitSet;
 
 final class AutomatonScheweLabeling implements AutomatonLabelUtil, AutomatonRabinLabel, AutomatonParityLabel {
-	/** Space containing a single space. */
-	private final static String SPACE = " ";
-	
-	/** Automaton to which this label belongs. */
-	private AutomatonSchewe automaton;
-	/** Accepting states, if used as Rabin automaton label. */
+    /** Space containing a single space. */
+    private final static String SPACE = " ";
+
+    /** Automaton to which this label belongs. */
+    private AutomatonSchewe automaton;
+    /** Accepting states, if used as Rabin automaton label. */
     private final BitSet accepting;
     /** Stable states, if used as Rabin automaton label. */
     private final BitSet stable;
@@ -39,10 +39,10 @@ final class AutomatonScheweLabeling implements AutomatonLabelUtil, AutomatonRabi
     private final int priority;
     /** Number of the automaton label. */
     private int number;
-    
+
     AutomatonScheweLabeling(AutomatonSchewe automaton, BitSet accepting, BitSet stable, int priority) {
-    	assert automaton != null;
-    	this.automaton = automaton;
+        assert automaton != null;
+        this.automaton = automaton;
         this.accepting = accepting;
         this.stable = stable;
         this.priority = priority;
@@ -57,19 +57,19 @@ final class AutomatonScheweLabeling implements AutomatonLabelUtil, AutomatonRabi
     public BitSet getStable() {
         return stable;
     }
-    
+
     @Override
     public int getPriority() {
         return priority;
     }
-    
+
     @Override
     public String toString() {
-    	if (automaton.isParity()) {
-    		return Integer.toString(priority);
-    	} else {
-    		return accepting + SPACE + stable;
-    	}
+        if (automaton.isParity()) {
+            return Integer.toString(priority);
+        } else {
+            return accepting + SPACE + stable;
+        }
     }
 
     @Override

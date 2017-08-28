@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -109,17 +109,17 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class ModelPRISM implements ModelJANIConverter {
-	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private ExpressionToTypeEmpty() {
-		}
-		@Override
-		public Type getType(Expression expression) {
-			assert expression != null;
-			return null;
-		}
-	}
-	
-	public final static class Builder {
+    private final static class ExpressionToTypeEmpty implements ExpressionToType {
+        private ExpressionToTypeEmpty() {
+        }
+        @Override
+        public Type getType(Expression expression) {
+            assert expression != null;
+            return null;
+        }
+    }
+
+    public final static class Builder {
         private Semantics semantics;
         private List<Module> modules;
         private Expression initialStates;
@@ -129,89 +129,89 @@ public final class ModelPRISM implements ModelJANIConverter {
         private Formulas formulas;
         private List<RewardStructure> rewards;
         private List<PlayerDefinition> players;
-        
+
         public Builder setSemantics(Semantics semantics) {
-        	this.semantics = semantics;
-        	return this;
+            this.semantics = semantics;
+            return this;
         }
-        
+
         private Semantics getSemantics() {
-			return semantics;
-		}
-        
+            return semantics;
+        }
+
         public Builder setModules(List<Module> modules) {
-        	this.modules = modules;
-        	return this;
+            this.modules = modules;
+            return this;
         }
-        
+
         private List<Module> getModules() {
-			return modules;
-		}
-        
+            return modules;
+        }
+
         public Builder setInitialStates(Expression initialStates) {
-        	this.initialStates = initialStates;
-        	return this;
+            this.initialStates = initialStates;
+            return this;
         }
-        
+
         private Expression getInitialStates() {
-			return initialStates;
-		}
-        
+            return initialStates;
+        }
+
         public Builder setGlobalVariables(Map<Expression,JANIType> globalVariables) {
-        	this.globalVariables = globalVariables;
-        	return this;
+            this.globalVariables = globalVariables;
+            return this;
         }
-        
+
         private Map<Expression, JANIType> getGlobalVariables() {
-			return globalVariables;
-		}
-        
+            return globalVariables;
+        }
+
         public Builder setGlobalInitValues(Map<Expression,Expression> globalInitValues) {
-        	this.globalInitValues = globalInitValues;
-        	return this;
+            this.globalInitValues = globalInitValues;
+            return this;
         }
-        
+
         private Map<Expression, Expression> getGlobalInitValues() {
-			return globalInitValues;
-		}
-        
+            return globalInitValues;
+        }
+
         public Builder setSystem(SystemDefinition system) {
-        	this.system = system;
-        	return this;
+            this.system = system;
+            return this;
         }
-        
+
         private SystemDefinition getSystem() {
-			return system;
-		}
-        
+            return system;
+        }
+
         public Builder setFormulas(Formulas formulas) {
-        	this.formulas = formulas;
-        	return this;
+            this.formulas = formulas;
+            return this;
         }
-        
+
         private Formulas getFormulas() {
-			return formulas;
-		}
-        
+            return formulas;
+        }
+
         public Builder setRewards(List<RewardStructure> rewards) {
-        	this.rewards = rewards;
-        	return this;
+            this.rewards = rewards;
+            return this;
         }
-        
+
         private List<RewardStructure> getRewards() {
-			return rewards;
-		}
-        
-        public Builder setPlayers(List<PlayerDefinition> players) {
-        	this.players = players;
-        	return this;
+            return rewards;
         }
-        
+
+        public Builder setPlayers(List<PlayerDefinition> players) {
+            this.players = players;
+            return this;
+        }
+
         private List<PlayerDefinition> getPlayers() {
-			return players;
-		}
-	}
-	
+            return players;
+        }
+    }
+
     public final static String IDENTIFIER = "prism";
     private final static String DEADLOCK = "\"deadlock\"";
     private final static String INIT = "\"init\"";
@@ -231,7 +231,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private final static String _PAR_ = "_PAR_";
     private final static String UNDERSCORE = "_";
     private final static char EQUALS_C = '=';
-    
+
     private Semantics semanticsType;
     private final List<Module> modules = new ArrayList<>();
     private final List<Module> publicModules = Collections.unmodifiableList(modules);
@@ -252,15 +252,15 @@ public final class ModelPRISM implements ModelJANIConverter {
     private TObjectIntMap<String> playerNameToNumber;
     private Expression rateIdentifier;
     private Expression rateLabel;
-    
+
     public void build(Builder builder) {
-    	assert builder != null;
+        assert builder != null;
         assert builder.getSemantics() != null;
         assert builder.getModules() != null;
         assert !builder.getModules().isEmpty();
         this.rateIdentifier = new ExpressionIdentifierStandard.Builder()
-        		.setName(RATE)
-        		.build();
+                .setName(RATE)
+                .build();
         this.rateLabel = rateIdentifier;
         Options options = Options.get();
         List<PlayerDefinition> players = builder.getPlayers();
@@ -339,7 +339,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             flatten();
         }
         Engine engine = UtilOptions.getSingletonInstance(Options.get(),
-        		OptionsModelChecker.ENGINE);
+                OptionsModelChecker.ENGINE);
         if (builder.getInitialStates() != null) {
             multipleInit = true;
             Expression initialStates = builder.getInitialStates();
@@ -353,14 +353,14 @@ public final class ModelPRISM implements ModelJANIConverter {
             this.initialStates = createDefaultInitialStates();
         }
         replaceRewardsConstants(formulas.getFormulas(), specifiedConsts);
-//        checkExpressionConsistency();
+        //        checkExpressionConsistency();
         if (engine instanceof EngineDD) {
             fixUnchangedVariables();
         }
         createProperties();
     }
 
-	/**
+    /**
      * Postprocessing steps for Markov automata.
      * Subsumes all commands labelled with "rate" to a single module, such that
      * there is a race between all the stochastic alternatives of all active
@@ -386,9 +386,9 @@ public final class ModelPRISM implements ModelJANIConverter {
                 for (Alternative alternative : command.getAlternatives()) {
                     Expression weight = alternative.getWeight();
                     weight = new ExpressionOperator.Builder()
-                    		.setOperator(OperatorIte.ITE)
-                    		.setOperands(guard, weight, ExpressionLiteral.getZero())
-                    		.build();
+                            .setOperator(OperatorIte.ITE)
+                            .setOperands(guard, weight, ExpressionLiteral.getZero())
+                            .build();
                     Map<Expression, Expression> effect = alternative.getEffect();
                     rateAlternatives.add(new Alternative(weight, effect, alternative.getPositional()));
                 }
@@ -415,7 +415,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (players == null) {
             return null;
         }
-        
+
         TObjectIntMap<String> result = new TObjectIntHashMap<>();
         int playerNumber = 0;
         for (PlayerDefinition player : players) {
@@ -428,7 +428,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private void setPlayers(List<Module> modules,
             List<PlayerDefinition> players) {
         // TODO consistency checks
-        
+
         TObjectIntMap<String> moduleToPlayer = new TObjectIntHashMap<>();
         TObjectIntMap<String> labelToPlayer = new TObjectIntHashMap<>();
         int playerNumber = 0;
@@ -441,14 +441,14 @@ public final class ModelPRISM implements ModelJANIConverter {
             }
             playerNumber++;
         }
-        
+
         for (Module module : modules) {
             assert module.isCommands();
             ModuleCommands moduleCommands = module.asCommands();
             String moduleName = moduleCommands.getName();
             int modulePlayer = moduleToPlayer.get(moduleName);
             for (Command command : moduleCommands.getCommands()) {
-            	ExpressionIdentifierStandard labelE = (ExpressionIdentifierStandard) command.getLabel();
+                ExpressionIdentifierStandard labelE = (ExpressionIdentifierStandard) command.getLabel();
                 String label = labelE.getName();
                 assert label != null;
                 assert semanticsType != null;
@@ -482,7 +482,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     // TODO fix for global variables
     private void fixUnchangedVariables() {
         ArrayList<ModuleCommands> newModules = new ArrayList<>();
-        
+
         for (Module module : modules) {
             ModuleCommands moduleGC = module.asCommands();
             ArrayList<Command> newCommands = new ArrayList<>();
@@ -579,7 +579,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         for (SystemDefinition child : system.getChildren()) {
             checkSystemDefinition(child, allActions,
-                        allModuleNames, moduleNamesSeen);
+                    allModuleNames, moduleNamesSeen);
         }
     }
 
@@ -602,7 +602,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         for (Entry<Expression,Expression> entry : formulas.getLabels().entrySet()) {
             types.put(entry.getKey(), null);
         }
-        
+
         for (Module module : modules) {
             module.checkExpressionConsistency(globalVariables, types);
         }
@@ -614,10 +614,10 @@ public final class ModelPRISM implements ModelJANIConverter {
             ensure(initStatesRing == null || TypeBoolean.isBoolean(initStatesRing),
                     ProblemsPRISM.INIT_NOT_BOOLEAN, initialStates);
         }
-        */
+         */
         for (Entry<Expression,JANIType> entry : globalVariables.entrySet()) {
-        	// TODO
-//            entry.getValue().checkExpressionConsistency(types);
+            // TODO
+            //            entry.getValue().checkExpressionConsistency(types);
             Expression init = globalInitValues.get(entry.getKey());
             // TODO
             /*
@@ -627,7 +627,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                         ProblemsPRISM.VAR_INIT_INCONSISTENT,
                         entry.getKey(), init);
             }
-            */
+             */
         }
 
         for (Entry<Expression,Expression> entry : formulas.getConstants().entrySet()) {
@@ -641,7 +641,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                             ProblemsPRISM.CONST_TYPE_INCONSISTENT,
                             entry.getKey(), entry.getValue());
                 }
-                */
+                 */
             }
         }
         // TODO
@@ -652,7 +652,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         for (Entry<Expression,Expression> entry : formulas.getLabels().entrySet()) {
             entry.getValue().getType();
         }
-        */
+         */
     }
 
     private void collectConstants() {
@@ -682,7 +682,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 
     private void expandModules(List<Module> modules) {
         Map<String,Module> moduleByName = new LinkedHashMap<>();
-        
+
         for (Module module : modules) {
             if (module.isCommands()) {
                 ModuleCommands expanded = module.asCommands().replaceFormulas(formulas.getFormulas());
@@ -690,7 +690,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 moduleByName.put(expanded.getName(), expanded);
             }
         }
-        
+
         for (Module module : modules) {
             if (module instanceof ModuleRename) {
                 ModuleRename rename = (ModuleRename) module;
@@ -705,7 +705,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         formulas.expandConstants();
         collectConstants();
-        
+
         List<Module> newModules = new ArrayList<>();
         for (Module module : this.modules) {
             newModules.add(module.replaceFormulas(specifiedConsts));
@@ -717,22 +717,22 @@ public final class ModelPRISM implements ModelJANIConverter {
     boolean isMultipleInit() {
         return multipleInit;
     }
-    
+
     private void createProperties() {
         properties = new PropertiesImpl(this);
         for (Entry<Expression,Expression> entry : formulas.getConstants().entrySet()) {
-        	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
+            ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             String name = key.getName();
             Type type = formulas.getConstantType(key.getName()).toType();
             properties.addConst(name, type, entry.getValue());
         }
         for (Entry<Expression,Expression> entry : formulas.getFormulas().entrySet()) {
-        	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
+            ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             String name = key.getName();
             properties.addFormula(name, entry.getValue());
         }
         for (Entry<Expression,Expression> entry : formulas.getLabels().entrySet()) {
-        	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
+            ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             String name = key.getName();
             properties.addLabel(name, entry.getValue());
         }
@@ -742,11 +742,11 @@ public final class ModelPRISM implements ModelJANIConverter {
     public Expression getInitialNodes() {
         return initialStates;
     }
-    
+
     public List<Module> getModules() {
         return publicModules;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -761,37 +761,37 @@ public final class ModelPRISM implements ModelJANIConverter {
             assert false;
         }
         builder.append(NEWLINE + NEWLINE);
-        
+
         for (Entry<Expression,JANIType> entry : globalVariables.entrySet()) {
-//            try {
-            	// TODO gettypte
-                builder.append(entry.getKey() + " : " + entry.getKey());
-  //          } catch (EPMCException e) {
-    //            e.printStackTrace();
-      //          assert false;
-        //    }
+            //            try {
+            // TODO gettypte
+            builder.append(entry.getKey() + " : " + entry.getKey());
+            //          } catch (EPMCException e) {
+            //            e.printStackTrace();
+            //          assert false;
+            //    }
             if (globalInitValues.containsKey(entry.getKey())) {
                 builder.append(" init " + globalInitValues.get(entry.getKey()));
             }
             builder.append(";\n");
         }
-		
-		for (Entry <Expression, Expression> entry : formulas.getConstants().entrySet()) {
-			builder.append("const ").append(formulas.getConstantTypes().get(entry.getKey())).append(" ").append(entry.getKey().toString());
-			if (entry.getValue()!=null)
-				builder.append(" = ").append(entry.getValue().toString());
-			builder.append(";\n");
-		}
-		
-		for (Entry <Expression, Expression> entry : formulas.getFormulas().entrySet()) {
-			builder.append("formula ").append(entry.getKey().toString()).append(" = ").append(entry.getValue().toString()).append(";\n");
-		}
-		
-		for (Entry <Expression, Expression> entry : formulas.getLabels().entrySet()) {
-			builder.append("label ").append(entry.getKey().toString()).append(" = ").append(entry.getValue().toString()).append(";\n");
-		}
 
-		for (Module module : modules) {
+        for (Entry <Expression, Expression> entry : formulas.getConstants().entrySet()) {
+            builder.append("const ").append(formulas.getConstantTypes().get(entry.getKey())).append(" ").append(entry.getKey().toString());
+            if (entry.getValue()!=null)
+                builder.append(" = ").append(entry.getValue().toString());
+            builder.append(";\n");
+        }
+
+        for (Entry <Expression, Expression> entry : formulas.getFormulas().entrySet()) {
+            builder.append("formula ").append(entry.getKey().toString()).append(" = ").append(entry.getValue().toString()).append(";\n");
+        }
+
+        for (Entry <Expression, Expression> entry : formulas.getLabels().entrySet()) {
+            builder.append("label ").append(entry.getKey().toString()).append(" = ").append(entry.getValue().toString()).append(";\n");
+        }
+
+        for (Module module : modules) {
             builder.append(module + "\n");
         }
         if (multipleInit) {
@@ -805,66 +805,66 @@ public final class ModelPRISM implements ModelJANIConverter {
     public Semantics getSemantics() {
         return semanticsType;
     }
-    
-	@Override
-	public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-			Set<Object> edgeProperties) {
+
+    @Override
+    public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
         Map<Expression,JANIType>  allVariables = new HashMap<>();
-		graphProperties = fixProperties(graphProperties);
-		nodeProperties = fixProperties(nodeProperties);
-		edgeProperties = fixProperties(edgeProperties);
+        graphProperties = fixProperties(graphProperties);
+        nodeProperties = fixProperties(nodeProperties);
+        edgeProperties = fixProperties(edgeProperties);
         allVariables.putAll(globalVariables);
         for (Module module : this.modules) {
             allVariables.putAll(module.getVariables());
         }
-		Map<Expression,Type> allTypes = new HashMap<>();
-//        for (Entry<Expression,JANIType> entry : allVariables.entrySet()) {
-//             allTypes.put(entry.getKey(), entry.getValue().toType());
-//        }
+        Map<Expression,Type> allTypes = new HashMap<>();
+        //        for (Entry<Expression,JANIType> entry : allVariables.entrySet()) {
+        //             allTypes.put(entry.getKey(), entry.getValue().toType());
+        //        }
         allTypes.put(new ExpressionIdentifierStandard.Builder()
-        		.setName(DEADLOCK)
-        		.build(), TypeBoolean.get());
+                .setName(DEADLOCK)
+                .build(), TypeBoolean.get());
         allTypes.put(new ExpressionIdentifierStandard.Builder()
-        		.setName(INIT)
-        		.build(), TypeBoolean.get());
-		if (engine instanceof EngineExplorer) {
-			ModelJANI jani = toJANI(false);
-			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
-		} else if (engine instanceof EngineExplicit) {
-			ModelJANI jani = toJANI(false);
-			return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
-		} else {
-			return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
-		}
+                .setName(INIT)
+                .build(), TypeBoolean.get());
+        if (engine instanceof EngineExplorer) {
+            ModelJANI jani = toJANI(false);
+            return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
+        } else if (engine instanceof EngineExplicit) {
+            ModelJANI jani = toJANI(false);
+            return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
+        } else {
+            return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
+        }
     }
-	
-	private Set<Object> fixProperties(Set<Object> properties) {
-		Set<Object> fixed = new LinkedHashSet<>(properties.size());
-		for (Object property : properties) {
-			if (property instanceof RewardSpecification) {
-				RewardSpecification rewardSpecification = (RewardSpecification) property;
-				RewardStructure rewardStructure = getReward(rewardSpecification);
-				ExpressionIdentifier rewardName = new ExpressionIdentifierStandard.Builder()
-					.setName(rewardStructure.getName())
-					.build();
-				RewardSpecification fixedRewardSpecification = new RewardSpecificationImpl(rewardName);				
-				fixed.add(fixedRewardSpecification);
-			} else {
-				fixed.add(property);
-			}
-		}
-		return fixed;
-	}
 
-	private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-			Set<Object> edgeProperties) {
-		if (engine instanceof EngineDD) {
-	        prepareAndCheckReady();
-			return new GraphDDPRISM(this, nodeProperties, edgeProperties);
-		} else {
-			assert false; // TODO user exception
-			return null;
-		}
+    private Set<Object> fixProperties(Set<Object> properties) {
+        Set<Object> fixed = new LinkedHashSet<>(properties.size());
+        for (Object property : properties) {
+            if (property instanceof RewardSpecification) {
+                RewardSpecification rewardSpecification = (RewardSpecification) property;
+                RewardStructure rewardStructure = getReward(rewardSpecification);
+                ExpressionIdentifier rewardName = new ExpressionIdentifierStandard.Builder()
+                        .setName(rewardStructure.getName())
+                        .build();
+                RewardSpecification fixedRewardSpecification = new RewardSpecificationImpl(rewardName);				
+                fixed.add(fixedRewardSpecification);
+            } else {
+                fixed.add(property);
+            }
+        }
+        return fixed;
+    }
+
+    private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
+        if (engine instanceof EngineDD) {
+            prepareAndCheckReady();
+            return new GraphDDPRISM(this, nodeProperties, edgeProperties);
+        } else {
+            assert false; // TODO user exception
+            return null;
+        }
     }
 
     @Override
@@ -874,8 +874,8 @@ public final class ModelPRISM implements ModelJANIConverter {
 
     private boolean isValidStateQuery(String query) {
         Expression queryExpr = new ExpressionIdentifierStandard.Builder()
-        		.setName(query)
-        		.build();
+                .setName(query)
+                .build();
         if (globalVariables.containsKey(queryExpr)) {
             return true;
         }
@@ -890,7 +890,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (DEADLOCK.equals(query)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -900,7 +900,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (type instanceof JANITypeBool) {
             value = ExpressionLiteral.getFalse();
         } else if (type instanceof JANITypeBounded) {
-        	JANITypeBounded typeBounded = (JANITypeBounded) type;
+            JANITypeBounded typeBounded = (JANITypeBounded) type;
             Expression lower = typeBounded.getLowerBound();
             value = new ExpressionLiteral.Builder()
                     .setValueProvider(() -> evaluateValue(lower))
@@ -911,16 +911,16 @@ public final class ModelPRISM implements ModelJANIConverter {
                     .setValueProvider(() -> TypeInteger.get().getZero())
                     .build();
         } else if (type instanceof JANITypeClock) {
-        	value = new ExpressionLiteral.Builder()
-        			.setValue(TypeInteger.get().newValue())
-        			.build();
+            value = new ExpressionLiteral.Builder()
+                    .setValue(TypeInteger.get().newValue())
+                    .build();
         } else {
             value = null;
             assert false ;
         }
         return value;
     }
-    
+
     private void createDefaultInitialValues() {
         for (Entry<Expression,JANIType> entry : globalVariables.entrySet()) {
             if (!globalInitValues.containsKey(entry.getKey())) {
@@ -943,7 +943,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             if (module.isCommands()) {
                 ModuleCommands commandsModule = module.asCommands();
                 newModule = new ModuleCommands(module.getName(), module.getVariables(),
-                    newInitValues, commandsModule.getCommands(), commandsModule.getInvariants(), null);
+                        newInitValues, commandsModule.getCommands(), commandsModule.getInvariants(), null);
             } else {
                 assert false;
                 newModule = null;
@@ -953,7 +953,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         modules.clear();
         modules.addAll(newModules);
     }
-    
+
     private void flatten() {
         ModuleCommands globalModule = flatten(system);
         globalVariables.putAll(globalModule.getVariables());
@@ -991,8 +991,8 @@ public final class ModelPRISM implements ModelJANIConverter {
             Set<Expression> labelsRight = right.getAlphabet();
             labels.retainAll(labelsRight);
             labels.remove(new ExpressionIdentifierStandard.Builder()
-            		.setName(EMPTY_LABEL)
-            		.build());
+                    .setName(EMPTY_LABEL)
+                    .build());
             if (SemanticsMA.isMA(semanticsType)) {
                 labels.remove(rateIdentifier);
             }
@@ -1035,7 +1035,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             labelNr++;
         }
         nameBuilder.append(_PAR_ + right.getName());
-        
+
         String newName = nameBuilder.toString();
         Map<Expression,JANIType> newVariables = new HashMap<>();
         newVariables.putAll(left.getVariables());
@@ -1054,7 +1054,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             ArrayList<Command> rightList = new ArrayList<>();
             rightMap.put(label, rightList);
         }
-        
+
         for (Command leftCmd : leftCmds) {
             if (labels.contains(leftCmd.getLabel())) {
                 ArrayList<Command> leftList = leftMap.get(leftCmd.getLabel());
@@ -1074,31 +1074,31 @@ public final class ModelPRISM implements ModelJANIConverter {
         for (Expression label : labels) {
             for (Command leftCmd : leftMap.get(label)) {
                 for (Command rightCmd : rightMap.get(label)) {
-                	ArrayList<Alternative> newAlternatives = new ArrayList<>();
-                	Expression newGuard = and(leftCmd.getGuard(),
-                			rightCmd.getGuard());
-                	for (Alternative leftAlt : leftCmd.getAlternatives()) {
-                		for (Alternative rightAlt : rightCmd.getAlternatives()) {
-                			Expression newWeight = new ExpressionOperator.Builder()
-                			        .setOperator(OperatorMultiply.MULTIPLY)
-                			        .setOperands(
-                			        		leftAlt.getWeight(),
-                			        		rightAlt.getWeight())
-                			        .build();
-                			Map<Expression,Expression> newEffects = new HashMap<>();
-                			newEffects.putAll(leftAlt.getEffect());
-                			newEffects.putAll(rightAlt.getEffect());
-                			Alternative newAlternative = new Alternative(newWeight, newEffects, null);
-                			newAlternatives.add(newAlternative);
-                		}
-                	}
-                	Expression newLabel = null;
-                	newLabel = label;
-                	Command newCommand = new Command(newLabel, newGuard, newAlternatives, null);
-                	if (SemanticsSMG.isSMG(semanticsType)) {
-                		newCommand.setPlayer(leftCmd.getPlayer());
-                	}
-                	newCommands.add(newCommand);
+                    ArrayList<Alternative> newAlternatives = new ArrayList<>();
+                    Expression newGuard = and(leftCmd.getGuard(),
+                            rightCmd.getGuard());
+                    for (Alternative leftAlt : leftCmd.getAlternatives()) {
+                        for (Alternative rightAlt : rightCmd.getAlternatives()) {
+                            Expression newWeight = new ExpressionOperator.Builder()
+                                    .setOperator(OperatorMultiply.MULTIPLY)
+                                    .setOperands(
+                                            leftAlt.getWeight(),
+                                            rightAlt.getWeight())
+                                    .build();
+                            Map<Expression,Expression> newEffects = new HashMap<>();
+                            newEffects.putAll(leftAlt.getEffect());
+                            newEffects.putAll(rightAlt.getEffect());
+                            Alternative newAlternative = new Alternative(newWeight, newEffects, null);
+                            newAlternatives.add(newAlternative);
+                        }
+                    }
+                    Expression newLabel = null;
+                    newLabel = label;
+                    Command newCommand = new Command(newLabel, newGuard, newAlternatives, null);
+                    if (SemanticsSMG.isSMG(semanticsType)) {
+                        newCommand.setPlayer(leftCmd.getPlayer());
+                    }
+                    newCommands.add(newCommand);
                 }
             }
         }
@@ -1106,13 +1106,13 @@ public final class ModelPRISM implements ModelJANIConverter {
         Expression rightInvariant = right.getInvariants();
         Expression newInvariant = null;
         if (leftInvariant != null && rightInvariant != null) {
-        	newInvariant = UtilExpressionStandard.opAnd(leftInvariant, rightInvariant);
+            newInvariant = UtilExpressionStandard.opAnd(leftInvariant, rightInvariant);
         } else if (leftInvariant != null) {
-        	newInvariant = leftInvariant;
+            newInvariant = leftInvariant;
         } else if (rightInvariant != null) {
-        	newInvariant = rightInvariant;
+            newInvariant = rightInvariant;
         } else {
-        	newInvariant = null;
+            newInvariant = null;
         }
         return new ModuleCommands(newName, newVariables, newInitValues, newCommands, newInvariant, null);
     }
@@ -1120,16 +1120,16 @@ public final class ModelPRISM implements ModelJANIConverter {
     public Map<Expression, JANIType> getGlobalVariables() {
         return Collections.unmodifiableMap(globalVariables);
     }
-    
+
     private Expression createDefaultInitialStates() {
         Expression initialStates = null;
         for (Expression var : globalVariables.keySet()) {
             Expression value = globalInitValues.get(var);
             Expression assg = eq(var, value);
             if (initialStates == null) {
-            	initialStates = assg;
+                initialStates = assg;
             } else {
-            	initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
+                initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
             }
         }
         for (Module module : modules) {
@@ -1137,14 +1137,14 @@ public final class ModelPRISM implements ModelJANIConverter {
                 Expression value = module.getInitValues().get(var);
                 Expression assg = eq(var, value);
                 if (initialStates == null) {
-                	initialStates = assg;
+                    initialStates = assg;
                 } else {
-                	initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
+                    initialStates = UtilExpressionStandard.opAnd(initialStates, assg);
                 }
             }
         }
         if (initialStates == null) {
-        	ExpressionLiteral.getTrue();
+            ExpressionLiteral.getTrue();
         }
         return initialStates;
     }
@@ -1157,7 +1157,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         return system;
     }
-    
+
     private void ensureNoUndefinedConstants() {
         if (formulas != null) {
             formulas.ensureNoUndefinedConstants();
@@ -1166,27 +1166,27 @@ public final class ModelPRISM implements ModelJANIConverter {
             properties.ensureNoUndefinedConstants();
         }
     }
-    
+
     public Formulas getFormulas() {
         return formulas;
     }
-    
+
     Map<Expression,Expression> getGlobalInitValues() {
         return publicGlobalInitValues;
     }
-    
+
     public SystemDefinition getSystem() {
         return system;
     }
-    
+
     int getPRISMGamesPlayer(SMGPlayer player) {
         assert player != null;
         Expression expression = player.getExpression();
         assert expression != null;
         assert expression instanceof ExpressionIdentifier
-        	|| expression instanceof ExpressionLiteral;
+        || expression instanceof ExpressionLiteral;
         if (expression instanceof ExpressionLiteral) {
-        	ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+            ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
             Value value = expressionLiteral.getValue();
             assert ValueInteger.isInteger(value);
             int intValue = ValueInteger.asInteger(value).getInt() - 1;
@@ -1194,7 +1194,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             assert intValue < playerNameToNumber.size();
             return intValue;
         } else {
-        	ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
+            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             String name = expressionIdentifier.getName();
             assert playerNameToNumber.containsKey(name);
             return playerNameToNumber.get(name);
@@ -1204,13 +1204,13 @@ public final class ModelPRISM implements ModelJANIConverter {
     private void checkPropertiesCompatible() {
         Log log = Options.get().get(OptionsMessages.LOG);
         for (RawProperty raw : getPropertyList().getRawProperties()) {
-        	Expression expr = getPropertyList().getParsedProperty(raw);
+            Expression expr = getPropertyList().getParsedProperty(raw);
             checkExpressionCompatible(expr, log);
         }
     }
-    
+
     private void checkExpressionCompatible(Expression value, Log log)
-            {
+    {
         if (value instanceof ExpressionIdentifier) {
             ensure(isValidStateQuery(value.toString()),
                     ProblemsPRISM.IDENTIFIER_UNDECLARED, value);
@@ -1238,7 +1238,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             }
         }
         if (value instanceof ExpressionCoalition) {
-        	ExpressionCoalition valueCoalition = (ExpressionCoalition) value;
+            ExpressionCoalition valueCoalition = (ExpressionCoalition) value;
             checkExpressionCompatible(valueCoalition.getInner(), log);
         } else if (!(value instanceof ExpressionReward)) {
             for (Expression child : value.getChildren()) {
@@ -1256,14 +1256,14 @@ public final class ModelPRISM implements ModelJANIConverter {
     public List<RewardStructure> getRewards() {
         return rewards;
     }
-    
+
     public RewardStructure getReward(RewardSpecification rewardSpecification)
-            {
+    {
         assert rewardSpecification != null;
         List<RewardStructure> rewards = getRewards();
         Expression expression = rewardSpecification.getExpression();
         if (expression instanceof ExpressionIdentifier) {
-        	ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
+            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             String name = expressionIdentifier.getName();
             for (RewardStructure rewardStructure : rewards) {
                 if (rewardStructure.getName().equals(name)) {
@@ -1288,7 +1288,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     public void read(InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
-        	assert input != null;
+            assert input != null;
         }
         ensure(inputs.length == 1, ProblemsPRISM.PRISM_ONE_MODEL_FILE, inputs.length);
         PrismParser parser = new PrismParser(inputs[0]);    
@@ -1296,41 +1296,41 @@ public final class ModelPRISM implements ModelJANIConverter {
         parser.parseModel();
     }
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
-	
-	@Override
-	public ModelJANI toJANI(boolean forExporting) {
-		PRISM2JANIConverter converter = new PRISM2JANIConverter(this, forExporting);
-		return converter.convert();
-	}
-	
-	public List<PlayerDefinition> getPlayers() {
-		return players;
-	}
-	
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public ModelJANI toJANI(boolean forExporting) {
+        PRISM2JANIConverter converter = new PRISM2JANIConverter(this, forExporting);
+        return converter.convert();
+    }
+
+    public List<PlayerDefinition> getPlayers() {
+        return players;
+    }
+
     private Expression and(Expression a, Expression b) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorAnd.AND)
-    			.setOperands(a, b)
-    			.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorAnd.AND)
+                .setOperands(a, b)
+                .build();
     }
-    
+
     private Expression eq(Expression a, Expression b) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorEq.EQ)
-        	.setOperands(a, b)
-        	.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorEq.EQ)
+                .setOperands(a, b)
+                .build();
     }
-    
+
     private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(), new Expression[0]);
         return evaluator.evaluate();
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -1339,14 +1339,14 @@ public final class ModelPRISM implements ModelJANIConverter {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
-    
+
     public Expression opAndNot(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
         return newOperator(OperatorAnd.AND, op1,
                 newOperator(OperatorNot.NOT, op2));
     }
-    
+
     private Expression newOperator(Operator operator, Expression... operands) {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -31,19 +31,19 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     public static TypeEnum get(Class<? extends Enum<?>> enumClass) {
         return ContextValue.get().makeUnique(new TypeEnum(enumClass));
     }
-    
+
     public static TypeEnum asEnum(Type type) {
-    	if (type instanceof TypeEnum) {
-    		return (TypeEnum) type;
-    	} else {
-    		return null;
-    	}
+        if (type instanceof TypeEnum) {
+            return (TypeEnum) type;
+        } else {
+            return null;
+        }
     }
 
     public static boolean isEnum(Type type) {
-    	return type instanceof TypeEnum;
+        return type instanceof TypeEnum;
     }
-    
+
     private final Class<? extends Enum<?>> enumClass;
     private final int numBits;
     private final int numConstants;
@@ -54,12 +54,12 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         numConstants = enumClass.getEnumConstants().length;
         numBits = Integer.SIZE - Integer.numberOfLeadingZeros(numConstants - 1);
     }
-    
-    
+
+
     public Class<? extends Enum<?>> getEnumClass() {
         return enumClass;
     }
-    
+
     @Override
     public ValueEnum newValue() {
         return new ValueEnum(this);
@@ -80,7 +80,7 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         }
         return enumClass == asEnum(type).getEnumClass();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -94,7 +94,7 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         }
         return this.enumClass == other.enumClass;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -102,7 +102,7 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         hash = enumClass.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -111,17 +111,17 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         builder.append(")");
         return builder.toString();
     }
-    
+
     @Override
     public int getNumBits() {
         return numBits;
     };
-    
+
     @Override
     public int getNumValues() {
         return numConstants;
     }
-    
+
     @Override
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayEnum(this));

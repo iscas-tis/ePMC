@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
@@ -32,56 +32,56 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 
 public final class JANITypeInt implements JANIType {
-	public final static String IDENTIFIER = "int";
-	/** Identifier for integer type. */
-	private final static String INT = "int";
-	
-	private ModelJANI model;
+    public final static String IDENTIFIER = "int";
+    /** Identifier for integer type. */
+    private final static String INT = "int";
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private ModelJANI model;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIType(value);
-	}
-	
-	@Override 
-	public JANIType parseAsJANIType(JsonValue value) {
-		if (!(value instanceof JsonString)) {
-			return null;
-		}
-		JsonString valueString = (JsonString) value;
-		if (!valueString.getString().equals(INT)) {
-			return null;
-		}
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		return UtilJSON.toStringValue(INT);
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public TypeInteger toType() {
-		return TypeInteger.get();
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIType(value);
+    }
 
-	@Override
-	public Value getDefaultValue() {
-		return UtilValue.newValue(toType(), 0);
-	}
+    @Override 
+    public JANIType parseAsJANIType(JsonValue value) {
+        if (!(value instanceof JsonString)) {
+            return null;
+        }
+        JsonString valueString = (JsonString) value;
+        if (!valueString.getString().equals(INT)) {
+            return null;
+        }
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JsonValue generate() {
+        return UtilJSON.toStringValue(INT);
+    }
+
+    @Override
+    public TypeInteger toType() {
+        return TypeInteger.get();
+    }
+
+    @Override
+    public Value getDefaultValue() {
+        return UtilValue.newValue(toType(), 0);
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

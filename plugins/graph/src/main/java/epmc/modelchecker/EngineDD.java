@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -35,7 +35,7 @@ public enum EngineDD implements Engine {
 
     /** Unique identifier of the engine. */
     public final static String IDENTIFIER = "dd";
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;

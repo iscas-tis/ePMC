@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.beedeedee;
 
@@ -54,20 +54,20 @@ import gnu.trove.map.hash.TLongObjectHashMap;
 
 public final class LibraryDDBeeDeeDee implements LibraryDD {
     public final static String IDENTIFIER = "beedeedee";
-    
+
     private final static class LowLevelPermutationBeeDeeDee
     implements PermutationLibraryDD{
         private final Map<Integer, Integer> bddPerm;
-        
+
         LowLevelPermutationBeeDeeDee(Map<Integer, Integer> bddPerm) {
             this.bddPerm = bddPerm;
         }
-        
+
         Map<Integer, Integer> getPermutation() {
             return bddPerm;
         }
     }
-    
+
     private ResizingAndGarbageCollectedFactory factory;
     private ContextDD contextDD;
     private Value oneValue;
@@ -78,7 +78,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     private final TIntList variables = new TIntArrayList();
     private int nextVariable;
     private TLongObjectMap<BDD> uniqueIdTable = new TLongObjectHashMap<>();
-    
+
     private TLongIntMap refs = new TLongIntHashMap();
 
     @Override
@@ -96,7 +96,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         uniqueIdTable.put(oneNode.hashCodeAux(), oneNode);
         this.alive = true;
     }
-    
+
     @Override
     public long apply(Operator operator, Type type, long... operands) {
         assert alive;
@@ -105,21 +105,21 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         assert TypeBoolean.isBoolean(type);
         assert operands != null;
         for (int opNr = 0; opNr < operands.length; opNr++) {
-        	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
+            assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         BDD result;
         if (operator.equals(OperatorId.ID)) {
-        	result = uniqueIdTable.get(operands[0]);
+            result = uniqueIdTable.get(operands[0]);
         } else if (operator.equals(OperatorNot.NOT)) {
-        	result = uniqueIdTable.get(operands[0]).not();
+            result = uniqueIdTable.get(operands[0]).not();
         } else if (operator.equals(OperatorAnd.AND)) {
             result = uniqueIdTable.get(operands[0]).and(uniqueIdTable.get(operands[1]));
         } else if (operator.equals(OperatorEq.EQ)) {
-        	result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
+            result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
         } else if (operator.equals(OperatorIff.IFF)) {
             result = uniqueIdTable.get(operands[0]).biimp(uniqueIdTable.get(operands[1]));
         } else if (operator.equals(OperatorImplies.IMPLIES)) {
-        	result = uniqueIdTable.get(operands[0]).imp(uniqueIdTable.get(operands[1]));
+            result = uniqueIdTable.get(operands[0]).imp(uniqueIdTable.get(operands[1]));
         } else if (operator.equals(OperatorNe.NE)) {
             result = uniqueIdTable.get(operands[0]).xor(uniqueIdTable.get(operands[1]));
         } else if (operator.equals(OperatorOr.OR)) {
@@ -127,8 +127,8 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         } else if (operator.equals(OperatorIte.ITE)) {
             result = uniqueIdTable.get(operands[0]).ite(uniqueIdTable.get(operands[1]), uniqueIdTable.get(operands[2]));        	
         } else {
-        	assert false;
-        	return -1;
+            assert false;
+            return -1;
         }
         ref(result);
         return result.hashCodeAux();
@@ -188,7 +188,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            {
+    {
         assert alive;
         assert dd >= 0;
         assert permutation != null;
@@ -210,7 +210,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         uniqueIdTable.put(dd.hashCodeAux(), dd);
         refs.adjustOrPutValue(dd.hashCodeAux(), 1, 1);
     }
-    
+
     @Override
     public void free(long dd) {
         assert alive;
@@ -312,7 +312,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            {
+    {
         assert alive;
         assert dd1 >= 0;
         assert dd2 >= 0;
@@ -396,19 +396,19 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         return IDENTIFIER;
     }
 
-	@Override
-	public boolean canApply(Operator operator, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operator.equals(OperatorId.ID)
-				|| operator.equals(OperatorNot.NOT)
-				|| operator.equals(OperatorAnd.AND)
-				|| operator.equals(OperatorEq.EQ)
-				|| operator.equals(OperatorIff.IFF)
-				|| operator.equals(OperatorImplies.IMPLIES)
-				|| operator.equals(OperatorNe.NE)
-				|| operator.equals(OperatorOr.OR)
-				|| operator.equals(OperatorIte.ITE);
-	}
+    @Override
+    public boolean canApply(Operator operator, Type resultType, long... operands) {
+        if (!TypeBoolean.isBoolean(resultType)) {
+            return false;
+        }
+        return operator.equals(OperatorId.ID)
+                || operator.equals(OperatorNot.NOT)
+                || operator.equals(OperatorAnd.AND)
+                || operator.equals(OperatorEq.EQ)
+                || operator.equals(OperatorIff.IFF)
+                || operator.equals(OperatorImplies.IMPLIES)
+                || operator.equals(OperatorNe.NE)
+                || operator.equals(OperatorOr.OR)
+                || operator.equals(OperatorIte.ITE);
+    }
 }

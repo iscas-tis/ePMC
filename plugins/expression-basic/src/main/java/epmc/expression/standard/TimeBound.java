@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -37,18 +37,18 @@ import epmc.value.ValueInteger;
  * @author Ernst Moritz Hahn
  */
 public final class TimeBound {
-	// TODO actually, we should get types as well as constants from somewhere
-	private final static class ExpressionToTypeEmpty implements ExpressionToType {
-		private ExpressionToTypeEmpty() {
-		}
-		
-		@Override
-		public Type getType(Expression expression) {
-			assert expression != null;
-			return null;
-		}
-	}
-	
+    // TODO actually, we should get types as well as constants from somewhere
+    private final static class ExpressionToTypeEmpty implements ExpressionToType {
+        private ExpressionToTypeEmpty() {
+        }
+
+        @Override
+        public Type getType(Expression expression) {
+            assert expression != null;
+            return null;
+        }
+    }
+
     public final static class Builder {
         private Expression left;
         private Expression right;
@@ -59,43 +59,43 @@ public final class TimeBound {
             this.left = left;
             return this;
         }
-        
+
         private Expression getLeft() {
             return left;
         }
-        
+
         public Builder setRight(Expression right) {
             this.right = right;
             return this;
         }
-        
+
         private Expression getRight() {
             return right;
         }
-        
+
         public Builder setLeftOpen(Boolean leftOpen) {
             this.leftOpen = leftOpen;
             return this;
         }
-        
+
         private Boolean isLeftOpen() {
             return leftOpen;
         }
-        
+
         public Builder setRightOpen(Boolean rightOpen) {
             this.rightOpen = rightOpen;
             return this;
         }
-        
+
         private Boolean isRightOpen() {
             return rightOpen;
         }
-        
+
         public TimeBound build() {
             return new TimeBound(this);
         }
     }
-    
+
     /** left time bound */
     private final Expression left;
     /** right time bound */
@@ -104,7 +104,7 @@ public final class TimeBound {
     private final boolean leftOpen;
     /** whether time-interval is right-open */
     private final boolean rightOpen;
-    
+
     private TimeBound(Builder builder) {
         assert builder != null;
         Expression left = builder.getLeft();
@@ -121,9 +121,9 @@ public final class TimeBound {
             leftOpen = false;
         }
         if (rightOpen == null && isPosInf(right)) {
-        	rightOpen = true;
+            rightOpen = true;
         } else if (rightOpen == null) {
-        	rightOpen = false;
+            rightOpen = false;
         }
         this.left = left;
         this.right = right;
@@ -145,35 +145,35 @@ public final class TimeBound {
         StringBuilder builder = new StringBuilder();
         if (isUnbounded()) {
         } else if (!isLeftBounded()) {
-        	builder.append(rightOpen ? "<" : "<=");
-        	builder.append(leftBraceIfNeeded(right));
-        	builder.append(right);
-        	builder.append(rightBraceIfNeeded(right));
+            builder.append(rightOpen ? "<" : "<=");
+            builder.append(leftBraceIfNeeded(right));
+            builder.append(right);
+            builder.append(rightBraceIfNeeded(right));
         } else if (!isRightBounded()) {
-        	builder.append(leftOpen ? ">" : ">=");
-        	builder.append(leftBraceIfNeeded(left));
-        	builder.append(left);
-        	builder.append(rightBraceIfNeeded(left));
+            builder.append(leftOpen ? ">" : ">=");
+            builder.append(leftBraceIfNeeded(left));
+            builder.append(left);
+            builder.append(rightBraceIfNeeded(left));
         } else if (left.equals(right)) {
-        	builder.append("=");
-        	builder.append(leftBraceIfNeeded(left));
-        	builder.append(left);
-        	builder.append(rightBraceIfNeeded(left));
+            builder.append("=");
+            builder.append(leftBraceIfNeeded(left));
+            builder.append(left);
+            builder.append(rightBraceIfNeeded(left));
         } else {
-        	builder.append(leftOpen ? "]" : "[");
-        	builder.append(left);
-        	builder.append(",");
-        	builder.append(right);
-        	builder.append(rightOpen ? "[" : "]");
+            builder.append(leftOpen ? "]" : "[");
+            builder.append(left);
+            builder.append(",");
+            builder.append(right);
+            builder.append(rightOpen ? "[" : "]");
         }
         return builder.toString();
     }
-    
+
     private static boolean needBracesForInequation(Expression expr) {
         return (!(expr instanceof ExpressionIdentifierStandard
                 || expr instanceof ExpressionLiteral));
     }
-    
+
     private String leftBraceIfNeeded(Expression expr) {
         if (needBracesForInequation(expr)) {
             return "(";
@@ -198,7 +198,7 @@ public final class TimeBound {
     public Expression getLeft() {
         return left;
     }
-    
+
     /**
      * Get right time bound.
      * 
@@ -207,7 +207,7 @@ public final class TimeBound {
     public Expression getRight() {
         return right;
     }
-    
+
     /**
      * Check whether time interval is left-open.
      * 
@@ -225,7 +225,7 @@ public final class TimeBound {
     public boolean isRightOpen() {
         return rightOpen;
     }
-    
+
     /**
      * Check whether the time bound is left-bounded.
      * That is, the left time bound &gt; 0 or the time interval is left open.
@@ -265,9 +265,9 @@ public final class TimeBound {
     public boolean isUnbounded() {
         return !isLeftBounded() && !isRightBounded();
     }
-    
+
     // TODO might provide additional context for constants etc.
-    
+
     /**
      * Get left time bound as {@link Value}.
      * For this, the left time bound expression will be evaluated. If a problem
@@ -299,7 +299,7 @@ public final class TimeBound {
     public int getRightInt() {
         return ValueInteger.asInteger(evaluateValue(getRight())).getInt();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof TimeBound)) {
@@ -310,7 +310,7 @@ public final class TimeBound {
                 && this.leftOpen == other.isLeftOpen() &&
                 this.rightOpen == other.isRightOpen();
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -321,15 +321,15 @@ public final class TimeBound {
         hash = (rightOpen ? 1 : 0) + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     private static ValueAlgebra evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression,
-        		new ExpressionToTypeEmpty(),
-        		new Expression[0]);
+                new ExpressionToTypeEmpty(),
+                new Expression[0]);
         return ValueAlgebra.asAlgebra(evaluator.evaluate());
     }
-    
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;

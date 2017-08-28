@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -43,13 +43,13 @@ import epmc.value.ValueArray;
 import epmc.value.ValueContentDoubleArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implements GraphSolverExplicit {
-	@FunctionalInterface
-	private static interface Diff {
-		double diff(double value1, double value2);
-	}
+    @FunctionalInterface
+    private static interface Diff {
+        double diff(double value1, double value2);
+    }
 
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java-double";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArray inputValues;
@@ -65,30 +65,30 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
             return false;
         }
-    	Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-    	if (!SemanticsMDP.isMDP(semantics)) {
-    		return false;
-    	}
+        Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsMDP.isMDP(semantics)) {
+            return false;
+        }
         Type typeWeight = TypeWeight.get();
         if (!TypeDouble.isDouble(typeWeight)) {
-        	return false;
+            return false;
         }
         return true;
     }
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	multiobjectiveWeighted();
+        prepareIterGraph();
+        multiobjectiveWeighted();
         prepareResultValues();
     }
 
@@ -108,8 +108,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
     }
 
     private void prepareResultValues() {
-    	this.outputValues = inputValues;
-    	objective.setResult(outputValues);
+        this.outputValues = inputValues;
+        objective.setResult(outputValues);
     }
 
     private void multiobjectiveWeighted() {
@@ -131,15 +131,15 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
             assert false;
         }
     }
-    
+
     /* auxiliary methods */
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* implementation of iteration algorithms */    
-    
+
     private void mdpMultiobjectiveweightedJacobiJavaDouble(
             GraphExplicitSparseAlternate graph, Value stopRewardsV,
             Value transRewardsV,
@@ -148,17 +148,17 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         double[] stopRewards = ValueContentDoubleArray.getContent(stopRewardsV);
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);
-		Arrays.fill(values, 0.0);
+        Arrays.fill(values, 0.0);
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
-		Diff diffOp = getDiff();
+        Diff diffOp = getDiff();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
-        		.asSparseNondetOnlyNondet()
-        		.getContent());
+                .asSparseNondetOnlyNondet()
+                .getContent());
         double distance;
         double[] presValues = values;
         double[] nextValues = new double[numStates];
@@ -166,7 +166,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         do {
             distance = 0.0;
             for (int state = 0; state < numStates; state++) {
-            	double stopReward = stopRewards[state];
+                double stopReward = stopRewards[state];
                 double presStateProb = presValues[state];
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
@@ -184,7 +184,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
                         choiceNextStateProb = choiceNextStateProb + weighted;
                     }
                     if (choiceNextStateProb > nextStateProb) {
-                    	nextStateProb = choiceNextStateProb;
+                        nextStateProb = choiceNextStateProb;
                         if (nextStateProb > presStateProb) {
                             schedulerJava[state] = nondetNr;
                         }
@@ -222,28 +222,28 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         double[] stopRewards = ValueContentDoubleArray.getContent(stopRewardsV);
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);
-		Arrays.fill(values, 0.0);
-		Diff diffOp = getDiff();
+        Arrays.fill(values, 0.0);
+        Diff diffOp = getDiff();
         Arrays.fill(schedulerJava, -1);
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
-        		.asSparseNondetOnlyNondet()
-        		.getContent());
+                .asSparseNondetOnlyNondet()
+                .getContent());
         double distance;
         do {
             distance = 0.0;
             for (int state = 0; state < numStates; state++) {
-            	double objWeight = stopRewards[state];
+                double objWeight = stopRewards[state];
                 double presStateProb = values[state];
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
                 double nextStateProb = Double.NEGATIVE_INFINITY;
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
-                	double transReward = transRewards[nondetNr];
+                    double transReward = transRewards[nondetNr];
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
                     double choiceNextStateProb = transReward;
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
-                    	double weight = weights[stateSucc];
+                        double weight = weights[stateSucc];
                         int succState = targets[stateSucc];
                         double succStateProb = values[succState];
                         double weighted = weight * succStateProb;
@@ -267,19 +267,19 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
             }
         } while (distance > tolerance / 2);
     }
-    
-	private Diff getDiff() {
-	    IterationStopCriterion stopCriterion =
-	    		Options.get().getEnum(OptionsGraphSolverIterative
-	    				.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
-	    switch (stopCriterion) {
-		case ABSOLUTE:
-			return (a,b) -> Math.abs(a - b);
-		case RELATIVE:
-			return (a,b) -> Math.abs(a - b) / a;
-		default:
-			break;
-	    }
-		return null;
-	}
+
+    private Diff getDiff() {
+        IterationStopCriterion stopCriterion =
+                Options.get().getEnum(OptionsGraphSolverIterative
+                        .GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
+        switch (stopCriterion) {
+        case ABSOLUTE:
+            return (a,b) -> Math.abs(a - b);
+        case RELATIVE:
+            return (a,b) -> Math.abs(a - b) / a;
+        default:
+            break;
+        }
+        return null;
+    }
 }

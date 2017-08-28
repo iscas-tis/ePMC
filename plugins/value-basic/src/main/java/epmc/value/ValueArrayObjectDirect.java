@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,23 +24,23 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 final class ValueArrayObjectDirect implements ValueArray {
-	private final TypeArrayObjectDirect type;
+    private final TypeArrayObjectDirect type;
     private Object[] content;
-	private boolean immutable;
-	private int size;
+    private boolean immutable;
+    private int size;
 
     ValueArrayObjectDirect(TypeArrayObjectDirect type) {
-    	this.type = type;
+        this.type = type;
         this.content = new Object[size()];
     }
-    
+
     @Override
     public ValueArrayObjectDirect clone() {
-    	ValueArrayObjectDirect other = new ValueArrayObjectDirect(getType());
-    	other.set(this);
-    	return other;
+        ValueArrayObjectDirect other = new ValueArrayObjectDirect(getType());
+        other.set(this);
+        return other;
     }
-    
+
     @Override
     public void set(Value value, int index) {
         assert !isImmutable();
@@ -60,7 +60,7 @@ final class ValueArrayObjectDirect implements ValueArray {
         Object entry = content[index];
         ValueObject.asObject(value).set(entry);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -73,45 +73,45 @@ final class ValueArrayObjectDirect implements ValueArray {
         }        
         return hash;
     }
-    
+
     @Override
     public TypeArrayObjectDirect getType() {
-    	return type;
+        return type;
     }
-    
+
     @Override
     public void setImmutable() {
-    	immutable = true;
+        immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setSize(int size) {
+    }
+
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         if (this.content.length < size) {
             content = new Object[size];
         }
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

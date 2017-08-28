@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -30,36 +30,36 @@ import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIte;
 
 public enum OperatorEvaluatorIte implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorIte.ITE;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 3) {
-			return false;
-		}
-		if (!TypeBoolean.isBoolean(types[0])) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorIte.ITE;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 3) {
+            return false;
+        }
+        if (!TypeBoolean.isBoolean(types[0])) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorIte.ITE);
+        assert operator != null;
+        assert operator.equals(OperatorIte.ITE);
         assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        for (Type type : types) {
+            assert type != null;
+        }
         if (!TypeBoolean.isBoolean(types[0])) {
             return null;
         }
@@ -73,15 +73,15 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
-    		result.set(operands[1]);
-    	} else {
-    		result.set(operands[2]);    		
-    	}
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
+            result.set(operands[1]);
+        } else {
+            result.set(operands[2]);    		
+        }
     }
 }

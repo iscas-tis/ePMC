@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -40,24 +40,24 @@ public class AfterOptionsCreationCommandLump implements AfterOptionsCreation {
     @Override
     public void process(Options options) {
         assert options != null;
-        
+
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);
         assert commandTaskClasses != null;
         options.addCommand()
-        	.setBundleName(OptionsCommandLump.OPTIONS_COMMAND_LUMP)
-        	.setIdentifier(CommandTaskLump.IDENTIFIER)
-        	.setCommandLine()
-        	.setGui()
-        	.setWeb()
-        	.build();
-        
+        .setBundleName(OptionsCommandLump.OPTIONS_COMMAND_LUMP)
+        .setIdentifier(CommandTaskLump.IDENTIFIER)
+        .setCommandLine()
+        .setGui()
+        .setWeb()
+        .build();
+
         commandTaskClasses.put(CommandTaskLump.IDENTIFIER, CommandTaskLump.class);
         OptionTypeEnum optionTypeOutput = new OptionTypeEnum(OutputType.class);
         options.addOption().setBundleName(OptionsCommandLump.OPTIONS_COMMAND_LUMP)
-        	.setIdentifier(OptionsCommandLump.LUMP_OUTPUT_TYPE)
-        	.setType(optionTypeOutput).setDefault(OutputType.STATISTICS)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(OptionsGraphsolver.GRAPHSOLVER_CATEGORY)
-        	.build();
+        .setIdentifier(OptionsCommandLump.LUMP_OUTPUT_TYPE)
+        .setType(optionTypeOutput).setDefault(OutputType.STATISTICS)
+        .setCommandLine().setGui().setWeb()
+        .setCategory(OptionsGraphsolver.GRAPHSOLVER_CATEGORY)
+        .build();
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -57,7 +57,7 @@ public interface NodeProperty {
      * @return value for node queried last
      */
     Value get(int node);
-    
+
     /**
      * Set value for node queried last.
      * The value is set for the node from the latest call of
@@ -80,7 +80,7 @@ public interface NodeProperty {
      * @return type of the values returned by {@link #get()}
      */
     Type getType();
-    
+
 
     /* default methods */
 
@@ -125,7 +125,7 @@ public interface NodeProperty {
         assert ValueObject.isObject(value) : value + " " + value.getType();
         return ValueObject.asObject(value).getObject();
     }
-    
+
     /**
      * Return value of this node as enum.
      * In addition to the requirements of {@link #get()}, the node property must
@@ -139,7 +139,7 @@ public interface NodeProperty {
         assert ValueEnum.isEnum(value);
         return ValueEnum.asEnum(value).getEnum();
     }
-    
+
     /**
      * Set object value for node queried last.
      * The method has the same functionality as {@link #set(Value)}, except that

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -48,12 +48,12 @@ public enum DirType {
         assert string != null;
         this.string = string;
     }
-    
+
     @Override
     public String toString() {
         return string;
     }
-    
+
     /**
      * Check whether this object represents the minimising direction.
      * 
@@ -62,7 +62,7 @@ public enum DirType {
     public boolean isMin() {
         return this == MIN;
     }
-    
+
     /**
      * Check whether this object represents the maximising direction.
      * 
@@ -71,15 +71,15 @@ public enum DirType {
     public boolean isMax() {
         return this == MAX;
     }
-    
+
     public boolean isExists() {
         return this == EXISTS;
     }
-    
+
     public boolean isForall() {
         return this == FORALL;
     }
-    
+
     /**
      * Check whether this object represents the unspecified direction.
      * 

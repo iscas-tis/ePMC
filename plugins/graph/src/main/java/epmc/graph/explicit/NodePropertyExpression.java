@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -46,7 +46,7 @@ public final class NodePropertyExpression implements NodeProperty {
         values = new Value[variables.length];
         evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, variables);
     }
-    
+
     private NodeProperty[] computeVariableNodeProperties(
             Expression[] variables) {
         NodeProperty[] variableNodeProperties = new NodeProperty[variables.length];

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -78,27 +78,27 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
     private boolean negate;
-	private Expression property;
-	private StateSet forStates;
+    private Expression property;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
     @Override
     public StateMap solve() {
@@ -121,9 +121,9 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
 
     public StateMap doSolve(Expression property, StateSet states, boolean min)
-            {
+    {
         if (isNot(property)) {
-        	ExpressionOperator propertyOperator = (ExpressionOperator) property;
+            ExpressionOperator propertyOperator = (ExpressionOperator) property;
             property = propertyOperator.getOperand1();
             negate = true;
             min = !min;
@@ -160,9 +160,9 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         this.computeForStates = (StateSetExplicit) states;
         return solve((ExpressionTemporal) property, min);
     }
-    
+
     private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-            {
+    {
         assert pathTemporal != null;
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];
@@ -171,13 +171,13 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         }
         EvaluatorExplicitBoolean[] evaluators = new EvaluatorExplicitBoolean[pathTemporal.getOperands().size()];
         for (int i = 0; i < pathTemporal.getOperands().size(); i++) {
-        	evaluators[i] = UtilEvaluatorExplicit.newEvaluatorBoolean(pathTemporal.getOperands().get(i), graph, expressions);
+            evaluators[i] = UtilEvaluatorExplicit.newEvaluatorBoolean(pathTemporal.getOperands().get(i), graph, expressions);
         }
-        
+
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = UtilValue.newValue(typeWeight, 1);
         ValueArray resultValues = newValueArrayWeight(computeForStates.size());
-//        ValueArray result = typeArray.newValue(computeForStates.length());
+        //        ValueArray result = typeArray.newValue(computeForStates.length());
 
         solveNext(pathTemporal, expressions, evalValues, evaluators, min);
         if (negate) {
@@ -224,7 +224,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         values = objective.getResult();
         TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
-        	OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, TypeReal.get());
+            OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, TypeReal.get());
             Value rightValue = timeBound.getRightValue();
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
@@ -258,15 +258,15 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         }
         Semantics semantics = modelChecker.getModel().getSemantics();
         if (!SemanticsDiscreteTime.isDiscreteTime(semantics)
-        		&& !SemanticsContinuousTime.isContinuousTime(semantics)) {
-        	return false;
+                && !SemanticsContinuousTime.isContinuousTime(semantics)) {
+            return false;
         }
         if (!(property instanceof ExpressionQuantifier)) {
             return false;
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (!isNext(propertyQuantifier.getQuantified())) {
-        	return false;
+            return false;
         }
         Set<Expression> inners = UtilPCTL.collectPCTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -274,57 +274,57 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
-	@Override
+    @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	return required;
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return required;
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         Set<Expression> inners = UtilPCTL.collectPCTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return required;
+        return required;
     }
-    
+
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return required;
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return required;
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     private ValueArray newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
-    
+
     private Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorNot.NOT)
-    			.setPositional(expression.getPositional())
-    			.setOperands(expression)
-    			.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorNot.NOT)
+                .setPositional(expression.getPositional())
+                .setOperands(expression)
+                .build();
     }
-    
+
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -333,7 +333,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isNext(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -341,7 +341,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.NEXT;
     }
-    
+
     private static boolean isFinally(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -349,7 +349,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
     }
-    
+
     private static boolean isGlobally(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -357,7 +357,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
     }
-    
+
     private static boolean isRelease(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -365,7 +365,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
     }
-    
+
     private static ExpressionTemporal newTemporal
     (TemporalType type, Expression op1, Expression op2,
             TimeBound bound, Positional positional) {

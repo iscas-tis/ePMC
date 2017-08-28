@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -63,7 +63,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     private GraphDD graph;
     private ExpressionToDD expressionToDD;
     private Expression property;
-	private StateSet forStates;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
@@ -72,8 +72,8 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     private DD doSolve(Expression property, StateSet forStates)
-            {
-        
+    {
+
         DD nodeSpace = graph.getNodeSpace();
         ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
         // get a out of F a
@@ -81,22 +81,22 @@ public final class PropertySolverDDReachability implements PropertySolver {
         // translate a to a BDD representation
         DD rightDD = expressionToDD.translate(innerProposition);
         DD oneStatesDD = rightDD.and(nodeSpace);
-        
+
         rightDD.dispose();
         DD someDD = ComponentsDD.reachPre(graph, oneStatesDD, nodeSpace, false, false);
         // those states can not reach one states are zeroStates
         DD zeroStatesDD = nodeSpace.andNot(someDD);
         DD result;
-        
+
         result = computeProbability(oneStatesDD, zeroStatesDD);
         return result;
     }
 
     private DD computeProbability(DD oneStatesDD, DD zeroStatesDD)
-            {
+    {
         DD nodeSpace = graph.getNodeSpace();
         List<DD> sinks = new ArrayList<>();
-        
+
         // compute sink states
         zeroStatesDD = zeroStatesDD.orWith(nodeSpace.not());
         sinks.add(zeroStatesDD);
@@ -107,27 +107,27 @@ public final class PropertySolverDDReachability implements PropertySolver {
 
         GraphExplicit graph = converter.buildGraph();
         BitSet targetBitSet = converter.ddToBitSet(oneStatesDD);
-        
+
         ValueArrayAlgebra values = UtilReachability.computeReachabilityProbability(graph, targetBitSet);
         DD result = converter.valuesToDD(values);
 
         return result;
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
     @Override
     public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
             this.expressionToDD = graph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -142,9 +142,9 @@ public final class PropertySolverDDReachability implements PropertySolver {
             expressionToDD.putConstantWith(inner, innerResult.getValuesDD());
         }
         allStates.close();
-        
+
         DD resultDD = doSolve(quantifiedProp, forStates);
-       
+
         // store the results in StateMap
         StateMap result = new StateMapDD((StateSetDD) forStates.clone(), resultDD);
         return result;
@@ -157,13 +157,13 @@ public final class PropertySolverDDReachability implements PropertySolver {
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
         }
-        
+
         Semantics semantics = modelChecker.getModel().getSemantics();
         // only allow DTMC
         if (! SemanticsDTMC.isDTMC(semantics)) {
-        	return false;
+            return false;
         }
-        
+
         if (!(property instanceof ExpressionQuantifier)) {
             return false;
         }
@@ -177,46 +177,46 @@ public final class PropertySolverDDReachability implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	/** EXPRESSION_TO_DD stores the oracle which is able to 
-    	 * translate an expression to a BDD */
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	required.add(CommonProperties.SEMANTICS);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        /** EXPRESSION_TO_DD stores the oracle which is able to 
+         * translate an expression to a BDD */
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         Set<Expression> inners = UtilReachability.collectReachabilityInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return Collections.unmodifiableSet(required);
     }    
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
 
- 
+
 }

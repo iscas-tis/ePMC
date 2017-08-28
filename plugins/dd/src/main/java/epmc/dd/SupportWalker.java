@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -43,10 +43,10 @@ public final class SupportWalker {
         private final static String LANGLE = "(";
         private final static String COMMA = ",";
         private final static String RANGLE = ")";
-        
+
         private long long1;
         private long long2;
-        
+
         LongPair(long long1, long long2) {
             this.long1 = long1;
             this.long2 = long2;
@@ -56,7 +56,7 @@ public final class SupportWalker {
             this.long1 = long1;
             this.long2 = long2;
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -80,15 +80,15 @@ public final class SupportWalker {
             }
             return true;
         }
-        
+
         @Override
         public String toString() {
             return LANGLE + long1 + COMMA + long2 + RANGLE;
         }
     }
-    
+
     private final static String GRAPH_START = "digraph {\n";
-    
+
     private final static int LEAF_REACHED = Integer.MAX_VALUE;
     private final static int HIGH_ADD = 0;
     private final static int LOW_ADD = 1;
@@ -104,7 +104,7 @@ public final class SupportWalker {
     private int trueIndex = Integer.MIN_VALUE;
     private int falseIndex = Integer.MIN_VALUE;
     private int zeroIndex = Integer.MIN_VALUE;
-    
+
     // TODO extend stop-at
 
     // copy constructor
@@ -125,7 +125,7 @@ public final class SupportWalker {
         this.falseIndex = falseIndex;
         this.zeroIndex = zeroIndex;
     }
-    
+
     SupportWalker(DD node, DD support, Value[] stopWhere) {
         assert node != null;
         assert support != null;
@@ -143,19 +143,19 @@ public final class SupportWalker {
         goBackStack = new int[variables.length];
         buildDiagram(node, support);
     }
-    
+
     SupportWalker(DD node, DD support, Collection<Value> stopWhere) {
         this(node, support, stopWhere.toArray(new Value[0]));
     }
-    
+
     SupportWalker(DD node, DD support) {
         this(node, support, true, true);
     }
-    
+
     SupportWalker(DD node, DD support, boolean stopAtFalse, boolean stopAtZero) {
         this(node, support, toStopWhere(stopAtFalse, stopAtZero, node));
     }
-    
+
     private static Value[] toStopWhere(boolean stopAtFalse,
             boolean stopAtZero, DD node) {
         assert node != null;
@@ -241,7 +241,7 @@ public final class SupportWalker {
             }
         }
     }
-    
+
     private void buildDiagram(Walker node, Walker support,
             TObjectIntMap<LongPair> nodeEnumerator,
             TObjectIntMap<Value> valueEnumerator, BitSet seen) {
@@ -293,12 +293,12 @@ public final class SupportWalker {
         if (node.isLeaf()) {
             Value nodeValue = node.value();
             for (Value stop : stopWhere) {
-            	// TODO check following, probably very inefficient
-            	if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
-            			&& stop.isEq(nodeValue)) {
-            		stopAt = true;
-            		break;
-            	}
+                // TODO check following, probably very inefficient
+                if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
+                        && stop.isEq(nodeValue)) {
+                    stopAt = true;
+                    break;
+                }
             }
         }
         return stopAt;
@@ -342,7 +342,7 @@ public final class SupportWalker {
             support.back();
         }
     }
-    
+
     public int low(int index) {
         assert diagram[index * NUM_OUT] >= 0;
         return diagram[index * NUM_OUT + LOW_ADD];
@@ -359,14 +359,14 @@ public final class SupportWalker {
         variable++;
         index = diagram[index * NUM_OUT + LOW_ADD];
     }
-    
+
     public void high() {
         assert diagram[index * NUM_OUT] >= 0;
         goBackStack[variable] = index;
         variable++;
         index = diagram[index * NUM_OUT + HIGH_ADD];
     }
-    
+
     public void back() {
         assert index > 0;
         variable--;
@@ -376,18 +376,18 @@ public final class SupportWalker {
     public int variable(int number) {
         return variables[number];
     }
-    
+
     public int variable() {
         assert index >= 0;
         assert index * NUM_OUT < diagram.length;
         return isLeaf(index) ? LEAF_REACHED : variable(variable);
     }
-    
+
 
     public boolean isLeaf(int index) {
         return diagram[index * NUM_OUT] < 0;
     }
-    
+
     public boolean isLeaf() {
         return isLeaf(index);
     }
@@ -396,21 +396,21 @@ public final class SupportWalker {
         assert isLeaf(index);
         return leafValues[-diagram[index * NUM_OUT] - 1];
     }
-    
+
     public Value value() {
         return value(index);
     }
-    
+
     public boolean isFalse() {
         assert(index == falseIndex) == (isLeaf() && ValueBoolean.isFalse(value()));
         return index == falseIndex;
     }
-    
+
     public boolean isTrue() {
         assert(index == trueIndex) == (isLeaf() && ValueBoolean.isTrue(value()));
         return index == trueIndex;
     }
-    
+
     public boolean isZero() {
         assert(index == zeroIndex) == (isLeaf() && ValueAlgebra.asAlgebra(value()).isZero());
         return index == zeroIndex;
@@ -419,7 +419,7 @@ public final class SupportWalker {
     public long uniqueId() {
         return index;
     }
-    
+
     public SupportWalkerNodeMap newNodeMap(Type type) {
         assert type != null;
         return new SupportWalkerNodeMap(this, type);
@@ -428,20 +428,20 @@ public final class SupportWalker {
     public SupportWalkerNodeMapInt newNodeMapInt() {
         return new SupportWalkerNodeMapInt(this);
     }
-    
+
     int getIndex() {
         return index;
     }
-    
+
     int getNumNodes() {
         return diagram.length;
     }
-    
+
     ContextDD getContext() {
         return contextDD;
     }
-    
-    
+
+
     public SupportWalker permute(Permutation permutation) {
         assert permutation != null;
         assert permutation.getContextDD() == contextDD;
@@ -453,24 +453,24 @@ public final class SupportWalker {
                 leafValues, variable, stopWhere, contextDD,
                 trueIndex, falseIndex, zeroIndex);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(GRAPH_START);
-        
+
         int[] map = new int[diagram.length / NUM_OUT];
         Arrays.fill(map, -1);
         computeVarMap(0, 0, map);
-        
+
         for (int node = 0; node < diagram.length / NUM_OUT; node++) {
             int variable = map[node];
             String label = variable == LEAF_REACHED
                     ? value(node) + ": " + value(node).getType()
-                    : String.valueOf(variable);
-            String shape = variable == LEAF_REACHED ? "box" : "circle";
-            builder.append("  node" + node + " [label=\"" + label);
-            builder.append("\", shape=\"" + shape + "\"];\n");
+                            : String.valueOf(variable);
+                    String shape = variable == LEAF_REACHED ? "box" : "circle";
+                    builder.append("  node" + node + " [label=\"" + label);
+                    builder.append("\", shape=\"" + shape + "\"];\n");
         }
         builder.append("\n");
         BitSet seen = UtilBitSet.newBitSetUnbounded();
@@ -491,7 +491,7 @@ public final class SupportWalker {
         computeVarMap(low(node), varNumber + 1, map);
         computeVarMap(high(node), varNumber + 1, map);
     }
-    
+
     private void transitionsToString(StringBuilder builder, BitSet seen, int node) {
         if (seen.get(node)) {
             return;

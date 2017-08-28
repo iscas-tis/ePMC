@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
@@ -40,7 +40,7 @@ import epmc.value.ValueBoolean;
 
 public class LTLHelper {
     public static RawProperties readProperties(Options options, String propFn)
-            {
+    {
         if (propFn != null) {
             RawProperties props = new RawProperties();
             Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
@@ -107,7 +107,7 @@ public class LTLHelper {
         }//if quantifier false
         return false;
     }
-    
+
     private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -116,7 +116,7 @@ public class LTLHelper {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -125,5 +125,5 @@ public class LTLHelper {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(expressionLiteral.getValue());
     }
-    
+
 }

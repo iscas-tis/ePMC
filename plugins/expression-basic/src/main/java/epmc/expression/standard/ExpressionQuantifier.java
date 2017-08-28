@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -50,80 +50,80 @@ public final class ExpressionQuantifier implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setDirType(DirType dirType) {
             this.dirType = dirType;
             return this;
         }
-        
+
         private DirType getDirType() {
             return dirType;
         }
-        
+
         public Builder setCmpType(CmpType cmpType) {
             this.cmpType = cmpType;
             return this;
         }
-        
+
         private CmpType getCmpType() {
             return cmpType;
         }
-        
+
         public Builder setQuantified(Expression quantified) {
             this.quantified = quantified;
             return this;
         }
-        
+
         private Expression getQuantified() {
             return quantified;
         }
-        
+
         public Builder setCompare(Expression compare) {
             this.compare = compare;
             return this;
         }
-        
+
         private Expression getCompare() {
             return compare;
         }
-        
+
         public Builder setCondition(Expression condition) {
             this.condition = condition;
             return this;
         }
-        
+
         private Expression getCondition() {
             return condition;
         }
-        
+
         public ExpressionQuantifier build() {
             return new ExpressionQuantifier(this);
         }
     }
 
     public static boolean isQuantifier(Expression expression) {
-    	return expression instanceof ExpressionQuantifier;
+        return expression instanceof ExpressionQuantifier;
     }
-    
+
     public static ExpressionQuantifier asQuantifier(Expression expression) {
-    	if (isQuantifier(expression)) {
-    		return (ExpressionQuantifier) expression;
-    	} else {
-    		return null;
-    	}
+        if (isQuantifier(expression)) {
+            return (ExpressionQuantifier) expression;
+        } else {
+            return null;
+        }
     }
-    
+
     private final Positional positional;
     private final DirType dirType;
     private final CmpType cmpType;
     private final Expression quantified;
     private final Expression compare;
     private final Expression condition;
-    
+
     private ExpressionQuantifier(Builder builder) {
         assert builder != null;
         if (builder.getCompare() == null) {
@@ -136,7 +136,7 @@ public final class ExpressionQuantifier implements Expression {
         assert builder.getCmpType() != null;
         assert builder.getQuantified() != null;
         assert builder.getCmpType() != CmpType.IS
-        		|| isTrue(builder.getCompare());
+                || isTrue(builder.getCompare());
         assert isTrue(builder.getCondition());
         this.positional = builder.getPositional();
         this.dirType = builder.getDirType();
@@ -149,23 +149,23 @@ public final class ExpressionQuantifier implements Expression {
     public DirType getDirType() {
         return dirType;
     }
-    
+
     public CmpType getCompareType() {
         return cmpType;
     }
-    
+
     public Expression getQuantified() {
         return quantified;
     }
-    
+
     public Expression getCompare() {
         return compare;
     }
-    
+
     public Expression getCondition() {
         return condition;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new Builder()
@@ -180,7 +180,7 @@ public final class ExpressionQuantifier implements Expression {
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
+        assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
@@ -196,7 +196,7 @@ public final class ExpressionQuantifier implements Expression {
             return booleanType;
         }
     }
-    
+
     public boolean isDirMin() {
         return dirType == DirType.MIN;
     }
@@ -204,7 +204,7 @@ public final class ExpressionQuantifier implements Expression {
     public boolean isDirNone() {
         return dirType == DirType.NONE;
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         List<Expression> result = new ArrayList<>();
@@ -218,8 +218,8 @@ public final class ExpressionQuantifier implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
-    
+
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -232,9 +232,9 @@ public final class ExpressionQuantifier implements Expression {
         } else {
             builder.append("P");
         }
-        
+
         if (rewardStructure != null && !isTrue(rewardStructure)) {
-        	builder.append("{" + rewardStructure + "}");
+            builder.append("{" + rewardStructure + "}");
         }
         builder.append(dirType);
         builder.append(cmpType);
@@ -244,8 +244,8 @@ public final class ExpressionQuantifier implements Expression {
         builder.append("[");
         builder.append(getQuantified());
         if (!isTrue(getCondition())) {
-        	builder.append(" given ");
-        	builder.append(getCondition());
+            builder.append(" given ");
+            builder.append(getCondition());
         }
         builder.append("]");
         if (getPositional() != null) {
@@ -273,7 +273,7 @@ public final class ExpressionQuantifier implements Expression {
         }
         return this.dirType == other.dirType && this.cmpType == other.cmpType;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -286,7 +286,7 @@ public final class ExpressionQuantifier implements Expression {
         hash = cmpType.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -295,7 +295,7 @@ public final class ExpressionQuantifier implements Expression {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
-    
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
@@ -325,19 +325,19 @@ public final class ExpressionQuantifier implements Expression {
                 assert false;
             }
         }
-    
+
         return dirType;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionQuantifier.Builder()
-				.setCmpType(cmpType)
-				.setCompare(compare)
-				.setCondition(condition)
-				.setDirType(dirType)
-				.setQuantified(quantified)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionQuantifier.Builder()
+                .setCmpType(cmpType)
+                .setCompare(compare)
+                .setCondition(condition)
+                .setDirType(dirType)
+                .setQuantified(quantified)
+                .setPositional(positional)
+                .build();
+    }
 }

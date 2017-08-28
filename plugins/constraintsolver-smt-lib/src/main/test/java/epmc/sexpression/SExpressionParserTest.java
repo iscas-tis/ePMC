@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.sexpression;
 
@@ -26,11 +26,11 @@ import epmc.sexpression.SExpressionParser;
 import epmc.sexpression.UtilSExpression;
 
 public class SExpressionParserTest {
-	@Test
-	public void parserText() {
-		SExpressionParser parser = UtilSExpression.newParser();
-		System.out.println(parser.parse(" ( 4.5 (a ddb( ö	𤽜  )(a())) ((asdfs)c(d e)) )"));
-		System.out.println(parser.parse("asdf"));
-//		System.out.println(parser.parse(""));
-	}
+    @Test
+    public void parserText() {
+        SExpressionParser parser = UtilSExpression.newParser();
+        System.out.println(parser.parse(" ( 4.5 (a ddb( ö	𤽜  )(a())) ((asdfs)c(d e)) )"));
+        System.out.println(parser.parse("asdf"));
+        //		System.out.println(parser.parse(""));
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -37,16 +37,16 @@ final class AutomatonKretinskyProductState implements AutomatonStateUtil {
         this.observer = observer;
         this.states = states.clone();
     }
-    
+
     AutomatonKretinskyProductState(AutomatonKretinskyProductState other) {
         this(other.getAutomaton(), other.states);
     }
-    
+
     @Override
     protected AutomatonStateUtil clone() {
         return new AutomatonKretinskyProductState(this);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -56,12 +56,12 @@ final class AutomatonKretinskyProductState implements AutomatonStateUtil {
         AutomatonKretinskyProductState other = (AutomatonKretinskyProductState) obj;
         return Arrays.equals(states, other.states);
     }
-    
+
     @Override
     public int hashCode() {
         return Arrays.hashCode(states);
     }
-    
+
     @Override
     public String toString() {
         return Arrays.toString(states);
@@ -81,11 +81,11 @@ final class AutomatonKretinskyProductState implements AutomatonStateUtil {
     public int getNumber() {
         return this.number;
     }
-    
+
     public AutomatonStateUtil[] getStates() {
         return states;
     }
-    
+
     AutomatonStateUtil getState(int number) {
         return states[number];
     }
@@ -103,7 +103,7 @@ final class AutomatonKretinskyProductState implements AutomatonStateUtil {
             return this.stable.get(pair);
         }
         int[] acceptance = observer.getAcceptance(pair);
-        
+
         DD bigAnd = observer.getContextDD().newConstant(true);
         for (int slaveNr = 0; slaveNr < acceptance.length; slaveNr++) {
             DD slaveDD = observer.getSubformulaDD(slaveNr);

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -56,7 +56,7 @@ public class PCTLSolverDDTest {
         Map<String,Object> constants = new HashMap<>();
         Value result;
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
-//        options.set(OptionsDD.DD_BINARY_ENGINE, "buddy");
+        //        options.set(OptionsDD.DD_BINARY_ENGINE, "buddy");
         options.set("dd-and-exist", true);
         options.set("dd-init-cache-size", "2621440");
         constants.put("K", "16");
@@ -78,7 +78,7 @@ public class PCTLSolverDDTest {
         constants.put("K", "3");
         options.set(OptionsModelChecker.CONST, constants);
 
-//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (\"entered\") ]");
+        //        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (\"entered\") ]");
         result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 3), "Pmin=?[ F (   ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13))      ) ]");
         assertEquals(0, result, tolerance);
         close(options);
@@ -94,8 +94,8 @@ public class PCTLSolverDDTest {
         constants.put("K", "3");
         options.set(OptionsModelChecker.CONST, constants);
 
-//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
-      result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (   ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13)) | ((p4>7) & (p4<13))    ) ]");
+        //        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (   ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13)) | ((p4>7) & (p4<13))    ) ]");
         assertEquals(0, result, tolerance);
         close(options);
     }
@@ -118,7 +118,7 @@ public class PCTLSolverDDTest {
         assertEquals(0, result, 1E-8);
         close(options);
     }
-    
+
     @Test
     public void clusterBoundedUntilTest() {
         Options options = prepareOptions();
@@ -132,7 +132,7 @@ public class PCTLSolverDDTest {
         assertEquals("0.007682184285169857", result, tolerance);
         close(options);
     }
-    
+
     @Test
     public void hermanOpenIntervalTest() {
         Value result;
@@ -149,19 +149,19 @@ public class PCTLSolverDDTest {
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 7), "filter(state, P=? [ G<7 !\"stable\" ], (x1=0)&(x2=0)&(x3=0)&(x4=0)&(x5=0)&(x6=0)&(x7=0))");
         assertEquals("0.28856343032384757", result, tolerance);
     }
-    
+
     @Test
     public void twoDiceTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         double tolerance = 1E-6;
-//        options.set(OptionsEPMC.MDP_ENCODING_MODE, OptionsTypesEPMC.MDPEncoding.STATE);
+        //        options.set(OptionsEPMC.MDP_ENCODING_MODE, OptionsTypesEPMC.MDPEncoding.STATE);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         Value result1 = computeResult(options, ModelNamesPRISM.TWO_DICE_MODEL, "Pmin=? [ F s1=7 & s2=7 & d1+d2=2 ]");
         assertEquals("1/36", result1, tolerance);
         close(options);
     }
-    
+
     @Test
     public void ddTest() {
         Options options = prepareOptions();
@@ -189,20 +189,20 @@ public class PCTLSolverDDTest {
         support = support.andWith(player2Pos2.newCube(0));
         support = support.andWith(player2Pos3.newCube(0));
         support = support.andWith(turn.newCube(0));
-        
+
         DD valid = ContextDD.get().newConstant(true);
-        
+
         valid = valid.andWith(player1Pos1Enc.le(ContextDD.get().newConstant(15)));
         valid = valid.andWith(player1Pos2Enc.le(ContextDD.get().newConstant(15)));
         valid = valid.andWith(player1Pos3Enc.le(ContextDD.get().newConstant(15)));
 
         valid = valid.andWith(player1Pos1Enc.le(player1Pos2Enc));
         valid = valid.andWith(player1Pos2Enc.le(player1Pos3Enc));
-        
+
         valid = valid.andWith(player1Pos1Enc.clone().geWith(ContextDD.get().newConstant(0))
-        		.impliesWith(player1Pos1Enc.ne(player1Pos2Enc)));
+                .impliesWith(player1Pos1Enc.ne(player1Pos2Enc)));
         valid = valid.andWith(player1Pos2Enc.clone().geWith(ContextDD.get().newConstant(0))
-        		.impliesWith(player1Pos2Enc.ne(player1Pos3Enc)));
+                .impliesWith(player1Pos2Enc.ne(player1Pos3Enc)));
 
         valid = valid.andWith(player2Pos1Enc.le(ContextDD.get().newConstant(15)));
         valid = valid.andWith(player2Pos2Enc.le(ContextDD.get().newConstant(15)));
@@ -210,9 +210,9 @@ public class PCTLSolverDDTest {
         valid = valid.andWith(player2Pos1Enc.le(player2Pos2Enc));
         valid = valid.andWith(player2Pos2Enc.le(player2Pos3Enc));
         valid = valid.andWith(player2Pos1Enc.clone().geWith(ContextDD.get().newConstant(0))
-        		.impliesWith(player2Pos1Enc.ne(player2Pos2Enc)));
+                .impliesWith(player2Pos1Enc.ne(player2Pos2Enc)));
         valid = valid.andWith(player2Pos2Enc.clone().geWith(ContextDD.get().newConstant(0))
-        		.impliesWith(player2Pos2Enc.ne(player2Pos3Enc)));
+                .impliesWith(player2Pos2Enc.ne(player2Pos3Enc)));
 
         valid = valid.andWith(player1Pos1Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos1Enc.ne(player2Pos1Enc)));
         valid = valid.andWith(player1Pos1Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos1Enc.ne(player2Pos2Enc)));
@@ -227,16 +227,16 @@ public class PCTLSolverDDTest {
         valid = valid.andWith(player1Pos3Enc.ge(ContextDD.get().newConstant(0)).implies(player1Pos3Enc.ne(player2Pos3Enc)));
 
         valid = valid.andWith(
-        		(player1Pos1Enc.eq(ContextDD.get().newConstant(-2))
-        		.andWith(player1Pos2Enc.eq(ContextDD.get().newConstant(-2)))
-        		.andWith(player1Pos3Enc.eq(ContextDD.get().newConstant(-2))))
-        		.implies(turnEnc.eq(ContextDD.get().newConstant(false))));
+                (player1Pos1Enc.eq(ContextDD.get().newConstant(-2))
+                        .andWith(player1Pos2Enc.eq(ContextDD.get().newConstant(-2)))
+                        .andWith(player1Pos3Enc.eq(ContextDD.get().newConstant(-2))))
+                .implies(turnEnc.eq(ContextDD.get().newConstant(false))));
 
         valid = valid.andWith(
-        		(player2Pos1Enc.eq(ContextDD.get().newConstant(-2))
-        		.andWith(player2Pos2Enc.eq(ContextDD.get().newConstant(-2)))
-        		.andWith(player2Pos3Enc.eq(ContextDD.get().newConstant(-2))))
-        		.implies(turnEnc.eq(ContextDD.get().newConstant(true))));
+                (player2Pos1Enc.eq(ContextDD.get().newConstant(-2))
+                        .andWith(player2Pos2Enc.eq(ContextDD.get().newConstant(-2)))
+                        .andWith(player2Pos3Enc.eq(ContextDD.get().newConstant(-2))))
+                .implies(turnEnc.eq(ContextDD.get().newConstant(true))));
 
         ContextDD.get().reorder();
         System.out.println(valid.countSat(support));

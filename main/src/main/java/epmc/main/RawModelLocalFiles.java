@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -90,7 +90,7 @@ public final class RawModelLocalFiles implements RawModel {
         }
         return result;
     }
-    
+
     @Override
     public InputStream[] getPropertyInputStreams() {
         // TODO improve user feedback in case of errors

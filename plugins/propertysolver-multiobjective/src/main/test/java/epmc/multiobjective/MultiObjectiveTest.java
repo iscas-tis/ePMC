@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -42,7 +42,7 @@ import epmc.plugin.OptionsPlugin;
 import epmc.value.Value;
 
 public class MultiObjectiveTest {
-  private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
+    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     @BeforeClass
     public static void initialise() {
@@ -98,13 +98,13 @@ public class MultiObjectiveTest {
         assertEquals(true, result);
         close(options);
     }
-    
+
     @Test
     public void miniQuantitative() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE, "multi(Pmax=? [ F x=1 ], P>=1[ F x=2 ])");
         assertEquals(1, result, 1E-10);
 
@@ -119,18 +119,18 @@ public class MultiObjectiveTest {
 
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE, "multi(Pmax=? [ F (G(x=1)) ], P>=0.6[ F(G( x=2)) ])");
         assertEquals("0.4", result, 1E-10);
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE, "multi(Pmin=? [ F (G(x=1)) ], P>=0.6[ F(G( x=2)) ])");
         assertEquals(0, result, 1E-10);
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE, "multi(Pmin=? [ F (G(x=2)) ], P>=0.6[ F(G( x=2)) ])");
         assertEquals("0.6", result, 1E-10);
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE, "multi(Pmax=? [ F (G(x=2)) ], P>=0.6[ F(G( x=2)) ])");
         assertEquals(1, result, 1E-10);
         close(options);
     }
-    
+
     @Test
     public void miniQualitativeRewards() {
         Options options = prepareMultiOptions();
@@ -139,12 +139,12 @@ public class MultiObjectiveTest {
 
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(R>=2 [ C ])");
         assertEquals(true, result);
-        
-  //      result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(R>=2.1 [ C ], P>=1[ F x=3 ])");
-//        assertEquals(false, result);
+
+        //      result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(R>=2.1 [ C ], P>=1[ F x=3 ])");
+        //        assertEquals(false, result);
         close(options);
     }
-    
+
     @Test
     public void miniQuantitativeRewards() {
         Options options = prepareMultiOptions();
@@ -152,30 +152,30 @@ public class MultiObjectiveTest {
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmax=? [ C ], P>=1[ F x=3 ])");
         assertEquals("2", result, 1E-10);
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(R>=2 [ C ], Pmax=?[ F x=3 ])");
         assertEquals("1", result, 1E-10);
 
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmax=? [ C ], P>=0.5[ F x=3 ])");
         assertEquals("3", result, 1E-10);
-        
+
         result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmax=? [ C ], P>=0.1[ F x=3 ])");
         assertEquals("3.8", result, 1E-10);
-        
 
-//        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmin=? [ C ], P>=0.5[ F x=3 ])");
-//        System.out.println("result " + result);
-//        assertEquals("0", result, 1E-10);
-        
-//        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmin=? [ C ], P<=0.5[ F x=3 ])");
-//        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmax=?[C], P>=0.9[!(F(x=3))])");
-//        System.out.println(result);
+
+        //        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmin=? [ C ], P>=0.5[ F x=3 ])");
+        //        System.out.println("result " + result);
+        //        assertEquals("0", result, 1E-10);
+
+        //        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmin=? [ C ], P<=0.5[ F x=3 ])");
+        //        result = computeResult(options, MULTI_OBJECTIVE_SIMPLE_REWARDS, "multi(Rmax=?[C], P>=0.9[!(F(x=3))])");
+        //        System.out.println(result);
         close(options);
     }
-    
+
     @Test
     public void dinnerReducedProbBounded1() {
         Options options = prepareMultiOptions();
@@ -187,19 +187,19 @@ public class MultiObjectiveTest {
 
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(P>=0.75[ F (!running & sated & kitchenClean) ], P>=1[ F(X(act = eatPizza)) ])");
         assertEquals(false, result);
-        
+
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(P>=0[ F (!running & sated & kitchenClean) ], P>=0.951[ F(X(act = eatPizza)) ])");
         assertEquals(false, result);
 
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(Pmax=?[ F (!running & sated & kitchenClean) ], P>=0.95[ F(X(act = eatPizza)) ])");
         assertEquals("0.9025", result, 1E-10);
-        
+
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(P>=0.95[ F(X(act = eatPizza)) ])");
         assertEquals(true, result);
-        
+
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(P>=0.95001[ F(X(act = eatPizza)) ])");
         assertEquals(false, result);
-        
+
         result = computeResult(options, DINNER_REDUCED_PROB_BOUNDED_1, "multi(Pmax=?[ F(X(act = eatPizza)) ])");
         assertEquals("0.95", result, 1E-10);
     }    
@@ -222,11 +222,11 @@ public class MultiObjectiveTest {
 
         result = computeResult(options, ANDREA_BUG, "multi(P>=1[F(state=N)],P>=1[F(state=0)])");
         assertEquals(true, result);
-        
+
         result = computeResult(options, ANDREA_BUG, "multi(P>=0.999[F(state=N)],P>=0.999[F(state=0)])");
         assertEquals(true, result);
     }
-    
+
     @Test
     public void andreaBugSecond() {
         Options options = prepareMultiOptions();

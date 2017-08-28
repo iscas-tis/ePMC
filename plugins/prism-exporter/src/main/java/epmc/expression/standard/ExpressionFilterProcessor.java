@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,59 +26,59 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionFilter filter = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionFilter; 
-		
-		filter = (ExpressionFilter) obj;
-		return this;
-	}
+    private ExpressionFilter filter = null;
 
-	@Override
-	public String toPRISM() {
-		assert filter != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		prism.append("filter(")
-			 .append(filter.getFilterType().toString())
-			 .append(", ")
-			 .append(ProcessorRegistrar.getProcessor(filter.getProp())
-					 				   .toPRISM());
-		
-		Expression states = filter.getStates();
-		if (states != null) {
-			prism.append(", ")
-				 .append(ProcessorRegistrar.getProcessor(states)
-						 				   .toPRISM());
-		}
-		prism.append(")");
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionFilter; 
 
-		return prism.toString();
-	}
-	@Override
-	public void validateTransientVariables() {
-		assert filter != null;
-		
-		for (Expression child : filter.getChildren()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert filter != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : filter.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        filter = (ExpressionFilter) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert filter != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        prism.append("filter(")
+        .append(filter.getFilterType().toString())
+        .append(", ")
+        .append(ProcessorRegistrar.getProcessor(filter.getProp())
+                .toPRISM());
+
+        Expression states = filter.getStates();
+        if (states != null) {
+            prism.append(", ")
+            .append(ProcessorRegistrar.getProcessor(states)
+                    .toPRISM());
+        }
+        prism.append(")");
+
+        return prism.toString();
+    }
+    @Override
+    public void validateTransientVariables() {
+        assert filter != null;
+
+        for (Expression child : filter.getChildren()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert filter != null;
+
+        boolean usesTransient = false;
+        for (Expression child : filter.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

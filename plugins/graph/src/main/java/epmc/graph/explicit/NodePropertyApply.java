@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -45,8 +45,8 @@ public final class NodePropertyApply implements NodeProperty {
     private final Value[] callOperands;
     /** Value returned by {@link #get()}. */
     private final Value value;
-	private OperatorEvaluator evaluator;
-    
+    private OperatorEvaluator evaluator;
+
     /**
      * Construct a new apply node property.
      * None of the arguments may be {@code null} or contain {@code null}
@@ -77,7 +77,7 @@ public final class NodePropertyApply implements NodeProperty {
         this.evaluator = evaluator;
         this.value = type.newValue();
     }
-    
+
     /**
      * {@inheritDoc}
      * For this property type, the result of this function is computed as

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -40,19 +40,19 @@ public final class GraphSolverObjectiveDDUnboundedReachability implements GraphS
     public GraphDD getGraph() {
         return graph;
     }
-    
+
     public void setMin(boolean min) {
         this.min = min;
     }
-    
+
     public boolean isMin() {
         return min;
     }
-    
+
     public void setTarget(DD target) {
         this.target = target;
     }
-    
+
     public DD getTarget() {
         return target;
     }
@@ -60,7 +60,7 @@ public final class GraphSolverObjectiveDDUnboundedReachability implements GraphS
     public void setSinks(List<DD> sinks) {
         this.sinks = sinks;
     }
-    
+
     public List<DD> getSinks() {
         return sinks;
     }

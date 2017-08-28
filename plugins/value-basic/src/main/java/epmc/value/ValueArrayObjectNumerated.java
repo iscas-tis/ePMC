@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -37,10 +37,10 @@ final class ValueArrayObjectNumerated implements ValueArray {
     private Object[] numberToObject = new Object[1];
     private int numBits;
 
-	private final TypeArrayObjectNumerated type;
+    private final TypeArrayObjectNumerated type;
     private long[] content;
-	private boolean immutable;
-	private int size;
+    private boolean immutable;
+    private int size;
 
     ValueArrayObjectNumerated(TypeArrayObjectNumerated type, boolean objectIdentity) {
         this.type = type;
@@ -52,16 +52,16 @@ final class ValueArrayObjectNumerated implements ValueArray {
         } else {
             objectToNumber = new TObjectIntHashMap<>();
         }
-        
+
     }
-    
+
     @Override
     public ValueArrayObjectNumerated clone() {
-    	ValueArrayObjectNumerated other = new ValueArrayObjectNumerated(getType(), objectIdentity);
-    	other.set(this);
-    	return other;
+        ValueArrayObjectNumerated other = new ValueArrayObjectNumerated(getType(), objectIdentity);
+        other.set(this);
+        return other;
     }
-    
+
     @Override
     public void set(Value value, int index) {
         assert !isImmutable();
@@ -93,18 +93,18 @@ final class ValueArrayObjectNumerated implements ValueArray {
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         ValueObject.asObject(value).set(numberToObject(number));
     }
-    
+
     private int getBitsPerEntry() {
         return numBits;
     }
-    
+
     private Object numberToObject(int number) {
         return numberToObject[number];
     }
@@ -119,7 +119,7 @@ final class ValueArrayObjectNumerated implements ValueArray {
                         2 * numberToObject.length);
             }
             numberToObject[number] = object;
-            
+
             int newNumConstants = objectToNumber.size();
             int newNumBits = Integer.SIZE - Integer.numberOfLeadingZeros(newNumConstants - 1);
             if (newNumBits > numBits) {
@@ -129,7 +129,7 @@ final class ValueArrayObjectNumerated implements ValueArray {
         }
         return number;
     }
-    
+
     void increaseNumBits() {
         int totalSize = size();
         int oldNumBitsPerEntry = getBitsPerEntry();
@@ -142,10 +142,10 @@ final class ValueArrayObjectNumerated implements ValueArray {
             for (int bitNr = 0; bitNr < oldNumBitsPerEntry; bitNr++) {
                 int bitIndex = entryNr * oldNumBitsPerEntry + bitNr;
                 int offset = bitIndex >> LOG2LONGSIZE;
-                boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-                if (bitValue) {
-                    number |= (1 << bitNr);
-                }
+            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+            if (bitValue) {
+                number |= (1 << bitNr);
+            }
             }
             for (int bitNr = 0; bitNr < newNumBitsPerEntry; bitNr++) {
                 boolean bitValue = (number & (1 << bitNr)) != 0;
@@ -160,52 +160,52 @@ final class ValueArrayObjectNumerated implements ValueArray {
         }
         this.content = newContent;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = 0 + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public TypeArrayObjectNumerated getType() {
-		return type;
-	}
-    
+        return type;
+    }
+
     @Override
     public void setImmutable() {
-    	this.immutable = true;
+        this.immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setSize(int size) {
+    }
+
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[num];
         this.size = size;		
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
+    @Override
+    public int size() {
+        return size;
+    }
 
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

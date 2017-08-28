@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -26,54 +26,54 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class AutomataProcessor implements JANI2PRISMProcessorStrict {
 
-	private Automata automata = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Automata;
-		
-		automata = (Automata) obj;
-		return this;
-	}
+    private Automata automata = null;
 
-	@Override
-	public String toPRISM() {
-		assert automata != null;
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Automata;
 
-		StringBuilder prism = new StringBuilder();
-		
-		for (Automaton automaton : automata) {
-			//AT: the location renaming is performed during the computation of AutomatonProcessor.toPRISM()
-			String automatonString = ProcessorRegistrar.getProcessor(automaton).toPRISM();
-			prism.append(JANIComponentRegistrar.locationRenaming(automaton))
-				 .append(automatonString)
-				 .append("\n");
-		}
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert automata != null;
-		
-		for (Automaton automaton : automata) {
-			ProcessorRegistrar.getProcessor(automaton)
-							  .validateTransientVariables();
-		}
-	}
+        automata = (Automata) obj;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert automata != null;
-		
-		boolean usesTransient = false;
-		for (Automaton automaton : automata) {
-			usesTransient |= ProcessorRegistrar.getProcessor(automaton)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+    @Override
+    public String toPRISM() {
+        assert automata != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        for (Automaton automaton : automata) {
+            //AT: the location renaming is performed during the computation of AutomatonProcessor.toPRISM()
+            String automatonString = ProcessorRegistrar.getProcessor(automaton).toPRISM();
+            prism.append(JANIComponentRegistrar.locationRenaming(automaton))
+            .append(automatonString)
+            .append("\n");
+        }
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert automata != null;
+
+        for (Automaton automaton : automata) {
+            ProcessorRegistrar.getProcessor(automaton)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert automata != null;
+
+        boolean usesTransient = false;
+        for (Automaton automaton : automata) {
+            usesTransient |= ProcessorRegistrar.getProcessor(automaton)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

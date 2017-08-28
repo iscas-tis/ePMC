@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.error;
 
@@ -29,8 +29,8 @@ public final class ProblemsPRISMConverter {
     public final static Problem PRISM_CONVERTER_VARIABLE_TYPE = newProblem("prism-converter-variable-type");
 
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(PROBLEMS_PRISM_CONVERTER, name);
+        assert name != null;
+        return UtilError.newProblem(PROBLEMS_PRISM_CONVERTER, name);
     }
 
     private ProblemsPRISMConverter() {

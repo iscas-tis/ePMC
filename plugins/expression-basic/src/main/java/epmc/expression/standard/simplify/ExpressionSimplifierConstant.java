@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -42,8 +42,8 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
         }
         if (UtilExpressionStandard.collectIdentifiers(expression).size() == 0) {
             return new ExpressionLiteral.Builder()
-            		.setValue(evaluateValue(expressionToType, expression))
-            		.build();
+                    .setValue(evaluateValue(expressionToType, expression))
+                    .build();
         }
         List<Expression> newChildren = new ArrayList<>();
         boolean simplified = false;

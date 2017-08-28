@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -45,131 +45,131 @@ import epmc.util.UtilJSON;
  * @author Andrea Turrini
  */
 public final class JANIPropertyRewardInstant implements JANINode {
-	/** Identifier of this JANI expression type. */
-	public final static String IDENTIFIER = "property-reward-instant";
+    /** Identifier of this JANI expression type. */
+    public final static String IDENTIFIER = "property-reward-instant";
 
-	private final static String EXP = "exp";
-	private final static String ACCUMULATE = "accumulate";
-	private final static String INSTANTS = "instants";
-	
-	private Map<String, ? extends JANIIdentifier> validIdentifiers;
-	private boolean forProperty;
-	private ModelJANI model;
-	
-	private boolean initialized;
-	private Expression exp;
-	private List<JANIPropertyAccumulateValue> accumulate;
-	private Expression instants;
-	
-	private void resetFields() {
-		initialized = false;
-		exp = null;
-		accumulate = null;
-		instants = null;
-	}
-	
-	public JANIPropertyRewardInstant() {
-		resetFields();
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert validIdentifiers != null;
-		assert value != null;
-		resetFields();
-		if (!forProperty) {
-			return null;
-		}
-		if (!(value instanceof JsonObject)) {
-			return null;
-		}
-		JsonObject object = (JsonObject) value;
-		if (!object.containsKey(EXP)) {
-			return null;
-		}
-		if (!object.containsKey(ACCUMULATE)) {
-			return null;
-		}
-		if (!object.containsKey(INSTANTS)) {
-			return null;
-		}
-		exp = ExpressionParser.parseExpression(model, object.get(EXP), validIdentifiers);
-		JsonArray accumulate = UtilJSON.getArray(object, ACCUMULATE);
-		this.accumulate = new ArrayList<>(accumulate.size());
-		for (JsonValue acc : accumulate) {
-			this.accumulate.add(UtilJSON.toOneOf(acc, JANIPropertyAccumulateValue.getAccumulateValues()));
-		}
-		instants = ExpressionParser.parseExpression(model, object.get(INSTANTS), validIdentifiers);
-		initialized = (exp != null) && (accumulate != null) && (instants != null);
-		return this;
-	}
+    private final static String EXP = "exp";
+    private final static String ACCUMULATE = "accumulate";
+    private final static String INSTANTS = "instants";
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(EXP, ExpressionParser.generateExpression(model, exp));
-		if (accumulate != null) {
-			JsonArrayBuilder accumulateBuilder = Json.createArrayBuilder();
-			for (JANIPropertyAccumulateValue acc : accumulate) {
-				accumulateBuilder.add(acc.toString());
-			}
-			builder.add(ACCUMULATE, accumulateBuilder);
-		}
-		builder.add(INSTANTS, ExpressionParser.generateExpression(model, instants));
-		return builder.build();
-	}
+    private Map<String, ? extends JANIIdentifier> validIdentifiers;
+    private boolean forProperty;
+    private ModelJANI model;
 
-	public void setRef(Expression ref) {
-		this.exp = ref;
-		initialized = (ref != null) && (accumulate != null) && (instants != null);
-	}
-	
-	public Expression getRef() {
-		return exp;
-	}
-	
-	public void setInstants(Expression instants) {
-		this.instants = instants;
-		initialized = (exp != null) && (accumulate != null) && (instants != null);
-	}
-	
-	public Expression getInstants() {
-		return instants;
-	}
-	
-	public void setAccumulate(List<JANIPropertyAccumulateValue> accumulate) {
-		this.accumulate = accumulate;
-		initialized = (exp != null) && (accumulate != null) && (instants != null);
-	}
-	
-	public List<JANIPropertyAccumulateValue> getAccumulate() {
-		return accumulate;
-	}
-	
-	public void setForProperty(boolean forProperty) {
-		this.forProperty = forProperty;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private boolean initialized;
+    private Expression exp;
+    private List<JANIPropertyAccumulateValue> accumulate;
+    private Expression instants;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-		this.validIdentifiers = identifiers;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    private void resetFields() {
+        initialized = false;
+        exp = null;
+        accumulate = null;
+        instants = null;
+    }
+
+    public JANIPropertyRewardInstant() {
+        resetFields();
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert validIdentifiers != null;
+        assert value != null;
+        resetFields();
+        if (!forProperty) {
+            return null;
+        }
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(EXP)) {
+            return null;
+        }
+        if (!object.containsKey(ACCUMULATE)) {
+            return null;
+        }
+        if (!object.containsKey(INSTANTS)) {
+            return null;
+        }
+        exp = ExpressionParser.parseExpression(model, object.get(EXP), validIdentifiers);
+        JsonArray accumulate = UtilJSON.getArray(object, ACCUMULATE);
+        this.accumulate = new ArrayList<>(accumulate.size());
+        for (JsonValue acc : accumulate) {
+            this.accumulate.add(UtilJSON.toOneOf(acc, JANIPropertyAccumulateValue.getAccumulateValues()));
+        }
+        instants = ExpressionParser.parseExpression(model, object.get(INSTANTS), validIdentifiers);
+        initialized = (exp != null) && (accumulate != null) && (instants != null);
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(EXP, ExpressionParser.generateExpression(model, exp));
+        if (accumulate != null) {
+            JsonArrayBuilder accumulateBuilder = Json.createArrayBuilder();
+            for (JANIPropertyAccumulateValue acc : accumulate) {
+                accumulateBuilder.add(acc.toString());
+            }
+            builder.add(ACCUMULATE, accumulateBuilder);
+        }
+        builder.add(INSTANTS, ExpressionParser.generateExpression(model, instants));
+        return builder.build();
+    }
+
+    public void setRef(Expression ref) {
+        this.exp = ref;
+        initialized = (ref != null) && (accumulate != null) && (instants != null);
+    }
+
+    public Expression getRef() {
+        return exp;
+    }
+
+    public void setInstants(Expression instants) {
+        this.instants = instants;
+        initialized = (exp != null) && (accumulate != null) && (instants != null);
+    }
+
+    public Expression getInstants() {
+        return instants;
+    }
+
+    public void setAccumulate(List<JANIPropertyAccumulateValue> accumulate) {
+        this.accumulate = accumulate;
+        initialized = (exp != null) && (accumulate != null) && (instants != null);
+    }
+
+    public List<JANIPropertyAccumulateValue> getAccumulate() {
+        return accumulate;
+    }
+
+    public void setForProperty(boolean forProperty) {
+        this.forProperty = forProperty;
+    }
+
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
+
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.validIdentifiers = identifiers;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

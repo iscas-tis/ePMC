@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy.automata;
 
@@ -54,9 +54,9 @@ public final class AutomatonDDSubset implements AutomatonDD {
     private final ExpressionToDD expressionToDD;
 
     /* constructors */
-    
+
     public AutomatonDDSubset(ExpressionToDD expressionToDD, Buechi buechi, DD states)
-            {
+    {
         assert expressionToDD != null;
         assert buechi != null;
         assert states != null;
@@ -95,7 +95,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     public List<DD> getPresVars() {
         return presVars;
     }
-    
+
     @Override
     public List<DD> getNextVars() {
         return nextVars;
@@ -109,13 +109,13 @@ public final class AutomatonDDSubset implements AutomatonDD {
     public DD getUnder() {
         return under;
     }
-    
+
     public DD getOver() {
         return over;
     }
 
     /* private auxiliary methods */
-    
+
     private void prepareVariables() {
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             String labelName = "%autlabel" + labelNr;
@@ -134,23 +134,23 @@ public final class AutomatonDDSubset implements AutomatonDD {
             }
         }
     }
-    
+
     private DD computeInit() {
         DD init = ContextDD.get().newConstant(true);
         BitSet bInit = buechi.getGraph().getInitialNodes();
         for (int node = 0; node < automaton.getNumNodes(); node++) {
-        	if (bInit.get(node)) {
-        		init = init.andWith(presVars.get(node).clone());        		
-        	} else {
-        		init = init.andWith(presVars.get(node).not());
-        	}
+            if (bInit.get(node)) {
+                init = init.andWith(presVars.get(node).clone());        		
+            } else {
+                init = init.andWith(presVars.get(node).not());
+            }
         }
         return init;
     }
-    
+
     private DD computeTransition() {
         List<DD> rSucc = subsetImage();
-        
+
         int trueState = buechi.getTrueState();
         if (trueState != -1) {
             DD rNextTrue = rSucc.get(trueState);
@@ -160,7 +160,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
                 }
             }
         }
-        
+
         DD trans = eq(rSucc, nextVars);
         ContextDD.get().dispose(rSucc);
         return trans;
@@ -186,7 +186,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
         return nextOns;
     }
-    
+
     private DD eq(List<DD> set1, List<DD> set2) {
         assert set1 != null;
         assert set2 != null;
@@ -232,7 +232,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
                 notGuardAndPres.dispose();
             }
         }
-        
+
         DD under = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD labelOn = labelsOns.get(labelNr);
@@ -243,7 +243,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         DD underOld = under;
         under = fixAcceptanceEmptySet(under);
         underOld.dispose();
-                
+
         return under;
     }
 
@@ -253,10 +253,10 @@ public final class AutomatonDDSubset implements AutomatonDD {
             DD nextVar = nextVars.get(state);
             allStatesOff = allStatesOff.andWith(nextVar.not());
         }
-        
+
         allStatesOff = allStatesOff.abstractAndExistWith(trans.clone(), nextCube.clone());
-        
-        
+
+
         DD allLabelsOff = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD label = labels.get(labelNr);
@@ -264,12 +264,12 @@ public final class AutomatonDDSubset implements AutomatonDD {
         }
         acceptance = allStatesOff.not().andWith(acceptance.clone())
                 .orWith(allStatesOff.andWith(allLabelsOff));
-        
+
         return acceptance;
     }
 
     private DD computeOver(ContextDD encoding)
-            {
+    {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             labelsOns.add(ContextDD.get().newConstant(false));
@@ -292,7 +292,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
                 guardAndPres.dispose();
             }
         }
-        
+
         DD over = ContextDD.get().newConstant(true);
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             DD labelOn = labelsOns.get(labelNr);
@@ -306,7 +306,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
         return over;
     }
-    
+
     private DD computeStateStaySame() {
         DD result = ContextDD.get().newConstant(true);
         Iterator<DD> presIter = presVars.iterator();
@@ -329,9 +329,9 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
     @Override
     public void close() {
-    	ContextDD.get().dispose(labels);
-    	ContextDD.get().dispose(presVars);
-    	ContextDD.get().dispose(nextVars);
+        ContextDD.get().dispose(labels);
+        ContextDD.get().dispose(presVars);
+        ContextDD.get().dispose(nextVars);
         presCube.dispose();
         nextCube.dispose();
         labelsCube.dispose();

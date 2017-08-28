@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.expression;
 
@@ -36,80 +36,80 @@ import epmc.value.UtilValue;
 import epmc.value.ValueReal;
 
 public final class JANIExpressionReal implements JANIExpression {
-	public final static String IDENTIFIER = "real";
+    public final static String IDENTIFIER = "real";
 
-	private boolean initialized = false;
-	
-	private ModelJANI model;
+    private boolean initialized = false;
 
-	private String number;
+    private ModelJANI model;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private String number;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		initialized = false;
-		if (!(value instanceof JsonNumber)) {
-			return null;
-		}
-		JsonNumber number = (JsonNumber) value;
-		if (number.isIntegral()) {
-			return null;
-		}
-		this.number = number.toString();
-		initialized = true;
-		return this;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		return UtilJSON.toNumberValue(number);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
-		assert expression != null;
-		assert model != null;
-		initialized = false;
-		if (!(expression instanceof ExpressionLiteral)) {
-			return null;
-		}
-		ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-		if (!ValueReal.isReal(expressionLiteral.getValue())) {
-			return null;
-		}
-		number = expressionLiteral.getValue().toString();
-		initialized = true;
-		return this;
-	}
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        initialized = false;
+        if (!(value instanceof JsonNumber)) {
+            return null;
+        }
+        JsonNumber number = (JsonNumber) value;
+        if (number.isIntegral()) {
+            return null;
+        }
+        this.number = number.toString();
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public Expression getExpression() {
-		assert initialized;
-		assert model != null;
-		return new ExpressionLiteral.Builder()
-				.setValueProvider(() -> UtilValue.newValue(TypeReal.get(), number))
-				.build();
-	}
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        return UtilJSON.toNumberValue(number);
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-	}
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        initialized = false;
+        if (!(expression instanceof ExpressionLiteral)) {
+            return null;
+        }
+        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+        if (!ValueReal.isReal(expressionLiteral.getValue())) {
+            return null;
+        }
+        number = expressionLiteral.getValue().toString();
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        return new ExpressionLiteral.Builder()
+                .setValueProvider(() -> UtilValue.newValue(TypeReal.get(), number))
+                .build();
+    }
+
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }
 }

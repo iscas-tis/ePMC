@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -38,7 +38,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -50,7 +50,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -60,7 +60,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -70,7 +70,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
@@ -98,20 +98,20 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
             return new EvaluatorExplicitOperatorShortcutOr(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
 
     public final static String IDENTIFIER = "operator-shortcut-or";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicitBoolean[] operands;
@@ -141,7 +141,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
@@ -161,7 +161,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
         }
         return result;
     }
-    
+
     @Override
     public boolean evaluateBoolean(Value... values) {
         assert values != null;
@@ -174,7 +174,7 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
             return operands[1].evaluateBoolean(values);
         }
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

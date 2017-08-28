@@ -16,24 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication.resultformatter;
 
 import javax.json.JsonValue;
 
 public interface ResultFormatter {
-	String getIdentifier();
-	
-	void setResult(Object result);
-	
-	boolean canHandle();
-	
-	String getLabel();
+    String getIdentifier();
 
-	JsonValue getType();
-	
-	JsonValue getValue();
-	
-	String getFormattedValue();
+    void setResult(Object result);
+
+    boolean canHandle();
+
+    String getLabel();
+
+    JsonValue getType();
+
+    JsonValue getValue();
+
+    String getFormattedValue();
 }

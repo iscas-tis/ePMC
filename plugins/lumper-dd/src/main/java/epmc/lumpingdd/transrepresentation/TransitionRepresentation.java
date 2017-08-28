@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumpingdd.transrepresentation;
 
@@ -24,14 +24,14 @@ import epmc.dd.DD;
 import epmc.graph.dd.GraphDD;
 
 public interface TransitionRepresentation {
-	
-	/**
-	 * Set the original graph that the lumper works on
-	 */
-	public void setOriginal(GraphDD original);
-	/**
-	 * Convert the transition weights DD of the original
-	 * graph to the right representation.
-	 */
-	public DD fromTransWeights();
+
+    /**
+     * Set the original graph that the lumper works on
+     */
+    public void setOriginal(GraphDD original);
+    /**
+     * Convert the transition weights DD of the original
+     * graph to the right representation.
+     */
+    public DD fromTransWeights();
 }

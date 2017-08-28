@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -63,10 +63,10 @@ public class RobotsForValueIteration {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_REDUCED, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0) ]");
         assertEquals(1, result, tolerance);
-        
+
         close(options);
     }
-    
+
     @Test
     public void mediumTest() {
         Options options = prepareOptions();
@@ -92,13 +92,13 @@ public class RobotsForValueIteration {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_ONE_DIR, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0 & box1At = 1) ]");
         assertEquals(1, result, tolerance);
-        
+
         options.set(GRAPHSOLVER_ITERATIVE_NATIVE, false);
         constants.put("N", "10");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_ONE_DIR, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0 & box1At = 1) ]");
         assertEquals(1, result, tolerance);
-        
+
         close(options);
     }
 }

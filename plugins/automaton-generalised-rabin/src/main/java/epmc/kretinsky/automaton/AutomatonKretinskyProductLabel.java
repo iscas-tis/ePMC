@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -30,7 +30,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     private int number;
     private AutomatonKretinskyProductState state;
     private AutomatonLabelUtil[] succLabel;
-    
+
     public AutomatonKretinskyProductLabel(
             AutomatonKretinskyProduct observerKretinskyProduct, AutomatonKretinskyProductState current, AutomatonLabelUtil[] succLabel) {
         this.state = current;
@@ -63,7 +63,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -89,7 +89,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
         }
         return true;
     }
-    
+
     @Override
     public int getNumber() {
         return this.number;
@@ -99,7 +99,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     public void setNumber(int number) {
         this.number = number;
     }
-    
+
     public void toString(StringBuilder builder) {
         try {
             for (int pair = 0; pair < observer.getNumPairs(); pair++) {
@@ -118,7 +118,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
             builder.append(e);
         }
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

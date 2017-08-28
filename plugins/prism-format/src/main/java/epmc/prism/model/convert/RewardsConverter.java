@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
@@ -73,427 +73,427 @@ import epmc.value.ValueBoolean;
  * @author Ernst Moritz Hahn
  */
 final class RewardsConverter {
-	/** Name of automaton which will handle rewards. */
-	private final static String REWARD_AUTOMATON = "reward_automaton";
-	/** Name of the single location of the reward automaton. */
-	private final static String LOCATION_NAME = PRISM2JANIConverter.LOCATION_NAME;
-	/** Empty string. */
-	private final static String EMPTY = PRISM2JANIConverter.EMPTY;
+    /** Name of automaton which will handle rewards. */
+    private final static String REWARD_AUTOMATON = "reward_automaton";
+    /** Name of the single location of the reward automaton. */
+    private final static String LOCATION_NAME = PRISM2JANIConverter.LOCATION_NAME;
+    /** Empty string. */
+    private final static String EMPTY = PRISM2JANIConverter.EMPTY;
 
-	/** PRISM model to be transformed to JANI model. */
-	private ModelPRISM modelPRISM;
-	/** JANI model resulting from transformation from PRISM model. */
-	private ModelJANI modelJANI;
-	/** Action used as silent action. */
-	private Action tauAction;
-	/** Rewards have to be renamed for exporting but not for internal use;
-	 * this variable controls the way rewards are managed. */
-	private boolean forExporting;
-	
-	void setForExporting(boolean forExporting) {
-		this.forExporting = forExporting;
-	}
-	
-	void setPRISMModel(ModelPRISM modelPrism) {
-		this.modelPRISM = modelPrism;
-	}
-	
-	void setJANIModel(ModelJANI modelJani) {
-		this.modelJANI = modelJani;
-	}
-	
-	void setTauAction(Action tauAction) {
-		this.tauAction = tauAction;
-	}
-	
-	void attachRewards() {
-		assert modelJANI != null;
-		assert modelPRISM != null;
-		assert tauAction != null;
-		
-		RewardMethod rewardMethod = Options.get().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
-		switch (rewardMethod) {
-		case INTEGRATE:
-			attachRewardsIntegrate();
-			break;
-		case EXTERNAL:
-			attachRewardsExternal();
-			break;
-		case NONE:
-			break;
-		default:
-			assert false;
-			break;		
-		}
-	}
-	
-	private void attachRewardsExternal() {
-    	Variables rewards = buildRewards();
-    	addRewards(rewards);
-    	Automaton rewardAutomaton = computeRewardAutomaton();
-		Automata automata = modelJANI.getAutomata();
-    	automata.addAutomaton(rewardAutomaton);
-    	composeRewardAutomatonWithSystem(rewardAutomaton);
-	}
-	
-	private void addRewards(Variables rewards) {
-		Variables globalVariables = modelJANI.getGlobalVariables();
-    	if (globalVariables == null) {
-    		globalVariables = new Variables();
-    		globalVariables.setModel(modelJANI);
-    		modelJANI.setGlobalVariables(globalVariables);
-    	}
-    	for (Variable variable : rewards) {
-    		globalVariables.addVariable(variable);
-    	}
-	}
+    /** PRISM model to be transformed to JANI model. */
+    private ModelPRISM modelPRISM;
+    /** JANI model resulting from transformation from PRISM model. */
+    private ModelJANI modelJANI;
+    /** Action used as silent action. */
+    private Action tauAction;
+    /** Rewards have to be renamed for exporting but not for internal use;
+     * this variable controls the way rewards are managed. */
+    private boolean forExporting;
 
-	private Variables buildRewards() {
-		Variables rewards = new Variables();
-		rewards.setModel(modelJANI);
-		JANITypeReal rewardType = new JANITypeReal();
-		rewardType.setModel(modelJANI);
-		for (RewardStructure reward : modelPRISM.getRewards()) {
-			String name = reward.getName();
-			if (forExporting) {
-				name = PRISM2JANIConverter.prefixRewardName(reward.getName());
-			}
-			Variable variable = new Variable();
-			variable.setModel(modelJANI);
-			variable.setName(name);
-			ExpressionIdentifierStandard identifier = new ExpressionIdentifierStandard.Builder()
-					.setName(name)
-					.build();
-			variable.setIdentifier(identifier);
-			variable.setType(rewardType);
-			variable.setTransient(true);
-			variable.setInitial(new ExpressionLiteral.Builder()
-					.setValueProvider(() -> TypeWeight.get().getZero()).build());
-			rewards.addVariable(variable);
-		}
-		return rewards;
-	}
+    void setForExporting(boolean forExporting) {
+        this.forExporting = forExporting;
+    }
 
-	private Automaton computeRewardAutomaton() {
-		Automaton automaton = new Automaton();
-		automaton.setModel(modelJANI);
-		automaton.setName(REWARD_AUTOMATON);
-		Location location = new Location();
-		location.setModel(modelJANI);
-		location.setName(LOCATION_NAME);
-		Assignments locationRewardAssignments = computeLocationRewardAssignments();
-		location.setTransientValueAssignments(locationRewardAssignments);
-		Locations locations = new Locations();
-		locations.add(location);
-		automaton.setLocations(locations);
-		automaton.setInitialLocations(Collections.singleton(location));
-		Edges edges = computeRewardAutomatonEdges(location);
-		automaton.setEdges(edges);		
-		return automaton;
-	}
+    void setPRISMModel(ModelPRISM modelPrism) {
+        this.modelPRISM = modelPrism;
+    }
 
-	private Edges computeRewardAutomatonEdges(Location location) {
-		assert location != null;
-		Edges edges = new Edges();
-		edges.setModel(modelJANI);
-		Actions actions = modelJANI.getActions();
-		for (Action action : actions) {
-			Edge edge = new Edge();
-			edge.setModel(modelJANI);
-			edge.setAction(action);
-			edge.setLocation(location);
-			Destinations destinations = new Destinations();
-			destinations.setModel(modelJANI);
-			edge.setDestinations(destinations);
-			Destination destination = new Destination();
-			destination.setModel(modelJANI);
-			destination.setLocation(location);
-			rewardSetRateIfAppropriate(edge);
-			Assignments assignments = new Assignments();
-			computeEdgeRewardAssignments(action, assignments);
-			destination.setAssignments(assignments);
-			destinations.addDestination(destination);
-			if (assignments.size() > 0) {
-				edges.addEdge(edge);
-			}
-		}
-		return edges;
-	}
+    void setJANIModel(ModelJANI modelJani) {
+        this.modelJANI = modelJani;
+    }
 
-	private void rewardSetRateIfAppropriate(Edge edge) {
-		assert edge != null;
-		if (SemanticsCTMC.isCTMC(modelPRISM.getSemantics())
-				|| SemanticsCTMDP.isCTMDP(modelPRISM.getSemantics())) {
-			Rate rate = new Rate();
-			rate.setModel(modelJANI);
-			rate.setExp(new ExpressionLiteral.Builder()
-					.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 1))
-					.build());
-			edge.setRate(rate);
-		}
-	}
+    void setTauAction(Action tauAction) {
+        this.tauAction = tauAction;
+    }
 
-	private void computeEdgeRewardAssignments(Action action, Assignments assignments) {
-		Variables rewards = modelJANI.getGlobalVariablesTransient();
-		assignments.setModel(modelJANI);
-		List<RewardStructure> rewardStructures = modelPRISM.getRewards();
-		for (RewardStructure structure : rewardStructures) {
-			String rewardName = structure.getName(); 
-			if (forExporting) {
-				rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
-			}
-			Variable variable = rewards.get(rewardName);
-			Expression assignedToVariable = null;
-			for (TransitionReward transitionReward : structure.getTransitionRewards()) {
-				String label = transitionReward.getLabel();
-				if (!action.getName().equals(label)
-						&& (this.tauAction != action || !label.equals(EMPTY))) {
-					continue;
-				}
-				Expression guard = transitionReward.getGuard();
-				Expression value = transitionReward.getValue();
-				Expression guardedReward = null;
-				if (isTrue(guard)) {
-					guardedReward = value;
-				} else {
-					guardedReward = UtilExpressionStandard.opIte(guard, value, 0);
-				}
-				if (assignedToVariable == null) {
-					assignedToVariable = guardedReward;
-				} else {
-					assignedToVariable = UtilExpressionStandard.opAdd(assignedToVariable, guardedReward);
-				}
-			}
-			if (assignedToVariable == null) {
-				continue;
-			}
-			AssignmentSimple rewardAssignment = new AssignmentSimple();
-			rewardAssignment.setModel(modelJANI);
-			rewardAssignment.setRef(variable);
-			rewardAssignment.setValue(assignedToVariable);
-			assignments.add(rewardAssignment);
-		}
-	}
+    void attachRewards() {
+        assert modelJANI != null;
+        assert modelPRISM != null;
+        assert tauAction != null;
 
-	private Assignments computeLocationRewardAssignments() {
-		Variables rewards = modelJANI.getGlobalVariablesTransient();
-		Assignments locationRewardAssignments = new Assignments();
-		locationRewardAssignments.setModel(modelJANI);
-		List<RewardStructure> rewardStructures = modelPRISM.getRewards();
-		for (RewardStructure structure : rewardStructures) {
-			Expression stateRewards = convertStateRewards(structure.getStateRewards());
-			if (stateRewards instanceof ExpressionLiteral
-					&& ValueAlgebra.asAlgebra(((ExpressionLiteral) stateRewards).getValue()).isZero()) {
-				continue;
-			}
-			String rewardName = structure.getName();
-			if (forExporting) {
-				rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
-			}
-			Variable rewardVariable = rewards.get(rewardName);
-			AssignmentSimple locationRewardAssignment = new AssignmentSimple();
-			locationRewardAssignment.setModel(modelJANI);
-			locationRewardAssignment.setRef(rewardVariable);
-			locationRewardAssignment.setValue(stateRewards);
-			locationRewardAssignments.add(locationRewardAssignment);
-		}
-		if (locationRewardAssignments.size() == 0) {
-			return null;
-		}
-		return locationRewardAssignments;
-	}
+        RewardMethod rewardMethod = Options.get().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
+        switch (rewardMethod) {
+        case INTEGRATE:
+            attachRewardsIntegrate();
+            break;
+        case EXTERNAL:
+            attachRewardsExternal();
+            break;
+        case NONE:
+            break;
+        default:
+            assert false;
+            break;		
+        }
+    }
 
-	private Expression convertStateRewards(List<StateReward> stateRewards) {
-		assert stateRewards != null;
-		Expression result = null;
-		for (StateReward stateReward : stateRewards) {
-			Expression guard = stateReward.getGuard();
-			Expression value = stateReward.getValue();
-			Expression guardedReward = null;
-			if (isTrue(guard)) {
-				guardedReward = value;
-			} else {
-				guardedReward = UtilExpressionStandard.opIte(guard, value, 0);				
-			}
-			if (result == null) {
-				result = guardedReward;
-			} else {
-				result = UtilExpressionStandard.opAdd(result, guardedReward);
-			}
-		}
-		if (result == null) {
-			return new ExpressionLiteral.Builder()
-					.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 0))
-					.build();
-		}
-		return result;
-	}
-	
-	private void composeRewardAutomatonWithSystem(Automaton rewardAutomaton) {
-		Component system = modelJANI.getSystem();
-		List<Action> rewardAutomatonActions = new ArrayList<>();
-		for (Edge edge : rewardAutomaton.getEdges()) {
-			rewardAutomatonActions.add(edge.getAction());
-		}
-		if (system instanceof ComponentSynchronisationVectors) {
-			ComponentSynchronisationVectors systemSync = (ComponentSynchronisationVectors) system;
-			SynchronisationVectorElement rewardElement = new SynchronisationVectorElement();
-			rewardElement.setModel(modelJANI);
-			rewardElement.setAutomaton(rewardAutomaton);
-			List<SynchronisationVectorElement> newElements = new ArrayList<>(systemSync.getElements());
-			newElements.add(rewardElement);
-			systemSync.setElements(newElements);
-			for (SynchronisationVectorSync sync : systemSync.getSyncs()) {
-				Action result = sync.getResult();
-				List<Action> newActions = new ArrayList<>(sync.getSynchronise());
-				if (!rewardAutomatonActions.contains(result)) {
-					result = null;
-				}
-				newActions.add(result);
-				sync.setSynchronise(newActions);
-			}
-		} else {
-			ComponentParallel result = new ComponentParallel();
-			result.setModel(modelJANI);
-			result.setLeft(system);
-			ComponentAutomaton componentRewardAutomaton = new ComponentAutomaton();
-			componentRewardAutomaton.setModel(modelJANI);
-			componentRewardAutomaton.setAutomaton(rewardAutomaton);
-			result.setRight(componentRewardAutomaton);
-			result.addActions(rewardAutomatonActions);
-			modelJANI.setSystem(result);
-		}
-	}
+    private void attachRewardsExternal() {
+        Variables rewards = buildRewards();
+        addRewards(rewards);
+        Automaton rewardAutomaton = computeRewardAutomaton();
+        Automata automata = modelJANI.getAutomata();
+        automata.addAutomaton(rewardAutomaton);
+        composeRewardAutomatonWithSystem(rewardAutomaton);
+    }
 
-	private void attachRewardsIntegrate() {
-    	Variables rewards = buildRewards();
-    	addRewards(rewards);
-		Actions actions = modelJANI.getActions();
-		for (Action action : actions) {
-			attachRewards(modelJANI.getSystem(), action, action);
-		}
-		Automaton automaton = modelJANI.getAutomata().iterator().next();
-		for (Location location : automaton.getLocations()) {
-			location.setTransientValueAssignments(computeLocationRewardAssignments());
-		}
-	}
-	
-	private void attachRewards(Component system, Action toAction, Action effectOf) {
-		assert system != null;
-		if (system instanceof ComponentAutomaton) {
-			attachRewardsAutomaton((ComponentAutomaton) system, toAction, effectOf);
-		} else if (system instanceof ComponentParallel) {
-			attachRewardsParallel((ComponentParallel) system, toAction, effectOf);
-		} else if (system instanceof ComponentRename) {
-			attachRewardsRename((ComponentRename) system, toAction, effectOf);
-		} else if (system instanceof ComponentSynchronisationVectors) {
-			attachRewardsSynchronisationVectors((ComponentSynchronisationVectors) system, toAction, effectOf);
-		} else {
-			assert false;
-		}
-	}
+    private void addRewards(Variables rewards) {
+        Variables globalVariables = modelJANI.getGlobalVariables();
+        if (globalVariables == null) {
+            globalVariables = new Variables();
+            globalVariables.setModel(modelJANI);
+            modelJANI.setGlobalVariables(globalVariables);
+        }
+        for (Variable variable : rewards) {
+            globalVariables.addVariable(variable);
+        }
+    }
 
-	private void attachRewardsSynchronisationVectors(
-			ComponentSynchronisationVectors system, Action toAction,
-			Action effectOf) {
-		/* Note that this way of attaching rewards only works for
-		 * synchronisation vectors produced by the translation from PRISM,
-		 * but not for general synchronisation vectors. */
-		List<SynchronisationVectorElement> elements = system.getElements();
-		List<SynchronisationVectorSync> oldSyncs = system.getSyncs();
-		while (!oldSyncs.isEmpty()) {
-			List<SynchronisationVectorSync> newSyncs = new ArrayList<>();
-			SynchronisationVectorSync oldSync = null;
-			for (SynchronisationVectorSync oldSyncc : oldSyncs) {
-				if (oldSyncc.getResult() == effectOf) {
-					oldSync = oldSyncc;
-					break;
-				}
-			}
-			if (oldSync == null) {
-				return;
-			}
-			List<Action> actions = oldSync.getSynchronise();
-			int elementNr = 0;
-			Action automatonAction = null;
-			for (Action action : actions) {
-				if (action != null) {
-					automatonAction = action;
-					break;
-				}
-				elementNr++;
-			}
-			Automaton automaton = elements.get(elementNr).getAutomaton();
-			attachRewardsAutomaton(automaton, automatonAction, effectOf);
-			for (SynchronisationVectorSync oldSyncc : oldSyncs) {
-				Action action = oldSyncc.getSynchronise().get(elementNr);
-				if (action != automatonAction) {
-					newSyncs.add(oldSyncc);
-				}
-			}
-			oldSyncs = newSyncs;
-		}
-		
-//		system.setSyncs(oldSyncs);
-		
-		// TODO Auto-generated method stub
-		
-	}
+    private Variables buildRewards() {
+        Variables rewards = new Variables();
+        rewards.setModel(modelJANI);
+        JANITypeReal rewardType = new JANITypeReal();
+        rewardType.setModel(modelJANI);
+        for (RewardStructure reward : modelPRISM.getRewards()) {
+            String name = reward.getName();
+            if (forExporting) {
+                name = PRISM2JANIConverter.prefixRewardName(reward.getName());
+            }
+            Variable variable = new Variable();
+            variable.setModel(modelJANI);
+            variable.setName(name);
+            ExpressionIdentifierStandard identifier = new ExpressionIdentifierStandard.Builder()
+                    .setName(name)
+                    .build();
+            variable.setIdentifier(identifier);
+            variable.setType(rewardType);
+            variable.setTransient(true);
+            variable.setInitial(new ExpressionLiteral.Builder()
+                    .setValueProvider(() -> TypeWeight.get().getZero()).build());
+            rewards.addVariable(variable);
+        }
+        return rewards;
+    }
 
-	private void attachRewardsAutomaton(Automaton automaton, Action toAction, Action effectOf) {
-		assert automaton != null;
-		assert toAction != null;
-		for (Edge edge : automaton.getEdges()) {
-			if (!edge.getAction().getName().equals(toAction.getName())) {
-				continue;
-			}
-//			AT: there are no transient/observable assignment in the JANI specification
-			for (Destination destination : edge.getDestinations()) {
-				Assignments assignments = destination.getAssignments();
-				computeEdgeRewardAssignments(effectOf, assignments);
-			}
-		}
-	}
-	
-	private void attachRewardsAutomaton(ComponentAutomaton system, Action toAction, Action effectOf) {
-		assert system != null;
-		assert toAction != null;
-		Automaton automaton = system.getAutomaton();
-		attachRewardsAutomaton(automaton, toAction, effectOf);
-	}
+    private Automaton computeRewardAutomaton() {
+        Automaton automaton = new Automaton();
+        automaton.setModel(modelJANI);
+        automaton.setName(REWARD_AUTOMATON);
+        Location location = new Location();
+        location.setModel(modelJANI);
+        location.setName(LOCATION_NAME);
+        Assignments locationRewardAssignments = computeLocationRewardAssignments();
+        location.setTransientValueAssignments(locationRewardAssignments);
+        Locations locations = new Locations();
+        locations.add(location);
+        automaton.setLocations(locations);
+        automaton.setInitialLocations(Collections.singleton(location));
+        Edges edges = computeRewardAutomatonEdges(location);
+        automaton.setEdges(edges);		
+        return automaton;
+    }
 
-	private void attachRewardsParallel(ComponentParallel system, Action toAction, Action effectOf) {
-		Component componentLeft = system.getLeft();
-		Component componentRight = system.getRight();
-		Set<Action> systemActions = system.getActions();
-		boolean found = false;
-		for (Action sysAction : systemActions) {
-			if (sysAction.getName().equals(toAction.getName())) {
-				found = true;
-			}
-		}
-		if (found) {
-			attachRewards(componentLeft, toAction, effectOf);
-		} else {
-			attachRewards(componentLeft, toAction, effectOf);
-			attachRewards(componentRight, toAction, effectOf);			
-		}
-	}
-	
-	private void attachRewardsRename(ComponentRename system, Action toAction, Action effectOf) {
-		assert system != null;
-		assert toAction != null;
-		assert effectOf != null;
-		Component renamed = system.getRenamed();
-		for (Entry<Action, Action> entry : system.getRenaming().entrySet()) {
-			Action entryFromAction = entry.getKey();
-			Action entryToAction = entry.getValue();
-			if (entryToAction.getName().equals(toAction.getName())) {
-				attachRewards(renamed, entryFromAction, effectOf);
-			}
-		}
-	}
-	
+    private Edges computeRewardAutomatonEdges(Location location) {
+        assert location != null;
+        Edges edges = new Edges();
+        edges.setModel(modelJANI);
+        Actions actions = modelJANI.getActions();
+        for (Action action : actions) {
+            Edge edge = new Edge();
+            edge.setModel(modelJANI);
+            edge.setAction(action);
+            edge.setLocation(location);
+            Destinations destinations = new Destinations();
+            destinations.setModel(modelJANI);
+            edge.setDestinations(destinations);
+            Destination destination = new Destination();
+            destination.setModel(modelJANI);
+            destination.setLocation(location);
+            rewardSetRateIfAppropriate(edge);
+            Assignments assignments = new Assignments();
+            computeEdgeRewardAssignments(action, assignments);
+            destination.setAssignments(assignments);
+            destinations.addDestination(destination);
+            if (assignments.size() > 0) {
+                edges.addEdge(edge);
+            }
+        }
+        return edges;
+    }
+
+    private void rewardSetRateIfAppropriate(Edge edge) {
+        assert edge != null;
+        if (SemanticsCTMC.isCTMC(modelPRISM.getSemantics())
+                || SemanticsCTMDP.isCTMDP(modelPRISM.getSemantics())) {
+            Rate rate = new Rate();
+            rate.setModel(modelJANI);
+            rate.setExp(new ExpressionLiteral.Builder()
+                    .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 1))
+                    .build());
+            edge.setRate(rate);
+        }
+    }
+
+    private void computeEdgeRewardAssignments(Action action, Assignments assignments) {
+        Variables rewards = modelJANI.getGlobalVariablesTransient();
+        assignments.setModel(modelJANI);
+        List<RewardStructure> rewardStructures = modelPRISM.getRewards();
+        for (RewardStructure structure : rewardStructures) {
+            String rewardName = structure.getName(); 
+            if (forExporting) {
+                rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
+            }
+            Variable variable = rewards.get(rewardName);
+            Expression assignedToVariable = null;
+            for (TransitionReward transitionReward : structure.getTransitionRewards()) {
+                String label = transitionReward.getLabel();
+                if (!action.getName().equals(label)
+                        && (this.tauAction != action || !label.equals(EMPTY))) {
+                    continue;
+                }
+                Expression guard = transitionReward.getGuard();
+                Expression value = transitionReward.getValue();
+                Expression guardedReward = null;
+                if (isTrue(guard)) {
+                    guardedReward = value;
+                } else {
+                    guardedReward = UtilExpressionStandard.opIte(guard, value, 0);
+                }
+                if (assignedToVariable == null) {
+                    assignedToVariable = guardedReward;
+                } else {
+                    assignedToVariable = UtilExpressionStandard.opAdd(assignedToVariable, guardedReward);
+                }
+            }
+            if (assignedToVariable == null) {
+                continue;
+            }
+            AssignmentSimple rewardAssignment = new AssignmentSimple();
+            rewardAssignment.setModel(modelJANI);
+            rewardAssignment.setRef(variable);
+            rewardAssignment.setValue(assignedToVariable);
+            assignments.add(rewardAssignment);
+        }
+    }
+
+    private Assignments computeLocationRewardAssignments() {
+        Variables rewards = modelJANI.getGlobalVariablesTransient();
+        Assignments locationRewardAssignments = new Assignments();
+        locationRewardAssignments.setModel(modelJANI);
+        List<RewardStructure> rewardStructures = modelPRISM.getRewards();
+        for (RewardStructure structure : rewardStructures) {
+            Expression stateRewards = convertStateRewards(structure.getStateRewards());
+            if (stateRewards instanceof ExpressionLiteral
+                    && ValueAlgebra.asAlgebra(((ExpressionLiteral) stateRewards).getValue()).isZero()) {
+                continue;
+            }
+            String rewardName = structure.getName();
+            if (forExporting) {
+                rewardName = PRISM2JANIConverter.prefixRewardName(rewardName);
+            }
+            Variable rewardVariable = rewards.get(rewardName);
+            AssignmentSimple locationRewardAssignment = new AssignmentSimple();
+            locationRewardAssignment.setModel(modelJANI);
+            locationRewardAssignment.setRef(rewardVariable);
+            locationRewardAssignment.setValue(stateRewards);
+            locationRewardAssignments.add(locationRewardAssignment);
+        }
+        if (locationRewardAssignments.size() == 0) {
+            return null;
+        }
+        return locationRewardAssignments;
+    }
+
+    private Expression convertStateRewards(List<StateReward> stateRewards) {
+        assert stateRewards != null;
+        Expression result = null;
+        for (StateReward stateReward : stateRewards) {
+            Expression guard = stateReward.getGuard();
+            Expression value = stateReward.getValue();
+            Expression guardedReward = null;
+            if (isTrue(guard)) {
+                guardedReward = value;
+            } else {
+                guardedReward = UtilExpressionStandard.opIte(guard, value, 0);				
+            }
+            if (result == null) {
+                result = guardedReward;
+            } else {
+                result = UtilExpressionStandard.opAdd(result, guardedReward);
+            }
+        }
+        if (result == null) {
+            return new ExpressionLiteral.Builder()
+                    .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 0))
+                    .build();
+        }
+        return result;
+    }
+
+    private void composeRewardAutomatonWithSystem(Automaton rewardAutomaton) {
+        Component system = modelJANI.getSystem();
+        List<Action> rewardAutomatonActions = new ArrayList<>();
+        for (Edge edge : rewardAutomaton.getEdges()) {
+            rewardAutomatonActions.add(edge.getAction());
+        }
+        if (system instanceof ComponentSynchronisationVectors) {
+            ComponentSynchronisationVectors systemSync = (ComponentSynchronisationVectors) system;
+            SynchronisationVectorElement rewardElement = new SynchronisationVectorElement();
+            rewardElement.setModel(modelJANI);
+            rewardElement.setAutomaton(rewardAutomaton);
+            List<SynchronisationVectorElement> newElements = new ArrayList<>(systemSync.getElements());
+            newElements.add(rewardElement);
+            systemSync.setElements(newElements);
+            for (SynchronisationVectorSync sync : systemSync.getSyncs()) {
+                Action result = sync.getResult();
+                List<Action> newActions = new ArrayList<>(sync.getSynchronise());
+                if (!rewardAutomatonActions.contains(result)) {
+                    result = null;
+                }
+                newActions.add(result);
+                sync.setSynchronise(newActions);
+            }
+        } else {
+            ComponentParallel result = new ComponentParallel();
+            result.setModel(modelJANI);
+            result.setLeft(system);
+            ComponentAutomaton componentRewardAutomaton = new ComponentAutomaton();
+            componentRewardAutomaton.setModel(modelJANI);
+            componentRewardAutomaton.setAutomaton(rewardAutomaton);
+            result.setRight(componentRewardAutomaton);
+            result.addActions(rewardAutomatonActions);
+            modelJANI.setSystem(result);
+        }
+    }
+
+    private void attachRewardsIntegrate() {
+        Variables rewards = buildRewards();
+        addRewards(rewards);
+        Actions actions = modelJANI.getActions();
+        for (Action action : actions) {
+            attachRewards(modelJANI.getSystem(), action, action);
+        }
+        Automaton automaton = modelJANI.getAutomata().iterator().next();
+        for (Location location : automaton.getLocations()) {
+            location.setTransientValueAssignments(computeLocationRewardAssignments());
+        }
+    }
+
+    private void attachRewards(Component system, Action toAction, Action effectOf) {
+        assert system != null;
+        if (system instanceof ComponentAutomaton) {
+            attachRewardsAutomaton((ComponentAutomaton) system, toAction, effectOf);
+        } else if (system instanceof ComponentParallel) {
+            attachRewardsParallel((ComponentParallel) system, toAction, effectOf);
+        } else if (system instanceof ComponentRename) {
+            attachRewardsRename((ComponentRename) system, toAction, effectOf);
+        } else if (system instanceof ComponentSynchronisationVectors) {
+            attachRewardsSynchronisationVectors((ComponentSynchronisationVectors) system, toAction, effectOf);
+        } else {
+            assert false;
+        }
+    }
+
+    private void attachRewardsSynchronisationVectors(
+            ComponentSynchronisationVectors system, Action toAction,
+            Action effectOf) {
+        /* Note that this way of attaching rewards only works for
+         * synchronisation vectors produced by the translation from PRISM,
+         * but not for general synchronisation vectors. */
+        List<SynchronisationVectorElement> elements = system.getElements();
+        List<SynchronisationVectorSync> oldSyncs = system.getSyncs();
+        while (!oldSyncs.isEmpty()) {
+            List<SynchronisationVectorSync> newSyncs = new ArrayList<>();
+            SynchronisationVectorSync oldSync = null;
+            for (SynchronisationVectorSync oldSyncc : oldSyncs) {
+                if (oldSyncc.getResult() == effectOf) {
+                    oldSync = oldSyncc;
+                    break;
+                }
+            }
+            if (oldSync == null) {
+                return;
+            }
+            List<Action> actions = oldSync.getSynchronise();
+            int elementNr = 0;
+            Action automatonAction = null;
+            for (Action action : actions) {
+                if (action != null) {
+                    automatonAction = action;
+                    break;
+                }
+                elementNr++;
+            }
+            Automaton automaton = elements.get(elementNr).getAutomaton();
+            attachRewardsAutomaton(automaton, automatonAction, effectOf);
+            for (SynchronisationVectorSync oldSyncc : oldSyncs) {
+                Action action = oldSyncc.getSynchronise().get(elementNr);
+                if (action != automatonAction) {
+                    newSyncs.add(oldSyncc);
+                }
+            }
+            oldSyncs = newSyncs;
+        }
+
+        //		system.setSyncs(oldSyncs);
+
+        // TODO Auto-generated method stub
+
+    }
+
+    private void attachRewardsAutomaton(Automaton automaton, Action toAction, Action effectOf) {
+        assert automaton != null;
+        assert toAction != null;
+        for (Edge edge : automaton.getEdges()) {
+            if (!edge.getAction().getName().equals(toAction.getName())) {
+                continue;
+            }
+            //			AT: there are no transient/observable assignment in the JANI specification
+            for (Destination destination : edge.getDestinations()) {
+                Assignments assignments = destination.getAssignments();
+                computeEdgeRewardAssignments(effectOf, assignments);
+            }
+        }
+    }
+
+    private void attachRewardsAutomaton(ComponentAutomaton system, Action toAction, Action effectOf) {
+        assert system != null;
+        assert toAction != null;
+        Automaton automaton = system.getAutomaton();
+        attachRewardsAutomaton(automaton, toAction, effectOf);
+    }
+
+    private void attachRewardsParallel(ComponentParallel system, Action toAction, Action effectOf) {
+        Component componentLeft = system.getLeft();
+        Component componentRight = system.getRight();
+        Set<Action> systemActions = system.getActions();
+        boolean found = false;
+        for (Action sysAction : systemActions) {
+            if (sysAction.getName().equals(toAction.getName())) {
+                found = true;
+            }
+        }
+        if (found) {
+            attachRewards(componentLeft, toAction, effectOf);
+        } else {
+            attachRewards(componentLeft, toAction, effectOf);
+            attachRewards(componentRight, toAction, effectOf);			
+        }
+    }
+
+    private void attachRewardsRename(ComponentRename system, Action toAction, Action effectOf) {
+        assert system != null;
+        assert toAction != null;
+        assert effectOf != null;
+        Component renamed = system.getRenamed();
+        for (Entry<Action, Action> entry : system.getRenaming().entrySet()) {
+            Action entryFromAction = entry.getKey();
+            Action entryToAction = entry.getValue();
+            if (entryToAction.getName().equals(toAction.getName())) {
+                attachRewards(renamed, entryFromAction, effectOf);
+            }
+        }
+    }
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {

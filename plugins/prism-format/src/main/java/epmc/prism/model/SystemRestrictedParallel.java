@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -36,7 +36,7 @@ public final class SystemRestrictedParallel implements SystemDefinition {
     private ModelPRISM model;
     private final Positional positional;
     private final List<SystemDefinition> children = new ArrayList<>();
-    
+
     public SystemRestrictedParallel(SystemDefinition left, SystemDefinition right,
             Set<Expression> sync, Positional positional) {
         this.positional = positional;
@@ -55,24 +55,24 @@ public final class SystemRestrictedParallel implements SystemDefinition {
         }
         this.sync.addAll(sync);
     }
-    
+
     public SystemDefinition getLeft() {
         return children.get(0);
     }
-    
+
     public SystemDefinition getRight() {
         return children.get(1);
     }
-    
+
     public Set<Expression> getSync() {
         return Collections.unmodifiableSet(sync);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("(" + children.get(0) + "|[");
-        
+
         int syncNr = 0;
         for (Expression label : sync) {
             builder.append(label);
@@ -84,7 +84,7 @@ public final class SystemRestrictedParallel implements SystemDefinition {
         builder.append("]|" + children.get(1) + ")");
         return builder.toString();
     }
-    
+
     @Override
     public Set<Expression> getAlphabet() {
         Set<Expression> result = new HashSet<>();

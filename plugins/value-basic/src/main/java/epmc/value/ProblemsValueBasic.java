@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -38,7 +38,7 @@ public final class ProblemsValueBasic {
     /** Given string does not represent a valid value of given type. */
     public final static Problem VALUES_STRING_INVALID_VALUE = newProblem("value-string-invalid-value");
     public final static Problem VALUES_UNSUPPORTED_OPERATION = newProblem("value-unsupported-operation");
-    
+
     /**
      * Create new problem object using module resource file.
      * The name parameter must not be {@code null}.
@@ -50,7 +50,7 @@ public final class ProblemsValueBasic {
         assert name != null;
         return UtilError.newProblem(PROBLEMS_VALUE_BASIC, name);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

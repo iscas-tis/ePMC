@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -41,207 +41,207 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class Edges implements JANINode, List<Edge> {
-	/** Maps names of valid variables to valid variables. */
-	private Map<String, JANIIdentifier> validIdentifiers;
-	/** Maps names of valid locations to valid locations. */
-	private Map<String, Location> validLocations;
+    /** Maps names of valid variables to valid variables. */
+    private Map<String, JANIIdentifier> validIdentifiers;
+    /** Maps names of valid locations to valid locations. */
+    private Map<String, Location> validLocations;
 
-	/** List of edges. */
-	private final List<Edge> edges = new ArrayList<>();
-	private ModelJANI model;
+    /** List of edges. */
+    private final List<Edge> edges = new ArrayList<>();
+    private ModelJANI model;
 
-	/**
-	 * Sets the map of actions of the automaton the edges are part of.
-	 * The parameter given is a map from variable names to variables.
-	 * This method must be called exactly once before parsing. It must not be
-	 * called with a {@code null} parameter or with a parameter containing
-	 * {@code null} entries.
-	 * 
-	 * @param validVariables variables of the model the edges description is part of
-	 */
-	void setValidIdentifiers(Map<String,JANIIdentifier> validVariables) {
-		assert this.validIdentifiers == null;
-		assert validVariables != null;
-		for (Entry<String, JANIIdentifier> entry : validVariables.entrySet()) {
-			assert entry.getKey() != null;
-			assert entry.getValue() != null;
-		}
-		this.validIdentifiers = validVariables;
-	}
-	
-	/**
-	 * Set locations of the automaton the edges belong to.
-	 * 
-	 * @param locations locations of the automaton the edges belong to
-	 */
-	void setValidLocations(Map<String,Location> locations) {
-		assert this.validLocations == null;
-		assert locations != null;
-		for (Entry<String, Location> entry : locations.entrySet()) {
-			assert entry.getKey() != null;
-			assert entry.getValue() != null;
-		}
-		this.validLocations = locations;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		assert validIdentifiers != null;
-		assert validLocations != null;
-		JsonArray array = UtilJSON.toArrayObject(value);
-		for (JsonValue edgeValue : array) {
-			Edge edge = new Edge();
-			edge.setValidIdentifiers(validIdentifiers);
-			edge.setValidLocations(validLocations);
-			edge.setModel(model);
-			edge.parse(edgeValue);
-			edges.add(edge);
-		}
-		return this;
-	}
+    /**
+     * Sets the map of actions of the automaton the edges are part of.
+     * The parameter given is a map from variable names to variables.
+     * This method must be called exactly once before parsing. It must not be
+     * called with a {@code null} parameter or with a parameter containing
+     * {@code null} entries.
+     * 
+     * @param validVariables variables of the model the edges description is part of
+     */
+    void setValidIdentifiers(Map<String,JANIIdentifier> validVariables) {
+        assert this.validIdentifiers == null;
+        assert validVariables != null;
+        for (Entry<String, JANIIdentifier> entry : validVariables.entrySet()) {
+            assert entry.getKey() != null;
+            assert entry.getValue() != null;
+        }
+        this.validIdentifiers = validVariables;
+    }
 
-	public void addEdge(Edge edge) {
-		edges.add(edge);
-	}
-	
-	@Override
-	public JsonValue generate() {
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (Edge edge : edges) {
-			result.add(edge.generate());
-		}
-		return result.build();
-	}
+    /**
+     * Set locations of the automaton the edges belong to.
+     * 
+     * @param locations locations of the automaton the edges belong to
+     */
+    void setValidLocations(Map<String,Location> locations) {
+        assert this.validLocations == null;
+        assert locations != null;
+        for (Entry<String, Location> entry : locations.entrySet()) {
+            assert entry.getKey() != null;
+            assert entry.getValue() != null;
+        }
+        this.validLocations = locations;
+    }
 
-	@Override
-	public Iterator<Edge> iterator() {
-		return edges.iterator();
-	}	
-	
-	@Override
-	public int size() {
-		return edges.size();
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return edges.isEmpty();
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		return edges.contains(o);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        assert validIdentifiers != null;
+        assert validLocations != null;
+        JsonArray array = UtilJSON.toArrayObject(value);
+        for (JsonValue edgeValue : array) {
+            Edge edge = new Edge();
+            edge.setValidIdentifiers(validIdentifiers);
+            edge.setValidLocations(validLocations);
+            edge.setModel(model);
+            edge.parse(edgeValue);
+            edges.add(edge);
+        }
+        return this;
+    }
 
-	@Override
-	public Object[] toArray() {
-		return edges.toArray();
-	}
+    public void addEdge(Edge edge) {
+        edges.add(edge);
+    }
 
-	@Override
-	public <T> T[] toArray(T[] a) {
-		return edges.toArray(a);
-	}
+    @Override
+    public JsonValue generate() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (Edge edge : edges) {
+            result.add(edge.generate());
+        }
+        return result.build();
+    }
 
-	@Override
-	public boolean add(Edge e) {
-		return edges.add(e);
-	}
+    @Override
+    public Iterator<Edge> iterator() {
+        return edges.iterator();
+    }	
 
-	@Override
-	public boolean remove(Object o) {
-		return edges.remove(o);
-	}
+    @Override
+    public int size() {
+        return edges.size();
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return edges.containsAll(c);
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends Edge> c) {
-		return edges.addAll(c);
-	}
+    @Override
+    public boolean isEmpty() {
+        return edges.isEmpty();
+    }
 
-	@Override
-	public boolean addAll(int index, Collection<? extends Edge> c) {
-		return edges.addAll(index, c);
-	}
+    @Override
+    public boolean contains(Object o) {
+        return edges.contains(o);
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return edges.removeAll(c);
-	}
+    @Override
+    public Object[] toArray() {
+        return edges.toArray();
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return edges.retainAll(c);
-	}
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return edges.toArray(a);
+    }
 
-	@Override
-	public void clear() {
-		edges.clear();
-	}
+    @Override
+    public boolean add(Edge e) {
+        return edges.add(e);
+    }
 
-	@Override
-	public Edge get(int index) {
-		return edges.get(index);
-	}
+    @Override
+    public boolean remove(Object o) {
+        return edges.remove(o);
+    }
 
-	@Override
-	public Edge set(int index, Edge element) {
-		return edges.set(index, element);
-	}
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return edges.containsAll(c);
+    }
 
-	@Override
-	public void add(int index, Edge element) {
-		edges.add(index, element);
-	}
+    @Override
+    public boolean addAll(Collection<? extends Edge> c) {
+        return edges.addAll(c);
+    }
 
-	@Override
-	public Edge remove(int index) {
-		return edges.remove(index);
-	}
+    @Override
+    public boolean addAll(int index, Collection<? extends Edge> c) {
+        return edges.addAll(index, c);
+    }
 
-	@Override
-	public int indexOf(Object o) {
-		return edges.indexOf(o);
-	}
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return edges.removeAll(c);
+    }
 
-	@Override
-	public int lastIndexOf(Object o) {
-		return edges.lastIndexOf(o);
-	}
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return edges.retainAll(c);
+    }
 
-	@Override
-	public ListIterator<Edge> listIterator() {
-		return edges.listIterator();
-	}
+    @Override
+    public void clear() {
+        edges.clear();
+    }
 
-	@Override
-	public ListIterator<Edge> listIterator(int index) {
-		return edges.listIterator(index);
-	}
+    @Override
+    public Edge get(int index) {
+        return edges.get(index);
+    }
 
-	@Override
-	public List<Edge> subList(int fromIndex, int toIndex) {
-		return edges.subList(fromIndex, toIndex);
-	}
+    @Override
+    public Edge set(int index, Edge element) {
+        return edges.set(index, element);
+    }
+
+    @Override
+    public void add(int index, Edge element) {
+        edges.add(index, element);
+    }
+
+    @Override
+    public Edge remove(int index) {
+        return edges.remove(index);
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return edges.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return edges.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<Edge> listIterator() {
+        return edges.listIterator();
+    }
+
+    @Override
+    public ListIterator<Edge> listIterator(int index) {
+        return edges.listIterator(index);
+    }
+
+    @Override
+    public List<Edge> subList(int fromIndex, int toIndex) {
+        return edges.subList(fromIndex, toIndex);
+    }
 }

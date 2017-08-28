@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -37,20 +37,20 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationMultiObjective implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "after-options-multi-objective";
+    private final static String IDENTIFIER = "after-options-multi-objective";
     private final static String MIN_INCREASE = "1E-7";
     private final static String MIN_NONZERO = "1E-8";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
-		solvers.put(PropertySolverExplicitMultiObjective.IDENTIFIER, PropertySolverExplicitMultiObjective.class);
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
+        solvers.put(PropertySolverExplicitMultiObjective.IDENTIFIER, PropertySolverExplicitMultiObjective.class);
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveWeightedJava.IDENTIFIER, GraphSolverIterativeMultiObjectiveWeightedJava.class);
@@ -60,24 +60,24 @@ public final class AfterOptionsCreationMultiObjective implements AfterOptionsCre
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveScheduledJavaDouble.IDENTIFIER, GraphSolverIterativeMultiObjectiveScheduledJavaDouble.class);
         graphSolverMap.put(GraphSolverIterativeMultiObjectiveScheduledNative.IDENTIFIER, GraphSolverIterativeMultiObjectiveScheduledNative.class);
         Category category = options.addCategory()
-        		.setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
-        		.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_CATEGORY)
-        		.build();
+                .setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
+                .setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_CATEGORY)
+                .build();
         options.addOption().setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
-        	.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE)
-        	.setCategory(category)
-        	.setCommandLine().setGui().setWeb()
-        	.setType(OptionTypeRealNonnegative.getInstance())
-        	.setDefault(MIN_INCREASE)
-        	.build();
+        .setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE)
+        .setCategory(category)
+        .setCommandLine().setGui().setWeb()
+        .setType(OptionTypeRealNonnegative.getInstance())
+        .setDefault(MIN_INCREASE)
+        .build();
         options.addOption().setBundleName(OptionsMultiObjective.OPTIONS_MULTI_OBJECTIVE)
-        	.setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT)
-        	.setCategory(category)
-        	.setCommandLine().setGui().setWeb()
-        	.setType(OptionTypeRealNonnegative.getInstance())
-        	.setDefault(MIN_NONZERO)
-        	.build();
+        .setIdentifier(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT)
+        .setCategory(category)
+        .setCommandLine().setGui().setWeb()
+        .setType(OptionTypeRealNonnegative.getInstance())
+        .setDefault(MIN_NONZERO)
+        .build();
         Map<String,Class<? extends SchedulerPrinter>> schedulerPrinters = options.get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
         assert schedulerPrinters != null;
-	}
+    }
 }

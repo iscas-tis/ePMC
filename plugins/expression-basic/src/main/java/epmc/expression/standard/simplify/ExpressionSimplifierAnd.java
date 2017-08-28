@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -79,7 +79,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         }
         return null;
     }
-    
+
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -88,7 +88,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isAnd(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -97,7 +97,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorAnd.AND);
     }
-    
+
     private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -106,7 +106,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {

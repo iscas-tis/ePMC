@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.dd;
 
@@ -39,39 +39,39 @@ import epmc.jani.model.component.ComponentRename;
  * @author Ernst Moritz Hahn
  */
 final class PreparatorDDComponent {
-	/** Map from component class to corresponding component explorer class. */
-	private final static Map<Class<? extends Component>, Class<? extends DDComponent>> MAP;
-	static {
-		Map<Class<? extends Component>, Class<? extends DDComponent>> map = new LinkedHashMap<>();
-		map.put(ComponentAutomaton.class, DDComponentAutomaton.class);
-		map.put(ComponentParallel.class, DDComponentParallel.class);
-		map.put(ComponentRename.class, DDComponentRename.class);
-		MAP = Collections.unmodifiableMap(map);
-	}
-	
-	/**
-	 * Prepare DD component.
-	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param graph graph to which component to be converted belongs
-	 * @param component component for which to obtain an explorer
-	 * @return DD representation of given component
-	 */
-	DDComponent prepare(GraphDDJANI graph, Component component) {
-		assert graph != null;
-		assert component != null;
-		Class<? extends DDComponent> clazz = MAP.get(component.getClass());
-		DDComponent instance = null;
-		try {
-			instance = clazz.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-			assert false;
-			return null;
-		}
-		instance.setGraph(graph);
-		instance.setComponent(component);
-		instance.build();
-		return instance;
-	}
+    /** Map from component class to corresponding component explorer class. */
+    private final static Map<Class<? extends Component>, Class<? extends DDComponent>> MAP;
+    static {
+        Map<Class<? extends Component>, Class<? extends DDComponent>> map = new LinkedHashMap<>();
+        map.put(ComponentAutomaton.class, DDComponentAutomaton.class);
+        map.put(ComponentParallel.class, DDComponentParallel.class);
+        map.put(ComponentRename.class, DDComponentRename.class);
+        MAP = Collections.unmodifiableMap(map);
+    }
+
+    /**
+     * Prepare DD component.
+     * None of the parameters may be {@code null}.
+     * 
+     * @param graph graph to which component to be converted belongs
+     * @param component component for which to obtain an explorer
+     * @return DD representation of given component
+     */
+    DDComponent prepare(GraphDDJANI graph, Component component) {
+        assert graph != null;
+        assert component != null;
+        Class<? extends DDComponent> clazz = MAP.get(component.getClass());
+        DDComponent instance = null;
+        try {
+            instance = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            assert false;
+            return null;
+        }
+        instance.setGraph(graph);
+        instance.setComponent(component);
+        instance.build();
+        return instance;
+    }
 }

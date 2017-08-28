@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -28,7 +28,7 @@ final class AutomatonMojmirState implements AutomatonStateUtil {
     private final Automaton observer;
     private final Expression expression;
     private int number;
-    
+
     AutomatonMojmirState(Automaton observer, Expression formula) {
         this.observer = observer;
         assert observer != null;
@@ -39,23 +39,23 @@ final class AutomatonMojmirState implements AutomatonStateUtil {
     AutomatonMojmirState(AutomatonMojmirState other) {
         this(other.getAutomaton(), other.expression);
     }
-    
+
     @Override
     protected AutomatonStateUtil clone() {
         return new AutomatonMojmirState(this);
     };
-    
+
     Expression getExpression() {
         return expression;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(expression.toString(false, false).trim());
         return builder.toString();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -65,7 +65,7 @@ final class AutomatonMojmirState implements AutomatonStateUtil {
         AutomatonMojmirState other = (AutomatonMojmirState) obj;
         return expression.equals(other.expression);
     }
-    
+
     @Override
     public int hashCode() {
         return expression.hashCode();

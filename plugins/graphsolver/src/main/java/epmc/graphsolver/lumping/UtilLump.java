@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lumping;
 
@@ -37,7 +37,7 @@ public final class UtilLump {
         result.prepare();
         return result;
     }
-    
+
     public static void fillGaps(int[] partition) {
         BitSet used = new BitSetUnboundedLongArray();
         for (int state = 0; state < partition.length; state++) {

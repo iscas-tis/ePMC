@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -38,7 +38,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return UtilExpressionStandard.opOr(UtilExpressionStandard.opNot(expressionOperator.getOperand1()), expressionOperator.getOperand2());
     }
-    
+
     private static boolean isImplies(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;

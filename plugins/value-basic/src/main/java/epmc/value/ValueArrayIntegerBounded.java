@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,7 +27,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     private static final int LOG2LONGSIZE = 6;
     /** String containing a single space. */
     private final static String SPACE = " ";
-	private final TypeArrayIntegerBounded type;
+    private final TypeArrayIntegerBounded type;
     /** Lower bound of integers stored in this array. */
     private final int lower;
     /** Upper bound of integers stored in this array. */
@@ -40,9 +40,9 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
      * variable here because the computation would be too expensive.
      * */
     private final int bitsPerEntry;
-	private boolean immutable;
-	private int size;
-    
+    private boolean immutable;
+    private int size;
+
     ValueArrayIntegerBounded(TypeArrayIntegerBounded type) {
         assert type != null;
         this.type = type;
@@ -60,10 +60,10 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         number += lower;
         return number;
@@ -71,9 +71,9 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
 
     @Override
     public ValueArrayIntegerBounded clone() {
-    	ValueArrayIntegerBounded other = new ValueArrayIntegerBounded(getType());
-    	other.set(this);
-    	return other;
+        ValueArrayIntegerBounded other = new ValueArrayIntegerBounded(getType());
+        other.set(this);
+        return other;
     }
 
     @Override
@@ -97,44 +97,44 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     private int getBitsPerEntry() {
         return bitsPerEntry;
     }
-    
+
     @Override
     public TypeArrayIntegerBounded getType() {
-    	return type;
+        return type;
     }
-    
+
     public int getBoundLower() {
         return lower;
     }
-    
+
     public int getBoundUpper() {
         return upper;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public void setImmutable() {
-    	immutable = true;
+        immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void set(int value, int index) {
+    }
+
+    @Override
+    public void set(int value, int index) {
         assert !isImmutable();
         assert index >= 0;
         assert index < size();
@@ -151,25 +151,25 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
                 content[offset] &= ~(1L << bitIndex);
             }
         }
-	}
+    }
 
-	@Override
-	public void setSize(int size) {
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[num];
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

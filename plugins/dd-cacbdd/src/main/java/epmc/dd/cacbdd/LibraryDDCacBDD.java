@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cacbdd;
 
@@ -52,7 +52,7 @@ import epmc.value.operator.OperatorOr;
 
 public final class LibraryDDCacBDD implements LibraryDD {
     public final static String IDENTIFIER = "cacbdd";
-    
+
     private final static class LowLevelPermutationCacBDD
     implements PermutationLibraryDD, Closeable {
         private final Pointer pointer;
@@ -61,7 +61,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         LowLevelPermutationCacBDD(Pointer pointer) {
             this.pointer = pointer;
         }
-        
+
         Pointer getPointer() {
             assert !closed;
             return pointer;
@@ -76,7 +76,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
             }
         }
     }
-    
+
     private static class CacBDD {
         static native Pointer cacwrapper_new_manager(int num_variables);
 
@@ -107,7 +107,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         static native Pointer cacwrapper_new_zero(Pointer manager);
 
         static native Pointer cacwrapper_new_variable(Pointer manager, int variable);
-        
+
         static native boolean cacwrapper_equals(Pointer op1, Pointer op2);
 
         static native boolean cacwrapper_is_leaf(Pointer op);
@@ -131,7 +131,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         static native void cacwrapper_free_permutation(Pointer permutation);
 
         static native Pointer cacwrapper_clone(Pointer op);
-        
+
         static native int cacwrapper_walker_variable(Pointer manager, int walker);
 
         static native int cacwrapper_walker_low(Pointer manager, int walker);
@@ -145,7 +145,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     private final static int COMPLEMENT = 0x80000000;
-    
+
     private ContextDD contextDD;
     private Pointer xbddmanager;
     private Pointer xmanager;
@@ -172,7 +172,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         this.valueFalse = TypeBoolean.get().getFalse();
         this.valueTrue = TypeBoolean.get().getTrue();
     }
-    
+
     @Override
     public ContextDD getContextDD() {
         return contextDD;
@@ -185,11 +185,11 @@ public final class LibraryDDCacBDD implements LibraryDD {
         assert TypeBoolean.isBoolean(type);
         Pointer result;
         if (operation.equals(OperatorNot.NOT)) {
-        	result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
+            result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
         } else if (operation.equals(OperatorAnd.AND)) {
             result = CacBDD.cacwrapper_and(new Pointer(operands[0]), new Pointer(operands[1]));
         } else if (operation.equals(OperatorEq.EQ)
-        		|| operation.equals(OperatorIff.IFF)) {
+                || operation.equals(OperatorIff.IFF)) {
             result = CacBDD.cacwrapper_xnor(new Pointer(operands[0]), new Pointer(operands[1]));        	
         } else if (operation.equals(OperatorImplies.IMPLIES)) {
             Pointer np1 = CacBDD.cacwrapper_not(new Pointer(operands[0]));
@@ -201,10 +201,10 @@ public final class LibraryDDCacBDD implements LibraryDD {
         } else if (operation.equals(OperatorOr.OR)) {
             result = CacBDD.cacwrapper_or(new Pointer(operands[0]), new Pointer(operands[1]));
         } else if (operation.equals(OperatorIte.ITE)) {
-        	result = CacBDD.cacwrapper_ite(xbddmanager, new Pointer(operands[0]), new Pointer(operands[1]), new Pointer(operands[2]));
+            result = CacBDD.cacwrapper_ite(xbddmanager, new Pointer(operands[0]), new Pointer(operands[1]), new Pointer(operands[2]));
         } else {
-        	assert false;
-        	result = null;
+            assert false;
+            result = null;
         }
         ensure(result != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         return Pointer.nativeValue(result);
@@ -263,7 +263,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCacBDD;
         Pointer p1 = new Pointer(dd);
@@ -380,7 +380,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            {
+    {
         Pointer p1 = new Pointer(dd1);
         Pointer p2 = new Pointer(dd2);
         Pointer p3 = new Pointer(cube);
@@ -404,7 +404,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         }
         LowLevelPermutationCacBDD perm = new LowLevelPermutationCacBDD(p);
         permutations.add(perm);
-        
+
         return perm;
     }
 
@@ -454,7 +454,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         int node = (int) from;
         return (node & COMPLEMENT) != 0;
     }
-    
+
     private static boolean isInt(long number) {
         return number == (int) number;
     }
@@ -479,20 +479,20 @@ public final class LibraryDDCacBDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.isBoolean(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

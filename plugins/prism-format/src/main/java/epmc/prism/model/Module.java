@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -35,7 +35,7 @@ public interface Module {
         assert false;
         return null;
     }
-    
+
     default Map<Expression, Expression> getInitValues() {
         assert false;
         return null;
@@ -61,11 +61,11 @@ public interface Module {
         assert false;
         return null;
     }
-    
+
     default boolean isCommands() {
         return this instanceof ModuleCommands;
     }
-    
+
     default ModuleCommands asCommands() {
         return (ModuleCommands) this;
     }    

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
@@ -48,46 +48,46 @@ import epmc.util.UtilBitSet;
 import epmc.value.Value;
 
 final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, AutomatonSafra {
-	public final static class Builder implements AutomatonParity.Builder {
-	    private Buechi buechi;
-		private BitSet init;
-		private boolean parity;
+    public final static class Builder implements AutomatonParity.Builder {
+        private Buechi buechi;
+        private BitSet init;
+        private boolean parity;
 
-		@Override
-	    public Builder setBuechi(Buechi buechi)  {
-	    	this.buechi = buechi;
-	    	return this;
-	    }
-	    
-		private Buechi getBuechi() {
-			return buechi;
-		}
-		
-		public Builder setInit(BitSet init) {
-			this.init = init;
-			return this;
-		}
-		
-		private BitSet getInit() {
-			return init;
-		}
-		
-		public Builder setParity(boolean parity) {
-			this.parity = parity;
-			return this;
-		}
-		
-		private boolean isParity() {
-			return parity;
-		}
-		
-		@Override
-		public AutomatonSchewe build() {
-			return new AutomatonSchewe(this);
-		}
-		
-	}
-	
+        @Override
+        public Builder setBuechi(Buechi buechi)  {
+            this.buechi = buechi;
+            return this;
+        }
+
+        private Buechi getBuechi() {
+            return buechi;
+        }
+
+        public Builder setInit(BitSet init) {
+            this.init = init;
+            return this;
+        }
+
+        private BitSet getInit() {
+            return init;
+        }
+
+        public Builder setParity(boolean parity) {
+            this.parity = parity;
+            return this;
+        }
+
+        private boolean isParity() {
+            return parity;
+        }
+
+        @Override
+        public AutomatonSchewe build() {
+            return new AutomatonSchewe(this);
+        }
+
+    }
+
     private final boolean useAutomatonMapsCache = false;
     private final AutomatonMaps automatonMaps = new AutomatonMaps();
     private AutomatonScheweState succState;
@@ -105,10 +105,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     private final ScheweCacheKey scheweCacheKey = new ScheweCacheKey();
     private boolean parity;
     private final BitSet prioritiesSeen;
-	private final EdgeProperty buechiLabels;
+    private final EdgeProperty buechiLabels;
 
     private AutomatonSchewe(Builder builder) {
-    	assert builder != null;
+        assert builder != null;
         assert builder.getBuechi() != null;
         this.parity = builder.isParity();
         buechi = builder.getBuechi();
@@ -126,9 +126,9 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         this.guardsValid = UtilBitSet.newBitSetUnbounded();
         this.prioritiesSeen = UtilBitSet.newBitSetUnbounded();
         if (useAutomatonMapsCache) {
-        	this.automatonMaps.initialiseCache(expressions);
+            this.automatonMaps.initialiseCache(expressions);
         }
-	}
+    }
 
 
     @Override
@@ -149,35 +149,35 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         return automatonMaps.numberToState(number);
     }
 
-	@Override
+    @Override
     public int getInitState() {
         return initState.getNumber();
     }
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            {
+    {
         assert modelState != null;
         long combined;
         if (useAutomatonMapsCache) {
-        	combined = automatonMaps.lookupSuccessorEntry(modelState, automatonState);
+            combined = automatonMaps.lookupSuccessorEntry(modelState, automatonState);
         } else {
             combined = -1L;
         }
         if (combined != -1L) {
-        	succStateNumber = AutomatonMaps.getSuccessorState(combined);
-        	succLabelNumber = AutomatonMaps.getSuccessorLabel(combined);
-        	return;
+            succStateNumber = AutomatonMaps.getSuccessorState(combined);
+            succLabelNumber = AutomatonMaps.getSuccessorLabel(combined);
+            return;
         }
         AutomatonScheweState scheweState = (AutomatonScheweState) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(scheweState);
         if (succState != null) {
-        	succStateNumber = succState.getNumber();
-        	succLabelNumber = succLabel.getNumber();
-        	if (useAutomatonMapsCache) {
-        		automatonMaps.insertSuccessorEntry(modelState, automatonState, succStateNumber, succLabelNumber);
-        	}
+            succStateNumber = succState.getNumber();
+            succLabelNumber = succLabel.getNumber();
+            if (useAutomatonMapsCache) {
+                automatonMaps.insertSuccessorEntry(modelState, automatonState, succStateNumber, succLabelNumber);
+            }
             return;
         }
         int[] nextIndex = new int[1];
@@ -228,7 +228,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         succStateNumber = succState.getNumber();
         succLabelNumber = succLabel.getNumber();
         if (useAutomatonMapsCache) {
-        	automatonMaps.insertSuccessorEntry(modelState, automatonState, succStateNumber, succLabelNumber);
+            automatonMaps.insertSuccessorEntry(modelState, automatonState, succStateNumber, succLabelNumber);
         }
     }
 
@@ -320,7 +320,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
      */
     private void rawUpdate(AutomatonScheweState scheweState,
             AutomatonScheweState succState)
-            {
+    {
         BitSet succs = UtilBitSet.newBitSetUnbounded(buechiGraph.getNumNodes());
         EdgeProperty labels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
@@ -341,10 +341,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
             rawUpdate(oldChildren[child], newChildren[child]);
         }
     }
-    
+
     private void sproutNewChildren(AutomatonScheweState scheweState,
             AutomatonScheweState succState, int[] nextIndex)
-                    {
+    {
         BitSet succs = UtilBitSet.newBitSetUnbounded(buechiGraph.getNumNodes());
         EdgeProperty labels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
@@ -443,7 +443,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         }
         succState.setChildren(newChildren);
     }
-    
+
     private int nodeToNumber(int[] node, int size) {
         int[] entry = Arrays.copyOf(node, size);
         int number = nodeNumbers.get(entry);
@@ -463,14 +463,14 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     public int getSuccessorLabel() {
         return succLabelNumber;
     }
-    
+
     @Override
-	public int getNumPairs() {
+    public int getNumPairs() {
         return nodeNumbers.size();
     }
-    
+
     @Override
-	public Buechi getBuechi() {
+    public Buechi getBuechi() {
         return buechi;
     }
 
@@ -483,7 +483,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     public AutomatonLabelUtil numberToLabel(int number) {
         return automatonMaps.numberToLabel(number);
     }
-    
+
     boolean isParity() {
         return parity;
     }
@@ -492,7 +492,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     public int getNumPriorities() {
         return prioritiesSeen.length();
     }
-    
+
     @Override
     public String toString() {
         AutomatonExporter exporter = new AutomatonExporterImpl();

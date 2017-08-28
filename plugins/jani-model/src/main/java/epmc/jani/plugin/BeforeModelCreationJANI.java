@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.plugin;
 
@@ -28,15 +28,15 @@ import epmc.plugin.BeforeModelCreation;
  * @author Ernst Moritz Hahn
  */
 public final class BeforeModelCreationJANI implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani";
 
-	@Override
-	public void process() {
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process() {
+    }
 }

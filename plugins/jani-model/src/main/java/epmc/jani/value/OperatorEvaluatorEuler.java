@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.value;
 
@@ -27,39 +27,39 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 
 public enum OperatorEvaluatorEuler implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorEuler.EULER;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 0) {
-			return false;
-		}
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorEuler.EULER;
+    }
 
-	@Override
-	public void apply(Value result, Value... operands) {
-		assert result != null;
-		assert operands != null;
-		assert operands.length == 0;
-		// TODO
-//		ValueReal.asReal(result).pi();
-	}
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 0) {
+            return false;
+        }
+        // TODO Auto-generated method stub
+        return true;
+    }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert types != null;
-		assert types.length == 0;
-		return TypeReal.get();
-	}
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length == 0;
+        // TODO
+        //		ValueReal.asReal(result).pi();
+    }
+
+    @Override
+    public Type resultType(Operator operator, Type... types) {
+        assert types != null;
+        assert types.length == 0;
+        return TypeReal.get();
+    }
 }

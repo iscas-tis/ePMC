@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -142,7 +142,7 @@ public final class GraphBuilderExplorer {
         ExplorerNode[] successorNodes = new ExplorerNode[1];
         successorNodes[0] = explorer.newNode();
         this.currentState = 0;
-        
+
         int numStates = lastNumber + 1;
         if (nondet) {
             graphAlter = new GraphExplicitSparseAlternate();
@@ -171,7 +171,7 @@ public final class GraphBuilderExplorer {
         }
         NodePropertyExplorerNode explorerNodeProperty = null;
         if (withExplorerNode) {
-        	explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
+            explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
             graph.registerNodeProperty(CommonProperties.NODE_EXPLORER,
                     explorerNodeProperty);
         }
@@ -232,7 +232,7 @@ public final class GraphBuilderExplorer {
                         }
                         int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(interSuccNr));
                         graphAlter.setNondetSuccessor(interSuccNr, numberSucc);
-//                        graph.setSuccessorNode(interSuccNr, numberSucc);
+                        //                        graph.setSuccessorNode(interSuccNr, numberSucc);
                         lastNumber = Math.max(numberSucc, lastNumber);
                     }
                     nondetNr++;
@@ -254,16 +254,16 @@ public final class GraphBuilderExplorer {
         }
         log.send(MessagesGraph.BUILD_MODEL_DONE, currentState, watch.getTimeSeconds());
         if (graph instanceof GraphExplicitSparse) {
-//            graphStoch.setNumStates(numStates);
-//            ((GraphExplicitSparse) graph).setNumStates(numStates);
+            //            graphStoch.setNumStates(numStates);
+            //            ((GraphExplicitSparse) graph).setNumStates(numStates);
         } else if (graph instanceof GraphExplicitSparseAlternate) {
-//            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
+            //            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
         }
         if (explorerNodeProperty != null) {
-        	explorerNodeProperty.setNumStates(graph.computeNumStates());
+            explorerNodeProperty.setNumStates(graph.computeNumStates());
         }
     }
-    
+
     private ExplorerNode[] assignSuccessorNodes(ExplorerNode[] successorNodes) {
         int numSuccessors = explorer.getNumSuccessors();
         if (numSuccessors > successorNodes.length) {
@@ -284,7 +284,7 @@ public final class GraphBuilderExplorer {
     }
 
     private static BitStoreableToNumber newNodeStore(Explorer explorer)
-            {
+    {
         int numBits = explorer.getNumNodeBits();
         return UtilGraph.newNodeStore(numBits);
     }

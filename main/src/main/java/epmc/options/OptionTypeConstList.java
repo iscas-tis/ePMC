@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -48,7 +48,7 @@ public final class OptionTypeConstList implements OptionType {
     private final static String UNCHECKED = "unchecked";
     /** Constant list option type. */
     private final static OptionTypeConstList INSTANCE = new OptionTypeConstList();
-    
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
@@ -57,7 +57,7 @@ public final class OptionTypeConstList implements OptionType {
      */
     private OptionTypeConstList() {
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -91,12 +91,12 @@ public final class OptionTypeConstList implements OptionType {
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         assert value != null;
@@ -117,7 +117,7 @@ public final class OptionTypeConstList implements OptionType {
         }
         return builder.toString();
     }
-    
+
     @Override
     public Object getDefault() {
         return new LinkedHashMap<String, Object>();

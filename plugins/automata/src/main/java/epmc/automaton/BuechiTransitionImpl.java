@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -28,17 +28,17 @@ final class BuechiTransitionImpl implements BuechiTransition {
     private final Expression expression;
     private final BitSet labeling;
     private ValueBoolean result;
-    
+
     BuechiTransitionImpl(Expression expression, BitSet labeling) {
         this.expression = expression;
         this.labeling = labeling;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
     public BitSet getLabeling() {
         return labeling;
@@ -47,12 +47,12 @@ final class BuechiTransitionImpl implements BuechiTransition {
     public void setResult(ValueBoolean result) {
         this.result = result;
     }
-    
+
     @Override
     public String toString() {
         return expression + "\n" + labeling;
     }
-    
+
     @Override
     public boolean guardFulfilled() {
         return result.getBoolean();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.lts;
 
@@ -28,30 +28,30 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
 public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorNonPRISM {
 
-	@Override
-	public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
-		assert obj instanceof ModelExtensionLTS;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
+        assert obj instanceof ModelExtensionLTS;
+        return this;
+    }
 
-	@Override
-	public String toPRISM() {
-		return "lts\n";
-	}
-	
-	@Override
-	public List<String> getUnsupportedFeature() {
-		List<String> ll = new LinkedList<>();
-		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_LTS);
-		return ll;
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-	}
+    @Override
+    public String toPRISM() {
+        return "lts\n";
+    }
 
-	@Override
-	public boolean usesTransientVariables() {
-		return false;
-	}	
+    @Override
+    public List<String> getUnsupportedFeature() {
+        List<String> ll = new LinkedList<>();
+        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_LTS);
+        return ll;
+    }
+
+    @Override
+    public void validateTransientVariables() {
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        return false;
+    }	
 }

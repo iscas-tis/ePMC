@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,72 +26,72 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionReward reward = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionReward; 
-		
-		reward = (ExpressionReward) obj;
-		return this;
-	}
+    private ExpressionReward reward = null;
 
-	@Override
-	public String toPRISM() {
-		assert reward != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		RewardType type = reward.getRewardType();
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionReward; 
+
+        reward = (ExpressionReward) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert reward != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        RewardType type = reward.getRewardType();
         prism.append(type.toString());
         switch(type) {
         case REACHABILITY:
-        	prism.append("(")
-        	     .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
-        	    		 				   .toPRISM())
-        	     .append(")");
-        	break;
+            prism.append("(")
+            .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
+                    .toPRISM())
+            .append(")");
+            break;
         case INSTANTANEOUS:
         case CUMULATIVE:
-        	prism.append("(")
-        	     .append(ProcessorRegistrar.getProcessor(reward.getTime())
-        	    		 				   .toPRISM())
-        	     .append(")");
-        	break;
+            prism.append("(")
+            .append(ProcessorRegistrar.getProcessor(reward.getTime())
+                    .toPRISM())
+            .append(")");
+            break;
         case DISCOUNTED:
             prism.append(ProcessorRegistrar.getProcessor(reward.getTime())
-            							   .toPRISM())
-                 .append(",")
-                 .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
-                		 				   .toPRISM());
-        	break;
-    	default:
+                    .toPRISM())
+            .append(",")
+            .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
+                    .toPRISM());
+            break;
+        default:
         }
 
-		return prism.toString();
-	}
+        return prism.toString();
+    }
 
-	@Override
-	public void validateTransientVariables() {
-		assert reward != null;
-		
-		for (Expression child : reward.getChildren()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert reward != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : reward.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+    @Override
+    public void validateTransientVariables() {
+        assert reward != null;
+
+        for (Expression child : reward.getChildren()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert reward != null;
+
+        boolean usesTransient = false;
+        for (Expression child : reward.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

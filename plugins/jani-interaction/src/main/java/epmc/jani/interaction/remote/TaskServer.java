@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -54,37 +54,37 @@ public interface TaskServer {
      * 
      */
     void start();
-    
+
     /**
      * Terminate given server process.
      * The method may only be called after {@link #start()} has been called.
      * It may only be called once for a given task server object.
      * 
      */
-	void stop();
-	
-	/**
-	 * Obtain interface to execute tasks on server.
-	 * This method may only be called once {@link #start()} has been called. It
-	 * may not be called after {@link #stop()} has been called.
-	 * 
-	 * @return interface to execute tasks on server.
-	 */
-	JANIRemote getServer();
-	
-	/**
-	 * Execute task on server
+    void stop();
+
+    /**
+     * Obtain interface to execute tasks on server.
      * This method may only be called once {@link #start()} has been called. It
      * may not be called after {@link #stop()} has been called.
-	 * 
-	 * @param userOptions options to send to the server
-	 * @param channel message channel to use
-	 * @param model model to analyse
-	 * @param ignoreConnectionErrors whether to silently ignore connection problems
-	 */
+     * 
+     * @return interface to execute tasks on server.
+     */
+    JANIRemote getServer();
+
+    /**
+     * Execute task on server
+     * This method may only be called once {@link #start()} has been called. It
+     * may not be called after {@link #stop()} has been called.
+     * 
+     * @param userOptions options to send to the server
+     * @param channel message channel to use
+     * @param model model to analyse
+     * @param ignoreConnectionErrors whether to silently ignore connection problems
+     */
     default void execute(Options userOptions, EPMCChannel channel, RawModel model, boolean ignoreConnectionErrors) {
-    	assert userOptions != null;
-    	assert channel != null;
+        assert userOptions != null;
+        assert channel != null;
         assert model != null;
         userOptions = userOptions.clone();
         try {

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.ctmc;
 
@@ -36,52 +36,52 @@ import epmc.options.Options;
 import epmc.value.TypeEnum;
 
 public final class ExplorerExtensionCTMC implements ExplorerExtension {
-	public final static String IDENTIFIER = "ctmc";
-	private ExplorerJANI explorer;
-	private ExplorerComponent system;
-	private PropertyNodeGeneral player;
-	private NodeJANI[] noNondetHelperNode;
-	private PropertyEdge systemWeight;
-	private boolean allowMulti;
+    public final static String IDENTIFIER = "ctmc";
+    private ExplorerJANI explorer;
+    private ExplorerComponent system;
+    private PropertyNodeGeneral player;
+    private NodeJANI[] noNondetHelperNode;
+    private PropertyEdge systemWeight;
+    private boolean allowMulti;
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setExplorer(ExplorerJANI explorer) {
-		this.explorer = explorer;
-		system = explorer.getExplorerSystem();
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
-		player.set(Player.STOCHASTIC);
-		noNondetHelperNode = new NodeJANI[1];
-		noNondetHelperNode[0] = system.newNode();
-		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-		systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-		allowMulti = Options.get().getBoolean(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
-	}
-	
-	@Override
-	public ExplorerEdgeProperty getEdgeProperty(Object property) {
-		if (property == CommonProperties.WEIGHT) {
-			return systemWeight;
-		}
-		return null;
-	}
-	
-	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) {
-		if (property == CommonProperties.PLAYER) {
-			return player;
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
-		assert automaton != null;
-		UtilExplorer.checkAutomatonProbabilitySum(automaton);
-	}
+    @Override
+    public void setExplorer(ExplorerJANI explorer) {
+        this.explorer = explorer;
+        system = explorer.getExplorerSystem();
+        player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
+        player.set(Player.STOCHASTIC);
+        noNondetHelperNode = new NodeJANI[1];
+        noNondetHelperNode[0] = system.newNode();
+        systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
+        systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
+        allowMulti = Options.get().getBoolean(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
+    }
+
+    @Override
+    public ExplorerEdgeProperty getEdgeProperty(Object property) {
+        if (property == CommonProperties.WEIGHT) {
+            return systemWeight;
+        }
+        return null;
+    }
+
+    @Override
+    public ExplorerNodeProperty getNodeProperty(Object property) {
+        if (property == CommonProperties.PLAYER) {
+            return player;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
+        assert automaton != null;
+        UtilExplorer.checkAutomatonProbabilitySum(automaton);
+    }
 }

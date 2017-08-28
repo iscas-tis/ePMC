@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -27,61 +27,61 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ConstantProcessor implements JANI2PRISMProcessorStrict {
 
-	private Constant constant = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Constant; 
+    private Constant constant = null;
 
-		constant = (Constant) obj;
-		JANIComponentRegistrar.registerConstant(constant);
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Constant; 
 
-	@Override
-	public String toPRISM() {
-		assert constant != null;
+        constant = (Constant) obj;
+        JANIComponentRegistrar.registerConstant(constant);
+        return this;
+    }
 
-		StringBuilder prism = new StringBuilder();
-		
-		String comment = constant.getComment();
-		if (comment != null) {
-			prism.append("// ")
-				 .append(comment)
-				 .append("\n");
-		}
+    @Override
+    public String toPRISM() {
+        assert constant != null;
 
-		prism.append("const ")
-			 .append(ProcessorRegistrar.getProcessor(constant.getType())
-					 										 .toPRISM())
-			 .append(" ")
-			 .append(constant.getName());
-		
-		Expression expression = constant.getValue();
-		if (expression != null) {
-			prism.append(" = ")
-				 .append(expression.toString());
-		}
-		
-		prism.append(";\n");
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert constant != null;
-		
-		ProcessorRegistrar.getProcessor(constant.getValue())
-						  .validateTransientVariables();
-	}
+        StringBuilder prism = new StringBuilder();
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert constant != null;
-		
-		return ProcessorRegistrar.getProcessor(constant.getValue())
-								 .usesTransientVariables();
-	}	
+        String comment = constant.getComment();
+        if (comment != null) {
+            prism.append("// ")
+            .append(comment)
+            .append("\n");
+        }
+
+        prism.append("const ")
+        .append(ProcessorRegistrar.getProcessor(constant.getType())
+                .toPRISM())
+        .append(" ")
+        .append(constant.getName());
+
+        Expression expression = constant.getValue();
+        if (expression != null) {
+            prism.append(" = ")
+            .append(expression.toString());
+        }
+
+        prism.append(";\n");
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert constant != null;
+
+        ProcessorRegistrar.getProcessor(constant.getValue())
+        .validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert constant != null;
+
+        return ProcessorRegistrar.getProcessor(constant.getValue())
+                .usesTransientVariables();
+    }	
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.java;
 
@@ -71,7 +71,7 @@ import epmc.value.operator.OperatorMin;
  */
 public final class BoundedJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-bounded-java";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -87,20 +87,20 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
+        assert origGraph != null;
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitBounded)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitBounded)) {
             return false;
         }
         return true;
@@ -108,7 +108,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     @Override
     public void solve() {
-    	prepareIterGraph();
+        prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
             if (SemanticsContinuousTime.isContinuousTime(semantics)) {
@@ -149,21 +149,21 @@ public final class BoundedJava implements GraphSolverExplicit {
     }
 
     private void prepareResultValues() {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
     private void bounded() {
@@ -190,7 +190,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         assert ValueReal.isReal(lambda) : lambda;
         assert !lambda.isPosInf() : lambda;
         Options options = Options.get();
-        
+
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
         if (isSparseMarkovJava(iterGraph)) {
@@ -201,15 +201,15 @@ public final class BoundedJava implements GraphSolverExplicit {
     }
 
     /* auxiliary methods */
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -220,7 +220,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovJava(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -240,7 +240,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     private void ctmcBoundedJava(GraphExplicitSparse graph,
             ValueArray values, FoxGlynn foxGlynn) {
-    	ValueArrayAlgebra fg = foxGlynn.getArray();
+        ValueArrayAlgebra fg = foxGlynn.getArray();
         Value fgWeight = foxGlynn.getTypeReal().newValue();
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = UtilValue.newArray(values.getType(), numStates);
@@ -297,7 +297,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     private static void dtmcBoundedJava(int bound,
             GraphExplicitSparse graph, ValueArrayAlgebra values)
-            		 {
+    {
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -369,7 +369,7 @@ public final class BoundedJava implements GraphSolverExplicit {
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
                     if (min) {
-                    	minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
                         maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
@@ -384,6 +384,6 @@ public final class BoundedJava implements GraphSolverExplicit {
     }
 
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

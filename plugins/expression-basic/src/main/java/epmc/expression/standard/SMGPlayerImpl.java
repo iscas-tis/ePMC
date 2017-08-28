@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -24,16 +24,16 @@ import epmc.expression.Expression;
 
 public final class SMGPlayerImpl implements SMGPlayer {
     private final Expression expression;
-    
+
     SMGPlayerImpl(Expression expression) {
         this.expression = expression;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -46,14 +46,14 @@ public final class SMGPlayerImpl implements SMGPlayer {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = expression.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
