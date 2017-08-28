@@ -73,7 +73,6 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
-    private int numIterations;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
@@ -183,22 +182,22 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         log.send(MessagesGraphSolverIterative.ITERATING);
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
-        numIterations = 0;
+        int[] numIterations = new int[1];
         GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            dtmcUnboundedJacobiNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
+            dtmcUnboundedJacobiNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMarkovNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedGaussseidelNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
+            dtmcUnboundedGaussseidelNative(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
+            mdpUnboundedJacobiNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMDPNative(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedGaussseidelNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);  
+            mdpUnboundedGaussseidelNative(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
         } else {
             assert false : iterGraph.getClass();
         }
-        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations,
+        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
                 timer.getTimeSeconds());
     }
 
@@ -242,7 +241,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
 
     private static void dtmcUnboundedJacobiNative(GraphExplicitSparse graph,
             Value values,
-            IterationStopCriterion stopCriterion, double tolerance) {
+            IterationStopCriterion stopCriterion, double tolerance, int[] numIterations) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -250,14 +249,14 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
 
-        int code = IterationNative.double_dtmc_unbounded_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem);
+        int code = IterationNative.double_dtmc_unbounded_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, numIterations);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
 
     private static void dtmcUnboundedGaussseidelNative(
             GraphExplicitSparse graph, Value values,
-            IterationStopCriterion stopCriterion, double tolerance) {
+            IterationStopCriterion stopCriterion, double tolerance, int[] numIterations) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -265,7 +264,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
 
-        int code = IterationNative.double_dtmc_unbounded_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem);
+        int code = IterationNative.double_dtmc_unbounded_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, numIterations);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -273,7 +272,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private static void mdpUnboundedJacobiNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance) {
+            double tolerance, int[] numIterations) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -283,7 +282,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         int code = IterationNative.double_mdp_unbounded_jacobi(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem);
+                min ? 1 : 0, valuesMem, numIterations);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -291,7 +290,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private static void mdpUnboundedGaussseidelNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance) {
+            double tolerance, int[] numIterations) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -302,7 +301,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
 
         int code = IterationNative.double_mdp_unbounded_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem);
+                min ? 1 : 0, valuesMem, numIterations);
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }

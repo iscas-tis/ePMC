@@ -31,10 +31,14 @@ import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
+import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
+import epmc.messages.OptionsMessages;
+import epmc.modelchecker.Log;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.options.Options;
+import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
@@ -136,19 +140,25 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
+        Log log = options.get(OptionsMessages.LOG);
+        StopWatch timer = new StopWatch(true);
+        log.send(MessagesGraphSolverIterative.ITERATING);
         double tolerance = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveMultiObjectiveScheduled = (GraphSolverObjectiveExplicitMultiObjectiveScheduled) objective;
         scheduler = (SchedulerSimpleMultiobjectiveJava) objectiveMultiObjectiveScheduled.getScheduler();
         Value stopStateRewards = objectiveMultiObjectiveScheduled.getStopStateRewards();
         Value cumulativeTransitionRewards = objectiveMultiObjectiveScheduled.getTransitionRewards();
         inputValues = objectiveMultiObjectiveScheduled.getValues();
+        int[] numIterations = new int[1];
         if (iterMethod == IterationMethod.JACOBI) {
-            mdpMultiobjectivescheduledJacobiJavaDouble(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectivescheduledJacobiJavaDouble(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else if (iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpMultiobjectivescheduledGaussseidelJavaDouble(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler);
+            mdpMultiobjectivescheduledGaussseidelJavaDouble(asSparseNondet(iterGraph), stopStateRewards, cumulativeTransitionRewards, stopCriterion, tolerance, inputValues, scheduler, numIterations);
         } else {
             assert false;
         }
+        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
+                timer.getTimeSeconds());
     }
 
     /* auxiliary methods */
@@ -164,7 +174,8 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         Diff diffOp = getDiff();
         double[] values = ValueContentDoubleArray.getContent(valuesV);
         Arrays.fill(values, 0.0);
@@ -180,6 +191,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         double[] presValues = values;
         double[] nextValues = new double[numStates];
         double distance;
+        int iterations = 0;
         do {
             distance = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -208,15 +220,18 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             double[] swap = nextValues;
             nextValues = presValues;
             presValues = swap;
+            iterations++;
         } while (distance > tolerance / 2);
         System.arraycopy(presValues, 0, values, 0, numStates);
+        numIterationsResult[0] = iterations;
     }
 
     private void mdpMultiobjectivescheduledGaussseidelJavaDouble(
             GraphExplicitSparseAlternate graph, Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler,
+            int[] numIterationsResult) {
         Diff diffOp = getDiff();
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -230,6 +245,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
                 .asSparseNondetOnlyNondet()
                 .getContent());
         double distance;
+        int iterations = 0;
         do {
             distance = 0.0;
             for (int state = 0; state < numStates; state++) {
@@ -255,6 +271,8 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
                 distance = Math.max(distance, diffOp.diff(presStateProb, nextStateProb));
                 values[state] = nextStateProb;
             }
+            iterations++;
         } while (distance > tolerance / 2);
+        numIterationsResult[0] = iterations;
     }
 }
