@@ -78,11 +78,6 @@ public interface Expression {
      */
     Positional getPositional();
 
-    // TODO might make sense to modify this method in such a way that it gets
-    // a map from expressions to their type. The reason is that the types change
-    // often after the model has been constructed, and using a map there would
-    // make it more transparent from where the type is actually obtained.
-
     // TODO adapt documentation
     /**
      * Get (or compute) type of the expression.
