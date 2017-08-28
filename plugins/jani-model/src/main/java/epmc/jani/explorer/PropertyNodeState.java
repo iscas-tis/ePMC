@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -49,13 +48,13 @@ public final class PropertyNodeState implements PropertyNode {
 	}
 
 	@Override
-	public Value get() throws EPMCException {
+	public Value get() {
 		value.set(explorer.isState());
 		return value;
 	}
 
 	@Override
-	public boolean getBoolean() throws EPMCException {
+	public boolean getBoolean() {
 		return explorer.isState();
 	}
 	

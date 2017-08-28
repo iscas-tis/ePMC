@@ -22,7 +22,6 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -33,7 +32,7 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 	private String prefix = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof AssignmentSimple; 
 		
@@ -48,7 +47,7 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert assignment != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -67,7 +66,7 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert assignment != null;
 		
 		ensure(!ProcessorRegistrar.getProcessor(assignment.getValue())
@@ -78,7 +77,7 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert assignment != null;
 		
 		boolean usesTransient = false;

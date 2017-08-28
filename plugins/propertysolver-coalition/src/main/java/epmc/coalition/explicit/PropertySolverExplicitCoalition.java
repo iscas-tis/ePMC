@@ -33,7 +33,6 @@ import epmc.automaton.UtilAutomaton;
 import epmc.coalition.UtilCoalition;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionCoalition;
 import epmc.expression.standard.ExpressionOperator;
@@ -112,7 +111,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	}
 
     @Override
-	public boolean canHandle() throws EPMCException {
+	public boolean canHandle() {
 	    assert property != null;
 	    if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
 	        return false;
@@ -139,14 +138,14 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	}
 
 	@Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
 //    	required.add(CommonProperties.NODE_EXPLORER);
@@ -169,7 +168,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
 	    if (!UtilCoalition.isQualitative(propertyCoalition)) {
 	    	required.add(CommonProperties.WEIGHT);
@@ -178,7 +177,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     }
     
     @Override
-	public StateMap solve() throws EPMCException {
+	public StateMap solve() {
 		assert property != null;
 		assert forStates != null;
 	    ExpressionQuantifier quant = UtilCoalition.getQuantifier(propertyCoalition);
@@ -262,9 +261,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	 * @param path LTL path formula within property to check
 	 * @param qualitative whether a purely qualitative game shall be constructed
 	 * @return 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private GraphExplicitWrapper buildGame(StateSetExplicit forStates, Expression path, boolean qualitative) throws EPMCException {
+	private GraphExplicitWrapper buildGame(StateSetExplicit forStates, Expression path, boolean qualitative) {
 		assert forStates != null;
 		assert path != null;
 	    Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
@@ -363,7 +361,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	    return wrapper;
 	}
 
-	private Player computePlayer(int node, NodeProperty isState, NodeProperty[] playerNodes) throws EPMCException {
+	private Player computePlayer(int node, NodeProperty isState, NodeProperty[] playerNodes) {
 		Player player;
         if (isState.getBoolean(node)) {
             player = Player.TWO;
@@ -385,9 +383,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	 * @param forStates model states for which results are needed
 	 * @param solverResult result from solver to be mapped back
 	 * @return result map for states of original model
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, BitSet solverResult) throws EPMCException {
+	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, BitSet solverResult) {
 		assert forStates != null;
 		assert solverResult != null;
 		TypeBoolean typeBoolean = TypeBoolean.get();
@@ -418,9 +415,8 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
 	 * @param solverResult result from solver to be mapped back
 	 * @param isMin 
 	 * @return result map for states of original model
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, ValueArrayAlgebra solverResult, boolean isMin) throws EPMCException {
+	private StateMap toOrig(GraphExplicit game, StateSetExplicit forStates, ValueArrayAlgebra solverResult, boolean isMin) {
 		assert forStates != null;
 		assert solverResult != null;
 	//        BitSet nodes = game.getInitialNodes();

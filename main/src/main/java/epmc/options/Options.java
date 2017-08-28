@@ -253,9 +253,8 @@ public final class Options implements Serializable, Cloneable {
      * 
      * @param args
      * @param ignoreUnknown
-     * @throws EPMCException
      */
-    public void parseOptions(String[] args, boolean ignoreUnknown) throws EPMCException {
+    public void parseOptions(String[] args, boolean ignoreUnknown) {
         assert args != null;
         for (String arg : args) {
             assert arg != null;
@@ -324,9 +323,8 @@ public final class Options implements Serializable, Cloneable {
      * 
      * @param option identifier of the option the value of which to parse
      * @param value value to parse
-     * @throws EPMCException thrown if value string could not be parsed correctly
      */
-    public void parse(String option, String value) throws EPMCException {
+    public void parse(String option, String value) {
         assert option != null;
         assert value != null;
         Option opt = options.get(option);
@@ -334,7 +332,7 @@ public final class Options implements Serializable, Cloneable {
         opt.parse(value);
     }
     
-    public void parse(Enum<?> identifier, String value) throws EPMCException {
+    public void parse(Enum<?> identifier, String value) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
         parse(identifierString, value);
@@ -657,13 +655,8 @@ public final class Options implements Serializable, Cloneable {
         }
         if (value instanceof String && !wasNull) {
             option.reset();
-            try {
-                option.unset();
-                option.parse((String) value);
-            } catch (EPMCException e) {
-                e.printStackTrace();
-                assert false : value;
-            }
+            option.unset();
+            option.parse((String) value);
         } else {
             option.set(value);
         }

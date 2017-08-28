@@ -22,7 +22,6 @@ package epmc.graphsolver.iterative.java;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -115,7 +114,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
             unboundedCumulative();
@@ -125,7 +124,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative);
@@ -184,7 +183,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -202,7 +201,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void unboundedCumulative() throws EPMCException {
+    private void unboundedCumulative() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -232,7 +231,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     /* auxiliary methods */
     
     private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
@@ -282,7 +281,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     
     private void dtmcUnboundedCumulativeJacobiJava(GraphExplicitSparse graph,
             ValueArray values,
-            IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) {
         int numStates = graph.computeNumStates();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -322,7 +321,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
 
     private void dtmcUnboundedCumulativeGaussseidelJava(GraphExplicitSparse graph,
     		ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -356,7 +355,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     private static void mdpUnboundedCumulativeJacobiJava(
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double tolerance, ValueArrayAlgebra cumul) throws EPMCException {
+            double tolerance, ValueArrayAlgebra cumul) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -412,7 +411,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     private void mdpUnboundedCumulativeGaussseidelJava(
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul)
-                    throws EPMCException {
+                    {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

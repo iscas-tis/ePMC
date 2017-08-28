@@ -23,7 +23,6 @@ package epmc.lumpingdd;
 import java.util.Collection;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.options.Option;
 import epmc.options.Options;
@@ -38,7 +37,7 @@ public class AfterOptionsCreationLumpingDD implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<?>> lumpersDD = options.get(OptionsGraphsolver.GRAPHSOLVER_DD_LUMPER_CLASS);
 		assert lumpersDD != null;

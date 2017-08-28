@@ -22,7 +22,6 @@ package epmc.multiobjective.graphsolver;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -107,13 +106,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	multiobjectiveScheduled();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -128,12 +127,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         inputValues = objectiveMultiObjectiveScheduled.getValues();
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	this.outputValues = inputValues;
     	objective.setResult(outputValues);
     }
 
-    private void multiobjectiveScheduled() throws EPMCException {
+    private void multiobjectiveScheduled() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -165,7 +164,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) {
 		Diff diffOp = getDiff();
 		double[] values = ValueContentDoubleArray.getContent(valuesV);
 		Arrays.fill(values, 0.0);
@@ -217,7 +216,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
             GraphExplicitSparseAlternate graph, Value stopRewardsV,
             Value transRewardsV,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            Value valuesV, SchedulerSimpleMultiobjectiveJava scheduler) {
 		Diff diffOp = getDiff();
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();

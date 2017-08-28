@@ -29,8 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
-
 /**
  * Option type for enums.
  * For the enum classes parsed by this parser, it is assumed that their
@@ -86,7 +84,7 @@ public final class OptionTypeEnum implements OptionType {
     }
 
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

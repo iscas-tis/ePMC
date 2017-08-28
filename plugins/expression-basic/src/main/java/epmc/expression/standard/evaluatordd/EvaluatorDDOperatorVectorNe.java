@@ -26,7 +26,6 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.operator.OperatorNe;
 
@@ -54,17 +53,17 @@ public final class EvaluatorDDOperatorVectorNe implements EvaluatorDD {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         return UtilEvaluatorDD.canVectorOperator(expression, OperatorNe.NE, variables);
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
         dd = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplNe);
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         assert dd != null;
         return dd;
     }
@@ -79,7 +78,7 @@ public final class EvaluatorDDOperatorVectorNe implements EvaluatorDD {
         closed = UtilEvaluatorDD.close(closed, dd, null);
     }
 
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
         return ContextDD.get();
     }
 }

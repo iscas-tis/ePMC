@@ -22,7 +22,6 @@ package epmc.jani.exporter.plugin;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.exporter.command.CommandTaskJANIExporterJANIExport;
 import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.main.options.OptionsEPMC;
@@ -47,7 +46,7 @@ public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreat
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
 		assert options != null;
 		addOptionsAndCommands(options);
     }

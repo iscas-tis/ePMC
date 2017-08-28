@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -29,7 +28,7 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 	private Probability probability = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Probability; 
 		
@@ -38,7 +37,7 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert probability != null;
 		
 		return ProcessorRegistrar.getProcessor(probability.getExp())
@@ -46,7 +45,7 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert probability != null;
 		
 		ProcessorRegistrar.getProcessor(probability.getExp())
@@ -54,7 +53,7 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert probability != null;
 		
 		return ProcessorRegistrar.getProcessor(probability.getExp())

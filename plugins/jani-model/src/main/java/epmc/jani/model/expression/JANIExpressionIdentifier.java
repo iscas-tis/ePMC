@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -69,12 +68,12 @@ public final class JANIExpressionIdentifier implements JANIExpression {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIExpression(value);
 	}
 	
 	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
+	public JANIExpression parseAsJANIExpression(JsonValue value) {
 		assert model != null;
 		assert validIdentifiers != null;
 		assert value != null;

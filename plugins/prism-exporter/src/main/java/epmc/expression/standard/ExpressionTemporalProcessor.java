@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -31,7 +30,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	private ExpressionTemporal temporal = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionTemporal; 
 		
@@ -40,7 +39,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert temporal != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -98,7 +97,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert temporal != null;
 		
 		for (Expression child : temporal.getChildren()) {
@@ -108,7 +107,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert temporal != null;
 		
 		boolean usesTransient = false;
@@ -120,7 +119,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 		return usesTransient;
 	}	
 
-	private static boolean isTrue(Expression expression) throws EPMCException {
+	private static boolean isTrue(Expression expression) {
         assert expression != null;
         
         if (!(expression instanceof ExpressionLiteral)) {
@@ -129,7 +128,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         return ValueBoolean.isTrue(getValue(expression));
     }
     
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         
         if (!(expression instanceof ExpressionLiteral)) {
@@ -138,7 +137,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         return ValueBoolean.isFalse(getValue(expression));
     }  
     
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
 

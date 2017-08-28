@@ -33,7 +33,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 /**
@@ -96,7 +95,7 @@ public final class Edges implements JANINode, List<Edge> {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		assert validIdentifiers != null;
@@ -118,7 +117,7 @@ public final class Edges implements JANINode, List<Edge> {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (Edge edge : edges) {
 			result.add(edge.generate());

@@ -23,7 +23,6 @@ package epmc.propertysolver;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
@@ -102,7 +101,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
 	 * main program will call this function to solve the model checking problem
 	 * */
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         assert property instanceof ExpressionQuantifier;
@@ -119,7 +118,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
 
     /** collect the states which satisfy a */
     private StateMap doSolve(Expression property, StateSet states)
-            throws EPMCException {
+            {
         // set states we are interested in
     	this.computeForStates = (StateSetExplicit) states;
         
@@ -185,7 +184,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
      * this function determine whether the propertysolver can handle the model checking task
      * */
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -222,7 +221,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
 
     // ---------------- some functions which are used for building the model graph
 	@Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	// semantics for the graph (MDP, MC and etc.)
     	required.add(CommonProperties.SEMANTICS);
@@ -230,7 +229,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	// for node properties
     	Set<Object> required = new LinkedHashSet<>();
     	// STATE and PLAYER properties are required for all models
@@ -251,7 +250,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	// require the edges of constructed graph being labelled by weights (probabilities)
     	required.add(CommonProperties.WEIGHT);

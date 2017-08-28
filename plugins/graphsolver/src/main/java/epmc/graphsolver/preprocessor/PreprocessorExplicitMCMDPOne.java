@@ -22,7 +22,6 @@ package epmc.graphsolver.preprocessor;
 
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Scheduler;
 import epmc.graph.Semantics;
@@ -83,7 +82,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
         GraphExplicit graphExplicit = null;
         GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         graphExplicit = objectiveUnboundedReachability.getGraph();
@@ -103,7 +102,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
 	}
 
     private Scheduler computeScheduler(GraphExplicit graph,
-            BitSet target, BitSet extendedTarget) throws EPMCException {
+            BitSet target, BitSet extendedTarget) {
         SchedulerSimpleSettable scheduler = new SchedulerSimpleArray(graph);
         graph.computePredecessors();
         NodeProperty states = graph.getNodeProperty(CommonProperties.STATE);

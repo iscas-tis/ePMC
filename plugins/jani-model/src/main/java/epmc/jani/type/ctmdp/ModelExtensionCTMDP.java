@@ -24,7 +24,6 @@ import static epmc.error.UtilError.ensure;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMDP;
 import epmc.jani.model.Edge;
@@ -43,18 +42,18 @@ public final class ModelExtensionCTMDP implements ModelExtensionSemantics {
 	}
 
 	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
+	public void setModel(ModelJANI model) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setNode(JANINode node) throws EPMCException {
+	public void setNode(JANINode node) {
 		this.node = node;
 	}
 
 	@Override
-	public void setJsonValue(JsonValue value) throws EPMCException {
+	public void setJsonValue(JsonValue value) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -65,7 +64,7 @@ public final class ModelExtensionCTMDP implements ModelExtensionSemantics {
 	}
 	
 	@Override
-	public void parseAfter() throws EPMCException {
+	public void parseAfter() {
 		if (node instanceof Edge) {
 			Edge edge = (Edge) node;
 			ensure(edge.getRate() != null, ProblemsJANICTMDP.JANI_CTMDP_EDGE_REQUIRES_RATE);

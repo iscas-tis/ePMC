@@ -20,7 +20,6 @@
 
 package epmc.jani.model.type;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeRealProcessor implements JANI2PRISMProcessorStrict {
@@ -28,7 +27,7 @@ public final class JANITypeRealProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeReal real = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj instanceof JANITypeReal;
 
 		real = (JANITypeReal) obj;
@@ -36,19 +35,19 @@ public final class JANITypeRealProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert real != null;
 		
 		return "double";
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert real != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert real != null;
 		
 		return false;

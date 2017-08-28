@@ -24,7 +24,6 @@ import java.io.Closeable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
@@ -130,7 +129,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public StateMapExplicit restrict(StateSet to) throws EPMCException {
+    public StateMapExplicit restrict(StateSet to) {
         assert !closed();
         assert to != null;
         assert to.isSubsetOf(states);
@@ -177,7 +176,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     
     @Override
     public StateMap apply(Operator identifier, StateMap operand)
-            throws EPMCException {
+            {
         assert !closed();
         assert identifier != null;
         assert operand != null;
@@ -202,7 +201,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         return result;
     }
 
-    private Value toArray() throws EPMCException {
+    private Value toArray() {
         Set<Value> values = new LinkedHashSet<>();
         Value value = type.newValue();
         for (int i = 0; i < size(); i++) {
@@ -222,7 +221,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public boolean isConstant() throws EPMCException {
+    public boolean isConstant() {
         assert !closed();
         if (size() == 0) {
             return true;
@@ -252,7 +251,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
 
     @Override
     public Value applyOver(Operator identifier, StateSet over)
-            throws EPMCException {
+            {
         assert identifier != null;
         assert over != null;
         assert over instanceof StateSetExplicit;
@@ -283,25 +282,25 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public void getRange(Value range, StateSet of) throws EPMCException {
+    public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
     
-    private boolean isAllTrue(StateSet of) throws EPMCException {
+    private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
     
     @Override
-    public void getSomeValue(Value to, StateSet of) throws EPMCException {
+    public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
         to.set(result);
     }
     
     @Override
-    public Value subsumeResult(StateSet initialStates) throws EPMCException {
+    public Value subsumeResult(StateSet initialStates) {
         boolean takeFirstInitState = initialStates.size() == 1;
         Value entry = getType().newValue();
         if (takeFirstInitState) {
@@ -326,16 +325,12 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         }
     }
     
-    private boolean hasMinAndMaxElements(StateSet of) throws EPMCException {
+    private boolean hasMinAndMaxElements(StateSet of) {
         if (TypeReal.isReal(getType())) {
             return true;
         }
-        try {
-            getRange(TypeInterval.get().newValue(),
-                    getStateSet());
-        } catch (EPMCException e) {
-            return false;
-        }
+        getRange(TypeInterval.get().newValue(),
+        		getStateSet());
         return true;
     }
     

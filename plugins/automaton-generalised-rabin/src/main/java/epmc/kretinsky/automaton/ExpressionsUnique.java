@@ -61,7 +61,7 @@ public final class ExpressionsUnique {
     private Map<Expression, Expression> replacementInverse;
     private Dummy dummy = new Dummy();
 
-    public ExpressionsUnique(ContextExpression contextExpression, Expression[] expressions) throws EPMCException {
+    public ExpressionsUnique(ContextExpression contextExpression, Expression[] expressions) {
         assert contextExpression != null;
         assert expressions != null;
         computeReplacement(expressions);
@@ -95,7 +95,7 @@ public final class ExpressionsUnique {
         expressionToDdMap.put(contextExpression.getTrue(), contextDD.newConstant(true));
     }
     
-    Expression makeUnique(Expression formula) throws EPMCException {
+    Expression makeUnique(Expression formula) {
         Expression retrieved = uniqueMap.get(formula);
         if (retrieved != null) {
             return retrieved;
@@ -127,7 +127,7 @@ public final class ExpressionsUnique {
         return retrieved;
     }
 
-    DD formulaToDD(Expression formula) throws EPMCException {
+    DD formulaToDD(Expression formula) {
         DD result;
         if (formula.isLiteral() || formula.isIdentifier()) {
             result = replacedToDD.translate(formula);
@@ -177,7 +177,7 @@ public final class ExpressionsUnique {
         return result;
     }
     
-    private DD atomicExpressionToDD(Expression expression) throws EPMCException {
+    private DD atomicExpressionToDD(Expression expression) {
         DD entry = atomicMap.get();
         if (entry == null) {
             entry = contextDD.newVariable(expression.toString(), contextValue.getTypeBoolean(), 1)
@@ -187,7 +187,7 @@ public final class ExpressionsUnique {
         return entry;
     }
     
-    void simplifyGuard(DD guard, int expression, List<List<Expression>> result, List<Expression> current) throws EPMCException {
+    void simplifyGuard(DD guard, int expression, List<List<Expression>> result, List<Expression> current) {
         if (expression >= replaced.length) {
             if (!guard.isFalse()) {
                 result.add(new ArrayList<>(current));
@@ -225,7 +225,7 @@ public final class ExpressionsUnique {
         }
     }
     
-    Expression simplifyGuard(Expression guard) throws EPMCException {
+    Expression simplifyGuard(Expression guard) {
         DD dd = formulaToDD(guard);
         if (dd.isTrue()) {
             dd.dispose();
@@ -249,7 +249,7 @@ public final class ExpressionsUnique {
         return result;
     }
     
-    void enumerateExpressionsValues() throws EPMCException {
+    void enumerateExpressionsValues() {
         Set<Expression> identifiers = contextExpression.newSet();
         for (Expression expression : expressions) {
             identifiers.addAll(expression.collectIdentifiers());
@@ -360,7 +360,7 @@ public final class ExpressionsUnique {
     }
 
     private void computeReplacement(
-            Expression[] expressions) throws EPMCException {
+            Expression[] expressions) {
         assert expressions != null;
         if (expressions.length == 0) {
             replacement = Collections.emptyMap();

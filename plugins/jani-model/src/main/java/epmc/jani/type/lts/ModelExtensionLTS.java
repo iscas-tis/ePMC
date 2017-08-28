@@ -22,7 +22,6 @@ package epmc.jani.type.lts;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsLTS;
 import epmc.jani.model.Destination;
@@ -44,19 +43,19 @@ public class ModelExtensionLTS implements ModelExtensionSemantics {
 	}
 
 	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
+	public void setModel(ModelJANI model) {
 		assert this.model == null;
 		assert model != null;
 		this.model = model;
 	}
 
 	@Override
-	public void setNode(JANINode node) throws EPMCException {
+	public void setNode(JANINode node) {
 		this.node = node;
 	}
 
 	@Override
-	public void parseAfter() throws EPMCException {
+	public void parseAfter() {
 		if (node instanceof Destinations) {
 			Destinations destinations = (Destinations) node;
 			ensure(destinations.size() == 1, ProblemsJANILTS.JANI_LTS_ONLY_ONE_DESTINATIONS);

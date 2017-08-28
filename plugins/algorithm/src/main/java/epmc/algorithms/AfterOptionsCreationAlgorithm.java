@@ -20,7 +20,6 @@
 
 package epmc.algorithms;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeEnum;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
@@ -34,7 +33,7 @@ public class AfterOptionsCreationAlgorithm implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         options.addOption().setIdentifier(OptionsAlgorithm.DD_SCC_ALGORITHM)
         	.setBundleName(OptionsAlgorithm.OPTIONS_ALGORITHM)

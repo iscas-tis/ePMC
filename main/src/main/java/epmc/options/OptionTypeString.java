@@ -22,8 +22,6 @@ package epmc.options;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
-
 /**
  * Option type parsing any string.
  * This option type allows any string to be parsed and stored, after trimming.
@@ -46,7 +44,7 @@ public final class OptionTypeString implements OptionType {
     }
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

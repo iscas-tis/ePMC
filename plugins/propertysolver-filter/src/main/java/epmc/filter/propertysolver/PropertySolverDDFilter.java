@@ -27,7 +27,6 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
@@ -82,7 +81,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
 
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         StateSetDD allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
@@ -96,7 +95,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -114,7 +113,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	required.add(CommonProperties.EXPRESSION_TO_DD);
@@ -122,7 +121,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -134,7 +133,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
         ExpressionFilter propertyFilter = ExpressionFilter.asFilter(property);
@@ -158,10 +157,9 @@ public final class PropertySolverDDFilter implements PropertySolver {
      * @param states state of the filter
      * @param modelStates all states of the model
      * @return result of filter computation
-     * @throws EPMCException thrown in case of problems during filtering
      */
     private DD solve(FilterType filter, DD property, DD states,
-	            DD modelStates) throws EPMCException {
+	            DD modelStates) {
     	assert filter != null;
     	assert property != null;
     	assert states != null;
@@ -265,9 +263,8 @@ public final class PropertySolverDDFilter implements PropertySolver {
      * Get DD context used.
      * 
      * @return DD context used
-     * @throws EPMCException thrown in case of failure getting DD context
      */
-	private ContextDD getContextDD() throws EPMCException {
+	private ContextDD getContextDD() {
     	return ContextDD.get();
 	}
 

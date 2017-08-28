@@ -20,7 +20,6 @@
 
 package epmc.jani.type.lts;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explorer.ExplorerNodeProperty;
@@ -43,7 +42,7 @@ public final class ExplorerExtensionLTS implements ExplorerExtension {
 	}
 
 	@Override
-	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
+	public void setExplorer(ExplorerJANI explorer) {
 		assert this.explorer == null;
 		assert explorer != null;
 		this.explorer = explorer;
@@ -62,7 +61,7 @@ public final class ExplorerExtensionLTS implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	public ExplorerNodeProperty getNodeProperty(Object property) {
 		if (property == CommonProperties.STATE) {
 			return state;
 		} else if (property == CommonProperties.PLAYER) {

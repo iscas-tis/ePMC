@@ -22,7 +22,6 @@ package epmc.prism.plugin;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
@@ -42,7 +41,7 @@ public final class AfterOptionsCreationPRISM implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		OptionTypeMap<Class<?>> modelInputType = options.getType(OptionsModelChecker.MODEL_INPUT_TYPE);
 		assert modelInputType != null;

@@ -23,7 +23,6 @@ package epmc.prism.model;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.jani.model.type.JANIType;
@@ -54,7 +53,7 @@ public interface Module {
 
     default void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
-            Map<Expression, Type> types) throws EPMCException {
+            Map<Expression, Type> types) {
         assert false;
     }
 

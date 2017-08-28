@@ -20,7 +20,6 @@
 
 package epmc.multiobjective.graphsolver;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -105,13 +104,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	multiobjectiveScheduled();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -126,12 +125,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         inputValues = objectiveMultiObjectiveScheduled.getValues();
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	this.outputValues = inputValues;
     	objective.setResult(outputValues);
     }
 
-    private void multiobjectiveScheduled() throws EPMCException {
+    private void multiobjectiveScheduled() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -176,7 +175,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -200,7 +199,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            Value values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            Value values, SchedulerSimpleMultiobjectiveJava scheduler) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

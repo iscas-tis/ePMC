@@ -20,7 +20,6 @@
 
 package epmc.value.plugin;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 import epmc.value.TypeBoolean;
@@ -72,7 +71,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
 
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 		addOperators();
 		addTypes();
 	}

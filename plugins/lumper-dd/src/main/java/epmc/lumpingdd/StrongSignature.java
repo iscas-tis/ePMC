@@ -25,7 +25,6 @@ import java.util.List;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.RewardSpecification;
 import epmc.graph.CommonProperties;
@@ -53,7 +52,7 @@ public class StrongSignature implements Signature {
 	private DD transStateSpace;
 
 	@Override
-	public void setOriginal(GraphDD original) throws EPMCException {
+	public void setOriginal(GraphDD original) {
 		this.original = original;
 		this.contextDD = original.getContextDD();
 		this.transRepr = new MultisetIndexRepresentation();
@@ -61,7 +60,7 @@ public class StrongSignature implements Signature {
 	}
 
 	@Override
-	public boolean canLump(List<Expression> validFor) throws EPMCException {
+	public boolean canLump(List<Expression> validFor) {
         Semantics semantics = original.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsMarkovChain.isMarkovChain(semantics)) {
         	return false;
@@ -79,7 +78,7 @@ public class StrongSignature implements Signature {
 	}
 
 	@Override
-	public void setBlockIndexVar(VariableDD blockIndex) throws EPMCException {
+	public void setBlockIndexVar(VariableDD blockIndex) {
         DD stateSpace = original.getNodeSpace().toMT();
 		transStateSpace = transRepr.fromTransWeights().multiply(stateSpace);
 		stateSpace.dispose();
@@ -92,7 +91,7 @@ public class StrongSignature implements Signature {
 	}
 
 	@Override
-	public DD computeSignatures(DD partitions) throws EPMCException {
+	public DD computeSignatures(DD partitions) {
         DD partitionsNext = partitions.permute(original.getSwapPresNext());
         return transStateSpace.clone().multiplyWith(partitionsNext)
         		.abstractSumWith(original.getNextCube().clone())

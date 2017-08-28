@@ -22,7 +22,6 @@ package epmc.jani.type.ctmc;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtension;
@@ -42,7 +41,7 @@ public class AfterOptionsCreationJANICTMC implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         Map<String,Class<ModelExtension>> modelExtensions = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {
         	modelExtensions = new OrderedMap<>();

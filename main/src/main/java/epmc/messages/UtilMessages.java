@@ -22,7 +22,6 @@ package epmc.messages;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
 import epmc.options.Options;
@@ -49,11 +48,7 @@ public final class UtilMessages {
         assert timeStarted >= 0;
         assert time >= 0;
         TimeStampFormat solver;
-        try {
-            solver = UtilOptions.getInstance(OptionsMessages.TIME_STAMPS);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        solver = UtilOptions.getInstance(OptionsMessages.TIME_STAMPS);
         if (solver instanceof TimeStampFormatNone) {
             return EMPTY;
         }

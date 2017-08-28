@@ -24,7 +24,6 @@ import static epmc.error.UtilError.ensure;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -119,7 +118,7 @@ public final class DestinationEvaluator {
 			return expressionToType;
 		}
 		
-		public DestinationEvaluator build() throws EPMCException {
+		public DestinationEvaluator build() {
 			return new DestinationEvaluator(this);
 		}
 	}
@@ -135,7 +134,7 @@ public final class DestinationEvaluator {
 	/** Number of location variable in the automaton evaluator belongs to. */
 	private final int locationVariable;
 	
-	private DestinationEvaluator(Builder builder) throws EPMCException {
+	private DestinationEvaluator(Builder builder) {
 		assert builder != null;
 		assert builder.getDestination() != null;
 		assert builder.getExpressionToType() != null;
@@ -164,7 +163,7 @@ public final class DestinationEvaluator {
 		zeroReal = UtilValue.newValue(TypeReal.get(), 0);
 	}
 
-	Value evaluateProbability(NodeJANI node) throws EPMCException {
+	Value evaluateProbability(NodeJANI node) {
 		ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
 		ensure(result.isGe(zeroReal), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
 		return result;
@@ -175,9 +174,8 @@ public final class DestinationEvaluator {
 	 * The parameter may not be {@code null}.
 	 * 
 	 * @param toNode node to assign effect to
-	 * @throws EPMCException thrown in case of problems
 	 */
-	void assignTo(NodeJANI fromNode, NodeJANI toNode) throws EPMCException {
+	void assignTo(NodeJANI fromNode, NodeJANI toNode) {
 		assert toNode != null;
 		assignments.apply(fromNode, toNode);
 		if (locationVariable != -1) {

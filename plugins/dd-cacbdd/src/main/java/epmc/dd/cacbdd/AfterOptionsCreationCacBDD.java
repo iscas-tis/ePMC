@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.dd.LibraryDD;
 import epmc.dd.OptionsDD;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeInteger;
 import epmc.options.Options;
@@ -39,7 +38,7 @@ public class AfterOptionsCreationCacBDD implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         Category category = options.addCategory()
         		.setBundleName(OptionsDDCacBDD.OPTIONS_DD_CACBDD)

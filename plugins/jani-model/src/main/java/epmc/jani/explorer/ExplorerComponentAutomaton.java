@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -80,7 +79,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 		
 		@Override
-		public Type getType(Expression expression) throws EPMCException {
+		public Type getType(Expression expression) {
 			assert expression != null;
 			Variable variable = variables.get(expression);
 			if (variable == null) {
@@ -187,7 +186,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert explorer != null;
 		assert component != null;
 		componentAutomaton = (ComponentAutomaton) component;
@@ -207,13 +206,13 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	@Override
-	public void buildAfterVariables() throws EPMCException {
+	public void buildAfterVariables() {
 		buildEdgeEvaluators();
 		buildTransientValueEvaluators();
 		prepareSuccessors();
 	}
 	
-	private void prepareSuccessors() throws EPMCException {
+	private void prepareSuccessors() {
 		int maxNumSucc = 0;
 		if (nonDet && stochastic) {
 			for (int loc = 0; loc < edgeEvaluators.length; loc++) {
@@ -239,7 +238,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 
-	private void prepareVariables() throws EPMCException {
+	private void prepareVariables() {
 		StateVariables stateVariables = explorer.getStateVariables();
 		if (typeLocation.getNumValues() > 1) {
 			Expression locationIdentifier = new ExpressionIdentifierStandard.Builder()
@@ -294,9 +293,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	/**
 	 * Build the edge evaluators of the component explorer
 	 * 
-	 * @throws EPMCException thrown in case problems occur
 	 */
-	private void buildEdgeEvaluators() throws EPMCException {
+	private void buildEdgeEvaluators() {
 		Map<Action,Integer> actionToInteger = computeActionToInteger();
 		Locations locations = automaton.getLocations();
 		int[] locationsNumEdges = new int[locations.size()];
@@ -328,7 +326,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 	
-	private void buildTransientValueEvaluators() throws EPMCException {
+	private void buildTransientValueEvaluators() {
 		locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
 		int index = 0;
 		for (Location location : automaton.getLocations()) {
@@ -387,7 +385,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	@Override
-	public PropertyNode getNodeProperty(Object property) throws EPMCException {
+	public PropertyNode getNodeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.STATE) {
 			return state;
@@ -396,7 +394,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	@Override
-	public PropertyEdge getEdgeProperty(Object property) throws EPMCException {
+	public PropertyEdge getEdgeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.WEIGHT) {
 			return weight;
@@ -407,12 +405,12 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 	
 	@Override
-	public NodeJANI newNode() throws EPMCException {
+	public NodeJANI newNode() {
 		return explorer.newNode();
 	}
 
 	@Override
-	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
+	public Collection<NodeJANI> getInitialNodes() {
 		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
 		Expression bounds = UtilModelParser.restrictToVariableRange(automaton.getVariablesOrEmpty());
 		initialExpression = UtilExpressionStandard.opAnd(initialExpression, bounds);
@@ -444,7 +442,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	@Override
-	public void queryNode(NodeJANI node) throws EPMCException {
+	public void queryNode(NodeJANI node) {
 		if (nonDet && stochastic) {
 			queryNondetStochastic(node);
 		} else if (nonDet && !stochastic) {
@@ -454,7 +452,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 
-	private void queryNoNondet(NodeJANI node) throws EPMCException {
+	private void queryNoNondet(NodeJANI node) {
 		numSuccessors = 0;
 		assert node != null;
 		Value[] nodeValues = node.getValues();
@@ -508,7 +506,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 
-	private void queryNondetStochastic(NodeJANI node) throws EPMCException {
+	private void queryNondetStochastic(NodeJANI node) {
 		assert node != null;
 		numSuccessors = 0;
 		Value[] nodeValues = node.getValues();
@@ -585,7 +583,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 		}
 	}
 
-	private void queryNondetNonStochastic(NodeJANI node) throws EPMCException {
+	private void queryNondetNonStochastic(NodeJANI node) {
 		numSuccessors = 0;
 		Value[] nodeValues = node.getValues();
 		int location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
@@ -646,14 +644,14 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
 	}
 
 	@Override
-	public boolean isState(NodeJANI node) throws EPMCException {
+	public boolean isState(NodeJANI node) {
 		Value[] nodeValues = node.getValues();
 		int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
 		return edge == -1;
 	}
 	
 	@Override
-	public boolean isState() throws EPMCException {
+	public boolean isState() {
 		return state.getBoolean();
 	}
 	

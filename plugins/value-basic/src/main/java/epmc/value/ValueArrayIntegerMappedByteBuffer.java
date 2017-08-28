@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
@@ -111,7 +110,7 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

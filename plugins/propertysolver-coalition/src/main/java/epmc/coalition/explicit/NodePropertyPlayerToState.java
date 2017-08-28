@@ -20,7 +20,6 @@
 
 package epmc.coalition.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
@@ -48,14 +47,14 @@ final class NodePropertyPlayerToState implements NodeProperty {
 	}
 
 	@Override
-	public Value get(int node) throws EPMCException {
+	public Value get(int node) {
 		Player player = playerProperty.getEnum(node);
 		value.set(player == Player.ONE || player == Player.TWO);
 		return value;
 	}
 
 	@Override
-	public void set(int node, Value value) throws EPMCException {
+	public void set(int node, Value value) {
 		assert value != null;
 		assert false;
 	}

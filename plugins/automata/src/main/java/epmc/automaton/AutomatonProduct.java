@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -228,7 +227,7 @@ public final class AutomatonProduct implements Automaton {
     private final Map<CacheKey,CacheValue> cache = new THashMap<>();
     private final CacheKey testEntry = new CacheKey();
 
-    public AutomatonProduct(Automaton[] automata) throws EPMCException {
+    public AutomatonProduct(Automaton[] automata) {
         assert assertConstructor(automata);
         this.automata = automata.clone();
         this.succStateArray = new int[automata.length];
@@ -245,7 +244,7 @@ public final class AutomatonProduct implements Automaton {
         automataExternal = Collections.unmodifiableList(automataList);
     }
 
-    public AutomatonProduct(List<? extends Automaton> automata) throws EPMCException {
+    public AutomatonProduct(List<? extends Automaton> automata) {
         this(automata.toArray(new Automaton[0]));
     }
     
@@ -269,7 +268,7 @@ public final class AutomatonProduct implements Automaton {
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         assert assertQueryState(modelState, automatonState);
         testEntry.modelState = modelState;
         testEntry.automatonState = automatonState;

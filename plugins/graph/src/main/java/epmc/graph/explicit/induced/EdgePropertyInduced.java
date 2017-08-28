@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit.induced;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.value.Type;
@@ -43,7 +42,7 @@ final class EdgePropertyInduced implements EdgeProperty {
     }
 
     @Override
-    public Value get(int currentNode, int successor) throws EPMCException {
+    public Value get(int currentNode, int successor) {
         assert successor >= 0;
         int decision = graph.getDecision(currentNode);
         assert successor < (decision == -1 ? graph.getNumSuccessors(currentNode) : 1);
@@ -51,7 +50,7 @@ final class EdgePropertyInduced implements EdgeProperty {
     }
 
     @Override
-    public void set(int node, int successor, Value value) throws EPMCException {
+    public void set(int node, int successor, Value value) {
         assert value != null;
         assert successor >= 0;
         int decision = graph.getDecision(node);

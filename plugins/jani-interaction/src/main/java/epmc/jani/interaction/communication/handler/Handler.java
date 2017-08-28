@@ -48,7 +48,6 @@ public interface Handler {
 	 * 
 	 * @param client client which sent the message
 	 * @param message message sent to the backend
-	 * @throws EPMCException thrown in case of problems
 	 */
-	void handle(Object client, JsonObject message) throws EPMCException;
+	void handle(Object client, JsonObject message);
 }

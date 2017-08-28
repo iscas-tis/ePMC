@@ -75,7 +75,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         return observerMaps.numberToState(number);
     }
 
-    AutomatonSlave(AutomatonMojmir observerExpression, boolean closeInner) throws EPMCException {
+    AutomatonSlave(AutomatonMojmir observerExpression, boolean closeInner) {
         assert observerExpression != null;
         assert observerExpression.isSimpleG();
         this.closeInner = closeInner;
@@ -89,12 +89,12 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         this.expressionsUnique = observerExpression.getExpressionsUnique();
     }
     
-    AutomatonSlave(Expression expression, ExpressionsUnique expressionsUnique, boolean implicit) throws EPMCException {
+    AutomatonSlave(Expression expression, ExpressionsUnique expressionsUnique, boolean implicit) {
         this(new AutomatonMojmir(expression, expressionsUnique, false, true), true);
     }
 
     private void computeSuccessor(AutomatonSlaveState current, int succNr)
-            throws EPMCException {
+            {
         if (current.getContent().length == 0) {
             AutomatonSlaveState succState = makeUnique(new AutomatonSlaveState(this, current.getContent()));
             this.succState = succState.getNumber();
@@ -146,7 +146,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         this.succLabel = makeUnique(new AutomatonSlaveLabel(succState, succNr)).getNumber();
     }
 
-    private int getIthExpressionStateSuccessor(int i, int value) throws EPMCException {
+    private int getIthExpressionStateSuccessor(int i, int value) {
         observerMojmir.queryState(value, i);
         return observerMojmir.getSuccessorState();
     }
@@ -158,14 +158,14 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         int succNr = expressionsUnique.valueToNumber(modelState);
         queryState(succNr, automatonState);
     }
 
     @Override
     public void queryState(int modelState, int observerState)
-            throws EPMCException {
+            {
         long cacheKey = (((long) modelState) << 32) | (observerState);
         long cacheVal = cache.get(cacheKey);
         if (cacheVal == -1) {
@@ -229,7 +229,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         return exporter.toString();
     }
     
-    public static void main(String[] args) throws EPMCException {
+    public static void main(String[] args) {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);

@@ -59,7 +59,7 @@ public final class LogJANI implements Log {
     /** Whether messages send should be suppressed. */
     private boolean silent;
     
-    public LogJANI(Options options, EPMCChannel channel) throws EPMCException {
+    public LogJANI(Options options, EPMCChannel channel) {
     	assert options != null;
         assert channel != null;
         this.options = options;

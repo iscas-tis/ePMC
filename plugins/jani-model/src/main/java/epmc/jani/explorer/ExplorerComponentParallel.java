@@ -28,7 +28,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsNonDet;
 import epmc.jani.model.Action;
@@ -105,7 +104,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert explorer != null;
 		assert component != null;
 		this.componentParallel = (ComponentParallel) component;
@@ -143,7 +142,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public void buildAfterVariables() throws EPMCException {
+	public void buildAfterVariables() {
 		successors = new NodeJANI[1];
 		successors[0] = newNode();
 		left.buildAfterVariables();
@@ -163,7 +162,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public PropertyNode getNodeProperty(Object property) throws EPMCException {
+	public PropertyNode getNodeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.STATE) {
 			return state;
@@ -173,7 +172,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public PropertyEdge getEdgeProperty(Object property) throws EPMCException {
+	public PropertyEdge getEdgeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.WEIGHT) {
 			return weight;
@@ -185,7 +184,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
+	public Collection<NodeJANI> getInitialNodes() {
 		Collection<NodeJANI> leftNodes = left.getInitialNodes();
 		Collection<NodeJANI> rightNodes = right.getInitialNodes();
 		Collection<NodeJANI> result = new ArrayList<>();
@@ -201,7 +200,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public void queryNode(NodeJANI node) throws EPMCException {
+	public void queryNode(NodeJANI node) {
 		assert node != null;
 		if (nonDet) {
 			queryNonDet(node);
@@ -210,7 +209,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 		}
 	}
 
-	private void queryNoNonDet(NodeJANI node) throws EPMCException {
+	private void queryNoNonDet(NodeJANI node) {
 		numSuccessors = 0;
 		left.queryNode(node);
 		right.queryNode(node);
@@ -267,7 +266,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 		}
 	}
 
-	private void queryNonDet(NodeJANI node) throws EPMCException {
+	private void queryNonDet(NodeJANI node) {
 		numSuccessors = 0;
 		boolean isLeftState = left.isState(node);
 		boolean isRightState = right.isState(node);
@@ -298,9 +297,8 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	 * the left and right explorers must have been already performed.
 	 * 
 	 * @param node node to query
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void querySynchroniseActions(NodeJANI node) throws EPMCException {
+	private void querySynchroniseActions(NodeJANI node) {
 		assert node != null;
 		state.set(true);
 		int numLeftSuccessors = left.getNumSuccessors();
@@ -364,9 +362,8 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	 * 
 	 * @param node node to query
 	 * @param right whether the right component node is not a state (ow. left)
-	 * @throws EPMCException thrown in case of problems.
 	 */
-	private void queryCopy(NodeJANI node, boolean right) throws EPMCException {
+	private void queryCopy(NodeJANI node, boolean right) {
 		assert node != null;
 		state.set(false);
 		int innerNumSuccessors;
@@ -405,9 +402,8 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	 * the left and right explorers must have been already performed.
 	 * @param nodeParallel 
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void queryMultiplyProbabilities(NodeJANI node) throws EPMCException {
+	private void queryMultiplyProbabilities(NodeJANI node) {
 		state.set(false);
 		int leftNumSuccessors = left.getNumSuccessors();
 		int rightNumSuccessors = right.getNumSuccessors();
@@ -452,15 +448,14 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 
 	@Override
-	public NodeJANI newNode() throws EPMCException {
+	public NodeJANI newNode() {
 		return explorer.newNode();
 	}
 
 	/**
 	 * Ensure successors size array sufficiently large to store successors.
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void ensureSuccessorsSize() throws EPMCException {
+	private void ensureSuccessorsSize() {
 		if (numSuccessors < successors.length) {
 			return;
 		}
@@ -481,12 +476,12 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
 	}
 	
 	@Override
-	public boolean isState(NodeJANI node) throws EPMCException {
+	public boolean isState(NodeJANI node) {
 		return left.isState(node) && right.isState(node);
 	}
 	
 	@Override
-	public boolean isState() throws EPMCException {
+	public boolean isState() {
 		return state.getBoolean();
 	}
 

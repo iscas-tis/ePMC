@@ -20,7 +20,6 @@
 
 package epmc.jani.type.dtmc;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explorer.ExplorerEdgeProperty;
@@ -55,7 +54,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	}
 
 	@Override
-	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
+	public void setExplorer(ExplorerJANI explorer) {
 		assert this.explorer == null;
 		assert explorer != null;
 		this.explorer = explorer;
@@ -80,7 +79,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	public ExplorerNodeProperty getNodeProperty(Object property) {
 		if (property == CommonProperties.PLAYER) {
 			return player;
 		} else {
@@ -89,7 +88,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
+	public ExplorerEdgeProperty getEdgeProperty(Object property) {
 		if (property == CommonProperties.WEIGHT) {
 			return systemWeight;
 		}
@@ -97,13 +96,13 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
 	}
 	
 	@Override
-	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) throws EPMCException {
+	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
 		assert automaton != null;
 		UtilExplorer.checkAutomatonProbabilitySum(automaton);
 	}
 	
 	@Override
-	public void afterQuerySystem(NodeJANI node) throws EPMCException {
+	public void afterQuerySystem(NodeJANI node) {
 		int numSuccessors = explorer.getNumSuccessors();
 		dtmcSum.set(zero);
 		for (int succ = 0; succ < numSuccessors; succ++) {

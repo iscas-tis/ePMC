@@ -22,7 +22,6 @@ package epmc.graph.explicit;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
@@ -57,7 +56,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public void set(int node, Value value) throws EPMCException {
+        public void set(int node, Value value) {
             assert value != null;
         }
 
@@ -103,7 +102,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         }
         
         @Override
-        public void set(int currentNode, Value value) throws EPMCException {
+        public void set(int currentNode, Value value) {
             assert value != null;
             int index = Arrays.binarySearch(ranges, currentNode);
             if (index < 0) {
@@ -370,7 +369,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
 
     @Override
-    public void computePredecessors(BitSet states) throws EPMCException {
+    public void computePredecessors(BitSet states) {
         this.properties.computePredecessors(states);
     }
 
@@ -380,7 +379,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
 
     @Override
-    public void prepareNode(int currentNode, int numSuccessors) throws EPMCException {
+    public void prepareNode(int currentNode, int numSuccessors) {
         assert numSuccessors >= 0;
         if (currentNode < numStates) {
             assert lastStatePrepared + 1 == currentNode : lastStatePrepared + " " + currentNode;
@@ -414,7 +413,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     
     @Override
     public Value addSettableGraphProperty(Object property, Type type)
-            throws EPMCException {
+            {
         assert property != null;
         assert type != null;
         Value value = type.newValue();
@@ -486,7 +485,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
     
     @Override
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
     }
 
     @Override

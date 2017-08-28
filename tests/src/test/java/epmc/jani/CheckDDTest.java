@@ -23,7 +23,6 @@ package epmc.jani;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineDD;
@@ -63,9 +62,8 @@ public final class CheckDDTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIOptions() throws EPMCException {
+    private final static Options prepareJANIOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, ModelJANI.IDENTIFIER);
@@ -75,10 +73,9 @@ public final class CheckDDTest {
     /**
      * Test for BEB model from Arnd Hartmanns.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void bebTest() throws EPMCException {
+    public void bebTest() {
         Options options = prepareJANIOptions();
         prepareOptions(options, ModelJANI.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
@@ -91,7 +88,7 @@ public final class CheckDDTest {
     }
     
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareJANIOptions();
         prepareOptions(options, ModelJANI.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);

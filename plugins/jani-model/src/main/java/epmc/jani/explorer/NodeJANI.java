@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.util.BitStream;
@@ -52,7 +51,7 @@ public final class NodeJANI implements ExplorerNode {
 	private final StateVariables stateVariables;
 	private Value[] initialValues;
 
-	public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) throws EPMCException {
+	public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) {
 		assert explorer != null;
 		assert stateVariables != null;
 		this.explorer = explorer;
@@ -88,15 +87,11 @@ public final class NodeJANI implements ExplorerNode {
 
 	@Override
 	public NodeJANI clone() {
-		try {
-			NodeJANI clone = new NodeJANI(explorer, stateVariables);
-			for (int varNr = 0; varNr < values.length; varNr++) {
-				clone.values[varNr].set(values[varNr]);
-			}
-			return clone;
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
+		NodeJANI clone = new NodeJANI(explorer, stateVariables);
+		for (int varNr = 0; varNr < values.length; varNr++) {
+			clone.values[varNr].set(values[varNr]);
 		}
+		return clone;
 	}
 
 	@Override
@@ -192,7 +187,7 @@ public final class NodeJANI implements ExplorerNode {
 		return ValueBoolean.asBoolean(values[variable]).getBoolean();
 	}
 	
-	public boolean setVariable(int variable, Value value) throws EPMCException {
+	public boolean setVariable(int variable, Value value) {
 		assert variable >= 0;
 		assert variable < values.length;
 		assert value != null;

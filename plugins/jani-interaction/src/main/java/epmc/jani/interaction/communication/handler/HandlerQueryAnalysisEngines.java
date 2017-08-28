@@ -30,7 +30,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.communication.Backend;
 import epmc.jani.interaction.error.ProblemsJANIInteraction;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -97,7 +96,7 @@ public final class HandlerQueryAnalysisEngines implements Handler {
 	}
 
 	@Override
-	public void handle(Object client, JsonObject object) throws EPMCException {
+	public void handle(Object client, JsonObject object) {
 		assert client != null;
 		assert object != null;
 		ensure(backend.clientLoggedIn(client),

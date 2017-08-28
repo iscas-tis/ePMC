@@ -20,7 +20,6 @@
 
 package epmc.algorithms;
 
-import epmc.error.EPMCException;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
@@ -78,7 +77,7 @@ public final class FoxGlynn {
     private ValueArrayAlgebra values;
     private ValueReal totalWeight;
 
-    private void finder(int m) throws EPMCException {
+    private void finder(int m) {
     	OperatorEvaluator logOp = ContextValue.get().getOperatorEvaluator(OperatorLog.LOG, TypeReal.get());
         OperatorEvaluator ceil = ContextValue.get().getOperatorEvaluator(OperatorCeil.CEIL, typeReal);
         OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
@@ -257,7 +256,7 @@ public final class FoxGlynn {
         // checked until here
     }
     
-    private void weighter(int m) throws EPMCException {
+    private void weighter(int m) {
         assert left <= right : left + " " + right;
         values = UtilValue.newArray(typeArray, right - left + 1);
         values.set(startValue, m - left);
@@ -336,7 +335,7 @@ public final class FoxGlynn {
     }
     
     private FoxGlynn(ValueReal lambda, ValueReal tau,
-    		ValueReal omega, ValueReal epsilon) throws EPMCException {
+    		ValueReal omega, ValueReal epsilon) {
         assert lambda != null;
         assert tau != null;
         assert omega != null;
@@ -404,7 +403,7 @@ public final class FoxGlynn {
     }
     
     public FoxGlynn(ValueReal lambda, ValueReal epsilon)
-            throws EPMCException {
+            {
         this(lambda, getUnderflow(lambda), getOverflow(lambda), epsilon);
     }
 
@@ -426,7 +425,7 @@ public final class FoxGlynn {
         return right;
     }
     
-    public void getWeight(int index, ValueReal weight) throws EPMCException {
+    public void getWeight(int index, ValueReal weight) {
         values.get(weight, index - left);
     }
 

@@ -21,7 +21,6 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -59,7 +58,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             for (Expression variable : variables) {
                 if (variable.equals(expression)) {
                     return true;
@@ -69,7 +68,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitVariable(this);
         }
 
@@ -92,7 +91,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     private final int index;
     private final Value result;
 
-    private EvaluatorExplicitVariable(Builder builder) throws EPMCException {
+    private EvaluatorExplicitVariable(Builder builder) {
         assert builder != null;
         assert builder.getVariables() != null;
         assert builder.getExpression() != null;
@@ -121,7 +120,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
@@ -131,7 +130,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;

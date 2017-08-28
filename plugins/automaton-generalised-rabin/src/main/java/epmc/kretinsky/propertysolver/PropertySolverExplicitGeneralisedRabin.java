@@ -67,7 +67,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+            {
         assert property != null;
         assert forStates != null;
         assert property.isQuantifier();
@@ -172,7 +172,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
 
     @Override
-    public boolean canHandle(Expression property, StateSet states) throws EPMCException {
+    public boolean canHandle(Expression property, StateSet states) {
         assert property != null;
         assert states != null;
         if (!modelChecker.isEngineExplicit()) {
@@ -191,7 +191,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         return true;
     }
 
-    static boolean decideComponentGeneralisedRabinMCLeaf(GraphExplicit graph, BitSet leafSCC) throws EPMCException {
+    static boolean decideComponentGeneralisedRabinMCLeaf(GraphExplicit graph, BitSet leafSCC) {
         AutomatonGeneralisedRabin rabin = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         int numPairs = rabin.getNumPairs();
@@ -226,7 +226,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
     
     static boolean decideComponentGeneralisedRabinMDPLeaf(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonGeneralisedRabin rabin = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         boolean accepting = false;
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -268,7 +268,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
 
     private Value prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+            {
         log.send(MessagesEPMC.PREPARING_MDP_FOR_ITERATION);
         BitSet test = (BitSet) graph.getInitialNodes().clone();
         test.andNot(acc);
@@ -333,7 +333,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
 
     private StateMap prodToOrigResult(Value iterResult,
-            GraphExplicit prodGraph) throws EPMCException {
+            GraphExplicit prodGraph) {
         assert iterResult != null;
         assert prodGraph != null;
         Type typeWeight = contextValue.getTypeWeight();

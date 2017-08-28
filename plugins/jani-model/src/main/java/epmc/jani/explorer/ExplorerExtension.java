@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.ExplorerEdgeProperty;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.jani.model.ModelExtension;
@@ -29,7 +28,7 @@ import epmc.value.Value;
 public interface ExplorerExtension {
 	String getIdentifier();
 	
-	default void setExplorer(ExplorerJANI explorer) throws EPMCException {
+	default void setExplorer(ExplorerJANI explorer) {
 	}
 	
 	default boolean isUsedGetNodeProperty() {
@@ -40,29 +39,29 @@ public interface ExplorerExtension {
 		return null;
 	}
 	
-	default ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	default ExplorerNodeProperty getNodeProperty(Object property) {
 		return null;
 	}
 	
-	default ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
+	default ExplorerEdgeProperty getEdgeProperty(Object property) {
 		return null;
 	}
 	
-	default void handleNoSuccessors(NodeJANI node) throws EPMCException {
+	default void handleNoSuccessors(NodeJANI node) {
 	}
 	
-	default void handleSelfLoop(NodeJANI node) throws EPMCException {
+	default void handleSelfLoop(NodeJANI node) {
 	}
 	
 	default void beforeQuerySystem(NodeJANI nodeJANI) {
 	}
 	
-	default void afterQuerySystem(NodeJANI node) throws EPMCException {
+	default void afterQuerySystem(NodeJANI node) {
 	}
 	
-	default void afterQueryAutomaton(ExplorerComponentAutomaton automaton) throws EPMCException {
+	default void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
 	}
 
-	default void setModelExtension(ModelExtension modelExtension) throws EPMCException {
+	default void setModelExtension(ModelExtension modelExtension) {
 	}
 }

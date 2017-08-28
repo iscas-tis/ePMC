@@ -31,7 +31,6 @@ import java.util.Set;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
@@ -110,7 +109,7 @@ final class DDComponentAutomaton implements DDComponent {
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert graph != null;
 		assert component != null;
 		
@@ -129,9 +128,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * location information of the automaton. It does not include global
 	 * variables.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void buildCubes() throws EPMCException {
+	private void buildCubes() {
 		presCube = getContextDD().newConstant(true);
 		for (VariableDD variable : localVariableDDs) {
 			presCube = presCube.andWith(variable.newCube(PRES_STATE));
@@ -145,9 +143,8 @@ final class DDComponentAutomaton implements DDComponent {
 	/**
 	 * Prepare variables and types for DD representation of the automaton.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void buildVariables() throws EPMCException {
+	private void buildVariables() {
 		typeLocation = TypeLocation.get(automaton.getLocations());
 		locationVariableDD = getContextDD().newVariable(automaton.getLocations().toString(), typeLocation, 2);
 		identifierToDD.putAll(graph.getGlobalIdentifiersToDD());
@@ -169,9 +166,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * The parameter may not be {@code null}.
 	 * 
 	 * @param expressionToDD expression to DD helper to apply this method
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void buildTransitions(ExpressionToDD expressionToDD) throws EPMCException {        
+	private void buildTransitions(ExpressionToDD expressionToDD) {        
 		assert expressionToDD != null;
 		for (Edge edge : automaton.getEdges()) {
 			DDTransition transition = translateEdge(edge, expressionToDD);
@@ -190,9 +186,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * @param edge edge to translate
 	 * @param expressionToDD expression to DD object
 	 * @return translated edge
-	 * @throws EPMCException thrown in case of problems.
 	 */
-	private DDTransition translateEdge(Edge edge, ExpressionToDD expressionToDD) throws EPMCException {
+	private DDTransition translateEdge(Edge edge, ExpressionToDD expressionToDD) {
 		assert edge != null;
 		assert expressionToDD != null;
 		DDTransition transition = new DDTransition();
@@ -221,7 +216,7 @@ final class DDComponentAutomaton implements DDComponent {
 		return transition;
 	}
 
-	private Set<VariableValid> buildDestinationVariableValid(Destination destination, DD guard, ExpressionToDD expressionToDD) throws EPMCException {
+	private Set<VariableValid> buildDestinationVariableValid(Destination destination, DD guard, ExpressionToDD expressionToDD) {
 		Set<VariableValid> result = new LinkedHashSet<>();
 		for (AssignmentSimple assg : destination.getAssignmentsOrEmpty()) {
 			Variable variable = assg.getRef();
@@ -261,9 +256,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * @param edgeWrites variables written by the edge of the destination
 	 * @param expressionToDD used to translate expressions
 	 * @return symbolic representation of edge destination
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD buildDestinationDD(Destination destination, Set<VariableDD> edgeWrites, ExpressionToDD expressionToDD) throws EPMCException {
+	private DD buildDestinationDD(Destination destination, Set<VariableDD> edgeWrites, ExpressionToDD expressionToDD) {
 		assert destination != null;
 		assert edgeWrites != null;
 		for (VariableDD variable : edgeWrites) {
@@ -314,9 +308,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * @param location location to obtain symbolic representation of
 	 * @param copy instance of DD variables to use for encoding
 	 * @return symbolic representation of the given location
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD locationToDD(Location location, int copy) throws EPMCException {
+	private DD locationToDD(Location location, int copy) {
 		assert location != null;
 		assert copy >= 0;
 		assert copy < 2;
@@ -373,9 +366,8 @@ final class DDComponentAutomaton implements DDComponent {
 	 * value. The expression to DD parameter must not be {@code null}.
 	 * 
 	 * @param expressionToDD expression to DD helper
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void computeInitialNodes(ExpressionToDD expressionToDD) throws EPMCException {
+	private void computeInitialNodes(ExpressionToDD expressionToDD) {
 		assert expressionToDD != null;
 		Set<Location> initialLocations = automaton.getInitialLocations();
 		ContextDD contextDD = ContextDD.get();

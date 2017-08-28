@@ -23,7 +23,6 @@ package epmc.coalition.explicit;
 import epmc.automaton.AutomatonParityLabel;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.Scheduler;
@@ -88,7 +87,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 	}
 
 	@Override
-	public QualitativeResult solve() throws EPMCException {
+	public QualitativeResult solve() {
 		StopWatch watch = new StopWatch(true);
 		getLog().send(MessagesCoalition.COALITION_STOCHASTIC_MCNAUGHTON_START);
 		int numNodes = game.getNumNodes();
@@ -123,7 +122,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return result;
 	}
 	
-	QualitativeResult zeroMcNaughton(BitSet p) throws EPMCException {
+	QualitativeResult zeroMcNaughton(BitSet p) {
         assert p != null;
         zeroMcNaughtonCalls++;
         if (p.isEmpty()) {
@@ -164,9 +163,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * @param p node space of subgame to consider
      * @param minPriority minimal priority of the subgame
      * @return winning regions of the players and requested strategies
-     * @throws EPMCException thrown in case of problems
      */
-	private QualitativeResult zeroMcNaughtonIterate(BitSet p, int minPriority) throws EPMCException {
+	private QualitativeResult zeroMcNaughtonIterate(BitSet p, int minPriority) {
 		assert p != null;
 		assert minPriority >= 0;
         NodeProperty labels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -278,9 +276,8 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * 
      * @param p node set of subgame
      * @return arbitrary valid strategy in p
-     * @throws EPMCException thrown in case of problems
      */
-    private SchedulerSimple computeArbitraryStrategies(BitSet p) throws EPMCException {
+    private SchedulerSimple computeArbitraryStrategies(BitSet p) {
     	assert p != null;
     	if (!computeStrategyP0 && !computeStrategyP1) {
     		return null;
@@ -316,23 +313,22 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 	 * @param nodes nodes to restrict area to
 	 * @param odd whether to compute attractor set for player odd (1)
 	 * @return
-	 * @throws EPMCException
 	 */
 	private BitSet satr(BitSet target, BitSet nodes, boolean odd)
-            throws EPMCException {
+            {
         return odd ? satr1(target, nodes) : satr0(target, nodes);
     }
     
-    private BitSet satr0(BitSet target, BitSet nodes) throws EPMCException {
+    private BitSet satr0(BitSet target, BitSet nodes) {
         return attract(game, target, nodes, playerEvenOrStochastic);
     }
 
-    private BitSet satr1(BitSet target, BitSet nodes) throws EPMCException {
+    private BitSet satr1(BitSet target, BitSet nodes) {
         return attract(game, target, nodes, playerOddOrStochastic);
     }
 
     private BitSet watr(BitSet target, BitSet nodes, boolean odd)
-            throws EPMCException {
+            {
         BitSet satrSame = satr(target, nodes, odd);
         BitSet nodesMSatrSame = UtilBitSet.newBitSetBounded(game.getNumNodes());
         BitSet nodesMTarget = UtilBitSet.newBitSetBounded(game.getNumNodes());
@@ -357,11 +353,11 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return satrSame;
     }
     
-    private BitSet watr0(BitSet target, BitSet nodes) throws EPMCException {
+    private BitSet watr0(BitSet target, BitSet nodes) {
         return watr(target, nodes, false);
     }
 
-    private BitSet watr1(BitSet target, BitSet nodes) throws EPMCException {
+    private BitSet watr1(BitSet target, BitSet nodes) {
         return watr(target, nodes, true);
     }
     
@@ -377,11 +373,10 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
      * @param target 
      * @param nodes nodes reaching the target
      * @param exists
-     * @throws EPMCException
      */
     private void computeStrategy(SchedulerSimpleSettable strategies, GraphExplicit graph,
             BitSet target, BitSet nodes, BitSet exists)
-                    throws EPMCException {
+                    {
     	assert strategies != null;
         assert graph != null;
         assert target != null;
@@ -445,7 +440,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 
     private BitSet attract(GraphExplicit graph,
             BitSet target, BitSet nodes, BitSet exists)
-                    throws EPMCException {
+                    {
         assert graph != null;
         assert target != null;
         assert nodes != null;

@@ -30,7 +30,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 public final class Metadata implements JANINode {
@@ -48,7 +47,7 @@ public final class Metadata implements JANINode {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonObject object = UtilJSON.toObjectString(value);

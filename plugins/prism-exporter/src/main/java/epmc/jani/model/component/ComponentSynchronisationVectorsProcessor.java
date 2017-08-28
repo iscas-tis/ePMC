@@ -24,7 +24,6 @@ import static epmc.error.UtilError.ensure;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.Edge;
@@ -37,7 +36,7 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 	private ComponentSynchronisationVectors syncVectors = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ComponentSynchronisationVectors; 
 		
@@ -46,7 +45,7 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert syncVectors != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -118,12 +117,12 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert syncVectors != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert syncVectors != null;
 
 		return false;

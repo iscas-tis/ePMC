@@ -52,7 +52,7 @@ public final class OptionTypeRealNonnegative implements OptionType {
     }
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

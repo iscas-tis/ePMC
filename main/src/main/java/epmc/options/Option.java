@@ -30,8 +30,6 @@ import java.util.Map;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
 
-import epmc.error.EPMCException;
-
 import java.util.ResourceBundle;
 
 /**
@@ -631,15 +629,11 @@ public final class Option implements Serializable, Cloneable {
      * Parse an option from a {@link String} by the options {@link OptionType}.
      * The parameter must not be {@code null}. Whether the function may called
      * multiple times before resetting the option depends on
-     * {@link OptionType#allowMulti()} of the option type used. If the function
-     * is called while this is not allowed by the {@link OptionType}, an
-     * {@link EPMCException} is thrown. An {@link EPMCException} is also
-     * thrown in case of an error while parsing the value string.
+     * {@link OptionType#allowMulti()} of the option type used.
      * 
      * @param value the {@link String} to parse to an option value
-     * @throws EPMCException thrown in case of parsing errors.or too many calls
      */
-    public void parse(String value) throws EPMCException {
+    public void parse(String value) {
         assert value != null;
         assert type != null;
         Object previous = null;
@@ -1030,12 +1024,7 @@ public final class Option implements Serializable, Cloneable {
      */
     private Object parseInternal(String unparsedValue) {
         Object result = null;
-        try {
-            result = type.parse(unparsedValue, result);
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false : unparsedValue;
-        }
+        result = type.parse(unparsedValue, result);
         return result;
     }
     

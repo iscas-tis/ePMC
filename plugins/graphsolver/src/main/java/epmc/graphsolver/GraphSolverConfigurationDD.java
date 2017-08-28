@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
 import epmc.graph.Semantics;
@@ -64,7 +63,7 @@ public final class GraphSolverConfigurationDD {
         this.objective = objective;
     }
 
-    public void solve() throws EPMCException {
+    public void solve() {
         GraphSolverObjectiveExplicit explicitObjective = preprocessDD();
         configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         configuration.setObjective(explicitObjective);
@@ -72,7 +71,7 @@ public final class GraphSolverConfigurationDD {
         postprocessDD(explicitObjective);
     }
     
-    private GraphSolverObjectiveExplicit preprocessDD() throws EPMCException {
+    private GraphSolverObjectiveExplicit preprocessDD() {
         if (lumpBeforeGraphSolving) {
             lumpDD();
         }
@@ -86,7 +85,7 @@ public final class GraphSolverConfigurationDD {
         return objectiveUnboundedReachability;
     }
     
-    private void postprocessDD(GraphSolverObjectiveExplicit explicitObjective) throws EPMCException {
+    private void postprocessDD(GraphSolverObjectiveExplicit explicitObjective) {
         this.resultDD = graphBuilderDD.valuesToDD(explicitObjective.getResult());
         graphBuilderDD.close();
         this.resultDD = this.resultDD.multiplyWith(graphDD.getNodeSpace().toMT());
@@ -97,7 +96,7 @@ public final class GraphSolverConfigurationDD {
         graphBuilderDD.close();
     }
 
-    private void lumpDD() throws EPMCException {
+    private void lumpDD() {
         for (DD sink : sinksDD) {
             graphDD.registerNodeProperty(sink, sink);
         }

@@ -36,7 +36,6 @@ import org.junit.Test;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -52,7 +51,7 @@ public class PCTLSolverDDTest {
     }
 
     @Test
-    public void coin06UntilTest() throws EPMCException {
+    public void coin06UntilTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -70,7 +69,7 @@ public class PCTLSolverDDTest {
     }
 
     @Test
-    public void philLss3GloballyTest() throws EPMCException {
+    public void philLss3GloballyTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -86,7 +85,7 @@ public class PCTLSolverDDTest {
     }
 
     @Test
-    public void philLss4GloballyTest() throws EPMCException {
+    public void philLss4GloballyTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -104,7 +103,7 @@ public class PCTLSolverDDTest {
     @Test
     // TODO ignored because "RP" not in PRISM file; 
     @Ignore
-    public void clusterGTest() throws EPMCException {
+    public void clusterGTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -121,7 +120,7 @@ public class PCTLSolverDDTest {
     }
     
     @Test
-    public void clusterBoundedUntilTest() throws EPMCException {
+    public void clusterBoundedUntilTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -135,7 +134,7 @@ public class PCTLSolverDDTest {
     }
     
     @Test
-    public void hermanOpenIntervalTest() throws EPMCException {
+    public void hermanOpenIntervalTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
@@ -152,7 +151,7 @@ public class PCTLSolverDDTest {
     }
     
     @Test
-    public void twoDiceTest() throws EPMCException {
+    public void twoDiceTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         double tolerance = 1E-6;
@@ -164,7 +163,7 @@ public class PCTLSolverDDTest {
     }
     
     @Test
-    public void ddTest() throws EPMCException {
+    public void ddTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         TypeInteger piecePositionType = TypeInteger.get(-2, 15);

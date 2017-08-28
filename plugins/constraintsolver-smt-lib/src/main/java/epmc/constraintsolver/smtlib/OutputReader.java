@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import epmc.constraintsolver.ConstraintSolverResult;
-import epmc.error.EPMCException;
 import epmc.sexpression.SExpression;
 import epmc.sexpression.SExpressionParser;
 import epmc.sexpression.UtilSExpression;
@@ -48,7 +47,7 @@ final class OutputReader {
 		parser = UtilSExpression.newParser();
 	}
 
-	SMTLibResult parseOutput(BufferedReader input) throws EPMCException {
+	SMTLibResult parseOutput(BufferedReader input) {
 		SMTLibResult result = new SMTLibResult();
 		result.type = ConstraintSolverResult.UNKNOWN;
 		result.values = new Value[solver.getVariables().size()];

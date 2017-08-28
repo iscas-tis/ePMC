@@ -37,7 +37,6 @@ import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.database.Database;
 import epmc.jani.interaction.error.ProblemsJANIInteractionJDBC;
 import epmc.jani.interaction.options.OptionsJANIInteractionJDBC;
@@ -71,7 +70,7 @@ public final class UserManager {
 	private final PreparedStatement deleteUserByUsername;
 	private final PreparedStatement changeUsernameByUsername;
 
-	public UserManager(Database storage) throws EPMCException {
+	public UserManager(Database storage) {
 		assert storage != null;
 		connection = storage.getConnection();
 		Options options = Options.get();
@@ -101,9 +100,8 @@ public final class UserManager {
 	 * @param username username of user to create
 	 * @param password password of user to create
 	 * @return -1 in case of failure, otherwise unique identifier
-	 * @throws EPMCException thrown in case of problems
 	 */
-	public int createUser(String username, String password) throws EPMCException {
+	public int createUser(String username, String password) {
 		assert username != null;
 		assert password != null;
 		byte[] saltBytes = newSalt();
@@ -144,9 +142,8 @@ public final class UserManager {
 	 * @param username name of user to try to log in
 	 * @param password password of user to try to log in
 	 * @return identifier for user or -1 in case of failure
-	 * @throws EPMCException thrown in case of problems
 	 */
-	public int checkLogin(String username, String password) throws EPMCException {
+	public int checkLogin(String username, String password) {
 		assert username != null;
 		assert password != null;
 		try {
@@ -168,7 +165,7 @@ public final class UserManager {
 		return -1;
 	}
 
-	public void changePassword(int userID, String password) throws EPMCException {
+	public void changePassword(int userID, String password) {
 		byte[] saltBytes = newSalt();
 		String encodedPassword = encodePassword(password, saltBytes);
 		String saltString = Base64.getEncoder().encodeToString(saltBytes);
@@ -184,7 +181,7 @@ public final class UserManager {
 		}
 	}
 
-	public void changePassword(String username, String password) throws EPMCException {
+	public void changePassword(String username, String password) {
 		byte[] saltBytes = newSalt();
 		String encodedPassword = encodePassword(password, saltBytes);
 		String saltString = Base64.getEncoder().encodeToString(saltBytes);
@@ -246,7 +243,7 @@ public final class UserManager {
 		return enc.encodeToString(hash);
 	}
 	
-	public void delete(String username) throws EPMCException {
+	public void delete(String username) {
 		assert username != null;
 		try {
 			deleteUserByUsername.setString(1, username);
@@ -258,7 +255,7 @@ public final class UserManager {
 		}
 	}
 	
-	public void changeUsername(String usernameOld, String usernameNew) throws EPMCException {
+	public void changeUsername(String usernameOld, String usernameNew) {
 		assert usernameOld != null;
 		assert usernameNew != null;
 		try {

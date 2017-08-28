@@ -20,7 +20,6 @@
 
 package epmc.automaton;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.value.Value;
@@ -47,7 +46,7 @@ public interface Buechi {
 
     GraphExplicit getGraph();
     
-    void query(Value[] get) throws EPMCException;
+    void query(Value[] get);
     
     
     /* default methods */

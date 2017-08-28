@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.jani.model.OptionsJANIModel;
@@ -103,7 +102,7 @@ public final class ConvertTestConfiguration {
 		return this;
 	}
 	
-	public ConvertTestStatistics run() throws EPMCException {
+	public ConvertTestStatistics run() {
 		ConvertTestStatistics result = new ConvertTestStatistics();
 		assert modelName != null;
 		Path path = Paths.get(modelName);
@@ -172,9 +171,8 @@ public final class ConvertTestConfiguration {
 	 * @param additionalPlugin 
 	 * 
 	 * @return options usable for JANI model analysis
-	 * @throws EPMCException thrown in case problem occurs
 	 */
-	public static Options prepareJANIOptions(String additionalPlugin) throws EPMCException {
+	public static Options prepareJANIOptions(String additionalPlugin) {
 	    Options options = UtilOptionsEPMC.newOptions();
 //	    String plugin = PLUGIN_DIR;
 	//    if (additionalPlugin != null) {

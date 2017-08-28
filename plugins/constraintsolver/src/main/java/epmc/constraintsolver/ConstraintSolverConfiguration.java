@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.constraintsolver.options.OptionsConstraintsolver;
 import epmc.dd.ContextDD;
-import epmc.error.EPMCException;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.options.Options;
 import epmc.util.Util;
@@ -46,11 +45,11 @@ public class ConstraintSolverConfiguration {
     }
     
     public ConstraintSolver newProblem()
-            throws EPMCException {
+            {
     	return buildSolver(features);
     }
     
-    private ConstraintSolver buildSolver(Set<Feature> features) throws EPMCException {
+    private ConstraintSolver buildSolver(Set<Feature> features) {
     	Options options = Options.get();
         Map<String,Class<? extends ConstraintSolver>> lumpersExplicit = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
         Collection<String> lumperExplicitt = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER);
@@ -72,7 +71,7 @@ public class ConstraintSolverConfiguration {
         return null;
     }
 
-    public ContextDD getContextDD() throws EPMCException {
+    public ContextDD getContextDD() {
         return ContextDD.get();
     }
     

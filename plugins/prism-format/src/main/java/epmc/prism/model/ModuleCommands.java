@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -115,10 +114,9 @@ public final class ModuleCommands implements Module {
      * @param name name of new module
      * @param map map of old parts to replacements
      * @return new module
-     * @throws EPMCException 
      */
     ModuleCommands rename(String name, Map<Expression, Expression> map)
-            throws EPMCException {
+            {
         assert name != null;
         assert map != null;
         for (Entry<Expression, Expression> entry : map.entrySet()) {
@@ -299,7 +297,7 @@ public final class ModuleCommands implements Module {
     public void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
             Map<Expression, Type> types)
-            throws EPMCException {
+            {
         for (Entry<Expression,JANIType> entry : variables.entrySet()) {
         	// TODO
 //            entry.getValue().checkExpressionConsistency(types);

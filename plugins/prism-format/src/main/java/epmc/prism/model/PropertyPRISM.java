@@ -31,7 +31,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.modelchecker.Property;
 import epmc.modelchecker.RawProperties;
@@ -65,7 +64,7 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public Expression parseExpression(InputStream stream) throws EPMCException {
+	public Expression parseExpression(InputStream stream) {
 		assert stream != null;
 		String string = null;
 		try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
@@ -79,7 +78,7 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public void writeProperties(RawProperties properties, OutputStream stream) throws EPMCException {
+	public void writeProperties(RawProperties properties, OutputStream stream) {
 		assert properties != null;
 		assert stream != null;
         assert stream != null;
@@ -109,7 +108,7 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public void readProperties(RawProperties properties, InputStream stream) throws EPMCException {
+	public void readProperties(RawProperties properties, InputStream stream) {
         assert stream != null;
         properties.clear();
         final StringBuilder comment = new StringBuilder();
@@ -226,7 +225,7 @@ public final class PropertyPRISM implements Property {
 	}
 
 	@Override
-	public Type parseType(String type) throws EPMCException {
+	public Type parseType(String type) {
 		assert type != null;
 		switch (type) {
 		case INT:

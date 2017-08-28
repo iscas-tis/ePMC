@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class ValueObject implements Value {
@@ -117,7 +116,7 @@ public final class ValueObject implements Value {
     }
 
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
     	ValueObject otherObject = asObject(other);
     	return content.equals(otherObject.content) ? 0.0 : 1.0;
     }
@@ -129,13 +128,13 @@ public final class ValueObject implements Value {
 	}
 
 	@Override
-	public boolean isEq(Value other) throws EPMCException {
+	public boolean isEq(Value other) {
     	ValueObject otherObject = asObject(other);
     	return content.equals(otherObject.content);
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

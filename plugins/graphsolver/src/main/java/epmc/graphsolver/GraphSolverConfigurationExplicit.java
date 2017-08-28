@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.lumping.LumperExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.preprocessor.PreprocessorExplicit;
@@ -54,7 +53,7 @@ public final class GraphSolverConfigurationExplicit {
         this.objective = objective;
     }
 
-    public void solve() throws EPMCException {
+    public void solve() {
         preprocess();
         LumperExplicit lumper = getLumperExplicit();
         GraphSolverObjectiveExplicit objective;
@@ -91,7 +90,7 @@ public final class GraphSolverConfigurationExplicit {
         return null;
     }
 
-    private void doSolve(GraphSolverObjectiveExplicit objective) throws EPMCException {
+    private void doSolve(GraphSolverObjectiveExplicit objective) {
         Collection<String> solvers = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER);
         Map<String,Class<GraphSolverExplicit>> solverClasses = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         graphSolver = Util.getInstance(solverClasses, solvers,
@@ -102,7 +101,7 @@ public final class GraphSolverConfigurationExplicit {
         graphSolver.solve();
     }
 
-    private void preprocess() throws EPMCException {
+    private void preprocess() {
         Map<String,Class<? extends PreprocessorExplicit>> preprocessors = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT_CLASS);
         Collection<String> preprocessorsC = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT);
         for (String lumperId : preprocessorsC) {

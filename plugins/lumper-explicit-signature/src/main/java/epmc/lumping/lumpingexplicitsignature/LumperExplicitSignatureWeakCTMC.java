@@ -20,7 +20,6 @@
 
 package epmc.lumping.lumpingexplicitsignature;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.lumping.LumperExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 
@@ -39,7 +38,7 @@ public final class LumperExplicitSignatureWeakCTMC implements LumperExplicit {
     }
 
     @Override
-    public void lump() throws EPMCException {
+    public void lump() {
         inner.lump();
     }
 
@@ -54,7 +53,7 @@ public final class LumperExplicitSignatureWeakCTMC implements LumperExplicit {
 	}
 
 	@Override
-	public void quotientToOriginal() throws EPMCException {
+	public void quotientToOriginal() {
 		inner.quotientToOriginal();
 	}
 }

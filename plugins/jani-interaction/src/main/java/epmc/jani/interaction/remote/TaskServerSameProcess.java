@@ -26,8 +26,6 @@ import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import epmc.error.EPMCException;
-
 /**
  * Task server which runs in the same process as the one who starts it.
  * Running the task server in the same process as the starting process means
@@ -42,7 +40,7 @@ public final class TaskServerSameProcess implements TaskServer {
     private JANIServer server;
 
     @Override
-    public void start() throws EPMCException {
+    public void start() {
         try {
             server = new JANIServer(null, 0);
         } catch (RemoteException e) {
@@ -51,7 +49,7 @@ public final class TaskServerSameProcess implements TaskServer {
     }
 
     @Override
-    public void stop() throws EPMCException {
+    public void stop() {
         try {
             UnicastRemoteObject.unexportObject(server, true);
         } catch (NoSuchObjectException e) {

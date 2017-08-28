@@ -63,11 +63,11 @@ public final class ExpressionParser implements JANINode {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIExpression(value);
 	}
 	
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
+	public JANIExpression parseAsJANIExpression(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		Map<String,Class<? extends JANIExpression>> types;
@@ -91,7 +91,7 @@ public final class ExpressionParser implements JANINode {
 		return expression;
 	}
 
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
 		assert model != null;
 		this.expression = null;
 		Map<String,Class<? extends JANIExpression>> types;
@@ -116,7 +116,7 @@ public final class ExpressionParser implements JANINode {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		return expression.generate();
 	}
 
@@ -149,9 +149,8 @@ public final class ExpressionParser implements JANINode {
 	 * @param value expression to be parsed
 	 * @param identifiers map of identifiers, or {@code null}
 	 * @return EPMC Expression
-	 * @throws EPMCException throw if expression incorrect
 	 */
-	public static Expression parseExpression(ModelJANI model, JsonValue value, Map<String,? extends JANIIdentifier> identifiers) throws EPMCException {
+	public static Expression parseExpression(ModelJANI model, JsonValue value, Map<String,? extends JANIIdentifier> identifiers) {
 		assert model != null;
 		assert value != null;
 		ExpressionParser parser = new ExpressionParser(model, identifiers, false);
@@ -174,9 +173,8 @@ public final class ExpressionParser implements JANINode {
 	 * @param key field containing the expression
 	 * @param identifiers  map of identifiers, or {@code null}
 	 * @return parsed expression
-	 * @throws EPMCException if field not present or invalid expression
 	 */
-	public static Expression getExpression(ModelJANI model, JsonObject object, String key, Map<String,JANIIdentifier> identifiers) throws EPMCException {
+	public static Expression getExpression(ModelJANI model, JsonObject object, String key, Map<String,JANIIdentifier> identifiers) {
 		assert model != null;
 		if (identifiers != null) {
 			for (Entry<String, JANIIdentifier> entry : identifiers.entrySet()) {
@@ -197,9 +195,8 @@ public final class ExpressionParser implements JANINode {
 	 * 
 	 * @param expression expression to be transformed
 	 * @return JANI representation
-	 * @throws EPMCException thrown in case of problems
 	 */
-	public static JsonValue generateExpression(ModelJANI model, Expression expression) throws EPMCException {
+	public static JsonValue generateExpression(ModelJANI model, Expression expression) {
 		assert model != null;
 		assert expression != null;
 		ExpressionParser parser = new ExpressionParser(model, Collections.emptyMap(), false);

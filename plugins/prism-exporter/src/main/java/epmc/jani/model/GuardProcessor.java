@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -29,7 +28,7 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 	private Guard guard = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Guard; 
 		
@@ -38,7 +37,7 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert guard != null;
 		
 		return ProcessorRegistrar.getProcessor(guard.getExp())
@@ -46,7 +45,7 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert guard != null;
 		
 		ProcessorRegistrar.getProcessor(guard.getExp())
@@ -54,7 +53,7 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert guard != null;
 		
 		return ProcessorRegistrar.getProcessor(guard.getExp())

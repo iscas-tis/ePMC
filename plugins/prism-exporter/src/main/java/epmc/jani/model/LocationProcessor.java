@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -29,7 +28,7 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 	private Location location = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Location; 
 		
@@ -38,14 +37,14 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert location != null;
 		
 		return "";
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert location != null;
 		
 		TimeProgress timeProgress = location.getTimeProgress();
@@ -60,7 +59,7 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert location != null;
 		
 		boolean usesTransient = false;

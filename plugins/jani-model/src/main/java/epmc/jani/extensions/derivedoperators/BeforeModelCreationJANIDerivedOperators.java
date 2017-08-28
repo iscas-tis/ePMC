@@ -20,7 +20,6 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 
@@ -34,7 +33,7 @@ public final class BeforeModelCreationJANIDerivedOperators implements BeforeMode
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSgn.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAbs.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTrunc.INSTANCE);

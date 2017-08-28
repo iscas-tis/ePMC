@@ -23,7 +23,6 @@ package epmc.automata.determinisation;
 import epmc.automaton.AutomatonParity;
 import epmc.automaton.AutomatonSafra;
 import epmc.automaton.Buechi;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.value.Value;
@@ -54,7 +53,7 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
 		}
 		
 		@Override
-		public AutomatonScheweParity build() throws EPMCException {
+		public AutomatonScheweParity build() {
 			return new AutomatonScheweParity(this);
 		}
 		
@@ -64,7 +63,7 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
 
     private final AutomatonSchewe inner;
     
-    private AutomatonScheweParity(Builder builder) throws EPMCException {
+    private AutomatonScheweParity(Builder builder) {
     	AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
     	scheweBuilder.setParity(true);
     	scheweBuilder.setBuechi(builder.getBuechi());
@@ -89,7 +88,7 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         inner.queryState(modelState, automatonState);
     }
 

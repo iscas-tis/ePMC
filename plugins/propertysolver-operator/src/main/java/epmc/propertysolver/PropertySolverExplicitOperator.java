@@ -28,7 +28,6 @@ import java.util.Set;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.value.TypeArrayConstant;
 import epmc.value.UtilValue;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
@@ -71,7 +70,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
 	}
     
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert forStates != null;
         Type type = propertyOperator.getType(modelChecker.getLowLevel());
         
@@ -116,7 +115,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -135,7 +134,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression operand : propertyOperator.getOperands()) {
@@ -145,7 +144,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression operand : propertyOperator.getOperands()) {
@@ -155,7 +154,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         for (Expression operand : propertyOperator.getOperands()) {
         	required.addAll(modelChecker.getRequiredEdgeProperties(operand, forStates));

@@ -25,7 +25,6 @@ import static epmc.error.UtilError.ensure;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -95,7 +94,7 @@ public final class ExpressionSteadyState implements Expression {
     }
     
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {

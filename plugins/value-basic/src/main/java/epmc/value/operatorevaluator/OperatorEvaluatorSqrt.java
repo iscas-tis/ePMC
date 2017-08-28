@@ -20,7 +20,6 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -69,7 +68,7 @@ public enum OperatorEvaluatorSqrt implements OperatorEvaluator {
     }
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
+    public void apply(Value result, Value... operands) {
     	assert result != null;
     	assert operands != null;
     	for (Value operand : operands) {

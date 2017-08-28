@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.graph.SemanticsTimed;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -33,7 +32,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 	private ModelJANI jani = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ModelJANI;
 		
@@ -44,7 +43,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert jani != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -101,7 +100,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert jani != null;
 		
 		ProcessorRegistrar.getProcessor(jani)
@@ -109,14 +108,14 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert jani != null;
 		
 		return ProcessorRegistrar.getProcessor(jani)
 								 .usesTransientVariables();		
 	}
 	
-	private void initialise() throws EPMCException {
+	private void initialise() {
 		
 		// Global variables to be registered
 		for (Variable variable : jani.getGlobalVariables()) {

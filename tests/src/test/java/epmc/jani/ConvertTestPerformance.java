@@ -26,8 +26,6 @@ import static epmc.modelchecker.TestHelper.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
-
 /**
  * Performance tests to compare old and new state space exploration.
  * 
@@ -46,7 +44,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-	public void brpTest() throws EPMCException {
+	public void brpTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BRP_MODEL)
     			.putConstant("N", "200")
@@ -58,7 +56,7 @@ public final class ConvertTestPerformance {
 	}
 
 	@Test
-    public void cellTest() throws EPMCException {
+    public void cellTest() {
 		ConvertTestStatistics statistics = new ConvertTestConfiguration()
 				.setModelName(CELL_MODEL)
 				.putConstant("N", "100")
@@ -68,7 +66,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void clusterTest() throws EPMCException {
+    public void clusterTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CLUSTER_MODEL)
     			.putConstant("N", "256")
@@ -80,7 +78,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void coinTest() throws EPMCException {
+    public void coinTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(COIN_MODEL, 6))
     			.putConstant("K", "10")
@@ -90,7 +88,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void csmaTest() throws EPMCException {
+    public void csmaTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(CSMA_MODEL, 3, 4))
     			.setExploreAll()
@@ -99,7 +97,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void diningCryptTest() throws EPMCException {
+    public void diningCryptTest() {
     	for (int num = 3; num < 9; num++) {
     		ConvertTestStatistics statistics = new ConvertTestConfiguration()
     				.setModelName(String.format(DINING_CRYPT_MODEL, num))
@@ -111,7 +109,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void embeddedTest() throws EPMCException {
+    public void embeddedTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(EMBEDDED_MODEL)
     			.putConstant("MAX_COUNT", 4)
@@ -121,7 +119,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void firewireAbstTest() throws EPMCException {
+    public void firewireAbstTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(FIREWIRE_ABST_MODEL)
     			.putConstant("delay", "10")
@@ -133,7 +131,7 @@ public final class ConvertTestPerformance {
 	    }
 
 	@Test
-    public void firewireImplTest() throws EPMCException {
+    public void firewireImplTest() {
 		ConvertTestStatistics statistics = new ConvertTestConfiguration()
 				.setModelName(FIREWIRE_IMPL_MODEL)
 				.putConstant("delay", "10")
@@ -144,7 +142,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void fmsTest() throws EPMCException {
+    public void fmsTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.putConstant("n", 4)
     			.setModelName(FMS_MODEL)
@@ -154,7 +152,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void kanbanTest() throws EPMCException {
+    public void kanbanTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.putConstant("t", 4)
     			.setModelName(KANBAN_MODEL)
@@ -164,7 +162,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void asyncLeaderTest() throws EPMCException {
+    public void asyncLeaderTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(LEADER_ASYNC_MODEL, 3))
     			.setExploreAll()
@@ -179,7 +177,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void syncLeaderTest() throws EPMCException {
+    public void syncLeaderTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(LEADER_SYNC_MODEL, 3, 3))
     			.setExploreAll()
@@ -194,7 +192,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void knaclTest() throws EPMCException {
+    public void knaclTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(KNACL_MODEL)
     			.putConstant("N1", "5")
@@ -206,7 +204,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void naclTest() throws EPMCException {
+    public void naclTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(NACL_MODEL)
     			.putConstant("N1", "10")
@@ -217,7 +215,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void mcTest() throws EPMCException {
+    public void mcTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MC_MODEL)
     			.putConstant("N1", "10")
@@ -228,7 +226,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void mutualTest() throws EPMCException {
+    public void mutualTest() {
     	for (int i = 3; i < 6; i++) {
     		ConvertTestStatistics statistics = new ConvertTestConfiguration()
     				.setModelName(String.format(MUTUAL_MODEL, i))
@@ -240,7 +238,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void peer2peerTest() throws EPMCException {
+    public void peer2peerTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(PEER2PEER_MODEL, 4, 4))
     			.setExploreAll()
@@ -249,7 +247,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void philTest() throws EPMCException {
+    public void philTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(PHIL_MODEL, 3))
     			.setExploreAll()
@@ -264,7 +262,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void philNoFairTest() throws EPMCException {
+    public void philNoFairTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(PHIL_NOFAIR_MODEL, 3))
     			.setExploreAll()
@@ -279,7 +277,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void philLssTest() throws EPMCException {
+    public void philLssTest() {
     	for (int K = 4; K < 5; K++) {
     		ConvertTestStatistics statistics = new ConvertTestConfiguration()
     				.setModelName(String.format(PHIL_LSS_MODEL, 4))
@@ -291,7 +289,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void pollingTest() throws EPMCException {
+    public void pollingTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(POLLING_MODEL, 3))
     			.setExploreAll()
@@ -306,7 +304,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void rabinTest() throws EPMCException {
+    public void rabinTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(RABIN_MODEL, 3))
     			.setExploreAll()
@@ -321,7 +319,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void beauquierTest() throws EPMCException {
+    public void beauquierTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(BEAUQUIER_MODEL, 3))
     			.setExploreAll()
@@ -336,7 +334,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void hermanTest() throws EPMCException {
+    public void hermanTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(HERMAN_MODEL, 3))
     			.setExploreAll()
@@ -351,7 +349,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(IJ_MODEL, 3))
     			.setExploreAll()
@@ -366,7 +364,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void tandemTest() throws EPMCException {
+    public void tandemTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(TANDEM_MODEL)
     			.putConstant("c", "3")
@@ -383,7 +381,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void wlanTest() throws EPMCException {
+    public void wlanTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(WLAN_MODEL, 1))
     			.putConstant("TRANS_TIME_MAX", "10")
@@ -400,7 +398,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void wlanCollideTest() throws EPMCException {
+    public void wlanCollideTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(WLAN_COLLIDE_MODEL, 1))
     			.putConstant("TRANS_TIME_MAX", "10")
@@ -419,7 +417,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void wlanTimeBoundTest() throws EPMCException {
+    public void wlanTimeBoundTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(WLAN_TIME_BOUNDED_MODEL, 1))
     			.putConstant("TRANS_TIME_MAX", "10")
@@ -438,7 +436,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void zeroconfTest() throws EPMCException {
+    public void zeroconfTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(ZEROCONF_MODEL)
     			.putConstant("reset", "false")
@@ -481,7 +479,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void zeroconfTimeBoundedTest() throws EPMCException {
+    public void zeroconfTimeBoundedTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(ZEROCONF_TIME_BOUNDED_MODEL)
     			.putConstant("reset", "false")
@@ -495,7 +493,7 @@ public final class ConvertTestPerformance {
     }
     
     @Test
-    public void byzantineTest() throws EPMCException {
+    public void byzantineTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(BYZANTINE_MODEL, 4, 1))
     			.setExploreJANI(true)
@@ -507,7 +505,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void cyclinTest() throws EPMCException {
+    public void cyclinTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CYCLIN_MODEL)
     			.putConstant("N", "4")
@@ -517,7 +515,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void fairExchangeTest() throws EPMCException {
+    public void fairExchangeTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(FAIR_EXCHANGE_MODEL, 10))
     			.setExploreAll()
@@ -526,7 +524,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void gossipTest() throws EPMCException {
+    public void gossipTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GOSSIP_MODEL, 4))
     			.setExploreAll()
@@ -535,7 +533,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void gossipDTMCTest() throws EPMCException {
+    public void gossipDTMCTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GOSSIP_DTMC_MODEL, 4))
     			.setExploreAll()
@@ -544,7 +542,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void graphTest() throws EPMCException {
+    public void graphTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GRAPH_MODEL, 4))
     			.putConstant("p", "0.2")
@@ -554,7 +552,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void kaminskyTest() throws EPMCException {
+    public void kaminskyTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(KAMINSKY_MODEL)
     			.putConstant("TIMES_TO_REQUEST_URL", 10)
@@ -568,7 +566,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void mapkCascadeTest() throws EPMCException {
+    public void mapkCascadeTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MAPK_CASCADE_MODEL)
     			.putConstant("N", "4")
@@ -578,7 +576,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void nandTest() throws EPMCException {
+    public void nandTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(NAND_MODEL)
     			.putConstant("N", "3")
@@ -589,7 +587,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void robotTest() throws EPMCException {
+    public void robotTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(ROBOT_MODEL)
     			.putConstant("n", "3")
@@ -599,7 +597,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void uavMdpTest() throws EPMCException {
+    public void uavMdpTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(UAV_MDP_MODEL)
     			.putConstant("accu_load1", "0.3")
@@ -614,7 +612,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void virusTest() throws EPMCException {
+    public void virusTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(VIRUS_MODEL, 3))
     			.putConstant("detect2", "0.2")
@@ -624,7 +622,7 @@ public final class ConvertTestPerformance {
     }
 
     @Test
-    public void walkersRingLLTest() throws EPMCException {
+    public void walkersRingLLTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(WALKERS_RING_LL_MODEL)
     			.putConstant("failureRate", 3)

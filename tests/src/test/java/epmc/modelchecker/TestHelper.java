@@ -42,7 +42,6 @@ import java.util.Map;
 
 import org.junit.Assert;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.main.options.OptionsEPMC;
@@ -149,7 +148,7 @@ public final class TestHelper {
     }
     
     public static Model loadModel(Options options,
-            List<String> modelFiles, String propertiesFile) throws EPMCException {
+            List<String> modelFiles, String propertiesFile) {
         assert options != null;
         assert modelFiles != null;
         try {
@@ -179,7 +178,7 @@ public final class TestHelper {
     }
     
     public static Model loadModel(Options options,
-            String modelFile, String propertiesFile) throws EPMCException {
+            String modelFile, String propertiesFile) {
         return loadModel(options, Collections.singletonList(modelFile), propertiesFile);
     }
     
@@ -193,7 +192,7 @@ public final class TestHelper {
         return loadModel(options, inputs, null);
     }
 
-    public static Model loadModelMulti(Options options, String... modelFiles) throws EPMCException {
+    public static Model loadModelMulti(Options options, String... modelFiles) {
         assert options != null;
         assert modelFiles != null;
         for (String modelFile : modelFiles) {
@@ -203,13 +202,13 @@ public final class TestHelper {
     }
 
     
-    public static Model loadModel(Options options, String modelFile) throws EPMCException {
+    public static Model loadModel(Options options, String modelFile) {
         assert options != null;
         assert modelFile != null;
         return loadModel(options, modelFile, null);
     }
 
-    public static Model loadModel(String modelFile) throws EPMCException {
+    public static Model loadModel(String modelFile) {
         assert modelFile != null;
         Options options = prepareOptions();
         return loadModel(options, modelFile, null);
@@ -258,7 +257,7 @@ public final class TestHelper {
         System.exit(1);
     }
 
-    private static List<String> readPluginList() throws EPMCException {
+    private static List<String> readPluginList() {
         URL url = TestHelper.class.getClassLoader().getResource(getPluginsListFilename());
         if (url == null) {
             exitPluginListNotFound();
@@ -274,17 +273,13 @@ public final class TestHelper {
     }
 
     public static void prepareOptions(Options options, LogType logType,
-            String modelInputType) throws EPMCException {
+            String modelInputType) {
         Options.set(options);
         List<String> pluginDir = readPluginList();
         List<String> oldPluginDir = options.getStringList(OptionsPlugin.PLUGIN);
         pluginDir.addAll(oldPluginDir);        
         options.set(OptionsPlugin.PLUGIN, pluginDir);
-        try {
-            UtilPlugin.loadPlugins(options);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        UtilPlugin.loadPlugins(options);
         Locale locale = Locale.getDefault();
         options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
@@ -294,26 +289,26 @@ public final class TestHelper {
     }
     
     public static Options prepareOptions(LogType logType,
-            String modelInputType) throws EPMCException {
+            String modelInputType) {
         assert logType != null;
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, logType, modelInputType);
         return options;
     }
     
-    public static Options prepareOptions() throws EPMCException {
+    public static Options prepareOptions() {
         return prepareOptions(LogType.TRANSLATE, MODEL_INPUT_TYPE_PRISM);
     }
 
-    public static void prepareOptions(Options options, String modelInputType) throws EPMCException {
+    public static void prepareOptions(Options options, String modelInputType) {
         prepareOptions(options, LogType.LIST, modelInputType);
     }
 
-    public static void prepareOptions(Options options) throws EPMCException {
+    public static void prepareOptions(Options options) {
         prepareOptions(options, LogType.LIST, MODEL_INPUT_TYPE_PRISM);        
     }
 
-    public static Options prepareOptions(String modelInputType) throws EPMCException {
+    public static Options prepareOptions(String modelInputType) {
         return prepareOptions(LogType.LIST, modelInputType);
     }
     
@@ -326,16 +321,12 @@ public final class TestHelper {
     private static Value stringToValue(String expected) {
         assert expected != null;
         Value expectedValue = null;
-        try {
-            Options options = Options.get();
-            String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
-            options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
-            Expression expectedExpression = UtilModelChecker.parseExpression(expected);
-            options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, modelInputType);
-            expectedValue = evaluateValue(expectedExpression);
-        } catch (EPMCException e) {
-        	throw new RuntimeException(e);
-        }
+        Options options = Options.get();
+        String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
+        Expression expectedExpression = UtilModelChecker.parseExpression(expected);
+        options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, modelInputType);
+        expectedValue = evaluateValue(expectedExpression);
 
         return expectedValue;
     }
@@ -349,16 +340,12 @@ public final class TestHelper {
         if (message == null) {
             message = prepareMessage(expected, actual, tolerance);
         }
-        try {
-            if (!expected.getType().canImport(actual.getType()) && !actual.getType().canImport(expected.getType())) {
-                assertTrue("types of expected value \"" + expected + "\" and "
-                        + " actual value \""+ actual + "\" are incompatible",
-                        false);
-            }
-            assertTrue(message, expected.distance(actual) < tolerance);
-        } catch (EPMCException e) {
-            throw new Error(e);
+        if (!expected.getType().canImport(actual.getType()) && !actual.getType().canImport(expected.getType())) {
+        	assertTrue("types of expected value \"" + expected + "\" and "
+        			+ " actual value \""+ actual + "\" are incompatible",
+        			false);
         }
+        assertTrue(message, expected.distance(actual) < tolerance);
     }
     
     public static void assertEquals(Value expected, Value actual,
@@ -374,11 +361,7 @@ public final class TestHelper {
         assert expected != null;
         assert tolerance >= 0.0;
         Value actualValue = expected.getType().newValue();
-        try {
-            actualValue.set("" + actual);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        actualValue.set("" + actual);
         assertEquals(null, expected, actualValue, tolerance);
     }
 
@@ -387,11 +370,7 @@ public final class TestHelper {
         assert actual != null;
         assert tolerance >= 0.0;
         Value expectedValue = actual.getType().newValue();
-        try {
-            expectedValue.set("" + expected);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        expectedValue.set("" + expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
 
@@ -434,12 +413,8 @@ public final class TestHelper {
     public static void assertEquals(boolean expected, Value actual) {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
-        try {
-            expectedValue.set(Boolean.toString(expected));
-            assertTrue(expectedValue.isEq(actual));
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        expectedValue.set(Boolean.toString(expected));
+        assertTrue(expectedValue.isEq(actual));
     }
 
     public static void assertEquals(String message,
@@ -550,7 +525,7 @@ public final class TestHelper {
     }
 
     public static void processAfterCommandExecution()
-            throws EPMCException {
+            {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
@@ -558,7 +533,7 @@ public final class TestHelper {
         }
     }
 
-    public static void processBeforeModelLoading(Options options) throws EPMCException {
+    public static void processBeforeModelLoading(Options options) {
         assert options != null;
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
@@ -567,7 +542,7 @@ public final class TestHelper {
         }
     }
     
-    public static void processAfterModelLoading(Options options) throws EPMCException {
+    public static void processAfterModelLoading(Options options) {
         assert options != null;
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
@@ -580,19 +555,19 @@ public final class TestHelper {
         assert options != null;
     }
     
-    private static Value evaluateValue(Expression expression) throws EPMCException {
+    private static Value evaluateValue(Expression expression) {
         assert expression != null;
         return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty());
     }
     
     
-    public static Value newValue(Type type, String valueString) throws EPMCException {
+    public static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
         value.set(valueString);
         return value;
     }
     
-    public static void readProperties(Property property, RawProperties properties, String fileName) throws EPMCException {
+    public static void readProperties(Property property, RawProperties properties, String fileName) {
         try (InputStream input = new FileInputStream(fileName)) {
             property.readProperties(properties, input);
         } catch (IOException e) {

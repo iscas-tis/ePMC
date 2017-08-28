@@ -23,8 +23,6 @@ package epmc.modelchecker;
 import java.io.InputStream;
 import java.io.Serializable;
 
-import epmc.error.EPMCException;
-
 // TODO complete documentation
 
 /**
@@ -52,9 +50,8 @@ public interface RawModel extends Serializable {
      * 
      * @return input streams for this model
      * 
-     * @throws EPMCException thrown if problem occurs
      */
-    InputStream[] getModelInputStreams() throws EPMCException;
+    InputStream[] getModelInputStreams();
     
-    InputStream[] getPropertyInputStreams() throws EPMCException;
+    InputStream[] getPropertyInputStreams();
 }

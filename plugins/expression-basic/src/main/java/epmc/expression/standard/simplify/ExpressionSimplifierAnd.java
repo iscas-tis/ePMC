@@ -20,7 +20,6 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
@@ -34,7 +33,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     public final static String IDENTIFIER = "and";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (!isAnd(expression)) {
             return null;
@@ -99,7 +98,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
                 .equals(OperatorAnd.AND);
     }
     
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -108,7 +107,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -273,7 +272,7 @@ public final class ExpressionTemporal implements Expression {
         return type;
     }
     
-    public boolean hasTimeBounds() throws EPMCException {
+    public boolean hasTimeBounds() {
         for (int boundNr = 0; boundNr < getNumOps(); boundNr++) {
             if (!getTimeBound().isUnbounded()) {
                 return true;
@@ -342,7 +341,7 @@ public final class ExpressionTemporal implements Expression {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
@@ -385,40 +384,32 @@ public final class ExpressionTemporal implements Expression {
             break;
         }
         case UNTIL: case RELEASE:
-            try {
-				if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
-				    builder.append("F");
-				    builder.append("(");
-				    builder.append(getOperand2());
-				    builder.append(")");
-				} else
-					try {
-						if (type == TemporalType.RELEASE && getNumOps() == 2
-						        && isFalse(getOperand2())) {
-						    builder.append("G");
-						    builder.append("(");
-						    builder.append(getOperand1());
-						    builder.append(")");
-						} else {
-						    opIter = getOperands().iterator();
-						    while (opIter.hasNext()) {
-						        Expression child = opIter.next();
-						        builder.append("(");
-						        builder.append(child);
-						        builder.append(")");
-						        if (opIter.hasNext()) {
-						            builder.append(type);
-						            //TODO
-//                        builder.append(getTimeBound(null, timeBoundIndex));
-						        }
-						    }
-						}
-					} catch (EPMCException e) {
-						throw new RuntimeException(e);
-					}
-			} catch (EPMCException e) {
-				throw new RuntimeException(e);
-			}
+        	if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
+        		builder.append("F");
+        		builder.append("(");
+        		builder.append(getOperand2());
+        		builder.append(")");
+        	} else
+        		if (type == TemporalType.RELEASE && getNumOps() == 2
+        		&& isFalse(getOperand2())) {
+        			builder.append("G");
+        			builder.append("(");
+        			builder.append(getOperand1());
+        			builder.append(")");
+        		} else {
+        			opIter = getOperands().iterator();
+        			while (opIter.hasNext()) {
+        				Expression child = opIter.next();
+        				builder.append("(");
+        				builder.append(child);
+        				builder.append(")");
+        				if (opIter.hasNext()) {
+        					builder.append(type);
+        					//TODO
+//                        	builder.append(getTimeBound(null, timeBoundIndex));
+        				}
+        			}
+        		}
             break;
         default:
             assert (false);
@@ -468,7 +459,7 @@ public final class ExpressionTemporal implements Expression {
         return hash;
     }
     
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -477,7 +468,7 @@ public final class ExpressionTemporal implements Expression {
         return ValueBoolean.isFalse(getValue(expressionLiteral));
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -486,7 +477,7 @@ public final class ExpressionTemporal implements Expression {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

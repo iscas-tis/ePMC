@@ -1,6 +1,5 @@
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.ExplorerEdgeProperty;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -17,7 +16,7 @@ public final class PropertyEdgeDecision implements ExplorerEdgeProperty {
 	}
 	
 	@Override
-	public Value get(int successor) throws EPMCException {
+	public Value get(int successor) {
 		NodeJANI node = explorer.getSuccessorNode(successor);
 		value.set(node);
 		return value;

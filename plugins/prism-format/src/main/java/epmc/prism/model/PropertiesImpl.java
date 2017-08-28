@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -62,20 +61,20 @@ public final class PropertiesImpl implements Properties {
     private final Map<String,Expression> labels = new LinkedHashMap<>();
 	private final ModelPRISM model;
     
-    public PropertiesImpl(ModelPRISM model) throws EPMCException {
+    public PropertiesImpl(ModelPRISM model) {
         assert model != null;
         this.model = model;
         // TODO check duplicates
     }
 
     @Override
-    public void parseProperties(InputStream... inputs) throws EPMCException {
+    public void parseProperties(InputStream... inputs) {
         for (InputStream input : inputs) {
             parseProperties(input);
         }
     }
     
-    private void parseProperties(InputStream input) throws EPMCException {
+    private void parseProperties(InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -84,7 +83,7 @@ public final class PropertiesImpl implements Properties {
         expand();
     }
     
-    public void parseProperties(RawProperties rawProperties) throws EPMCException {
+    public void parseProperties(RawProperties rawProperties) {
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
@@ -129,7 +128,7 @@ public final class PropertiesImpl implements Properties {
         }
     }
 
-    public void addProperty(RawProperty prop, Expression parsed) throws EPMCException {
+    public void addProperty(RawProperty prop, Expression parsed) {
         assert prop != null;
         assert parsed != null;
         properties.put(prop, parsed);
@@ -137,7 +136,7 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addConst(String name, Type type, Expression entry)
-            throws EPMCException {
+            {
         assert name != null;
         assert type != null;
         // entry might be null for undefined constants
@@ -148,7 +147,7 @@ public final class PropertiesImpl implements Properties {
     }
     
     public void addFormula(String name, Expression entry)
-            throws EPMCException {
+            {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
@@ -157,7 +156,7 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addLabel(String name, Expression entry)
-            throws EPMCException {
+            {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
@@ -170,7 +169,7 @@ public final class PropertiesImpl implements Properties {
         return properties.get(property);
     }
     
-    public void expandAndCheckWithDefinedCheck() throws EPMCException {
+    public void expandAndCheckWithDefinedCheck() {
         checkCyclic();
         expand();
         checkNonConstantConst();
@@ -178,7 +177,7 @@ public final class PropertiesImpl implements Properties {
         checkTypes();
     }
     
-    private void checkTypes() throws EPMCException {
+    private void checkTypes() {
 //        for (Entry<Property,Expression> entry : properties.entrySet()) {
 // TODO temporarily disabled
 //            entry.getValue().computeType();
@@ -232,7 +231,7 @@ public final class PropertiesImpl implements Properties {
     }
 
 
-    private void checkUndefinedConst() throws EPMCException {
+    private void checkUndefinedConst() {
         Set<String> usedConstants = new LinkedHashSet<>();
         Set<Expression> seen = new HashSet<>();
         for (Expression expr : properties.values()) {
@@ -267,9 +266,8 @@ public final class PropertiesImpl implements Properties {
     /**
      * Checks for constant definitions which do not evaluate to constant values.
      * 
-     * @throws EPMCException thrown if non-constant constants found
      */
-    private void checkNonConstantConst() throws EPMCException {
+    private void checkNonConstantConst() {
         Set<Expression> seen = new HashSet<>();
         for (Entry<String, Expression> entry : constants.entrySet()) {
             ArrayList<String> path = new ArrayList<>();
@@ -335,9 +333,8 @@ public final class PropertiesImpl implements Properties {
     /**
      * Checks whether there are cyclic const or formula definitions.
      * 
-     * @throws EPMCException thrown if there are cyclic definitions
      */
-    private void checkCyclic() throws EPMCException {
+    private void checkCyclic() {
         for (Entry<String, Expression> entry : constants.entrySet()) {
             Set<Expression> seen = new HashSet<>();
             ArrayList<String> path = new ArrayList<>();
@@ -432,7 +429,7 @@ public final class PropertiesImpl implements Properties {
         return builder.toString();
     }
     
-    public void ensureNoUndefinedConstants() throws EPMCException {
+    public void ensureNoUndefinedConstants() {
         for (Entry<String, Expression> entry : constants.entrySet()) {
             ensure(entry.getValue() != null, ProblemsModelChecker.CONST_UNDEFINED, entry.getKey());
         }

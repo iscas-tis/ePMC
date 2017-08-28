@@ -33,7 +33,6 @@ import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -136,7 +135,7 @@ public final class ExpressionFilter implements Expression {
     }
     
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
@@ -251,7 +250,7 @@ public final class ExpressionFilter implements Expression {
         return states;
     }
     
-    public Value initialAccumulatorValue(ExpressionToType expressionToType, Value value) throws EPMCException {
+    public Value initialAccumulatorValue(ExpressionToType expressionToType, Value value) {
     	assert expressionToType != null;
         assert value != null;
         switch (type) {
@@ -296,14 +295,10 @@ public final class ExpressionFilter implements Expression {
         StringBuilder builder = new StringBuilder();
         builder.append("filter(" + type + ",");
         builder.append(prop);
-        try {
-			if (!isTrue(states)) {
-			    builder.append(",");
-			    builder.append(states);
-			}
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        if (!isTrue(states)) {
+        	builder.append(",");
+        	builder.append(states);
+        }
         builder.append(")");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -343,7 +338,7 @@ public final class ExpressionFilter implements Expression {
         return hash;
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -352,7 +347,7 @@ public final class ExpressionFilter implements Expression {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

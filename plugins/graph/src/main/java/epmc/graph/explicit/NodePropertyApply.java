@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
@@ -88,7 +87,7 @@ public final class NodePropertyApply implements NodeProperty {
      * resulting value.
      */
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node);
         }
@@ -102,7 +101,7 @@ public final class NodePropertyApply implements NodeProperty {
      * to this function have no effect.
      */
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         assert value != null;
     }
 

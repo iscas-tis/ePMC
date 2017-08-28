@@ -23,7 +23,6 @@ package epmc.jani.interaction.plugin;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.InteractionExtension;
 import epmc.jani.interaction.command.CommandTaskJANIInteractionAddUser;
 import epmc.jani.interaction.command.CommandTaskJANIInteractionDeleteUser;
@@ -71,7 +70,7 @@ public final class AfterOptionsCreationJANIInteraction implements AfterOptionsCr
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
 		assert options != null;
 		addOptionsAndCommands(options);
         addResultFormatters(options);
@@ -160,7 +159,7 @@ public final class AfterOptionsCreationJANIInteraction implements AfterOptionsCr
         options.set(OptionsJANIInteraction.JANI_INTERACTION_RESULT_FORMATTER_CLASS, resultFormatter);
 	}
 
-	private void processJDBC(Options options) throws EPMCException {
+	private void processJDBC(Options options) {
 		assert options != null;
 		OptionTypeString optionTypeString = OptionTypeString.getInstance();
 		Category category = options.addCategory()

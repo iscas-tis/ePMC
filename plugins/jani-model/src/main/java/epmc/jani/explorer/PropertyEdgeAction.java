@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.ModelJANI;
 import epmc.value.Type;
@@ -61,7 +60,7 @@ public final class PropertyEdgeAction implements PropertyEdge {
 	}
 
 	@Override
-	public Value get(int successor) throws EPMCException {
+	public Value get(int successor) {
 		Action action = numberToAction[values[successor]];
 		value.set(action);
 		return value;
@@ -76,7 +75,7 @@ public final class PropertyEdgeAction implements PropertyEdge {
 		return type;
 	}
 
-	public void set(int successor, Object value) throws EPMCException {
+	public void set(int successor, Object value) {
 		assert value instanceof Action : value + " " + value.getClass();
 		assert actionToNumber.containsKey(value);
 		ensureSuccessorsSize(successor);

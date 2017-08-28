@@ -32,7 +32,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -103,7 +102,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         private final Equivalence equivalence;
         private boolean[] blocksSeen;
 
-        RefinementRunnable() throws EPMCException {
+        RefinementRunnable() {
             this.equivalence = Util.getInstance(equivalenceClass);
             equivalence.setObjective(objective);
             equivalence.setSuccessorsFromTo(successorsFromTo);
@@ -142,8 +141,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                     }
                     todo.done(blockNr);
                 }
-            } catch (EPMCException | InterruptedException e) {
-                // TODO Auto-generated catch block
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -201,7 +199,7 @@ final class LumperExplicitSignature implements LumperExplicit {
     }
     
     @Override
-    public void lump() throws EPMCException {
+    public void lump() {
         this.blocksSeen = new boolean[original.getNumNodes()];
         if (this.originalToQuotientState == null) {
             this.originalToQuotientState = computeInitialPartition();
@@ -260,7 +258,7 @@ final class LumperExplicitSignature implements LumperExplicit {
 
     private void refinementLoopMultiThread(
             LumperExplicitSignature lumperExplicitSignature,
-            Equivalence equivalence, Comparator<TodoElem> comparator) throws EPMCException {
+            Equivalence equivalence, Comparator<TodoElem> comparator) {
         this.todo = new BlocksTodoSynchronised(comparator, blocks, original.getNumNodes());
         int blocksSize = blocks.size();
         for (int i = 0; i < blocksSize; i++) {
@@ -283,7 +281,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         }
     }
 
-    private void refinementLoopSingleThread(LumperExplicitSignature lumper, Equivalence equivalence, Comparator<TodoElem> comparator) throws EPMCException {
+    private void refinementLoopSingleThread(LumperExplicitSignature lumper, Equivalence equivalence, Comparator<TodoElem> comparator) {
         this.todo = new BlocksTodoSynchronised(comparator, blocks, original.getNumNodes());
         int blocksSize = blocks.size();
         for (int i = 0; i < blocksSize; i++) {
@@ -403,7 +401,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         blocksSeen = null;
     }
 
-    private void computePredecessorsAndMaxFanout() throws EPMCException {
+    private void computePredecessorsAndMaxFanout() {
         int numStates = original.getNumNodes();
         successorsFromTo = new int[numStates + 1];
         predecessorsFromTo = new int[numStates + 1];
@@ -542,7 +540,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         return result;
     }
 
-    private int[] computeInitialPartition() throws EPMCException {
+    private int[] computeInitialPartition() {
     	if (this.objective instanceof GraphSolverObjectiveExplicitLump) {
     		GraphSolverObjectiveExplicitLump objectiveLump = (GraphSolverObjectiveExplicitLump) objective;
     		int[] result = new int[objectiveLump.size()];
@@ -577,7 +575,7 @@ final class LumperExplicitSignature implements LumperExplicit {
 	}
 
 	@Override
-	public void quotientToOriginal() throws EPMCException {
+	public void quotientToOriginal() {
 		if (objective instanceof GraphSolverObjectiveExplicitLump) {
 			
 		} else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {

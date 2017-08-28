@@ -85,9 +85,8 @@ public final class EPMC {
      * 
      * @param args command line arguments
      * @return options parsed from command line arguments
-     * @throws EPMCException thrown in case of problems
      */
-    private static Options prepareOptions(String[] args) throws EPMCException {
+    private static Options prepareOptions(String[] args) {
         assert args != null;
         for (String arg : args) {
             assert arg != null;
@@ -113,9 +112,8 @@ public final class EPMC {
      * The options parameter must not be {@code null}.
      * 
      * @param options options to use
-     * @throws EPMCException thrown in case of problems
      */
-    private static void startInConsole(Options options) throws EPMCException {
+    private static void startInConsole(Options options) {
         assert options != null;
         if (options.getString(Options.COMMAND) == null) {
             System.out.println(options.getShortUsage());
@@ -139,9 +137,8 @@ public final class EPMC {
      * 
      * @param options options to use
      * @param log2 
-     * @throws EPMCException thrown in case of problems
      */
-    private static void execute(Options options, LogCommandLine log) throws EPMCException {
+    private static void execute(Options options, LogCommandLine log) {
         assert options != null;
         RawModel model = new RawModelLocalFiles(
                 options.getStringList(OptionsEPMC.MODEL_INPUT_FILES).toArray(new String[0]),
@@ -159,9 +156,8 @@ public final class EPMC {
      * 
      * @param options options to use
      * @param log log used
-     * @throws EPMCException 
      */
-    private static void printResults(Options options, LogCommandLine log) throws EPMCException {
+    private static void printResults(Options options, LogCommandLine log) {
         assert options != null;
         assert log != null;
         for (RawProperty property : log.getProperties()) {

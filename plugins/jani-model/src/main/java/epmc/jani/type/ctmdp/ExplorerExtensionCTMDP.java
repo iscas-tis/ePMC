@@ -20,7 +20,6 @@
 
 package epmc.jani.type.ctmdp;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explorer.ExplorerEdgeProperty;
@@ -47,7 +46,7 @@ public final class ExplorerExtensionCTMDP implements ExplorerExtension {
 	}
 
 	@Override
-	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
+	public void setExplorer(ExplorerJANI explorer) {
 		this.explorer = explorer;
 		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
 		weight = new PropertyEdgeGeneral(explorer, TypeWeight.get());
@@ -76,7 +75,7 @@ public final class ExplorerExtensionCTMDP implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
+	public ExplorerEdgeProperty getEdgeProperty(Object property) {
 		if (property == CommonProperties.WEIGHT) {
 			return weight;
 		}
@@ -84,7 +83,7 @@ public final class ExplorerExtensionCTMDP implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	public ExplorerNodeProperty getNodeProperty(Object property) {
 		if (property == CommonProperties.PLAYER) {
 			return player;
 		} else {
@@ -93,7 +92,7 @@ public final class ExplorerExtensionCTMDP implements ExplorerExtension {
 	}
 	
 	@Override
-	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) throws EPMCException {
+	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
 		assert automaton != null;
 		UtilExplorer.checkAutomatonProbabilitySum(automaton);
 	}

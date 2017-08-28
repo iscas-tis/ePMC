@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -114,7 +113,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 		private ExpressionToTypeEmpty() {
 		}
 		@Override
-		public Type getType(Expression expression) throws EPMCException {
+		public Type getType(Expression expression) {
 			assert expression != null;
 			return null;
 		}
@@ -254,7 +253,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private Expression rateIdentifier;
     private Expression rateLabel;
     
-    public void build(Builder builder) throws EPMCException {
+    public void build(Builder builder) {
     	assert builder != null;
         assert builder.getSemantics() != null;
         assert builder.getModules() != null;
@@ -467,7 +466,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void automataToCommands() throws EPMCException {
+    private void automataToCommands() {
         List<Module> newModules = new ArrayList<>();
         for (Module module : modules) {
             if (module.isCommands()) {
@@ -514,7 +513,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         modules.addAll(newModules);
     }
 
-    private void ensureNoInitAtVars() throws EPMCException {
+    private void ensureNoInitAtVars() {
         for (Expression init : globalInitValues.values()) {
             ensure(init == null, ProblemsPRISM.NOT_BOTH_INITS);
         }
@@ -525,7 +524,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void checkSystemDefinition() throws EPMCException {
+    private void checkSystemDefinition() {
         Set<Expression> allActions = new HashSet<>();
         Set<String> allModuleNames = new LinkedHashSet<>();
         Set<String> moduleNamesSeen = new LinkedHashSet<>();
@@ -554,7 +553,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private void checkSystemDefinition(SystemDefinition system,
             Set<Expression> allActions,
             Set<String> allModuleNames,
-            Set<String> moduleNamesSeen) throws EPMCException {
+            Set<String> moduleNamesSeen) {
         if (system instanceof SystemRestrictedParallel) {
             SystemRestrictedParallel parSystem = (SystemRestrictedParallel) system;
             for (Expression action : parSystem.getSync()) {
@@ -584,7 +583,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void checkExpressionConsistency() throws EPMCException {
+    private void checkExpressionConsistency() {
         Map<Expression,Type> types = new HashMap<>();
         for (Entry<Expression,JANIType> entry : globalVariables.entrySet()) {
             types.put(entry.getKey(), entry.getValue().toType());
@@ -681,7 +680,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void expandModules(List<Module> modules) throws EPMCException {
+    private void expandModules(List<Module> modules) {
         Map<String,Module> moduleByName = new LinkedHashMap<>();
         
         for (Module module : modules) {
@@ -719,7 +718,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return multipleInit;
     }
     
-    private void createProperties() throws EPMCException {
+    private void createProperties() {
         properties = new PropertiesImpl(this);
         for (Entry<Expression,Expression> entry : formulas.getConstants().entrySet()) {
         	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
@@ -809,7 +808,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     
 	@Override
 	public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-			Set<Object> edgeProperties) throws EPMCException {
+			Set<Object> edgeProperties) {
         Map<Expression,JANIType>  allVariables = new HashMap<>();
 		graphProperties = fixProperties(graphProperties);
 		nodeProperties = fixProperties(nodeProperties);
@@ -839,7 +838,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 		}
     }
 	
-	private Set<Object> fixProperties(Set<Object> properties) throws EPMCException {
+	private Set<Object> fixProperties(Set<Object> properties) {
 		Set<Object> fixed = new LinkedHashSet<>(properties.size());
 		for (Object property : properties) {
 			if (property instanceof RewardSpecification) {
@@ -858,7 +857,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 	}
 
 	private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-			Set<Object> edgeProperties) throws EPMCException {
+			Set<Object> edgeProperties) {
 		if (engine instanceof EngineDD) {
 	        prepareAndCheckReady();
 			return new GraphDDPRISM(this, nodeProperties, edgeProperties);
@@ -896,7 +895,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     // TODO should become superfluous in a while
-    private Expression defaultInitialValue(JANIType type) throws EPMCException {
+    private Expression defaultInitialValue(JANIType type) {
         Expression value;
         if (type instanceof JANITypeBool) {
             value = ExpressionLiteral.getFalse();
@@ -922,7 +921,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return value;
     }
     
-    private void createDefaultInitialValues() throws EPMCException {
+    private void createDefaultInitialValues() {
         for (Entry<Expression,JANIType> entry : globalVariables.entrySet()) {
             if (!globalInitValues.containsKey(entry.getKey())) {
                 Expression value = defaultInitialValue(entry.getValue());
@@ -955,7 +954,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         modules.addAll(newModules);
     }
     
-    private void flatten() throws EPMCException {
+    private void flatten() {
         ModuleCommands globalModule = flatten(system);
         globalVariables.putAll(globalModule.getVariables());
         globalInitValues.putAll(globalModule.getInitValues());
@@ -972,7 +971,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         system.setModel(this);
     }
 
-    private ModuleCommands flatten(SystemDefinition system) throws EPMCException {
+    private ModuleCommands flatten(SystemDefinition system) {
         if (system.isModule()) {
             SystemModule systemModule = system.asModule();
             for (Module module : modules) {
@@ -1159,7 +1158,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return system;
     }
     
-    private void ensureNoUndefinedConstants() throws EPMCException {
+    private void ensureNoUndefinedConstants() {
         if (formulas != null) {
             formulas.ensureNoUndefinedConstants();
         }
@@ -1180,7 +1179,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return system;
     }
     
-    int getPRISMGamesPlayer(SMGPlayer player) throws EPMCException {
+    int getPRISMGamesPlayer(SMGPlayer player) {
         assert player != null;
         Expression expression = player.getExpression();
         assert expression != null;
@@ -1202,7 +1201,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void checkPropertiesCompatible() throws EPMCException {
+    private void checkPropertiesCompatible() {
         Log log = Options.get().get(OptionsMessages.LOG);
         for (RawProperty raw : getPropertyList().getRawProperties()) {
         	Expression expr = getPropertyList().getParsedProperty(raw);
@@ -1211,7 +1210,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
     
     private void checkExpressionCompatible(Expression value, Log log)
-            throws EPMCException {
+            {
         if (value instanceof ExpressionIdentifier) {
             ensure(isValidStateQuery(value.toString()),
                     ProblemsPRISM.IDENTIFIER_UNDECLARED, value);
@@ -1248,7 +1247,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void prepareAndCheckReady() throws EPMCException {
+    private void prepareAndCheckReady() {
         properties.expandAndCheckWithDefinedCheck();
         ensureNoUndefinedConstants();
         checkPropertiesCompatible();
@@ -1259,7 +1258,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
     
     public RewardStructure getReward(RewardSpecification rewardSpecification)
-            throws EPMCException {
+            {
         assert rewardSpecification != null;
         List<RewardStructure> rewards = getRewards();
         Expression expression = rewardSpecification.getExpression();
@@ -1286,7 +1285,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     @Override
-    public void read(InputStream... inputs) throws EPMCException {
+    public void read(InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
         	assert input != null;
@@ -1303,7 +1302,7 @@ public final class ModelPRISM implements ModelJANIConverter {
 	}
 	
 	@Override
-	public ModelJANI toJANI(boolean forExporting) throws EPMCException {
+	public ModelJANI toJANI(boolean forExporting) {
 		PRISM2JANIConverter converter = new PRISM2JANIConverter(this, forExporting);
 		return converter.convert();
 	}
@@ -1326,13 +1325,13 @@ public final class ModelPRISM implements ModelJANIConverter {
         	.build();
     }
     
-    private Value evaluateValue(Expression expression) throws EPMCException {
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(), new Expression[0]);
         return evaluator.evaluate();
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

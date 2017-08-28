@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
@@ -216,7 +215,7 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable {
     }
     
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
     	ValueTernary otherTernary = asTernary(other);
     	return value.equals(otherTernary.value) ? 0.0 : 1.0;
     }

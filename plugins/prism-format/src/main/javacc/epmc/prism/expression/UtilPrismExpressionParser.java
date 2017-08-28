@@ -2,7 +2,6 @@ package epmc.prism.expression;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
@@ -75,7 +74,7 @@ public final class UtilPrismExpressionParser {
 		}
 		
 		@Override
-		public Value provideValue() throws EPMCException {
+		public Value provideValue() {
 			return UtilValue.newValue(TypeReal.get(), string);
 		}
 	}
@@ -89,7 +88,7 @@ public final class UtilPrismExpressionParser {
 		}
 		
 		@Override
-		public Value provideValue() throws EPMCException {
+		public Value provideValue() {
 			return UtilValue.newValue(TypeInteger.get(), string);
 		}
 	}
@@ -103,7 +102,7 @@ public final class UtilPrismExpressionParser {
 		}
 		
 		@Override
-		public Value provideValue() throws EPMCException {
+		public Value provideValue() {
 			return UtilValue.newValue(TypeBoolean.get(), string);
 		}
 	}

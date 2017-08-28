@@ -20,7 +20,6 @@
 
 package epmc.coalition.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
@@ -50,7 +49,7 @@ final class EdgePropertyRestricted implements EdgeProperty {
 	}
 
 	@Override
-	public Value get(int queriedNode, int successor) throws EPMCException {
+	public Value get(int queriedNode, int successor) {
 		boolean valid = restriction.get(queriedNode * maxNumSuccessors + successor);
 		return original.get(queriedNode, valid ? successor : substitute[queriedNode]);
 	}

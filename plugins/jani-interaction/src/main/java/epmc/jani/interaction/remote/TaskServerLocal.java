@@ -82,7 +82,7 @@ public final class TaskServerLocal implements TaskServer {
     private boolean stopped;
     
     @Override
-    public void start() throws EPMCException {
+    public void start() {
         assert !started;
         started = true;
         Class<EPMC> mainClass = epmc.main.EPMC.class;
@@ -151,7 +151,7 @@ public final class TaskServerLocal implements TaskServer {
     }
     
     @Override
-    public void stop() throws EPMCException {
+    public void stop() {
         assert started;
         assert !stopped;
         stopped = true;

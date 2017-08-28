@@ -29,7 +29,6 @@ import java.net.MalformedURLException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.OptionsManager;
 import epmc.jani.interaction.UserManager;
 import epmc.jani.interaction.database.Database;
@@ -55,9 +54,8 @@ public final class JANIInteractionJDBCTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIInteractionJDBCOptions() throws EPMCException {
+    private final static Options prepareJANIInteractionJDBCOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.parse(OptionsPlugin.PLUGIN, PLUGIN_DIR_JI);
         options.parse(OptionsPlugin.PLUGIN, PLUGIN_DIR);
@@ -73,7 +71,7 @@ public final class JANIInteractionJDBCTest {
 	}
 	
 	@Test
-	public void connectionTest() throws EPMCException {
+	public void connectionTest() {
 		Options options = prepareJANIInteractionJDBCOptions();
 		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
 		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");

@@ -29,7 +29,6 @@ import java.util.Set;
 import epmc.algorithms.dd.ComponentsDD;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
@@ -96,7 +95,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
     private DD solve(boolean min, Expression property, boolean qualitative,
             StateSet forStates)
-            throws EPMCException {
+            {
         if (isNot(property)) {
         	ExpressionOperator propertyOperator = (ExpressionOperator) property;
         	property = propertyOperator.getOperand1();
@@ -139,7 +138,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return null;
     }
 
-    private DD solveUntil(StateSet forStates) throws EPMCException {
+    private DD solveUntil(StateSet forStates) {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
         TimeBound timeBound = innerTemporal.getTimeBound();
@@ -180,7 +179,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private DD checkUntilQuantitative(DD targetDD, DD failDD)
-            throws EPMCException {
+            {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
         TimeBound timeBound = innerTemporal.getTimeBound();
@@ -337,7 +336,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private DD checkUntilQualitative(DD targetDD, DD failDD)
-            throws EPMCException {
+            {
         DD nodeSpace = modelGraph.getNodeSpace();
         Value oneHalf = UtilValue.newValue(TypeReal.get(), "1/2");
         Value zero = TypeReal.get().getZero();
@@ -357,7 +356,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
         	this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
@@ -396,7 +395,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -420,7 +419,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.EXPRESSION_TO_DD);
     	required.add(CommonProperties.SEMANTICS);
@@ -428,7 +427,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -442,7 +441,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	return Collections.unmodifiableSet(required);
@@ -453,7 +452,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return IDENTIFIER;
     }
 
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
     	return ContextDD.get();
 	}
 

@@ -23,7 +23,6 @@ package epmc.jani.model.type;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
@@ -50,12 +49,12 @@ public final class JANITypeInt implements JANIType {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIType(value);
 	}
 	
 	@Override 
-	public JANIType parseAsJANIType(JsonValue value) throws EPMCException {
+	public JANIType parseAsJANIType(JsonValue value) {
 		if (!(value instanceof JsonString)) {
 			return null;
 		}
@@ -77,7 +76,7 @@ public final class JANITypeInt implements JANIType {
 	}
 
 	@Override
-	public Value getDefaultValue() throws EPMCException {
+	public Value getDefaultValue() {
 		return UtilValue.newValue(toType(), 0);
 	}
 

@@ -105,8 +105,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import epmc.error.EPMCException;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.messages.TimeStampFormatSecondsStarted;
@@ -145,9 +143,8 @@ public final class CheckSymbolicTest {
      * Prepare options including loading PRISM plugin.
      * 
      * @return options usable for PRISM model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options preparePRISMOptions() throws EPMCException {
+    private final static Options preparePRISMOptions() {
 	    try {
 			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
 		} catch (FileNotFoundException e) {
@@ -167,7 +164,7 @@ public final class CheckSymbolicTest {
     
     
     @Test
-    public void testPRISMTest() throws EPMCException {
+    public void testPRISMTest() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N", "4");
     	Options options = preparePRISMOptions();
@@ -182,7 +179,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISMClusterDTMC3() throws EPMCException {
+    public void testPRISMClusterDTMC3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -196,7 +193,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISMPeterson() throws EPMCException {
+    public void testPRISMPeterson() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -212,7 +209,7 @@ public final class CheckSymbolicTest {
     }
 
    @Test
-    public void testPRISM_BRP() throws EPMCException {
+    public void testPRISM_BRP() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("MAX", "4");
     	constants.put("N", "64");
@@ -234,7 +231,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Cell() throws EPMCException {
+    public void testPRISM_Cell() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "0.5");
     	constants.put("N", "50");
@@ -256,7 +253,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Cluster() throws EPMCException {
+    public void testPRISM_Cluster() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "10");
     	constants.put("N", "20");
@@ -282,7 +279,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Coin_2() throws EPMCException {
+    public void testPRISM_Coin_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -305,7 +302,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Coin_4() throws EPMCException {
+    public void testPRISM_Coin_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -328,7 +325,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Coin_6() throws EPMCException {
+    public void testPRISM_Coin_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -352,7 +349,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Coin_8() throws EPMCException {
+    public void testPRISM_Coin_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -376,7 +373,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Coin_10() throws EPMCException {
+    public void testPRISM_Coin_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -399,7 +396,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_2_2() throws EPMCException {
+    public void testPRISM_CSMA_2_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = preparePRISMOptions();
@@ -423,7 +420,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_2_4() throws EPMCException {
+    public void testPRISM_CSMA_2_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = preparePRISMOptions();
@@ -447,7 +444,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_2_6() throws EPMCException {
+    public void testPRISM_CSMA_2_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = preparePRISMOptions();
@@ -471,7 +468,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_3_2() throws EPMCException {
+    public void testPRISM_CSMA_3_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = preparePRISMOptions();
@@ -495,7 +492,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_3_4() throws EPMCException {
+    public void testPRISM_CSMA_3_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = preparePRISMOptions();
@@ -519,7 +516,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_3_6() throws EPMCException {
+    public void testPRISM_CSMA_3_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = preparePRISMOptions();
@@ -543,7 +540,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_4_2() throws EPMCException {
+    public void testPRISM_CSMA_4_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = preparePRISMOptions();
@@ -568,7 +565,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_4_4() throws EPMCException {
+    public void testPRISM_CSMA_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = preparePRISMOptions();
@@ -593,7 +590,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_CSMA_4_6() throws EPMCException {
+    public void testPRISM_CSMA_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = preparePRISMOptions();
@@ -617,7 +614,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Dice() throws EPMCException {
+    public void testPRISM_Dice() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "3");
         Options options = preparePRISMOptions();
@@ -635,7 +632,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_TwoDice() throws EPMCException {
+    public void testPRISM_TwoDice() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "5");
         Options options = preparePRISMOptions();
@@ -651,7 +648,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_3() throws EPMCException {
+    public void testPRISM_DiningCrypt_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -665,7 +662,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_4() throws EPMCException {
+    public void testPRISM_DiningCrypt_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -679,7 +676,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_5() throws EPMCException {
+    public void testPRISM_DiningCrypt_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -693,7 +690,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_6() throws EPMCException {
+    public void testPRISM_DiningCrypt_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -707,7 +704,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_7() throws EPMCException {
+    public void testPRISM_DiningCrypt_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -721,7 +718,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_8() throws EPMCException {
+    public void testPRISM_DiningCrypt_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -735,7 +732,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_9() throws EPMCException {
+    public void testPRISM_DiningCrypt_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -749,7 +746,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_10() throws EPMCException {
+    public void testPRISM_DiningCrypt_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -763,7 +760,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_DiningCrypt_15() throws EPMCException {
+    public void testPRISM_DiningCrypt_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = preparePRISMOptions();
@@ -777,7 +774,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_FirewireAbs() throws EPMCException {
+    public void testPRISM_FirewireAbs() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
@@ -791,7 +788,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_FirewireImpl() throws EPMCException {
+    public void testPRISM_FirewireImpl() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
@@ -808,7 +805,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_FMS() throws EPMCException {
+    public void testPRISM_FMS() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("n", "5");
         Options options = preparePRISMOptions();
@@ -828,7 +825,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Kanban() throws EPMCException {
+    public void testPRISM_Kanban() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("t", "4");
         Options options = preparePRISMOptions();
@@ -847,7 +844,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_3() throws EPMCException {
+    public void testPRISM_LeaderAsync_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -867,7 +864,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_4() throws EPMCException {
+    public void testPRISM_LeaderAsync_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -887,7 +884,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_5() throws EPMCException {
+    public void testPRISM_LeaderAsync_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = preparePRISMOptions();
@@ -907,7 +904,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_6() throws EPMCException {
+    public void testPRISM_LeaderAsync_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = preparePRISMOptions();
@@ -927,7 +924,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_7() throws EPMCException {
+    public void testPRISM_LeaderAsync_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -947,7 +944,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_8() throws EPMCException {
+    public void testPRISM_LeaderAsync_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = preparePRISMOptions();
@@ -968,7 +965,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_9() throws EPMCException {
+    public void testPRISM_LeaderAsync_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -989,7 +986,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderAsync_10() throws EPMCException {
+    public void testPRISM_LeaderAsync_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1009,7 +1006,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_2() throws EPMCException {
+    public void testPRISM_LeaderSync_3_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1026,7 +1023,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_3() throws EPMCException {
+    public void testPRISM_LeaderSync_3_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1043,7 +1040,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_4() throws EPMCException {
+    public void testPRISM_LeaderSync_3_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1060,7 +1057,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_5() throws EPMCException {
+    public void testPRISM_LeaderSync_3_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1077,7 +1074,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_6() throws EPMCException {
+    public void testPRISM_LeaderSync_3_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1094,7 +1091,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_3_8() throws EPMCException {
+    public void testPRISM_LeaderSync_3_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1111,7 +1108,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_2() throws EPMCException {
+    public void testPRISM_LeaderSync_4_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1128,7 +1125,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_3() throws EPMCException {
+    public void testPRISM_LeaderSync_4_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1145,7 +1142,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_4() throws EPMCException {
+    public void testPRISM_LeaderSync_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1162,7 +1159,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_5() throws EPMCException {
+    public void testPRISM_LeaderSync_4_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1179,7 +1176,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_6() throws EPMCException {
+    public void testPRISM_LeaderSync_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1196,7 +1193,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_4_8() throws EPMCException {
+    public void testPRISM_LeaderSync_4_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1213,7 +1210,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_2() throws EPMCException {
+    public void testPRISM_LeaderSync_5_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1230,7 +1227,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_3() throws EPMCException {
+    public void testPRISM_LeaderSync_5_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1247,7 +1244,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_4() throws EPMCException {
+    public void testPRISM_LeaderSync_5_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1264,7 +1261,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_5() throws EPMCException {
+    public void testPRISM_LeaderSync_5_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1281,7 +1278,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_6() throws EPMCException {
+    public void testPRISM_LeaderSync_5_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1298,7 +1295,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_5_8() throws EPMCException {
+    public void testPRISM_LeaderSync_5_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1315,7 +1312,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_2() throws EPMCException {
+    public void testPRISM_LeaderSync_6_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1332,7 +1329,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_3() throws EPMCException {
+    public void testPRISM_LeaderSync_6_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1349,7 +1346,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_4() throws EPMCException {
+    public void testPRISM_LeaderSync_6_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1366,7 +1363,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_5() throws EPMCException {
+    public void testPRISM_LeaderSync_6_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1383,7 +1380,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_6() throws EPMCException {
+    public void testPRISM_LeaderSync_6_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1401,7 +1398,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_LeaderSync_6_8() throws EPMCException {
+    public void testPRISM_LeaderSync_6_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = preparePRISMOptions();
@@ -1419,7 +1416,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_KNACL() throws EPMCException {
+    public void testPRISM_KNACL() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1444,7 +1441,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_NACL() throws EPMCException {
+    public void testPRISM_NACL() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1465,7 +1462,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_MC() throws EPMCException {
+    public void testPRISM_MC() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1489,7 +1486,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Mutual_3() throws EPMCException {
+    public void testPRISM_Mutual_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1504,7 +1501,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Mutual_4() throws EPMCException {
+    public void testPRISM_Mutual_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1519,7 +1516,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Mutual_5() throws EPMCException {
+    public void testPRISM_Mutual_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1534,7 +1531,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Mutual_8() throws EPMCException {
+    public void testPRISM_Mutual_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1549,7 +1546,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Mutual_10() throws EPMCException {
+    public void testPRISM_Mutual_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1566,7 +1563,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_4_4() throws EPMCException {
+    public void testPRISM_P2P_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1582,7 +1579,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_4_5() throws EPMCException {
+    public void testPRISM_P2P_4_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1599,7 +1596,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_4_6() throws EPMCException {
+    public void testPRISM_P2P_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1616,7 +1613,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_4_7() throws EPMCException {
+    public void testPRISM_P2P_4_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1633,7 +1630,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_4_8() throws EPMCException {
+    public void testPRISM_P2P_4_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = preparePRISMOptions();
@@ -1649,7 +1646,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_5_4() throws EPMCException {
+    public void testPRISM_P2P_5_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1666,7 +1663,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_5_5() throws EPMCException {
+    public void testPRISM_P2P_5_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = preparePRISMOptions();
@@ -1683,7 +1680,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_5_6() throws EPMCException {
+    public void testPRISM_P2P_5_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = preparePRISMOptions();
@@ -1700,7 +1697,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_5_7() throws EPMCException {
+    public void testPRISM_P2P_5_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1717,7 +1714,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_P2P_5_8() throws EPMCException {
+    public void testPRISM_P2P_5_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = preparePRISMOptions();
@@ -1731,7 +1728,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_3() throws EPMCException {
+    public void testPRISM_Phil_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1743,7 +1740,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_4() throws EPMCException {
+    public void testPRISM_Phil_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1755,7 +1752,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_5() throws EPMCException {
+    public void testPRISM_Phil_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1767,7 +1764,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_6() throws EPMCException {
+    public void testPRISM_Phil_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1779,7 +1776,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_7() throws EPMCException {
+    public void testPRISM_Phil_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1791,7 +1788,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Phil_8() throws EPMCException {
+    public void testPRISM_Phil_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1804,7 +1801,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_9() throws EPMCException {
+    public void testPRISM_Phil_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1817,7 +1814,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_10() throws EPMCException {
+    public void testPRISM_Phil_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1830,7 +1827,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_15() throws EPMCException {
+    public void testPRISM_Phil_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1843,7 +1840,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_20() throws EPMCException {
+    public void testPRISM_Phil_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1856,7 +1853,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_25() throws EPMCException {
+    public void testPRISM_Phil_25() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1869,7 +1866,7 @@ public final class CheckSymbolicTest {
 
     // PRISM fails by out of memory
     @Test
-    public void testPRISM_Phil_30() throws EPMCException {
+    public void testPRISM_Phil_30() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1883,7 +1880,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_3() throws EPMCException {
+    public void testPRISM_PhilNofair_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1900,7 +1897,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_4() throws EPMCException {
+    public void testPRISM_PhilNofair_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1917,7 +1914,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_5() throws EPMCException {
+    public void testPRISM_PhilNofair_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1935,7 +1932,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_6() throws EPMCException {
+    public void testPRISM_PhilNofair_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1953,7 +1950,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_7() throws EPMCException {
+    public void testPRISM_PhilNofair_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1971,7 +1968,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_8() throws EPMCException {
+    public void testPRISM_PhilNofair_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -1989,7 +1986,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_9() throws EPMCException {
+    public void testPRISM_PhilNofair_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -2007,7 +2004,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilNofair_10() throws EPMCException {
+    public void testPRISM_PhilNofair_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = preparePRISMOptions();
@@ -2024,7 +2021,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilLSS_3() throws EPMCException {
+    public void testPRISM_PhilLSS_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
@@ -2042,7 +2039,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_PhilLSS_4() throws EPMCException {
+    public void testPRISM_PhilLSS_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
@@ -2061,7 +2058,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_2() throws EPMCException {
+    public void testPRISM_Polling_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2083,7 +2080,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_3() throws EPMCException {
+    public void testPRISM_Polling_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2105,7 +2102,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_4() throws EPMCException {
+    public void testPRISM_Polling_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2127,7 +2124,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_5() throws EPMCException {
+    public void testPRISM_Polling_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2149,7 +2146,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_6() throws EPMCException {
+    public void testPRISM_Polling_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2171,7 +2168,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_7() throws EPMCException {
+    public void testPRISM_Polling_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2193,7 +2190,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_8() throws EPMCException {
+    public void testPRISM_Polling_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2215,7 +2212,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_9() throws EPMCException {
+    public void testPRISM_Polling_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2237,7 +2234,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_10() throws EPMCException {
+    public void testPRISM_Polling_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2259,7 +2256,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_11() throws EPMCException {
+    public void testPRISM_Polling_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2281,7 +2278,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_12() throws EPMCException {
+    public void testPRISM_Polling_12() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2303,7 +2300,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_13() throws EPMCException {
+    public void testPRISM_Polling_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2325,7 +2322,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_14() throws EPMCException {
+    public void testPRISM_Polling_14() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2347,7 +2344,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_15() throws EPMCException {
+    public void testPRISM_Polling_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2369,7 +2366,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_16() throws EPMCException {
+    public void testPRISM_Polling_16() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2391,7 +2388,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_17() throws EPMCException {
+    public void testPRISM_Polling_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2413,7 +2410,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_18() throws EPMCException {
+    public void testPRISM_Polling_18() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = preparePRISMOptions();
@@ -2435,7 +2432,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_19() throws EPMCException {
+    public void testPRISM_Polling_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2457,7 +2454,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Polling_20() throws EPMCException {
+    public void testPRISM_Polling_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = preparePRISMOptions();
@@ -2476,7 +2473,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Rabin_3() throws EPMCException {
+    public void testPRISM_Rabin_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = preparePRISMOptions();
@@ -2492,7 +2489,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_Rabin_4() throws EPMCException {
+    public void testPRISM_Rabin_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = preparePRISMOptions();
@@ -2510,7 +2507,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_5() throws EPMCException {
+    public void testPRISM_Rabin_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = preparePRISMOptions();
@@ -2528,7 +2525,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_6() throws EPMCException {
+    public void testPRISM_Rabin_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = preparePRISMOptions();
@@ -2546,7 +2543,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_7() throws EPMCException {
+    public void testPRISM_Rabin_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = preparePRISMOptions();
@@ -2564,7 +2561,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_8() throws EPMCException {
+    public void testPRISM_Rabin_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = preparePRISMOptions();
@@ -2582,7 +2579,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_9() throws EPMCException {
+    public void testPRISM_Rabin_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = preparePRISMOptions();
@@ -2600,7 +2597,7 @@ public final class CheckSymbolicTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISM_Rabin_10() throws EPMCException {
+    public void testPRISM_Rabin_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = preparePRISMOptions();
@@ -2618,7 +2615,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Beauquier_3() throws EPMCException {
+    public void testPRISM_Beauquier_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2638,7 +2635,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Beauquier_5() throws EPMCException {
+    public void testPRISM_Beauquier_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2658,7 +2655,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Beauquier_7() throws EPMCException {
+    public void testPRISM_Beauquier_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2678,7 +2675,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Beauquier_9() throws EPMCException {
+    public void testPRISM_Beauquier_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2699,7 +2696,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Beauquier_11() throws EPMCException {
+    public void testPRISM_Beauquier_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2719,7 +2716,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_3() throws EPMCException {
+    public void testPRISM_Herman_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2739,7 +2736,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_5() throws EPMCException {
+    public void testPRISM_Herman_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2759,7 +2756,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_7() throws EPMCException {
+    public void testPRISM_Herman_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2779,7 +2776,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_9() throws EPMCException {
+    public void testPRISM_Herman_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2799,7 +2796,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_11() throws EPMCException {
+    public void testPRISM_Herman_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "2");
@@ -2819,7 +2816,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_13() throws EPMCException {
+    public void testPRISM_Herman_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2839,7 +2836,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_15() throws EPMCException {
+    public void testPRISM_Herman_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2859,7 +2856,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_17() throws EPMCException {
+    public void testPRISM_Herman_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2879,7 +2876,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Herman_19() throws EPMCException {
+    public void testPRISM_Herman_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2899,7 +2896,7 @@ public final class CheckSymbolicTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISM_Herman_21() throws EPMCException {
+    public void testPRISM_Herman_21() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2919,7 +2916,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_3() throws EPMCException {
+    public void testPRISM_IJ_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2939,7 +2936,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_4() throws EPMCException {
+    public void testPRISM_IJ_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2959,7 +2956,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_5() throws EPMCException {
+    public void testPRISM_IJ_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2979,7 +2976,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_6() throws EPMCException {
+    public void testPRISM_IJ_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2999,7 +2996,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_7() throws EPMCException {
+    public void testPRISM_IJ_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3019,7 +3016,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_8() throws EPMCException {
+    public void testPRISM_IJ_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3039,7 +3036,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_9() throws EPMCException {
+    public void testPRISM_IJ_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3059,7 +3056,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_10() throws EPMCException {
+    public void testPRISM_IJ_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3079,7 +3076,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_11() throws EPMCException {
+    public void testPRISM_IJ_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3099,7 +3096,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_12() throws EPMCException {
+    public void testPRISM_IJ_12() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3119,7 +3116,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_13() throws EPMCException {
+    public void testPRISM_IJ_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3139,7 +3136,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_14() throws EPMCException {
+    public void testPRISM_IJ_14() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3159,7 +3156,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_15() throws EPMCException {
+    public void testPRISM_IJ_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3179,7 +3176,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_16() throws EPMCException {
+    public void testPRISM_IJ_16() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3199,7 +3196,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_17() throws EPMCException {
+    public void testPRISM_IJ_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3219,7 +3216,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_18() throws EPMCException {
+    public void testPRISM_IJ_18() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3239,7 +3236,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_19() throws EPMCException {
+    public void testPRISM_IJ_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3259,7 +3256,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_20() throws EPMCException {
+    public void testPRISM_IJ_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3279,7 +3276,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_IJ_21() throws EPMCException {
+    public void testPRISM_IJ_21() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3300,7 +3297,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Tandem() throws EPMCException {
+    public void testPRISM_Tandem() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("c", "10");
     	constants.put("T", "1");
@@ -3320,7 +3317,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_0() throws EPMCException {
+    public void testPRISM_WLAN_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3344,7 +3341,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_1() throws EPMCException {
+    public void testPRISM_WLAN_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3368,7 +3365,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_2() throws EPMCException {
+    public void testPRISM_WLAN_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3392,7 +3389,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_3() throws EPMCException {
+    public void testPRISM_WLAN_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3416,7 +3413,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_4() throws EPMCException {
+    public void testPRISM_WLAN_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3440,7 +3437,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_5() throws EPMCException {
+    public void testPRISM_WLAN_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3464,7 +3461,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_WLAN_6() throws EPMCException {
+    public void testPRISM_WLAN_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3486,7 +3483,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_0() throws EPMCException {
+    public void testPRISM_WLANCollide_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3501,7 +3498,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_1() throws EPMCException {
+    public void testPRISM_WLANCollide_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3516,7 +3513,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_2() throws EPMCException {
+    public void testPRISM_WLANCollide_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3531,7 +3528,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_3() throws EPMCException {
+    public void testPRISM_WLANCollide_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3546,7 +3543,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_4() throws EPMCException {
+    public void testPRISM_WLANCollide_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3561,7 +3558,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_5() throws EPMCException {
+    public void testPRISM_WLANCollide_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3576,7 +3573,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANCollide_6() throws EPMCException {
+    public void testPRISM_WLANCollide_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3591,7 +3588,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANTimeBounded_0() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3607,7 +3604,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANTimeBounded_1() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3623,7 +3620,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANTimeBounded_2() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3639,7 +3636,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANTimeBounded_3() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3655,7 +3652,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_WLANTimeBounded_4() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3673,7 +3670,7 @@ public final class CheckSymbolicTest {
     // Fails by out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISM_WLANTimeBounded_5() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3691,7 +3688,7 @@ public final class CheckSymbolicTest {
     // Fails by out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISM_WLANTimeBounded_6() throws EPMCException {
+    public void testPRISM_WLANTimeBounded_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3709,7 +3706,7 @@ public final class CheckSymbolicTest {
     // No support for R yet
     @Ignore
     @Test
-    public void testPRISM_Zeroconf() throws EPMCException {
+    public void testPRISM_Zeroconf() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("err", "0");
     	constants.put("K", "4");
@@ -3728,7 +3725,7 @@ public final class CheckSymbolicTest {
     }
 
     @Test
-    public void testPRISM_ZeroconfTimeBounded() throws EPMCException {
+    public void testPRISM_ZeroconfTimeBounded() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "11");
     	constants.put("K", "1");

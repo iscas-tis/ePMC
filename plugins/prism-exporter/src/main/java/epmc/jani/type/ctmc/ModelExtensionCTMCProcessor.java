@@ -20,13 +20,12 @@
 
 package epmc.jani.type.ctmc;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class ModelExtensionCTMCProcessor implements JANI2PRISMProcessorStrict {
 
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj instanceof ModelExtensionCTMC;
 		return this;
 	}
@@ -37,11 +36,11 @@ public final class ModelExtensionCTMCProcessor implements JANI2PRISMProcessorStr
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		return false;
 	}	
 }

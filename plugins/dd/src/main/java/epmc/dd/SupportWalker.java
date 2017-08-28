@@ -23,7 +23,6 @@ package epmc.dd;
 import java.util.Arrays;
 import java.util.Collection;
 
-import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;
@@ -294,16 +293,12 @@ public final class SupportWalker {
         if (node.isLeaf()) {
             Value nodeValue = node.value();
             for (Value stop : stopWhere) {
-                try {
-                	// TODO check following, probably very inefficient
-                    if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
-                    		&& stop.isEq(nodeValue)) {
-                        stopAt = true;
-                        break;
-                    }
-                } catch (EPMCException e) {
-                	throw new RuntimeException(e);
-                }
+            	// TODO check following, probably very inefficient
+            	if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
+            			&& stop.isEq(nodeValue)) {
+            		stopAt = true;
+            		break;
+            	}
             }
         }
         return stopAt;

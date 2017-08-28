@@ -24,7 +24,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsSMG;
 import epmc.jani.model.JANINode;
@@ -55,7 +54,7 @@ public final class ModelExtensionSMG implements ModelExtensionSemantics {
 	}
 
 	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
+	public void setModel(ModelJANI model) {
 		this.model = model;
 	}
 	
@@ -65,17 +64,17 @@ public final class ModelExtensionSMG implements ModelExtensionSemantics {
 	}
 	
 	@Override
-	public void setJsonValue(JsonValue value) throws EPMCException {
+	public void setJsonValue(JsonValue value) {
 		this.value = value;
 	}
 	
 	@Override
-	public void setNode(JANINode node) throws EPMCException {
+	public void setNode(JANINode node) {
 		this.node = node;
 	}
 	
 	@Override
-	public void parseAfter() throws EPMCException {
+	public void parseAfter() {
 		if (!(node instanceof ModelJANI)) {
 			return;
 		}
@@ -95,7 +94,7 @@ public final class ModelExtensionSMG implements ModelExtensionSemantics {
 	}
 	
 	@Override
-	public void generate(JsonObjectBuilder generate) throws EPMCException {
+	public void generate(JsonObjectBuilder generate) {
 		assert generate != null;
 		generate.add(PLAYERS, players.generate());
 	}

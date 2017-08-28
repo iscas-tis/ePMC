@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
@@ -66,7 +65,7 @@ public final class GraphDDProperties implements Closeable {
     }
 
     public final void setGraphProperty(Object property, Value value)
-            throws EPMCException {
+            {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property);        
@@ -130,7 +129,7 @@ public final class GraphDDProperties implements Closeable {
         return graph;
     }
     
-    public ContextDD getContextDD() throws EPMCException {
+    public ContextDD getContextDD() {
         return graph.getContextDD();
     }
 

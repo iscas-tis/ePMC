@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -76,7 +75,7 @@ final class PropertyNormaliser {
 		return this;
 	}
 	
-	PropertyNormaliser build() throws EPMCException {
+	PropertyNormaliser build() {
         subtractNumericalFrom = newValueWeight();
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
@@ -202,7 +201,7 @@ final class PropertyNormaliser {
     	return expressionReward.getRewardType().isCumulative();
     }
     
-    private Value evaluateValue(Expression expression) throws EPMCException {
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
         return evaluator.evaluate();
@@ -226,7 +225,7 @@ final class PropertyNormaliser {
         return expressionQuantifier.getCompareType() == CmpType.IS;
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

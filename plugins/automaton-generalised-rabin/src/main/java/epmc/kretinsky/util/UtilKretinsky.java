@@ -48,7 +48,7 @@ public final class UtilKretinsky {
         return false;
     }
     
-    public static boolean spotLTLEquivalent(Expression expression1, Expression expression2) throws EPMCException {
+    public static boolean spotLTLEquivalent(Expression expression1, Expression expression2) {
         assert expression1 != null;
         assert expression2 != null;
         Map<Expression,String> expr2str = contextExpression.newMap();

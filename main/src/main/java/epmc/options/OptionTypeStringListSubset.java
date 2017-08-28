@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.util.SerializableKeyset;
 
 // TODO finish description
@@ -75,7 +74,7 @@ public final class OptionTypeStringListSubset<V> implements OptionType {
     // TODO check whether elements are actually map keys
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         List<String> result;

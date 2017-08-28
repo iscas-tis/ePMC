@@ -23,7 +23,6 @@ package epmc.expression.standard;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -43,7 +42,7 @@ import epmc.value.Value;
 public final class ExpressionLiteral implements ExpressionPropositional {
 	@FunctionalInterface
 	public interface ValueProvider {
-		Value provideValue() throws EPMCException;
+		Value provideValue();
 	}
 	
 	public static boolean isLiteral(Expression expression) {
@@ -116,7 +115,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         }
     }
 
-    public Value getValue() throws EPMCException {
+    public Value getValue() {
     	if (value != null) {
     		return value;
     	} else if (valueProvider != null) {
@@ -136,7 +135,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	assert expressionToType != null;
     	if (value != null) {
     		return value.getType();
@@ -170,11 +169,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         } else if (valueProvider != null) {
         	builder.append(valueProvider);
         	builder.append(":");
-        	try {
-				builder.append(valueProvider.provideValue());
-			} catch (EPMCException e) {
-				throw new RuntimeException(e);
-			}
+        	builder.append(valueProvider.provideValue());
         } else {
         	throw new RuntimeException();
         }

@@ -22,7 +22,6 @@ package epmc.value;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
@@ -114,7 +113,7 @@ final class ValueArrayTernary implements ValueArray {
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

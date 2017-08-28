@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
@@ -74,7 +73,7 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
 	}
     
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         List<Expression> identifiers = new ArrayList<>();
@@ -118,20 +117,20 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	return Collections.unmodifiableSet(required);
     }
     
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         required.addAll(UtilExpressionStandard.collectIdentifiers(property));
     	return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	return Collections.unmodifiableSet(required);
     }

@@ -23,7 +23,6 @@ package epmc.constraintsolver.plugin;
 import java.util.Map;
 
 import epmc.constraintsolver.options.OptionsConstraintsolver;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeStringListSubset;
 import epmc.options.Options;
@@ -39,7 +38,7 @@ public class AfterOptionsCreationConstraintsolver implements AfterOptionsCreatio
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		
 		Category category = options.addCategory()

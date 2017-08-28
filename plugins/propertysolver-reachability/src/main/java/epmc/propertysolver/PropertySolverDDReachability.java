@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.algorithms.dd.ComponentsDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
@@ -73,7 +72,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     private DD doSolve(Expression property, StateSet forStates)
-            throws EPMCException {
+            {
         
         DD nodeSpace = graph.getNodeSpace();
         ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
@@ -94,7 +93,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     private DD computeProbability(DD oneStatesDD, DD zeroStatesDD)
-            throws EPMCException {
+            {
         DD nodeSpace = graph.getNodeSpace();
         List<DD> sinks = new ArrayList<>();
         
@@ -126,7 +125,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
         	this.graph = modelChecker.getLowLevel();
             this.expressionToDD = graph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
@@ -153,7 +152,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
 
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -184,7 +183,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	/** EXPRESSION_TO_DD stores the oracle which is able to 
     	 * translate an expression to a BDD */
@@ -194,7 +193,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -208,7 +207,7 @@ public final class PropertySolverDDReachability implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	return Collections.unmodifiableSet(required);

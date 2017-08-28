@@ -20,7 +20,6 @@
 
 package epmc.graph.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -48,9 +47,8 @@ public interface ExplorerNodeProperty {
      * stored e.g. in an array value or copied using {@link UtilValue#clone(Value)}.
      * 
      * @return value for node queried last
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get() throws EPMCException;
+    Value get();
     
     /**
      * Obtain type of the values returned by {@link #get()}.
@@ -69,9 +67,8 @@ public interface ExplorerNodeProperty {
      * {@link AssertionError} may be thrown if assertions are enabled.
      * 
      * @return value of this node as boolean
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default boolean getBoolean() throws EPMCException {
+    default boolean getBoolean() {
         Value value = get();
         assert ValueBoolean.isBoolean(value);
         return ValueBoolean.asBoolean(value).getBoolean();

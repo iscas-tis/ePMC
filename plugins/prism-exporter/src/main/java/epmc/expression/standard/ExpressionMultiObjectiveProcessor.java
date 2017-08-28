@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -30,7 +29,7 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 	private ExpressionMultiObjective multiObjective = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionMultiObjective; 
 		
@@ -39,7 +38,7 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert multiObjective != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -60,7 +59,7 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 		return prism.toString();
 	}
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert multiObjective != null;
 		
 		for (Expression child : multiObjective.getOperands()) {
@@ -70,7 +69,7 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert multiObjective != null;
 		
 		boolean usesTransient = false;

@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
@@ -111,7 +110,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public boolean isEq(Value other) throws EPMCException {
+    public boolean isEq(Value other) {
         assert other != null;
         assert ValueEnum.isEnum(other);
         assert this.getType().getEnumClass() == TypeEnum.asEnum(other.getType()).getEnumClass();
@@ -170,7 +169,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
     	ValueEnum otherEnum = asEnum(other);
     	return value == otherEnum.value ? 0.0 : 1.0;
     }
@@ -183,7 +182,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

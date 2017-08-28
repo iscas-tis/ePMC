@@ -31,7 +31,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
@@ -92,7 +91,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     private DD nodes;
 
     public ProductGraphDDExplicit(GraphDD model, DD modelInit, Automaton automaton,
-            ExpressionToDD expressionToDD) throws EPMCException {
+            ExpressionToDD expressionToDD) {
         assert model != null;
         assert modelInit != null;
         assert automaton != null;
@@ -182,7 +181,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
     public ProductGraphDDExplicit(GraphDD model, Automaton automaton, ExpressionToDD expressionToDD)
-            throws EPMCException {
+            {
         this(model, model.getInitialNodes(), automaton, expressionToDD);
     }
     
@@ -191,7 +190,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return initial;
     }
 
-    private DD next(DD from) throws EPMCException {
+    private DD next(DD from) {
         assert from != null;
         states = states.orWith(from.clone());
         DD modelStates = model.getNodeProperty(CommonProperties.STATE);
@@ -264,7 +263,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return nextNonStates.orWith(nextStates);
     }
 
-    private static DD next(DD trans, DD from, DD presCube, Permutation swap) throws EPMCException {
+    private static DD next(DD trans, DD from, DD presCube, Permutation swap) {
         return trans.abstractAndExist(from, presCube).permuteWith(swap);
     }
 
@@ -279,14 +278,14 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
     @Override
-    public DD getTransitions() throws EPMCException {
+    public DD getTransitions() {
         if (transitionsBoolean == null) {
             computeTransitions();
         }
         return transitionsBoolean;
     }
 
-    private void computeTransitions() throws EPMCException {
+    private void computeTransitions() {
         assert transitions == null;
         assert transitionsBoolean == null;
         DD states = model.getNodeProperty(CommonProperties.STATE);
@@ -327,7 +326,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
     @Override
-    public DD getNodeSpace() throws EPMCException {
+    public DD getNodeSpace() {
         if (nodes == null) {
             nodes = exploreNodeSpace(this);
         }
@@ -343,11 +342,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         varEqExpressions.dispose();
         exprVarsCube.dispose();
         ContextDD contextDD;
-		try {
-			contextDD = ContextDD.get();
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        contextDD = ContextDD.get();
         initial.dispose();
         contextDD.dispose(presVars);
         contextDD.dispose(nextVars);
@@ -386,7 +381,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
     @Override
-    public ContextDD getContextDD() throws EPMCException {
+    public ContextDD getContextDD() {
         return model.getContextDD();
     }
     
@@ -395,7 +390,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return properties;
     }
     
-    private static DD exploreNodeSpace(ProductGraphDDExplicit graph) throws EPMCException {
+    private static DD exploreNodeSpace(ProductGraphDDExplicit graph) {
         assert graph != null;
         Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -421,7 +416,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		return model.getType(expression);
 	}

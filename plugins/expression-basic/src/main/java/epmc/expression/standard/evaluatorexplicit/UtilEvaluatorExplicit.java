@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -82,21 +81,21 @@ public final class UtilEvaluatorExplicit {
     /** String containing a single space. */
     private final static String SPACE = " ";
 
-    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) {
         return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, expressionToType, variables);
     }
     
-    public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+    public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) {
         Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
         return newEvaluator(returnType, expression, variables, cache, expressionToType);
     }
     
-    public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+    public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) {
         Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
         return newEvaluator(null, expression, variables, cache, expressionToType);
     }
     
-    public static Value evaluate(Expression expression, ExpressionToType expressionToType) throws EPMCException {
+    public static Value evaluate(Expression expression, ExpressionToType expressionToType) {
     	assert expression != null;
     	assert expressionToType != null;
         EvaluatorExplicit evaluator = newEvaluator(expression, expressionToType, new Expression[0]);
@@ -108,7 +107,7 @@ public final class UtilEvaluatorExplicit {
             Expression expression,
             Expression[] variables,
             Map<EvaluatorCacheEntry,EvaluatorExplicit> cache,
-            ExpressionToType expressionToType) throws EPMCException {
+            ExpressionToType expressionToType) {
 //        UtilEvaluatorExplicitCompile.compile(returnType, expression, variables);
         assert expression != null;
         assert variables != null;

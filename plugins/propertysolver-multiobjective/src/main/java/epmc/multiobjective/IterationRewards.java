@@ -22,7 +22,6 @@ package epmc.multiobjective;
 
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
@@ -41,7 +40,7 @@ final class IterationRewards {
     private int currentState;
     private int currentCombination;
     
-    IterationRewards(GraphExplicitSparseAlternate graph, int numProperties) throws EPMCException {
+    IterationRewards(GraphExplicitSparseAlternate graph, int numProperties) {
         assert graph != null;
         assert numProperties >= 0;
         this.combinations = UtilBitSet.newBitSetUnbounded();
@@ -83,7 +82,7 @@ final class IterationRewards {
         return combinations.get((combinationsFromTo[state] + number) * numProperties + objective);
     }
 
-    void getReward(Value reward, int state, int succ, int objective) throws EPMCException {
+    void getReward(Value reward, int state, int succ, int objective) {
         int index = graph.getStateBounds().getInt(state) + succ;
         this.rewards[objective].get(reward, index);
     }
@@ -94,7 +93,7 @@ final class IterationRewards {
         return rewards[obj];
     }
     
-    void addCombination(BitSet combination) throws EPMCException {
+    void addCombination(BitSet combination) {
         assert currentState < graph.computeNumStates();
         assert combination != null;
         assert combination.length() <= numProperties;
@@ -104,20 +103,20 @@ final class IterationRewards {
         currentCombination++;
     }
     
-    void setReward(Value reward, int succ, int objective) throws EPMCException {
+    void setReward(Value reward, int succ, int objective) {
         assert currentState < graph.computeNumStates();
         assert reward != null;
         int index = graph.getStateBounds().getInt(currentState) + succ;
         this.rewards[objective].set(reward, index);
     }
     
-    void finishState() throws EPMCException {
+    void finishState() {
         assert currentState < graph.computeNumStates();
         combinationsFromTo[currentState + 1] = currentCombination;
         currentState++;
     }
 
-    void setStateCombinations(Set<BitSet> combinations) throws EPMCException {
+    void setStateCombinations(Set<BitSet> combinations) {
         for (BitSet set : combinations) {
             addCombination(set);
         }

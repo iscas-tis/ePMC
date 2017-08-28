@@ -33,7 +33,6 @@ import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.error.ProblemsConstraintsolver;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.util.JNATools;
@@ -188,7 +187,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
 	}
 
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
         this.lp = LpSolve.make_lp(numConstraints, numVariables);
         ensure(this.lp != null, ProblemsConstraintsolver.CONSTRAINTSOLVER_INSUFFICIENT_NATIVE_MEMORY);
         LpSolve.set_debug(this.lp, FALSE);
@@ -429,7 +428,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     }
 
     @Override
-    public ValueReal getResultObjectiveValue() throws EPMCException {
+    public ValueReal getResultObjectiveValue() {
         assert !closed;
         double result = LpSolve.get_var_primalresult(lp, 0);
         ValueReal resultValue = TypeReal.get().newValue();
@@ -442,7 +441,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     }
     
     @Override
-    public ValueArray getResultVariablesValuesSingleType() throws EPMCException {
+    public ValueArray getResultVariablesValuesSingleType() {
         assert !closed;
         Value entry = TypeReal.get().newValue();
         ValueArray result = UtilValue.newArray(TypeReal.get().getTypeArray(),
@@ -460,7 +459,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     }
     
 	@Override
-	public Value[] getResultVariablesValues() throws EPMCException {
+	public Value[] getResultVariablesValues() {
         assert !closed;
         Value[] result = new Value[numVariables];
         TypeReal typeReal = TypeReal.get();

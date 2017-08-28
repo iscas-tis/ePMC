@@ -26,8 +26,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
-
 /**
  * Option type for lists of constants.
  * Constant definitions are given in the form
@@ -61,7 +59,7 @@ public final class OptionTypeConstList implements OptionType {
     }
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         Map<String,Object> result;
         if (prevValue == null) {

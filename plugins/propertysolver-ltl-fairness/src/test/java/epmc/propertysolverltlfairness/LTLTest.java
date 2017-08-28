@@ -22,7 +22,6 @@ package epmc.propertysolverltlfairness;
 
 import java.io.FileNotFoundException;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.main.options.UtilOptionsEPMC;
@@ -33,7 +32,7 @@ import epmc.value.ContextValue;
 
 public class LTLTest {
     
-    public static void main(String[] args) throws EPMCException, FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
         String file = "/home/liyong/projects/test/mdptt.pctl";
         Options options = UtilOptionsEPMC.newOptions();
         RawProperties props = LTLHelper.readProperties(options, file);

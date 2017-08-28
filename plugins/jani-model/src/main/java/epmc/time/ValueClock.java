@@ -1,6 +1,5 @@
 package epmc.time;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
@@ -47,31 +46,31 @@ public final class ValueClock implements ValueAlgebra {
 	}
 
 	@Override
-	public void add(Value operand1, Value operand2) throws EPMCException {
+	public void add(Value operand1, Value operand2) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void divide(Value operand1, Value operand2) throws EPMCException {
+	public void divide(Value operand1, Value operand2) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void subtract(Value operand1, Value operand2) throws EPMCException {
+	public void subtract(Value operand1, Value operand2) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void multiply(Value operand1, Value operand2) throws EPMCException {
+	public void multiply(Value operand1, Value operand2) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void addInverse(Value operand) throws EPMCException {
+	public void addInverse(Value operand) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -107,19 +106,19 @@ public final class ValueClock implements ValueAlgebra {
 	}
 
 	@Override
-	public double norm() throws EPMCException {
+	public double norm() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public double distance(Value other) throws EPMCException {
+	public double distance(Value other) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

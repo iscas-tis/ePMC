@@ -29,7 +29,6 @@ import epmc.value.ValueNumBitsKnown;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.value.Value;
@@ -66,7 +65,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
         Value value = getValue(expression);
         boolean useVector = false;
 //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
@@ -83,7 +82,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         dd = UtilEvaluatorDD.getDD(dd, vector, expression);
         assert dd != null;
         return dd;
@@ -94,7 +93,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
         return vector;
     }
 
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

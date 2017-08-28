@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange {
@@ -114,7 +113,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
     
     @Override
-    public boolean isGe(Value operand) throws EPMCException {
+    public boolean isGe(Value operand) {
         assert operand != null;
         assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
         if (isInterval(operand)) {
@@ -143,7 +142,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
 
     @Override
-    public void set(String string) throws EPMCException {
+    public void set(String string) {
         assert string != null;
         string = string.trim();
         String[] parts = string.split(COMMA);
@@ -180,12 +179,12 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
     
     @Override
-    public boolean checkRange() throws EPMCException {
+    public boolean checkRange() {
         return ValueRange.checkRange(lower) && ValueRange.checkRange(upper) && lower.isLe(upper);
     }
     
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
         assert other != null;
         if (isInterval(other)) {
         	ValueInterval otherInterval = (ValueInterval) other;
@@ -231,28 +230,28 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
     
     @Override
-    public void add(Value operand1, Value operand2) throws EPMCException {
+    public void add(Value operand1, Value operand2) {
         lower.add(getLower(operand1), getLower(operand2));
         upper.add(getUpper(operand1), getUpper(operand2));
     }
     
     @Override
     public void subtract(Value operand1, Value operand2)
-            throws EPMCException {
+            {
         lower.subtract(getLower(operand1), getLower(operand2));
         upper.subtract(getUpper(operand1), getUpper(operand2));
     }
     
     @Override
     public void multiply(Value operand1, Value operand2)
-            throws EPMCException {
+            {
         lower.multiply(getLower(operand1), getLower(operand2));
         upper.multiply(getUpper(operand1), getUpper(operand2));
     }
     
     @Override
     public void divide(Value operand1, Value operand2)
-            throws EPMCException {
+            {
         lower.divide(getLower(operand1), getLower(operand2));
         upper.divide(getUpper(operand1), getUpper(operand2));
     }
@@ -274,7 +273,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
 
 	@Override
-	public void addInverse(Value operand) throws EPMCException {
+	public void addInverse(Value operand) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -286,7 +285,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
 	}
 
 	@Override
-	public double norm() throws EPMCException {
+	public double norm() {
 		return Math.max(lower.norm(), upper.norm());
 	}
 }

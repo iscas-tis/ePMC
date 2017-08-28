@@ -33,7 +33,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Operator;
@@ -157,7 +156,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     private final List<LowLevelPermutationCacBDD> permutations = new ArrayList<>();
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CacBDD.loaded, ProblemsDD.CACBDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -180,7 +179,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
@@ -212,7 +211,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         assert ValueBoolean.isBoolean(value);
         Pointer result;
@@ -226,7 +225,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         Pointer result = CacBDD.cacwrapper_new_variable(xbddmanager, nextVariable);
         ensure(result != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         nextVariable++;
@@ -253,7 +252,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -264,7 +263,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCacBDD;
         Pointer p1 = new Pointer(dd);
@@ -338,7 +337,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         Pointer p1 = new Pointer(dd);
         Pointer p2 = new Pointer(cube);
         Pointer result = CacBDD.cacwrapper_exist(p1, p2);
@@ -347,7 +346,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         Pointer p1 = new Pointer(dd);
         Pointer p2 = new Pointer(cube);
         Pointer result = CacBDD.cacwrapper_universal(p1, p2);
@@ -356,32 +355,32 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         Pointer p1 = new Pointer(dd1);
         Pointer p2 = new Pointer(dd2);
         Pointer p3 = new Pointer(cube);
@@ -391,7 +390,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         assert permutation != null;
         Pointer p;
         if (permutation.length == 0) {

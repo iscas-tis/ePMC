@@ -26,12 +26,9 @@ import java.util.Set;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
@@ -39,9 +36,9 @@ import epmc.value.ValueObject;
 public interface GraphDD extends LowLevel {
     /* methods to be implemented by implementing classes. */
 
-    DD getInitialNodes() throws EPMCException;
+    DD getInitialNodes();
 
-    DD getTransitions() throws EPMCException;
+    DD getTransitions();
 
     DD getPresCube();
 
@@ -53,7 +50,7 @@ public interface GraphDD extends LowLevel {
     
     Permutation getSwapPresNext();
     
-    DD getNodeSpace() throws EPMCException;
+    DD getNodeSpace();
 
     @Override
     void close();
@@ -77,7 +74,7 @@ public interface GraphDD extends LowLevel {
         return getProperties().getGraphProperty(property);
     }
     
-    default DD getNodeProperty(Object property) throws EPMCException {
+    default DD getNodeProperty(Object property) {
         return getProperties().getNodeProperty(property);
     }
 
@@ -85,7 +82,7 @@ public interface GraphDD extends LowLevel {
         return getProperties().getNodeProperties();
     }
 
-    default DD getEdgeProperty(Object property) throws EPMCException {
+    default DD getEdgeProperty(Object property) {
         return getProperties().getEdgeProperty(property);
     }
 
@@ -97,7 +94,7 @@ public interface GraphDD extends LowLevel {
         getProperties().setGraphPropertyObject(property, value);
     }
 
-    default void setGraphProperty(Object property, Value value) throws EPMCException {
+    default void setGraphProperty(Object property, Value value) {
         getProperties().setGraphProperty(property, value);
     }
 
@@ -109,21 +106,21 @@ public interface GraphDD extends LowLevel {
         getProperties().registerEdgeProperty(property, value);
     }
 
-    default ContextDD getContextDD() throws EPMCException {
+    default ContextDD getContextDD() {
         return ContextDD.get();
     }
 
     @Override
-    default StateSet newInitialStateSet() throws EPMCException {
+    default StateSet newInitialStateSet() {
         return new StateSetDD(this, getInitialNodes().clone());
     }
 
-    default BigInteger getNumNodes() throws EPMCException {
+    default BigInteger getNumNodes() {
         return getNodeSpace().countSat(getPresCube());
     }
     
     @Override
-    default Type getType(Expression expression) throws EPMCException {
+    default Type getType(Expression expression) {
     	assert expression != null;
     	Value graphProperty = getGraphProperty(expression);
     	if (graphProperty != null) {

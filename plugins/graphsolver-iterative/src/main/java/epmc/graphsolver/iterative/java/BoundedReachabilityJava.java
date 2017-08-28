@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import epmc.algorithms.FoxGlynn;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -112,7 +111,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (SemanticsContinuousTime.isContinuousTime(semantics)) {
@@ -123,7 +122,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedReachability);
@@ -179,7 +178,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         }        
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -197,7 +196,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void dtBoundedReachability() throws EPMCException {
+    private void dtBoundedReachability() {
         assert iterGraph != null;
         GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
         ValueInteger time = ValueInteger.asInteger(objectiveBoundedReachability.getTime());
@@ -212,7 +211,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         }
     }
 
-    private void ctBoundedReachability() throws EPMCException {
+    private void ctBoundedReachability() {
         assert iterGraph != null : "iterGraph == null";
         assert lambda != null : "lambda == null";
         assert ValueReal.isReal(lambda) : lambda;
@@ -266,7 +265,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     /* implementation of iteration algorithms */    
     
     private void ctmcBoundedJava(GraphExplicitSparse graph,
-            ValueArray values, FoxGlynn foxGlynn) throws EPMCException {
+            ValueArray values, FoxGlynn foxGlynn) {
     	ValueArrayAlgebra fg = foxGlynn.getArray();
         Value fgWeight = foxGlynn.getTypeReal().newValue();
         int numStates = graph.computeNumStates();
@@ -324,7 +323,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
 
     private static void dtmcBoundedJava(int bound,
             GraphExplicitSparse graph, ValueArrayAlgebra values)
-            		throws EPMCException {
+            		 {
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -359,7 +358,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
 
     private void mdpBoundedJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values) throws EPMCException {
+            ValueArrayAlgebra values) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

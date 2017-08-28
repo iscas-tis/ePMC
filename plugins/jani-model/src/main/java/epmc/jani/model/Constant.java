@@ -27,7 +27,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.jani.model.expression.ExpressionParser;
@@ -93,7 +92,7 @@ public final class Constant implements JANINode, JANIIdentifier {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		assert model != null;
 		resetFields();
@@ -118,7 +117,7 @@ public final class Constant implements JANINode, JANIIdentifier {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add(NAME, name);
 		builder.add(TYPE, type.generate());

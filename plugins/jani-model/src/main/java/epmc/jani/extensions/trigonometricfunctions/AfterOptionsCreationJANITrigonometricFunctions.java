@@ -22,7 +22,6 @@ package epmc.jani.extensions.trigonometricfunctions;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.options.Options;
@@ -38,7 +37,7 @@ public class AfterOptionsCreationJANITrigonometricFunctions implements AfterOpti
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         Map<String,Class<? extends ModelExtension>> modelExtensions =
         		options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {

@@ -38,10 +38,9 @@ public final class UtilError {
      * @param condition condition to check
      * @param problem problem description to use
      * @param arguments
-     * @throws EPMCException
      */
     public static void ensure(boolean condition, Problem problem,
-            Object... arguments) throws EPMCException {
+            Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
                 .setProblem(problem)
@@ -57,10 +56,9 @@ public final class UtilError {
      * @param problem problem description to use
      * @param cause
      * @param arguments
-     * @throws EPMCException
      */
     public static void ensure(boolean condition, Problem problem,
-            Throwable cause, Object... arguments) throws EPMCException {
+            Throwable cause, Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
                 .setProblem(problem)
@@ -77,10 +75,9 @@ public final class UtilError {
      * @param problem problem description to use
      * @param positional
      * @param arguments
-     * @throws EPMCException
      */
     public static void ensure(boolean condition, Problem problem,
-            Positional positional, Object... arguments) throws EPMCException {
+            Positional positional, Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
                 .setProblem(problem)
@@ -95,10 +92,9 @@ public final class UtilError {
      * 
      * @param problem problem description to use
      * @param arguments
-     * @throws EPMCException
      */
     public static void fail(Problem problem, Object... arguments)
-            throws EPMCException {
+            {
         throw new EPMCException.Builder()
             .setProblem(problem)
             .setArguments(arguments)
@@ -111,10 +107,9 @@ public final class UtilError {
      * @param problem problem description to use
      * @param cause
      * @param arguments
-     * @throws EPMCException
      */
     public static void fail(Problem problem, Throwable cause,
-            Object... arguments) throws EPMCException {
+            Object... arguments) {
         throw new EPMCException.Builder()
             .setProblem(problem)
             .setCause(cause)
@@ -128,10 +123,9 @@ public final class UtilError {
      * @param problem problem description to use
      * @param positional
      * @param arguments
-     * @throws EPMCException
      */
     public static void fail(Problem problem, Positional positional,
-            Object... arguments) throws EPMCException {
+            Object... arguments) {
         throw new EPMCException.Builder()
                 .setProblem(problem)
                 .setPositional(positional)

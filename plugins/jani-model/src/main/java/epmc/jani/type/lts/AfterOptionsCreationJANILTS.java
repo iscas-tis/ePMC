@@ -22,7 +22,6 @@ package epmc.jani.type.lts;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtension;
@@ -41,7 +40,7 @@ public class AfterOptionsCreationJANILTS implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 
         Map<String,Class<ModelExtension>> modelExtensions = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);

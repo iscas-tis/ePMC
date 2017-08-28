@@ -27,7 +27,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.TimeBound;
@@ -76,7 +75,7 @@ public final class JANIPropertyInterval implements JANINode {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert validIdentifiers != null;
 		assert model != null;
 		assert value != null;
@@ -109,7 +108,7 @@ public final class JANIPropertyInterval implements JANINode {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		assert initialized;
 		assert model != null;
 		assert validIdentifiers != null;

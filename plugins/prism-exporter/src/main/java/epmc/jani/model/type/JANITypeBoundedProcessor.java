@@ -20,7 +20,6 @@
 
 package epmc.jani.model.type;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict {
@@ -28,7 +27,7 @@ public final class JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict
 	private JANITypeBounded bounded = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj instanceof JANITypeBounded;
 
 		bounded = (JANITypeBounded) obj;
@@ -36,19 +35,19 @@ public final class JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert bounded != null;
 		
 		return bounded.toType().toString();
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert bounded != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert bounded != null;
 		
 		return false;

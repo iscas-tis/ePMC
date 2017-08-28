@@ -21,7 +21,6 @@
 package epmc.coalition.dd;
 
 import epmc.automaton.AutomatonParityLabel;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.dd.GraphDD;
@@ -69,5 +68,5 @@ interface SolverQualitative {
 	
 	void setComputeStrategies(boolean playerEven, boolean playerOdd);
 	
-	DDPair solve() throws EPMCException;
+	DDPair solve();
 }

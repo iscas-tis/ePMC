@@ -23,7 +23,6 @@ package epmc.expression.standard.simplify;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -36,7 +35,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
     public final static String IDENTIFIER = "constant";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (expression instanceof ExpressionLiteral) {
             return null;
@@ -64,7 +63,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
         }
     }
 
-    private static Value evaluateValue(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    private static Value evaluateValue(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
         return evaluator.evaluate();

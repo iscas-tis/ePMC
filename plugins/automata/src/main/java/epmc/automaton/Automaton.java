@@ -22,7 +22,6 @@ package epmc.automaton;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -54,20 +53,20 @@ public interface Automaton extends Closeable {
         	return this;
         }
         
-        default Builder setExpression(Expression expression, Expression[] expressions) throws EPMCException {
+        default Builder setExpression(Expression expression, Expression[] expressions) {
             ValueBoolean negate = TypeBoolean.get().newValue(false);
             Buechi buechi = UtilAutomaton.newBuechi(expression, expressions, true, negate);
             setBuechi(buechi);
             return this;
         }
         
-        default Builder setExpression(Expression expression) throws EPMCException {
+        default Builder setExpression(Expression expression) {
             Expression[] expressions = UtilAutomaton.collectLTLInner(expression).toArray(new Expression[0]);
             setExpression(expression, expressions);
             return this;
         }
 
-        Automaton build() throws EPMCException;
+        Automaton build();
     }
 
     int getInitState();
@@ -81,7 +80,7 @@ public interface Automaton extends Closeable {
     Expression[] getExpressions();
     
     void queryState(Value[] modelState, int automatonState)
-            throws EPMCException;
+           ;
     
     default String getIdentifier() {
         return null;

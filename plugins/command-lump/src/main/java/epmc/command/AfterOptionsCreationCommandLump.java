@@ -22,7 +22,6 @@ package epmc.command;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
@@ -39,7 +38,7 @@ public class AfterOptionsCreationCommandLump implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);

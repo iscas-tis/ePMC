@@ -82,7 +82,7 @@ public final class GraphBuilderExplorer {
         this.edgeProperties.addAll(edgeProperties);
     }
 
-    public void build() throws EPMCException {
+    public void build() {
         Thread observerThread = new Thread(() -> {
             int sleepTime = 5;
             try {
@@ -120,7 +120,7 @@ public final class GraphBuilderExplorer {
         observerThread.interrupt();
     }
 
-    private void doBuild() throws EPMCException {
+    private void doBuild() {
         assert this.explorer != null;
         assert this.graphProperties != null;
         assert this.nodeProperties != null;
@@ -264,7 +264,7 @@ public final class GraphBuilderExplorer {
         }
     }
     
-    private ExplorerNode[] assignSuccessorNodes(ExplorerNode[] successorNodes) throws EPMCException {
+    private ExplorerNode[] assignSuccessorNodes(ExplorerNode[] successorNodes) {
         int numSuccessors = explorer.getNumSuccessors();
         if (numSuccessors > successorNodes.length) {
             int oldLength = successorNodes.length;
@@ -284,7 +284,7 @@ public final class GraphBuilderExplorer {
     }
 
     private static BitStoreableToNumber newNodeStore(Explorer explorer)
-            throws EPMCException {
+            {
         int numBits = explorer.getNumNodeBits();
         return UtilGraph.newNodeStore(numBits);
     }

@@ -28,7 +28,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Operator;
@@ -143,7 +142,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     private ContextDD contextDD;
     
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -167,7 +166,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
@@ -198,7 +197,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
         long result;
@@ -212,7 +211,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         long result = Sylvan.sylvan_ithvar(nextVariable);
         nextVariable++;
         Sylvan.sylvan_ref(result);
@@ -236,7 +235,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -247,7 +246,7 @@ public final class LibraryDDSylvan implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationSylvan;
         return Sylvan.sylvan_ref(Sylvan.Sylvan_compose(dd, ((LowLevelPermutationSylvan) permutation).getMap()));
@@ -295,53 +294,53 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         long result = Sylvan.Sylvan_exists(dd, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         long result = Sylvan.Sylvan_forall(dd, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         long result = Sylvan.Sylvan_and_exists(dd1, dd2, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         return new LowLevelPermutationSylvan(permutation);
     }
 

@@ -20,7 +20,6 @@
 
 package epmc.algorithms.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -85,7 +84,7 @@ public class EndComponentsImpl implements EndComponents {
         this.mecsOnly = mecsOnly;
     }
 
-    private void computeNextComponent() throws EPMCException {
+    private void computeNextComponent() {
         hasNext = false;
         while (!hasNext && todoSize != 0) {
             if (tjCallStackIndex == -1) {
@@ -143,7 +142,7 @@ public class EndComponentsImpl implements EndComponents {
     }
 
     @Override
-    public BitSet next() throws EPMCException {
+    public BitSet next() {
         computeNextComponent();
         if (!hasNext) {
             return null;
@@ -157,7 +156,7 @@ public class EndComponentsImpl implements EndComponents {
         return result;
     }
 
-    private void tarjan() throws EPMCException {
+    private void tarjan() {
         while (!hasNext && tjCallStackIndex >= 0) {
             int numSucc = graph.getNumSuccessors(tjNode);
             if (tjSuccIter < numSucc) {
@@ -205,7 +204,7 @@ public class EndComponentsImpl implements EndComponents {
         }
     }
 
-    private void checkMEC() throws EPMCException {
+    private void checkMEC() {
         if (this.sccSize == 1) {
             int node = scc[0];
             this.existing.set(scc[0], false);
@@ -290,7 +289,7 @@ public class EndComponentsImpl implements EndComponents {
     
     private void removeLeavingAttr(GraphExplicit graph,
             BitSet existingStates, int[] remaining,
-            BitSet scc, int[] leaving, int leavingIndex) throws EPMCException {
+            BitSet scc, int[] leaving, int leavingIndex) {
         graph.computePredecessors();
         NodeProperty player = graph.getNodeProperty(CommonProperties.PLAYER);
         for (int nodeNr = 0; nodeNr < sccSize; nodeNr++) {

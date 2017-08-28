@@ -22,7 +22,6 @@ package epmc.jani.plugin;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.explorer.AssignmentEvaluator;
 import epmc.jani.explorer.AssignmentSimpleEvaluator;
 import epmc.jani.explorer.ExplorerExtension;
@@ -59,7 +58,7 @@ public final class AfterOptionsCreationJANI implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
 		assert options != null;
 		
 		OptionTypeMap<Class<?>> modelInputType = options.getType(OptionsModelChecker.MODEL_INPUT_TYPE);

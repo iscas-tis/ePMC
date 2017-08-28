@@ -156,7 +156,7 @@ public final class ClientInfo {
 	 * @param id ID of the analysis
 	 * @param server task server running the analysis
 	 */
-	public synchronized void registerAnalysis(BigInteger id, TaskServer server) throws EPMCException {
+	public synchronized void registerAnalysis(BigInteger id, TaskServer server) {
 		assert id != null;
 		assert server != null;
 		ensure(!runningAnalyses.containsKey(id), ProblemsJANIInteraction.JANI_INTERACTION_ANALYSIS_SAME_ID);

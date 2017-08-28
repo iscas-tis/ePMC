@@ -41,7 +41,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.options.Options;
 import epmc.value.Type;
@@ -84,7 +83,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 	}
 
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert !closed;
 	}
 
@@ -96,7 +95,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 
 	/*
 	@Override
-	public int addVariable(ExpressionIdentifierStandard identifier) throws EPMCException {
+	public int addVariable(ExpressionIdentifierStandard identifier) {
 		assert !closed;
 		String name = identifier.getName();
 		Type type = identifier.getType();
@@ -121,7 +120,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 	}
 
 	@Override
-	public void addConstraint(Expression expression) throws EPMCException {
+	public void addConstraint(Expression expression) {
 		assert !closed;
 		constraints.add(expression);
 	}
@@ -140,7 +139,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 	}
 
 	@Override
-	public ConstraintSolverResult solve() throws EPMCException {
+	public ConstraintSolverResult solve() {
 		assert !closed;
 		Path path = null;
 		try {
@@ -163,7 +162,7 @@ public class ConstraintSolverISat3Textual implements ConstraintSolver {
 		return result.type;
 	}
 
-	private ISatResult callSolver(String file) throws EPMCException {
+	private ISatResult callSolver(String file) {
 		List<String> callOptions = Options.get().get(OptionsISat3.ISAT3_COMMAND_LINE);
 		List<String> execArgs = new ArrayList<>();
 		for (String param : callOptions) {

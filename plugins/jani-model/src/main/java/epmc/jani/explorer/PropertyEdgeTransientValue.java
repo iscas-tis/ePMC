@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -30,7 +29,7 @@ public final class PropertyEdgeTransientValue implements PropertyEdge {
 	private final int varNr;
 	private final Type type;
 
-	PropertyEdgeTransientValue(ExplorerJANI explorer, int varNr) throws EPMCException {
+	PropertyEdgeTransientValue(ExplorerJANI explorer, int varNr) {
 		assert explorer != null;
 		assert varNr >= 0;
 		this.explorer = explorer;
@@ -39,7 +38,7 @@ public final class PropertyEdgeTransientValue implements PropertyEdge {
 	}
 
 	@Override
-	public Value get(int successor) throws EPMCException {
+	public Value get(int successor) {
 		assert successor >= 0 : successor;
 		assert successor < explorer.getNumSuccessors() : successor + SPACE + explorer.getNumSuccessors() ;
 		return explorer.getSuccessorNode(successor).getValue(varNr);

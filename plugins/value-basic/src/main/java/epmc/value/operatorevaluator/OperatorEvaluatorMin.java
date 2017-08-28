@@ -22,7 +22,6 @@ package epmc.value.operatorevaluator;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.ProblemsValueBasic;
@@ -70,7 +69,7 @@ public enum OperatorEvaluatorMin implements OperatorEvaluator {
     }
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
+    public void apply(Value result, Value... operands) {
     	assert result != null;
     	assert operands != null;
     	for (Value operand : operands) {

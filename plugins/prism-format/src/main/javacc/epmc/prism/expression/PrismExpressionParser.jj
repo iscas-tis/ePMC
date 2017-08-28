@@ -101,7 +101,7 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpression(int line, int column, String string) throws EPMCException {
+	public Expression parseExpression(int line, int column, String string)  {
 		this.initialLine = line;
 		this.initialColumn = column;
 		this.string = string;
@@ -127,7 +127,7 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpressionAsProperty(int line, int column, String string) throws EPMCException {
+	public Expression parseExpressionAsProperty(int line, int column, String string)  {
 		this.initialLine = line;
 		this.initialColumn = column;
 		this.string = string;
@@ -299,7 +299,7 @@ TOKEN_MGR_DECLS:
     }
 }
 
-private Expression parseCompleteExp() throws EPMCException :
+private Expression parseCompleteExp()  :
 {
 	Expression e;
 }
@@ -309,7 +309,7 @@ private Expression parseCompleteExp() throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseCompleteProp() throws EPMCException :
+private Expression parseCompleteProp()  :
 {
 	Expression e;
 	Expression label = null;
@@ -328,7 +328,7 @@ private Expression parseCompleteProp() throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseExpTemporal(boolean parseExp) throws EPMCException :
+private Expression parseExpTemporal(boolean parseExp)  :
 {
 	Expression e;
 }
@@ -337,7 +337,7 @@ private Expression parseExpTemporal(boolean parseExp) throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseExp(boolean parseExp) throws EPMCException :
+private Expression parseExp(boolean parseExp)  :
 {
 	Expression e;
 }
@@ -347,7 +347,7 @@ private Expression parseExp(boolean parseExp) throws EPMCException :
 	{ return e; }
 }
 
-private Expression ExpressionITE(boolean parseExp) throws EPMCException :
+private Expression ExpressionITE(boolean parseExp)  :
 {
 	Expression prop;
 	Expression propThen;
@@ -372,7 +372,7 @@ private Expression ExpressionITE(boolean parseExp) throws EPMCException :
 	{ return prop; }
 }
 
-private Expression ExpressionImplies(boolean parseExp) throws EPMCException :
+private Expression ExpressionImplies(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -390,7 +390,7 @@ private Expression ExpressionImplies(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression ExpressionIff(boolean parseExp) throws EPMCException :
+private Expression ExpressionIff(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -408,7 +408,7 @@ private Expression ExpressionIff(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression ExpressionOr(boolean parseExp) throws EPMCException :
+private Expression ExpressionOr(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -426,7 +426,7 @@ private Expression ExpressionOr(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression ExpressionAnd(boolean parseExp) throws EPMCException :
+private Expression ExpressionAnd(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -445,7 +445,7 @@ private Expression ExpressionAnd(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression ExpressionNot(boolean parseExp) throws EPMCException :
+private Expression ExpressionNot(boolean parseExp)  :
 {
 	  Expression p;
 	InfoExpression info = new InfoExpression(string);
@@ -464,7 +464,7 @@ private Expression ExpressionNot(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
+private Expression ExpressionEqNe(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -483,7 +483,7 @@ private Expression ExpressionEqNe(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator EqNe() throws EPMCException :
+private Operator EqNe()  :
 {
 }
 {
@@ -496,7 +496,7 @@ private Operator EqNe() throws EPMCException :
 	)
 }
 
-private Expression ExpressionROp(boolean parseExp) throws EPMCException :
+private Expression ExpressionROp(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -515,7 +515,7 @@ private Expression ExpressionROp(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator LtGtLeGe() throws EPMCException :
+private Operator LtGtLeGe()  :
 {
 }
 {
@@ -534,7 +534,7 @@ private Operator LtGtLeGe() throws EPMCException :
 	)
 }
 
-private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
+private Expression ExpressionPlusMinus(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -554,7 +554,7 @@ private Expression ExpressionPlusMinus(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Operator PlusMinus() throws EPMCException :
+private Operator PlusMinus()  :
 {
 }
 {
@@ -567,7 +567,7 @@ private Operator PlusMinus() throws EPMCException :
 	)
 }
 
-private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException :
+private Expression ExpressionTimesDivide(boolean parseExp)  :
 {
 	Expression p;
 	Expression nextProp;
@@ -586,7 +586,7 @@ private Expression ExpressionTimesDivide(boolean parseExp) throws EPMCException 
 	{ return p; }
 }
 
-private Operator TimesDivide() throws EPMCException :
+private Operator TimesDivide()  :
 {
 }
 {
@@ -599,7 +599,7 @@ private Operator TimesDivide() throws EPMCException :
 	)
 }
 
-private Expression ExpressionUnaryMinus(boolean parseExp) throws EPMCException :
+private Expression ExpressionUnaryMinus(boolean parseExp)  :
 {
 	Expression p;
 	InfoExpression info = new InfoExpression(string);
@@ -616,7 +616,7 @@ private Expression ExpressionUnaryMinus(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression parseBasic(boolean parseExp) throws EPMCException :
+private Expression parseBasic(boolean parseExp)  :
 {
 	Expression e;
 }
@@ -651,7 +651,7 @@ private Expression parseBasic(boolean parseExp) throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseFunction(boolean parseExp) throws EPMCException :
+private Expression parseFunction(boolean parseExp)  :
 {
 	Expression e;
 	Expression ne;
@@ -698,7 +698,7 @@ private Expression parseFunction(boolean parseExp) throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseSpecialFunction(boolean parseExp) throws EPMCException :
+private Expression parseSpecialFunction(boolean parseExp)  :
 {
 	Expression e;
 }
@@ -709,7 +709,7 @@ private Expression parseSpecialFunction(boolean parseExp) throws EPMCException :
 	{ return e; }
 }
 
-private Expression parseSqrt(boolean parseExp) throws EPMCException :
+private Expression parseSqrt(boolean parseExp)  :
 {
 	Expression e;
 	InfoExpression info = new InfoExpression(string);
@@ -728,7 +728,7 @@ private Expression parseSqrt(boolean parseExp) throws EPMCException :
 			.build(), info); }
 }
 
-private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunctionN(boolean parseExp, Operator type)  :
 {
 	Expression e;
 	Expression ne;
@@ -746,7 +746,7 @@ private Expression parseFunctionN(boolean parseExp, Operator type) throws EPMCEx
 	{ return e; }
 }
 
-private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunction2(boolean parseExp, Operator type)  :
 {
 	Expression e;
 	Expression ne;
@@ -761,7 +761,7 @@ private Expression parseFunction2(boolean parseExp, Operator type) throws EPMCEx
 	  return newOperator(type, e, ne, info);}
 }
 
-private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCException :
+private Expression parseFunction1(boolean parseExp, Operator type)  :
 {
 	Expression e;
 }
@@ -770,7 +770,7 @@ private Expression parseFunction1(boolean parseExp, Operator type) throws EPMCEx
 	{ return newOperator(type, e);}
 }
 
-private Operator functionMultipleParams() throws EPMCException :
+private Operator functionMultipleParams()  :
 {
 }
 {
@@ -783,7 +783,7 @@ private Operator functionMultipleParams() throws EPMCException :
 	)
 }
 
-private Operator functionOneParam() throws EPMCException :
+private Operator functionOneParam()  :
 {
 }
 {
@@ -799,7 +799,7 @@ private Operator functionOneParam() throws EPMCException :
 	)
 }
 
-private Operator functionTwoParams() throws EPMCException :
+private Operator functionTwoParams()  :
 {
 }
 {
@@ -815,7 +815,7 @@ private Operator functionTwoParams() throws EPMCException :
 	)
 }
 
-private Expression parseParenth(boolean parseExp) throws EPMCException :
+private Expression parseParenth(boolean parseExp)  :
 {
 	Expression p;
 }
@@ -826,7 +826,7 @@ private Expression parseParenth(boolean parseExp) throws EPMCException :
 	{ return p; }
 }
 
-private Expression parseIdentifier() throws EPMCException :
+private Expression parseIdentifier()  :
 {
 	Token literal;
 	InfoExpression info = new InfoExpression(string);
@@ -840,7 +840,7 @@ private Expression parseIdentifier() throws EPMCException :
 		.build(); }
 }
 
-private Expression parseLabel() throws EPMCException :
+private Expression parseLabel()  :
 {
 	Token literal;
 	InfoExpression info = new InfoExpression(string);
@@ -861,7 +861,7 @@ private Expression parseLabel() throws EPMCException :
 		.build(); }
 }
 
-private Expression parseReal() throws EPMCException :
+private Expression parseReal()  :
 {
 	Token real;
 	InfoExpression info = new InfoExpression(string);
@@ -876,7 +876,7 @@ private Expression parseReal() throws EPMCException :
 		.build(); }
 }
 
-private Expression parseInt() throws EPMCException :
+private Expression parseInt()  :
 {
 	Token intg;
 	InfoExpression info = new InfoExpression(string);
@@ -891,7 +891,7 @@ private Expression parseInt() throws EPMCException :
 		.build(); }
 }
 
-private Expression parseBoolean() throws EPMCException :
+private Expression parseBoolean()  :
 {
 	InfoExpression info = new InfoExpression(string);
 }
@@ -913,7 +913,7 @@ private Expression parseBoolean() throws EPMCException :
 	)
 }
 
-private OldSchoolFilter OldSchoolFilter() throws EPMCException :
+private OldSchoolFilter OldSchoolFilter()  :
 {
 	Expression states;
 	boolean min = false;
@@ -959,7 +959,7 @@ private OldSchoolFilter OldSchoolFilter() throws EPMCException :
 	}
 }
 
-private Expression parseCoalition(boolean parseExp) throws EPMCException :
+private Expression parseCoalition(boolean parseExp)  :
 {
 	Expression innerFormula;
 	List<Expression> players = new ArrayList<Expression>();
@@ -999,7 +999,7 @@ private Expression parseCoalition(boolean parseExp) throws EPMCException :
 	}
 }
 
-private Expression parseProbQuant(boolean parseExp) throws EPMCException :
+private Expression parseProbQuant(boolean parseExp)  :
 {
 	Expression prop;
 	Expression cmp;
@@ -1080,7 +1080,7 @@ private Expression parseProbQuant(boolean parseExp) throws EPMCException :
 	}
 }
 
-private Expression parseSteadyQuant(boolean parseExp) throws EPMCException :
+private Expression parseSteadyQuant(boolean parseExp)  :
 {
 	Expression prop;
 	Expression cmp;
@@ -1181,7 +1181,7 @@ private CmpType PropQuantCmpType() :
 	)
 }
 
-private Expression parseRewardPath(boolean parseExp, Expression rewardStructure) throws EPMCException :
+private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)  :
 {
 	Expression prop;
 	Expression timebound;
@@ -1225,7 +1225,7 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 	)
 }
 
-private Expression parseRewardStructure(boolean parseExp) throws EPMCException :
+private Expression parseRewardStructure(boolean parseExp)  :
 {
 	Expression rewardStructure = null;
 	Token literal;
@@ -1247,7 +1247,7 @@ private Expression parseRewardStructure(boolean parseExp) throws EPMCException :
 	{ return rewardStructure; }
 }
 
-private Expression parseRewQuant(boolean parseExp) throws EPMCException :
+private Expression parseRewQuant(boolean parseExp)  :
 {
 	Expression prop;
 	Expression cmp;
@@ -1367,7 +1367,7 @@ private DirType SteadyQuantProbDirType() :
 	)
 }
 
-private FilterType ExpressionFilterType() throws EPMCException :
+private FilterType ExpressionFilterType()  :
 {
 	FilterType type = null;
 	Token id;
@@ -1437,7 +1437,7 @@ private FilterType ExpressionFilterType() throws EPMCException :
 	{ return type; }
 }
 
-private Expression parseFilter(boolean parseExp) throws EPMCException :
+private Expression parseFilter(boolean parseExp)  :
 {
 	FilterType type;
 	Expression prop;
@@ -1472,7 +1472,7 @@ private Expression parseFilter(boolean parseExp) throws EPMCException :
 		.build(); }
 }
 
-private Expression parseMultiObjective(boolean parseExp) throws EPMCException :
+private Expression parseMultiObjective(boolean parseExp)  :
 {
 	Expression formula;
 	List<Expression> list = new ArrayList<Expression>();
@@ -1508,7 +1508,7 @@ private Expression parseMultiObjective(boolean parseExp) throws EPMCException :
 		.build(); }
 }
 
-//private Expression parseExpAsProp(boolean parseExp) throws EPMCException :
+//private Expression parseExpAsProp(boolean parseExp)  :
 //{
 //	Expression p;
 //}
@@ -1517,7 +1517,7 @@ private Expression parseMultiObjective(boolean parseExp) throws EPMCException :
 //	{ return p; }
 //}
 
-TimeBound TimeBound() throws EPMCException :
+TimeBound TimeBound()  :
 {
 	Expression left;
 	Expression right;
@@ -1602,7 +1602,7 @@ TimeBound TimeBound() throws EPMCException :
 	{ return timeBound; }
 }
 
-//private Expression parseExpForTimeBound(boolean parseExp) throws EPMCException :
+//private Expression parseExpForTimeBound(boolean parseExp)  :
 //{
 //	Expression exp;
 //}
@@ -1619,7 +1619,7 @@ TimeBound TimeBound() throws EPMCException :
 //	{ return exp; }
 //}
 
-private Expression parseTemporalBinary(boolean parseExp) throws EPMCException :
+private Expression parseTemporalBinary(boolean parseExp)  :
 {
 	ArrayList<Expression> expressions = new ArrayList<Expression>();
 	ArrayList<TimeBound> timeBounds = new ArrayList<TimeBound>();
@@ -1694,7 +1694,7 @@ private BinType TempBinType() :
 	)
 }
 
-private Expression parseTemporalUnary(boolean parseExp) throws EPMCException :
+private Expression parseTemporalUnary(boolean parseExp)  :
 {
 	Expression p;
 	UnType type;

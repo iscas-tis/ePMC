@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit.subgraph;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.value.Type;
@@ -43,12 +42,12 @@ public class NodePropertySubgraph implements NodeProperty {
     }
 
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         return inner.get(graph.subToOrig(node));
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         inner.set(graph.subToOrig(node), value);
     }
 

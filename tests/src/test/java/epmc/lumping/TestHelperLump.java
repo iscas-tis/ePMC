@@ -26,7 +26,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
@@ -53,31 +52,27 @@ public final class TestHelperLump {
     		String property) {
         Set<Object> nodeProperties = new HashSet<>();
         nodeProperties.add(CommonProperties.STATE);
-        try {
-            Model model = TestHelper.loadModel(options, modelFile);
-            assert model != null;
-            Map<String,Class<? extends LumperExplicit>> lumpersExplicit = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
-            LumperExplicit useInstance = null;
-            TestHelper.addProperty(model, property);
-            RawProperty raw = model.getPropertyList().getRawProperties().iterator().next();
-            Expression expr = model.getPropertyList().getParsedProperty(raw);
-            Set<Expression> atomics = collectAPs(expr);
-            nodeProperties.addAll(UtilExpressionStandard.collectIdentifiers(expr));
-            GraphExplicit graph = exploreToGraph(model, nodeProperties);
-            GraphSolverObjectiveExplicitLump objective = UtilLump.partitionByAPsObjective(graph, atomics);
-            for (Class<? extends LumperExplicit> clazz : lumpersExplicit.values()) {
-                LumperExplicit instance = Util.getInstance(clazz);
-                instance.setOriginal(objective);
-                if (instance.canLump()) {
-                    useInstance = instance;
-                    break;
-                }
-            }
-            useInstance.lump();
-            return useInstance.getQuotient().getGraph();
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
+        Model model = TestHelper.loadModel(options, modelFile);
+        assert model != null;
+        Map<String,Class<? extends LumperExplicit>> lumpersExplicit = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
+        LumperExplicit useInstance = null;
+        TestHelper.addProperty(model, property);
+        RawProperty raw = model.getPropertyList().getRawProperties().iterator().next();
+        Expression expr = model.getPropertyList().getParsedProperty(raw);
+        Set<Expression> atomics = collectAPs(expr);
+        nodeProperties.addAll(UtilExpressionStandard.collectIdentifiers(expr));
+        GraphExplicit graph = exploreToGraph(model, nodeProperties);
+        GraphSolverObjectiveExplicitLump objective = UtilLump.partitionByAPsObjective(graph, atomics);
+        for (Class<? extends LumperExplicit> clazz : lumpersExplicit.values()) {
+        	LumperExplicit instance = Util.getInstance(clazz);
+        	instance.setOriginal(objective);
+        	if (instance.canLump()) {
+        		useInstance = instance;
+        		break;
+        	}	
         }
+        useInstance.lump();
+        return useInstance.getQuotient().getGraph();
     }
 
     public static Set<Expression> collectAPs(Expression expression) {

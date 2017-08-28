@@ -22,7 +22,6 @@ package epmc.value;
 
 import static epmc.error.UtilError.fail;
 
-import epmc.error.EPMCException;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
@@ -165,7 +164,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public boolean isLt(Value operand) throws EPMCException {
+    public boolean isLt(Value operand) {
         assert operand != null;
         if (!ValueInteger.isInteger(operand) && !ValueDouble.isDouble(operand)) {
             return ValueAlgebra.asAlgebra(operand).isGt(this);
@@ -182,7 +181,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public boolean isGt(Value operand) throws EPMCException {
+    public boolean isGt(Value operand) {
         assert operand != null;
         if (!ValueInteger.isInteger(operand) && !ValueDouble.isDouble(operand)) {
             return ValueAlgebra.asAlgebra(operand).isLt(this);
@@ -249,7 +248,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
     
     @Override
-    public boolean checkRange() throws EPMCException {
+    public boolean checkRange() {
         return value >= getType().getLowerInt() && value <= getType().getUpperInt();
     }    
     
@@ -258,7 +257,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
     
     @Override
-    public void set(String value) throws EPMCException {
+    public void set(String value) {
         assert value != null;
         try {
             this.value = Integer.parseInt(value);
@@ -283,7 +282,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
         if (isInteger(other)) {
         	return this.value - ValueInteger.asInteger(other).getInt();
         } else {
@@ -305,7 +304,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
 	}
 
 	@Override
-	public void divide(Value operand1, Value operand2) throws EPMCException {
+	public void divide(Value operand1, Value operand2) {
 		// TODO Auto-generated method stub
 		
 	}

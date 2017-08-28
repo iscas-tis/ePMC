@@ -29,7 +29,6 @@ import epmc.automaton.AutomatonParityLabel;
 import epmc.automaton.ProductGraphDDExplicit;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.dd.GraphDD;
@@ -72,7 +71,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 	}
 
 	@Override
-	public DDPair solve() throws EPMCException {
+	public DDPair solve() {
         this.EMPTY_BIT_SET_PAIR = new DDPair(ContextDD.get().newConstant(false), ContextDD.get().newConstant(false));
 		ProductGraphDDExplicit product = (ProductGraphDDExplicit) game;
 		AutomatonParity automaton = (AutomatonParity) product.getAutomaton();
@@ -86,7 +85,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
 	}
 	
     private List<DD> computePriorities(AutomatonParity automaton,
-            TObjectIntMap<DD> labelsMap) throws EPMCException {
+            TObjectIntMap<DD> labelsMap) {
     	assert automaton != null;
         assert labelsMap != null;
 
@@ -109,7 +108,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return priorities;
     }
 
-    private DDPair zeroMcNaughton(DD p) throws EPMCException {
+    private DDPair zeroMcNaughton(DD p) {
         zeroMcNaughtonCalls++;
         // note that p might be destroyed by call to this algorithm
         assert p != null;
@@ -175,7 +174,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         }
     }
 
-    private DD satr0(DD target, DD nodes) throws EPMCException {
+    private DD satr0(DD target, DD nodes) {
         DD exist = playerEven;
         DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerOdd;
@@ -187,7 +186,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return result;
     }
 
-    private DD satr1(DD target, DD nodes) throws EPMCException {
+    private DD satr1(DD target, DD nodes) {
         DD exist = playerOdd;
         DD forall = ContextDD.get().newConstant(false);
         DD forallExist = playerEven;
@@ -199,21 +198,21 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return result;
     }
     
-    private DD watr0(DD target, DD nodes) throws EPMCException {
+    private DD watr0(DD target, DD nodes) {
         return watr(target, nodes, false);
     }
 
-    private DD watr1(DD target, DD nodes) throws EPMCException {
+    private DD watr1(DD target, DD nodes) {
         return watr(target, nodes, true);
     }
     
     private DD satr(DD target, DD nodes, boolean odd)
-            throws EPMCException {
+            {
         return odd ? satr1(target, nodes) : satr0(target, nodes);
     }
 
     private DD watr(DD target, DD nodes, boolean odd)
-            throws EPMCException {
+            {
         DD satrSame = satr(target, nodes, odd);
         DD nodesMSatrSame = ContextDD.get().newConstant(false);
         DD nodesMTarget = ContextDD.get().newConstant(false);
@@ -232,7 +231,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         return satrSame;
     }
 
-    public ContextDD getContextDD() throws EPMCException {
+    public ContextDD getContextDD() {
     	return game.getContextDD();
 	}
 }

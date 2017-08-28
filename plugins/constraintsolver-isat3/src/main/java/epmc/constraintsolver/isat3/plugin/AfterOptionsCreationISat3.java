@@ -27,7 +27,6 @@ import java.util.Map;
 import epmc.constraintsolver.isat3.textual.ConstraintSolverISat3Textual;
 import epmc.constraintsolver.options.OptionsConstraintsolver;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeStringList;
@@ -43,7 +42,7 @@ public final class AfterOptionsCreationISat3 implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		
 		Map<String,Class<?>> solvers = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);

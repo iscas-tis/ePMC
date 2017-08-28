@@ -22,7 +22,6 @@ package epmc.graph.explicit;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 import epmc.util.BitSet;
@@ -81,7 +80,7 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     }
     
     @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+    public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplicit;
         StateSetExplicit other = (StateSetExplicit) states;

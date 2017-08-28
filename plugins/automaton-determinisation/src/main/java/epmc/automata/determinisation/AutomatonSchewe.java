@@ -38,7 +38,6 @@ import epmc.automaton.AutomatonSafra;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
 import epmc.automaton.BuechiTransition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -83,7 +82,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 		}
 		
 		@Override
-		public AutomatonSchewe build() throws EPMCException {
+		public AutomatonSchewe build() {
 			return new AutomatonSchewe(this);
 		}
 		
@@ -157,7 +156,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         assert modelState != null;
         long combined;
         if (useAutomatonMapsCache) {
@@ -256,7 +255,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         }
     }
 
-    private void lookupCache(AutomatonScheweState scheweState) throws EPMCException {
+    private void lookupCache(AutomatonScheweState scheweState) {
         assert scheweState != null;
         int entryNr = 0;
 
@@ -318,11 +317,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
      * 
      * @param scheweState present state
      * @param succState successor state
-     * @throws EPMCException
      */
     private void rawUpdate(AutomatonScheweState scheweState,
             AutomatonScheweState succState)
-            throws EPMCException {
+            {
         BitSet succs = UtilBitSet.newBitSetUnbounded(buechiGraph.getNumNodes());
         EdgeProperty labels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
@@ -346,7 +344,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     
     private void sproutNewChildren(AutomatonScheweState scheweState,
             AutomatonScheweState succState, int[] nextIndex)
-                    throws EPMCException {
+                    {
         BitSet succs = UtilBitSet.newBitSetUnbounded(buechiGraph.getNumNodes());
         EdgeProperty labels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {

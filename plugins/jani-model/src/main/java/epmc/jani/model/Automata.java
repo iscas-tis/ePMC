@@ -32,7 +32,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.util.UtilJSON;
@@ -62,7 +61,7 @@ public final class Automata implements JANINode, Map<String,Automaton>, Iterable
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonArray array = UtilJSON.toArrayObject(value);
@@ -85,7 +84,7 @@ public final class Automata implements JANINode, Map<String,Automaton>, Iterable
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (Automaton automaton : automata.values()) {
 			result.add(automaton.generate());
@@ -176,7 +175,7 @@ public final class Automata implements JANINode, Map<String,Automaton>, Iterable
 	}
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		for (Automaton automaton : automata.values()) {
 			Type type = automaton.getType(expression);

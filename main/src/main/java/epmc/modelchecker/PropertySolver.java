@@ -22,7 +22,6 @@ package epmc.modelchecker;
 
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
@@ -81,11 +80,10 @@ public interface PropertySolver {
      * exception instead of returning false.
      * 
      * @return whether the solver can decide the property
-     * @throws EPMCException thrown for invalid model/property combinations
      */
-    boolean canHandle() throws EPMCException;
+    boolean canHandle();
 
-    default boolean canComputeScheduler() throws EPMCException {
+    default boolean canComputeScheduler() {
     	return false;
     }
     
@@ -93,31 +91,27 @@ public interface PropertySolver {
      * Obtain set of identifiers of graph properties required by this solver.
      * 
      * @return set of identifiers of graph properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredGraphProperties() throws EPMCException;
+    Set<Object> getRequiredGraphProperties();
 
     /**
      * Obtain set of identifiers of node properties required by this solver.
      * 
      * @return set of identifiers of node properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredNodeProperties() throws EPMCException;
+    Set<Object> getRequiredNodeProperties();
 
     /**
      * Obtain set of identifiers of edge properties required by this solver.
      * 
      * @return set of identifiers of edge properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredEdgeProperties() throws EPMCException;
+    Set<Object> getRequiredEdgeProperties();
     
     /**
      * Decide given property.
      * 
      * @return value of the property for given relevant states
-     * @throws EPMCException if a problem occurs during computation
      */
-    StateMap solve() throws EPMCException;
+    StateMap solve();
 }

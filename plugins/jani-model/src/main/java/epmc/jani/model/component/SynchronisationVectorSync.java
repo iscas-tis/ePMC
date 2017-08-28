@@ -31,7 +31,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
@@ -58,7 +57,7 @@ public final class SynchronisationVectorSync implements JANINode {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);
 		JsonArray synchronise = UtilJSON.getArray(object, SYNCHRONISE);
@@ -81,7 +80,7 @@ public final class SynchronisationVectorSync implements JANINode {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		JsonArrayBuilder synchronise = Json.createArrayBuilder();
 		for (Action sync : this.synchronise) {

@@ -21,7 +21,6 @@
 package epmc.graphsolver.lumping;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.ModelChecker;
@@ -61,9 +60,8 @@ public interface LumperDD {
      * once for a given object.
      * 
      * @param graph graph to be lumped
-     * @throws EPMCException thrown in case of problems
      */
-    void setOriginal(GraphDD graph) throws EPMCException;
+    void setOriginal(GraphDD graph);
     
     /**
      * Requires that a given property is maintained by the lumping.
@@ -97,7 +95,7 @@ public interface LumperDD {
      * 
      * @return whether lumper can perform lumping for the given configuration
      */
-    boolean canLump() throws EPMCException;
+    boolean canLump();
     
     /**
      * Perform lumping for given configuration.
@@ -105,9 +103,8 @@ public interface LumperDD {
      * #canLump()} would be allowed and returns or would return {@code true}.
      * The method may only be called once for a given object.
      * 
-     * @throws EPMCException thrown if an error occurs during computation
      */
-    void lump() throws EPMCException;
+    void lump();
 
     /**
      * Obtain quotient model.
@@ -116,12 +113,12 @@ public interface LumperDD {
      * 
      * @return quotient model
      */
-    GraphDD getQuotient() throws EPMCException;
+    GraphDD getQuotient();
 
     Expression getQuotientExpression(Expression expression)
-            throws EPMCException;
+           ;
 
-    DD originalToQuotient(DD original) throws EPMCException;
+    DD originalToQuotient(DD original);
 
-    DD quotientToOriginal(DD quotient) throws EPMCException;
+    DD quotientToOriginal(DD quotient);
 }

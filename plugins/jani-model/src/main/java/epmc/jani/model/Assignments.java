@@ -32,7 +32,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 /**
@@ -79,7 +78,7 @@ public final class Assignments implements JANINode, Set<AssignmentSimple> {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		assert validIdentifiers != null;
@@ -96,7 +95,7 @@ public final class Assignments implements JANINode, Set<AssignmentSimple> {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (AssignmentSimple assignment : assignments) {
 			result.add(assignment.generate());

@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.value.TypeBoolean;
 import epmc.value.ValueBoolean;
@@ -36,7 +35,7 @@ final class PropertyNodeDeadlock implements ExplorerNodeProperty {
 	/** Used to return the value of the property. */
 	private final ValueBoolean value;
 
-	PropertyNodeDeadlock(ExplorerJANI explorer) throws EPMCException {
+	PropertyNodeDeadlock(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
 		TypeBoolean type = TypeBoolean.get();
@@ -44,13 +43,13 @@ final class PropertyNodeDeadlock implements ExplorerNodeProperty {
 	}
 	
 	@Override
-	public ValueBoolean get() throws EPMCException {
+	public ValueBoolean get() {
 		value.set(explorer.isDeadlock());
 		return value;
 	}
 	
 	@Override
-	public boolean getBoolean() throws EPMCException {
+	public boolean getBoolean() {
 		return explorer.isDeadlock();
 	}
 	

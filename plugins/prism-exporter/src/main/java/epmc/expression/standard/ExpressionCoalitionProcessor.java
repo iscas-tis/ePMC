@@ -23,7 +23,6 @@ package epmc.expression.standard;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
@@ -35,7 +34,7 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 	private ExpressionCoalition coalition = null;
 
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionCoalition; 
 		
@@ -44,7 +43,7 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert coalition != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -69,7 +68,7 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert coalition != null;
 		
 		for (Expression child : coalition.getChildren()) {
@@ -79,7 +78,7 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert coalition != null;
 		
 		boolean usesTransient = false;

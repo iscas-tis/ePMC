@@ -106,7 +106,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public AutomatonKretinskyProduct() {
     }
     
-    public void setExpression(Expression expression, Expression[] expressions) throws EPMCException {
+    public void setExpression(Expression expression, Expression[] expressions) {
         assert expression != null;
         assert expressions != null;
         this.disableUnusedSlaves = options.get(OptionsKretinsky.KRETINSKY_DISABLE_UNUSED_SLAVES);
@@ -143,13 +143,13 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     };
     
     @Override
-    public void setExpression(Expression expression) throws EPMCException {
+    public void setExpression(Expression expression) {
         expression = UtilExpression.toNegationNormalForm(expression);
         Expression[] expressions = getModelChecker().relevantExpressionsArray(expression);
         setExpression(expression, expressions);
     }
     
-    private void preprocessSlaves() throws EPMCException {
+    private void preprocessSlaves() {
         AutomatonStateUtil[] slStates = new AutomatonStateUtil[slaves.length];
         for (int i = 0; i < slaves.length; i++) {
             slStates[i] = slaves[i].numberToState(slaves[i].getInitState());
@@ -168,7 +168,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     }
 
     AutomatonKretinskyProduct(Expression expression, Expression[] expressions)
-            throws EPMCException {
+            {
         assert assertConstructor(expression, expressions);
         setExpression(expression, expressions);
     }
@@ -183,7 +183,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return true;
     }
 
-    private void disableUnusedSlaves(AutomatonStateUtil[] state) throws EPMCException {
+    private void disableUnusedSlaves(AutomatonStateUtil[] state) {
         if (!disableUnusedSlaves) {
             return;
         }
@@ -209,7 +209,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     }
 
     public void queryState(int modelState, int automatonState)
-            throws EPMCException {
+            {
         if (runSlaves) {
             long cacheKey = (((long) modelState) << 32) | (automatonState);
             long cacheVal = cache.get(cacheKey);
@@ -258,7 +258,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
    
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         int modelStateNr = expressionsUnique.valueToNumber(modelState);
         queryState(modelStateNr, automatonState);
     }
@@ -330,7 +330,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return result;
     }
 
-    private void prepareAcceptance() throws EPMCException {
+    private void prepareAcceptance() {
         ContextDD contextDD = ContextDD.get();
         int numAcceptancePairs = 1;
         for (int i = 0; i < slaves.length; i++) {
@@ -403,7 +403,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return pairSlaveToStates[pair][number];
     }
     
-    public static void main(String[] args) throws EPMCException {
+    public static void main(String[] args) {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsEPMC.PLUGIN, "/Users/emhahn/Documents/workspace/iscasmc/plugins/kretinsky");
         UtilPlugin.preparePlugins(options);

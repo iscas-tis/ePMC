@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public interface ValueRange extends Value {
@@ -36,7 +35,7 @@ public interface ValueRange extends Value {
 		}
 	}
 
-	static boolean checkRange(Value value) throws EPMCException {
+	static boolean checkRange(Value value) {
 		ValueRange valueRange = asRange(value);
 		if (valueRange == null) {
 			return true;
@@ -44,5 +43,5 @@ public interface ValueRange extends Value {
 		return valueRange.checkRange();
 	}
 	
-    boolean checkRange() throws EPMCException;
+    boolean checkRange();
 }

@@ -35,7 +35,6 @@ import org.junit.Test;
 
 import epmc.ModelNamesPRISM;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -49,7 +48,7 @@ public class NumberOfNodesConstantTest {
     }
 
     @Test
-    public void cluster() throws EPMCException {
+    public void cluster() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         constants.put("N", "16");

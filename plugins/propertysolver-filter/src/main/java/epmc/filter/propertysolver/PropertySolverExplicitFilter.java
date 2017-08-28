@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
@@ -103,7 +102,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
 	}
     
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert forStates != null;
         // TODO should first check states to compute values for, then only compute values for these
         StateSetExplicit allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -192,7 +191,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -210,14 +209,14 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -228,7 +227,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getProp(), allStates));
@@ -236,7 +235,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     	return Collections.unmodifiableSet(required);
     }
 
-    private static void accumulate(FilterType type, Value resultValue, Value value) throws EPMCException {
+    private static void accumulate(FilterType type, Value resultValue, Value value) {
     	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
     	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());

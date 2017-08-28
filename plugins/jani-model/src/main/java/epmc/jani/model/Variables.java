@@ -34,7 +34,6 @@ import javax.json.JsonValue;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Maps.EntryTransformer;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -77,7 +76,7 @@ public final class Variables implements JANINode, Iterable<Variable>, Map<String
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		JsonArray array = UtilJSON.toArrayObject(value);
 		// TODO check duplicates?
@@ -92,7 +91,7 @@ public final class Variables implements JANINode, Iterable<Variable>, Map<String
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (Variable variable : variables.values()) {
 			result.add(variable.generate());
@@ -212,7 +211,7 @@ public final class Variables implements JANINode, Iterable<Variable>, Map<String
 	}
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.asIdentifierStandard(expression);
 		if (identifier == null) {

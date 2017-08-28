@@ -23,7 +23,7 @@ import epmc.graph.explicit.GraphExplicitWrapper;
 public class SpotParser {
 
   public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr)
-      throws EPMCException {
+       {
     assert ap2expr != null;
     try {
       return Automaton(ap2expr);
@@ -95,7 +95,7 @@ public class SpotParser {
 | < T : "t" >
 | < NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
 | < IDENTIFIER : (["a"-"z","A"-"Z","0"-"9","_"])+ >
-}GraphExplicitWrapper Automaton(Map<String,Expression> ap2expr) throws EPMCException :{
+}GraphExplicitWrapper Automaton(Map<String,Expression> ap2expr)  :{
   HanoiHeader header;
   GraphExplicitWrapper graph;
 }{
@@ -133,7 +133,7 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
   { return header; }
 }
 
-GraphExplicitWrapper Body(HanoiHeader header) throws EPMCException :
+GraphExplicitWrapper Body(HanoiHeader header)  :
 {
   GraphPreparator graph = new GraphPreparator(header);
 }
@@ -144,7 +144,7 @@ GraphExplicitWrapper Body(HanoiHeader header) throws EPMCException :
   { return graph.toGraph(); }
 }
 
-void State(GraphPreparator graph) throws EPMCException :
+void State(GraphPreparator graph)  :
 {
   int from;
   Expression guard;

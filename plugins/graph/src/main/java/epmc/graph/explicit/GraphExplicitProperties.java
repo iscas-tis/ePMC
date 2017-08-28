@@ -29,7 +29,6 @@ import java.util.Set;
 
 import com.google.common.base.MoreObjects;
 
-import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;
@@ -100,7 +99,7 @@ public final class GraphExplicitProperties implements Serializable {
     }
 
     public void setGraphProperty(Object property, Value value)
-            throws EPMCException {
+            {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property) : property;
@@ -159,7 +158,7 @@ public final class GraphExplicitProperties implements Serializable {
         return edgePropertiesExternal;
     }
 
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
         TIntStack todo = new TIntArrayStack();
         for (int node = start.nextSetBit(0); node >= 0; node = start.nextSetBit(node+1)) {
             if (!exploredNodes.get(node)) {
@@ -181,7 +180,7 @@ public final class GraphExplicitProperties implements Serializable {
         }
     }
 
-    public void computePredecessors() throws EPMCException {
+    public void computePredecessors() {
         if (predecessorsComputed) {
             return;
         }
@@ -218,7 +217,7 @@ public final class GraphExplicitProperties implements Serializable {
         }
     }
     
-    public void computePredecessors(BitSet states) throws EPMCException {
+    public void computePredecessors(BitSet states) {
         predecessorTargets = null;
         predecessorBounds = new int[states.length() + 1];
         for (int node = 0; node < states.length(); node++) {

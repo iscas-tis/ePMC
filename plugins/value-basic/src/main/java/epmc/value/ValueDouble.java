@@ -22,7 +22,6 @@ package epmc.value;
 
 import static epmc.error.UtilError.fail;
 
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.value.Value;
 
@@ -188,7 +187,7 @@ public final class ValueDouble implements ValueReal {
     }
 
     @Override
-    public double distance(Value op) throws EPMCException {
+    public double distance(Value op) {
         assert op != null;
         if (!getType().canImport(op.getType())) {
             return op.distance(this);
@@ -248,7 +247,7 @@ public final class ValueDouble implements ValueReal {
     }
     
     @Override
-    public void set(String string) throws EPMCException {
+    public void set(String string) {
         assert string != null;
         if (string.contains(DIVIDED)) {
             String[] parts = string.split(DIVIDED);

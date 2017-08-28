@@ -98,7 +98,7 @@ final class AutomatonKretinskyProductState implements AutomatonStateUtil {
         return (AutomatonSlaveState) states[slaveNr + 1];
     }
 
-    public boolean isStable(int pair) throws EPMCException {
+    public boolean isStable(int pair) {
         if (this.stableKnown.get(pair)) {
             return this.stable.get(pair);
         }

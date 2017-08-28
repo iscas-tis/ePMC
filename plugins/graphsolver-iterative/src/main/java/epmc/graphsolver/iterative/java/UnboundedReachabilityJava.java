@@ -23,7 +23,6 @@ package epmc.graphsolver.iterative.java;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -114,13 +113,13 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	unboundedReachability();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
@@ -167,7 +166,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -185,7 +184,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void unboundedReachability() throws EPMCException {
+    private void unboundedReachability() {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -214,7 +213,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     /* auxiliary methods */
     
     private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
@@ -266,7 +265,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     
     private void dtmcUnboundedJacobiJava(GraphExplicitSparse graph,
             ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) {
         int numStates = graph.computeNumStates();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -307,7 +306,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
 
     private void dtmcUnboundedGaussseidelJava(GraphExplicitSparse graph,
             ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -342,7 +341,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     private void mdpUnboundedJacobiJava(
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double tolerance) throws EPMCException {
+            double tolerance) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -399,7 +398,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     private void mdpUnboundedGaussseidelJava(
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance)
-                    throws EPMCException {
+                    {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

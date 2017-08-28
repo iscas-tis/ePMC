@@ -1,6 +1,5 @@
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.util.BitStream;
 import epmc.value.TypeArray;
 import epmc.value.Value;
@@ -45,7 +44,7 @@ public final class ValueArrayJANIDecision implements ValueArray {
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		assert value != null;
 		assert false;
 	}

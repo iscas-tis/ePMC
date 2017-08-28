@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 /**
@@ -63,7 +62,7 @@ public final class Locations implements JANINode, Iterable<Location>, Serializab
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonArray array = UtilJSON.toArray(value);
@@ -79,7 +78,7 @@ public final class Locations implements JANINode, Iterable<Location>, Serializab
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder result = Json.createArrayBuilder();
 		for (Location location : locations.values()) {
 			result.add(location.generate());

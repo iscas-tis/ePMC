@@ -20,7 +20,6 @@
 
 package epmc.value.plugin;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
@@ -37,7 +36,7 @@ public final class AfterOptionsCreationValueBasic implements AfterOptionsCreatio
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         assert options != null;
         OptionTypeString typeString = OptionTypeString.getInstance();
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();

@@ -25,11 +25,10 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class GraphExporterDOT {    
-    public static void export(GraphExplicit graph, OutputStream stream) throws EPMCException {
+    public static void export(GraphExplicit graph, OutputStream stream) {
         PrintStream out = new PrintStream(stream);
         out.println("digraph {");
         Set<Object> nodeProperties = graph.getNodeProperties();
@@ -72,12 +71,8 @@ public final class GraphExporterDOT {
     
     public static String toString(GraphExplicit graph) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            export(graph, out);
-            return out.toString();
-        } catch (EPMCException e) {
-            return "ERROR";
-        }
+        export(graph, out);
+        return out.toString();
     }
     
     /**

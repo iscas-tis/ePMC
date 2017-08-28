@@ -22,7 +22,6 @@ package epmc.propertysolverltlfairness;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.Options;
@@ -37,7 +36,7 @@ public final class AfterOptionsCreationLTLFairness implements AfterOptionsCreati
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
 		assert solvers != null;

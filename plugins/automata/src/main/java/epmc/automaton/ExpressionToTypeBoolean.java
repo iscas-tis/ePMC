@@ -23,7 +23,6 @@ package epmc.automaton;
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.Type;
@@ -46,7 +45,7 @@ final class ExpressionToTypeBoolean implements ExpressionToType {
 	}
 	
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		if (mapped.contains(expression)) {
 			return TypeBoolean.get();

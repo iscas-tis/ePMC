@@ -24,7 +24,6 @@ import epmc.automaton.AutomatonParityLabel;
 import epmc.coalition.graphsolver.GraphSolverObjectiveExplicitUnboundedReachabilityGame;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.Scheduler;
@@ -101,7 +100,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 	}
 
 	@Override
-	public QuantitativeResult solve() throws EPMCException {
+	public QuantitativeResult solve() {
 		compareTolerance = Options.get().getDouble(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE);
 		StopWatch totalTime = new StopWatch(true);
 		getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_START);
@@ -132,7 +131,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return result;
 	}
 
-	private SchedulerSimpleSettable initialise(BitSet p) throws EPMCException {
+	private SchedulerSimpleSettable initialise(BitSet p) {
 		assert p != null;
 		NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
 		numInitCalls++;
@@ -212,7 +211,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return strategy;
 	}
 
-    private boolean assertStrategy(BitSet p, SchedulerSimple strategy) throws EPMCException {
+    private boolean assertStrategy(BitSet p, SchedulerSimple strategy) {
     	assert p != null;
     	assert strategy != null;
     	NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
@@ -227,7 +226,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return true;
 	}
 
-	private boolean assertSubGraphSuccessors(GraphExplicitSubgraph subGraph) throws EPMCException {
+	private boolean assertSubGraphSuccessors(GraphExplicitSubgraph subGraph) {
     	assert subGraph != null;
     	int numSubGraphNodes = subGraph.getNumNodes();
 		for (int node = 0; node < numSubGraphNodes; node++) {
@@ -236,7 +235,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return true;
 	}
 
-	QuantitativeResult reach(GraphExplicit graph, BitSet target, boolean computeStrategy) throws EPMCException {
+	QuantitativeResult reach(GraphExplicit graph, BitSet target, boolean computeStrategy) {
         GraphSolverObjectiveExplicitUnboundedReachabilityGame objective = new GraphSolverObjectiveExplicitUnboundedReachabilityGame();
         objective.setGraph(graph);
         objective.setComputeScheduler(computeStrategy);
@@ -248,7 +247,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         return new QuantitativeResult(objective.getResult(), objective.getScheduler());
 	}
 
-	private boolean reachSanityCheck(GraphExplicit graph, BitSet target, GraphSolverObjectiveExplicitUnboundedReachabilityGame objective) throws EPMCException {
+	private boolean reachSanityCheck(GraphExplicit graph, BitSet target, GraphSolverObjectiveExplicitUnboundedReachabilityGame objective) {
 		int numStates = graph.getNumNodes();
 		NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
 		EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
@@ -289,7 +288,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return true;
 	}
 
-	private QuantitativeResult improve(SchedulerSimpleSettable strategies) throws EPMCException {
+	private QuantitativeResult improve(SchedulerSimpleSettable strategies) {
 		StopWatch improveTime = new StopWatch(true);
 		StopWatch mdpEvaluateTime = new StopWatch(false);
 		StopWatch qualitativeEvaluationTime = new StopWatch(false);
@@ -394,7 +393,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return new QuantitativeResult(values, strategies);
 	}
 	
-    private BitSet computeRestriction(ValueArray values) throws EPMCException {
+    private BitSet computeRestriction(ValueArray values) {
     	assert values != null;
     	int maxNumSuccessors = 0;
     	int numNodes = game.getNumNodes();
@@ -424,7 +423,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return result;
 	}
 
-	private QuantitativeResult evaluateMDP(SchedulerSimple strategies) throws EPMCException {
+	private QuantitativeResult evaluateMDP(SchedulerSimple strategies) {
     	assert strategies != null;
     	GraphExplicitInduced induced = new GraphExplicitInduced(game, strategies);
 
@@ -499,7 +498,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 		return result;
 	}
 
-    private SolverQualitative newQualitativeSolver() throws EPMCException {
+    private SolverQualitative newQualitativeSolver() {
         return UtilOptions.getInstance(OptionsCoalition.COALITION_SOLVER);
     }
 

@@ -26,7 +26,6 @@ import java.util.List;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.dd.GraphDD;
@@ -59,7 +58,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     private GraphDD model;
 
     public ProductGraphDDDD(GraphDD model, DD modelInit, AutomatonDD automaton)
-            throws EPMCException {
+            {
         this.model = model;
         this.properties = new GraphDDProperties(this);
         assert model != null;
@@ -111,17 +110,17 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     }
     
     public ProductGraphDDDD(GraphDD model, AutomatonDD automaton)
-            throws EPMCException {
+            {
         this(model, model.getInitialNodes(), automaton);
     }
     
     @Override
-    public DD getInitialNodes() throws EPMCException {
+    public DD getInitialNodes() {
         return initial;
     }
 
     @Override
-    public DD getTransitions() throws EPMCException {
+    public DD getTransitions() {
         return transitionsBoolean;
     }
 
@@ -135,7 +134,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     }
 
     @Override
-    public DD getNodeSpace() throws EPMCException {
+    public DD getNodeSpace() {
         if (nodes == null) {
             nodes = exploreNodeSpace(this);
         }
@@ -154,13 +153,9 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         weight.dispose();
         states.dispose();
         player.dispose();
-        try {
-			ContextDD.get().dispose(presVars);
-	        ContextDD.get().dispose(nextVars);
-	        ContextDD.get().dispose(actionVars);
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        ContextDD.get().dispose(presVars);
+        ContextDD.get().dispose(nextVars);
+        ContextDD.get().dispose(actionVars);
         presCube.dispose();
         nextCube.dispose();
 //        actionCube.dispose();
@@ -187,7 +182,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         return properties;
     }
     
-    private static DD exploreNodeSpace(GraphDD graph) throws EPMCException {
+    private static DD exploreNodeSpace(GraphDD graph) {
         assert graph != null;
         Log log = Options.get().get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -214,12 +209,12 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         return states;
     }
     
-    private static DD next(DD trans, DD from, DD pres, Permutation swap) throws EPMCException {
+    private static DD next(DD trans, DD from, DD pres, Permutation swap) {
         return trans.abstractAndExist(from, pres).permuteWith(swap);
     }
 
     @Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		return model.getType(expression);
 	}

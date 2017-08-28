@@ -29,7 +29,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -77,12 +76,12 @@ public final class JANITypeBounded implements JANIType {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIType(value);
 	}
 	
 	@Override 
-	public JANIType parseAsJANIType(JsonValue value) throws EPMCException {
+	public JANIType parseAsJANIType(JsonValue value) {
 		if (!(value instanceof JsonObject)) {
 			return null;
 		}
@@ -126,7 +125,7 @@ public final class JANITypeBounded implements JANIType {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder().add(KIND, BOUNDED);
 		
 		result.add(BASE, INT);
@@ -140,7 +139,7 @@ public final class JANITypeBounded implements JANIType {
 	}
 
 	@Override
-	public TypeInteger toType() throws EPMCException {
+	public TypeInteger toType() {
         int lowerInt = Integer.MIN_VALUE;
         int upperInt = Integer.MAX_VALUE;
         if (lowerBound != null) {
@@ -203,7 +202,7 @@ public final class JANITypeBounded implements JANIType {
 	}
 
 	@Override
-	public Value getDefaultValue() throws EPMCException {
+	public Value getDefaultValue() {
 		TypeInteger type = toType();
 		if (TypeInteger.asInteger(type).getLowerInt() <= 0
 				&& 0 <= TypeInteger.asInteger(type).getUpperInt()) {

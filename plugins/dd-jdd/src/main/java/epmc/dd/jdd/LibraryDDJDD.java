@@ -23,7 +23,6 @@ package epmc.dd.jdd;
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.value.Operator;
 import epmc.value.Type;
@@ -71,7 +70,7 @@ public final class LibraryDDJDD implements LibraryDD {
     
     @Override
     public long apply(Operator operator, Type type, long... operands)
-            throws EPMCException {
+            {
         assert alive;
         assert operator != null;
         assert type != null;
@@ -109,7 +108,7 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert alive;
         assert value != null;
         assert ValueBoolean.isBoolean(value);
@@ -119,7 +118,7 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         assert alive;
         int result = bdd.createVar();
         bdd.ref(result);
@@ -161,7 +160,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert alive;
         assert dd >= 0;
         assert permutation != null;
@@ -249,14 +248,14 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert alive;
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert alive;
         assert false;
         return -1;
@@ -264,7 +263,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         assert alive;
         assert dd1 >= 0;
         assert dd2 >= 0;
@@ -298,7 +297,7 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         this.contextDD = contextDD;
         int initCache = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);

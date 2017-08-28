@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -34,7 +33,7 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
 	private boolean forDefinition = false;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Variable; 
 		
@@ -55,7 +54,7 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert variable != null;
 		
 		JANIComponentRegistrar.variableRenaming(variable, prefix);
@@ -66,7 +65,7 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
 		}
 	}
 	
-	private String toPRISMForDefinition() throws EPMCException {
+	private String toPRISMForDefinition() {
 		StringBuilder prism = new StringBuilder();
 		
 		String comment = variable.getComment();
@@ -104,12 +103,12 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert variable != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert variable != null;
 		
 		return variable.isTransient();

@@ -57,7 +57,7 @@ public final class OptionTypeBoolean implements OptionType {
     
     @Override
     public Object parse(String value, Object previousValue)
-            throws EPMCException {
+            {
         assert value != null;
         ensure(previousValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

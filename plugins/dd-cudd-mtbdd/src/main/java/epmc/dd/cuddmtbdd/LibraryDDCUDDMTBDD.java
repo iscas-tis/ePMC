@@ -438,7 +438,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -492,7 +492,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     
     @Override
     public long apply(Operator operation, Type type, long... operands)
-            throws EPMCException {
+            {
         assert operation != null;
         assert type != null;
         this.resultType = type;
@@ -547,7 +547,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
 
     
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         long valueNumber = valueToNumber(value);
         Pointer res = CUDD.Cudd_MTBDD_addConst(cuddManager, valueNumber);
         if (res == null) {
@@ -590,7 +590,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         Pointer var;
         var = CUDD.Cudd_MTBDD_addIthVar(cuddManager, numVariables);
         if (var == null) {
@@ -665,13 +665,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         assert alive;
     }
 
     @Override
     public long permute(long node, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCUDD;
         LowLevelPermutationCUDD permutationCUDD = (LowLevelPermutationCUDD) permutation;
@@ -717,19 +717,19 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -752,7 +752,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -776,13 +776,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         assert false;
         return -1;
     }
     
     @Override
-	public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+	public long abstractMax(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -805,7 +805,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
     
     @Override
-	public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+	public long abstractMin(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);

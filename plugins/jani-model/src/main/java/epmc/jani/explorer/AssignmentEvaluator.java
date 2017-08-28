@@ -22,7 +22,6 @@ package epmc.jani.explorer;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.jani.model.Assignment;
@@ -42,8 +41,8 @@ public interface AssignmentEvaluator {
 		
 		boolean canHandle();
 		
-		AssignmentEvaluator build() throws EPMCException;
+		AssignmentEvaluator build();
 	}
 
-	void apply(NodeJANI node, NodeJANI successor) throws EPMCException;
+	void apply(NodeJANI node, NodeJANI successor);
 }

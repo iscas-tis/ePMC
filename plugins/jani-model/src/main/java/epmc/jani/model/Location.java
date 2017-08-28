@@ -29,7 +29,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.util.UtilJSON;
@@ -75,7 +74,7 @@ public final class Location implements JANINode, Serializable {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		UtilJSON.ensureObject(value);
@@ -101,7 +100,7 @@ public final class Location implements JANINode, Serializable {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		result.add(NAME, name);
 		UtilModelParser.addOptional(result, TRANSIENT_VALUES, transientValuesAssignments);

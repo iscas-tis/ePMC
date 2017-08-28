@@ -268,7 +268,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     private boolean alive = true;
     
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -319,7 +319,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     
     @Override
     public long apply(Operator operation, Type type, long... operands)
-            throws EPMCException {
+            {
         assert operation != null;
         assert type != null;
         Pointer op1Ptr = operands.length >= 1 ? new Pointer(operands[0]) : null;
@@ -402,7 +402,7 @@ public final class LibraryDDCUDD implements LibraryDD {
 
     
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
         if (mtbdd) {
@@ -448,7 +448,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         Pointer var;
         if (mtbdd) {
             var = CUDD.Cudd_addIthVar(cuddManager, numVariables);
@@ -539,7 +539,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         assert alive;
         if (CUDD.Cudd_ReduceHeap(cuddManager, reorderMethod, 1) == 0) {
             if (badProblem != null) {
@@ -551,7 +551,7 @@ public final class LibraryDDCUDD implements LibraryDD {
 
     @Override
     public long permute(long node, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCUDD;
         LowLevelPermutationCUDD permutationCUDD = (LowLevelPermutationCUDD) permutation;
@@ -618,7 +618,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
     
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
         Pointer result;
@@ -644,7 +644,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert mtbdd;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -671,13 +671,13 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1L;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -699,20 +699,20 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
     
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         Pointer f = new Pointer(dd1);
         Pointer g = new Pointer(dd2);
         Pointer h = new Pointer(cube);

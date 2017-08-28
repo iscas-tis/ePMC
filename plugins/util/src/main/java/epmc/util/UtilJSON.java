@@ -90,7 +90,7 @@ public final class UtilJSON {
 	
 	/* ensure methods */
 	
-	public static void ensureEquals(JsonObject object, String key, String compare) throws EPMCException {
+	public static void ensureEquals(JsonObject object, String key, String compare) {
 		assert object != null;
 		assert key != null;
 		assert compare != null;
@@ -105,9 +105,8 @@ public final class UtilJSON {
 	 * @param key name of key 
 	 * @param value actual value
 	 * @param compare value to compare against
-	 * @throws EPMCException thrown if values not equal
 	 */
-	public static void ensureEquals(String key, String value, String compare) throws EPMCException {
+	public static void ensureEquals(String key, String value, String compare) {
 		assert key != null;
 		assert value != null;
 		assert compare != null;
@@ -121,9 +120,8 @@ public final class UtilJSON {
 	 * 
 	 * @param name name to check
 	 * @param map map to check name
-	 * @throws EPMCException thrown if element not unique
 	 */
-	public static <K,V> void ensureUnique(K name, Map<K, V> map) throws EPMCException {
+	public static <K,V> void ensureUnique(K name, Map<K, V> map) {
 		assert name != null;
 		assert map != null;
 		for (Entry<K, V> entry : map.entrySet()) {
@@ -133,13 +131,13 @@ public final class UtilJSON {
 	    ensure(!map.containsKey(name), ProblemsJSON.JSON_ELEMENT_UNIQUE);
 	}
 
-	public static void ensureInteger(JsonValue value) throws EPMCException {
+	public static void ensureInteger(JsonValue value) {
 		assert value != null;
 		ensureNumber(value);
 		ensure(((JsonNumber) value).isIntegral(), ProblemsJSON.JSON_NOT_VALUE_INTEGER);
 	}
 
-    public static void ensureBoolean(JsonValue value) throws EPMCException {
+    public static void ensureBoolean(JsonValue value) {
         assert value != null;
         
         ensure(value.getValueType() == ValueType.TRUE ||
@@ -147,7 +145,7 @@ public final class UtilJSON {
                 ProblemsJSON.JSON_NOT_VALUE_BOOLEAN);
     }
 
-	public static <K> void ensureUnique(K name, Set<K> set) throws EPMCException {
+	public static <K> void ensureUnique(K name, Set<K> set) {
 		assert name != null;
 		assert set != null;
 		for (K element : set) {
@@ -156,7 +154,7 @@ public final class UtilJSON {
 	    ensure(!set.contains(name), ProblemsJSON.JSON_ELEMENT_UNIQUE);
 	}
 
-	public static void ensureKeyIs(JsonObject object, String key, String expected) throws EPMCException {
+	public static void ensureKeyIs(JsonObject object, String key, String expected) {
 		assert object != null;
 		assert key != null;
 		assert expected != null;
@@ -169,28 +167,27 @@ public final class UtilJSON {
 	 * 
 	 * @param condition condition specifying presence of element
 	 * @param element name of element
-	 * @throws EPMCException thrown if element not present
 	 */
 	public static void ensurePresent(boolean condition, String element)
-	        throws EPMCException {
+	        {
 	    ensure(condition, ProblemsJSON.JSON_ELEMENT_REQUIRED, element);
 	}
 
-	public static void ensurePresent(Object what, String element) throws EPMCException {
+	public static void ensurePresent(Object what, String element) {
 		ensurePresent(what != null, element);
 	}
 
-	public static void ensureObject(JsonValue value) throws EPMCException {
+	public static void ensureObject(JsonValue value) {
 		assert value != null;
 	    ensure(value.getValueType() == ValueType.OBJECT, ProblemsJSON.JSON_VALUE_OBJECT);
 	}
 
-	public static void ensureArray(JsonValue value) throws EPMCException {
+	public static void ensureArray(JsonValue value) {
 		assert value != null;
 	    ensure(value.getValueType() == ValueType.ARRAY, ProblemsJSON.JSON_VALUE_ARRAY);
 	}
 
-	public static void ensureOnlyOnce(Object object) throws EPMCException {
+	public static void ensureOnlyOnce(Object object) {
 		ensureOnlyOnce(object == null);
 	}
 
@@ -202,25 +199,24 @@ public final class UtilJSON {
 	 * the duplicate element occurs.
 	 * 
 	 * @param condition condition specifying that SON object only occurs once
-	 * @throws EPMCException thrown if condition violated
 	 */
-	public static void ensureOnlyOnce(boolean condition) throws EPMCException {
+	public static void ensureOnlyOnce(boolean condition) {
 	    ensure(condition, ProblemsJSON.JSON_ELEMENT_ONLY_ONCE);
 	}
 
-	public static void ensureString(JsonValue value) throws EPMCException {
+	public static void ensureString(JsonValue value) {
 		assert value != null;
 		ensure(value.getValueType() == ValueType.STRING, ProblemsJSON.JSON_NOT_VALUE_STRING);
 	}
 
-	public static void ensureString(JsonObject object, String name) throws EPMCException {
+	public static void ensureString(JsonObject object, String name) {
 		assert object != null;
 		assert name != null;
 		UtilJSON.ensurePresent(object.get(name), name);
 		UtilJSON.ensureString(object.get(name));
 	}
 
-	public static void ensureStringOrObject(JsonValue value) throws EPMCException {
+	public static void ensureStringOrObject(JsonValue value) {
 		assert value != null;
 		ensure(value.getValueType() == ValueType.STRING || value.getValueType() == ValueType.OBJECT, ProblemsJSON.JSON_NOT_VALUE_STRING_OR_OBJECT);
 	}
@@ -231,9 +227,8 @@ public final class UtilJSON {
 	 * The parameter may not be {@code null}.
 	 * 
 	 * @param value event for which to check whether it is a value number
-	 * @throws EPMCException thrown if event is not a value string
 	 */
-	public static void ensureNumber(JsonValue value) throws EPMCException {
+	public static void ensureNumber(JsonValue value) {
 		assert value != null;
 		ensure(value.getValueType() == ValueType.NUMBER, ProblemsJSON.JSON_NOT_VALUE_NUMBER);
 	}
@@ -246,9 +241,8 @@ public final class UtilJSON {
 	 * 
 	 * @param composition string for which to check whether it is contained
 	 * @param compositions possible choices of string
-	 * @throws EPMCException thrown if string not contained in choices
 	 */
-	public static void ensureOneOf(String composition, Set<String> compositions) throws EPMCException {
+	public static void ensureOneOf(String composition, Set<String> compositions) {
 		assert composition != null;
 		assert compositions != null;
 		for (String choice : compositions) {
@@ -257,12 +251,12 @@ public final class UtilJSON {
 		ensure(compositions.contains(composition), ProblemsJSON.JSON_VALUE_ONE_OF, compositions);
 	}
 
-	public static void ensureIdentifier(String identifier) throws EPMCException {
+	public static void ensureIdentifier(String identifier) {
 		assert identifier != null;
 		ensure(identifier.matches(IDENTIFIER_PATTERN), ProblemsJSON.JSON_INVALID_IDENTIFIER, identifier);
 	}
 
-	public static void ensureMatches(String string, String pattern) throws EPMCException {
+	public static void ensureMatches(String string, String pattern) {
 		assert string != null;
 		assert pattern != null;
 		ensure(string.matches(pattern), ProblemsJSON.JSON_DOES_NOT_MATCH, string, pattern);
@@ -270,13 +264,13 @@ public final class UtilJSON {
 
 	/* conversion methods */
 	
-	public static JsonObject toObject(JsonValue value) throws EPMCException {
+	public static JsonObject toObject(JsonValue value) {
 		assert value != null;
 		UtilJSON.ensureObject(value);
 		return (JsonObject) value;
 	}
 
-	public static JsonObject toObjectString(JsonValue value) throws EPMCException {
+	public static JsonObject toObjectString(JsonValue value) {
 	    assert value != null;
 	    UtilJSON.ensureObject(value);
 	    JsonObject object = (JsonObject) value;
@@ -286,13 +280,13 @@ public final class UtilJSON {
 	    return object;
 	}
 
-	public static JsonArray toArray(JsonValue value) throws EPMCException {
+	public static JsonArray toArray(JsonValue value) {
 		assert value != null;
 		UtilJSON.ensureArray(value);
 		return (JsonArray) value;
 	}
 
-	public static JsonArray toArrayObject(JsonValue value) throws EPMCException {
+	public static JsonArray toArrayObject(JsonValue value) {
 		assert value != null;
 		JsonArray result = UtilJSON.toArray(value);
 		for (JsonValue element : result) {
@@ -301,7 +295,7 @@ public final class UtilJSON {
 		return result;
 	}
 
-	public static JsonArray toArrayString(JsonValue value) throws EPMCException {
+	public static JsonArray toArrayString(JsonValue value) {
 		assert value != null;
 		JsonArray result = UtilJSON.toArray(value);
 		for (JsonValue element : result) {
@@ -310,7 +304,7 @@ public final class UtilJSON {
 		return result;
 	}
 
-	public static JsonArray toArrayInteger(JsonValue value) throws EPMCException {
+	public static JsonArray toArrayInteger(JsonValue value) {
 		assert value != null;
 		JsonArray result = UtilJSON.toArray(value);
 		for (JsonValue element : result) {
@@ -319,7 +313,7 @@ public final class UtilJSON {
 		return result;
 	}
 
-	public static String toOneOf(JsonObject object, String key, Set<String> set) throws EPMCException {
+	public static String toOneOf(JsonObject object, String key, Set<String> set) {
 		assert object != null;
 		assert key != null;
 		assert set != null;
@@ -332,7 +326,7 @@ public final class UtilJSON {
 		return object.getString(key);
 	}
 
-	public static <V> V toOneOf(JsonObject object, String key, Map<String,V> map) throws EPMCException {
+	public static <V> V toOneOf(JsonObject object, String key, Map<String,V> map) {
 		assert object != null;
 		assert key != null;
 		assert map != null;
@@ -346,7 +340,7 @@ public final class UtilJSON {
 		return map.get(object.getString(key));
 	}
 
-	   public static <V> V toOneOfOrNull(JsonObject object, String key, Map<String,V> map) throws EPMCException {
+	   public static <V> V toOneOfOrNull(JsonObject object, String key, Map<String,V> map) {
 	        assert object != null;
 	        assert key != null;
 	        assert map != null;
@@ -365,7 +359,7 @@ public final class UtilJSON {
 	        return map.get(object.getString(key));
 	    }
 
-	public static <V> V toOneOf(JsonObject object, String key, ToValueInterface<V> toValueInterface) throws EPMCException {
+	public static <V> V toOneOf(JsonObject object, String key, ToValueInterface<V> toValueInterface) {
 		assert object != null;
 		assert key != null;
 		assert toValueInterface != null;
@@ -376,7 +370,7 @@ public final class UtilJSON {
 		return result;
 	}
 
-	public static <V> V toOneOf(JsonValue value, Map<String,V> map) throws EPMCException {
+	public static <V> V toOneOf(JsonValue value, Map<String,V> map) {
 		assert value != null;
 		assert map != null;
 		for (Entry<String, ?> entry : map.entrySet()) {
@@ -388,7 +382,7 @@ public final class UtilJSON {
 		return map.get(((JsonString) value).getString());
 	}
 
-	public static <V> Set<V> toSubsetOf(JsonValue value, Map<String,V> map) throws EPMCException {
+	public static <V> Set<V> toSubsetOf(JsonValue value, Map<String,V> map) {
 	    assert value != null;
 	    assert map != null;
 	    for (Entry<String, ?> entry : map.entrySet()) {
@@ -408,12 +402,12 @@ public final class UtilJSON {
 	    return result;
 	}
 
-	public static <V> Set<V> toSubsetOf(JsonObject object, String key, Map<String,V> map) throws EPMCException {
+	public static <V> Set<V> toSubsetOf(JsonObject object, String key, Map<String,V> map) {
 	    JsonArray array = UtilJSON.getArrayString(object, key);
 	    return toSubsetOf(array, map);
 	}
 	
-	public static <V> Set<V> toSubsetOfOrNull(JsonObject object, String key, Map<String,V> map) throws EPMCException {
+	public static <V> Set<V> toSubsetOfOrNull(JsonObject object, String key, Map<String,V> map) {
 	    if (!object.containsKey(key)) {
 	        return null;
 	    }
@@ -503,14 +497,14 @@ public final class UtilJSON {
 		return result.build().get(ARBITRARY);
 	}	
 
-	public static String toIdentifierString(JsonValue value) throws EPMCException {
+	public static String toIdentifierString(JsonValue value) {
 		assert value != null;
 		UtilJSON.ensureString(value);
 		UtilJSON.ensureIdentifier(((JsonString) value).getString());
 		return ((JsonString) value).getString();
 	}
 
-	public static String toString(JsonValue value) throws EPMCException {
+	public static String toString(JsonValue value) {
 		assert value != null;
 		UtilJSON.ensureString(value);
 		return ((JsonString) value).getString();
@@ -519,7 +513,7 @@ public final class UtilJSON {
 	
 	/* checked get methods */
 	
-	public static JsonArray getArray(JsonObject object, String key) throws EPMCException {
+	public static JsonArray getArray(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
@@ -534,14 +528,14 @@ public final class UtilJSON {
 		}
 	}
 	
-	public static JsonObject getObject(JsonObject object, String key) throws EPMCException {
+	public static JsonObject getObject(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
 		return toObject(object.get(key));
 	}
 
-	public static JsonArray getArrayObject(JsonObject object, String key) throws EPMCException {
+	public static JsonArray getArrayObject(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
@@ -556,7 +550,7 @@ public final class UtilJSON {
 		}
 	}
 	
-	public static JsonArray getArrayString(JsonObject object, String key) throws EPMCException {
+	public static JsonArray getArrayString(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
@@ -564,7 +558,7 @@ public final class UtilJSON {
 	}
 	
     public static JsonArray getArrayStringOrNull(JsonObject object,
-            String key) throws EPMCException {
+            String key) {
         assert object != null;
         assert key != null;
         if (object.get(key) == null) {
@@ -574,7 +568,7 @@ public final class UtilJSON {
     }
     
     public static JsonArray getArrayStringOrEmpty(JsonObject object,
-            String key) throws EPMCException {
+            String key) {
         assert object != null;
         assert key != null;
         if (object.get(key) == null) {
@@ -584,7 +578,7 @@ public final class UtilJSON {
     }
     
     public static Set<String> getStringSetOrEmpty(JsonObject object,
-            String key) throws EPMCException {
+            String key) {
         JsonArray array = getArrayStringOrEmpty(object, key);
         Set<String> result = new LinkedHashSet<>();
         for (JsonValue value : array) {
@@ -594,14 +588,14 @@ public final class UtilJSON {
         return result;
     }
     
-	public static JsonArray getArrayInteger(JsonObject object, String key) throws EPMCException {
+	public static JsonArray getArrayInteger(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
 		return toArrayInteger(object.get(key));
 	}
 
-	public static BigInteger[] getArrayBigInteger(JsonObject object, String key) throws EPMCException {
+	public static BigInteger[] getArrayBigInteger(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		UtilJSON.ensurePresent(object.get(key), key);
@@ -615,7 +609,7 @@ public final class UtilJSON {
 		return result;
 	}
 	
-	public static String getString(JsonObject object, String name) throws EPMCException {
+	public static String getString(JsonObject object, String name) {
 		assert object != null;
 		assert name != null;
 		ensurePresent(object.get(name), name);
@@ -623,7 +617,7 @@ public final class UtilJSON {
 		return object.getString(name);
 	}
 	
-	public static JsonValue get(JsonObject object, String name) throws EPMCException {
+	public static JsonValue get(JsonObject object, String name) {
 		assert object != null;
 		assert name != null;
 		ensurePresent(object.get(name), name);
@@ -640,7 +634,7 @@ public final class UtilJSON {
 		}
 	}
 
-	public static int getInteger(JsonObject object, String name) throws EPMCException {
+	public static int getInteger(JsonObject object, String name) {
 		assert object != null;
 		assert name != null;
 		ensurePresent(object.get(name), name);
@@ -653,7 +647,7 @@ public final class UtilJSON {
 		return object.getInt(name);
 	}
 
-	public static Integer getIntegerOrNull(JsonObject object, String name) throws EPMCException {
+	public static Integer getIntegerOrNull(JsonObject object, String name) {
 	    assert object != null;
 	    assert name != null;
 	    if (!object.containsKey(name)) {
@@ -668,7 +662,7 @@ public final class UtilJSON {
 	    return object.getInt(name);
 	}
 
-	public static BigInteger getBigInteger(JsonObject object, String name) throws EPMCException {
+	public static BigInteger getBigInteger(JsonObject object, String name) {
 		assert object != null;
 		assert name != null;
 		ensurePresent(object.get(name), name);
@@ -686,7 +680,7 @@ public final class UtilJSON {
 		}
 	}
 	
-    public static boolean getBoolean(JsonObject object, String name) throws EPMCException {
+    public static boolean getBoolean(JsonObject object, String name) {
         assert object != null;
         assert name != null;
         ensurePresent(object.get(name), name);
@@ -694,7 +688,7 @@ public final class UtilJSON {
         return object.getBoolean(name);
     }
 
-	public static String getIdentifier(JsonObject object, String key) throws EPMCException {
+	public static String getIdentifier(JsonObject object, String key) {
 		assert object != null;
 		assert key != null;
 		ensurePresent(object.get(key), key);
@@ -704,7 +698,7 @@ public final class UtilJSON {
 		return object.getString(key);
 	}
 
-	public static String getMatch(JsonObject object, String key, String pattern) throws EPMCException {
+	public static String getMatch(JsonObject object, String key, String pattern) {
 		assert object != null;
 		assert key != null;
 		ensurePresent(object.get(key), key);
@@ -769,7 +763,7 @@ public final class UtilJSON {
 	    return result;
 	}
 	
-	public static JsonStructure read(InputStream input) throws EPMCException {
+	public static JsonStructure read(InputStream input) {
 		assert input != null;
         try (JsonReader reader = Json.createReader(input)) {
         	return reader.read();
@@ -783,7 +777,7 @@ public final class UtilJSON {
         }
 	}
 	
-	public static JsonStructure read(String string) throws EPMCException {
+	public static JsonStructure read(String string) {
 		assert string != null;
 		ByteArrayInputStream input = new ByteArrayInputStream(string.getBytes());
 		return read(input);

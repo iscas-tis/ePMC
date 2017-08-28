@@ -25,7 +25,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.SMGPlayer;
@@ -63,7 +62,7 @@ public final class ConvertTest {
         prepare();
     }
 
-    private final static Options prepareCoalitionOptions() throws EPMCException {
+    private final static Options prepareCoalitionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
@@ -71,7 +70,7 @@ public final class ConvertTest {
     }
     
     @Test
-	public void twoInvestorsTest() throws EPMCException {
+	public void twoInvestorsTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(TWO_INVESTORS)
 //    			.setExploreAll()
@@ -88,7 +87,7 @@ public final class ConvertTest {
 	}
 
     @Test
- 	public void robotsTest() throws EPMCException {
+ 	public void robotsTest() {
      	ConvertTestStatistics statistics = new ConvertTestConfiguration()
      			.setModelName("/Users/emhahn/svn/papers-iscas/working/sven/parity/experiments/robots.prism")
      			.putConstant("size", 8)
@@ -102,7 +101,7 @@ public final class ConvertTest {
 
     
 	@Test
-    public void smallTest() throws EPMCException {
+    public void smallTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(ROBOTS)
 //    			.setExploreAll()
@@ -118,7 +117,7 @@ public final class ConvertTest {
     }
     
     @Test
-    public void robotReachabilityTest() throws EPMCException {
+    public void robotReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -175,7 +174,7 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotSmallRepeatedReachabilityTest() throws EPMCException {
+    public void robotSmallRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
 //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
 //      options.set(OptionsModelChecker.ENGINE, EngineDD.class);
@@ -203,7 +202,7 @@ public final class ConvertTest {
     }
     
     @Test
-    public void robotRepeatedReachabilityTest() throws EPMCException {
+    public void robotRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
 //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
       options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -256,7 +255,7 @@ public final class ConvertTest {
     }
     
     @Test
-    public void robotOrderedReachabilityTest() throws EPMCException {
+    public void robotOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -298,7 +297,7 @@ public final class ConvertTest {
     
     @Ignore
     @Test
-    public void robotRepeatedOrderedReachabilityTest() throws EPMCException {
+    public void robotRepeatedOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -346,7 +345,7 @@ public final class ConvertTest {
 
     
     @Test
-    public void robotSmallReachAvoidTest() throws EPMCException {
+    public void robotSmallReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -396,7 +395,7 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotSmallModifiedReachAvoidTest() throws EPMCException {
+    public void robotSmallModifiedReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -449,7 +448,7 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotReachAvoidTest() throws EPMCException {
+    public void robotReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

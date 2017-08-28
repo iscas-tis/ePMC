@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
@@ -50,7 +49,7 @@ public class MultiObjectiveTest {
         prepare();
     }
 
-    private final static Options prepareMultiOptions() throws EPMCException {
+    private final static Options prepareMultiOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options);
@@ -60,7 +59,7 @@ public class MultiObjectiveTest {
     }
 
     @Test
-    public void miniQualitative() throws EPMCException {
+    public void miniQualitative() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;
@@ -101,7 +100,7 @@ public class MultiObjectiveTest {
     }
     
     @Test
-    public void miniQuantitative() throws EPMCException {
+    public void miniQuantitative() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;
@@ -133,7 +132,7 @@ public class MultiObjectiveTest {
     }
     
     @Test
-    public void miniQualitativeRewards() throws EPMCException {
+    public void miniQualitativeRewards() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;
@@ -147,7 +146,7 @@ public class MultiObjectiveTest {
     }
     
     @Test
-    public void miniQuantitativeRewards() throws EPMCException {
+    public void miniQuantitativeRewards() {
         Options options = prepareMultiOptions();
         double tolerance = 1E-20;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -178,7 +177,7 @@ public class MultiObjectiveTest {
     }
     
     @Test
-    public void dinnerReducedProbBounded1() throws EPMCException {
+    public void dinnerReducedProbBounded1() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Map<String,Object> constants = new HashMap<>();
@@ -209,10 +208,9 @@ public class MultiObjectiveTest {
      * Checking absence of bug which had lead to an infinite loop in the
      * multi-objective property checker.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void andreaBug() throws EPMCException {
+    public void andreaBug() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -230,7 +228,7 @@ public class MultiObjectiveTest {
     }
     
     @Test
-    public void andreaBugSecond() throws EPMCException {
+    public void andreaBugSecond() {
         Options options = prepareMultiOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);

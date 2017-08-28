@@ -23,7 +23,6 @@ package epmc.kretinsky.automaton;
 import java.util.Arrays;
 
 import epmc.automaton.AutomatonLabelUtil;
-import epmc.error.EPMCException;
 
 final class AutomatonSlaveLabel implements AutomatonLabelUtil {
     private final int[] content;
@@ -37,7 +36,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         this.input = input;
     }
 
-    boolean isFailOrBuy(boolean[] finalStates, int rank) throws EPMCException {
+    boolean isFailOrBuy(boolean[] finalStates, int rank) {
         for (int state1Nr = 0; state1Nr < content.length; state1Nr++) {
             if (content[state1Nr] == Integer.MAX_VALUE) {
                 continue;
@@ -75,7 +74,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         return false;
     }
     
-    boolean isSuccess(boolean[] finalStates, int rank) throws EPMCException {
+    boolean isSuccess(boolean[] finalStates, int rank) {
         for (int stateNr = 0; stateNr < content.length; stateNr++) {
             if (content[stateNr] != rank) {
                 continue;

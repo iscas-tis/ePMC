@@ -20,7 +20,6 @@
 
 package epmc.jani.measure;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -91,7 +90,7 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
 		return false;
 	}
 
-	public void add(Value operand1, Value operand2) throws EPMCException {
+	public void add(Value operand1, Value operand2) {
 //		this.operator = ContextValue.get().getOperator(OperatorAdd.IDENTIFIER);
 		this.operands = new DiscreteMeasure[2];
 		this.operands[0] = (DiscreteMeasure) operand1; // TODO castorimport
@@ -111,19 +110,19 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
 	}
 
 	@Override
-	public boolean isEq(Value other) throws EPMCException {
+	public boolean isEq(Value other) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public double distance(Value other) throws EPMCException {
+	public double distance(Value other) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

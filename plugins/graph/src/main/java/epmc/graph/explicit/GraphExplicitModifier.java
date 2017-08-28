@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.value.ContextValue;
@@ -31,7 +30,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorMax;
 
 public final class GraphExplicitModifier {    
-    public static void embed(GraphExplicit graph) throws EPMCException {
+    public static void embed(GraphExplicit graph) {
         assert graph != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();
@@ -54,7 +53,7 @@ public final class GraphExplicitModifier {
         }
     }
 
-    public static void uniformise(GraphExplicit graph, Value uniRate) throws EPMCException {
+    public static void uniformise(GraphExplicit graph, Value uniRate) {
         assert graph != null;
         Value uniformisationRate = computeUniformisationRate(graph);
         if (uniRate != null) {
@@ -86,7 +85,7 @@ public final class GraphExplicitModifier {
     }
     
     private static Value computeUniformisationRate(GraphExplicit graph)
-            throws EPMCException {
+            {
         ValueAlgebra result = newValueWeight();
         ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);

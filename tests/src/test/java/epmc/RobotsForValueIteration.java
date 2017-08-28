@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -48,7 +47,7 @@ public class RobotsForValueIteration {
     }
 
     @Test
-    public void smallTest() throws EPMCException {
+    public void smallTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -69,7 +68,7 @@ public class RobotsForValueIteration {
     }
     
     @Test
-    public void mediumTest() throws EPMCException {
+    public void mediumTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;

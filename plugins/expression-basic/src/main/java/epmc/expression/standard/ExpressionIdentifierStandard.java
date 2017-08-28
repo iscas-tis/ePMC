@@ -23,7 +23,6 @@ package epmc.expression.standard;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -115,7 +114,7 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	assert expressionToType != null;
     	return expressionToType.getType(this);
     }

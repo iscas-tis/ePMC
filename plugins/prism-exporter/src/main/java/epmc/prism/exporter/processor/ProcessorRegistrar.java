@@ -25,7 +25,6 @@ import static epmc.error.UtilError.ensure;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.standard.ExpressionCoalition;
 import epmc.expression.standard.ExpressionCoalitionProcessor;
 import epmc.expression.standard.ExpressionFilter;
@@ -183,9 +182,8 @@ public class ProcessorRegistrar {
 	 * 
 	 * @param JANIComponent the JANI component for which obtain the processor
 	 * @return the corresponding processor
-	 * @throws EPMCException if no processor is associated to the given JANI component
 	 */
-	public static JANI2PRISMProcessorStrict getProcessor(Object JANIComponent) throws EPMCException {
+	public static JANI2PRISMProcessorStrict getProcessor(Object JANIComponent) {
 		assert JANIComponent != null;
 		
 		JANI2PRISMProcessorStrict processor = null;

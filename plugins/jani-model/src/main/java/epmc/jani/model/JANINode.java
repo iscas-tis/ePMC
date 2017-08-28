@@ -22,8 +22,6 @@ package epmc.jani.model;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
-
 /**
  * Interface for JANI model parts which can be read and written from/to JANI.
  * 
@@ -53,9 +51,8 @@ public interface JANINode {
 	 * @param model model to which this node belongs
 	 * @param value JSON to convert to JANI
 	 * @return the JANINode corresponding to the given value, or {@code null} if the parsing is not possible
-	 * @throws EPMCException in case of incorrect JSON input
 	 */
-	JANINode parse(JsonValue value) throws EPMCException;
+	JANINode parse(JsonValue value);
 	
 	/**
 	 * Generate JSON from this JANI node.
@@ -64,5 +61,5 @@ public interface JANINode {
 	 * 
 	 * @return JSON representing this JANI node
 	 */
-	JsonValue generate() throws EPMCException;
+	JsonValue generate();
 }

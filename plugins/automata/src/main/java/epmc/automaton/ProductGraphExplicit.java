@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -49,7 +48,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     
     @FunctionalInterface
     public interface NextAutomatonState {
-       boolean move(int node) throws EPMCException;
+       boolean move(int node);
     }
     
     /**
@@ -190,7 +189,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             return nextAutomatonState;
         }
         
-        public ProductGraphExplicit build() throws EPMCException {
+        public ProductGraphExplicit build() {
             return new ProductGraphExplicit(this);
         }
     }
@@ -207,12 +206,12 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node) throws EPMCException {
+        public Value get(int node) {
             return from.get(getModelNode(node));
         }
         
         @Override
-        public void set(int node, Value value) throws EPMCException {
+        public void set(int node, Value value) {
             assert false;
         }
 
@@ -239,7 +238,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node) throws EPMCException {
+        public Value get(int node) {
             if (queriedNode != node) {
             	long combined = numberToCombined[node];
             	queryNode(combined);
@@ -249,7 +248,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public void set(int node, Value value) throws EPMCException {
+        public void set(int node, Value value) {
             assert false;
         }
 
@@ -264,19 +263,19 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public void set(int node, Object object) throws EPMCException {
+        public void set(int node, Object object) {
             assert object != null;
             assert ValueObject.isObject(value);
             assert false;
         }    
         
         @Override
-        public void set(int node, int value) throws EPMCException {
+        public void set(int node, int value) {
             assert false;
         }    
 
         @Override
-        public void set(int node, Enum<?> object) throws EPMCException {
+        public void set(int node, Enum<?> object) {
             assert object != null;
             assert false;
         }
@@ -295,7 +294,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node, int succNr) throws EPMCException {
+        public Value get(int node, int succNr) {
             if (queriedNode != node) {
             	long combined = numberToCombined[node];
             	queryNode(combined);
@@ -332,7 +331,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         
         @Override
-        public Value get(int node, int successor) throws EPMCException {
+        public Value get(int node, int successor) {
             assert successor >= 0 : successor;
             assert successor < numSuccessors : successor;
             if (automaton.isDeterministic()) {
@@ -382,7 +381,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     private final NextAutomatonState nextAutomatonState;
     private int queriedNode = -1;
 
-    private ProductGraphExplicit(Builder builder) throws EPMCException {
+    private ProductGraphExplicit(Builder builder) {
         assert builder != null;
         assert builder.getModel() != null;
         assert builder.getAutomaton() != null;
@@ -504,7 +503,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         return combinedToModelNode(combined);
     }
     
-    private void queryNode(long combined) throws EPMCException {
+    private void queryNode(long combined) {
         int modelNode = combinedToModelNode(combined);
         int propNodeAutomatonValue = combinedToAutomatonNode(combined);
         
@@ -557,7 +556,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
     }
 
-    private void addSuccessor(int modelNode, int automatonNode) throws EPMCException {
+    private void addSuccessor(int modelNode, int automatonNode) {
         if (manualEnumeration) {
             manualSuccessorNodes[numSuccessors] = combine(modelNode, automatonNode);
         } else {
@@ -573,7 +572,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
     
     @Override
-    public int getNumSuccessors(int node) throws EPMCException {
+    public int getNumSuccessors(int node) {
         assert node >= 0 : node;
         if (queriedNode != node) {
         	long combined = numberToCombined[node];
@@ -588,7 +587,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
     
     @Override
-    public int getSuccessorNode(int node, int successor) throws EPMCException {
+    public int getSuccessorNode(int node, int successor) {
         assert node >= 0 : node;
         if (queriedNode != node) {
         	long combined = numberToCombined[node];
@@ -599,7 +598,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
 
     @Override
-    public void computePredecessors(BitSet nodes) throws EPMCException {
+    public void computePredecessors(BitSet nodes) {
         assert false;
     }
 
@@ -639,7 +638,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         return (int) state;
     }
     
-    private void reserveSuccessors() throws EPMCException {
+    private void reserveSuccessors() {
         if (manualEnumeration) {
             int succLength = manualSuccessorNodes.length;        
             if (succLength >= numSuccessors) {
@@ -671,7 +670,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
     
     @Override
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
         properties.explore(start);
     }
 
@@ -692,7 +691,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
 
     @Override
     public void setGraphProperty(Object property, Value value)
-            throws EPMCException {
+            {
         properties.setGraphProperty(property, value);
     }
 
@@ -771,7 +770,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
 	}
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		return model.getType(expression);
 	}

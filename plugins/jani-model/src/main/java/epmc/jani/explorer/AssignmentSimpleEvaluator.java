@@ -22,7 +22,6 @@ package epmc.jani.explorer;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -109,7 +108,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 		}
 
 		@Override
-		public AssignmentSimpleEvaluator build() throws EPMCException {
+		public AssignmentSimpleEvaluator build() {
 			assert canHandle();
 			return new AssignmentSimpleEvaluator(this);
 		}
@@ -118,7 +117,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 	private final int variable;
 	private final EvaluatorExplicit expression;
 	
-	private AssignmentSimpleEvaluator(Builder builder) throws EPMCException {
+	private AssignmentSimpleEvaluator(Builder builder) {
 		assert builder != null;
 		Map<Variable, Integer> variableMap = builder.getVariableMap();
 		AssignmentSimple entry = builder.getAssignment();
@@ -133,7 +132,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 	}
 	
 	@Override
-	public void apply(NodeJANI node, NodeJANI successor) throws EPMCException {
+	public void apply(NodeJANI node, NodeJANI successor) {
 		assert node != null;
 		assert successor != null;
 		Value[] variableValues = node.getValues();

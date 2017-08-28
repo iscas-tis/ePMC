@@ -20,7 +20,6 @@
 
 package epmc.algorithms.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -36,7 +35,7 @@ public final class ComponentsExplicit {
         return new EndComponentsImpl(graph, existingNodes, mecsOnly);
     }
 
-    public void removeLeavingAttr(GraphExplicit graph, BitSet set) throws EPMCException {
+    public void removeLeavingAttr(GraphExplicit graph, BitSet set) {
         assert graph != null;
         assert set != null;
         assert set.length() <= graph.getNumNodes();
@@ -97,7 +96,7 @@ public final class ComponentsExplicit {
     }
     
     public BitSet removeLeavingAttr(GraphExplicit graph,
-            int[] leaving, int leavingSize) throws EPMCException {
+            int[] leaving, int leavingSize) {
         int[] remaining = new int[graph.getNumNodes()];
         BitSet existingStates = UtilBitSet.newBitSetUnbounded(graph.getNumNodes());
         existingStates.flip(0, graph.getNumNodes());
@@ -120,7 +119,7 @@ public final class ComponentsExplicit {
     private static void removeLeavingAttr(GraphExplicit graph,
             BitSet existingStates, int[] remaining,
             BitSet scc, int[] leaving, int leavingIndex,
-            int[] sccStates, int sccBegin, int sccEnd) throws EPMCException {
+            int[] sccStates, int sccBegin, int sccEnd) {
         graph.computePredecessors();
         NodeProperty player = graph.getNodeProperty(CommonProperties.PLAYER);
         for (int nodeNr = sccBegin; nodeNr < sccEnd; nodeNr++) {
@@ -159,7 +158,7 @@ public final class ComponentsExplicit {
     
     public BitSet reachPre(GraphExplicit graph,
             BitSet target, BitSet nodes, boolean min, boolean one)
-                    throws EPMCException {
+                    {
         assert graph != null;
         assert target != null;
         assert nodes != null;
@@ -218,7 +217,7 @@ public final class ComponentsExplicit {
     }
     
     public BitSet reachPre(GraphExplicit graph,
-            BitSet target, boolean min, boolean one) throws EPMCException {
+            BitSet target, boolean min, boolean one) {
         assert graph != null;
         assert target != null;
         if (!min && one) {
@@ -240,9 +239,8 @@ public final class ComponentsExplicit {
      * @param graph graph for which to compute set
      * @param target target nodes
      * @return set of nodes which may reach target set with probability one
-     * @throws EPMCException
      */
-    public BitSet reachMaxOne(GraphExplicit graph, BitSet target) throws EPMCException {
+    public BitSet reachMaxOne(GraphExplicit graph, BitSet target) {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
@@ -296,7 +294,7 @@ public final class ComponentsExplicit {
         return R;
     }
 
-    public BitSet reachMinOne(GraphExplicit graph, BitSet target) throws EPMCException {
+    public BitSet reachMinOne(GraphExplicit graph, BitSet target) {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
@@ -307,7 +305,7 @@ public final class ComponentsExplicit {
         return reachPre(graph, target, nodes, true, true);
     }
 
-    public BitSet reachMaxOne(GraphExplicit graph, BitSet target, BitSet nodes) throws EPMCException {
+    public BitSet reachMaxOne(GraphExplicit graph, BitSet target, BitSet nodes) {
         return reachPre(graph, target, nodes, false, true);
     }
     

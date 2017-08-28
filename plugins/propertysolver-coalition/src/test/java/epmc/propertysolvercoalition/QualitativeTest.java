@@ -25,7 +25,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
@@ -56,7 +55,7 @@ public final class QualitativeTest {
         prepare();
     }
 
-    private final static Options prepareCoalitionOptions() throws EPMCException {
+    private final static Options prepareCoalitionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
@@ -64,7 +63,7 @@ public final class QualitativeTest {
     }
     
     @Test
-    public void twoInvestorsTest() throws EPMCException {
+    public void twoInvestorsTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -91,7 +90,7 @@ public final class QualitativeTest {
     
     @Ignore
     @Test
-    public void smallTest() throws EPMCException {
+    public void smallTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -108,7 +107,7 @@ public final class QualitativeTest {
     }
     
     @Test
-    public void robotReachabilityTest() throws EPMCException {
+    public void robotReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -165,7 +164,7 @@ public final class QualitativeTest {
     }
 
     @Test
-    public void robotSmallRepeatedReachabilityTest() throws EPMCException {
+    public void robotSmallRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
 //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
 //      options.set(OptionsModelChecker.ENGINE, EngineDD.class);
@@ -193,7 +192,7 @@ public final class QualitativeTest {
     }
     
     @Test
-    public void robotRepeatedReachabilityTest() throws EPMCException {
+    public void robotRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
 //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
       options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -246,7 +245,7 @@ public final class QualitativeTest {
     }
     
     @Test
-    public void robotOrderedReachabilityTest() throws EPMCException {
+    public void robotOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -288,7 +287,7 @@ public final class QualitativeTest {
     
     @Ignore
     @Test
-    public void robotRepeatedOrderedReachabilityTest() throws EPMCException {
+    public void robotRepeatedOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -337,7 +336,7 @@ public final class QualitativeTest {
     
     @Ignore
     @Test
-    public void robotSmallReachAvoidTest() throws EPMCException {
+    public void robotSmallReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -387,7 +386,7 @@ public final class QualitativeTest {
     }
 
     @Test
-    public void robotSmallModifiedReachAvoidTest() throws EPMCException {
+    public void robotSmallModifiedReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -441,7 +440,7 @@ public final class QualitativeTest {
 
     @Ignore
     @Test
-    public void robotReachAvoidTest() throws EPMCException {
+    public void robotReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

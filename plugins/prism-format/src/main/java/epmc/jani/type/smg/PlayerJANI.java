@@ -29,7 +29,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
 import epmc.jani.model.Automata;
@@ -70,7 +69,7 @@ public final class PlayerJANI implements JANINode {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		JsonObject object = UtilJSON.toObject(value);
 		name = UtilJSON.getString(object, NAME);
 		this.automata = UtilJSON.toSubsetOfOrNull(object, AUTOMATA, validAutomata);

@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
-
 /**
  * {@link Value} storing multiple {@link Value}s of given {@link Type}.
  * In principle, multiple values could just be stored as Java arrays.
@@ -93,7 +91,7 @@ public interface ValueArray extends Value {
     }    
     
     @Override
-    default boolean isEq(Value other) throws EPMCException {
+    default boolean isEq(Value other) {
     	assert other != null;
     	assert isArray(other);
         ValueArray otherArray = ValueArray.asArray(other);
@@ -136,7 +134,7 @@ public interface ValueArray extends Value {
     }
     
     @Override
-    default double distance(Value other) throws EPMCException {
+    default double distance(Value other) {
         assert other != null;
         if (!isArray(other)) {
             return Double.POSITIVE_INFINITY;

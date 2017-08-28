@@ -38,7 +38,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.RewardSpecification;
@@ -110,7 +109,7 @@ final class GraphDDPRISM implements GraphDD {
     
     GraphDDPRISM(ModelPRISM model, Set<Object> nodeProperties,
             Set<Object> edgeProperties)
-            throws EPMCException {
+            {
         this.properties = new GraphDDProperties(this);
         assert assertConstructorArguments(model, nodeProperties, edgeProperties);
         ensure(Options.get().getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
@@ -259,7 +258,7 @@ final class GraphDDPRISM implements GraphDD {
     			expressionToDD);
     }
     
-    private void processNodeProperties(Set<Object> nodeProperties) throws EPMCException {
+    private void processNodeProperties(Set<Object> nodeProperties) {
         for (Object prop : nodeProperties) {
             if (prop == CommonProperties.STATE) {
                 properties.registerNodeProperty(CommonProperties.STATE, states);
@@ -279,7 +278,7 @@ final class GraphDDPRISM implements GraphDD {
         }
     }
 
-    private void processEdgeProperties(Set<Object> edgeProperties) throws EPMCException {
+    private void processEdgeProperties(Set<Object> edgeProperties) {
         for (Object prop : edgeProperties) {
             if (prop instanceof RewardSpecification) {
                 RewardSpecification rewardSpecification = (RewardSpecification) prop;
@@ -294,7 +293,7 @@ final class GraphDDPRISM implements GraphDD {
             TransitionEncoding transEnc, DD sink, DD presEqNext,
             VariableDD actionVariable, Permutation nextToPres,
             Iterable<VariableDD> nondetVariables)
-            throws EPMCException {
+            {
         DD result = transitions.clone();
         if (transEnc == TransitionEncoding.MC) {
             if (withWeights) {
@@ -344,7 +343,7 @@ final class GraphDDPRISM implements GraphDD {
 
     private static DD computeDeadlock(ModelPRISM model,
             ExpressionToDD expressionToDD, DD states)
-            throws EPMCException {
+            {
         Map<String,Module> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module);
@@ -361,7 +360,7 @@ final class GraphDDPRISM implements GraphDD {
 
     private static Map<Expression,DD> computeCanMode(SystemDefinition system,
             Map<String, Module> modules, ExpressionToDD expressionToDD)
-                    throws EPMCException {
+                    {
         Expression noSync = new ExpressionIdentifierStandard.Builder()
         		.setName("")
         		.build();
@@ -469,7 +468,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private static Map<Expression,Type> collectVariables(ModelPRISM model) throws EPMCException {
+    private static Map<Expression,Type> collectVariables(ModelPRISM model) {
         assert model != null;
         Map<Expression,Type> result = new HashMap<>();
         for (Entry<Expression, JANIType> entry : model.getGlobalVariables().entrySet()) {
@@ -485,7 +484,7 @@ final class GraphDDPRISM implements GraphDD {
 
     private static DD computeStates(TransitionEncoding transEnc,
             Iterable<VariableDD> nondetVariables)
-            throws EPMCException {
+            {
         return ContextDD.get().newConstant(true);
     }
     
@@ -511,7 +510,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private List<DD> computePresVars() throws EPMCException {
+    private List<DD> computePresVars() {
         List<DD> result = new ArrayList<>();
         for (Expression variable : variables.keySet()) {
             for (DD var : variablesDD.get(variable).getDDVariables(0)) {
@@ -522,7 +521,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private List<DD> computeNextVars() throws EPMCException {
+    private List<DD> computeNextVars() {
         List<DD> result = new ArrayList<>();
         for (Expression variable : variables.keySet()) {
             for (DD var : variablesDD.get(variable).getDDVariables(1)) {
@@ -533,7 +532,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private DD computePresEqNext() throws EPMCException {
+    private DD computePresEqNext() {
         DD result = ContextDD.get().newConstant(true);
         for (Expression variable : variables.keySet()) {
             List<DD> ddVarsPres = variablesDD.get(variable).getDDVariables(0);
@@ -551,7 +550,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private DD modulesDDToModel(List<DD> modulesDD) throws EPMCException {
+    private DD modulesDDToModel(List<DD> modulesDD) {
         assert modulesDD != null;
         assert modulesDD.size() == 1;
         DD result = modulesDD.get(0).clone();
@@ -572,7 +571,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private DD translateInitial() throws EPMCException {
+    private DD translateInitial() {
         DD init = expressionToDD.translate(model.getInitialNodes());
         return init;
     }
@@ -610,7 +609,7 @@ final class GraphDDPRISM implements GraphDD {
     }
     
     private void computeVariableEncoding(Map<Expression,Type> variables)
-            throws EPMCException {
+            {
         int lower = computeNonDetVarLower();
         switch (transEnc) {
         case MDP_STATE:
@@ -630,7 +629,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private Map<Expression,DD> translateModule(ModuleCommands module)
-            throws EPMCException {
+            {
         int commandNr = 0;
         Map<Expression,DD> result = new HashMap<>();
         for (Command command : module.getCommands()) {
@@ -658,7 +657,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
     
-    private DD translateSystem() throws EPMCException {
+    private DD translateSystem() {
         Map<String,ModuleCommands> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module.asCommands());
@@ -671,7 +670,7 @@ final class GraphDDPRISM implements GraphDD {
     }
     
     private Map<Expression, DD> translateSystem(SystemDefinition system, Map<String, ModuleCommands> modules)
-            throws EPMCException {
+            {
         Map<Expression,DD> result = new HashMap<>();
         Expression noSync = new ExpressionIdentifierStandard.Builder()
         		.setName("")
@@ -727,7 +726,7 @@ final class GraphDDPRISM implements GraphDD {
         return result;
     }
 
-    private DD translateModuleDD(ModuleCommands module) throws EPMCException {
+    private DD translateModuleDD(ModuleCommands module) {
         int commandNr = 0;
         DD moduleDD = withWeights ? ContextDD.get().newConstant(0) : ContextDD.get().newConstant(false);
         for (Command command : module.getCommands()) {
@@ -746,7 +745,7 @@ final class GraphDDPRISM implements GraphDD {
     }
     
     private DD translateCommand(Command command, Module module, int number)
-            throws EPMCException {
+            {
         DD guard = expressionToDD.translate(command.getGuard());
         if (withWeights) {
             guard = guard.toMTWith();
@@ -816,7 +815,7 @@ final class GraphDDPRISM implements GraphDD {
         return commandDD;
     }
     
-    private DD translateAlternative(Alternative alternative) throws EPMCException {
+    private DD translateAlternative(Alternative alternative) {
         DD weight;
         if (withWeights) {
             weight = expressionToDD.translate(alternative.getWeight());
@@ -856,7 +855,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     @Override
-    public DD getNodeSpace() throws EPMCException {
+    public DD getNodeSpace() {
         return nodes;
     }
 
@@ -905,7 +904,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private DD translateStateReward(DD state, RewardStructure rewardStructure)
-            throws EPMCException {
+            {
         assert state != null;
         assert rewardStructure != null;
         DD rewardDD = ContextDD.get().newConstant(0);
@@ -920,7 +919,7 @@ final class GraphDDPRISM implements GraphDD {
     }
     
     private DD translateTransReward(DD state, RewardStructure rewardStructure)
-            throws EPMCException {
+            {
         assert state != null;
         assert rewardStructure != null;
         DD rewardDD = ContextDD.get().newConstant(0);
@@ -935,7 +934,7 @@ final class GraphDDPRISM implements GraphDD {
         return rewardDD;
     }
 
-    private DD newLabelDD(String labelString) throws EPMCException {
+    private DD newLabelDD(String labelString) {
         assert labelString != null;
         Expression label = new ExpressionIdentifierStandard.Builder()
         		.setName(labelString)
@@ -948,7 +947,7 @@ final class GraphDDPRISM implements GraphDD {
     
     private static DD exploreNodeSpace(Log log,
             DD initial, DD trans, DD pres, Permutation swap)
-                    throws EPMCException {
+                    {
         StopWatch timer = new StopWatch(true);
         log.send(MessagesPRISM.EXPLORING);
         DD states = initial.clone();

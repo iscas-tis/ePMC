@@ -22,7 +22,6 @@ package epmc.jani.type.smg;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtensionSemantics;
@@ -40,7 +39,7 @@ public final class AfterOptionsCreationSMG implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		Map<String, Class<? extends ModelExtensionSemantics>> janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
 		assert janiToSemantics != null;
 		janiToSemantics.put(ModelExtensionSMG.IDENTIFIER, ModelExtensionSMG.class);

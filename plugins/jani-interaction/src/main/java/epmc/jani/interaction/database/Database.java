@@ -33,7 +33,6 @@ import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.Properties;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.error.ProblemsJANIInteractionJDBC;
 import epmc.jani.interaction.options.OptionsJANIInteractionJDBC;
 import epmc.options.Options;
@@ -74,7 +73,7 @@ public final class Database {
 	private final Connection connection;
 	private final String primaryKeyTypeString;
 
-	public Database() throws EPMCException {
+	public Database() {
 		loadDriver();
 		connection = establishConnection();
 		primaryKeyTypeString = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DBTYPE_PRIMARY_KEY_AUTOINCREMENT);
@@ -84,9 +83,8 @@ public final class Database {
 	 * Load JDBC driver if requested by user.
 	 * The options parameter must not be {@code null}.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private static void loadDriver() throws EPMCException {
+	private static void loadDriver() {
 		String driverJAR = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR);
 		String driverClassName = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS);
 		if (driverClassName != null) {
@@ -135,9 +133,8 @@ public final class Database {
 	 * {@link Options} provided.
 	 * 
 	 * @return connection created
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private static Connection establishConnection() throws EPMCException {
+	private static Connection establishConnection() {
 		String url = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL);
 		String username = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME);
 		String password = Options.get().getString(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD);

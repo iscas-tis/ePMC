@@ -23,7 +23,6 @@ package epmc.jani.interaction.communication;
 import java.io.IOException;
 import java.io.InputStream;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.messages.MessagesJANIInteraction;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
 import epmc.messages.OptionsMessages;
@@ -49,7 +48,7 @@ public final class Server extends NanoWSD implements BackendFeedback  {
 	private final Backend backend;
 	private final boolean printMessages;
 
-	public Server() throws EPMCException {
+	public Server() {
 		super(getPort());
 		backend = new Backend(this);
 		printMessages = Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);

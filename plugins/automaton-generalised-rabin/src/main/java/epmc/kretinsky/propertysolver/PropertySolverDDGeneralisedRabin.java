@@ -70,7 +70,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     @Override
     public boolean canHandle(Expression property, StateSet forStates)
-            throws EPMCException {
+            {
         assert property != null;
         assert forStates != null;
         if (!modelChecker.isEngineDD()) {
@@ -91,7 +91,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+            {
         assert property != null;
         assert forStates != null;
         assert property.isQuantifier();
@@ -190,7 +190,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     private void computeSymbStabAcc(AutomatonGeneralisedRabin automaton, TObjectIntMap<DD> tObjectIntMap,
             DD nonStates, List<DD> stable, List<List<DD>> accepting)
-                    throws EPMCException {
+                    {
         assert tObjectIntMap != null;
         assert nonStates != null;
         assert stable != null;
@@ -227,7 +227,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
     }
     
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
-            throws EPMCException {
+            {
 //        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNotWith(target.clone());
         DD zeroNodes = nodeSpace.clone().andNotWith(someNodes).andNotWith(target.clone());
@@ -264,7 +264,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
     }
     
     private boolean decideComponentGeneralisedRabinMCLeaf(DD component, List<DD> stable,
-            List<List<DD>> accepting) throws EPMCException {
+            List<List<DD>> accepting) {
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD stableDD = stable.get();
             if (!component.and(stableDD).eqWith(component.clone()).isTrueWith()) {
@@ -287,7 +287,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
     
     private boolean decideComponentGeneralisedRabinMDPLeaf(
             ProductGraphDDExplicit product, DD leafSCC,
-            List<DD> stable, List<List<DD>> accepting) throws EPMCException {
+            List<DD> stable, List<List<DD>> accepting) {
         boolean decision = false;
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD leafSCCAndStable = leafSCC.and(stable.get());
@@ -308,7 +308,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
     }
     
     private DD stayIn(GraphDD graph, DD target, DD forall)
-            throws EPMCException {
+            {
         assert graph != null;
         assert target != null;
         assert forall != null;

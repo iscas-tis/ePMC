@@ -30,7 +30,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
@@ -104,12 +103,12 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIExpression(value);
 	}
 	
 	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
+	public JANIExpression parseAsJANIExpression(JsonValue value) {
 		assert model != null;
 		assert validIdentifiers != null;
 		assert value != null;
@@ -145,7 +144,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		assert initialized;
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add(OP, FILTER);
@@ -156,7 +155,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
 	}
 
 	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
 		assert model != null;
 		assert validIdentifiers != null;
 		assert expression != null;
@@ -180,7 +179,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
 	}
 
 	@Override
-	public Expression getExpression() throws EPMCException {
+	public Expression getExpression() {
 		assert initialized;
 		assert model != null;
 		assert validIdentifiers != null;

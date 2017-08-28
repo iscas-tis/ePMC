@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -43,7 +42,7 @@ public final class ValueArrayGeneric implements ValueArray {
         return clone;
     }
 
-    void setContent(Type entryType, Value[] content) throws EPMCException {
+    void setContent(Type entryType, Value[] content) {
         assert !isImmutable();
         for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);
@@ -93,7 +92,7 @@ public final class ValueArrayGeneric implements ValueArray {
     }
 
     @Override
-    public void set(String value) throws EPMCException {
+    public void set(String value) {
         // TODO Auto-generated method stub
         
     }

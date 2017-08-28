@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray {
@@ -124,7 +123,7 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

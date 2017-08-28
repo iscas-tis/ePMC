@@ -34,7 +34,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
@@ -125,11 +124,10 @@ public final class GraphDDJANI implements GraphDD {
 	 * @param model model to construct symbolic representation of
 	 * @param nodeProperties node properties to be derived and stored
 	 * @param edgeProperties edge properties to be derived and stored
-	 * @throws EPMCException thrown in case of problems during construction
 	 */
 	public GraphDDJANI(ModelJANI model,
 			Set<Object> nodeProperties,
-			Set<Object> edgeProperties) throws EPMCException {
+			Set<Object> edgeProperties) {
 		assert assertConstructor(nodeProperties, edgeProperties);
 		
 		this.model = model;
@@ -169,7 +167,7 @@ public final class GraphDDJANI implements GraphDD {
 		// TODO continue here (observables, etc.)
 	}
 
-	private void buildProperties(DD weight) throws EPMCException {
+	private void buildProperties(DD weight) {
         properties.registerGraphProperty(CommonProperties.EXPRESSION_TO_DD,
         		new TypeObject.Builder()
                 .setClazz(expressionToDD.getClass())
@@ -195,7 +193,7 @@ public final class GraphDDJANI implements GraphDD {
 		properties.registerEdgeProperty(CommonProperties.WEIGHT, weight);
 	}
 
-	private void checkStateSpace(List<DDTransition> transitions) throws EPMCException {
+	private void checkStateSpace(List<DDTransition> transitions) {
 		assert transitions != null;
 		for (DDTransition transition : transitions) {
 			assert transition != null;
@@ -218,9 +216,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * 
 	 * @param component top-level system component
 	 * @return cube of present state variables
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD buildPresCube(DDComponent component) throws EPMCException {
+	private DD buildPresCube(DDComponent component) {
 		assert component != null;
 		DD presCube = component.getPresCube().clone();
 		for (VariableDD variable : globalVariableDDs) {
@@ -237,9 +234,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * 
 	 * @param component top-level system component
 	 * @return cube of next state variables
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD buildNextCube(DDComponent component) throws EPMCException {
+	private DD buildNextCube(DDComponent component) {
 		assert component != null;
 		DD nextCube = component.getNextCube().clone();
 		for (VariableDD variable : globalVariableDDs) {
@@ -248,7 +244,7 @@ public final class GraphDDJANI implements GraphDD {
 		return nextCube;
 	}
 
-	private VariableDD buildActionVariable(List<DDTransition> transitions) throws EPMCException {
+	private VariableDD buildActionVariable(List<DDTransition> transitions) {
 		if (SemanticsNonDet.isNonDet(model.getSemantics())) {
 			int required = Integer.SIZE - Integer.numberOfLeadingZeros(transitions.size() - 1);
 			ensure(this.ddActionBits.get(0).size() >= required, ProblemsJANIDD.JANI_DD_ACTION_BITS_INSUFFICIENT, this.ddActionBits.get(0).size(), required);
@@ -259,7 +255,7 @@ public final class GraphDDJANI implements GraphDD {
 		}
 	}
 
-	private DD buildActionCube(VariableDD actionVariable) throws EPMCException {
+	private DD buildActionCube(VariableDD actionVariable) {
 		if (SemanticsNonDet.isNonDet(model.getSemantics())) {
 			assert actionVariable != null;
 			return actionVariable.newCube(PRES_STATE);
@@ -268,7 +264,7 @@ public final class GraphDDJANI implements GraphDD {
 		}
 	}
 
-	private DD buildWeight(List<DDTransition> transitions, VariableDD actionVariable) throws EPMCException {
+	private DD buildWeight(List<DDTransition> transitions, VariableDD actionVariable) {
 		assert transitions != null;
 		for (DDTransition transition : transitions) {
 			assert transition != null;
@@ -293,7 +289,7 @@ public final class GraphDDJANI implements GraphDD {
 		return weight;
 	}
 
-	private DDTransition computeDeadlockTransition(DD deadlocks, Set<VariableDD> variables) throws EPMCException {
+	private DDTransition computeDeadlockTransition(DD deadlocks, Set<VariableDD> variables) {
 		DDTransition result = new DDTransition();
 		result.setAction(model.getSilentAction());
 		result.setGuard(deadlocks.clone());
@@ -312,7 +308,7 @@ public final class GraphDDJANI implements GraphDD {
 		return result;
 	}
 
-	private DD buildDeadlocks(List<DDTransition> transitions) throws EPMCException {
+	private DD buildDeadlocks(List<DDTransition> transitions) {
 		DD guards = contextDD.newConstant(false);
 		for (DDTransition transition : transitions) {
 			guards = guards.orWith(transition.getGuard().clone());
@@ -353,9 +349,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * 
 	 * @param transitionsList list of transitions of the top-level component
 	 * @return node space of the model
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD explore(List<DDTransition> transitionsList) throws EPMCException {	
+	private DD explore(List<DDTransition> transitionsList) {	
 		assert transitionsList != null;
 		for (DDTransition transition : transitionsList) {
 			assert transition != null;
@@ -396,9 +391,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * 
 	 * @param component top-level component of the model
 	 * @return transitions modified to build the transition relation
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private List<DDTransition> buildTransitions(DDComponent component) throws EPMCException {
+	private List<DDTransition> buildTransitions(DDComponent component) {
 		assert component != null;
 		List<DDTransition> transitions = component.getTransitions();
 		for (DDTransition transition : transitions) {
@@ -447,9 +441,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * Because for models without nondeterminism action variables are not
 	 * needed, they will not be constructed for such models.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void prepareActionDDVariable() throws EPMCException {
+	private void prepareActionDDVariable() {
 		if (!SemanticsNonDet.isNonDet(model.getSemantics())) {
 			return;
 		}
@@ -469,9 +462,8 @@ public final class GraphDDJANI implements GraphDD {
 	/**
 	 * Build the set of global variables.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void buildGlobalVariables() throws EPMCException {
+	private void buildGlobalVariables() {
 		for (Variable variable : model.getGlobalVariablesOrEmpty()) {
 			VariableDD variableDD = contextDD.newVariable(variable.getName(), variable.toType(), 2);
 			globalVariableDDs.add(variableDD);
@@ -489,9 +481,8 @@ public final class GraphDDJANI implements GraphDD {
 	 * 
 	 * @param component topmost DD system component
 	 * @return initial nodes of this symbolic graph
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private DD buildInitialNodes(DDComponent component) throws EPMCException {
+	private DD buildInitialNodes(DDComponent component) {
 		assert component != null;
 		Expression initialStates = model.getInitialStatesExpressionOrTrue();
 		Expression bounds = UtilModelParser.restrictToVariableRange(model.getGlobalVariablesOrEmpty());
@@ -511,12 +502,12 @@ public final class GraphDDJANI implements GraphDD {
 	}
 
 	@Override
-	public DD getInitialNodes() throws EPMCException {
+	public DD getInitialNodes() {
 		return initialNodes;
 	}
 
 	@Override
-	public DD getTransitions() throws EPMCException {
+	public DD getTransitions() {
 		return transitions;
 	}
 
@@ -541,7 +532,7 @@ public final class GraphDDJANI implements GraphDD {
 	}
 
 	@Override
-	public DD getNodeSpace() throws EPMCException {
+	public DD getNodeSpace() {
 		return nodeSpace;
 	}
 

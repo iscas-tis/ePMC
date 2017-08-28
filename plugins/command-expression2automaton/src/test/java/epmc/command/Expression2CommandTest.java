@@ -24,7 +24,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.command.OptionsCommandExpression2Automaton;
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -45,7 +44,7 @@ public final class Expression2CommandTest {
         prepare();
     }
 
-    private final static Options prepareExpression2CommandOptions() throws EPMCException {
+    private final static Options prepareExpression2CommandOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
@@ -53,7 +52,7 @@ public final class Expression2CommandTest {
     }
     
     @Test
-    public void asdfTest() throws EPMCException {
+    public void asdfTest() {
         Options options = prepareExpression2CommandOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

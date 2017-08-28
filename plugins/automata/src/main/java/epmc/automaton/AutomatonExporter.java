@@ -23,8 +23,6 @@ package epmc.automaton;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
-import epmc.error.EPMCException;
-
 public interface AutomatonExporter {
     enum Format {
         DOT
@@ -36,20 +34,16 @@ public interface AutomatonExporter {
     
     void setFormat(Format format);
     
-    void export() throws EPMCException;
+    void export();
     
     default String exportToString() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         setOutput(out);
-        try {
-            export();
-        } catch (EPMCException e) {
-            return e.toString();
-        }
+        export();
         return out.toString();
     }
     
-    default void print() throws EPMCException {
+    default void print() {
         setOutput(System.out);
         export();
     }

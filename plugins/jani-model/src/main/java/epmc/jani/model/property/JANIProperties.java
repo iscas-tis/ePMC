@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -73,7 +72,7 @@ public final class JANIProperties implements JANINode, Properties {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		assert validIdentifiers != null;
@@ -90,7 +89,7 @@ public final class JANIProperties implements JANINode, Properties {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		assert validIdentifiers != null;
 		assert model != null;
 		assert properties != null;
@@ -125,7 +124,7 @@ public final class JANIProperties implements JANINode, Properties {
 	}
 	
 	@Override
-	public void parseProperties(InputStream... inputs) throws EPMCException {
+	public void parseProperties(InputStream... inputs) {
 		assert inputs != null;
 		for (InputStream input : inputs) {
 			assert input != null;

@@ -27,7 +27,6 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.options.Options;
@@ -67,7 +66,7 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
         Options options = Options.get();
         boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
@@ -86,7 +85,7 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         dd = UtilEvaluatorDD.getDD(dd, vector, expression);
         assert dd != null;
         return dd;

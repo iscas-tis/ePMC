@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
@@ -67,7 +66,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 		this.atomics = new ArrayList<>(atomics);
 	}
 	
-	public void prepare() throws EPMCException {
+	public void prepare() {
 		this.nodeProperties = computeAtomNodeProperties(graph, atomics);
 		this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
 		int numStates = graph.computeNumStates();
@@ -89,7 +88,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 		this.numStates = numStates;
 	}	
     
-    public int getBlock(int state) throws EPMCException {
+    public int getBlock(int state) {
         int block = 0;
         int marker = 1;
         for (int atomicNr = 0; atomicNr < nodeProperties.length; atomicNr++) {
@@ -106,7 +105,7 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
     }
 
     private static NodeProperty[] computeAtomNodeProperties(GraphExplicit graph,
-            Collection<Expression> atomics) throws EPMCException {
+            Collection<Expression> atomics) {
         List<NodeProperty> result = new ArrayList<>();
         for (Expression atomic : atomics) {
             if (graph.getNodeProperty(atomic) != null) {

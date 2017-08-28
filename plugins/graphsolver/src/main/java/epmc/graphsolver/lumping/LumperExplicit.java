@@ -20,7 +20,6 @@
 
 package epmc.graphsolver.lumping;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 
@@ -78,9 +77,8 @@ public interface LumperExplicit {
      * #canLump()} would be allowed and returns or would return {@code true}.
      * The method may only be called once for a given object.
      * 
-     * @throws EPMCException thrown if an error occurs during computation
      */
-    void lump() throws EPMCException;
+    void lump();
 
     /**
      * Obtain quotient model.
@@ -91,5 +89,5 @@ public interface LumperExplicit {
      */
     GraphSolverObjectiveExplicit getQuotient();
     
-    void quotientToOriginal() throws EPMCException;
+    void quotientToOriginal();
 }

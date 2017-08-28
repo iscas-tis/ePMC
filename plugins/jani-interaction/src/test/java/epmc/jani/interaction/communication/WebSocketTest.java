@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.command.CommandTaskJaniInteractionStartServer;
 import epmc.jani.interaction.options.JANIInteractionIO;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
@@ -56,9 +55,8 @@ public class WebSocketTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIInteractionOptions() throws EPMCException {
+    private final static Options prepareJANIInteractionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.NOTRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);        
@@ -71,7 +69,7 @@ public class WebSocketTest {
     }
 
     @Test
-    public void webSocketsTest() throws EPMCException {
+    public void webSocketsTest() {
         Options options = prepareJANIInteractionOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_TYPE, JANIInteractionIO.WEBSOCKETS);
@@ -84,7 +82,7 @@ public class WebSocketTest {
     
     @Ignore
     @Test
-    public void userManagementTest() throws EPMCException {
+    public void userManagementTest() {
         Options options = prepareJANIInteractionOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_TYPE, JANIInteractionIO.WEBSOCKETS);

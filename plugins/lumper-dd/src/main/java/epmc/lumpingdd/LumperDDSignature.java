@@ -51,7 +51,6 @@ import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
 import epmc.dd.Walker;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -122,7 +121,7 @@ public class LumperDDSignature implements LumperDD {
      * @return A translated expression over the quotient state space
      */
     @Override
-    public Expression getQuotientExpression(Expression expression) throws EPMCException {
+    public Expression getQuotientExpression(Expression expression) {
     	ExpressionToDD etdd = original.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
     	DD blockPresCube = blockIndexVar.newCube(0);
 		Map<Expression, Expression> replacements = new HashMap<>();
@@ -200,7 +199,7 @@ public class LumperDDSignature implements LumperDD {
     	return result;
     }
     
-    private ExpressionToDD getQuotientExpressionToDD() throws EPMCException {
+    private ExpressionToDD getQuotientExpressionToDD() {
     	Map<Expression, VariableDD> variables = new HashMap<>();
     	variables.put(newIdentifier(BLOCK_INDEX), blockIndexVar);
     	return new ExpressionToDD(variables);
@@ -304,7 +303,7 @@ public class LumperDDSignature implements LumperDD {
     	return result;
     }
     
-    public static DD satOneWith(DD dd, DD cube) throws EPMCException {
+    public static DD satOneWith(DD dd, DD cube) {
     	DD result = pickOne(dd, cube);
     	dd.dispose();
     	cube.dispose();
@@ -320,7 +319,7 @@ public class LumperDDSignature implements LumperDD {
      * @param dd The dd to pick assignments in
      * @param cube The cube of variables from which to pick one assignment
      */
-    public static DD pickOne(DD dd, DD cube) throws EPMCException {
+    public static DD pickOne(DD dd, DD cube) {
         assert cube.assertCube();
         assert TypeBoolean.isBoolean(dd.getType()) || TypeReal.isReal(dd.getType()) || TypeInteger.isInteger(dd.getType());
         TLongObjectMap<DD> cache = new TLongObjectHashMap<>();
@@ -333,7 +332,7 @@ public class LumperDDSignature implements LumperDD {
         return result;
     }
     
-    private static DD pickOne(Walker w, Walker cube, DD falseTerminal, ContextDD contextDD, TLongObjectMap<DD> cache) throws EPMCException {
+    private static DD pickOne(Walker w, Walker cube, DD falseTerminal, ContextDD contextDD, TLongObjectMap<DD> cache) {
         if(cache.containsKey(w.uniqueId())) {
             return cache.get(w.uniqueId());
         }
@@ -407,7 +406,7 @@ public class LumperDDSignature implements LumperDD {
     }
 
     @Override
-    public void setOriginal(GraphDD graph) throws EPMCException {
+    public void setOriginal(GraphDD graph) {
         assert graph != null;
         this.original = graph;
         contextDD = original.getContextDD();
@@ -421,12 +420,12 @@ public class LumperDDSignature implements LumperDD {
     }
 
     @Override
-    public boolean canLump() throws EPMCException {
+    public boolean canLump() {
     	return signature.canLump(requireValidFor);
     }
 
     @Override
-    public void lump() throws EPMCException {
+    public void lump() {
     	long time = System.nanoTime();
 
     	partitionADD = makeInitialPartition();
@@ -467,7 +466,7 @@ public class LumperDDSignature implements LumperDD {
      * the same labels in the same block.
      * @return A DD defining the initial partition
      */
-    private DD makeInitialPartition() throws EPMCException {
+    private DD makeInitialPartition() {
 
     	List<DD> labels = new ArrayList<>();
     	List<DD> reward = new ArrayList<>();
@@ -577,7 +576,7 @@ public class LumperDDSignature implements LumperDD {
      * @param partition The partitionDD to be translated
      * @return The new partitionDD
      */
-    private DD reduceBlockIndexRange(int newUpper, DD partition) throws EPMCException {
+    private DD reduceBlockIndexRange(int newUpper, DD partition) {
     	DD result = partition;
     	if(blockIndexVar.getUpper() > newUpper) {
     		VariableDD oldBlockIndexVar = blockIndexVar;
@@ -636,7 +635,7 @@ public class LumperDDSignature implements LumperDD {
      * signatures. Each signature is replaced by a block
      * index.
      */
-    private DD refine(DD signatures, VariableDD blockIndex) throws EPMCException {
+    private DD refine(DD signatures, VariableDD blockIndex) {
     	Counter blockCounter = new Counter();
     	TLongObjectMap<DD> cache = new TLongObjectHashMap<>();
         DD signaturesReplaced = replaceSignatures(signatures.walker(), blockIndex, blockCounter, cache).clone();
@@ -664,7 +663,7 @@ public class LumperDDSignature implements LumperDD {
      * @return A DD defining the partitions based on the signatures
      */
     private DD replaceSignatures(Walker w, VariableDD blockIndex,
-            Counter blockCount, TLongObjectMap<DD> computedTable) throws EPMCException {
+            Counter blockCount, TLongObjectMap<DD> computedTable) {
         if(computedTable.containsKey(w.uniqueId())) {
             return computedTable.get(w.uniqueId());
         }
@@ -730,7 +729,7 @@ public class LumperDDSignature implements LumperDD {
 	 * Build the DD that defines the transition weights of
 	 * the quotient graph
 	 */
-    private DD getQuotientTransWeights() throws EPMCException {
+    private DD getQuotientTransWeights() {
 		DD presCube = original.getPresCube().and(blockIndexVar.newCube(0));
 		DD nextCube = original.getNextCube().and(blockIndexVar.newCube(1));
 		Permutation p = contextDD.newPermutationCube(presCube, nextCube);
@@ -777,7 +776,7 @@ public class LumperDDSignature implements LumperDD {
     }
 
     @Override
-    public GraphDD getQuotient() throws EPMCException {
+    public GraphDD getQuotient() {
         DD quotientTransWeightsDD = getQuotientTransWeights();
         DD partitionsBDD = partitionADD.clone().eqWith(contextDD.newConstant(1));
         
@@ -865,7 +864,7 @@ public class LumperDDSignature implements LumperDD {
     }
 
     @Override
-    public DD quotientToOriginal(DD quotient) throws EPMCException {
+    public DD quotientToOriginal(DD quotient) {
     	if (quotient.getType() == TypeBoolean.get()) {
             return quotient.abstractAndExist(partitionADD.eq(contextDD.newConstant(1)), blockIndexVar.newCube(0));
     	} else {
@@ -874,7 +873,7 @@ public class LumperDDSignature implements LumperDD {
     }
     
     @Override
-    public DD originalToQuotient(DD original) throws EPMCException {
+    public DD originalToQuotient(DD original) {
     	if (original.getType() == TypeBoolean.get()) {
     		return original.abstractAndExist(partitionADD.eq(contextDD.newConstant(1)), this.original.getPresCube());
     	} else {
@@ -900,7 +899,7 @@ public class LumperDDSignature implements LumperDD {
     	return newLiteral(valueInteger);
     }
     
-    private ValueAlgebra newValueWeightTransition(String string) throws EPMCException {
+    private ValueAlgebra newValueWeightTransition(String string) {
     	assert string != null;
     	TypeAlgebra typeWeightTransition = TypeWeightTransition.get();
     	return UtilValue.newValue(typeWeightTransition, string);

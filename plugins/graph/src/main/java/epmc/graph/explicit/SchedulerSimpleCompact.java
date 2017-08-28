@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.Scheduler;
 
 /**
@@ -64,9 +63,8 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
      * 
      * @param graph graph to construct scheduler for
      * @param content array to use for content of scheduler, or {@code null}
-     * @throws EPMCException thrown in case of problems during construction
      */
-    private SchedulerSimpleCompact(GraphExplicit graph, long[] content) throws EPMCException {
+    private SchedulerSimpleCompact(GraphExplicit graph, long[] content) {
         this.graph = graph;
         numNodes = graph.getNumNodes();
         int numValues = 0;
@@ -91,9 +89,8 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
      * {@link Scheduler#UNSET}.
      * 
      * @param graph graph to construct scheduler for
-     * @throws EPMCException thrown in case of problems during construction
      */
-    public SchedulerSimpleCompact(GraphExplicit graph) throws EPMCException {
+    public SchedulerSimpleCompact(GraphExplicit graph) {
         this(graph, null);
     }
     
@@ -145,12 +142,6 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
     
     @Override
     public SchedulerSimple clone() {
-        try {
-            return new SchedulerSimpleCompact(graph, content.clone());
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false;
-            return null;
-        }
+    	return new SchedulerSimpleCompact(graph, content.clone());
     }    
 }

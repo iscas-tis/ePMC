@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -128,7 +127,7 @@ public final class Command {
             Map<Expression, JANIType> globalVariables,
             Map<Expression, JANIType> variables,
             Map<Expression, Type> types)
-                    throws EPMCException {    
+                    {    
     	// TODO
     	/*
         Type guardRing = guard.getType();

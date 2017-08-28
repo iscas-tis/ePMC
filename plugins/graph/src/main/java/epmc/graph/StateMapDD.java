@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
@@ -102,7 +101,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public StateMapDD restrict(StateSet to) throws EPMCException {
+    public StateMapDD restrict(StateSet to) {
         assert !closed();
         assert to != null;
         assert to.isSubsetOf(states);
@@ -129,7 +128,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     
     @Override
     public StateMap apply(Operator operator, StateMap operand)
-            throws EPMCException {
+            {
         assert !closed();
         assert operator != null;
         assert operand != null;
@@ -140,7 +139,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         return result;
     }
 
-    private Value toArray() throws EPMCException {
+    private Value toArray() {
         Set<Value> values = new LinkedHashSet<>();
         valuesDD.collectValues(values, states.getStatesDD());
         TypeArray typeArray = type.getTypeArray();
@@ -154,7 +153,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public boolean isConstant() throws EPMCException {
+    public boolean isConstant() {
         assert !closed();
         if (size() == 0) {
             return true;
@@ -167,7 +166,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public Value applyOver(Operator operator, StateSet over) throws EPMCException {
+    public Value applyOver(Operator operator, StateSet over) {
         assert !closed();
         assert operator != null;
         assert over != null;
@@ -177,25 +176,25 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
     
     @Override
-    public void getRange(Value range, StateSet of) throws EPMCException {
+    public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
     
-    private boolean isAllTrue(StateSet of) throws EPMCException {
+    private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
     
     @Override
-    public void getSomeValue(Value to, StateSet of) throws EPMCException {
+    public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
         to.set(result);
     }
 
     @Override
-    public Value subsumeResult(StateSet initialStates) throws EPMCException {
+    public Value subsumeResult(StateSet initialStates) {
         boolean takeFirstInitState = initialStates.size() == 1;
         Value entry = getType().newValue();
         if (takeFirstInitState) {
@@ -220,16 +219,12 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         }
     }
     
-    private boolean hasMinAndMaxElements(StateSet of) throws EPMCException {
+    private boolean hasMinAndMaxElements(StateSet of) {
         if (TypeReal.isReal(getType())) {
             return true;
         }
-        try {
-            getRange(TypeInterval.get().newValue(),
-                    getStateSet());
-        } catch (EPMCException e) {
-            return false;
-        }
+        getRange(TypeInterval.get().newValue(),
+        		getStateSet());
         return true;
     }
 }

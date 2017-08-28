@@ -28,8 +28,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
-
 import java.util.Set;
 
 /**
@@ -74,7 +72,7 @@ public final class OptionTypeMap<V> implements OptionType {
     }
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

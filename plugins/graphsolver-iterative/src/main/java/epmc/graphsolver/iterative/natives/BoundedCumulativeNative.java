@@ -20,7 +20,6 @@
 
 package epmc.graphsolver.iterative.natives;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -98,7 +97,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative) {
         	boundedCumulative();
@@ -106,7 +105,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulative);
@@ -155,7 +154,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -173,7 +172,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void boundedCumulative() throws EPMCException {
+    private void boundedCumulative() {
         assert iterGraph != null;
         GraphSolverObjectiveExplicitBoundedCumulative objectiveBoundedCumulative = (GraphSolverObjectiveExplicitBoundedCumulative) objective;
         ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulative.getTime());
@@ -229,7 +228,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
     
     private static void dtmcBoundedCumulativeNative(int bound,
             GraphExplicitSparse graph, Value values, Value cumul)
-                    throws EPMCException {
+                    {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -244,7 +243,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
 
     private static void mdpBoundedCumulativeNative(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
-            Value values, Value cumul) throws EPMCException {
+            Value values, Value cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();

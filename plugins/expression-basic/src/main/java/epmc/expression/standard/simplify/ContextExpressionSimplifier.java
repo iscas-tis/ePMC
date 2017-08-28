@@ -22,7 +22,6 @@ package epmc.expression.standard.simplify;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.OptionsExpressionBasic;
@@ -44,7 +43,7 @@ public final class ContextExpressionSimplifier {
         }
     }
     
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         Expression result = expression;
         boolean changed = true;
         while (changed) {

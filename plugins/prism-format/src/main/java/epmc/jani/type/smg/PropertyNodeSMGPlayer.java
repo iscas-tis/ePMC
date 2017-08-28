@@ -20,7 +20,6 @@
 
 package epmc.jani.type.smg;
 
-import epmc.error.EPMCException;
 import epmc.jani.explorer.ExplorerJANI;
 import epmc.jani.explorer.PropertyNode;
 import epmc.value.Type;
@@ -47,13 +46,13 @@ public final class PropertyNodeSMGPlayer implements PropertyNode {
 	}
 	
 	@Override
-	public Value get() throws EPMCException {
+	public Value get() {
 		value.set(extension.getNodePlayer() == player);
 		return value;
 	}
 
 	@Override
-	public boolean getBoolean() throws EPMCException {
+	public boolean getBoolean() {
 		return extension.getNodePlayer() == player;
 	}
 	

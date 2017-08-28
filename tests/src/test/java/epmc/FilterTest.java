@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -48,7 +47,7 @@ public class FilterTest {
     }
 
     @Test
-    public void chainTest() throws EPMCException {
+    public void chainTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         chainTestRun(options);

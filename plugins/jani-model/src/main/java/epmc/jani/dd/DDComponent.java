@@ -26,7 +26,6 @@ import java.util.Set;
 
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.jani.model.component.Component;
 
 /**
@@ -72,9 +71,8 @@ interface DDComponent extends Closeable {
 	 * #setComponent(Component)} must have been called. The function must be
 	 * called exactly once.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	void build() throws EPMCException;
+	void build();
 
 	/**
 	 * Obtain the DD transitions of this DD component.

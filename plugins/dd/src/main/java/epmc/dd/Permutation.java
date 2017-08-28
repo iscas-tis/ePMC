@@ -28,8 +28,6 @@ import gnu.trove.strategy.IdentityHashingStrategy;
 import java.util.Arrays;
 import java.util.Map;
 
-import epmc.error.EPMCException;
-
 /**
  * Represents a permutation of DD variables.
  * In contrast to {@link PermutationLibraryDD}, this class represents
@@ -53,9 +51,8 @@ public final class Permutation  {
      * 
      * @param contextDD context to which this permutation will belong
      * @param array array representing a permutation
-     * @throws EPMCException thrown in case of problems
      */
-    Permutation(ContextDD contextDD, int[] array) throws EPMCException {
+    Permutation(ContextDD contextDD, int[] array) {
         assert contextDD != null;
         assert assertPermutation(array);
         assert array.length == contextDD.numVariables();
@@ -95,9 +92,8 @@ public final class Permutation  {
      * needs to be done if after the creation of the permutations new DD
      * variables have been created.
      * 
-     * @throws EPMCException used in case of problems
      */
-    private void createLowLevelPermutations() throws EPMCException {
+    private void createLowLevelPermutations() {
         if (array.length != contextDD.numVariables()) {
             int[] newArray = Arrays.copyOf(array, contextDD.numVariables());
             for (int variable = array.length; variable < contextDD.numVariables(); variable++) {
@@ -144,9 +140,8 @@ public final class Permutation  {
      * 
      * @param libraryDD library to get DD library permutation of
      * @return DD library permutation for the given DD library
-     * @throws EPMCException
      */
-    PermutationLibraryDD getLowLevel(LibraryDD libraryDD) throws EPMCException {
+    PermutationLibraryDD getLowLevel(LibraryDD libraryDD) {
         assert libraryDD != null;
         assert libraryDD.getContextDD() == contextDD;
         if (array.length != contextDD.numVariables()) {

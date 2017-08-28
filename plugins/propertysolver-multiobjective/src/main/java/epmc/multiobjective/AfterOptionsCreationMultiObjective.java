@@ -22,7 +22,6 @@ package epmc.multiobjective;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graph.SchedulerPrinter;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -48,7 +47,7 @@ public final class AfterOptionsCreationMultiObjective implements AfterOptionsCre
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
 		solvers.put(PropertySolverExplicitMultiObjective.IDENTIFIER, PropertySolverExplicitMultiObjective.class);

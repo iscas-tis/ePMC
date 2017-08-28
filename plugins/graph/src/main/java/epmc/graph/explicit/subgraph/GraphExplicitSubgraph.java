@@ -23,7 +23,6 @@ package epmc.graph.explicit.subgraph;
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitProperties;
@@ -94,7 +93,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         return initialNodes;
     }
 
-    void queryNode(int node) throws EPMCException {
+    void queryNode(int node) {
         assert node >= 0;
         assert node < subToOrig.length;
         if (queriedNode == node) {
@@ -122,13 +121,13 @@ public class GraphExplicitSubgraph implements GraphExplicit {
     }
     
     @Override
-    public int getNumSuccessors(int node) throws EPMCException {
+    public int getNumSuccessors(int node) {
     	queryNode(node);
         return numSuccessors;
     }
 
     @Override
-    public int getSuccessorNode(int node, int successor) throws EPMCException {
+    public int getSuccessorNode(int node, int successor) {
     	queryNode(node);
         assert successor >= 0;
         assert successor < numSuccessors;
@@ -153,7 +152,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         return subToOrig[subNode];
     }
     
-    public int getOrigSuccNumber(int node, int succNr) throws EPMCException {
+    public int getOrigSuccNumber(int node, int succNr) {
     	queryNode(node);
         assert succNr >= 0 : succNr;
         assert succNr < numSuccessors;
@@ -175,13 +174,8 @@ public class GraphExplicitSubgraph implements GraphExplicit {
     @Override
     public String toString() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            GraphExporterDOT.export(this, stream);
-            return stream.toString();
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            return null;
-        }
+        GraphExporterDOT.export(this, stream);
+        return stream.toString();
     }
 
 	@Override

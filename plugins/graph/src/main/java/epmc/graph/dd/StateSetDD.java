@@ -23,7 +23,6 @@ package epmc.graph.dd;
 import java.io.Closeable;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 
@@ -83,7 +82,7 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
     }
     
     @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+    public boolean isSubsetOf(StateSet states) {
         assert !closed();
         assert states != null;
         assert states instanceof StateSetDD;

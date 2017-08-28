@@ -20,7 +20,6 @@
 
 package epmc.jani.interaction.plugin;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.command.CommandTaskJaniInteractionStartServer;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
@@ -36,7 +35,7 @@ public final class AfterServerStartJANIInteraction implements AfterServerStart {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
         String commandName = options.getString(Options.COMMAND);
         if (commandName.equals(CommandTaskJaniInteractionStartServer.IDENTIFIER)) {

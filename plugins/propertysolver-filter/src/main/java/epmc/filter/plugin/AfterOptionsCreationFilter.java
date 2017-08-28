@@ -22,7 +22,6 @@ package epmc.filter.plugin;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.filter.propertysolver.PropertySolverDDFilter;
 import epmc.filter.propertysolver.PropertySolverExplicitFilter;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -44,7 +43,7 @@ public final class AfterOptionsCreationFilter implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
 		assert solvers != null;

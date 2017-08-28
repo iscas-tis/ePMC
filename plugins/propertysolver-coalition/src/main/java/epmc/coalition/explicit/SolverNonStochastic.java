@@ -21,7 +21,6 @@
 package epmc.coalition.explicit;
 
 import epmc.automaton.AutomatonParityLabel;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -77,7 +76,6 @@ interface SolverNonStochastic {
 	 * been called. This method must not be called more than once.
 	 * 
 	 * @return winning regions and (potentially) strategies of the game
-	 * @throws EPMCException
 	 */
-	QualitativeResult solve() throws EPMCException;
+	QualitativeResult solve();
 }

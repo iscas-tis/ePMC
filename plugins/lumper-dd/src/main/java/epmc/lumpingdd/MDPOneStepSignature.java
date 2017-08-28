@@ -76,7 +76,7 @@ public class MDPOneStepSignature implements Signature {
 	private boolean useStateDistribution;
 
 	@Override
-	public void setOriginal(GraphDD original) throws EPMCException {
+	public void setOriginal(GraphDD original) {
 		this.original = original;
 		this.contextDD = original.getContextDD();
 //    	useStateDistribution = ((Semantics) original.getGraphPropertyObject(CommonProperties.SEMANTICS)).isNonDet()
@@ -99,7 +99,7 @@ public class MDPOneStepSignature implements Signature {
 	}
 
 	@Override
-	public void setBlockIndexVar(VariableDD blockIndex) throws EPMCException {
+	public void setBlockIndexVar(VariableDD blockIndex) {
 		this.blockIndexVar = blockIndex;
 		this.blockPresNextPerm = contextDD.newPermutationListDD(
 				blockIndexVar.getDDVariables(0), blockIndexVar.getDDVariables(1));
@@ -193,7 +193,7 @@ public class MDPOneStepSignature implements Signature {
      * Replace the leafs by DDs according to the relation
      * in replacements.
      */
-    private Tuple<DD> replaceSymbolsTuple(ContextDD contextDD, Walker w, Map<Value, DD> replacements1, Map<Value, DD> replacements2, TLongObjectMap<Tuple<DD>> computedCache) throws EPMCException {
+    private Tuple<DD> replaceSymbolsTuple(ContextDD contextDD, Walker w, Map<Value, DD> replacements1, Map<Value, DD> replacements2, TLongObjectMap<Tuple<DD>> computedCache) {
     	if(computedCache.containsKey(w.uniqueId())) {
     		return computedCache.get(w.uniqueId());
     	}
@@ -258,7 +258,7 @@ public class MDPOneStepSignature implements Signature {
 	}
 
 	@Override
-	public DD computeSignatures(DD partitions) throws EPMCException {
+	public DD computeSignatures(DD partitions) {
 		DD partitionsNext = partitions.permute(original.getSwapPresNext());
 		DD equalsPreviousBlock = pVar.multiply(partitions);
 		

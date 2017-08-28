@@ -24,7 +24,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import epmc.constraintsolver.ConstraintSolverResult;
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -44,7 +43,7 @@ final class ISatOutputReader {
 		this.solver = solver;
 	}
 	
-	ISatResult parseOutput(BufferedReader input) throws EPMCException {
+	ISatResult parseOutput(BufferedReader input) {
 		ISatResult result = new ISatResult();
 		result.type = ConstraintSolverResult.UNKNOWN;
 		result.values = new Value[solver.getVariables().size()];
@@ -89,23 +88,18 @@ final class ISatOutputReader {
 		return result;
 	}
 
-	private Value valueFromInterval(Type type, String line) throws EPMCException {
+	private Value valueFromInterval(Type type, String line) {
 		assert type != null;
 		assert line != null;
 		assert line.charAt(0) == LBRACK_C : line;
 		assert line.charAt(line.length() - 1) == RBRACK_C: line;
 		assert line.contains(COMMA): line;
 		String lower = line.substring(1, line.indexOf(COMMA));
-		try {
-			return newValue(type, lower);
-		} catch(EPMCException e) {
-			System.err.println(lower);
-			return null;
-		}
+		return newValue(type, lower);
 	}
 
     
-    private static Value newValue(Type type, String valueString) throws EPMCException {
+    private static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
         value.set(valueString);
         return value;

@@ -23,7 +23,6 @@ package epmc.jani.explorer;
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.value.TypeBoolean;
 import epmc.value.ValueBoolean;
@@ -41,7 +40,7 @@ final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
 	/** Set of initial nodes of the explorer. */
 	private final Set<NodeJANI> initialNodes;
 
-	PropertyNodeInitialNodes(ExplorerJANI explorer) throws EPMCException {
+	PropertyNodeInitialNodes(ExplorerJANI explorer) {
 		assert explorer != null;
 		this.explorer = explorer;
 		this.initialNodes = new HashSet<>(explorer.getInitialNodes());
@@ -50,13 +49,13 @@ final class PropertyNodeInitialNodes implements ExplorerNodeProperty {
 	}
 	
 	@Override
-	public ValueBoolean get() throws EPMCException {
+	public ValueBoolean get() {
 		value.set(initialNodes.contains(explorer.getQueriedNode()));
 		return value;
 	}
 	
 	@Override
-	public boolean getBoolean() throws EPMCException {
+	public boolean getBoolean() {
 		return initialNodes.contains(explorer.getQueriedNode());
 	}
 	

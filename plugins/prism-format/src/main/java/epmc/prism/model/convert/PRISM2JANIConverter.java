@@ -128,7 +128,7 @@ public final class PRISM2JANIConverter {
 		}
 		
 		@Override
-		public Type getType(Expression expression) throws EPMCException {
+		public Type getType(Expression expression) {
 			return typeMap.get(expression);
 		}
 		
@@ -189,9 +189,8 @@ public final class PRISM2JANIConverter {
 	 * Convert PRISM model to JANI format.
 	 * 
 	 * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
-	 * @throws EPMCException thrown in case of problems
 	 */
-	public ModelJANI convert() throws EPMCException {
+	public ModelJANI convert() {
     	modelJANI.setSemantics(modelPRISM.getSemantics().toString());
     	modelJANI.setVersion(JANI_VERSION);
     	
@@ -215,7 +214,7 @@ public final class PRISM2JANIConverter {
     	return modelJANI;
 	}
 
-	private void convertExtensions() throws EPMCException {
+	private void convertExtensions() {
     	List<ModelExtension> modelExtensions = new ArrayList<>();
     	ModelExtensionDerivedOperators extension = Util.getInstance(ModelExtensionDerivedOperators.class);
     	extension.setModel(modelJANI);
@@ -231,7 +230,7 @@ public final class PRISM2JANIConverter {
     	playerConverter.attachPlayers();
 	}
 
-	private void convertSystem() throws EPMCException {
+	private void convertSystem() {
     	SystemType systemType = Options.get().get(OptionsPRISMConverter.PRISM_CONVERTER_SYSTEM_METHOD);
     	SystemConverter systemConverter;
     	switch (systemType) {
@@ -251,7 +250,7 @@ public final class PRISM2JANIConverter {
 		systemConverter.convert();
 	}
 
-	private void convertRewards() throws EPMCException {
+	private void convertRewards() {
     	RewardsConverter rewardsConverter = new RewardsConverter();
     	rewardsConverter.setJANIModel(modelJANI);
     	rewardsConverter.setPRISMModel(modelPRISM);
@@ -296,7 +295,7 @@ public final class PRISM2JANIConverter {
 		return janiConstants;
 	}
 
-	private JANIProperties buildProperties() throws EPMCException {
+	private JANIProperties buildProperties() {
 		JANIProperties properties = new JANIProperties();
 		properties.setModel(modelJANI);
 		//TODO: get the right valid identifiers
@@ -387,7 +386,7 @@ public final class PRISM2JANIConverter {
      * @param expression the expression to convert
      * @return an equivalent expression using only named reward structures
      */
-	private Expression useOnlyPrefixedNamedRewards(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
+	private Expression useOnlyPrefixedNamedRewards(ModelPRISM modelPRISM, Expression expression) {
 		assert expression != null;
 		List<Expression> oldChildren = expression.getChildren();
 		List<Expression> newChildren = new ArrayList<>(oldChildren.size());
@@ -423,7 +422,7 @@ public final class PRISM2JANIConverter {
      * @param expression the expression to convert
      * @return an equivalent expression using only named reward structures
      */
-	public static Expression useOnlyNamedRewards(ModelPRISM modelPRISM, Expression expression) throws EPMCException {
+	public static Expression useOnlyNamedRewards(ModelPRISM modelPRISM, Expression expression) {
 		assert expression != null;
 		List<Expression> oldChildren = expression.getChildren();
 		List<Expression> newChildren = new ArrayList<>(oldChildren.size());
@@ -495,7 +494,7 @@ public final class PRISM2JANIConverter {
 		}
 	}
 	
-	private Automata computeAutomata(Actions actions, Variables globalVariables) throws EPMCException {
+	private Automata computeAutomata(Actions actions, Variables globalVariables) {
 		Automata automata = new Automata();
 		automata.setModel(modelJANI);
 		int number = 0;
@@ -525,9 +524,8 @@ public final class PRISM2JANIConverter {
 	 * includes all local variables of modules, because these are potentially
 	 * read and written by several modules.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private Variables buildGlobalVariables() throws EPMCException {
+	private Variables buildGlobalVariables() {
 		Variables globalVariables = new Variables();
 
     	for (Entry<Expression, JANIType> entry : modelPRISM.getGlobalVariables().entrySet()) {
@@ -546,7 +544,7 @@ public final class PRISM2JANIConverter {
 	}
 
 	private Variable convertVariable(ExpressionIdentifierStandard identifier, JANIType type,
-			Expression varInit) throws EPMCException {
+			Expression varInit) {
 		String varName = identifier.getName();
 		type.setModel(modelJANI);
 		Variable variable = new Variable();
@@ -587,10 +585,9 @@ public final class PRISM2JANIConverter {
 	 * @param actions
 	 * @param globalVariables 
 	 * @return automaton converted from module
-	 * @throws EPMCException thrown in case of problems
 	 */
 	private Automaton moduleToAutomaton(ModuleCommands module, Actions actions,
-			Variables globalVariables) throws EPMCException {
+			Variables globalVariables) {
 		Automaton automaton = new Automaton();
 		Rate rateOne = new Rate();
 		rateOne.setExp(ExpressionLiteral.getOne());
@@ -690,9 +687,8 @@ public final class PRISM2JANIConverter {
 	 * 
 	 * @param expression expression to be converted
 	 * @return converted expression directly representable in JANI
-	 * @throws EPMCException thrown in case of problems
 	 */
-	Expression prism2jani(Expression expression) throws EPMCException {
+	Expression prism2jani(Expression expression) {
 		assert expression != null;
 		if (ExpressionOperator.isOperator(expression)) {
 			return prism2jani(ExpressionOperator.asOperator(expression));
@@ -705,7 +701,7 @@ public final class PRISM2JANIConverter {
 		}
 	}
 	
-	private Expression prism2jani(ExpressionOperator expression) throws EPMCException {
+	private Expression prism2jani(ExpressionOperator expression) {
 		assert expression != null;
 		Operator operator = expression.getOperator();
 		Positional positional = expression.getPositional();
@@ -757,7 +753,7 @@ public final class PRISM2JANIConverter {
 		return tauAction;
 	}
 	
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

@@ -20,7 +20,6 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -63,7 +62,7 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
 	}
 
 	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
+	public void apply(Value result, Value... operands) {
 		assert result != null;
 		assert operands != null;
 		assert operands.length >= 1;

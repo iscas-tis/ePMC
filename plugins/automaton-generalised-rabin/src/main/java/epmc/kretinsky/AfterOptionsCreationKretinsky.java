@@ -45,7 +45,7 @@ public class AfterOptionsCreationKretinsky implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
         OptionTypeString typeString = UtilOptions.getTypeString();
 		OptionTypeBoolean typeBoolean = UtilOptions.getTypeBoolean();

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 
 public interface EvaluatorDD extends Closeable {
@@ -36,11 +35,11 @@ public interface EvaluatorDD extends Closeable {
     
     void setExpression(Expression expression);
 
-    boolean canHandle() throws EPMCException;
+    boolean canHandle();
     
-    void build() throws EPMCException;
+    void build();
 
-    DD getDD() throws EPMCException;
+    DD getDD();
     
     List<DD> getVector();
     

@@ -29,7 +29,6 @@ import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
 import epmc.automaton.BuechiTransition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -63,7 +62,7 @@ public final class AutomatonBreakpoint implements Automaton {
 		}
 		
 		@Override
-		public AutomatonBreakpoint build() throws EPMCException {
+		public AutomatonBreakpoint build() {
 			return new AutomatonBreakpoint(this);
 		}
 		
@@ -187,7 +186,7 @@ public final class AutomatonBreakpoint implements Automaton {
     
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         AutomatonBreakpointState breakpointState = (AutomatonBreakpointState) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(breakpointState);
@@ -246,7 +245,7 @@ public final class AutomatonBreakpoint implements Automaton {
     }
     
     private void lookupCache(AutomatonBreakpointState breakpointState)
-            throws EPMCException {
+            {
         int entryNr = 0;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {

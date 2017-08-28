@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
@@ -34,7 +33,7 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
 	private final Type type;
 	private final Value[] values;
 
-	PropertyNodeExpression(ExplorerJANI explorer, Expression[] identifiers, Expression expression, Type type) throws EPMCException {
+	PropertyNodeExpression(ExplorerJANI explorer, Expression[] identifiers, Expression expression, Type type) {
 		assert explorer != null;
 		assert expression != null;
 		expression = UtilExpressionStandard.replace(expression, explorer.getModel().getConstants());
@@ -44,7 +43,7 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
 	}
 	
 	@Override
-	public Value get() throws EPMCException {
+	public Value get() {
 		evaluator.evaluate(values);
 		return evaluator.getResultValue();
 	}
