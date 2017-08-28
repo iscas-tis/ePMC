@@ -51,6 +51,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueContentDoubleArray;
+import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
 import epmc.value.ValueReal;
@@ -431,7 +432,13 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     public ValueReal getResultObjectiveValue() throws EPMCException {
         assert !closed;
         double result = LpSolve.get_var_primalresult(lp, 0);
-        return UtilValue.newValueDouble(TypeReal.get(), result);
+        ValueReal resultValue = TypeReal.get().newValue();
+        if (ValueDouble.isDouble(resultValue)) {
+        	ValueDouble.asDouble(resultValue).set(result);
+        } else {
+            resultValue.set(Double.toString(result));
+        }
+        return resultValue;
     }
     
     @Override
@@ -442,7 +449,11 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         		numVariables);
         for (int i = 0; i < result.size(); i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            entry.set(Double.toString(doubleVal));
+            if (ValueDouble.isDouble(entry)) {
+            	ValueDouble.asDouble(entry).set(doubleVal);
+            } else {
+            	entry.set(Double.toString(doubleVal));
+            }
             result.set(entry, i);
         }
         return result;
@@ -452,10 +463,15 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
 	public Value[] getResultVariablesValues() throws EPMCException {
         assert !closed;
         Value[] result = new Value[numVariables];
+        TypeReal typeReal = TypeReal.get();
         for (int i = 0; i < result.length; i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            Value entry = UtilValue.newValueDouble(TypeReal.get()
-            		, doubleVal);
+            Value entry = typeReal.newValue();
+            if (ValueDouble.isDouble(entry)) {
+            	ValueDouble.asDouble(entry).set(doubleVal);
+            } else {
+            	entry.set(Double.toString(doubleVal));
+            }
             result[i] = entry;
         }
         return result;
