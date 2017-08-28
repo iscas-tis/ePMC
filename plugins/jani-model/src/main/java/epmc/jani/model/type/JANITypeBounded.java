@@ -146,7 +146,8 @@ public final class JANITypeBounded implements JANIType {
             if (model != null) {
                 lowerBound = UtilExpressionStandard.replace(lowerBound, model.getConstants());
             }
-            if (!model.containsUndefinedConstants()) {
+            // TODO HACK
+            if (model == null || !model.containsUndefinedConstants()) {
                 Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty());
                 if (ValueInteger.isInteger(lowerValue)) {
                     lowerInt = ValueInteger.asInteger(lowerValue).getInt();
@@ -157,7 +158,7 @@ public final class JANITypeBounded implements JANIType {
             if (model != null) {
                 upperBound = UtilExpressionStandard.replace(upperBound, model.getConstants());
             }
-            if (!model.containsUndefinedConstants()) {
+            if (model == null || !model.containsUndefinedConstants()) {
                 Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty());
                 if (ValueInteger.isInteger(upperValue)) {
                     upperInt = ValueInteger.asInteger(upperValue).getInt();
