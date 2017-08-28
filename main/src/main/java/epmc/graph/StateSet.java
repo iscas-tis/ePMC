@@ -22,8 +22,6 @@ package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
-
 //TODO complete documentation
 
 public interface StateSet extends Closeable, Cloneable {
@@ -33,7 +31,7 @@ public interface StateSet extends Closeable, Cloneable {
     @Override
     void close();
 
-    boolean isSubsetOf(StateSet states) throws EPMCException;
+    boolean isSubsetOf(StateSet states);
     
     StateSet clone();
 

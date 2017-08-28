@@ -3,7 +3,6 @@ package epmc.time;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.type.JANIType;
@@ -37,12 +36,12 @@ public final class JANITypeClock implements JANIType {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIType(value);
 	}
 	
 	@Override 
-	public JANIType parseAsJANIType(JsonValue value) throws EPMCException {
+	public JANIType parseAsJANIType(JsonValue value) {
 		assert model != null;
 		initialized = false;
 		if (!(value instanceof JsonString)) {
@@ -68,7 +67,7 @@ public final class JANITypeClock implements JANIType {
 	}
 
 	@Override
-	public ValueClock getDefaultValue() throws EPMCException {
+	public ValueClock getDefaultValue() {
 		return UtilValue.newValue(toType(), 0);
 	}
 }

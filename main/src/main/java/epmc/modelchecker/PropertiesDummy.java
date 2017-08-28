@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -54,7 +53,7 @@ public final class PropertiesDummy implements Properties {
     private final Map<String,Expression> labels = new LinkedHashMap<>();
     
     @Override
-    public void parseProperties(InputStream... inputs) throws EPMCException {
+    public void parseProperties(InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
             assert input != null;
@@ -69,9 +68,8 @@ public final class PropertiesDummy implements Properties {
      * The input stream parameter must not be {@code null}.
      * 
      * @param input input string to parse from
-     * @throws EPMCException thrown in case of problems
      */
-    private void parseProperties(InputStream input) throws EPMCException {
+    private void parseProperties(InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -84,9 +82,8 @@ public final class PropertiesDummy implements Properties {
      * The raw properties parameter must not be {@code null}.
      * 
      * @param rawProperties raw properties to parse
-     * @throws EPMCException thrown in case of problems
      */
-    private void parseProperties(RawProperties rawProperties) throws EPMCException {
+    private void parseProperties(RawProperties rawProperties) {
         assert rawProperties != null;
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);

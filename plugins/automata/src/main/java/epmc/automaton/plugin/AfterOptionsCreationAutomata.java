@@ -23,7 +23,6 @@ package epmc.automaton.plugin;
 import java.util.Map;
 
 import epmc.automaton.OptionsAutomaton;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeEnum;
@@ -44,7 +43,7 @@ public final class AfterOptionsCreationAutomata implements AfterOptionsCreation 
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         assert options != null;
         OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         OptionTypeString typeString = OptionTypeString.getInstance();

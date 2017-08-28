@@ -20,7 +20,6 @@
 
 package epmc.dd;
 
-import epmc.error.EPMCException;
 import epmc.plugin.AfterCommandExecution;
 
 public final class AfterCommandExecutionDD implements AfterCommandExecution {
@@ -32,7 +31,7 @@ public final class AfterCommandExecutionDD implements AfterCommandExecution {
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 	}
 
 }

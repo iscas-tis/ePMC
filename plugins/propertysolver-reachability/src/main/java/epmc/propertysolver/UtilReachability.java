@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
@@ -71,7 +70,7 @@ public final class UtilReachability {
     
     // solve the linear equation system
     public static ValueArrayAlgebra computeReachabilityProbability(
-    		GraphExplicit graph, BitSet oneStates) throws EPMCException {
+    		GraphExplicit graph, BitSet oneStates) {
     	
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();

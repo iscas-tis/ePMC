@@ -20,28 +20,9 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.jani.extensions.derivedoperators.OperatorAbs;
-import epmc.jani.extensions.derivedoperators.OperatorSgn;
-import epmc.jani.extensions.derivedoperators.OperatorTrunc;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAcosh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAsinh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAtanh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorCosh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorSinh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorTanh;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAcos;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAsin;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAtan;
-import epmc.jani.extensions.trigonometricfunctions.OperatorCos;
-import epmc.jani.extensions.trigonometricfunctions.OperatorSin;
-import epmc.jani.extensions.trigonometricfunctions.OperatorTan;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.prism.value.OperatorPRISMPow;
@@ -51,7 +32,6 @@ import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorCeil;
 import epmc.value.operator.OperatorDivideIgnoreZero;
-import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorFloor;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorIff;
@@ -76,7 +56,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	private String prefix = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionOperator; 
 		
@@ -91,7 +71,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert expressionOperator != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -256,7 +236,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert expressionOperator != null;
 		
 		for (Expression child : expressionOperator.getChildren()) {
@@ -265,7 +245,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert expressionOperator != null;
 		
 		boolean usesTransient = false;

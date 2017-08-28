@@ -20,8 +20,6 @@
 
 package epmc.plugin;
 
-import epmc.error.EPMCException;
-
 /**
  * Interface to perform tasks after a model has been created on the server.
  * 
@@ -31,7 +29,6 @@ public interface AfterModelCreation extends PluginInterface {
     /**
      * Performs a task after a model has been created on the server.
      * 
-     * @throws EPMCException thrown in case of a problem occurring
      */
-    void process() throws EPMCException;
+    void process();
 }

@@ -35,7 +35,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.isat3.textual.ConstraintSolverISat3Textual;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
@@ -59,9 +58,8 @@ public class ISat3TextualTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareISat3Options() throws EPMCException {
+    private final static Options prepareISat3Options() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options);
@@ -69,7 +67,7 @@ public class ISat3TextualTest {
     }
     
     @Test
-    public void iSat3ManualTest() throws EPMCException {
+    public void iSat3ManualTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
@@ -92,7 +90,7 @@ public class ISat3TextualTest {
     }
     
     @Test
-    public void andreaTest() throws EPMCException {
+    public void andreaTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);

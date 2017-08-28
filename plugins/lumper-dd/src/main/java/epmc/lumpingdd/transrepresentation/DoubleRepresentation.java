@@ -21,7 +21,6 @@
 package epmc.lumpingdd.transrepresentation;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.dd.GraphDD;
 
@@ -41,7 +40,7 @@ public class DoubleRepresentation implements TransitionRepresentation {
 	}
 	
 	@Override
-	public DD fromTransWeights() throws EPMCException {
+	public DD fromTransWeights() {
 		// We are not interested in actions
 		return original.getEdgeProperty(CommonProperties.WEIGHT)
     			.abstractSum(original.getActionCube());

@@ -23,7 +23,6 @@ package epmc.coalition.graphsolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Player;
@@ -108,7 +107,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame) {
         	unboundedReachability();
@@ -124,7 +123,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         }
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         
         BitSet playerEven = UtilBitSet.newBitSetUnbounded();
@@ -170,7 +169,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());
@@ -211,7 +210,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     	objective.setResult(outputValues);
     }
 
-    private void unboundedReachability() throws EPMCException {
+    private void unboundedReachability() {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -233,7 +232,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     /* auxiliary methods */
     
     private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
@@ -271,7 +270,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     private void tpgUnboundedGaussseidelJava(
             GraphExplicitSparseAlternate graph,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
+            double precision) {
     	
         int minEnd = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -340,7 +339,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     private void tpgUnboundedJacobiJava(
             GraphExplicitSparseAlternate graph,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
+            double precision) {
         int minEnd = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -416,7 +415,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     private void computeStrategy(SchedulerSimpleSettable strategy,
             BitSet target, ValueArrayAlgebra values)
-                    throws EPMCException {
+                    {
     	assert strategy != null;
         assert target != null;
         NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
@@ -487,7 +486,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         assert assertStrategyOK(strategy, target);
     }
 
-    private boolean assertStrategyOK(SchedulerSimple strategy, BitSet target) throws EPMCException {
+    private boolean assertStrategyOK(SchedulerSimple strategy, BitSet target) {
         /* make sure that we indeed computed the strategy correctly */
     	NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < origGraph.getNumNodes(); node++) {

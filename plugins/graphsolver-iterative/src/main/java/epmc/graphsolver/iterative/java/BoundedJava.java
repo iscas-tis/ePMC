@@ -21,7 +21,6 @@
 package epmc.graphsolver.iterative.java;
 
 import epmc.algorithms.FoxGlynn;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -108,7 +107,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
@@ -124,7 +123,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     }
 
     // TODO can directly use original graph under certain circumstances
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBounded);
@@ -149,7 +148,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         inputValues = objectiveBounded.getValues();
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -167,7 +166,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void bounded() throws EPMCException {
+    private void bounded() {
         assert iterGraph != null;
         assert inputValues != null;
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
@@ -184,7 +183,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         }
     }
 
-    private void ctBounded() throws EPMCException {
+    private void ctBounded() {
         assert iterGraph != null : "iterGraph == null";
         assert inputValues != null : "inputValues == null";
         assert lambda != null : "lambda == null";
@@ -240,7 +239,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     /* implementation of iteration algorithms */    
 
     private void ctmcBoundedJava(GraphExplicitSparse graph,
-            ValueArray values, FoxGlynn foxGlynn) throws EPMCException {
+            ValueArray values, FoxGlynn foxGlynn) {
     	ValueArrayAlgebra fg = foxGlynn.getArray();
         Value fgWeight = foxGlynn.getTypeReal().newValue();
         int numStates = graph.computeNumStates();
@@ -298,7 +297,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     private static void dtmcBoundedJava(int bound,
             GraphExplicitSparse graph, ValueArrayAlgebra values)
-            		throws EPMCException {
+            		 {
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -333,7 +332,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     private void mdpBoundedJava(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values) throws EPMCException {
+            ValueArrayAlgebra values) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

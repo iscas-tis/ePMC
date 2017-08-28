@@ -20,7 +20,6 @@
 
 package epmc.prism.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -74,7 +73,7 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
     }
     
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
+    public void apply(Value result, Value... operands) {
     	if (ValueInteger.isInteger(result)) {
     		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
         	int value1 = ValueInteger.asInteger(operands[0]).getInt();

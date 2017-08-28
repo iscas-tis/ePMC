@@ -26,7 +26,6 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.value.Operator;
@@ -74,7 +73,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
     	Operator operator = expressionOperator.getOperator();
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
@@ -101,7 +100,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
         closed = UtilEvaluatorDD.close(closed, dd, null);
     }
 
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
         return ContextDD.get();
     }
 }

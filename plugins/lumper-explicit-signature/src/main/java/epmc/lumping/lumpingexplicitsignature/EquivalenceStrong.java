@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMC;
@@ -95,7 +94,7 @@ public final class EquivalenceStrong implements Equivalence {
     }
 
     @Override
-    public void prepare() throws EPMCException {
+    public void prepare() {
         assert successorsFromTo != null;
         assert successorStates != null;
         assert successorWeights != null;
@@ -114,7 +113,7 @@ public final class EquivalenceStrong implements Equivalence {
     
     @Override
     public List<int[]> splitBlock(int[] block, int[] partition)
-            throws EPMCException {
+            {
         newBlocks.clear();
         signatureToStates.clear();
         int blockSize = block.length;
@@ -128,7 +127,7 @@ public final class EquivalenceStrong implements Equivalence {
         return newBlocks;
     }
     
-    private void computeSignature(int node, int[] stateToBlock) throws EPMCException {
+    private void computeSignature(int node, int[] stateToBlock) {
         blockToNumber.clear();
         int size = 0;
         int from = successorsFromTo[node];
@@ -186,7 +185,7 @@ public final class EquivalenceStrong implements Equivalence {
         return clone;
     }
     
-    private void computeCmpSignature() throws EPMCException {
+    private void computeCmpSignature() {
         this.maxOrigFanout = 0;
         int numStates = successorsFromTo.length - 1;
         for (int state = 0; state < numStates; state++) {
@@ -207,7 +206,7 @@ public final class EquivalenceStrong implements Equivalence {
     }
     
     @Override
-    public GraphExplicit computeQuotient(int[] originalToQuotientState, List<int[]> blocks) throws EPMCException {
+    public GraphExplicit computeQuotient(int[] originalToQuotientState, List<int[]> blocks) {
         GraphExplicit quotient;
         int numStates = blocks.size();
         int numTotalOut = 0;

@@ -22,7 +22,6 @@ package epmc.jani.model;
 
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public class MetadataProcessor implements JANI2PRISMProcessorStrict {
@@ -30,7 +29,7 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 	private Metadata metadata = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Metadata; 
 
@@ -39,7 +38,7 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert metadata != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -56,12 +55,12 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert metadata != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert metadata != null;
 		
 		return false;

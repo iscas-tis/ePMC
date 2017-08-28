@@ -32,7 +32,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ProblemsJANIParser;
@@ -65,7 +64,7 @@ public final class ComponentSynchronisationVectors implements Component {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);
@@ -100,7 +99,7 @@ public final class ComponentSynchronisationVectors implements Component {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		JsonArrayBuilder elements = Json.createArrayBuilder();
 		for (SynchronisationVectorElement element : this.elements) {

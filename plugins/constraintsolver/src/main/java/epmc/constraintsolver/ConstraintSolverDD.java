@@ -25,7 +25,6 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.value.Type;
@@ -62,23 +61,23 @@ public final class ConstraintSolverDD implements ConstraintSolver {
 	}
 
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
         this.conjunction = getContextDD().newConstant(false);
 	}
 
     
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
     	return ContextDD.get();
 	}
 
-	public void addConstraint(DD constraint) throws EPMCException {
+	public void addConstraint(DD constraint) {
         assert !closed;
         assert constraint != null;
         conjunction = conjunction.andWith(constraint);
     }
 
     @Override
-    public void addConstraint(Expression expression) throws EPMCException {
+    public void addConstraint(Expression expression) {
         DD dd = expressionToDD.translate(expression);
         addConstraint(dd);
     }

@@ -24,7 +24,6 @@ import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeEnumerable;
 import epmc.value.TypeInteger;
@@ -95,9 +94,8 @@ public interface VariableDD extends Closeable {
      * 
      * @param copy copy to use for encoding
      * @return possible values of the type as an MTBDD
-     * @throws EPMCException thrown in case of problems
      */
-    DD getValueEncoding(int copy) throws EPMCException;
+    DD getValueEncoding(int copy);
 
     @Override
     void close();
@@ -124,13 +122,13 @@ public interface VariableDD extends Closeable {
     String getName();
 
     // TODO should be changed to getVariableValue(), should not recompute each time
-    DD newIntValue(int copy, int value) throws EPMCException;
+    DD newIntValue(int copy, int value);
 
-    DD newVariableValue(int copy, Value value) throws EPMCException;
+    DD newVariableValue(int copy, Value value);
     
     /* default methods */
 
-    default DD newVariableValue(int copy, int valueNr) throws EPMCException {
+    default DD newVariableValue(int copy, int valueNr) {
     	ValueEnumerable value = TypeEnumerable.asEnumerable(getType()).newValue();
     	value.setValueNumber(valueNr);
         return newVariableValue(copy, value);
@@ -145,7 +143,7 @@ public interface VariableDD extends Closeable {
         return result;
     }
 
-    default DD newValidValues(int copy) throws EPMCException {
+    default DD newValidValues(int copy) {
         assert copy >= 0;
         assert copy < getNumCopies();
         DD result = getContext().newConstant(false);
@@ -156,7 +154,7 @@ public interface VariableDD extends Closeable {
     }
     
     // TODO should be changed to getCube(), should not recompute cube each time
-    default DD newCube(int copy) throws EPMCException {
+    default DD newCube(int copy) {
         assert alive();
         assert copy >= 0;
         assert copy < getNumCopies();
@@ -204,7 +202,7 @@ public interface VariableDD extends Closeable {
         return TypeInteger.asInteger(getType()).getUpperInt();
     } 
     
-    default DD newEqCopies(int copy1, int copy2) throws EPMCException {
+    default DD newEqCopies(int copy1, int copy2) {
         DD cube1 = newCube(copy1);
         DD cube2 = newCube(copy2);
         Walker walker1 = cube1.walker();

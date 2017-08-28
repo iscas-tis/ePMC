@@ -23,7 +23,6 @@ package epmc.jani.interaction.permanentstorage;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.InteractionExtension;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
 import epmc.options.Options;
@@ -38,7 +37,7 @@ public final class AfterOptionsCreationJANIInteractionPermanentStorage implement
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<? extends InteractionExtension>> extensions = options.get(OptionsJANIInteraction.JANI_INTERACTION_EXTENSION_CLASS);
 		if (extensions == null) {

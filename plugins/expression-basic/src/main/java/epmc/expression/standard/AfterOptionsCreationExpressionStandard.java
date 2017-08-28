@@ -22,7 +22,6 @@ package epmc.expression.standard;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatordd.EvaluatorDD;
 import epmc.expression.standard.evaluatordd.EvaluatorDDLiteral;
@@ -72,7 +71,7 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         assert options != null;
         assert options != null;
 

@@ -23,7 +23,6 @@ package epmc.expression.standard.simplify;
 import epmc.value.TypeAlgebra;
 import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorSubtract;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
@@ -35,7 +34,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
     public final static String IDENTIFIER = "subtract";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (!isSubtract(expression)) {
             return null;
@@ -64,7 +63,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
                 .equals(OperatorSubtract.SUBTRACT);
     }
 
-    private boolean isZero(Expression expression) throws EPMCException {
+    private boolean isZero(Expression expression) {
         assert expression != null;
         return expression instanceof ExpressionLiteral
                 && ValueAlgebra.asAlgebra(((ExpressionLiteral) expression).getValue()).isZero();

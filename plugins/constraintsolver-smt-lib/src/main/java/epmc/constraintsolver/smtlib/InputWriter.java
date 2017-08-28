@@ -30,7 +30,6 @@ import java.util.Map;
 
 import epmc.constraintsolver.smtlib.options.OptionsSMTLib;
 import epmc.constraintsolver.smtlib.options.SMTLibVersion;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -165,7 +164,7 @@ final class InputWriter {
 		version = Options.get().get(OptionsSMTLib.SMTLIB_VERSION);
 	}
 
-	void write() throws EPMCException {
+	void write() {
 		try (PrintStream out = new PrintStream(outStream);) {
 			setOption(out, PRINT_SUCCESS, FALSE);
 			setOption(out, PRODUCE_MODELS, TRUE);
@@ -180,7 +179,7 @@ final class InputWriter {
 		}		
 	}
 
-	private void writeVariableDeclarations(PrintStream out) throws EPMCException  {
+	private void writeVariableDeclarations(PrintStream out)  {
 		for (SMTLibVariable variable : solver.getVariables()) {
 			String typeString = typeToString(variable.getType());
 			String name = variable.getName();
@@ -194,36 +193,26 @@ final class InputWriter {
 			Value lower = variable.getLower();
 			Expression varExpr = null;
 			if (lower != null && !ValueAlgebra.asAlgebra(lower).isNegInf()) {
-				try {
-					varExpr = UtilModelChecker.parseExpression(lower.toString());
-				} catch (EPMCException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				};
+				varExpr = UtilModelChecker.parseExpression(lower.toString());
 				command(out, ASSERT,
 						LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
 			}
 			Value upper = variable.getUpper();
 			if (upper != null && !ValueAlgebra.asAlgebra(upper).isPosInf()) {
-				try {
-					varExpr = UtilModelChecker.parseExpression(upper.toString());
-				} catch (EPMCException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				};
+				varExpr = UtilModelChecker.parseExpression(upper.toString());
 				command(out, ASSERT,
 						LANGLE + LEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
 			}
 		}
 	}
 	
-	private void writeConstraints(PrintStream out) throws EPMCException {
+	private void writeConstraints(PrintStream out) {
 		for (Expression expression : solver.getConstraints()) {
 			command(out, ASSERT, expression);
 		}
 	}
 	
-	private SExpression translateExpression(Expression expression) throws EPMCException {
+	private SExpression translateExpression(Expression expression) {
 		assert expression != null;
 		if (expression instanceof ExpressionIdentifier) {
 			ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
@@ -239,7 +228,7 @@ final class InputWriter {
 	}
 
 	private SExpression translateExpressionOperator(ExpressionOperator expression)
-			throws EPMCException {
+			 {
 		SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperator());
 		assert operator != null : expression.getOperator();
 		SExpression[] result = new SExpression[expression.getChildren().size() + 1];
@@ -262,8 +251,7 @@ final class InputWriter {
 		out.println(RANGLE);
 	}
 	
-	private void command(PrintStream out, String command, Object... parameters)
-			throws EPMCException {
+	private void command(PrintStream out, String command, Object... parameters) {
 		assert command != null;
 		assert parameters != null;
 		out.print(LANGLE);
@@ -281,7 +269,7 @@ final class InputWriter {
 	}
 	
 	private void writeObject(PrintStream out, Object object)
-			throws EPMCException {
+			 {
 		if (object instanceof Object[]) {
 			out.print(LANGLE);
 			Object[] array = (Object[]) object;
@@ -329,7 +317,7 @@ final class InputWriter {
 		}
 	}
 	
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

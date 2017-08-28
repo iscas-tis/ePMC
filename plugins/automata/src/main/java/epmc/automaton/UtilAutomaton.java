@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -58,14 +57,14 @@ import epmc.value.operator.OperatorOr;
 
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,
-            int[] numAPs) throws EPMCException {
+            int[] numAPs) {
         Options options = Options.get();
         return expr2string(expression, expr2str, numAPs, options.getBoolean(OptionsAutomaton.AUTOMATON_SUBSUME_APS));
     }
 
     public static Buechi newBuechi
     (Expression property, Expression[] expressions, boolean isNondet,
-            ValueBoolean negate) throws EPMCException {
+            ValueBoolean negate) {
         assert property != null;
         assert negate != null;
         Options options = Options.get();
@@ -138,7 +137,7 @@ public final class UtilAutomaton {
     }
 
     public static Buechi computeBuechi(Expression property, Expression[] expressions)
-            throws EPMCException {
+            {
         assert property != null;
         assert expressions != null;
         for (Expression expression : expressions) {
@@ -149,7 +148,7 @@ public final class UtilAutomaton {
     }
 
     public static Expression bounded2next(Expression expression)
-            throws EPMCException {
+            {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
@@ -225,7 +224,7 @@ public final class UtilAutomaton {
 
     public static AutomatonRabin newAutomatonRabin(
     		Expression expression,
-    		Expression[] expressions) throws EPMCException {
+    		Expression[] expressions) {
         assert expression != null;
         assert expressions != null;
         for (Expression entry : expressions) {
@@ -240,7 +239,7 @@ public final class UtilAutomaton {
         return result.build();
     }
 
-    public static AutomatonRabin newAutomatonRabinSafra(Buechi buechi, BitSet automatonState) throws EPMCException {
+    public static AutomatonRabin newAutomatonRabinSafra(Buechi buechi, BitSet automatonState) {
         Map<String,Class<Automaton.Builder>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonSafra.Builder result = (AutomatonSafra.Builder)
                 Util.getInstanceByClass(automata,
@@ -254,7 +253,7 @@ public final class UtilAutomaton {
 
     public static AutomatonParity newAutomatonParity(
     		Expression expression,
-    		Expression[] expressions) throws EPMCException {
+    		Expression[] expressions) {
         assert expression != null;
         assert expressions != null;
         for (Expression entry : expressions) {
@@ -323,7 +322,7 @@ public final class UtilAutomaton {
     }
 
     private static String expr2string(Expression expression, Map<Expression, String> expr2str,
-            int[] numAPs, boolean subsumeAPs) throws EPMCException {
+            int[] numAPs, boolean subsumeAPs) {
         String result = expr2str.get(expression);
         if (result != null) {
             return result;
@@ -375,7 +374,7 @@ public final class UtilAutomaton {
         return result;
     }
 
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -384,7 +383,7 @@ public final class UtilAutomaton {
         return ValueBoolean.isFalse(getValue(expressionLiteral));
     }
 
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -393,7 +392,7 @@ public final class UtilAutomaton {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

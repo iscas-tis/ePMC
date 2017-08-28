@@ -22,7 +22,6 @@ package epmc.graphsolver.iterative;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.graphsolver.iterative.java.BoundedCumulativeDiscountedJava;
 import epmc.graphsolver.iterative.java.BoundedCumulativeJava;
@@ -51,7 +50,7 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         
         Category category = options.addCategory()

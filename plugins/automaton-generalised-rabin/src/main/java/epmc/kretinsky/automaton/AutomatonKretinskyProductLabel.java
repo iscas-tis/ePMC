@@ -24,7 +24,6 @@ package epmc.kretinsky.automaton;
 import java.util.Arrays;
 
 import epmc.automaton.AutomatonLabelUtil;
-import epmc.error.EPMCException;
 
 public final class AutomatonKretinskyProductLabel implements AutomatonGeneralisedRabinLabel, AutomatonLabelUtil {
     private final AutomatonKretinskyProduct observer;
@@ -40,7 +39,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     }
 
     @Override
-    public boolean isAccepting(int pair, int number) throws EPMCException {
+    public boolean isAccepting(int pair, int number) {
         int[] acceptance = observer.getAcceptance(pair);
         int slaveNr = observer.acceptanceToSlaveNumber(pair, number);
         AutomatonSlaveLabel label = (AutomatonSlaveLabel) succLabel[slaveNr + 1];
@@ -49,7 +48,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     }
 
     @Override
-    public boolean isStable(int pair) throws EPMCException {
+    public boolean isStable(int pair) {
         if (!state.isStable(pair)) {
             return false;
         }

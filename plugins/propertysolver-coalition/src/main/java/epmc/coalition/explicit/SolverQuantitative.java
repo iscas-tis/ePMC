@@ -21,7 +21,6 @@
 package epmc.coalition.explicit;
 
 import epmc.automaton.AutomatonParityLabel;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -82,7 +81,6 @@ interface SolverQuantitative {
 	 * been called. This method must not be called more than once.
 	 * 
 	 * @return probabilities and (potentially) strategies of the game
-	 * @throws EPMCException
 	 */
-	QuantitativeResult solve() throws EPMCException;
+	QuantitativeResult solve();
 }

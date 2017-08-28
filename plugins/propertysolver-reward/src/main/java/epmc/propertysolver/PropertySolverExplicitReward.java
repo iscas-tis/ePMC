@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
@@ -104,7 +103,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.SEMANTICS);
 		return Collections.unmodifiableSet(required);
@@ -112,7 +111,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
@@ -127,7 +126,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.WEIGHT);
 		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -136,7 +135,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
 		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedProp = (ExpressionReward) propertyQuantifier.getQuantified();
         if (quantifiedProp.getRewardType().isReachability()) {
@@ -157,7 +156,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     }
 
     public StateMap doSolve(Expression property, StateSetExplicit states, boolean min)
-            throws EPMCException {
+            {
         RewardSpecification rewardStructure = ((ExpressionReward) property).getReward();
         NodeProperty stateReward = graph.getNodeProperty(rewardStructure);
         EdgeProperty transReward = graph.getEdgeProperty(rewardStructure);
@@ -166,7 +165,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 
     public StateMapExplicit solve(Expression property, StateSetExplicit states, boolean min,
             NodeProperty stateReward, EdgeProperty transReward)
-                    throws EPMCException {
+                    {
         assert property != null;
         assert states != null;
         assert stateReward != null;
@@ -231,7 +230,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         return result;
     }
 
-    private ValueArrayAlgebra buildCumulativeRewards(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) throws EPMCException {
+    private ValueArrayAlgebra buildCumulativeRewards(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) {
         Semantics semantics = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
 		if (SemanticsMarkovChain.isMarkovChain(semantics)) {
 			return buildCumulativeRewardsMC(sinks, reachSink, reachNotOneSink, stateReward, transReward);
@@ -243,7 +242,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         }    	
     }
     
-    private ValueArrayAlgebra buildCumulativeRewardsMC(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) throws EPMCException {
+    private ValueArrayAlgebra buildCumulativeRewardsMC(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) {
     	ValueArrayAlgebra cumulRewards = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
         ValueAlgebra acc = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
@@ -267,7 +266,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 		return cumulRewards;
 	}
 
-    private ValueArrayAlgebra buildCumulativeRewardsMDP(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) throws EPMCException {
+    private ValueArrayAlgebra buildCumulativeRewardsMDP(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) {
         int numNondet = graph.getNumNodes() - graph.computeNumStates();
         ValueArrayAlgebra cumulRewards = UtilValue.newArray(TypeWeight.get().getTypeArray(), numNondet);
         ValueAlgebra acc = newValueWeight();
@@ -308,7 +307,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 	}
 
 	private BitSet computeReachNotOneSink(Expression property, BitSet reachSink, boolean min)
-            throws EPMCException {
+            {
         assert property != null;
         RewardType rewardType = ((ExpressionReward) property).getRewardType();
         BitSet reachNotOneSink = UtilBitSet.newBitSetUnbounded();
@@ -324,7 +323,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         return reachNotOneSink;
     }
 
-    private BitSet computeReachSink(Expression property) throws EPMCException {
+    private BitSet computeReachSink(Expression property) {
         assert property != null;
         ExpressionReward propertyReward = (ExpressionReward) property;
         RewardType rewardType = propertyReward.getRewardType();
@@ -355,7 +354,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -391,7 +390,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     	return TypeWeightTransition.get().newValue();
     }
     
-    private Value evaluateValue(Expression expression) throws EPMCException {
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
         return evaluator.evaluate();

@@ -24,7 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
@@ -50,9 +49,8 @@ public final class UtilModelChecker {
      * @param string string to parse to expression
      * 
      * @return parsed expression
-     * @throws EPMCException thrown if expression could not be parsed
      */
-    public static Expression parseExpression(String string) throws EPMCException {
+    public static Expression parseExpression(String string) {
         assert string != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         InputStream stream = new ByteArrayInputStream(string.getBytes());
@@ -67,9 +65,8 @@ public final class UtilModelChecker {
      * @param string string to parse to expression
      * 
      * @return parsed expression
-     * @throws EPMCException thrown if expression could not be parsed
      */
-    public static Type parseType(String string) throws EPMCException {
+    public static Type parseType(String string) {
         assert string != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         return property.parseType(string);

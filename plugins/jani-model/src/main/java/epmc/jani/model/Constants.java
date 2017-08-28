@@ -29,7 +29,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -54,7 +53,7 @@ public final class Constants implements JANINode, Iterable<Constant>, Expression
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		JsonArray array = UtilJSON.toArray(value);
 		for (JsonValue var : array) {
@@ -68,7 +67,7 @@ public final class Constants implements JANINode, Iterable<Constant>, Expression
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonArrayBuilder builder = Json.createArrayBuilder();
 		for (Constant constant : constants.values()) {
 			builder.add(constant.generate());
@@ -95,7 +94,7 @@ public final class Constants implements JANINode, Iterable<Constant>, Expression
 	}
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.asIdentifierStandard(expression);
 		if (identifier == null) {

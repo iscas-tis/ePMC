@@ -34,7 +34,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.UserManager;
 import epmc.jani.interaction.communication.Backend;
 import epmc.jani.interaction.communication.ClientInfo;
@@ -102,7 +101,7 @@ public final class HandlerAuthenticate implements Handler {
 	private final Backend backend;
 	private final UserManager userManager;
 
-	public HandlerAuthenticate(Backend backend) throws EPMCException {
+	public HandlerAuthenticate(Backend backend) {
 		assert backend != null;
 		this.backend = backend;
 		capabilitiesParameters = buildCapabilitiesParameters();		
@@ -189,7 +188,7 @@ public final class HandlerAuthenticate implements Handler {
 	 * @param message message by which client is trying to connect
 	 */
 	@Override
-	public void handle(Object client, JsonObject message) throws EPMCException {
+	public void handle(Object client, JsonObject message) {
 		assert client != null;
 		assert message != null;
 		checkMessage(client, message);
@@ -199,7 +198,7 @@ public final class HandlerAuthenticate implements Handler {
 		backend.send(client, reply);
 	}
 
-	private void checkMessage(Object client, JsonObject message) throws EPMCException {
+	private void checkMessage(Object client, JsonObject message) {
 		assert message != null;
 		Map<Object, ClientInfo> clients = backend.getClients();
 		boolean stdio = backend.isStdio();
@@ -224,7 +223,7 @@ public final class HandlerAuthenticate implements Handler {
 			ProblemsJANIInteraction.JANI_INTERACTION_INVALID_MESSAGE);
 	}
 
-	private void checkAvailableVersions(JsonObject message) throws EPMCException {
+	private void checkAvailableVersions(JsonObject message) {
 		BigInteger ourJaniVersion = backend.getOurJaniVersion();
 		BigInteger[] clientVersions = UtilJSON.getArrayBigInteger(message, JANI_VERSIONS);
 		boolean found = false;
@@ -236,7 +235,7 @@ public final class HandlerAuthenticate implements Handler {
 		ensure(found, ProblemsJANIInteraction.JANI_INTERACTION_NO_ACCORDING_VERSION_FOUND);
 	}
 
-	private void login(Object client, JsonObject message) throws EPMCException {
+	private void login(Object client, JsonObject message) {
 		String login = null;
 		String password = null;
 		if (message.containsKey(AUTHENTICATE_LOGIN)) {

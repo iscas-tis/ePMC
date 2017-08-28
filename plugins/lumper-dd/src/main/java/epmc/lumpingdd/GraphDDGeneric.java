@@ -26,7 +26,6 @@ import java.util.Map;
 
 import epmc.dd.DD;
 import epmc.dd.Permutation;
-import epmc.error.EPMCException;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
 import epmc.value.Type;
@@ -134,12 +133,12 @@ public final class GraphDDGeneric implements GraphDD {
 	}
 
 	@Override
-	public DD getInitialNodes() throws EPMCException {
+	public DD getInitialNodes() {
 		return initialNodes;
 	}
 
 	@Override
-	public DD getTransitions() throws EPMCException {
+	public DD getTransitions() {
 		return transitions;
 	}
 
@@ -167,7 +166,7 @@ public final class GraphDDGeneric implements GraphDD {
 	}
 
 	@Override
-	public DD getNodeSpace() throws EPMCException {
+	public DD getNodeSpace() {
 		// TODO Auto-generated method stub
 		return null;
 	}

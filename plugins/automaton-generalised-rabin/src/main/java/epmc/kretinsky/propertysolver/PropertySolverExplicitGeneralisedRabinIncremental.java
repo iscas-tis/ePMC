@@ -66,7 +66,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+            {
         System.out.println("INCREMENTAL");
         assert property != null;
         assert forStates != null;
@@ -169,7 +169,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     @Override
-    public boolean canHandle(Expression property, StateSet states) throws EPMCException {
+    public boolean canHandle(Expression property, StateSet states) {
         assert property != null;
         assert states != null;
         if (!modelChecker.isEngineExplicit()) {
@@ -189,7 +189,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     private boolean decideComponent(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonKretinskyProduct mojmir = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         NodeProperty nodeAutomaton = graph.getNodeProperty(CommonProperties.NODE_AUTOMATON);
         NodeProperty origState = graph.getNodeProperty(CommonProperties.NODE_MODEL);
@@ -243,7 +243,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }    
 
     private Value prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+            {
         log.send(MessagesEPMC.PREPARING_MDP_FOR_ITERATION);
         BitSet test = (BitSet) graph.getInitialNodes().clone();
         test.andNot(acc);
@@ -308,7 +308,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     private StateMap prodToOrigResult(Value iterResult,
-            GraphExplicit prodGraph) throws EPMCException {
+            GraphExplicit prodGraph) {
         assert iterResult != null;
         assert prodGraph != null;
         Type typeWeight = contextValue.getTypeWeight();

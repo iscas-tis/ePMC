@@ -28,7 +28,6 @@ import java.util.Set;
 
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentRename;
@@ -78,7 +77,7 @@ final class DDComponentRename implements DDComponent {
 	}
 
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert graph != null;
 		assert component != null;
 		PreparatorDDComponent preparator = new PreparatorDDComponent();

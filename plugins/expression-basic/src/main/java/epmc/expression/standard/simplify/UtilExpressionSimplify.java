@@ -20,18 +20,17 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.Type;
 
 public final class UtilExpressionSimplify {
-    public static Expression simplify(ExpressionToType expressionToType, Expression expression, Type preferredType) throws EPMCException {
+    public static Expression simplify(ExpressionToType expressionToType, Expression expression, Type preferredType) {
         ContextExpressionSimplifier context = new ContextExpressionSimplifier();
         return context.simplify(expressionToType, expression);
     }
     
-    public static Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public static Expression simplify(ExpressionToType expressionToType, Expression expression) {
         return simplify(expressionToType, expression, null);
     }
     

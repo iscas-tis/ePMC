@@ -23,7 +23,6 @@ package epmc.jani.type.smg;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -33,7 +32,7 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
 	private ModelExtensionSMG smg;
 
 	@Override
-	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) {
 		assert obj instanceof ModelExtensionSMG;
 		
 		smg = (ModelExtensionSMG) obj;
@@ -41,7 +40,7 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert smg != null;
 		
 		return new StringBuilder().append(ModelExtensionSMG.IDENTIFIER)
@@ -59,14 +58,14 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert smg != null;
 		
 		ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert smg != null;
 		
 		return ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();

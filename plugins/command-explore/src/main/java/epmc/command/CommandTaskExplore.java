@@ -69,7 +69,7 @@ public class CommandTaskExplore implements CommandTask {
 		}
     }
     
-    public void explore() throws EPMCException {
+    public void explore() {
     	Model model = modelChecker.getModel();
     	Engine engine = modelChecker.getEngine();
         Log log = getLog();
@@ -112,7 +112,7 @@ public class CommandTaskExplore implements CommandTask {
         }
     }
 
-    public GraphExplicit exploreToGraph() throws EPMCException {
+    public GraphExplicit exploreToGraph() {
         Log log = getLog();
         log.send(MessagesCommandExplore.EXPLORING);
         Set<Object> graphProperties = new LinkedHashSet<>();
@@ -128,13 +128,13 @@ public class CommandTaskExplore implements CommandTask {
 
     private GraphExplicit buildModelGraphExplicit(Set<Object> graphProperties,
             Set<Object> nodeProperties,
-            Set<Object> edgeProperties) throws EPMCException {
+            Set<Object> edgeProperties) {
     	Model model = modelChecker.getModel();
     	return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
      }
     
     private Set<Object> prepareNodeProperties(Model model)
-            throws EPMCException {
+            {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.STATE);
@@ -146,7 +146,7 @@ public class CommandTaskExplore implements CommandTask {
     }
 
     private Set<Object> prepareEdgeProperties(Model model)
-            throws EPMCException {
+            {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.WEIGHT);

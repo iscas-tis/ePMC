@@ -30,7 +30,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -45,7 +44,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void hermanTest() throws EPMCException {
+    public void hermanTest() {
         Value result;
         double tolerance = 1E-10;
         Options options = prepareOptions();
@@ -134,7 +133,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -198,7 +197,7 @@ public final class RewardSolverExplicitTest {
     // TODO Moritz: ignoring this test for now, let's see what to do after the release
     @Ignore
     @Test
-    public void ijDiscountedTest() throws EPMCException {
+    public void ijDiscountedTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -221,7 +220,7 @@ public final class RewardSolverExplicitTest {
     }
     
     @Test
-    public void beauquierTest() throws EPMCException {
+    public void beauquierTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -272,7 +271,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void testAndSetTest() throws EPMCException {
+    public void testAndSetTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -292,7 +291,7 @@ public final class RewardSolverExplicitTest {
     }
     
     @Test
-    public void leaderSynchronousTest() throws EPMCException {
+    public void leaderSynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -312,7 +311,7 @@ public final class RewardSolverExplicitTest {
     }
     
     @Test
-    public void leaderAsynchronousTest() throws EPMCException {
+    public void leaderAsynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -338,7 +337,7 @@ public final class RewardSolverExplicitTest {
     }
     
     @Test
-    public void gossipDTMCTest() throws EPMCException {
+    public void gossipDTMCTest() {
         Options options = prepareOptions();
         double tolerance = 1E-9;
         Value result;
@@ -376,7 +375,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void gossipMDPTest() throws EPMCException {
+    public void gossipMDPTest() {
         Options options = prepareOptions();
         double tolerance = 1E-9;
         Value result;
@@ -421,7 +420,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

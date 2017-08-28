@@ -23,7 +23,6 @@ package epmc.jani.valuejson;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
@@ -36,7 +35,7 @@ public class AfterOptionsCreationJANIValueJSON implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		List<Class<? extends ValueJSON>> valueJsonClasses = new ArrayList<>();
 		valueJsonClasses.add(0, ValueJSONGeneral.class);

@@ -25,7 +25,6 @@ import static epmc.error.UtilError.ensure;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
@@ -44,9 +43,8 @@ public final class UtilExplorer {
 	 * the automaton parameter must not be {@code null}.
 	 * 
 	 * @param automaton automaton to be checked
-	 * @throws EPMCException thrown in case sum not one or other problems
 	 */
-	public static void checkAutomatonProbabilitySum(ExplorerComponentAutomaton automaton) throws EPMCException {
+	public static void checkAutomatonProbabilitySum(ExplorerComponentAutomaton automaton) {
 		assert automaton != null;
 		int numSuccessors = automaton.getNumSuccessors();
 		ValueAlgebra probabilitySum = automaton.getProbabilitySum();

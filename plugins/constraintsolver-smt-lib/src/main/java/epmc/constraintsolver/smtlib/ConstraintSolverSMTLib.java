@@ -41,7 +41,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.smtlib.options.OptionsSMTLib;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.options.Options;
 import epmc.value.Type;
@@ -83,7 +82,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert !closed;
 	}
 	
@@ -103,7 +102,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 	}
 	
 	@Override
-	public void addConstraint(Expression expression) throws EPMCException {
+	public void addConstraint(Expression expression) {
 		assert !closed;
 		constraints.add(expression);
 	}
@@ -119,7 +118,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 	}
 	
 	@Override
-	public ConstraintSolverResult solve() throws EPMCException {
+	public ConstraintSolverResult solve() {
 		assert !closed;
 		Path path = null;
 		try {
@@ -142,7 +141,7 @@ public final class ConstraintSolverSMTLib implements ConstraintSolver {
 		return result.type;
 	}
 	
-	private SMTLibResult callSolver(String file) throws EPMCException {
+	private SMTLibResult callSolver(String file) {
 		List<String> callOptions = Options.get().get(OptionsSMTLib.SMTLIB_COMMAND_LINE);
 		List<String> execArgs = new ArrayList<>();
 		for (String param : callOptions) {

@@ -78,7 +78,7 @@ public final class HandlerStartAnalysis implements Handler {
 	}
 
 	@Override
-	public void handle(Object client, JsonObject object) throws EPMCException {
+	public void handle(Object client, JsonObject object) {
 		assert client != null;
 		assert object != null;
 		BigInteger id;
@@ -168,7 +168,7 @@ public final class HandlerStartAnalysis implements Handler {
 		}).start();
 	}
 
-	private RawModel prepareJANIModel(JsonValue model, JsonObject message) throws EPMCException {
+	private RawModel prepareJANIModel(JsonValue model, JsonObject message) {
 		assert model != null;
 		assert message != null;
 //		Set<String> includePropertiesNames = buildIncludePropertiesNams(message);
@@ -179,7 +179,7 @@ public final class HandlerStartAnalysis implements Handler {
         return new RawModelByteArray(new byte[][]{modelObject.toString().getBytes()}, null);
 	}
 
-	private Set<String> buildIncludePropertiesNams(JsonObject message) throws EPMCException {
+	private Set<String> buildIncludePropertiesNams(JsonObject message) {
 		assert message != null;
 		JsonArray properties = UtilJSON.getArrayString(message, PROPERTIES);
 		Set<String> includeProperties = new HashSet<>();
@@ -189,7 +189,7 @@ public final class HandlerStartAnalysis implements Handler {
 		return includeProperties;
 	}
 
-	private JsonArray buildIncludeProperties(JsonObject model, Set<String> include) throws EPMCException {
+	private JsonArray buildIncludeProperties(JsonObject model, Set<String> include) {
 		assert model != null;
 		assert include != null;
 		JsonArray allModelProperties = UtilJSON.getArrayObject(model, PROPERTIES);

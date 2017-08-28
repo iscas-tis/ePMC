@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 final class ValueArrayIntegerBounded implements ValueArrayInteger {
@@ -129,7 +128,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     	return immutable;
     }
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

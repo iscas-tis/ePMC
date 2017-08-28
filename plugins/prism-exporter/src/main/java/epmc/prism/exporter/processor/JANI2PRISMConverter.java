@@ -20,7 +20,6 @@
 
 package epmc.prism.exporter.processor;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 
 public final class JANI2PRISMConverter {
@@ -34,13 +33,13 @@ public final class JANI2PRISMConverter {
 		this.jani = jani;
 	}
 	
-	public String convertModel() throws EPMCException {
+	public String convertModel() {
 		assert jani != null;
 		
 		return ProcessorRegistrar.getProcessor(jani).toPRISM();
 	}
 
-	public String convertProperties() throws EPMCException {
+	public String convertProperties() {
 		assert jani != null;
 		
 		return ProcessorRegistrar.getProcessor(jani.getPropertyList()).toPRISM();

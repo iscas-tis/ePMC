@@ -34,7 +34,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionReward;
@@ -109,12 +108,12 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIExpression(value);
 	}
 	
 	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
+	public JANIExpression parseAsJANIExpression(JsonValue value) {
 		assert model != null;
 		assert validIdentifiers != null;
 		assert value != null;
@@ -185,7 +184,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		assert initialized;
 		assert model != null;
 		assert validIdentifiers != null;
@@ -210,7 +209,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 	}
 
 	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
 		assert expression != null;
 		assert model != null;
 		assert validIdentifiers != null;
@@ -303,7 +302,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 	}
 
 	@Override
-	public Expression getExpression() throws EPMCException {
+	public Expression getExpression() {
 		assert initialized;
 		assert model != null;
 		assert validIdentifiers != null;

@@ -23,7 +23,6 @@ package epmc.jani.type.smg;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.ModelJANIProcessor;
@@ -37,7 +36,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	private PlayerJANI player = null;
 	
 	@Override
-	public JANI2PRISMProcessorExtended setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorExtended setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof PlayerJANI; 
 		
@@ -46,7 +45,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert player != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -94,7 +93,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert player != null;
 		
 		for (Action action: player.getActionsOrEmpty()) {
@@ -103,7 +102,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert player != null;
 		
 		boolean usesTransient = false;

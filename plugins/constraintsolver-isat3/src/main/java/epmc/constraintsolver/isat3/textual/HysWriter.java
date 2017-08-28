@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
@@ -147,7 +146,7 @@ final class HysWriter {
 		this.outStream = outStream;
 	}
 
-	void write() throws EPMCException {
+	void write() {
 		try (PrintStream out = new PrintStream(outStream);) {
 			writeVariableDeclarations(out);
 			writeConstraints(out);
@@ -185,7 +184,7 @@ final class HysWriter {
 		out.println();
 	}
 
-	private void writeConstraints(PrintStream out) throws EPMCException  {
+	private void writeConstraints(PrintStream out)  {
 //		Expression constraintExpression = null;
 //		for (Expression expression : solver.getConstraints()) {
 //			if (constraintExpression == null) {
@@ -204,7 +203,7 @@ final class HysWriter {
 //		out.println(SEMICOLON);
 	}
 
-	private String translateExpression(Expression expression) throws EPMCException {
+	private String translateExpression(Expression expression) {
 		assert expression != null;
 		if (expression instanceof ExpressionIdentifierStandard) {
 			ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
@@ -219,8 +218,7 @@ final class HysWriter {
 		}
 	}
 
-	private String translateExpressionOperator(ExpressionOperator expression)
-			throws EPMCException {
+	private String translateExpressionOperator(ExpressionOperator expression) {
 		ISatOperator operator = EPMC_TO_ISAT3.get(expression.getOperator());
 		assert operator != null : expression.getOperator();
 		StringBuilder result = new StringBuilder();
@@ -250,7 +248,7 @@ final class HysWriter {
 		return result.toString();
 	}
 	
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

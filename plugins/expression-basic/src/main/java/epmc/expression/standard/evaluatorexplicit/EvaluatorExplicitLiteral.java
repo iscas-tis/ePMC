@@ -21,7 +21,6 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -70,7 +69,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitLiteral(this);
         }
 
@@ -87,7 +86,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
     private final Value value;
     private final boolean booleanValue;
 
-    private EvaluatorExplicitLiteral(Builder builder) throws EPMCException {
+    private EvaluatorExplicitLiteral(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -112,14 +111,14 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert expression != null;
         assert variables != null;
         return value;
     }
     
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         return booleanValue;
     }
 
@@ -128,7 +127,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         return value;
     }
 
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

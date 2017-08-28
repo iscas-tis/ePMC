@@ -3,7 +3,6 @@ package epmc.propertysolver;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionSteadyState;
@@ -44,7 +43,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
 	}
 
 	@Override
-	public boolean canHandle() throws EPMCException {
+	public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -66,7 +65,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -76,7 +75,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -87,7 +86,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -98,7 +97,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
 	}
 
 	@Override
-	public StateMap solve() throws EPMCException {
+	public StateMap solve() {
     	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
     	ExpressionSteadyState steadyState = ExpressionSteadyState.asSteadyState(propertyQuantifier.getQuantified());
 

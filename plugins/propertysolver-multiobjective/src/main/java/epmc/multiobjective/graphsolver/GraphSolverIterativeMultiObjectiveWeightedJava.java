@@ -22,7 +22,6 @@ package epmc.multiobjective.graphsolver;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -76,13 +75,13 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	multiobjectiveWeighted();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -97,12 +96,12 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         inputValues = objectiveMultiObjectiveWeighted.getValues();
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	this.outputValues = inputValues;
     	objective.setResult(outputValues);
     }
 
-    private void multiobjectiveWeighted() throws EPMCException {
+    private void multiobjectiveWeighted() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -125,7 +124,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     /* auxiliary methods */
     
     private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
@@ -164,7 +163,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -240,7 +239,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

@@ -20,7 +20,6 @@
 
 package epmc.jani.flatten;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentParallel;
@@ -42,7 +41,7 @@ public final class FlatterComponentParallel implements FlatterComponent {
 	}
 
 	@Override
-	public ComponentAutomaton flatten() throws EPMCException {
+	public ComponentAutomaton flatten() {
 		ComponentParallel componentParallel = (ComponentParallel) component;
 		
 		

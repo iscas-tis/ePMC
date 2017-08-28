@@ -68,7 +68,7 @@ public final class HandlerUpdateServerParameters implements Handler {
 	}
 
 	@Override
-	public void handle(Object client, JsonObject object) throws EPMCException {
+	public void handle(Object client, JsonObject object) {
 		assert client != null;
 		assert object != null;
 		ensure(backend.clientLoggedIn(client), ProblemsJANIInteraction.JANI_INTERACTION_NOT_LOGGED_IN);

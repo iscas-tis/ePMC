@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -46,7 +45,7 @@ public class PropositionalAndOperatorTest {
     }
 
     @Test
-    public void operatorTest() throws EPMCException {
+    public void operatorTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Value result;

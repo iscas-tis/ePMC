@@ -23,7 +23,6 @@ package epmc.graphsolver.lumping;
 import java.util.Arrays;
 import java.util.Collection;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
@@ -31,7 +30,7 @@ import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
 
 public final class UtilLump {
-    public static GraphSolverObjectiveExplicitLump partitionByAPsObjective(GraphExplicit graph, Collection<Expression> atomics) throws EPMCException {
+    public static GraphSolverObjectiveExplicitLump partitionByAPsObjective(GraphExplicit graph, Collection<Expression> atomics) {
         GraphSolverObjectiveExplicitLump result = new GraphSolverObjectiveExplicitLump();
         result.setGraph(graph);
         result.setAtomics(atomics);

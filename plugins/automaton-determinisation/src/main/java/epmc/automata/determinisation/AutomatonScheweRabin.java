@@ -23,7 +23,6 @@ package epmc.automata.determinisation;
 import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonSafra;
 import epmc.automaton.Buechi;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.value.Value;
@@ -54,7 +53,7 @@ public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafr
 		}
 		
 		@Override
-		public AutomatonScheweRabin build() throws EPMCException {
+		public AutomatonScheweRabin build() {
 			return new AutomatonScheweRabin(this);
 		}
 	}
@@ -63,7 +62,7 @@ public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafr
 
     private final AutomatonSchewe inner;
     
-    private AutomatonScheweRabin(Builder builder) throws EPMCException {
+    private AutomatonScheweRabin(Builder builder) {
     	AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
     	scheweBuilder.setBuechi(builder.getBuechi());
     	scheweBuilder.setInit(builder.getInit());
@@ -88,7 +87,7 @@ public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafr
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         inner.queryState(modelState, automatonState);
     }
 

@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.options.Option;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
@@ -99,9 +98,8 @@ public final class UtilPlugin {
      * </p>
      * 
      * @param options defines plugin locations and will contain loaded plugins
-     * @throws EPMCException thrown in case of problems during plugin loading
      */
-    public static void loadPlugins(Options options) throws EPMCException {
+    public static void loadPlugins(Options options) {
         assert options != null;
         List<String> plugins = getPluginList(options);
 
@@ -158,9 +156,8 @@ public final class UtilPlugin {
      * 
      * @param options options to read plugin list from
      * @return list of external plugins
-     * @throws EPMCException thrown in case of problems
      */
-    private static List<String> getPluginList(Options options) throws EPMCException {
+    private static List<String> getPluginList(Options options) {
         assert options != null;
         List<String> result = new ArrayList<>();
         
@@ -197,9 +194,8 @@ public final class UtilPlugin {
      * 
      * @param pluginListPath file to read list of plugins from
      * @return list of plugins
-     * @throws EPMCException thrown in case of problems, e.g. non-existing files
      */
-    public static List<String> readPluginList(Path pluginListPath) throws EPMCException {
+    public static List<String> readPluginList(Path pluginListPath) {
         assert pluginListPath != null;
         Charset charset = Charset.forName(US_ASCII);
         List<String> result = new ArrayList<>();

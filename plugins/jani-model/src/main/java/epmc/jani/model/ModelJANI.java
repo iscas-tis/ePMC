@@ -242,7 +242,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 
 	@Override
-	public void read(InputStream... inputs) throws EPMCException {
+	public void read(InputStream... inputs) {
 		assert inputs != null;
 		for (InputStream input : inputs) {
 			assert input != null;
@@ -263,7 +263,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 
 		JsonObject object = UtilJSON.toObject(value);
@@ -319,7 +319,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return this;
 	}
 
-	public Map<Expression, Expression> computeConstants() throws EPMCException {
+	public Map<Expression, Expression> computeConstants() {
 		Map<Expression,Expression> result = new LinkedHashMap<>();
 		Map<Expression,Expression> externalConstants = computeExternalConstants();
 		if (modelConstants != null) {
@@ -345,7 +345,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return result;
 	}
 
-	private Map<Expression, Expression> computeExternalConstants() throws EPMCException {
+	private Map<Expression, Expression> computeExternalConstants() {
 		Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         Map<Expression, Expression> result = new LinkedHashMap<>();
@@ -366,7 +366,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         return result;
 	}
 
-	private Expression parseConstant(String valueString) throws EPMCException {
+	private Expression parseConstant(String valueString) {
 		assert valueString != null;
 		ExpressionLiteral.ValueProvider valueProvider = () -> {
 			Value value = null;
@@ -405,7 +405,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return restrictInitial;
 	}
 	
-	public Expression getInitialStatesExpressionOrTrue() throws EPMCException {
+	public Expression getInitialStatesExpressionOrTrue() {
 		Expression initial;
 		if (restrictInitial == null) {
 			initial = ExpressionLiteral.getTrue();
@@ -425,14 +425,14 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return initial;
 	}
 	
-	private void parseType(JsonObject object) throws EPMCException {
+	private void parseType(JsonObject object) {
 		UtilJSON.ensureString(object, TYPE);
 		// TODO support further types
 		Class<? extends ModelExtensionSemantics> clazz = UtilJSON.toOneOf(object, TYPE, janiToSemantics);
 		semantics = Util.getInstance(clazz);
 	}
 
-	private void parseFeatures(JsonObject object) throws EPMCException {
+	private void parseFeatures(JsonObject object) {
 		assert object != null;
 		JsonArray array = UtilJSON.getArrayStringOrNull(object, FEATURES);
 		if (array == null) {
@@ -460,7 +460,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		result.add(JANI_VERSION, janiVersion);
 		result.add(NAME, name);
@@ -510,7 +510,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return semantics.getIdentifier();
 	}
 
-	public void setSemantics(String semantics) throws EPMCException {
+	public void setSemantics(String semantics) {
 		if (semantics == null) {
 			this.semantics = null;
 		} else {
@@ -525,7 +525,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	public LowLevel newLowLevel(Engine engine,
 			Set<Object> graphProperties,
 			Set<Object> nodeProperties,
-			Set<Object> edgeProperties) throws EPMCException {
+			Set<Object> edgeProperties) {
 //		assert !containsUndefinedConstants() : findSomeUndefinedConstant(); // TODO
 		if (engine instanceof EngineExplorer) {
 			return new ExplorerJANI(this, graphProperties, nodeProperties, edgeProperties);
@@ -672,7 +672,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		return silentAction;
 	}
 	
-	public void parseBeforeModelNodeExtensions(JANINode node, JsonValue value) throws EPMCException {
+	public void parseBeforeModelNodeExtensions(JANINode node, JsonValue value) {
 		assert node != null;
 		semantics.setNode(node);
 		semantics.setJsonValue(value);
@@ -687,7 +687,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 		}
 	}
 
-	public void parseAfterModelNodeExtensions(JANINode node, JsonValue value) throws EPMCException {
+	public void parseAfterModelNodeExtensions(JANINode node, JsonValue value) {
 		assert node != null;
 		assert value != null;
 		semantics.setNode(node);
@@ -778,12 +778,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	@Override
 	public ModelJANI clone() {
 		ModelJANI clone = new ModelJANI();
-		try {
-			JsonValue generated = generate();
-			clone.parse(generated);
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+		JsonValue generated = generate();
+		clone.parse(generated);
 		return clone;
 	}
 
@@ -806,7 +802,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 	}
 
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		Type type = null;
 		if (variables != null) {

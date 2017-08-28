@@ -32,7 +32,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -46,7 +45,7 @@ public class InitLabelTest {
     }
 
     @Test
-    public void herman03Test() throws EPMCException {
+    public void herman03Test() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;

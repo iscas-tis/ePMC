@@ -38,7 +38,7 @@ public final class KretinskyTest {
         prepare();
     }
 
-    private final static Options prepareKretinskyOptions() throws EPMCException {
+    private final static Options prepareKretinskyOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsEPMC.PLUGIN, pluginDir);
         prepareOptions(options);
@@ -47,7 +47,7 @@ public final class KretinskyTest {
 
     
     @Test
-    public void clusterUntilTest() throws EPMCException {
+    public void clusterUntilTest() {
         Options options = prepareKretinskyOptions();
         prepareOptions(options);
         /*
@@ -64,7 +64,7 @@ public final class KretinskyTest {
   //      clusterUntilTestRun(options);
     }    
     
-    private void clusterUntilTestRun(Options options) throws EPMCException {
+    private void clusterUntilTestRun(Options options) {
         Map<String,Object> constants = new HashMap<>();
         Value result;
         double tolerance = 1E-10;
@@ -106,7 +106,7 @@ public final class KretinskyTest {
     }
 
     @Test
-    public void twoDiceTest() throws EPMCException {
+    public void twoDiceTest() {
         Options options = prepareKretinskyOptions();
         options.set(OptionsEPMC.PROPERTY_SOLVER, "generalised-rabin-explicit,generalised-rabin-dd");
         options.set(OptionsEPMC.ENGINE, OptionsTypesEPMC.Engine.EXPLICIT);
@@ -116,7 +116,7 @@ public final class KretinskyTest {
         twoDiceTestRun(options);
     }
     
-    private void twoDiceTestRun(Options options) throws EPMCException {
+    private void twoDiceTestRun(Options options) {
         double tolerance = 1E-11;
         options.set(OptionsEPMC.ITERATION_TOLERANCE, Double.toString(tolerance));
         Value result1 = computeResult(options, TWO_DICE, "Pmin=? [ true & (F s1=7 & s2=7 & d1+d2=2) ]");
@@ -124,7 +124,7 @@ public final class KretinskyTest {
     }
 
     @Test
-    public void firewireImplPatternTestRun() throws EPMCException {
+    public void firewireImplPatternTestRun() {
         Options options = prepareKretinskyOptions();
         options.set(OptionsEPMC.ENGINE, OptionsTypesEPMC.Engine.EXPLICIT);
         options.set(OptionsEPMC.PROPERTY_SOLVER, "generalised-rabin-incremental-explicit,generalised-rabin-dd");
@@ -133,7 +133,7 @@ public final class KretinskyTest {
   //      firewireImplPatternTestRun(options);
     }
     
-    private void firewireImplPatternTestRun(Options options) throws EPMCException {
+    private void firewireImplPatternTestRun(Options options) {
         Map<String,String> constants = new HashMap<>();
         Value result;
         double tolerance = 1E-10;
@@ -146,7 +146,7 @@ public final class KretinskyTest {
     }
 
     @Test
-    public void dining_crypt3Test() throws EPMCException {
+    public void dining_crypt3Test() {
         Options options = prepareKretinskyOptions();
         options.set(OptionsEPMC.PROPERTY_SOLVER, "generalised-rabin-explicit,generalised-rabin-dd,filter-dd,filter-explicit,propositional-dd,propositional-explicit,operator-dd,operator-explicit");
         options.set(OptionsEPMC.ENGINE, OptionsTypesEPMC.Engine.EXPLICIT);
@@ -155,7 +155,7 @@ public final class KretinskyTest {
         dining_crypt3TestRun(options);
     }
     
-    private void dining_crypt3TestRun(Options options) throws EPMCException {
+    private void dining_crypt3TestRun(Options options) {
         double tolerance = 1E-10;
         Value result;
         options.set(OptionsEPMC.ITERATION_TOLERANCE, Double.toString(tolerance));

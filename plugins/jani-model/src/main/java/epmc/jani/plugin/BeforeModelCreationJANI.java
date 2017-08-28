@@ -20,7 +20,6 @@
 
 package epmc.jani.plugin;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 
 /**
@@ -38,6 +37,6 @@ public final class BeforeModelCreationJANI implements BeforeModelCreation {
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 	}
 }

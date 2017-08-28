@@ -71,7 +71,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
@@ -109,9 +108,8 @@ public final class CheckExplicitTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIOptions() throws EPMCException {
+    private final static Options prepareJANIOptions() {
 	    try {
 			System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
 		} catch (FileNotFoundException e) {
@@ -131,7 +129,7 @@ public final class CheckExplicitTest {
     
     
     @Test
-    public void testPRISMExportedTest() throws EPMCException {
+    public void testPRISMExportedTest() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("p", "0.5");
     	Options options = prepareJANIOptions();
@@ -146,7 +144,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMTest() throws EPMCException { System.gc();
+    public void testPRISMTest() { System.gc();
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -163,7 +161,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBRP() throws EPMCException {
+    public void testPRISMExportedBRP() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("MAX", "4");
     	constants.put("N", "64");
@@ -190,7 +188,7 @@ public final class CheckExplicitTest {
     //It fails in computing the S properties as they are not supported yet
     @Ignore
     @Test
-    public void testPRISMExportedCell() throws EPMCException {
+    public void testPRISMExportedCell() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "0.5");
     	constants.put("N", "50");
@@ -211,7 +209,7 @@ public final class CheckExplicitTest {
     //It fails in computing the S properties as they are not supported yet
     @Ignore
     @Test
-    public void testPRISMExportedCluster() throws EPMCException {
+    public void testPRISMExportedCluster() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "10");
     	constants.put("N", "20");
@@ -235,7 +233,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCoin_2() throws EPMCException {
+    public void testPRISMExportedCoin_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -256,7 +254,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCoin_4() throws EPMCException {
+    public void testPRISMExportedCoin_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -277,7 +275,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCoin_6() throws EPMCException {
+    public void testPRISMExportedCoin_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -300,7 +298,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCoin_8() throws EPMCException {
+    public void testPRISMExportedCoin_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -323,7 +321,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCoin_10() throws EPMCException {
+    public void testPRISMExportedCoin_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "2");
     	constants.put("k", "10");
@@ -344,7 +342,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_2_2() throws EPMCException {
+    public void testPRISMExportedCSMA_2_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = prepareJANIOptions();
@@ -366,7 +364,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_2_4() throws EPMCException {
+    public void testPRISMExportedCSMA_2_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = prepareJANIOptions();
@@ -388,7 +386,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_2_6() throws EPMCException {
+    public void testPRISMExportedCSMA_2_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = prepareJANIOptions();
@@ -410,7 +408,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_3_2() throws EPMCException {
+    public void testPRISMExportedCSMA_3_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = prepareJANIOptions();
@@ -432,7 +430,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_3_4() throws EPMCException {
+    public void testPRISMExportedCSMA_3_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = prepareJANIOptions();
@@ -456,7 +454,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_6() throws EPMCException {
+    public void testPRISMExportedCSMA_3_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = prepareJANIOptions();
@@ -478,7 +476,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedCSMA_4_2() throws EPMCException {
+    public void testPRISMExportedCSMA_4_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
     	Options options = prepareJANIOptions();
@@ -502,7 +500,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_4() throws EPMCException {
+    public void testPRISMExportedCSMA_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = prepareJANIOptions();
@@ -526,7 +524,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_6() throws EPMCException {
+    public void testPRISMExportedCSMA_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "1");
         Options options = prepareJANIOptions();
@@ -548,7 +546,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDice() throws EPMCException {
+    public void testPRISMExportedDice() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "3");
         Options options = prepareJANIOptions();
@@ -564,7 +562,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedTwoDice() throws EPMCException {
+    public void testPRISMExportedTwoDice() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("x", "5");
         Options options = prepareJANIOptions();
@@ -580,7 +578,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_3() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -594,7 +592,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_4() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -608,7 +606,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_5() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -622,7 +620,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_6() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -636,7 +634,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_7() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -650,7 +648,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_8() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -664,7 +662,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_9() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -680,7 +678,7 @@ public final class CheckExplicitTest {
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_10() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -696,7 +694,7 @@ public final class CheckExplicitTest {
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_15() throws EPMCException {
+    public void testPRISMExportedDiningCrypt_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "0");
         Options options = prepareJANIOptions();
@@ -710,7 +708,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedFireweireAbs() throws EPMCException {
+    public void testPRISMExportedFireweireAbs() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
@@ -724,7 +722,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedFireweireImpl() throws EPMCException {
+    public void testPRISMExportedFireweireImpl() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("delay", "36");
     	constants.put("fast", "0.5");
@@ -740,7 +738,7 @@ public final class CheckExplicitTest {
     //No support yet for S
     @Ignore
     @Test
-    public void testPRISMExportedFMS() throws EPMCException {
+    public void testPRISMExportedFMS() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("n", "5");
         Options options = prepareJANIOptions();
@@ -759,7 +757,7 @@ public final class CheckExplicitTest {
     //No support yet for S
     @Ignore
     @Test
-    public void testPRISMExportedKanban() throws EPMCException {
+    public void testPRISMExportedKanban() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("t", "4");
         Options options = prepareJANIOptions();
@@ -776,7 +774,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_3() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
        Options options = prepareJANIOptions();
@@ -794,7 +792,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_4() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -812,7 +810,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_5() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = prepareJANIOptions();
@@ -830,7 +828,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_6() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = prepareJANIOptions();
@@ -848,7 +846,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_7() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -868,7 +866,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_8() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	Options options = prepareJANIOptions();
@@ -888,7 +886,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_9() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -908,7 +906,7 @@ public final class CheckExplicitTest {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_10() throws EPMCException {
+    public void testPRISMExportedLeaderAsync_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -926,7 +924,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_2() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -941,7 +939,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_3() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -956,7 +954,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_4() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -971,7 +969,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_5() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -986,7 +984,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_6() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1001,7 +999,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_8() throws EPMCException {
+    public void testPRISMExportedLeaderSync_3_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1016,7 +1014,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_2() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1031,7 +1029,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_3() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1046,7 +1044,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_4() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1061,7 +1059,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_5() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1076,7 +1074,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_6() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1091,7 +1089,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_4_8() throws EPMCException {
+    public void testPRISMExportedLeaderSync_4_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1106,7 +1104,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_2() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1121,7 +1119,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_3() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1136,7 +1134,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_4() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1151,7 +1149,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_5() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1166,7 +1164,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_6() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1181,7 +1179,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_5_8() throws EPMCException {
+    public void testPRISMExportedLeaderSync_5_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1196,7 +1194,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_6_2() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1211,7 +1209,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_6_3() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1226,7 +1224,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_6_4() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1241,7 +1239,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_6_5() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1256,7 +1254,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_6_6() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1273,7 +1271,7 @@ public final class CheckExplicitTest {
     // PRISM fails with a SIGSEGV in libdd
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_8() throws EPMCException {
+    public void testPRISMExportedLeaderSync_6_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("L", "1");
         Options options = prepareJANIOptions();
@@ -1290,7 +1288,7 @@ public final class CheckExplicitTest {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedKNACL() throws EPMCException {
+    public void testPRISMExportedKNACL() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1314,7 +1312,7 @@ public final class CheckExplicitTest {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedNACL() throws EPMCException {
+    public void testPRISMExportedNACL() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1334,7 +1332,7 @@ public final class CheckExplicitTest {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedMC() throws EPMCException {
+    public void testPRISMExportedMC() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N1", "10");
     	constants.put("N2", "10");
@@ -1358,7 +1356,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedMutual_3() throws EPMCException {
+    public void testPRISMExportedMutual_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1373,7 +1371,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedMutual_4() throws EPMCException {
+    public void testPRISMExportedMutual_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1388,7 +1386,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedMutual_5() throws EPMCException {
+    public void testPRISMExportedMutual_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1405,7 +1403,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedMutual_8() throws EPMCException {
+    public void testPRISMExportedMutual_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1422,7 +1420,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedMutual_10() throws EPMCException {
+    public void testPRISMExportedMutual_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1437,7 +1435,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedP2P_4_4() throws EPMCException {
+    public void testPRISMExportedP2P_4_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1451,7 +1449,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedP2P_4_5() throws EPMCException {
+    public void testPRISMExportedP2P_4_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1467,7 +1465,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_6() throws EPMCException {
+    public void testPRISMExportedP2P_4_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1483,7 +1481,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_7() throws EPMCException {
+    public void testPRISMExportedP2P_4_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1499,7 +1497,7 @@ public final class CheckExplicitTest {
     // PRISM fails with SIGSEGV in libprismhybrid
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_8() throws EPMCException {
+    public void testPRISMExportedP2P_4_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = prepareJANIOptions();
@@ -1513,7 +1511,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedP2P_5_4() throws EPMCException {
+    public void testPRISMExportedP2P_5_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1529,7 +1527,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_5() throws EPMCException {
+    public void testPRISMExportedP2P_5_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = prepareJANIOptions();
@@ -1545,7 +1543,7 @@ public final class CheckExplicitTest {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_6() throws EPMCException {
+    public void testPRISMExportedP2P_5_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
     	Options options = prepareJANIOptions();
@@ -1561,7 +1559,7 @@ public final class CheckExplicitTest {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_7() throws EPMCException {
+    public void testPRISMExportedP2P_5_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1577,7 +1575,7 @@ public final class CheckExplicitTest {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_8() throws EPMCException {
+    public void testPRISMExportedP2P_5_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "1.1");
         Options options = prepareJANIOptions();
@@ -1591,7 +1589,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhil_3() throws EPMCException {
+    public void testPRISMExportedPhil_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1603,7 +1601,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhil_4() throws EPMCException {
+    public void testPRISMExportedPhil_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1615,7 +1613,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhil_5() throws EPMCException {
+    public void testPRISMExportedPhil_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1627,7 +1625,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhil_6() throws EPMCException {
+    public void testPRISMExportedPhil_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1641,7 +1639,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedPhil_7() throws EPMCException {
+    public void testPRISMExportedPhil_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1655,7 +1653,7 @@ public final class CheckExplicitTest {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedPhil_8() throws EPMCException {
+    public void testPRISMExportedPhil_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1669,7 +1667,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_9() throws EPMCException {
+    public void testPRISMExportedPhil_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1683,7 +1681,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_10() throws EPMCException {
+    public void testPRISMExportedPhil_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1697,7 +1695,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_15() throws EPMCException {
+    public void testPRISMExportedPhil_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1711,7 +1709,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_20() throws EPMCException {
+    public void testPRISMExportedPhil_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1725,7 +1723,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_25() throws EPMCException {
+    public void testPRISMExportedPhil_25() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1739,7 +1737,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_30() throws EPMCException {
+    public void testPRISMExportedPhil_30() {
     	Map<String, Object> constants = new LinkedHashMap<>();
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
@@ -1751,7 +1749,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhilNofair_3() throws EPMCException {
+    public void testPRISMExportedPhilNofair_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1766,7 +1764,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhilNofair_4() throws EPMCException {
+    public void testPRISMExportedPhilNofair_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1781,7 +1779,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhilNofair_5() throws EPMCException {
+    public void testPRISMExportedPhilNofair_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1798,7 +1796,7 @@ public final class CheckExplicitTest {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_6() throws EPMCException {
+    public void testPRISMExportedPhilNofair_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1815,7 +1813,7 @@ public final class CheckExplicitTest {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_7() throws EPMCException {
+    public void testPRISMExportedPhilNofair_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1832,7 +1830,7 @@ public final class CheckExplicitTest {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_8() throws EPMCException {
+    public void testPRISMExportedPhilNofair_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1849,7 +1847,7 @@ public final class CheckExplicitTest {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_9() throws EPMCException {
+    public void testPRISMExportedPhilNofair_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1866,7 +1864,7 @@ public final class CheckExplicitTest {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_10() throws EPMCException {
+    public void testPRISMExportedPhilNofair_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
         Options options = prepareJANIOptions();
@@ -1881,7 +1879,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhilLSS_3() throws EPMCException {
+    public void testPRISMExportedPhilLSS_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
@@ -1897,7 +1895,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedPhilLSS_4() throws EPMCException {
+    public void testPRISMExportedPhilLSS_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "3");
     	constants.put("L", "1");
@@ -1915,7 +1913,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_2() throws EPMCException {
+    public void testPRISMExportedPolling_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -1936,7 +1934,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_3() throws EPMCException {
+    public void testPRISMExportedPolling_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -1957,7 +1955,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_4() throws EPMCException {
+    public void testPRISMExportedPolling_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -1978,7 +1976,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_5() throws EPMCException {
+    public void testPRISMExportedPolling_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -1999,7 +1997,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_6() throws EPMCException {
+    public void testPRISMExportedPolling_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2020,7 +2018,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_7() throws EPMCException {
+    public void testPRISMExportedPolling_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -2041,7 +2039,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_8() throws EPMCException {
+    public void testPRISMExportedPolling_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -2062,7 +2060,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_9() throws EPMCException {
+    public void testPRISMExportedPolling_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -2083,7 +2081,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_10() throws EPMCException {
+    public void testPRISMExportedPolling_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2104,7 +2102,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_11() throws EPMCException {
+    public void testPRISMExportedPolling_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2125,7 +2123,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_12() throws EPMCException {
+    public void testPRISMExportedPolling_12() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2146,7 +2144,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_13() throws EPMCException {
+    public void testPRISMExportedPolling_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2167,7 +2165,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_14() throws EPMCException {
+    public void testPRISMExportedPolling_14() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2188,7 +2186,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_15() throws EPMCException {
+    public void testPRISMExportedPolling_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2209,7 +2207,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_16() throws EPMCException {
+    public void testPRISMExportedPolling_16() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2230,7 +2228,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_17() throws EPMCException {
+    public void testPRISMExportedPolling_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2251,7 +2249,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_18() throws EPMCException {
+    public void testPRISMExportedPolling_18() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
     	Options options = prepareJANIOptions();
@@ -2272,7 +2270,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_19() throws EPMCException {
+    public void testPRISMExportedPolling_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -2293,7 +2291,7 @@ public final class CheckExplicitTest {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_20() throws EPMCException {
+    public void testPRISMExportedPolling_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "50");
         Options options = prepareJANIOptions();
@@ -2312,7 +2310,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedRabin_3() throws EPMCException {
+    public void testPRISMExportedRabin_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = prepareJANIOptions();
@@ -2328,7 +2326,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedRabin_4() throws EPMCException {
+    public void testPRISMExportedRabin_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = prepareJANIOptions();
@@ -2346,7 +2344,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_5() throws EPMCException {
+    public void testPRISMExportedRabin_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = prepareJANIOptions();
@@ -2364,7 +2362,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_6() throws EPMCException {
+    public void testPRISMExportedRabin_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = prepareJANIOptions();
@@ -2382,7 +2380,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_7() throws EPMCException {
+    public void testPRISMExportedRabin_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
     	Options options = prepareJANIOptions();
@@ -2400,7 +2398,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_8() throws EPMCException {
+    public void testPRISMExportedRabin_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = prepareJANIOptions();
@@ -2418,7 +2416,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_9() throws EPMCException {
+    public void testPRISMExportedRabin_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = prepareJANIOptions();
@@ -2436,7 +2434,7 @@ public final class CheckExplicitTest {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_10() throws EPMCException {
+    public void testPRISMExportedRabin_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("k", "5");
         Options options = prepareJANIOptions();
@@ -2452,7 +2450,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBeauquier_3() throws EPMCException {
+    public void testPRISMExportedBeauquier_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2470,7 +2468,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBeauquier_5() throws EPMCException {
+    public void testPRISMExportedBeauquier_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2488,7 +2486,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBeauquier_7() throws EPMCException {
+    public void testPRISMExportedBeauquier_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2506,7 +2504,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedBeauquier_9() throws EPMCException {
+    public void testPRISMExportedBeauquier_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2525,7 +2523,7 @@ public final class CheckExplicitTest {
 
     @Test
     @Ignore
-    public void testPRISMExportedBeauquier_11() throws EPMCException {
+    public void testPRISMExportedBeauquier_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2543,7 +2541,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedHerman_3() throws EPMCException {
+    public void testPRISMExportedHerman_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2561,7 +2559,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedHerman_5() throws EPMCException {
+    public void testPRISMExportedHerman_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2579,7 +2577,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedHerman_7() throws EPMCException {
+    public void testPRISMExportedHerman_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2597,7 +2595,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedHerman_9() throws EPMCException {
+    public void testPRISMExportedHerman_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2615,7 +2613,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedHerman_11() throws EPMCException {
+    public void testPRISMExportedHerman_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2635,7 +2633,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_13() throws EPMCException {
+    public void testPRISMExportedHerman_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2655,7 +2653,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_15() throws EPMCException {
+    public void testPRISMExportedHerman_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2675,7 +2673,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_17() throws EPMCException {
+    public void testPRISMExportedHerman_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2695,7 +2693,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_19() throws EPMCException {
+    public void testPRISMExportedHerman_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2715,7 +2713,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
    @Ignore
     @Test
-    public void testPRISMExportedHerman_21() throws EPMCException {
+    public void testPRISMExportedHerman_21() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2733,7 +2731,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_3() throws EPMCException {
+    public void testPRISMExportedIJ_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2751,7 +2749,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_4() throws EPMCException {
+    public void testPRISMExportedIJ_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2769,7 +2767,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_5() throws EPMCException {
+    public void testPRISMExportedIJ_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2787,7 +2785,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_6() throws EPMCException {
+    public void testPRISMExportedIJ_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2805,7 +2803,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_7() throws EPMCException {
+    public void testPRISMExportedIJ_7() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2823,7 +2821,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_8() throws EPMCException {
+    public void testPRISMExportedIJ_8() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2841,7 +2839,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_9() throws EPMCException {
+    public void testPRISMExportedIJ_9() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2859,7 +2857,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_10() throws EPMCException {
+    public void testPRISMExportedIJ_10() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2877,7 +2875,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_11() throws EPMCException {
+    public void testPRISMExportedIJ_11() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2895,7 +2893,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_12() throws EPMCException {
+    public void testPRISMExportedIJ_12() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2913,7 +2911,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_13() throws EPMCException {
+    public void testPRISMExportedIJ_13() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2931,7 +2929,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_14() throws EPMCException {
+    public void testPRISMExportedIJ_14() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2949,7 +2947,7 @@ public final class CheckExplicitTest {
     }
     
     @Test
-    public void testPRISMExportedIJ_15() throws EPMCException {
+    public void testPRISMExportedIJ_15() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -2969,7 +2967,7 @@ public final class CheckExplicitTest {
     //Fails while computing rewards
     @Ignore
     @Test
-    public void testPRISMExportedIJ_16() throws EPMCException {
+    public void testPRISMExportedIJ_16() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "0");
     	constants.put("k", "0");
@@ -2987,7 +2985,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedIJ_17() throws EPMCException {
+    public void testPRISMExportedIJ_17() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3007,7 +3005,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_18() throws EPMCException {
+    public void testPRISMExportedIJ_18() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3027,7 +3025,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_19() throws EPMCException {
+    public void testPRISMExportedIJ_19() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3047,7 +3045,7 @@ public final class CheckExplicitTest {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_20() throws EPMCException {
+    public void testPRISMExportedIJ_20() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3067,7 +3065,7 @@ public final class CheckExplicitTest {
     //Fails with GC overhead with 8G of memory
     @Ignore
     @Test
-    public void testPRISMExportedIJ_21() throws EPMCException {
+    public void testPRISMExportedIJ_21() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("K", "1");
     	constants.put("k", "1");
@@ -3087,7 +3085,7 @@ public final class CheckExplicitTest {
     //S not yet supported
     @Ignore
     @Test
-    public void testPRISMExportedTandem() throws EPMCException {
+    public void testPRISMExportedTandem() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("c", "10");
     	constants.put("T", "1");
@@ -3105,7 +3103,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_0() throws EPMCException {
+    public void testPRISMExportedWLAN_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3127,7 +3125,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_1() throws EPMCException {
+    public void testPRISMExportedWLAN_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3149,7 +3147,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_2() throws EPMCException {
+    public void testPRISMExportedWLAN_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3171,7 +3169,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_3() throws EPMCException {
+    public void testPRISMExportedWLAN_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3193,7 +3191,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_4() throws EPMCException {
+    public void testPRISMExportedWLAN_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3215,7 +3213,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_5() throws EPMCException {
+    public void testPRISMExportedWLAN_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3237,7 +3235,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLAN_6() throws EPMCException {
+    public void testPRISMExportedWLAN_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("TRANS_TIME_MAX", "10");
     	constants.put("k", "2");
@@ -3259,7 +3257,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_0() throws EPMCException {
+    public void testPRISMExportedWLANCollide_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3275,7 +3273,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_1() throws EPMCException {
+    public void testPRISMExportedWLANCollide_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3291,7 +3289,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_2() throws EPMCException {
+    public void testPRISMExportedWLANCollide_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3307,7 +3305,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_3() throws EPMCException {
+    public void testPRISMExportedWLANCollide_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3323,7 +3321,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_4() throws EPMCException {
+    public void testPRISMExportedWLANCollide_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3339,7 +3337,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_5() throws EPMCException {
+    public void testPRISMExportedWLANCollide_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3355,7 +3353,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_6() throws EPMCException {
+    public void testPRISMExportedWLANCollide_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("COL", "2");
 		constants.put("TRANS_TIME_MAX", "10");
@@ -3371,7 +3369,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_0() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_0() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3390,7 +3388,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_1() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3409,7 +3407,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_2() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_2() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3428,7 +3426,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_3() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_3() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3447,7 +3445,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_4() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_4() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3466,7 +3464,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_5() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_5() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3487,7 +3485,7 @@ public final class CheckExplicitTest {
     // Fails by out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_6() throws EPMCException {
+    public void testPRISMExportedWLANTimeBounded_6() {
     	Map<String, Object> constants = new LinkedHashMap<>();
 		constants.put("TRANS_TIME_MAX", "10");
     	constants.put("DEADLINE", "100");
@@ -3506,7 +3504,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedZeroconf() throws EPMCException {
+    public void testPRISMExportedZeroconf() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("err", "0");
     	constants.put("K", "4");
@@ -3525,7 +3523,7 @@ public final class CheckExplicitTest {
     }
 
     @Test
-    public void testPRISMExportedZeroconfTimeBounded() throws EPMCException {
+    public void testPRISMExportedZeroconfTimeBounded() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("T", "11");
     	constants.put("K", "1");

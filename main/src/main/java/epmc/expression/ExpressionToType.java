@@ -20,7 +20,6 @@
 
 package epmc.expression;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 
 /**
@@ -38,7 +37,6 @@ public interface ExpressionToType {
      * 
      * @param expression expression to get type of
      * @return type of the expression, or {@code null}
-     * @throws EPMCException thrown in case of problems
      */
-    Type getType(Expression expression) throws EPMCException;
+    Type getType(Expression expression);
 }

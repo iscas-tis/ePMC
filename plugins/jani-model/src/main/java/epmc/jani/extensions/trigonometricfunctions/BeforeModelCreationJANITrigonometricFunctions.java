@@ -20,7 +20,6 @@
 
 package epmc.jani.extensions.trigonometricfunctions;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 
@@ -34,7 +33,7 @@ public final class BeforeModelCreationJANITrigonometricFunctions implements Befo
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);

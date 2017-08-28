@@ -25,7 +25,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
@@ -55,7 +54,7 @@ public final class ComponentAutomaton implements Component {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);

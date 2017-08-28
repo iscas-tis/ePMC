@@ -20,7 +20,6 @@
 
 package epmc.graphsolver;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.util.BitSet;
@@ -41,7 +40,7 @@ public final class UtilGraphSolver {
         return new GraphSolverConfigurationExplicit();
     }
 
-    public static void solve(GraphSolverObjectiveExplicit objective) throws EPMCException {
+    public static void solve(GraphSolverObjectiveExplicit objective) {
         assert objective != null;
         GraphSolverConfigurationExplicit configuration = newGraphSolverConfigurationExplicit();
         configuration.setObjective(objective);

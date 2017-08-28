@@ -20,7 +20,6 @@
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.Explorer;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
@@ -94,7 +93,7 @@ public final class PropertyNodeGeneral implements PropertyNode {
 	}
 
 	@Override
-	public Value get() throws EPMCException {
+	public Value get() {
 		return value;
 	}
 

@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
@@ -89,7 +88,7 @@ public final class EdgePropertyApply implements EdgeProperty {
      * resulting value.
      */
     @Override
-    public Value get(int node, int successor) throws EPMCException {
+    public Value get(int node, int successor) {
         assert successor >= 0;
         assert successor < graph.getNumSuccessors(node);
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {

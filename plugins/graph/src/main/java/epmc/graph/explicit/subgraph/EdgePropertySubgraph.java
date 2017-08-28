@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit.subgraph;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.value.Type;
@@ -44,7 +43,7 @@ public class EdgePropertySubgraph implements EdgeProperty {
     }
 
     @Override
-    public Value get(int node, int successor) throws EPMCException {
+    public Value get(int node, int successor) {
     	int old = graph.getQueriedNode();
     	graph.queryNode(node);
         Value res = inner.get(graph.subToOrig(node), graph.getOrigSuccNumber(node, successor));

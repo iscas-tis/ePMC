@@ -29,7 +29,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.JANINode;
@@ -57,7 +56,7 @@ public final class SynchronisationVectorElement implements JANINode {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);
 		automaton = UtilJSON.toOneOf(object, AUTOMATON, model.getAutomata());
@@ -69,7 +68,7 @@ public final class SynchronisationVectorElement implements JANINode {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add(AUTOMATON, automaton.getName());
 		if (inputEnable != null) {

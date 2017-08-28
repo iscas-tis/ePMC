@@ -25,8 +25,6 @@ import static epmc.error.UtilError.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
-
 public final class SExpressionParser {
 	private final static char CHAR_END_STRING = '\0';
 	private final static char CHAR_LIST_OPEN = '(';
@@ -41,7 +39,7 @@ public final class SExpressionParser {
 	SExpressionParser() {
 	}
 
-	public SExpression parse(String string) throws EPMCException {
+	public SExpression parse(String string) {
 		this.string = string;
 		tokenIndex = 0;
 		nextChar = nextChar();
@@ -62,7 +60,7 @@ public final class SExpressionParser {
 		return result;
 	}
 	
-	private String nextToken() throws EPMCException {
+	private String nextToken() {
 		ensure(nextChar != CHAR_END_STRING, ProblemsSExpression.SEXPRESSION_UNEXPECTED_END_OF_INPUT);
 		while (Character.isWhitespace(nextChar)) {
 			nextChar = nextChar();
@@ -91,7 +89,7 @@ public final class SExpressionParser {
 		}
 	}
 
-	private SExpression parseInternal(String token) throws EPMCException {
+	private SExpression parseInternal(String token) {
 		assert token != null;
 		if (token == SExpression.LIST_CLOSE) {
 			fail(ProblemsSExpression.SEXPRESSION_UNEXPECTED_CLOSING_BRACE);

@@ -20,7 +20,6 @@
 
 package epmc.automaton;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.value.ValueBoolean;
@@ -55,7 +54,7 @@ final class BuechiTransitionImpl implements BuechiTransition {
     }
     
     @Override
-    public boolean guardFulfilled() throws EPMCException {
+    public boolean guardFulfilled() {
         return result.getBoolean();
     }
 }

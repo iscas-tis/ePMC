@@ -20,7 +20,6 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelExtension;
@@ -59,17 +58,17 @@ public final class ModelExtensionDerivedOperators implements ModelExtension {
 	}
 
 	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
+	public void setModel(ModelJANI model) {
 		this.model = model;
 	}
 
 	@Override
-	public void setNode(JANINode node) throws EPMCException {
+	public void setNode(JANINode node) {
 		this.node = node;
 	}
 
 	@Override
-	public void parseBefore() throws EPMCException {
+	public void parseBefore() {
 		if (!(this.node instanceof ModelJANI)) {
 			return;
 		}

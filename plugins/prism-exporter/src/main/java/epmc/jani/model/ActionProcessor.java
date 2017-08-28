@@ -20,7 +20,6 @@
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
@@ -29,7 +28,7 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
 	private Action action = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Action; 
 		
@@ -38,7 +37,7 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert action != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -51,13 +50,13 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert action != null;
 	}
 	
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert action != null;
 		
 		return false;

@@ -68,9 +68,8 @@ public interface OptionType {
      * @param value value to be parsed
      * @param previousValue value parsed previously, or {@code null}
      * @return parsed value
-     * @throws EPMCException thrown if the value could not be parsed
      */
-    Object parse(String value, Object previousValue) throws EPMCException;
+    Object parse(String value, Object previousValue);
 
     /**
      * Obtain short description of option type.

@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.jani.model.JANIIdentifier;
@@ -70,12 +69,12 @@ public final class JANIExpressionBool implements JANIExpression {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		return parseAsJANIExpression(value);
 	}
 	
 	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
+	public JANIExpression parseAsJANIExpression(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		resetFields();
@@ -96,7 +95,7 @@ public final class JANIExpressionBool implements JANIExpression {
 	}
 
 	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
+	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
 		assert expression != null;
 		resetFields();
 		if (!(expression instanceof ExpressionLiteral)) {

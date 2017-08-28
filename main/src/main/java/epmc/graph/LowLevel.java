@@ -22,7 +22,6 @@ package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.expression.ExpressionToType;
 
 /**
@@ -36,9 +35,8 @@ public interface LowLevel extends Closeable, ExpressionToType {
      * Create new set of initial states of this low-level model.
      * 
      * @return new set of initial states
-     * @throws EPMCException thrown in case of problems during creation
      */
-    StateSet newInitialStateSet() throws EPMCException;
+    StateSet newInitialStateSet();
     
     @Override
     void close();

@@ -25,7 +25,6 @@ import static epmc.error.UtilError.*;
 import java.io.IOException;
 import java.net.BindException;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.communication.GUI;
 import epmc.jani.interaction.communication.Server;
 import epmc.jani.interaction.communication.StandardStream;
@@ -61,7 +60,7 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
 	}
 	
 	@Override
-	public void executeOnClient() throws EPMCException {
+	public void executeOnClient() {
 		JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
 		switch (type) {
 		case STDIO:

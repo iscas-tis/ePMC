@@ -22,7 +22,6 @@ package epmc.graphsolver.iterative.natives;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -101,13 +100,13 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	boundedCumulativeDiscounted();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted);
@@ -167,7 +166,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -185,7 +184,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     	objective.setResult(outputValues);
     }
 
-    private void boundedCumulativeDiscounted() throws EPMCException {
+    private void boundedCumulativeDiscounted() {
         assert iterGraph != null;
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
@@ -246,7 +245,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     
     private static void dtmcBoundedCumulativeDiscountedNative(int bound,
             ValueReal discount, GraphExplicitSparse graph, Value values, Value cumul)
-                    throws EPMCException {
+                    {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -262,7 +261,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
 
     private static void mdpBoundedCumulativeDiscountedNative(int bound,
             ValueReal discount, GraphExplicitSparseAlternate graph, boolean min,
-            Value values, Value cumul) throws EPMCException {
+            Value values, Value cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();

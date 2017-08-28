@@ -28,8 +28,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.concurrent.LinkedBlockingDeque;
 
-import epmc.error.EPMCException;
-
 // TODO continue
 // TODO documentation
 
@@ -58,9 +56,8 @@ public final class StandardStream implements BackendFeedback {
 	 * Construct new standard I/O interaction object.
 	 * The options parameter must not be {@code null}
 	 * 
-	 * @throws EPMCException 
 	 */
-	public StandardStream() throws EPMCException {
+	public StandardStream() {
 		this.backend = new Backend(this);
 	}
 

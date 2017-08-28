@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray {
@@ -108,7 +107,7 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

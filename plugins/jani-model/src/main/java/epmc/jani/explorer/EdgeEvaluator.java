@@ -23,7 +23,6 @@ package epmc.jani.explorer;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -127,7 +126,7 @@ public final class EdgeEvaluator {
 			return expressionToType;
 		}
 		
-		public EdgeEvaluator build() throws EPMCException {
+		public EdgeEvaluator build() {
 			return new EdgeEvaluator(this);
 		}
 	}
@@ -142,7 +141,7 @@ public final class EdgeEvaluator {
 	/** Evaluator for the rate of the edge. */
 	private EvaluatorExplicit rateEval;
 
-	private EdgeEvaluator(Builder builder) throws EPMCException {
+	private EdgeEvaluator(Builder builder) {
 		assert builder != null;
 		assert builder.getEdge() != null;
 		assert builder.getVariablesMap() != null;
@@ -191,9 +190,8 @@ public final class EdgeEvaluator {
 	 * must have been set.
 	 * 
 	 * @return {@code true} iff guard is fulfilled
-	 * @throws EPMCException thrown in case of problems
 	 */
-	boolean evaluateGuard() throws EPMCException {
+	boolean evaluateGuard() {
 		return guardEval.evaluateBoolean(variableValues);
 	}
 	
@@ -201,7 +199,7 @@ public final class EdgeEvaluator {
 		return rateEval != null;
 	}
 	
-	Value evaluateRate() throws EPMCException {
+	Value evaluateRate() {
 		rateEval.evaluate(variableValues);
 		return rateEval.getResultValue();
 	}

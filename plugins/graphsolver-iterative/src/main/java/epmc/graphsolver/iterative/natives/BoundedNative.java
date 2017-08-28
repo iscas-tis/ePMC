@@ -21,7 +21,6 @@
 package epmc.graphsolver.iterative.natives;
 
 import epmc.algorithms.FoxGlynn;
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -100,7 +99,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
@@ -113,7 +112,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBounded);
@@ -143,7 +142,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -161,7 +160,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void bounded() throws EPMCException {
+    private void bounded() {
         assert iterGraph != null;
         assert inputValues != null;
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
@@ -177,7 +176,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         }
     }
 
-    private void ctBounded() throws EPMCException {
+    private void ctBounded() {
         assert iterGraph != null : "iterGraph == null";
         assert inputValues != null : "inputValues == null";
         assert lambda != null : "lambda == null";
@@ -233,7 +232,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     /* implementation/native call of/to iteration algorithms */    
     
     private static void ctmcBoundedNative(GraphExplicitSparse graph,
-            Value values, FoxGlynn foxGlynn) throws EPMCException {
+            Value values, FoxGlynn foxGlynn) {
         int numStates = graph.computeNumStates();
         double[] fg = ValueContentDoubleArray.getContent(foxGlynn.getArray());
         int left = foxGlynn.getLeft();
@@ -249,7 +248,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     
     private static void dtmcBoundedNative(int bound,
             GraphExplicitSparse graph, Value values)
-                    throws EPMCException {
+                    {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -262,7 +261,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     
     private static void mdpBoundedNative(int bound,
             GraphExplicitSparseAlternate graph, boolean min,
-            Value values) throws EPMCException {
+            Value values) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();

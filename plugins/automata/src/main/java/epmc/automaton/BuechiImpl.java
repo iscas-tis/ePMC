@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.automaton.SpotParser;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -84,7 +83,7 @@ public class BuechiImpl implements Buechi {
     }
     
     public BuechiImpl(Expression expression, Expression[] expressions)
-            throws EPMCException {
+            {
         assert expression != null;
         // TODO does not work if used there
 //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
@@ -150,13 +149,13 @@ public class BuechiImpl implements Buechi {
     }
 
     @Override
-    public void query(Value[] get) throws EPMCException {
+    public void query(Value[] get) {
     	for (int i = 0; i < evaluators.length; i++) {
     		evaluators[i].evaluate(get);
     	}
     }
     
-    private int findTrueState() throws EPMCException {
+    private int findTrueState() {
         int trueState = -1;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
@@ -173,7 +172,7 @@ public class BuechiImpl implements Buechi {
         return trueState;
     }
 
-    private GraphExplicit createSpotAutomaton(Expression expression, Set<Expression> expressionsSeen) throws EPMCException {
+    private GraphExplicit createSpotAutomaton(Expression expression, Set<Expression> expressionsSeen) {
         assert expression != null;
         assert expressionsSeen != null;
         Map<Expression,String> expr2str = new HashMap<>();
@@ -219,7 +218,7 @@ public class BuechiImpl implements Buechi {
         }
     }
 
-    private void fixNoLabels() throws EPMCException {
+    private void fixNoLabels() {
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
@@ -250,7 +249,7 @@ public class BuechiImpl implements Buechi {
         return trueState;
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -259,7 +258,7 @@ public class BuechiImpl implements Buechi {
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
     
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
@@ -267,7 +266,7 @@ public class BuechiImpl implements Buechi {
     }
     
     public static String expr2spot(Expression expression,
-            Map<Expression, String> expr2str) throws EPMCException  {
+            Map<Expression, String> expr2str)  {
         assert expression != null;
         assert expr2str != null;
         for (Entry<Expression, String> entry : expr2str.entrySet()) {
@@ -399,7 +398,7 @@ public class BuechiImpl implements Buechi {
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
 
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
@@ -454,7 +453,7 @@ public class BuechiImpl implements Buechi {
     }
     
     public static Expression replaceNeOperator(Expression expression)
-            throws EPMCException {
+            {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {

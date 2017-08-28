@@ -22,7 +22,6 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.graph.SemanticsDTMC;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
@@ -37,7 +36,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	private Automaton automaton = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Edge; 
 		
@@ -68,7 +67,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert edge != null;
 		
 		Rate edgeRate = edge.getRate();
@@ -118,7 +117,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert edge != null;
 		
 		ProcessorRegistrar.getProcessor(edge.getGuard())
@@ -128,7 +127,7 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert edge != null;
 		
 		boolean usesTransient = false;

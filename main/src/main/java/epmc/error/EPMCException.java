@@ -35,7 +35,7 @@ import java.util.Arrays;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class EPMCException extends Exception {
+public final class EPMCException extends RuntimeException {
     /**
      * Builder for {@link EPMCException}.
      * 

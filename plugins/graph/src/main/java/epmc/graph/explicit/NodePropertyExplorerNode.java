@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.util.BitStoreableToNumber;
@@ -120,19 +119,19 @@ final class NodePropertyExplorerNode implements NodeProperty {
 		}
 
 		@Override
-		public double distance(Value other) throws EPMCException {
+		public double distance(Value other) {
 			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
-		public boolean isEq(Value other) throws EPMCException {
+		public boolean isEq(Value other) {
 			// TODO Auto-generated method stub
 			return false;
 		}
 
 		@Override
-		public void set(String value) throws EPMCException {
+		public void set(String value) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -266,7 +265,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
 
 		@Override
-		public void set(String value) throws EPMCException {
+		public void set(String value) {
 			// TODO Auto-generated method stub
 			
 		}
@@ -308,9 +307,8 @@ final class NodePropertyExplorerNode implements NodeProperty {
      * @param graph graph to which this property belongs
      * @param explorer explorer graph was constructed from
      * @param nodeStore storage of the nodes of the explorer
-     * @throws EPMCException thrown in case of problems
      */
-    NodePropertyExplorerNode(GraphExplicit graph, Explorer explorer, BitStoreableToNumber nodeStore) throws EPMCException {
+    NodePropertyExplorerNode(GraphExplicit graph, Explorer explorer, BitStoreableToNumber nodeStore) {
         assert graph != null;
         assert explorer != null;
         assert nodeStore != null;
@@ -333,7 +331,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
     }
 
     @Override
-    public Value get(int graphNode) throws EPMCException {
+    public Value get(int graphNode) {
         if (graphNode >= numStates) {
             value.node = -1;
             lastNode = graphNode;
@@ -349,7 +347,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
     
     @SuppressWarnings("unchecked")
     @Override
-    public <T> T getObject(int graphNode) throws EPMCException {
+    public <T> T getObject(int graphNode) {
         if (graphNode >= numStates) {
             value.node = -1;
             lastNode = graphNode;
@@ -364,7 +362,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         assert value != null;
         assert false;
     }

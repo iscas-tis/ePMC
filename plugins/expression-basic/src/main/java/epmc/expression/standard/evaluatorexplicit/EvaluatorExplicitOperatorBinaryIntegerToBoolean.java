@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -84,7 +83,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             assert expression != null;
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
@@ -120,7 +119,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperatorBinaryIntegerToBoolean(this);
         }
 
@@ -152,7 +151,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
 
     private final OperatorEvaluator evaluator;
     
-    private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) throws EPMCException {
+    private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -199,7 +198,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -213,7 +212,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     }
     
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;

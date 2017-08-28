@@ -34,7 +34,6 @@ import epmc.constraintsolver.ConstraintSolverConfiguration;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
-import epmc.error.EPMCException;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueArray;
@@ -47,7 +46,7 @@ public class SolverLPTest {
     }
 
     @Test
-    public void wikipediaTest() throws EPMCException {
+    public void wikipediaTest() {
         final double tolerance = 1E-10;
         prepareOptions();
         ConstraintSolverConfiguration contextSolver = new ConstraintSolverConfiguration();

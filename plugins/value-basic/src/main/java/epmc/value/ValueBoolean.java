@@ -22,7 +22,6 @@ package epmc.value;
 
 import static epmc.error.UtilError.fail;
 
-import epmc.error.EPMCException;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
@@ -163,7 +162,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
     }
     
     @Override
-    public void set(String string) throws EPMCException {
+    public void set(String string) {
         assert string != null;
         string = string.toLowerCase();
         string = string.trim();
@@ -187,7 +186,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
     }
     
     @Override
-    public double distance(Value other) throws EPMCException {
+    public double distance(Value other) {
     	ValueBoolean otherBoolean = asBoolean(other);
     	return value == otherBoolean.value ? 0.0 : 1.0;
     }

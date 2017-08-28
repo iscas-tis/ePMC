@@ -106,9 +106,8 @@ public final class Backend {
 	 * None of the parameters may be {@code null}.
 	 * @param feedback feedback channel
 	 * 
-	 * @throws EPMCException 
 	 */
-	Backend(BackendFeedback feedback) throws EPMCException {
+	Backend(BackendFeedback feedback) {
 		assert feedback != null;
 		this.feedback = feedback;
 		permanentStorage = new Database();
@@ -126,7 +125,7 @@ public final class Backend {
 		}
 	}
 
-	private Map<String, Handler> buildHandlers() throws EPMCException {
+	private Map<String, Handler> buildHandlers() {
 		Map<String,Handler> handlers = new LinkedHashMap<>();
 		UtilHandler.addIntegratedHandlers(this, handlers);
         for (InteractionExtension extension : this.extensions.values()) {
@@ -182,7 +181,7 @@ public final class Backend {
 	 * @param client client sending the message
 	 * @param message message to be handled
 	 */
-	private void handle(Object client, JsonValue value) throws EPMCException {
+	private void handle(Object client, JsonValue value) {
 		assert client != null;
 		assert value != null;
 		JsonObject object = null;

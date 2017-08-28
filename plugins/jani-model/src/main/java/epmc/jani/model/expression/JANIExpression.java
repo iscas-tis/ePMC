@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -39,7 +38,7 @@ public interface JANIExpression extends JANINode {
 	default void setForProperty(boolean forProperty) {
 	}
 	
-	Expression getExpression() throws EPMCException;
+	Expression getExpression();
 	
 	/**
 	 * Match the given expression and returns the corresponding {@link epmc.jani.model.expression.JANIExpression}.
@@ -50,9 +49,9 @@ public interface JANIExpression extends JANINode {
 	 * @param expression the expression to match
 	 * @return the {@link epmc.jani.model.expression.JANIExpression} representing the expression, {@code null} if no matching is possible
 	 */
-	JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException;
+	JANIExpression matchExpression(ModelJANI model, Expression expression);
 	
-	JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException;
+	JANIExpression parseAsJANIExpression(JsonValue value);
 	
 	void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers);
 }

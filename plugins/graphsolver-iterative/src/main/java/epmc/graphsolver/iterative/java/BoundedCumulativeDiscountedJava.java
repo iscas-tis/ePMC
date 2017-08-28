@@ -20,7 +20,6 @@
 
 package epmc.graphsolver.iterative.java;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -105,13 +104,13 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	boundedCumulativeDiscounted();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted);
@@ -159,7 +158,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -177,7 +176,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
     	objective.setResult(outputValues);
     }
 
-    private void boundedCumulativeDiscounted() throws EPMCException {
+    private void boundedCumulativeDiscounted() {
         assert iterGraph != null;
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
@@ -234,7 +233,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
     
     private void dtmcBoundedCumulativeDiscountedJava(int bound,
             Value discount, GraphExplicitSparse graph, ValueArray values, ValueArray cumul)
-                    throws EPMCException {
+                    {
         int numStates = graph.computeNumStates();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -271,7 +270,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
     
     private void mdpBoundedCumulativeDiscountedJava(int bound,
             Value discount, GraphExplicitSparseAlternate graph, boolean min,
-            ValueArrayAlgebra values, ValueArray cumul) throws EPMCException {
+            ValueArrayAlgebra values, ValueArray cumul) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

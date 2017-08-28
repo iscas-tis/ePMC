@@ -32,7 +32,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.dd.Walker;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsNonDet;
@@ -62,7 +61,7 @@ public class MultisetIndexRepresentation implements TransitionRepresentation {
 	private DD resultCache;
 
 	@Override
-	public void setOriginal(GraphDD original) throws EPMCException {
+	public void setOriginal(GraphDD original) {
 		this.original = original;
 		this.contextDD = original.getContextDD();
         Semantics semantics = original.getGraphPropertyObject(CommonProperties.SEMANTICS);
@@ -70,11 +69,11 @@ public class MultisetIndexRepresentation implements TransitionRepresentation {
 	}
 	
 	@Override
-	public DD fromTransWeights() throws EPMCException {
+	public DD fromTransWeights() {
 		return fromTransWeightsWithActions().abstractSum(original.getActionCube());
 	}
 	
-	private DD fromTransWeightsWithActions() throws EPMCException {
+	private DD fromTransWeightsWithActions() {
 		if(resultCache != null) {
 			return resultCache;
 		}
@@ -104,7 +103,7 @@ public class MultisetIndexRepresentation implements TransitionRepresentation {
      * Replace the leafs by DDs according to the relation
      * in replacements.
      */
-    private DD replaceSymbols(ContextDD contextDD, Walker w, Map<Value, DD> replacements, TLongObjectMap<DD> computedCache) throws EPMCException {
+    private DD replaceSymbols(ContextDD contextDD, Walker w, Map<Value, DD> replacements, TLongObjectMap<DD> computedCache) {
     	if(computedCache.containsKey(w.uniqueId())) {
     		return computedCache.get(w.uniqueId());
     	}

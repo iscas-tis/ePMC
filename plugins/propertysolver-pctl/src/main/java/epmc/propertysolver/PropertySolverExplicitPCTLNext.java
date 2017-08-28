@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
@@ -70,7 +69,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
-import epmc.value.ValueReal;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorNot;
 
@@ -103,7 +101,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         assert property instanceof ExpressionQuantifier;
@@ -123,7 +121,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
 
     public StateMap doSolve(Expression property, StateSet states, boolean min)
-            throws EPMCException {
+            {
         if (isNot(property)) {
         	ExpressionOperator propertyOperator = (ExpressionOperator) property;
             property = propertyOperator.getOperand1();
@@ -164,7 +162,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
     
     private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-            throws EPMCException {
+            {
         assert pathTemporal != null;
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];
@@ -193,7 +191,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
-    private void solveNext(ExpressionTemporal pathTemporal, Expression[] expressions, Value[] evalValues, EvaluatorExplicitBoolean[] evaluators, boolean min) throws EPMCException {
+    private void solveNext(ExpressionTemporal pathTemporal, Expression[] expressions, Value[] evalValues, EvaluatorExplicitBoolean[] evaluators, boolean min) {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
@@ -253,7 +251,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -282,14 +280,14 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
 
 	@Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	return required;
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -303,7 +301,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	return required;

@@ -20,7 +20,6 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 
@@ -41,7 +40,6 @@ public interface ExpressionSimplifier {
      * @param expressionToType expression types
      * @param expression expression to simplify
      * @return simplified expression, or {@code null}
-     * @throws EPMCException thrown in case of problems
      */
-    Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException;
+    Expression simplify(ExpressionToType expressionToType, Expression expression);
 }

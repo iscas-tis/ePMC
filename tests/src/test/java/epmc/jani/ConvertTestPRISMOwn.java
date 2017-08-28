@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.ModelNamesOwn;
-import epmc.error.EPMCException;
 
 public final class ConvertTestPRISMOwn {
 	/** Location of plugin directory in file system. */
@@ -41,7 +40,7 @@ public final class ConvertTestPRISMOwn {
     }
 
     @Test
-    public void zeroconfSimpleTest() throws EPMCException {
+    public void zeroconfSimpleTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(ModelNamesOwn.ZEROCONF_SIMPLE)
     			.putConstant("n", "10")

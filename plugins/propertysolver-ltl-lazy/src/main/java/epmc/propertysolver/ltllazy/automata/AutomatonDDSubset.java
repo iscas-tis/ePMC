@@ -30,7 +30,6 @@ import epmc.automaton.BuechiTransition;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -57,7 +56,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     /* constructors */
     
     public AutomatonDDSubset(ExpressionToDD expressionToDD, Buechi buechi, DD states)
-            throws EPMCException {
+            {
         assert expressionToDD != null;
         assert buechi != null;
         assert states != null;
@@ -117,7 +116,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
     /* private auxiliary methods */
     
-    private void prepareVariables() throws EPMCException {
+    private void prepareVariables() {
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             String labelName = "%autlabel" + labelNr;
             VariableDD variable = ContextDD.get().newBoolean(labelName, 1);
@@ -136,7 +135,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         }
     }
     
-    private DD computeInit() throws EPMCException {
+    private DD computeInit() {
         DD init = ContextDD.get().newConstant(true);
         BitSet bInit = buechi.getGraph().getInitialNodes();
         for (int node = 0; node < automaton.getNumNodes(); node++) {
@@ -149,7 +148,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return init;
     }
     
-    private DD computeTransition() throws EPMCException {
+    private DD computeTransition() {
         List<DD> rSucc = subsetImage();
         
         int trueState = buechi.getTrueState();
@@ -167,7 +166,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return trans;
     }
 
-    private List<DD> subsetImage() throws EPMCException {
+    private List<DD> subsetImage() {
         List<DD> nextOns = new ArrayList<>();
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             nextOns.add(ContextDD.get().newConstant(false));
@@ -188,7 +187,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return nextOns;
     }
     
-    private DD eq(List<DD> set1, List<DD> set2) throws EPMCException {
+    private DD eq(List<DD> set1, List<DD> set2) {
         assert set1 != null;
         assert set2 != null;
         for (DD dd : set1) {
@@ -210,7 +209,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return result;
     }
 
-    private DD computeUnder(ContextDD encoding) throws EPMCException {
+    private DD computeUnder(ContextDD encoding) {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             labelsOns.add(ContextDD.get().newConstant(true));
@@ -248,7 +247,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return under;
     }
 
-    private DD fixAcceptanceEmptySet(DD acceptance) throws EPMCException {
+    private DD fixAcceptanceEmptySet(DD acceptance) {
         DD allStatesOff = ContextDD.get().newConstant(true);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
             DD nextVar = nextVars.get(state);
@@ -270,7 +269,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
     }
 
     private DD computeOver(ContextDD encoding)
-            throws EPMCException {
+            {
         ArrayList<DD> labelsOns = new ArrayList<>();
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             labelsOns.add(ContextDD.get().newConstant(false));
@@ -308,7 +307,7 @@ public final class AutomatonDDSubset implements AutomatonDD {
         return over;
     }
     
-    private DD computeStateStaySame() throws EPMCException {
+    private DD computeStateStaySame() {
         DD result = ContextDD.get().newConstant(true);
         Iterator<DD> presIter = presVars.iterator();
         Iterator<DD> nextIter = nextVars.iterator();
@@ -330,13 +329,9 @@ public final class AutomatonDDSubset implements AutomatonDD {
 
     @Override
     public void close() {
-    	try {
-        	ContextDD.get().dispose(labels);
-			ContextDD.get().dispose(presVars);
-	    	ContextDD.get().dispose(nextVars);
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+    	ContextDD.get().dispose(labels);
+    	ContextDD.get().dispose(presVars);
+    	ContextDD.get().dispose(nextVars);
         presCube.dispose();
         nextCube.dispose();
         labelsCube.dispose();

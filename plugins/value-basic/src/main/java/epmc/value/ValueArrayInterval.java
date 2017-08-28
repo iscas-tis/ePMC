@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContentDoubleArray {
@@ -100,7 +99,7 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     }
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

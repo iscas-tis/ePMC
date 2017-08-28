@@ -22,7 +22,6 @@ package epmc.jani.explorer;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.Explorer;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -71,7 +70,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
 	 * @param successor successor to set value for
 	 * @param value value to set
 	 */
-	public void set(int successor, Value value) throws EPMCException {
+	public void set(int successor, Value value) {
 		assert value != null;
 		ensureSuccessorsSize(successor);
 		values[successor].set(value);
@@ -86,14 +85,14 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
 	 * @param successor successor to set value for
 	 * @param value value to set
 	 */
-	public void set(int successor, Object value) throws EPMCException {
+	public void set(int successor, Object value) {
 		assert value != null;
 		ensureSuccessorsSize(successor);
 		ValueObject.asObject(values[successor]).set(value);
 	}
 
 	@Override
-	public Value get(int successor) throws EPMCException {
+	public Value get(int successor) {
 		assert successor >= 0;
 		assert successor < explorer.getNumSuccessors();
 		ensureSuccessorsSize(successor);

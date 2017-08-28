@@ -31,7 +31,6 @@ import epmc.coalition.explicit.SolverQualitativeMcNaughton;
 import epmc.coalition.graphsolver.GraphSolverIterativeCoalitionJava;
 import epmc.coalition.graphsolver.GraphSolverIterativeCoalitionNative;
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Category;
@@ -58,7 +57,7 @@ public final class AfterOptionsCreationCoalition implements AfterOptionsCreation
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Category category = options.addCategory()
 				.setBundleName(OptionsCoalition.OPTIONS_COALITION)

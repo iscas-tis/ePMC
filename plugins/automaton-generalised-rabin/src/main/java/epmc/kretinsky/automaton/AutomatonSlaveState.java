@@ -122,7 +122,7 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
         return content;
     }
 
-    public DD getDDAssignsRank(int rank) throws EPMCException {
+    public DD getDDAssignsRank(int rank) {
         DD result = observer.getContextDD().newConstant(true);
         for (int i = 0; i < content.length; i++) {
             if (content[i] == -1 || content[i] > rank) {

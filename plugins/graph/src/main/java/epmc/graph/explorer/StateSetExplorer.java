@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.StateSet;
 
 /**
@@ -70,7 +69,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
     }
 
     @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+    public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplorer;
         StateSetExplorer other = (StateSetExplorer) states;

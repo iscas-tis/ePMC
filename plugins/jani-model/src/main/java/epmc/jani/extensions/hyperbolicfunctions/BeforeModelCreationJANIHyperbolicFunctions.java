@@ -20,7 +20,6 @@
 
 package epmc.jani.extensions.hyperbolicfunctions;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 
@@ -34,7 +33,7 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 	}
 
 	@Override
-	public void process() throws EPMCException {
+	public void process() {
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
 		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);

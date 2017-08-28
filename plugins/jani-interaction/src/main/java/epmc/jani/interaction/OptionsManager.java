@@ -46,7 +46,7 @@ public final class OptionsManager {
 	private final PreparedStatement insertByUser;
 	private final PreparedStatement selectByUser;
 	
-	public OptionsManager(Database storage) throws EPMCException {
+	public OptionsManager(Database storage) {
 		assert storage != null;
 		connection = storage.getConnection();
 		String createOptionsTableString = MessageFormat.format(SQL_CREATE_OPTIONS_TABLE, 
@@ -64,7 +64,7 @@ public final class OptionsManager {
 		}
 	}
 	
-	public void write(int user, boolean admin, Options options) throws EPMCException {
+	public void write(int user, boolean admin, Options options) {
 		assert options != null;
 		try {
 			deleteByUser.setInt(1, user);
@@ -91,7 +91,7 @@ public final class OptionsManager {
 		}
 	}
 	
-	public void read(int user, boolean admin, Options options) throws EPMCException {
+	public void read(int user, boolean admin, Options options) {
 		assert options != null;
 		for (Option option : options.getAllOptions().values()) {
 			if (!admin && !option.isWeb()) {

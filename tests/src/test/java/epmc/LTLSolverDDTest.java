@@ -34,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
@@ -55,7 +54,7 @@ public class LTLSolverDDTest {
     }
 
     @Test
-    public void clusterUntilTest() throws EPMCException {
+    public void clusterUntilTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -99,7 +98,7 @@ public class LTLSolverDDTest {
     }
 
     @Test
-    public void clusterBugAndreaTest() throws EPMCException {
+    public void clusterBugAndreaTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -118,7 +117,7 @@ public class LTLSolverDDTest {
 
     @Ignore
     @Test
-    public void firewireImplPatternRabinTest() throws EPMCException {
+    public void firewireImplPatternRabinTest() {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
         Value result;
@@ -141,7 +140,7 @@ public class LTLSolverDDTest {
     @Test
     // TODO define custom labels
     @Ignore
-    public void philLss3PatternRabinTest() throws EPMCException {
+    public void philLss3PatternRabinTest() {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
         Value result;
@@ -163,7 +162,7 @@ public class LTLSolverDDTest {
     
     
     @Test
-    public void zeroconfTest() throws EPMCException {
+    public void zeroconfTest() {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
         Value result;
@@ -184,7 +183,7 @@ public class LTLSolverDDTest {
     }
     
     @Test
-    public void zeroconfBugFoundByLiYongTest() throws EPMCException {
+    public void zeroconfBugFoundByLiYongTest() {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
         Value result;
@@ -207,7 +206,7 @@ public class LTLSolverDDTest {
     }
 
     @Test
-    public void simpleTest() throws EPMCException {
+    public void simpleTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         computeResult(options, SIMPLE, "P=?[(F( s=1 )) & true ]");
@@ -215,7 +214,7 @@ public class LTLSolverDDTest {
     }
 
     @Test
-    public void twoDiceTest() throws EPMCException {
+    public void twoDiceTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         double tolerance = 1E-11;
@@ -230,10 +229,9 @@ public class LTLSolverDDTest {
      * The test case helped to detect an issue in the initial state
      * computation of BDD-based breakpoint automata.
      * 
-     * @throws EPMCException expected not to be thrown
      */
     @Test
-    public void mdpttTest() throws EPMCException {
+    public void mdpttTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;

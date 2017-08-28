@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.constraintsolver.lpsolve.ConstraintSolverLPSolve;
 import epmc.constraintsolver.options.OptionsConstraintsolver;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
@@ -37,7 +36,7 @@ public class AfterOptionsCreationConstraintsolverLpSolve implements AfterOptions
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		Map<String,Class<?>> solvers = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
 		assert solvers != null;

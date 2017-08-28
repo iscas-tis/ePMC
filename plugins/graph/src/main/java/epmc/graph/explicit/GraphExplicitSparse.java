@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
@@ -139,7 +138,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     
     @Override
     public Value addSettableGraphProperty(Object property, Type type)
-            throws EPMCException {
+            {
         assert property != null;
         assert type != null;
         Value value = type.newValue();
@@ -181,7 +180,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
 
     @Override
-    public void computePredecessors(BitSet nodes) throws EPMCException {
+    public void computePredecessors(BitSet nodes) {
         this.properties.computePredecessors(nodes);
     }
 
@@ -220,7 +219,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     
     @Override
     public void prepareNode(int currentNode, int numSuccessors)
-            throws EPMCException {
+            {
         assert numSuccessors >= 0;
         int from = bounds.getInt(currentNode);
         bounds = ensureSize(bounds, currentNode + 1 + 1);
@@ -232,7 +231,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
     
     @Override
-    public int computeNumStates() throws EPMCException {
+    public int computeNumStates() {
         return numNodes;
     }
     
@@ -254,7 +253,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
 
     @Override
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
     }
 
     @Override

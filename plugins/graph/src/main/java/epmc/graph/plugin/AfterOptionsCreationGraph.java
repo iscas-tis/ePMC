@@ -20,7 +20,6 @@
 
 package epmc.graph.plugin;
 
-import epmc.error.EPMCException;
 import epmc.graph.OptionsTypesGraph;
 import epmc.graph.options.OptionsGraph;
 import epmc.modelchecker.EngineDD;
@@ -41,7 +40,7 @@ public final class AfterOptionsCreationGraph implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         assert options != null;
         assert options != null;
         options.addOption().setBundleName(OptionsGraph.OPTIONS_GRAPH)

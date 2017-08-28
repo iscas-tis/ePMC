@@ -22,7 +22,6 @@ package epmc.coalition.explicit;
 
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitProperties;
 import epmc.util.BitSet;
@@ -34,7 +33,7 @@ final class GraphExplicitRestricted implements GraphExplicit {
 	private final int maxNumSuccessors;
 	private final GraphExplicitProperties properties;
 
-	GraphExplicitRestricted(GraphExplicit original, BitSet restriction) throws EPMCException {
+	GraphExplicitRestricted(GraphExplicit original, BitSet restriction) {
 		assert original != null;
 		assert restriction != null;
 		this.original = original;
@@ -74,12 +73,12 @@ final class GraphExplicitRestricted implements GraphExplicit {
 	}
 
 	@Override
-	public int getNumSuccessors(int node) throws EPMCException {
+	public int getNumSuccessors(int node) {
 		return original.getNumSuccessors(node);
 	}
 
 	@Override
-	public int getSuccessorNode(int queriedNode, int successor) throws EPMCException {
+	public int getSuccessorNode(int queriedNode, int successor) {
 		boolean valid = this.restriction.get(queriedNode * maxNumSuccessors + successor);
 		return original.getSuccessorNode(queriedNode, valid
 				? successor

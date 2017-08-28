@@ -23,8 +23,6 @@ package epmc.options;
 import static epmc.error.UtilError.ensure;
 import static epmc.error.UtilError.fail;
 
-import epmc.error.EPMCException;
-
 // TODO move out of main part
 
 public class OptionTypeIntegerInterval implements OptionType {
@@ -45,7 +43,7 @@ public class OptionTypeIntegerInterval implements OptionType {
     
     @Override
     public Object parse(String value, Object prevValue)
-            throws EPMCException {
+            {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

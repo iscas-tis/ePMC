@@ -22,7 +22,6 @@ package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -60,7 +59,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         }
         
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             for (Expression variable : variables) {
                 if (variable.equals(expression)
                         && variable.getType(expressionToType) != null
@@ -72,7 +71,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitIntegerVariable(this);
         }
 
@@ -96,7 +95,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     private final int index;
     private final Value result;
 
-    private EvaluatorExplicitIntegerVariable(Builder builder) throws EPMCException {
+    private EvaluatorExplicitIntegerVariable(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -124,7 +123,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
@@ -134,7 +133,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     }
 
     @Override
-    public int evaluateInteger(Value... values) throws EPMCException {
+    public int evaluateInteger(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;

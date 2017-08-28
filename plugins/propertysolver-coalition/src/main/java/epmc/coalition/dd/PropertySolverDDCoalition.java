@@ -36,7 +36,6 @@ import epmc.coalition.UtilCoalition;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionCoalition;
 import epmc.expression.standard.ExpressionOperator;
@@ -107,7 +106,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
     	assert property != null;
     	if (!(modelChecker.getEngine() instanceof EngineDD)) {
     		return false;
@@ -134,7 +133,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.EXPRESSION_TO_DD);
 		required.add(CommonProperties.SEMANTICS);
@@ -142,7 +141,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
@@ -159,7 +158,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 	    if (!UtilCoalition.isQualitative(propertyCoalition)) {
 	    	required.add(CommonProperties.WEIGHT);
@@ -168,7 +167,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
 	}
     
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
     	assert states != null;
         StateSetDD forStates = (StateSetDD) states;
 		getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
@@ -222,7 +221,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         return result;
     }
 
-    private StateMap toOrig(DD res, StateSetDD forStates) throws EPMCException {
+    private StateMap toOrig(DD res, StateSetDD forStates) {
     	assert res != null;
     	assert forStates != null;
         StateMap result;
@@ -238,7 +237,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         return result;
     }
 
-    private ProductGraphDDExplicit buildGame(StateSetDD forStates, Expression path, boolean qualitative) throws EPMCException {
+    private ProductGraphDDExplicit buildGame(StateSetDD forStates, Expression path, boolean qualitative) {
 		getLog().send(MessagesCoalition.COALITION_PRODUCT_START);
 		StopWatch watch = new StopWatch(true);
         Expression[] expressions = UtilCoalition.collectLTLInner(path).toArray(new Expression[0]);
@@ -271,7 +270,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
 
     private List<DD> computePriorities(AutomatonParity automaton,
-            TObjectIntMap<DD> labelsMap) throws EPMCException {
+            TObjectIntMap<DD> labelsMap) {
         assert labelsMap != null;
 
         List<DD> priorities = new ArrayList<>();
@@ -293,7 +292,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         return priorities;
     }
     
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
     	return ContextDD.get();
 	}
     

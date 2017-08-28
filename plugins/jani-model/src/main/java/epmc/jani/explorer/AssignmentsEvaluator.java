@@ -2,7 +2,6 @@ package epmc.jani.explorer;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.jani.model.Assignment;
@@ -44,14 +43,14 @@ public final class AssignmentsEvaluator {
 			return this;
 		}
 		
-		public AssignmentsEvaluator build() throws EPMCException {
+		public AssignmentsEvaluator build() {
 			return new AssignmentsEvaluator(this);		
 		}
 	}
 	
 	private final AssignmentEvaluator[] evaluators;
 	
-	private AssignmentsEvaluator(Builder builder) throws EPMCException {
+	private AssignmentsEvaluator(Builder builder) {
 		assert builder != null;
 		evaluators = new AssignmentEvaluator[builder.assignments.size()];
 		int index = 0;
@@ -61,7 +60,7 @@ public final class AssignmentsEvaluator {
 		}
 	}
 	
-	private static AssignmentEvaluator newAssignmentEvaluator(Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType) throws EPMCException {
+	private static AssignmentEvaluator newAssignmentEvaluator(Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType) {
 		assert assignment != null;
 		Options options = Options.get();
         Map<String,Class<? extends AssignmentEvaluator.Builder>> assignmentEvaluators = options.get(OptionsJANIExplorer.JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS);
@@ -79,7 +78,7 @@ public final class AssignmentsEvaluator {
 		return null;
 	}
 
-	public void apply(NodeJANI node, NodeJANI successor) throws EPMCException {
+	public void apply(NodeJANI node, NodeJANI successor) {
 		assert node != null;
 		assert successor != null;
 		for (AssignmentEvaluator evaluator : evaluators) {

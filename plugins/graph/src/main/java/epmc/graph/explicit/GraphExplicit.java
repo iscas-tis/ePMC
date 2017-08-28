@@ -22,7 +22,6 @@ package epmc.graph.explicit;
 
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.LowLevel;
@@ -61,9 +60,8 @@ public interface GraphExplicit extends LowLevel {
      * Get number of successors of last node queried by {@link #queryNode(int)}.
      * 
      * @return number of successors of node queried last
-     * @throws EPMCException 
      */
-    int getNumSuccessors(int node) throws EPMCException;
+    int getNumSuccessors(int node);
     
     /**
      * Get the successor node with the given number.
@@ -74,9 +72,8 @@ public interface GraphExplicit extends LowLevel {
      * 
      * @param successor successor number
      * @return successor with the given number of the queried node
-     * @throws EPMCException 
      */
-    int getSuccessorNode(int node, int successor) throws EPMCException;    
+    int getSuccessorNode(int node, int successor);    
 
     /**
      * Get the properties of this graph.
@@ -88,7 +85,7 @@ public interface GraphExplicit extends LowLevel {
 
     // default fail / convenience
 
-    default void computePredecessors(BitSet states) throws EPMCException {
+    default void computePredecessors(BitSet states) {
         getProperties().computePredecessors(states);
     }
     
@@ -96,7 +93,7 @@ public interface GraphExplicit extends LowLevel {
         getProperties().clearPredecessors();
     }
     
-    default void explore(BitSet start) throws EPMCException {
+    default void explore(BitSet start) {
         getProperties().explore(start);
     }
 
@@ -104,7 +101,7 @@ public interface GraphExplicit extends LowLevel {
         getProperties().registerGraphProperty(property, type);
     }
 
-    default void setGraphProperty(Object property, Value value) throws EPMCException {
+    default void setGraphProperty(Object property, Value value) {
         getProperties().setGraphProperty(property, value);
     }
     
@@ -155,7 +152,7 @@ public interface GraphExplicit extends LowLevel {
 
 
     default Value addSettableGraphProperty(Object property, Type type)
-            throws EPMCException {
+            {
         assert false;
         return null;
     }
@@ -175,7 +172,7 @@ public interface GraphExplicit extends LowLevel {
     }
     
     default void prepareNode(int node, int numSuccessors)
-            throws EPMCException {
+            {
         assert false;
     }
 
@@ -187,7 +184,7 @@ public interface GraphExplicit extends LowLevel {
         return addSettableEdgeProperty(new Object(), type);
     }
 
-    default int computeNumStates() throws EPMCException {
+    default int computeNumStates() {
         int numStates = 0;
         NodeProperty isState = getNodeProperty(CommonProperties.STATE);
         assert isState != null;
@@ -200,7 +197,7 @@ public interface GraphExplicit extends LowLevel {
         return numStates;
     }
 
-    default void computePredecessors() throws EPMCException {
+    default void computePredecessors() {
         getProperties().computePredecessors();
     }
 
@@ -223,7 +220,7 @@ public interface GraphExplicit extends LowLevel {
     }
 
     default boolean getGraphPropertyBoolean(Object property)
-            throws EPMCException {
+            {
         assert property != null;
         return ValueBoolean.asBoolean(getGraphProperty(property)).getBoolean();
     }
@@ -249,7 +246,7 @@ public interface GraphExplicit extends LowLevel {
     }
 
     default void registerGraphProperty(Object propertyName, Value value)
-            throws EPMCException {
+            {
         assert propertyName != null;
         assert value != null;
         registerGraphProperty(propertyName, value.getType());
@@ -262,7 +259,7 @@ public interface GraphExplicit extends LowLevel {
         setGraphProperty(propertyName, object);
     }
 
-    default void explore()  throws EPMCException {
+    default void explore()  {
         explore(getInitialNodes());
     }
 
@@ -279,9 +276,8 @@ public interface GraphExplicit extends LowLevel {
      * 
      * @param node a successor node of the currently queried node
      * @return successor number of this node
-     * @throws EPMCException 
      */
-    default int getSuccessorNumber(int fromNode, int toNode) throws EPMCException {
+    default int getSuccessorNumber(int fromNode, int toNode) {
         assert fromNode >= 0;
         assert fromNode < getNumNodes();
         assert toNode >= 0;
@@ -296,7 +292,7 @@ public interface GraphExplicit extends LowLevel {
     }
     
     @Override
-    default Type getType(Expression expression) throws EPMCException {
+    default Type getType(Expression expression) {
     	Value graphProperty = getGraphProperty(expression);
     	if (graphProperty != null) {
     		return graphProperty.getType();

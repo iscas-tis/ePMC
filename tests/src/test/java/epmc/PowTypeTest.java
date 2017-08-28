@@ -25,7 +25,6 @@ import static epmc.modelchecker.TestHelper.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.graph.TestHelperGraph;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ExploreStatistics;
@@ -46,7 +45,7 @@ public final class PowTypeTest {
     }
 
     @Test
-    public void powTypeTest() throws EPMCException {
+    public void powTypeTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

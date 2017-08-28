@@ -23,7 +23,6 @@ package epmc.expression.standard;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -125,7 +124,7 @@ public final class ExpressionCoalition implements Expression {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	Type type = expressionToType.getType(this);
     	if (type != null) {
     		return type;

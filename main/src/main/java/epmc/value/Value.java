@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
-
 /**
  * Interface to represent values used during analysis.
  * TODO complete documentation
@@ -53,7 +51,7 @@ public interface Value extends Comparable<Value> {
      */
     void set(Value value);
     
-    void set(String value) throws EPMCException;
+    void set(String value);
 
     /**
      * Sets value to be immutable.
@@ -72,7 +70,7 @@ public interface Value extends Comparable<Value> {
      */
     boolean isImmutable();
 
-    double distance(Value other) throws EPMCException;
+    double distance(Value other);
 
-    boolean isEq(Value other) throws EPMCException;
+    boolean isEq(Value other);
 }

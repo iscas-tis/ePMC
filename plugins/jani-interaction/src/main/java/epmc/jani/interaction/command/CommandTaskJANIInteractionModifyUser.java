@@ -20,7 +20,6 @@
 
 package epmc.jani.interaction.command;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.UserManager;
 import epmc.jani.interaction.database.Database;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
@@ -37,7 +36,7 @@ public final class CommandTaskJANIInteractionModifyUser implements CommandTask {
 	}
 
 	@Override
-	public void executeOnClient() throws EPMCException {
+	public void executeOnClient() {
 		Database storage = new Database();
 		UserManager userManager = new UserManager(storage);
 		String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);

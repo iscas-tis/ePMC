@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.component.Component;
 import epmc.util.Util;
 
@@ -56,9 +55,8 @@ final class PreparatorComponentExplorer {
 	 * @param explorer explorer to which component to be converted belongs
 	 * @param component component for which to obtain an explorer
 	 * @return explorer for given component
-	 * @throws EPMCException thrown in case of problems
 	 */
-	ExplorerComponent prepare(ExplorerJANI explorer, Component component) throws EPMCException {
+	ExplorerComponent prepare(ExplorerJANI explorer, Component component) {
 		assert explorer != null;
 		assert component != null;
 		ExplorerComponent instance = null;

@@ -23,7 +23,6 @@ package epmc.modelchecker;
 import java.io.InputStream;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 
@@ -57,9 +56,8 @@ public interface Model {
      * <code>null</code>.
      * 
      * @param inputs input files of this model
-     * @throws EPMCException model could not be read (e.g. syntax error)
      */
-    void read(InputStream... inputs) throws EPMCException;
+    void read(InputStream... inputs);
 
     /**
      * Get the semantics type of the model.
@@ -89,12 +87,11 @@ public interface Model {
      * @param nodeProperties node properties to use
      * @param edgeProperties edge properties to use
      * @return symbolic graph representation of model
-     * @throws EPMCException thrown if creation fails
      */
     LowLevel newLowLevel(Engine engine,
             Set<Object> graphProperties,
             Set<Object> nodeProperties,
-            Set<Object> edgeProperties) throws EPMCException;
+            Set<Object> edgeProperties);
     
     /**
      * Returns the list of properties associated to this model.

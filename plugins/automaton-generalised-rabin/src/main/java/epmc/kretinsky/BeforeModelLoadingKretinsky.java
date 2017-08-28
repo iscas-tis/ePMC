@@ -33,7 +33,7 @@ public final class BeforeModelLoadingKretinsky implements BeforeModelCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 	}
 

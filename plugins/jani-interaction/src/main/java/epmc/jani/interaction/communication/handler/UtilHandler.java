@@ -22,11 +22,10 @@ package epmc.jani.interaction.communication.handler;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.communication.Backend;
 
 public final class UtilHandler {
-	public static void addIntegratedHandlers(Backend backend, Map<String, Handler> handlers) throws EPMCException {
+	public static void addIntegratedHandlers(Backend backend, Map<String, Handler> handlers) {
 		assert backend != null;
 		assert handlers != null;
 		handlers.put(HandlerAuthenticate.TYPE, new HandlerAuthenticate(backend));

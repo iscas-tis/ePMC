@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.dd.LibraryDD;
 import epmc.dd.OptionsDD;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
@@ -41,7 +40,7 @@ public final class AfterOptionsDD implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
         assert options != null;
         Map<String,Class<? extends LibraryDD>> ddLibraryClasses = new OrderedMap<>();
         OptionTypeMap<?> ddBinaryEngineType = new OptionTypeMap<>(ddLibraryClasses);

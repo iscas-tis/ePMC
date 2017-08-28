@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
@@ -103,7 +102,7 @@ public final class UtilValue {
         return allTypesKnown;
     }
     
-    public static <T extends Value, U extends Type> T newValue(U type, String valueString) throws EPMCException {
+    public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
         @SuppressWarnings("unchecked")
 		T value = (T) type.newValue();
         value.set(valueString);
@@ -189,15 +188,11 @@ public final class UtilValue {
         Value entryAccThis = array.getType().getEntryType().newValue();
         Value entryAccOther = array.getType().getEntryType().newValue();
         for (int entry = 0; entry < totalSize; entry++) {
-            try {
-            	array.get(entryAccThis, entry);
-                other.get(entryAccOther, entry);
-                if (!entryAccThis.isEq(entryAccOther)) {
-                    return false;
-                }
-            } catch (EPMCException e) {
-                throw new RuntimeException(e);
-            }
+        	array.get(entryAccThis, entry);
+        	other.get(entryAccOther, entry);
+        	if (!entryAccThis.isEq(entryAccOther)) {
+        		return false;
+        	}
         }
         return true;
     }

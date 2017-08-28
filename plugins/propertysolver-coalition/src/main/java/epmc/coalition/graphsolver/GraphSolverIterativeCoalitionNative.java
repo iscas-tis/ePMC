@@ -23,7 +23,6 @@ package epmc.coalition.graphsolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -133,7 +132,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachabilityGame) {
         	unboundedReachability();
@@ -149,7 +148,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         }
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         
         BitSet playerEven = UtilBitSet.newBitSetUnbounded();
@@ -195,7 +194,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.getNumNodes());
@@ -236,7 +235,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
     	objective.setResult(outputValues);
     }
 
-    private void unboundedReachability() throws EPMCException {
+    private void unboundedReachability() {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -283,7 +282,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
     private void tpgUnboundedGaussseidelNative(
             GraphExplicitSparseAlternate graph,
             Value values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
+            double precision) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -301,7 +300,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
     private void tpgUnboundedJacobiNative(
             GraphExplicitSparseAlternate graph,
             Value values, IterationStopCriterion stopCriterion,
-            double precision) throws EPMCException {
+            double precision) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -319,7 +318,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
 
     private void computeStrategy(SchedulerSimpleSettable strategy,
             BitSet target, ValueArrayAlgebra values)
-                    throws EPMCException {
+                    {
     	assert strategy != null;
         assert target != null;
         NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
@@ -390,7 +389,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         assert assertStrategyOK(strategy, target);
     }
 
-    private boolean assertStrategyOK(SchedulerSimple strategy, BitSet target) throws EPMCException {
+    private boolean assertStrategyOK(SchedulerSimple strategy, BitSet target) {
         /* make sure that we indeed computed the strategy correctly */
     	NodeProperty playerProperty = origGraph.getNodeProperty(CommonProperties.PLAYER);
         for (int node = 0; node < origGraph.getNumNodes(); node++) {

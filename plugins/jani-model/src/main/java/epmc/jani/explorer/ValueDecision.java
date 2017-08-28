@@ -1,6 +1,5 @@
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -61,7 +60,7 @@ public final class ValueDecision implements Value {
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		assert value != null;
 		value = value.trim();
 		value = value.substring(1, value.length() - 1);
@@ -84,14 +83,14 @@ public final class ValueDecision implements Value {
 	}
 
 	@Override
-	public double distance(Value other) throws EPMCException {
+	public double distance(Value other) {
 		assert other != null;
 		assert other instanceof ValueDecision;
 		return isEq(other) ? 0.0 : 1.0;
 	}
 
 	@Override
-	public boolean isEq(Value other) throws EPMCException {
+	public boolean isEq(Value other) {
 		assert other != null;
 		assert other instanceof ValueDecision;
 		ValueDecision otherDecision = (ValueDecision) other;

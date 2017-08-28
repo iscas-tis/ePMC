@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -84,7 +83,7 @@ final class GraphPreparator {
 		stateTransitions.add(new Transition(to, guard, label));
 	}
 	
-	GraphExplicitWrapper toGraph() throws EPMCException {
+	GraphExplicitWrapper toGraph() {
 	    GraphExplicitWrapper graph = new GraphExplicitWrapper();
 	    TypeInteger typeInteger = TypeInteger.get();
 	    TypeObject typeLabel = new TypeObject.Builder()

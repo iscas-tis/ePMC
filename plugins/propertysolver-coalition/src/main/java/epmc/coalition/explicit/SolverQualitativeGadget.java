@@ -25,7 +25,6 @@ import java.util.Arrays;
 import epmc.automaton.AutomatonParityLabel;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -87,7 +86,7 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 	}
 
 	@Override
-	public QualitativeResult solve() throws EPMCException {
+	public QualitativeResult solve() {
 		assert stochasticGame != null;
 		assert strictEvenSet;
 		getLog().send(MessagesCoalition.COALITION_GADGET_START);
@@ -128,9 +127,8 @@ public final class SolverQualitativeGadget implements SolverQualitative {
 	 * &quot;Simple Stochastic Parity Games&quot;,
 	 * &quot;Quantitative Stochastic Parity Games&quot;.
 	 * 
-	 * @throws EPMCException thrown if a problem occurs
 	 */
-	private void transform() throws EPMCException {
+	private void transform() {
 		StopWatch watch = new StopWatch(true);
 		getLog().send(MessagesCoalition.COALITION_GADGET_TRANSFORM_START);
         NodeProperty stochasticLabels = stochasticGame.getNodeProperty(CommonProperties.AUTOMATON_LABEL);

@@ -131,7 +131,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         }
     }
     
-    private void checkValueProblem() throws EPMCException {
+    private void checkValueProblem() {
         if (valueProblem != null) {
             EPMCException toThrow = valueProblem;
             valueProblem = null;
@@ -291,7 +291,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     
     // TODO make sure mapping of operators still works
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD !=null;
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         
@@ -331,7 +331,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         this.resultType = type;
@@ -370,7 +370,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         long result = Sylvan.mtbdd_makeleaf(3, valueToNumber(value));
         Sylvan.mtbdd_ref(result);
@@ -378,7 +378,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         long result = Sylvan.mtbdd_makenode(nextVariable, falseNode, trueNode);
 //        result = Sylvan.mtbdd_makenode(10, result, trueNode);
         nextVariable++;
@@ -403,7 +403,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         
     }
 
@@ -414,7 +414,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationSylvan;
         return Sylvan.mtbdd_ref(Sylvan.MTBDD_compose(dd, ((LowLevelPermutationSylvan) permutation).getMap()));
@@ -462,19 +462,19 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.ADD));
@@ -484,7 +484,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.MULTIPLY));
@@ -494,7 +494,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.MAX));
@@ -504,7 +504,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.MIN));
@@ -515,13 +515,13 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         assert false;
         return -1;
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         return new LowLevelPermutationSylvan(permutation, falseNode, trueNode);
     }
 

@@ -23,14 +23,13 @@ package epmc.jani.type.lts;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
 public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorNonPRISM {
 
 	@Override
-	public JANI2PRISMProcessorNonPRISM setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
 		assert obj instanceof ModelExtensionLTS;
 		return this;
 	}
@@ -48,11 +47,11 @@ public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorNonP
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		return false;
 	}	
 }

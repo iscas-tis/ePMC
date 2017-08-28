@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsStochastic;
@@ -102,7 +101,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert explorer != null;
 		assert component != null;
 		componentSynchronisationVectors = (ComponentSynchronisationVectors) component;
@@ -169,7 +168,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public void buildAfterVariables() throws EPMCException {
+	public void buildAfterVariables() {
 		successors = new NodeJANI[1];
 		successors[0] = newNode();
 		for (ExplorerComponentAutomaton automaton : automata) {
@@ -178,7 +177,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 	
 	@Override
-	public void queryNode(NodeJANI node) throws EPMCException {
+	public void queryNode(NodeJANI node) {
 		assert node != null;
 		if (twoLayer) {
 			queryNodeTwoLayer(node);
@@ -187,7 +186,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 		}
 	}
 
-	private void queryNodeTwoLayer(NodeJANI node) throws EPMCException {
+	private void queryNodeTwoLayer(NodeJANI node) {
 		boolean state = isState(node);
 		this.state.set(state);
 		if (state) {
@@ -197,7 +196,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 		}
 	}
 
-	private void queryNodeTwoLayerState(NodeJANI node) throws EPMCException {
+	private void queryNodeTwoLayerState(NodeJANI node) {
 		for (int automatonNr = 0; automatonNr < automata.length; automatonNr++) {
 			automata[automatonNr].queryNode(node);
 		}
@@ -236,7 +235,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 		}
 	}
 
-	private void queryNodeTwoLayerNonState(NodeJANI node) throws EPMCException {
+	private void queryNodeTwoLayerNonState(NodeJANI node) {
 		int numSuccessors = 1;
 		for (int autNr = 0; autNr < automata.length; autNr++) {
 			ExplorerComponentAutomaton automaton = automata[autNr];
@@ -270,7 +269,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 		}
 	}
 
-	private void queryNodeSingleLayer(NodeJANI node) throws EPMCException {
+	private void queryNodeSingleLayer(NodeJANI node) {
 		for (int automatonNr = 0; automatonNr < automata.length; automatonNr++) {
 			automata[automatonNr].queryNode(node);
 		}
@@ -337,7 +336,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public PropertyNode getNodeProperty(Object property) throws EPMCException {
+	public PropertyNode getNodeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.STATE) {
 			return state;
@@ -347,7 +346,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public PropertyEdge getEdgeProperty(Object property) throws EPMCException {
+	public PropertyEdge getEdgeProperty(Object property) {
 		assert property != null;
 		assert property != null;
 		if (property == CommonProperties.WEIGHT) {
@@ -360,7 +359,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public Collection<NodeJANI> getInitialNodes() throws EPMCException {		
+	public Collection<NodeJANI> getInitialNodes() {		
 		List<NodeJANI> initialNodes = Collections.singletonList(explorer.newNode());
 		for (ExplorerComponentAutomaton automaton : automata) {
 			List<NodeJANI> newInitialNodes = new ArrayList<>();
@@ -388,7 +387,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 
 	@Override
-	public NodeJANI newNode() throws EPMCException {
+	public NodeJANI newNode() {
 		return explorer.newNode();
 	}
 
@@ -398,7 +397,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 	
 	@Override
-	public boolean isState(NodeJANI node) throws EPMCException {
+	public boolean isState(NodeJANI node) {
 		boolean state = true;
 		for (ExplorerComponentAutomaton automaton : automata) {
 			state &= automaton.isState(node);
@@ -407,7 +406,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	}
 	
 	@Override
-	public boolean isState() throws EPMCException {
+	public boolean isState() {
 		return state.getBoolean();
 	}
 	
@@ -420,9 +419,8 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
 	
 	/**
 	 * Ensure successors size array sufficiently large to store successors.
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private void ensureSuccessorsSize() throws EPMCException {
+	private void ensureSuccessorsSize() {
 		if (numSuccessors < successors.length) {
 			return;
 		}

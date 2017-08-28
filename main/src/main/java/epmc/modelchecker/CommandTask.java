@@ -20,8 +20,6 @@
 
 package epmc.modelchecker;
 
-import epmc.error.EPMCException;
-
 /**
  * Task which should be performed by EPMC.
  * Tasks include e.g. model checking, showing available options, exploring the
@@ -58,9 +56,8 @@ public interface CommandTask {
     /**
      * Run part of the task to be executed on the client.
      * 
-     * @throws EPMCException thrown in case of problems
      */
-    default void executeOnClient() throws EPMCException {
+    default void executeOnClient() {
     }
 
     /**

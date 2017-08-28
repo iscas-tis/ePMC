@@ -2,8 +2,6 @@ package epmc.graph;
 
 import java.io.OutputStream;
 
-import epmc.error.EPMCException;
-
 public interface SchedulerPrinter {
 	void setLowLevel(LowLevel lowLevel);
 	
@@ -13,5 +11,5 @@ public interface SchedulerPrinter {
 
 	boolean canHandle();
 		
-	void print() throws EPMCException;
+	void print();
 }

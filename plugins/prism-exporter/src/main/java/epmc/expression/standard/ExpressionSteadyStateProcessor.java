@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -30,7 +29,7 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 	private ExpressionSteadyState steadyState = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionSteadyState; 
 		
@@ -39,7 +38,7 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert steadyState != null;
 		
 		return ProcessorRegistrar.getProcessor(steadyState.getOperand1())
@@ -47,7 +46,7 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert steadyState != null;
 		
 		for (Expression child: steadyState.getChildren()) {
@@ -57,7 +56,7 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert steadyState != null;
 		
 		boolean usesTransient = false;

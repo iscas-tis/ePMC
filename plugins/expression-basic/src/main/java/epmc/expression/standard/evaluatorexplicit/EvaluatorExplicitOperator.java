@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -93,7 +92,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperator(this);
         }
 
@@ -120,7 +119,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     private final Value[] operandValues;
     private final Value result;
 
-    private EvaluatorExplicitOperator(Builder builder) throws EPMCException {
+    private EvaluatorExplicitOperator(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -155,7 +154,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     }
     
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -173,7 +172,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         return ValueBoolean.asBoolean(evaluate(values)).getBoolean();
     }
 }

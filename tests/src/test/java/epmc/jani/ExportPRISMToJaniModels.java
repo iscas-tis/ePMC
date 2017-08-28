@@ -33,7 +33,6 @@ import javax.json.JsonValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.modelchecker.TestHelper;
@@ -50,17 +49,17 @@ public final class ExportPRISMToJaniModels {
     }
 
     @Test
-    public void convertTest() throws EPMCException {
+    public void convertTest() {
     	export(System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop", System.getProperty("user.home") + "/test.jani");
     }
     
     @Test
-    public void convertSingle() throws EPMCException {
+    public void convertSingle() {
     	export(FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
     }
     
     @Test
-    public void convertPRISMIncluded() throws EPMCException {
+    public void convertPRISMIncluded() {
     	export(BRP_MODEL, BRP_PROPERTY);
     	export(CELL_MODEL, CELL_PROPERTY);
     	export(CLUSTER_MODEL, CLUSTER_PROPERTY);
@@ -145,7 +144,7 @@ public final class ExportPRISMToJaniModels {
     }
 
 //    @Test
-    public void convertPRISMHomepage() throws EPMCException {
+    public void convertPRISMHomepage() {
 //    	export(BROADCAST_COLL_ASYNC_MODEL);
 //    	export(BROADCAST_COLL_SYNC_MODEL);
 //    	export(BROADCAST_COLL_SYNC_DELAY_MODEL);
@@ -198,15 +197,15 @@ public final class ExportPRISMToJaniModels {
         export(WALKERS_RING_LL_MODEL);
     }
     
-    private static void export(String prismFilename) throws EPMCException {
+    private static void export(String prismFilename) {
     	export(prismFilename, null, null);
     }
     
-    private static void export(String prismFilename, String propertyFilename) throws EPMCException {
+    private static void export(String prismFilename, String propertyFilename) {
     	export(prismFilename, propertyFilename, null);
     }
     
-    private static void export(String prismFilename, String propertyFilename, String janiFilename) throws EPMCException {
+    private static void export(String prismFilename, String propertyFilename, String janiFilename) {
     	String modelName = new File(prismFilename).getName();
     	modelName = modelName.substring(0, modelName.lastIndexOf('.'));
     	if (janiFilename == null) {

@@ -28,7 +28,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMC;
@@ -101,7 +100,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     /** according to canSolve, we only accept unbounded reachability 
      * of DTMC and MDP , do not worry about other things */
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
         // TODO Auto-generated method stub
         assert this.targets != null;
         assert this.graph != null;
@@ -124,7 +123,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
     /** computed ZERO states in DTMC, that is, they can not reach target states with positive probability
      * could also be used in MDP, may contain actions */
-    private BitSet computeProb0() throws EPMCException {
+    private BitSet computeProb0() {
         graph.computePredecessors();
         BitSet oldPrev = targets.clone();
         BitSet reachSome = targets.clone();
@@ -152,7 +151,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     
     /** for MCs, every state is state in MC, no need to check whether it is state */
     private ValueArray solveMCLP(GraphExplicit graph, BitSet acc) 
-            throws EPMCException {
+            {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
@@ -273,7 +272,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     }
     
     
-    private ValueArray solveMDPLP(GraphExplicit graph, BitSet acc) throws EPMCException {
+    private ValueArray solveMDPLP(GraphExplicit graph, BitSet acc) {
   
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);

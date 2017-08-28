@@ -24,7 +24,6 @@ import epmc.automaton.AutomatonParityLabel;
 import epmc.coalition.messages.MessagesCoalition;
 import epmc.coalition.options.OptionsCoalition;
 import epmc.coalition.options.OptionsCoalition.JurdzinskyLiftOrder;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -64,7 +63,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 	}
 
 	@Override
-	public QualitativeResult solve() throws EPMCException {
+	public QualitativeResult solve() {
 		assert game != null;
 		getLog().send(MessagesCoalition.COALITION_JURDZINSKI_START);
 		StopWatch watch = new StopWatch(true);
@@ -111,7 +110,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
         return new QualitativeResult(evenWins, oddWins, strategies);
 	}
 
-	private int computeDecision(int node, int[] vectors, int vectorSize, int[] previousValue) throws EPMCException {
+	private int computeDecision(int node, int[] vectors, int vectorSize, int[] previousValue) {
 		int numSuccessors = game.getNumSuccessors(node);
 		storeVector(vectors, vectorSize, game.getSuccessorNode(node, 0), previousValue);
 		Player player = this.player.getEnum(node);
@@ -128,7 +127,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		return decision;
 	}
 
-	private int computeMaxPriority() throws EPMCException {
+	private int computeMaxPriority() {
 		int numNodes = game.getNumNodes();
 		int maxPriority = 0;
         NodeProperty stochasticLabels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -155,9 +154,8 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 	 * </p>
 	 * 
 	 * @return bounds for uneven priorities
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private int[] computeCounterBounds() throws EPMCException {
+	private int[] computeCounterBounds() {
 		int[] bounds = new int[(maxPriority + 1) / 2];
         NodeProperty labels = game.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         int numNodes = game.getNumNodes();
@@ -172,7 +170,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 		return bounds;
 	}
 
-	private void liftSuccessorAll(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int[] previousValue) throws EPMCException {
+	private void liftSuccessorAll(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int[] previousValue) {
 		boolean changed = true;
 		int numNodes = game.getNumNodes();
     	StopWatch iterationWatch = new StopWatch(true);
@@ -199,7 +197,7 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
     			numChanged);
 	}
 
-	private void liftSuccessorChanged(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int[] previousValue) throws EPMCException {		
+	private void liftSuccessorChanged(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int[] previousValue) {		
 		StopWatch predecessorsWatch = new StopWatch(true);
 		getLog().send(MessagesCoalition.COALITION_JURDZINSKI_COMPUTE_PREDECESSORS_START);
     	game.computePredecessors();
@@ -260,9 +258,8 @@ public final class SolverNonStochasticJurdzinski implements SolverNonStochastic 
 	 * @param node
 	 * @param previousValue
 	 * @return
-	 * @throws EPMCException
 	 */
-	private boolean liftNode(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int node, int[] previousValue) throws EPMCException {
+	private boolean liftNode(int[] vectors, int vectorSize, int[] counterBounds, NodeProperty labels, int node, int[] previousValue) {
         AutomatonParityLabel label = labels.getObject(node);
         int priority = label.getPriority();
 		int numSuccessors = game.getNumSuccessors(node);

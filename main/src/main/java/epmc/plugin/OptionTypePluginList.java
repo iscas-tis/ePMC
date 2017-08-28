@@ -23,7 +23,6 @@ package epmc.plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionType;
 
 /**
@@ -56,7 +55,7 @@ public final class OptionTypePluginList implements OptionType {
     }
     
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         List<String> result;
         if (prevValue == null) {

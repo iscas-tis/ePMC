@@ -39,7 +39,6 @@ import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonRabinLabel;
 import epmc.automaton.ProductGraphExplicit;
 import epmc.automaton.UtilAutomaton;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionMultiObjective;
@@ -100,7 +99,7 @@ final class ProductBuilder {
 		return this;
 	}
 	
-	Product build() throws EPMCException {
+	Product build() {
     	assert initialStates != null;
         GraphExplicit prodWrapper = computeProductGraph(initialStates);
         GraphBuilderExplicit builder = new GraphBuilderExplicit();
@@ -116,7 +115,7 @@ final class ProductBuilder {
         return new Product(iterGraph, rewards, numAutomata);
 	}
 	
-	private GraphExplicit computeProductGraph(StateSetExplicit initialStates) throws EPMCException {
+	private GraphExplicit computeProductGraph(StateSetExplicit initialStates) {
         Set<Expression> expressionsSet = new HashSet<>();
         for (Expression objective : property.getOperands()) {
         	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
@@ -188,7 +187,7 @@ final class ProductBuilder {
 	}
 	
     private IterationRewards computeRewards(GraphBuilderExplicit builder)
-    		throws EPMCException {
+    		 {
     	GraphExplicit prodWrapper = builder.getInputGraph();
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
         EdgeProperty[] transRewards = new EdgeProperty[property.getOperands().size()];
@@ -257,7 +256,7 @@ final class ProductBuilder {
         return result;
     }
     
-    private Map<BitSet,BitSet> computeCombinations(GraphBuilderExplicit builder) throws EPMCException {
+    private Map<BitSet,BitSet> computeCombinations(GraphBuilderExplicit builder) {
         computeStableAccepting(builder.getInputGraph());
         Map<BitSet,BitSet> todoMap = new THashMap<>();
         Map<BitSet,BitSet> resultMap = new THashMap<>();
@@ -297,7 +296,7 @@ final class ProductBuilder {
         return resultMap;
     }
     
-	private void computeStableAccepting(GraphExplicit prodWrapper) throws EPMCException {
+	private void computeStableAccepting(GraphExplicit prodWrapper) {
 		NodeProperty automatonLabel = prodWrapper.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         stable = new BitSet[automatonProduct.getNumComponents()][];
         accepting = new BitSet[automatonProduct.getNumComponents()][];
@@ -326,7 +325,7 @@ final class ProductBuilder {
     }
 
     private BitSet computeAccepting(GraphExplicit prodWrapper, BitSet states, BitSet properties)
-            throws EPMCException {
+            {
         assert states != null;
         assert properties != null;
         int numCombinations = 1;

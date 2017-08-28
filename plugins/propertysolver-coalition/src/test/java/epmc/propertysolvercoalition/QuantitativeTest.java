@@ -23,7 +23,6 @@ package epmc.propertysolvercoalition;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
@@ -53,7 +52,7 @@ public final class QuantitativeTest {
         prepare();
     }
 
-    private final static Options prepareCoalitionOptions() throws EPMCException {
+    private final static Options prepareCoalitionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
@@ -61,7 +60,7 @@ public final class QuantitativeTest {
     }
     
     @Test
-    public void robotOldQuantitativeTest() throws EPMCException {
+    public void robotOldQuantitativeTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
 //        options.set(OptionsValue.ITERATION_NATIVE, false);
@@ -95,7 +94,7 @@ public final class QuantitativeTest {
 
     
     @Test
-    public void robotQuantitativeTest() throws EPMCException {
+    public void robotQuantitativeTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-9;
       options.set("prism-flatten", false);
@@ -155,10 +154,9 @@ public final class QuantitativeTest {
     /**
      * Test to make sure that a certain bug found by Andrea Turrini is fixed.
      * 
-     * @throws EPMCException should not be thrown
      */
     @Test
-    public void robotBugAndreaTest() throws EPMCException {
+    public void robotBugAndreaTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-9;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

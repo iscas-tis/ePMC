@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.RawModel;
 import epmc.modelchecker.error.ProblemsModelChecker;
 
@@ -56,9 +55,8 @@ public final class RawModelLocalFiles implements RawModel {
      * 
      * @param modelFilenames model filenames
      * @param propertyFilenames property filenames
-     * @throws EPMCException thrown in case of problems
      */
-    public RawModelLocalFiles(String[] modelFilenames, String[] propertyFilenames) throws EPMCException {
+    public RawModelLocalFiles(String[] modelFilenames, String[] propertyFilenames) {
         assert modelFilenames != null;
         for (String filename : modelFilenames) {
             assert filename != null;

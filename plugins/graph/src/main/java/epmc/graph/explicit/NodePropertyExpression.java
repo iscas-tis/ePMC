@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -38,7 +37,7 @@ public final class NodePropertyExpression implements NodeProperty {
     private final Type type;
     private final Value[] values;
 
-    public NodePropertyExpression(GraphExplicit graph, Expression expression) throws EPMCException {
+    public NodePropertyExpression(GraphExplicit graph, Expression expression) {
         assert expression != null;
         this.graph = graph;
         type = expression.getType(graph);
@@ -65,7 +64,7 @@ public final class NodePropertyExpression implements NodeProperty {
     }
 
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         for (int i = 0; i < variableNodeProperties.length; i++) {
             values[i] = variableNodeProperties[i].get(node);
         }
@@ -74,7 +73,7 @@ public final class NodePropertyExpression implements NodeProperty {
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
     }
 
     @Override

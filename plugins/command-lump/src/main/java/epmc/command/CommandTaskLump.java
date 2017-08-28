@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
@@ -79,15 +78,10 @@ public class CommandTaskLump implements CommandTask {
 
     @Override
     public void executeInServer() {
-        try {
-			lump();
-		} catch (EPMCException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	lump();
     }
     
-    public void lump() throws EPMCException {
+    public void lump() {
         Engine engine = modelChecker.getEngine();
         if (engine instanceof EngineExplicit) {
             lumpExplicit();
@@ -99,7 +93,7 @@ public class CommandTaskLump implements CommandTask {
         }
     }
     
-    private void lumpExplicit() throws EPMCException {
+    private void lumpExplicit() {
         long time = System.nanoTime();
         Model model = modelChecker.getModel();
     	Options options = Options.get();
@@ -165,7 +159,7 @@ public class CommandTaskLump implements CommandTask {
     }
     
     private static GraphSolverObjectiveExplicitLump partitionByProperty(
-            GraphExplicit graph, Expression expression) throws EPMCException {
+            GraphExplicit graph, Expression expression) {
         if (expression instanceof ExpressionQuantifier) {
         	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             expression = expressionQuantifier.getQuantified();
@@ -196,7 +190,7 @@ public class CommandTaskLump implements CommandTask {
         }
     }
 
-    private void lumpDD() throws EPMCException {
+    private void lumpDD() {
         Set<Object> graphProperties = new LinkedHashSet<>();
         graphProperties.add(CommonProperties.SEMANTICS);
         graphProperties.add(CommonProperties.EXPRESSION_TO_DD);
@@ -236,7 +230,7 @@ public class CommandTaskLump implements CommandTask {
     }
     
     public static Set<RewardSpecification> collectRewards(Model model)
-            throws EPMCException {
+            {
         assert model != null;
         Properties properties = model.getPropertyList();
         Set<RewardSpecification> result = new LinkedHashSet<>();
@@ -247,7 +241,7 @@ public class CommandTaskLump implements CommandTask {
         return Collections.unmodifiableSet(result);
     }
 
-    private LumperDD getLumperForModelAndProp(GraphDD modelGraph, Collection<Expression> propertyList) throws EPMCException {
+    private LumperDD getLumperForModelAndProp(GraphDD modelGraph, Collection<Expression> propertyList) {
     	Options options = Options.get();
         Collection<String> lumperDD = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_DD);
         assert lumperDD != null;
@@ -290,7 +284,7 @@ public class CommandTaskLump implements CommandTask {
     }
     
     static Set<RewardSpecification> collectRewards(Model model, Expression property)
-            throws EPMCException {
+            {
         assert model != null;
         assert property != null;
         Set<RewardSpecification> result = new LinkedHashSet<>();
@@ -299,7 +293,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static void collectRewardsRec(Model model, Expression property,
-            Set<RewardSpecification> result) throws EPMCException {
+            Set<RewardSpecification> result) {
         assert model != null;
         assert property != null;
         assert result != null;

@@ -77,7 +77,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     private Map<Expression,Expression> languageMap;
     
     public AutomatonMojmir(Expression formula, ExpressionsUnique expressionsUnique,
-            boolean implicit, boolean simpleG) throws EPMCException {
+            boolean implicit, boolean simpleG) {
         formula = UtilExpression.toNegationNormalForm(formula);
         this.languageMap = contextExpression.newMap();
         this.expressionsUnique = expressionsUnique;
@@ -124,7 +124,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         return (AutomatonMojmirState) observerMaps.numberToState(number);
     }
 
-    private void explore() throws EPMCException {
+    private void explore() {
         Set<AutomatonMojmirState> seen = new HashSet<>();
         Queue<AutomatonMojmirState> todo = new LinkedList<>();
         todo.add(initState);
@@ -161,7 +161,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
 
     private AutomatonMojmirState computeSuccessor(
-            AutomatonMojmirState current, Value[] succ) throws EPMCException {
+            AutomatonMojmirState current, Value[] succ) {
         Expression formula = current.getExpression();
         Expression succExpr = af(formula, succ, simpleG);
         succExpr = expressionsUnique.makeUnique(succExpr);
@@ -190,7 +190,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
     
     private Map<Expression, Type> collectPropositionalTypes(Expression formula)
-            throws EPMCException {
+            {
         assert formula != null;
         if (formula.isPropositional() && !formula.isTrue() && !formula.isFalse()) {
             return Collections.singletonMap(formula, formula.getType());
@@ -210,14 +210,14 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
 
     @Override
     public void queryState(Value[] input, int automatonState)
-            throws EPMCException {
+            {
         assert assertModelState(input);
         int inputNr = expressionsUnique.valueToNumber(input);
         queryState(inputNr, automatonState);
     }
 
     @Override
-    public void queryState(int inputNr, int automatonState) throws EPMCException {
+    public void queryState(int inputNr, int automatonState) {
         if (implicit) {
             Value[] modelState = consistentValues[inputNr];
             AutomatonMojmirState kretinskyState = numberToState(automatonState);
@@ -230,7 +230,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
     
     private Expression af(Expression formula, Value[] modelState, boolean simpleG)
-            throws EPMCException {
+            {
         formula = expressionsUnique.makeUnique(formula);
         if (formula.isPropositional()) {
             formulaEvaluator.setVariableValues(modelState);
@@ -319,7 +319,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         }
     }
 
-    private boolean assertModelState(Value[] modelState) throws EPMCException {
+    private boolean assertModelState(Value[] modelState) {
         assert modelState != null;
         assert modelState.length == expressionsUnique.getReplaced().length
                 : Arrays.toString(modelState) + " " + Arrays.toString(expressionsUnique.getReplaced());
@@ -350,7 +350,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
 
     // TODO remove
-    Value[][] getConsistentValues() throws EPMCException {
+    Value[][] getConsistentValues() {
         return consistentValues;
     }
     
@@ -402,7 +402,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         return buffer.toString();
     }
     
-    boolean isSink(int state) throws EPMCException {
+    boolean isSink(int state) {
         while (sinkMask.size() <= state) {
             sinkMask.add(-1);
         }
@@ -434,7 +434,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         return stateExpressions[number];
     }
     
-    public static void main(String[] args) throws EPMCException {
+    public static void main(String[] args) {
         StopWatch watch = Util.newStopWatch(true);
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);

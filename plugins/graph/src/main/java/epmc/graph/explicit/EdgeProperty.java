@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -59,9 +58,8 @@ public interface EdgeProperty  {
      * 
      * @param successor number of successor edge
      * @return value for edge with the given number of the node queried last
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get(int node, int successor) throws EPMCException;
+    Value get(int node, int successor);
     
     /**
      * Set value for edge of node queried last.
@@ -82,9 +80,8 @@ public interface EdgeProperty  {
      * 
      * @param successor number of successor edge to set
      * @param value value to set for the edge
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(int node,  int successor, Value value) throws EPMCException;
+    void set(int node,  int successor, Value value);
     
     /**
      * Obtain type of the values returned by {@link #get(int)}.
@@ -105,9 +102,8 @@ public interface EdgeProperty  {
      * 
      * @param edge number to get value of
      * @return value of given edge of node as object
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T> T getObject(int node, int successor) throws EPMCException {
+    default <T> T getObject(int node, int successor) {
         assert successor >= 0;
         Value value = get(node, successor);
         assert ValueObject.isObject(value);
@@ -125,9 +121,8 @@ public interface EdgeProperty  {
      * 
      * @param value string value to set for the edge
      * @param successor number of successor edge to set value of
-     * @throws EPMCException thrown in case of problems during setting
      */
-    default void set(int node, int successor, String value) throws EPMCException {
+    default void set(int node, int successor, String value) {
         Value tmpValue = getType().newValue();
         tmpValue.set(value);
         set(node, successor, tmpValue);

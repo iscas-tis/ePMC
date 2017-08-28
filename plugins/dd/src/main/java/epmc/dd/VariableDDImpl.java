@@ -26,7 +26,6 @@ import java.util.List;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.MoreObjects.ToStringHelper;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
@@ -55,7 +54,7 @@ final class VariableDDImpl implements VariableDD {
 
     VariableDDImpl(ContextDD contextDD, int copies, Type type, String name,
             List<List<DD>> ddVariables)
-            throws EPMCException {
+            {
         assert contextDD != null;
         assert copies > 0;
         assert type != null;
@@ -84,11 +83,11 @@ final class VariableDDImpl implements VariableDD {
     }
 
     VariableDDImpl(ContextDD contextDD, int copies, Type type, String name)
-            throws EPMCException {
+            {
         this(contextDD, copies, type, name, null);
     }
 
-    private void prepareIntegerDDVariables(List<List<DD>> ddVariables) throws EPMCException {
+    private void prepareIntegerDDVariables(List<List<DD>> ddVariables) {
         final int numValues = getUpper() - getLower() + 1;
         final int numBits = Integer.SIZE - Integer.numberOfLeadingZeros(numValues - 1);
         for (int copy = 0; copy < copies; copy++) {
@@ -110,7 +109,7 @@ final class VariableDDImpl implements VariableDD {
         }
     }
 
-    private void prepareBooleanDDVariables(List<List<DD>> ddVariables) throws EPMCException {
+    private void prepareBooleanDDVariables(List<List<DD>> ddVariables) {
         contextDD.addGroup(contextDD.numVariables(), copies, true);
         for (int copy = 0; copy < copies; copy++) {
             ArrayList<DD> var = new ArrayList<>(1);
@@ -126,7 +125,7 @@ final class VariableDDImpl implements VariableDD {
         }
     }
     
-    private void prepareGeneralDDVariables(List<List<DD>> ddVariables) throws EPMCException {
+    private void prepareGeneralDDVariables(List<List<DD>> ddVariables) {
         final int numValues = type.getNumValues();
         final int numBits = Integer.SIZE - Integer.numberOfLeadingZeros(numValues - 1);
         for (int copy = 0; copy < copies; copy++) {
@@ -148,7 +147,7 @@ final class VariableDDImpl implements VariableDD {
         }
     }
 
-    private DD computeValueEncoding(int copy) throws EPMCException {
+    private DD computeValueEncoding(int copy) {
         if (TypeInteger.isInteger(type)) {
             return computeValueEncodingInteger(copy);
         } else if (TypeBoolean.isBoolean(type)) {
@@ -158,7 +157,7 @@ final class VariableDDImpl implements VariableDD {
         }
     }
 
-    private DD computeValueEncodingInteger(int copy) throws EPMCException {
+    private DD computeValueEncodingInteger(int copy) {
         int numValues = getUpper() - getLower() + 1;
         DD encoding = contextDD.newConstant(getLower());
         int bitValue = 1;
@@ -178,7 +177,7 @@ final class VariableDDImpl implements VariableDD {
         return ddVariables.get(copy).get(0).clone();
     }
 
-    private DD computeValueEncodingGeneral(int copy) throws EPMCException {
+    private DD computeValueEncodingGeneral(int copy) {
         // TODO fix
         int numValues = type.getNumValues();
         // TODO value should actually be 'invalid'
@@ -212,7 +211,7 @@ final class VariableDDImpl implements VariableDD {
     }
     
     @Override
-    public DD getValueEncoding(int copy) throws EPMCException {
+    public DD getValueEncoding(int copy) {
         assert alive();
         assert copy >= 0;
         assert copy < valueEncodings.size();
@@ -283,7 +282,7 @@ final class VariableDDImpl implements VariableDD {
     }
 
     @Override
-    public DD newIntValue(int copy, int value) throws EPMCException {
+    public DD newIntValue(int copy, int value) {
         assert alive();
         assert copy >= 0;
         assert copy < getNumCopies();
@@ -306,7 +305,7 @@ final class VariableDDImpl implements VariableDD {
     }
 
     @Override
-    public DD newVariableValue(int copy, Value value) throws EPMCException {
+    public DD newVariableValue(int copy, Value value) {
         assert copy >= 0;
         assert copy < copies;
         assert value != null;

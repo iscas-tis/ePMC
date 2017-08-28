@@ -38,7 +38,6 @@ import java.util.Set;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
@@ -74,7 +73,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     }
 
     @Override
-    public void export() throws EPMCException {
+    public void export() {
         assert automaton != null;
         assert outStream != null;
         assert format != null;
@@ -120,7 +119,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     }
 
     private Value[][] computeValidInputs(Automaton automaton)
-            throws EPMCException {
+            {
     	assert automaton != null;
         ContextDD contextDD = ContextDD.get();
         Expression[] expressions = automaton.getExpressions();
@@ -174,7 +173,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         return result;
     }
 
-	private TIntObjectMap<Object> exploreStates() throws EPMCException {
+	private TIntObjectMap<Object> exploreStates() {
         TIntStack todo = new TIntArrayStack();
         assert automaton.getInitState() == 0;
         todo.push(0);

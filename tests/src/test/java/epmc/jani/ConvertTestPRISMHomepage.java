@@ -27,8 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
-
 public final class ConvertTestPRISMHomepage {
 	/** Location of plugin directory in file system. */
     final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
@@ -44,7 +42,7 @@ public final class ConvertTestPRISMHomepage {
     // BLUETOOTH_MODEL uses old syntax, thus not supported
     
     @Test
-    public void broadcastCollAsyncTest() throws EPMCException {
+    public void broadcastCollAsyncTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BROADCAST_COLL_ASYNC_MODEL)
     			.putConstant("psend", "0.2")
@@ -54,7 +52,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void broadcastCollSyncTest() throws EPMCException {
+    public void broadcastCollSyncTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BROADCAST_COLL_SYNC_MODEL)
     			.putConstant("psend", "0.2")
@@ -64,7 +62,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void broadcastCollSyncDelayTest() throws EPMCException {
+    public void broadcastCollSyncDelayTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BROADCAST_COLL_SYNC_DELAY_MODEL)
     			.setExploreAll()
@@ -73,7 +71,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void broadcastCollSyncLossyTest() throws EPMCException {
+    public void broadcastCollSyncLossyTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BROADCAST_COLL_SYNC_LOSSY_MODEL)
     			.putConstant("precv", "0.3")
@@ -83,7 +81,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void broadcastNoCollSyncTest() throws EPMCException {
+    public void broadcastNoCollSyncTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(BROADCAST_NO_COLL_SYNC_MODEL)
     			.setExploreAll()
@@ -92,7 +90,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void byzantineTest() throws EPMCException {
+    public void byzantineTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(BYZANTINE_MODEL, 4, 1))
     			.setExploreJANI(true)
@@ -104,7 +102,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void ccEdfTest() throws EPMCException {
+    public void ccEdfTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CC_EDF_MODEL)
     			.setExploreAll()
@@ -113,7 +111,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void circadianTest() throws EPMCException {
+    public void circadianTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CIRCADIAN_MODEL)
 //    			.setExploreAll()
@@ -122,7 +120,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void contractBmgrTest() throws EPMCException {
+    public void contractBmgrTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CONTRACT_BMGR_MODEL)
     			.setExploreAll()
@@ -133,7 +131,7 @@ public final class ConvertTestPRISMHomepage {
     // CONTRACT_EGL1_5_MODEL uses old syntax, not usable
 
     @Test
-    public void crowdsTest() throws EPMCException {
+    public void crowdsTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CROWDS_MODEL)
     			.setExploreAll()
@@ -142,7 +140,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void cyclinTest() throws EPMCException {
+    public void cyclinTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(CYCLIN_MODEL)
     			.putConstant("N", "4")
@@ -152,7 +150,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void fairExchangeTest() throws EPMCException {
+    public void fairExchangeTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(FAIR_EXCHANGE_MODEL, 10))
     			.setExploreAll()
@@ -161,7 +159,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void fgfTest() throws EPMCException {
+    public void fgfTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(FGF_MODEL)
     			.setExploreAll()
@@ -170,7 +168,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void gossipTest() throws EPMCException {
+    public void gossipTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GOSSIP_MODEL, 4))
     			.setExploreAll()
@@ -179,7 +177,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void gossipDTMCTest() throws EPMCException {
+    public void gossipDTMCTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GOSSIP_DTMC_MODEL, 4))
     			.setExploreAll()
@@ -188,7 +186,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void graphTest() throws EPMCException {
+    public void graphTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(GRAPH_MODEL, 4))
     			.putConstant("p", "0.2")
@@ -198,7 +196,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void investorTest() throws EPMCException {
+    public void investorTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(INVESTOR_MODEL)
     			.setExploreAll()
@@ -207,7 +205,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void kaminskyTest() throws EPMCException {
+    public void kaminskyTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(KAMINSKY_MODEL)
     			.putConstant("TIMES_TO_REQUEST_URL", 10)
@@ -221,7 +219,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void mapkCascadeTest() throws EPMCException {
+    public void mapkCascadeTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MAPK_CASCADE_MODEL)
     			.putConstant("N", "4")
@@ -231,7 +229,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void mdpttTest() throws EPMCException {
+    public void mdpttTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MDPTT_MODEL)
     			.setExploreAll()
@@ -242,7 +240,7 @@ public final class ConvertTestPRISMHomepage {
     // TODO this is a game model, cannot handle currently
     @Ignore
     @Test
-    public void mdsmTest() throws EPMCException {
+    public void mdsmTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MDSM_MODEL)
     			.setExploreAll()
@@ -253,7 +251,7 @@ public final class ConvertTestPRISMHomepage {
     // TODO this is a game model, cannot handle currently
     @Ignore
     @Test
-    public void mdsmPTest() throws EPMCException {
+    public void mdsmPTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(MDSM_P_MODEL)
     			.setExploreAll()
@@ -262,7 +260,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void nandTest() throws EPMCException {
+    public void nandTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(NAND_MODEL)
     			.putConstant("N", "3")
@@ -273,7 +271,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void negotiationTest() throws EPMCException {
+    public void negotiationTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(NEGOTIATION_MODEL)
     			.setExploreAll()
@@ -282,7 +280,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void optimalTwoDiceTest() throws EPMCException {
+    public void optimalTwoDiceTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(OPTIMAL_TWO_DICE_MODEL)
     			.setExploreAll()
@@ -291,7 +289,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void pincrackingTest() throws EPMCException {
+    public void pincrackingTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(PINCRACKING_MODEL)
     			.setExploreAll()
@@ -301,7 +299,7 @@ public final class ConvertTestPRISMHomepage {
     
     @Ignore // TODO to make this work, will have to combine some of the files
     @Test
-    public void powerTest() throws EPMCException {
+    public void powerTest() {
     	new ConvertTestConfiguration()
 		.setModelName(POWER_CTMC3_PM1_MODEL)
 		.setExploreAll()
@@ -369,7 +367,7 @@ public final class ConvertTestPRISMHomepage {
     }
     
     @Test
-    public void rabinChoiceTest() throws EPMCException {
+    public void rabinChoiceTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(RABIN_CHOICE_MODEL)
     			.setExploreAll()
@@ -378,7 +376,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void robotTest() throws EPMCException {
+    public void robotTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(ROBOT_MODEL)
     			.putConstant("n", "3")
@@ -388,7 +386,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void stableMatchingTest() throws EPMCException {
+    public void stableMatchingTest() {
     	ConvertTestStatistics statistics1 = new ConvertTestConfiguration()
     			.setModelName(String.format(STABLE_MATCHING_MODEL, 1))
     			.setExploreAll()
@@ -409,7 +407,7 @@ public final class ConvertTestPRISMHomepage {
     }
     
     @Test
-    public void staticEdfTest() throws EPMCException {
+    public void staticEdfTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(STATIC_EDF_MODEL)
     			.setExploreAll()
@@ -418,7 +416,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void testAndSetTest() throws EPMCException {
+    public void testAndSetTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(TEST_AND_SET_MODEL)
     			.setExploreAll()
@@ -427,7 +425,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void thinkteamRetrialTest() throws EPMCException {
+    public void thinkteamRetrialTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(THINKTEAM_RETRIAL_MODEL)
     			.setExploreAll()
@@ -438,7 +436,7 @@ public final class ConvertTestPRISMHomepage {
     // TODO game, cannot yet handle
     @Ignore
     @Test
-    public void uavGameTest() throws EPMCException {
+    public void uavGameTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(UAV_GAME_MODEL)
     			.setExploreAll()
@@ -447,7 +445,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void uavMdpTest() throws EPMCException {
+    public void uavMdpTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(UAV_MDP_MODEL)
     			.putConstant("accu_load1", "0.3")
@@ -462,7 +460,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void virusTest() throws EPMCException {
+    public void virusTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(String.format(VIRUS_MODEL, 3))
     			.putConstant("detect2", "0.2")
@@ -472,7 +470,7 @@ public final class ConvertTestPRISMHomepage {
     }
 
     @Test
-    public void walkersRingLLTest() throws EPMCException {
+    public void walkersRingLLTest() {
     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
     			.setModelName(WALKERS_RING_LL_MODEL)
     			.putConstant("failureRate", 3)

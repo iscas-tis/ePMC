@@ -31,7 +31,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.util.UtilJSON;
@@ -94,7 +93,7 @@ public final class AssignmentSimple implements Assignment {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		assert validIdentifiers != null;
@@ -119,7 +118,7 @@ public final class AssignmentSimple implements Assignment {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder builder = Json.createObjectBuilder();
 		builder.add(REF, ref.getName());
 		builder.add(VALUE, ExpressionParser.generateExpression(model, this.value));

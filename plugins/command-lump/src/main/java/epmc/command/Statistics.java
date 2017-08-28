@@ -22,7 +22,6 @@ package epmc.command;
 
 import com.google.common.base.MoreObjects;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
@@ -36,7 +35,7 @@ public final class Statistics {
 	private final int numNondet;
 	private final int numFanout;
 	
-	public Statistics(GraphExplicit graph) throws EPMCException {
+	public Statistics(GraphExplicit graph) {
 		assert graph != null;
 		
 		NodeProperty stateProp = graph.getNodeProperty(CommonProperties.STATE);

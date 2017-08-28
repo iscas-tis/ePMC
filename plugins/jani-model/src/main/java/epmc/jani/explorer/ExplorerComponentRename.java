@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.jani.model.Action;
 import epmc.jani.model.component.Component;
@@ -79,7 +78,7 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 	
 	@Override
-	public void build() throws EPMCException {
+	public void build() {
 		assert explorer != null;
 		assert component != null;
 		componentRename = (ComponentRename) component;
@@ -94,13 +93,13 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 
 	@Override
-	public void buildAfterVariables() throws EPMCException {
+	public void buildAfterVariables() {
 		inner.buildAfterVariables();
 		state = inner.getNodeProperty(CommonProperties.STATE);
 	}
 	
 	@Override
-	public void queryNode(NodeJANI nodeRename) throws EPMCException {
+	public void queryNode(NodeJANI nodeRename) {
 		assert nodeRename != null;
 		inner.queryNode(nodeRename);
 		for (int succNr = 0; succNr < getNumSuccessors(); succNr++) {
@@ -132,13 +131,13 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 
 	@Override
-	public PropertyNode getNodeProperty(Object property) throws EPMCException {
+	public PropertyNode getNodeProperty(Object property) {
 		assert property != null;
 		return inner.getNodeProperty(property);
 	}
 
 	@Override
-	public PropertyEdge getEdgeProperty(Object property) throws EPMCException {
+	public PropertyEdge getEdgeProperty(Object property) {
 		assert property != null;
 		if (property == CommonProperties.TRANSITION_LABEL) {
 			return label;
@@ -148,7 +147,7 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 
 	@Override
-	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
+	public Collection<NodeJANI> getInitialNodes() {
 		return initialNodes;
 	}
 
@@ -163,7 +162,7 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 
 	@Override
-	public NodeJANI newNode() throws EPMCException {
+	public NodeJANI newNode() {
 		return explorer.newNode();
 	}
 
@@ -173,12 +172,12 @@ public final class ExplorerComponentRename implements ExplorerComponent {
 	}
 	
 	@Override
-	public boolean isState(NodeJANI node) throws EPMCException {
+	public boolean isState(NodeJANI node) {
 		return inner.isState(node);
 	}
 	
 	@Override
-	public boolean isState() throws EPMCException {
+	public boolean isState() {
 		return state.getBoolean();
 	}
 	

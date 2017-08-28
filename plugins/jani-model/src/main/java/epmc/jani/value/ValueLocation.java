@@ -20,7 +20,6 @@
 
 package epmc.jani.value;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Location;
 import epmc.util.BitStream;
 import epmc.value.Value;
@@ -167,7 +166,7 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
 	}
 	
 	@Override
-	public boolean isEq(Value other) throws EPMCException {
+	public boolean isEq(Value other) {
 		assert other != null;
 		assert other instanceof ValueLocation;
 		ValueLocation otherLocation = (ValueLocation) other;
@@ -196,13 +195,13 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
 	}
 
 	@Override
-	public double distance(Value other) throws EPMCException {
+	public double distance(Value other) {
 		ValueLocation otherLocation = (ValueLocation) other;
 		return Math.abs(locationNumber - otherLocation.locationNumber);
 	}
 
 	@Override
-	public void set(String value) throws EPMCException {
+	public void set(String value) {
 		// TODO Auto-generated method stub
 		
 	}

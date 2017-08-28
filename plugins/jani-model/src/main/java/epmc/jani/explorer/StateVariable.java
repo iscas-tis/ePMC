@@ -1,6 +1,5 @@
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -61,7 +60,7 @@ public final class StateVariable {
 			return decision;
 		}
 		
-		public StateVariable build() throws EPMCException {
+		public StateVariable build() {
 			return new StateVariable(this);
 		}
 	}
@@ -74,7 +73,7 @@ public final class StateVariable {
 	private final Value initialValue;
 	private final boolean decision;
 	
-	private StateVariable(Builder builder) throws EPMCException {
+	private StateVariable(Builder builder) {
 		assert builder != null;
 		assert builder.getIdentifier() != null;
 		assert builder.getType() != null;
@@ -91,7 +90,7 @@ public final class StateVariable {
 		if (initialValueExpression != null) {
 			initialValue = UtilEvaluatorExplicit.evaluate(initialValueExpression, new ExpressionToType() {
 				@Override
-				public Type getType(Expression expression) throws EPMCException {
+				public Type getType(Expression expression) {
 					return null;
 				}
 			});

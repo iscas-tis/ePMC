@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
@@ -107,7 +106,7 @@ final class RewardsConverter {
 		this.tauAction = tauAction;
 	}
 	
-	void attachRewards() throws EPMCException {
+	void attachRewards() {
 		assert modelJANI != null;
 		assert modelPRISM != null;
 		assert tauAction != null;
@@ -128,7 +127,7 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewardsExternal() throws EPMCException {
+	private void attachRewardsExternal() {
     	Variables rewards = buildRewards();
     	addRewards(rewards);
     	Automaton rewardAutomaton = computeRewardAutomaton();
@@ -149,7 +148,7 @@ final class RewardsConverter {
     	}
 	}
 
-	private Variables buildRewards() throws EPMCException {
+	private Variables buildRewards() {
 		Variables rewards = new Variables();
 		rewards.setModel(modelJANI);
 		JANITypeReal rewardType = new JANITypeReal();
@@ -175,7 +174,7 @@ final class RewardsConverter {
 		return rewards;
 	}
 
-	private Automaton computeRewardAutomaton() throws EPMCException {
+	private Automaton computeRewardAutomaton() {
 		Automaton automaton = new Automaton();
 		automaton.setModel(modelJANI);
 		automaton.setName(REWARD_AUTOMATON);
@@ -193,7 +192,7 @@ final class RewardsConverter {
 		return automaton;
 	}
 
-	private Edges computeRewardAutomatonEdges(Location location) throws EPMCException {
+	private Edges computeRewardAutomatonEdges(Location location) {
 		assert location != null;
 		Edges edges = new Edges();
 		edges.setModel(modelJANI);
@@ -234,7 +233,7 @@ final class RewardsConverter {
 		}
 	}
 
-	private void computeEdgeRewardAssignments(Action action, Assignments assignments) throws EPMCException {
+	private void computeEdgeRewardAssignments(Action action, Assignments assignments) {
 		Variables rewards = modelJANI.getGlobalVariablesTransient();
 		assignments.setModel(modelJANI);
 		List<RewardStructure> rewardStructures = modelPRISM.getRewards();
@@ -276,7 +275,7 @@ final class RewardsConverter {
 		}
 	}
 
-	private Assignments computeLocationRewardAssignments() throws EPMCException {
+	private Assignments computeLocationRewardAssignments() {
 		Variables rewards = modelJANI.getGlobalVariablesTransient();
 		Assignments locationRewardAssignments = new Assignments();
 		locationRewardAssignments.setModel(modelJANI);
@@ -304,7 +303,7 @@ final class RewardsConverter {
 		return locationRewardAssignments;
 	}
 
-	private Expression convertStateRewards(List<StateReward> stateRewards) throws EPMCException {
+	private Expression convertStateRewards(List<StateReward> stateRewards) {
 		assert stateRewards != null;
 		Expression result = null;
 		for (StateReward stateReward : stateRewards) {
@@ -366,7 +365,7 @@ final class RewardsConverter {
 		}
 	}
 
-	private void attachRewardsIntegrate() throws EPMCException {
+	private void attachRewardsIntegrate() {
     	Variables rewards = buildRewards();
     	addRewards(rewards);
 		Actions actions = modelJANI.getActions();
@@ -379,7 +378,7 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewards(Component system, Action toAction, Action effectOf) throws EPMCException {
+	private void attachRewards(Component system, Action toAction, Action effectOf) {
 		assert system != null;
 		if (system instanceof ComponentAutomaton) {
 			attachRewardsAutomaton((ComponentAutomaton) system, toAction, effectOf);
@@ -396,7 +395,7 @@ final class RewardsConverter {
 
 	private void attachRewardsSynchronisationVectors(
 			ComponentSynchronisationVectors system, Action toAction,
-			Action effectOf) throws EPMCException {
+			Action effectOf) {
 		/* Note that this way of attaching rewards only works for
 		 * synchronisation vectors produced by the translation from PRISM,
 		 * but not for general synchronisation vectors. */
@@ -441,7 +440,7 @@ final class RewardsConverter {
 		
 	}
 
-	private void attachRewardsAutomaton(Automaton automaton, Action toAction, Action effectOf) throws EPMCException {
+	private void attachRewardsAutomaton(Automaton automaton, Action toAction, Action effectOf) {
 		assert automaton != null;
 		assert toAction != null;
 		for (Edge edge : automaton.getEdges()) {
@@ -456,14 +455,14 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewardsAutomaton(ComponentAutomaton system, Action toAction, Action effectOf) throws EPMCException {
+	private void attachRewardsAutomaton(ComponentAutomaton system, Action toAction, Action effectOf) {
 		assert system != null;
 		assert toAction != null;
 		Automaton automaton = system.getAutomaton();
 		attachRewardsAutomaton(automaton, toAction, effectOf);
 	}
 
-	private void attachRewardsParallel(ComponentParallel system, Action toAction, Action effectOf) throws EPMCException {
+	private void attachRewardsParallel(ComponentParallel system, Action toAction, Action effectOf) {
 		Component componentLeft = system.getLeft();
 		Component componentRight = system.getRight();
 		Set<Action> systemActions = system.getActions();
@@ -481,7 +480,7 @@ final class RewardsConverter {
 		}
 	}
 	
-	private void attachRewardsRename(ComponentRename system, Action toAction, Action effectOf) throws EPMCException {
+	private void attachRewardsRename(ComponentRename system, Action toAction, Action effectOf) {
 		assert system != null;
 		assert toAction != null;
 		assert effectOf != null;
@@ -495,7 +494,7 @@ final class RewardsConverter {
 		}
 	}
 	
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

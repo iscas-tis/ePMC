@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -66,7 +65,7 @@ public final class NodePropertyConstant implements NodeProperty {
      * of the graph.
      */
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         assert value != null;
         assert this.value.getType().canImport(value.getType());
         this.value.set(value);

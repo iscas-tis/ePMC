@@ -28,7 +28,6 @@ import epmc.constraintsolver.ConstraintSolverConfiguration;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -64,7 +63,7 @@ final class DownClosure {
     }
     
     ValueArrayAlgebra findSeparating(ValueArrayAlgebra outside, boolean numerical)
-            throws EPMCException {
+            {
         assert outside != null;
         assert outside.size() == dimension;            
         if (elements.size() == 0) {
@@ -75,7 +74,7 @@ final class DownClosure {
     }
 
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
-    		boolean numerical) throws EPMCException {
+    		boolean numerical) {
     	assert outside != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
     	ValueAlgebra lowerBound = TypeWeight.get().newValue();
@@ -110,7 +109,7 @@ final class DownClosure {
     
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
             boolean numerical, Value lowerBound)
-            throws EPMCException {
+            {
         Value zero = TypeWeight.get().getZero();
         Value one = TypeWeight.get().getOne();
         ConstraintSolver problem = contextSolver.newProblem();
@@ -204,7 +203,7 @@ final class DownClosure {
 
     private ValueArrayAlgebra findSeparatingEmptyEntries(
     		ValueArrayAlgebra outside,
-            boolean numerical) throws EPMCException {
+            boolean numerical) {
         boolean outsideNonZero = false;
         ValueAlgebra entry = newValueWeight();
         for (int i = 0; i < outside.size(); i++) {
@@ -243,7 +242,7 @@ final class DownClosure {
         return separating;
     }
 
-    private void normalise(ValueArrayAlgebra array) throws EPMCException {
+    private void normalise(ValueArrayAlgebra array) {
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra sum = newValueWeight();
         entry.set(0);
@@ -258,7 +257,7 @@ final class DownClosure {
         }
     }
     
-    public void improveNumerical(ValueArray current) throws EPMCException {
+    public void improveNumerical(ValueArray current) {
         assert current != null;
         assert current.size() == dimension;
         assert current.getType().getEntryType() == TypeWeight.get();
@@ -352,7 +351,7 @@ final class DownClosure {
         current.set(entry, 0);
     }
 
-    public ValueArrayAlgebra findFeasibleRandomisedScheduler(ValueArray current) throws EPMCException {
+    public ValueArrayAlgebra findFeasibleRandomisedScheduler(ValueArray current) {
         assert current != null;
         assert current.size() == dimension;
         assert current.getType().getEntryType() == TypeWeight.get();

@@ -23,7 +23,6 @@ package epmc.command;
 import java.util.Map;
 
 import epmc.automaton.OptionsAutomaton;
-import epmc.error.EPMCException;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
 import epmc.options.OptionTypeMap;
@@ -39,7 +38,7 @@ public class AfterOptionsCreationCommandExpression2Automaton implements AfterOpt
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);

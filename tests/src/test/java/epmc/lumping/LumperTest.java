@@ -31,7 +31,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.ModelNamesPRISM;
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ExploreStatistics;
@@ -47,7 +46,7 @@ public final class LumperTest {
     }
 
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -70,7 +69,7 @@ public final class LumperTest {
     }
 
     @Test
-    public void cellTest() throws EPMCException {
+    public void cellTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         GraphExplicit result;
@@ -105,7 +104,7 @@ public final class LumperTest {
     }
     
     @Test
-    public void clusterTest() throws EPMCException {
+    public void clusterTest() {
         Options options = prepareOptions();
         GraphExplicit result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -135,7 +134,7 @@ public final class LumperTest {
     }
     
     @Test
-    public void cyclinTest() throws EPMCException {
+    public void cyclinTest() {
         Options options = prepareOptions();
         GraphExplicit result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -151,7 +150,7 @@ public final class LumperTest {
     }        
 
     @Test
-    public void er12_1Test() throws EPMCException {
+    public void er12_1Test() {
         Options options = prepareOptions();
         double tolerance = 1E-13;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

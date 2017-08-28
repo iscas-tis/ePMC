@@ -32,7 +32,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Operator;
@@ -183,7 +182,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     private int initVarNum;
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(BuDDy.loaded, ProblemsDD.BUDDY_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -227,7 +226,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
     
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
@@ -262,7 +261,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
         int result;
@@ -277,7 +276,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         if (nextVariable + 1 > initVarNum) {
             checkBuDDyResult(BuDDy.bdd_setvarnum(nextVariable + 1));
         }
@@ -310,7 +309,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -321,7 +320,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+            {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationBuDDy;
         assert assertNonNegInt(dd);
@@ -386,7 +385,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert assertNonNegInt(dd);
         assert assertNonNegInt(cube);
         int p1 = (int) dd;
@@ -398,7 +397,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert assertNonNegInt(dd);
         assert assertNonNegInt(cube);
         int p1 = (int) dd;
@@ -410,32 +409,32 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+            {
         assert assertNonNegInt(dd1);
         assert assertNonNegInt(dd2);
         assert assertNonNegInt(cube);
@@ -449,7 +448,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         Pointer p = BuDDy.bdd_newpair();
         ensure(p != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         for (int var = 0; var < permutation.length; var++) {
@@ -529,7 +528,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
         return true;
     }
     
-    private void checkBuDDyResult(int result) throws EPMCException {
+    private void checkBuDDyResult(int result) {
         ensure(result != BDD_MEMORY, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         if (result >= 0) {
             return;

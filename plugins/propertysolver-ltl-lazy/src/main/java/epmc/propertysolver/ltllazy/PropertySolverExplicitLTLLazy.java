@@ -36,7 +36,6 @@ import epmc.automaton.AutomatonStateBuechi;
 import epmc.automaton.Buechi;
 import epmc.automaton.ProductGraphExplicit;
 import epmc.automaton.UtilAutomaton;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -111,7 +110,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit checkTemporalLTLNonIncremental(Buechi buechi)
-            throws EPMCException {
+            {
         StateMapExplicit result = null;
         if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_USE_SUBSET)) {
             result = computeNonIncremental(DecisionMethod.SUBSET, buechi);
@@ -126,7 +125,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit computeNonIncremental(DecisionMethod method, Buechi buechi)
-            throws EPMCException {
+            {
         Automaton automaton = null;
         StopWatch timer = new StopWatch(true);
         switch (method) {
@@ -245,7 +244,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit prodToOrigResult(ValueArrayAlgebra iterResult,
-            GraphExplicit prodGraph) throws EPMCException {
+            GraphExplicit prodGraph) {
         // TODO implement more cleanly
         assert iterResult != null;
         assert prodGraph != null;
@@ -266,7 +265,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private StateMapExplicit checkTemporalLTLIncremental(Buechi buechi)
-            throws EPMCException {
+            {
         log.send(MessagesLTLLazy.LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL);
         AutomatonSubset automaton = new AutomatonSubset.Builder().setBuechi(buechi).build();
         ProductGraphExplicit prodGraph = new ProductGraphExplicit.Builder()
@@ -301,7 +300,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+            {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
@@ -388,7 +387,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     private void decideComponents(Buechi buechi,
             EndComponents endComponents,
             int numLabels, BitSet acc, GraphExplicit graph)
-                    throws EPMCException {
+                    {
         int numComponents = 0;
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
         BitSet init = graph.getInitialNodes().clone();
@@ -458,7 +457,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentSubset(BitSet ecc, GraphExplicit graph, int numLabels)
-            throws EPMCException {
+            {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_SUBSET);
         BitSet labelsFoundLower = UtilBitSet.newBitSetUnbounded(numLabels);
         BitSet labelsFoundOver = UtilBitSet.newBitSetUnbounded(numLabels);
@@ -482,7 +481,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentBreakpointSingletons(GraphExplicit subsetGraph,
             Buechi buechi, BitSet ecc, boolean bscc)
-                    throws EPMCException {
+                    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT_SINGLETONS);
         BitSet toCheck = UtilBitSet.newBitSetUnbounded();
         toCheck.or(ecc);
@@ -563,7 +562,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     
     private ComponentDecision decideComponentBreakpoint(GraphExplicit subsetGraph,
             BitSet ecc, boolean bscc)
-                    throws EPMCException {
+                    {
         AutomatonSubset automaton = ValueObject.asObject(subsetGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         Buechi buechi = automaton.getBuechi();
         
@@ -631,7 +630,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentBreakpointMCLeaf(
-            GraphExplicit graph, BitSet leafSCC) throws EPMCException {
+            GraphExplicit graph, BitSet leafSCC) {
         boolean accepting = false;
         boolean rejecting = false;
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -653,7 +652,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentBreakpointMDPLeaf(
-            GraphExplicit graph, BitSet leafSCC) throws EPMCException {
+            GraphExplicit graph, BitSet leafSCC) {
         BitSet existing = UtilBitSet.newBitSetUnbounded();
 
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -677,7 +676,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentRabin(GraphExplicit subsetProd,
-            BitSet scc, boolean bscc) throws EPMCException {
+            BitSet scc, boolean bscc) {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_RABIN);
         AutomatonSubset subOb = ValueObject.asObject(subsetProd.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         Buechi buechi = subOb.getBuechi();
@@ -733,7 +732,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentRabinMCLeaf(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonRabin rabin = ValueObject.asObject(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         BitSet accepting = UtilBitSet.newBitSetUnbounded(rabin.getNumPairs());
@@ -753,7 +752,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentRabinMDPLeaf(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonRabin rabin = ValueObject.asObject(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         boolean accepting = false;
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -807,7 +806,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         Expression quantifiedProp = propertyQuantifier.getQuantified();
@@ -830,7 +829,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
     
     private StateMap doSolve(Expression property, StateSet forStates, boolean min)
-            throws EPMCException {
+            {
         this.forStates = (StateSetExplicit) forStates;
         Semantics type = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(type)) {
@@ -859,7 +858,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         return innerResult;
     }
     
-    private boolean isBSCC(GraphExplicit graph, BitSet ecc) throws EPMCException {
+    private boolean isBSCC(GraphExplicit graph, BitSet ecc) {
         boolean isBSCC = true;
         if (nonDet) {
             for (int node = ecc.nextSetBit(0); node >= 0; node = ecc.nextSetBit(node+1)) {
@@ -879,7 +878,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     // leafSCC with probability one (max probability)
     private boolean checkReachOne(GraphExplicit prodWrapperGraph,
             BitSet subsetECC, GraphExplicit leafGraph, BitSet leafSCC)
-                    throws EPMCException {
+                    {
         ProductGraphExplicit prodGraph = prodWrapperGraph.getGraphPropertyObject(CommonProperties.INNER_GRAPH);
         AutomatonSubset subset = ValueObject.asObject(prodGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         ComponentsExplicit components = UtilAlgorithms.newComponentsExplicit();
@@ -900,7 +899,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -930,14 +929,14 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -950,7 +949,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     }
     
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	return Collections.unmodifiableSet(required);

@@ -28,7 +28,6 @@ import epmc.constraintsolver.options.OptionsConstraintsolver;
 import epmc.constraintsolver.smtlib.ConstraintSolverSMTLib;
 import epmc.constraintsolver.smtlib.options.OptionsSMTLib;
 import epmc.constraintsolver.smtlib.options.SMTLibVersion;
-import epmc.error.EPMCException;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeEnum;
@@ -45,7 +44,7 @@ public final class AfterOptionsCreationSMTLib implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		
 		Map<String,Class<?>> solvers = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);

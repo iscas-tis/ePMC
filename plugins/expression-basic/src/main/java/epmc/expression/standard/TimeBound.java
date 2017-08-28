@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -44,7 +43,7 @@ public final class TimeBound {
 		}
 		
 		@Override
-		public Type getType(Expression expression) throws EPMCException {
+		public Type getType(Expression expression) {
 			assert expression != null;
 			return null;
 		}
@@ -121,22 +120,18 @@ public final class TimeBound {
         if (leftOpen == null) {
             leftOpen = false;
         }
-        try {
-			if (rightOpen == null && isPosInf(right)) {
-			    rightOpen = true;
-			} else if (rightOpen == null) {
-			    rightOpen = false;
-			}
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        if (rightOpen == null && isPosInf(right)) {
+        	rightOpen = true;
+        } else if (rightOpen == null) {
+        	rightOpen = false;
+        }
         this.left = left;
         this.right = right;
         this.leftOpen = leftOpen;
         this.rightOpen = rightOpen;
     }
 
-    private boolean isPosInf(Expression expression) throws EPMCException {
+    private boolean isPosInf(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -148,32 +143,28 @@ public final class TimeBound {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        try {
-            if (isUnbounded()) {
-            } else if (!isLeftBounded()) {
-                builder.append(rightOpen ? "<" : "<=");
-                builder.append(leftBraceIfNeeded(right));
-                builder.append(right);
-                builder.append(rightBraceIfNeeded(right));
-            } else if (!isRightBounded()) {
-                builder.append(leftOpen ? ">" : ">=");
-                builder.append(leftBraceIfNeeded(left));
-                builder.append(left);
-                builder.append(rightBraceIfNeeded(left));
-            } else if (left.equals(right)) {
-                builder.append("=");
-                builder.append(leftBraceIfNeeded(left));
-                builder.append(left);
-                builder.append(rightBraceIfNeeded(left));
-            } else {
-                builder.append(leftOpen ? "]" : "[");
-                builder.append(left);
-                builder.append(",");
-                builder.append(right);
-                builder.append(rightOpen ? "[" : "]");
-            }
-        } catch (EPMCException e) {
-            return e.toString();
+        if (isUnbounded()) {
+        } else if (!isLeftBounded()) {
+        	builder.append(rightOpen ? "<" : "<=");
+        	builder.append(leftBraceIfNeeded(right));
+        	builder.append(right);
+        	builder.append(rightBraceIfNeeded(right));
+        } else if (!isRightBounded()) {
+        	builder.append(leftOpen ? ">" : ">=");
+        	builder.append(leftBraceIfNeeded(left));
+        	builder.append(left);
+        	builder.append(rightBraceIfNeeded(left));
+        } else if (left.equals(right)) {
+        	builder.append("=");
+        	builder.append(leftBraceIfNeeded(left));
+        	builder.append(left);
+        	builder.append(rightBraceIfNeeded(left));
+        } else {
+        	builder.append(leftOpen ? "]" : "[");
+        	builder.append(left);
+        	builder.append(",");
+        	builder.append(right);
+        	builder.append(rightOpen ? "[" : "]");
         }
         return builder.toString();
     }
@@ -240,9 +231,8 @@ public final class TimeBound {
      * That is, the left time bound &gt; 0 or the time interval is left open.
      * 
      * @return check whether time bound is left bounded
-     * @throws EPMCException in case a problem occurs during evaluation
      */
-    public boolean isLeftBounded() throws EPMCException {
+    public boolean isLeftBounded() {
         if (isLeftOpen()) {
             return true;
         }
@@ -258,9 +248,8 @@ public final class TimeBound {
      * That is, the right time bound is &lt; &infin;.
      * 
      * @return check whether time bound is right bounded
-     * @throws EPMCException 
      */
-    public boolean isRightBounded() throws EPMCException {
+    public boolean isRightBounded() {
         if (!(getRight() instanceof ExpressionLiteral)) {
             return true;
         }
@@ -272,9 +261,8 @@ public final class TimeBound {
      * It is unbounded if it is neither left bounded nor right bounded.
      * 
      * @return whether the time interval is unbounded
-     * @throws EPMCException in case a problem occurs during evaluation
      */
-    public boolean isUnbounded() throws EPMCException {
+    public boolean isUnbounded() {
         return !isLeftBounded() && !isRightBounded();
     }
     
@@ -287,9 +275,8 @@ public final class TimeBound {
      * will be thrown.
      * 
      * @return left time bound as {@link Value}
-     * @throws EPMCException in case a problem occurs during evaluation
      */
-    public ValueAlgebra getLeftValue() throws EPMCException {
+    public ValueAlgebra getLeftValue() {
         return evaluateValue(getLeft());
     }
 
@@ -300,17 +287,16 @@ public final class TimeBound {
      * will be thrown.
      * 
      * @return right time bound as {@link Value}
-     * @throws EPMCException in case a problem occurs during evaluation
      */
-    public ValueAlgebra getRightValue() throws EPMCException {
+    public ValueAlgebra getRightValue() {
         return evaluateValue(getRight());
     }
 
-    public int getLeftInt() throws EPMCException {
+    public int getLeftInt() {
         return ValueInteger.asInteger(evaluateValue(getLeft())).getInt();
     }
 
-    public int getRightInt() throws EPMCException {
+    public int getRightInt() {
         return ValueInteger.asInteger(evaluateValue(getRight())).getInt();
     }
     
@@ -336,7 +322,7 @@ public final class TimeBound {
         return hash;
     }
     
-    private static ValueAlgebra evaluateValue(Expression expression) throws EPMCException {
+    private static ValueAlgebra evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression,
         		new ExpressionToTypeEmpty(),
@@ -344,7 +330,7 @@ public final class TimeBound {
         return ValueAlgebra.asAlgebra(evaluator.evaluate());
     }
     
-    private static Value getValue(Expression expression) throws EPMCException {
+    private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

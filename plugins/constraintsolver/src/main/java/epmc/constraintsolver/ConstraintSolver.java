@@ -22,7 +22,6 @@ package epmc.constraintsolver;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.Type;
 import epmc.value.UtilValue;
@@ -48,21 +47,21 @@ public interface ConstraintSolver extends Closeable {
 
 	boolean canHandle();
 
-	void build() throws EPMCException;
+	void build();
 	
     int addVariable(String name, Type type, Value lower, Value upper);
 
-    void addConstraint(Expression expression) throws EPMCException;
+    void addConstraint(Expression expression);
     
     void setObjective(Expression objective);
     
     void setDirection(Direction direction);
     
-    ConstraintSolverResult solve() throws EPMCException;
+    ConstraintSolverResult solve();
     
-    Value[] getResultVariablesValues() throws EPMCException;
+    Value[] getResultVariablesValues();
 
-    Value getResultObjectiveValue() throws EPMCException;
+    Value getResultObjectiveValue();
 
     @Override
     void close();
@@ -71,7 +70,7 @@ public interface ConstraintSolver extends Closeable {
     /* default methods */
     
 	/*
-    default int addVariable(ExpressionIdentifierStandard identifier) throws EPMCException {
+    default int addVariable(ExpressionIdentifierStandard identifier) {
         assert identifier != null;
         String name = identifier.getName();
         Object scope = identifier.getScope();
@@ -90,7 +89,7 @@ public interface ConstraintSolver extends Closeable {
 		return addVariable(name, type, null, null);
 	}
 
-    default ValueArray getResultVariablesValuesSingleType() throws EPMCException {
+    default ValueArray getResultVariablesValuesSingleType() {
     	Value[] values = getResultVariablesValues();
     	Type type = values[0].getType();
     	for (Value value : values) {
@@ -108,12 +107,12 @@ public interface ConstraintSolver extends Closeable {
     }
 
     default void addConstraint(ValueArray row, int[] variables,
-            ConstraintType constraintType, Value rightHandSide) throws EPMCException {
+            ConstraintType constraintType, Value rightHandSide) {
     	addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
     }
     
     default void addConstraint(Value[] row, int[] variables,
-            ConstraintType constraintType, Value rightHandSide) throws EPMCException {
+            ConstraintType constraintType, Value rightHandSide) {
     	addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
     }
     

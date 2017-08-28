@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentParallel;
@@ -57,9 +56,8 @@ final class PreparatorDDComponent {
 	 * @param graph graph to which component to be converted belongs
 	 * @param component component for which to obtain an explorer
 	 * @return DD representation of given component
-	 * @throws EPMCException thrown in case of problems
 	 */
-	DDComponent prepare(GraphDDJANI graph, Component component) throws EPMCException {
+	DDComponent prepare(GraphDDJANI graph, Component component) {
 		assert graph != null;
 		assert component != null;
 		Class<? extends DDComponent> clazz = MAP.get(component.getClass());

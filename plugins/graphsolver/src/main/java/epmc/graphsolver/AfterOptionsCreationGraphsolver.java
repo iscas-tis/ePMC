@@ -22,7 +22,6 @@ package epmc.graphsolver;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.preprocessor.PreprocessorExplicitMCMDPOne;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
@@ -40,7 +39,7 @@ public final class AfterOptionsCreationGraphsolver implements AfterOptionsCreati
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 
 		Category category = options.addCategory()

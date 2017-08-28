@@ -32,7 +32,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Action;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
@@ -82,7 +81,7 @@ public final class ComponentRename implements Component {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		UtilJSON.ensureObject(value);
@@ -116,7 +115,7 @@ public final class ComponentRename implements Component {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		result.add(COMPOSITION, RENAME);
 		result.add(ELEMENT, renamed.generate());

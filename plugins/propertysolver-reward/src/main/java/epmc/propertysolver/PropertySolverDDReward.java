@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -40,7 +39,6 @@ import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 
 // TODO check whether this works for JANI MDPs - probably not
@@ -77,24 +75,24 @@ public final class PropertySolverDDReward implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.EXPRESSION_TO_DD);
 		return Collections.unmodifiableSet(required);
 	}
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		return Collections.emptySet();
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		return Collections.emptySet();
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         ExpressionReward quantifiedProp = (ExpressionReward) propertyQuantifier.getQuantified();
         if (quantifiedProp.getRewardType().isReachability()) {
         	StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
@@ -119,7 +117,7 @@ public final class PropertySolverDDReward implements PropertySolver {
 
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         assert forStates != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {

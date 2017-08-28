@@ -20,7 +20,6 @@
 
 package epmc.multiobjective.graphsolver;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -33,8 +32,6 @@ import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.options.Options;
-import epmc.value.Type;
-import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -80,13 +77,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	multiobjectiveScheduled();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -101,12 +98,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         inputValues = objectiveMultiObjectiveScheduled.getValues();
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	this.outputValues = inputValues;
     	objective.setResult(outputValues);
     }
 
-    private void multiobjectiveScheduled() throws EPMCException {
+    private void multiobjectiveScheduled() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -128,7 +125,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     /* auxiliary methods */
     
     private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
@@ -167,7 +164,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();
@@ -226,7 +223,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
             IterationStopCriterion stopCriterion, double tolerance,
-            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) throws EPMCException {
+            ValueArrayAlgebra values, SchedulerSimpleMultiobjectiveJava scheduler) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] nondetBounds = graph.getNondetBoundsJava();

@@ -22,7 +22,6 @@ package epmc.jani.explorer;
 
 import java.util.Collection;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.jani.model.ModelJANI;
@@ -70,14 +69,13 @@ public interface ExplorerComponent extends Explorer {
 	 * {@link #setComponent(Component)} must have been called. After having
 	 * called this model, the explorer is ready to explore the component.
 	 * 
-	 * @throws EPMCException thrown in case of problems
 	 */
-	void build() throws EPMCException;
+	void build();
 	
-	void buildAfterVariables() throws EPMCException;
+	void buildAfterVariables();
 	
 	@Override
-	NodeJANI newNode() throws EPMCException;
+	NodeJANI newNode();
 
     /**
      * {@inheritDoc}
@@ -87,7 +85,7 @@ public interface ExplorerComponent extends Explorer {
      * </p>
      */
 	@Override
-    PropertyNode getNodeProperty(Object property) throws EPMCException;
+    PropertyNode getNodeProperty(Object property);
 
     /**
      * {@inheritDoc}
@@ -97,7 +95,7 @@ public interface ExplorerComponent extends Explorer {
      * </p>
      */
 	@Override
-	PropertyEdge getEdgeProperty(Object property) throws EPMCException;
+	PropertyEdge getEdgeProperty(Object property);
 
 	/**
      * {@inheritDoc}
@@ -107,17 +105,17 @@ public interface ExplorerComponent extends Explorer {
      * </p>
      */
 	@Override
-    Collection<NodeJANI> getInitialNodes() throws EPMCException;
+    Collection<NodeJANI> getInitialNodes();
 
 	@Override
-	default void queryNode(ExplorerNode node) throws EPMCException {
+	default void queryNode(ExplorerNode node) {
 		assert node instanceof NodeJANI;
 		queryNode((NodeJANI) node);
 	}
 
-    void queryNode(NodeJANI node) throws EPMCException;
+    void queryNode(NodeJANI node);
 
-    boolean isState(NodeJANI node) throws EPMCException;
+    boolean isState(NodeJANI node);
     
     /**
      * {@inheritDoc}
@@ -135,5 +133,5 @@ public interface ExplorerComponent extends Explorer {
 	 */
 	void setNumSuccessors(int numSuccessors);
 
-	boolean isState() throws EPMCException;
+	boolean isState();
 }

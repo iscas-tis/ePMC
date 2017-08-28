@@ -22,7 +22,6 @@ package epmc.command;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
@@ -37,7 +36,7 @@ public class AfterOptionsCreationCommandCheck implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);
         assert commandTaskClasses != null;

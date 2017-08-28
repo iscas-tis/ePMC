@@ -23,7 +23,6 @@ package epmc.jani.interaction.communication.handler;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.RawModel;
 
 // TODO document class
@@ -59,7 +58,7 @@ public final class RawModelByteArray implements RawModel {
     }
 
     @Override
-    public InputStream[] getPropertyInputStreams() throws EPMCException {
+    public InputStream[] getPropertyInputStreams() {
         if (propertyData == null) {
             return null;
         }

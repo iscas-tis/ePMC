@@ -33,7 +33,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
@@ -87,7 +86,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);
@@ -152,7 +151,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 		return restrictInitial;
 	}
 	
-	public Expression getInitialStatesExpressionOrTrue() throws EPMCException {
+	public Expression getInitialStatesExpressionOrTrue() {
 		Expression initial;
 		if (restrictInitial == null) {
 			initial = ExpressionLiteral.getTrue();
@@ -177,7 +176,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 	}
 	
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		result.add(NAME, name);
 		UtilModelParser.addOptional(result, VARIABLES, variables);
@@ -303,7 +302,7 @@ public final class Automaton implements JANINode, ExpressionToType {
 	}
 	
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		assert expression != null;
 		if (variables != null) {
 			return variables.getType(expression);

@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
@@ -29,7 +28,7 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
 	private ExpressionIdentifierStandard identifier = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionIdentifierStandard; 
 		
@@ -38,19 +37,19 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert identifier != null;
 		
 		return JANIComponentRegistrar.getVariableNameByName(identifier.getName());
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert identifier != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert identifier != null;
 
 		return JANIComponentRegistrar.getVariableByName(identifier.getName())

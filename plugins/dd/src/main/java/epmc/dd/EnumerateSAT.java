@@ -20,7 +20,6 @@
 
 package epmc.dd;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
@@ -65,7 +64,7 @@ public final class EnumerateSAT {
         this.callback = callback;
     }
     
-    public void enumerate() throws EPMCException {
+    public void enumerate() {
         DD cube = buildCube();
         int cubeMaxSize = cubeMaxSize(cube);
         marks = new boolean[cubeMaxSize];
@@ -119,7 +118,7 @@ public final class EnumerateSAT {
         return size;
     }
 
-    private DD buildCube() throws EPMCException {
+    private DD buildCube() {
         DD cube = getContextDD().newConstant(true);
         for (VariableDD variableDD : variables) {
             cube = cube.andWith(variableDD.newCube(0));

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -120,12 +119,11 @@ public final class ExplorerJANI implements Explorer {
 	 * @param edgeProperties 
 	 * @param nodeProperties 
 	 * @param graphProperties 
-	 * @throws EPMCException thrown in case problems occur
 	 */
 	public ExplorerJANI(ModelJANI model,
 			Set<Object> graphProperties,
 			Set<Object> nodeProperties,
-			Set<Object> edgeProperties) throws EPMCException {
+			Set<Object> edgeProperties) {
 		assert model != null;
 		assert graphProperties != null;
 		assert nodeProperties != null;
@@ -170,7 +168,7 @@ public final class ExplorerJANI implements Explorer {
 		return selfLoopVariable;
 	}
 	
-	private void prepareGlobalVariables(ModelJANI model) throws EPMCException {
+	private void prepareGlobalVariables(ModelJANI model) {
 		assert model != null;
 		if (nonDet) {
 			Expression selfLoopIdentifier = new ExpressionIdentifierStandard.Builder()
@@ -185,7 +183,7 @@ public final class ExplorerJANI implements Explorer {
 		}
 	}
 
-	private ExplorerComponent prepareSystem(ModelJANI model2) throws EPMCException {
+	private ExplorerComponent prepareSystem(ModelJANI model2) {
 		PreparatorComponentExplorer preparator = new PreparatorComponentExplorer();
 		ExplorerComponent result = preparator.prepare(this, model.getSystem());
 		result.buildAfterVariables();
@@ -196,7 +194,7 @@ public final class ExplorerJANI implements Explorer {
 		return stateVariables;
 	}
 	
-	private ExplorerExtension[] prepareExtensions(ModelJANI model) throws EPMCException {
+	private ExplorerExtension[] prepareExtensions(ModelJANI model) {
 		assert model != null;
 		int size = 0;
 		Options options = Options.get();
@@ -228,9 +226,8 @@ public final class ExplorerJANI implements Explorer {
 	 * Build transient values structures.
 	 * @param edgeProperties 
 	 * @param nodeProperties 
-	 * @throws EPMCException 
 	 */
-	private void buildTransientValues(Set<Object> nodeProperties, Set<Object> edgeProperties) throws EPMCException {
+	private void buildTransientValues(Set<Object> nodeProperties, Set<Object> edgeProperties) {
 		assert model != null;
 		Set<Expression> usedTransientValues = new HashSet<>();
 		for (Object property : nodeProperties) {
@@ -279,9 +276,8 @@ public final class ExplorerJANI implements Explorer {
 	 * Compute initial nodes of the model.
 	 * 
 	 * @return initial nodes of the model
-	 * @throws EPMCException thrown in case of problems
 	 */
-	private Collection<NodeJANI> computeInitialNodes() throws EPMCException {
+	private Collection<NodeJANI> computeInitialNodes() {
 		Expression initialExpression = model.getInitialStatesExpressionOrTrue();
 		initialExpression = model.replaceConstants(initialExpression);
 		VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
@@ -309,12 +305,12 @@ public final class ExplorerJANI implements Explorer {
 	}
 
 	@Override
-	public Collection<NodeJANI> getInitialNodes() throws EPMCException {
+	public Collection<NodeJANI> getInitialNodes() {
 		return initialNodes;
 	}
 
 	@Override
-	public void queryNode(ExplorerNode node) throws EPMCException {
+	public void queryNode(ExplorerNode node) {
 		assert node != null;
 		assert node instanceof NodeJANI;
 		NodeJANI nodeJANI = (NodeJANI) node;
@@ -407,7 +403,7 @@ public final class ExplorerJANI implements Explorer {
 	}
 
 	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	public ExplorerNodeProperty getNodeProperty(Object property) {
 		assert property != null;
 		for (ExplorerExtension extension : extensions) {
 			ExplorerNodeProperty nodeProperty = extension.getNodeProperty(property);
@@ -448,7 +444,7 @@ public final class ExplorerJANI implements Explorer {
 		return null;
 	}
 
-	private ExplorerNodeProperty getConstantExpressionNodeProperty(Expression property) throws EPMCException {
+	private ExplorerNodeProperty getConstantExpressionNodeProperty(Expression property) {
 		assert property != null;
 		PropertyNodeConstant result = constantProperies.get(property);
 		if (result != null) {
@@ -463,7 +459,7 @@ public final class ExplorerJANI implements Explorer {
 	}
 
 	@Override
-	public ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
+	public ExplorerEdgeProperty getEdgeProperty(Object property) {
 		assert property != null;
 		for (ExplorerExtension extension : extensions) {
 			ExplorerEdgeProperty edgeProperty = extension.getEdgeProperty(property);
@@ -482,7 +478,7 @@ public final class ExplorerJANI implements Explorer {
 	}
 
 	@Override
-	public NodeJANI newNode() throws EPMCException {
+	public NodeJANI newNode() {
 		return new NodeJANI(this, stateVariables);
 	}
 	
@@ -503,12 +499,12 @@ public final class ExplorerJANI implements Explorer {
 		return queriedNode;
 	}
 	
-	public boolean isState() throws EPMCException {
+	public boolean isState() {
 		return state;
 	}
 	
 	@Override
-	public Type getType(Expression expression) throws EPMCException {
+	public Type getType(Expression expression) {
 		Type type = stateVariables.get(expression).getType();
 		if (type != null) {
 			return type;

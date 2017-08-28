@@ -129,10 +129,9 @@ public final class Analyse {
      * @param context value context used
      * @param rawModel model to parse, or {@code null}
      * @return parsed model
-     * @throws EPMCException thrown in case of problems
      */
     private static Model parseModel(RawModel rawModel)
-            throws EPMCException {
+            {
         Model model;
         if (rawModel == null || rawModel.getModelInputStreams().length == 0) {
             model = new ModelDummy();
@@ -179,9 +178,8 @@ public final class Analyse {
      * The options parameter must not be {@code null}.
      * 
      * @param options options to use
-     * @throws EPMCException thrown in case of problems
      */
-    private static void processAfterServerStart(Options options) throws EPMCException {
+    private static void processAfterServerStart(Options options) {
         assert options != null;
         for (Class<? extends AfterServerStart> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterServerStart.class)) {
             AfterServerStart afterModelLoading = null;
@@ -198,10 +196,9 @@ public final class Analyse {
      * {@link BeforeModelCreation#process()}.
      * The expression context parameter must not be {@code null}.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     private static void processBeforeModelCreations()
-            throws EPMCException {
+            {
         Options options = Options.get();
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
@@ -218,9 +215,8 @@ public final class Analyse {
      * {@link AfterModelCreation#process()}.
      * The expression context parameter must not be {@code null}.
      * 
-     * @throws EPMCException thrown in case of problems
      */
-    private static void processAfterModelCreations() throws EPMCException {
+    private static void processAfterModelCreations() {
         Options options = Options.get();
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
@@ -236,9 +232,8 @@ public final class Analyse {
      * {@link AfterCommandExecution#process()}.
      * The value context parameter must not be {@code null}.
      * 
-     * @throws EPMCException thrown in case of problems
      */
-    private static void processAfterCommandExecution() throws EPMCException {
+    private static void processAfterCommandExecution() {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);

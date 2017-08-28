@@ -62,9 +62,8 @@ public final class UtilModelParser {
 	 * @param result JANI model node to parse
 	 * @param object 
 	 * @param key
-	 * @throws EPMCException
 	 */
-	public static void parse(ModelJANI model, JANINode result, JsonObject object, String key) throws EPMCException {
+	public static void parse(ModelJANI model, JANINode result, JsonObject object, String key) {
 		assert result != null;
 		assert object != null;
 		assert key != null;
@@ -73,7 +72,7 @@ public final class UtilModelParser {
 		result.parse(object.get(key));
 	}
 
-	public static <T extends JANINode> T parse(ModelJANI model, Class<T> resultClass, JsonObject object, String key) throws EPMCException {
+	public static <T extends JANINode> T parse(ModelJANI model, Class<T> resultClass, JsonObject object, String key) {
 		assert resultClass != null;
 		assert object != null;
 		assert key != null;
@@ -88,7 +87,7 @@ public final class UtilModelParser {
 		return result;
 	}
 
-	public static <T extends JANINode> T parse(ModelJANI model, NodeProvider<T> provider, JsonObject object, String key) throws EPMCException {
+	public static <T extends JANINode> T parse(ModelJANI model, NodeProvider<T> provider, JsonObject object, String key) {
 		assert provider != null;
 		assert object != null;
 		assert key != null;
@@ -103,7 +102,7 @@ public final class UtilModelParser {
 		return result;
 	}
 
-	public static <T extends JANINode> T parse(ModelJANI model, Class<T> resultClass, JsonValue value) throws EPMCException {
+	public static <T extends JANINode> T parse(ModelJANI model, Class<T> resultClass, JsonValue value) {
 		assert model != null;
 		assert resultClass != null;
 		assert value != null;
@@ -114,7 +113,7 @@ public final class UtilModelParser {
 		return result;
 	}
 	
-	public static <T extends JANINode> T parse(ModelJANI model, NodeProvider<T> provider, JsonValue value) throws EPMCException {
+	public static <T extends JANINode> T parse(ModelJANI model, NodeProvider<T> provider, JsonValue value) {
 		assert model != null;
 		assert provider != null;
 		assert value != null;
@@ -141,9 +140,8 @@ public final class UtilModelParser {
 	 * @param result JANI model node to parse
 	 * @param object object to read element to be parsed from
 	 * @param key name of field to be read from object parameter
-	 * @throws EPMCException thrown in case of problems during parsing
 	 */
-	public static void parseOptional(ModelJANI model, JANINode result, JsonObject object, String key) throws EPMCException {
+	public static void parseOptional(ModelJANI model, JANINode result, JsonObject object, String key) {
 		assert result != null;
 		assert object != null;
 		assert key != null;
@@ -154,7 +152,7 @@ public final class UtilModelParser {
 		}
 	}
 
-	public static <T extends JANINode> T parseOptional(ModelJANI model, NodeProvider<T> provider, JsonObject object, String key) throws EPMCException {
+	public static <T extends JANINode> T parseOptional(ModelJANI model, NodeProvider<T> provider, JsonObject object, String key) {
 		assert provider != null;
 		assert object != null;
 		assert key != null;
@@ -168,7 +166,7 @@ public final class UtilModelParser {
 		return result;
 	}
 
-	public static <T extends JANINode> T parseOptional(ModelJANI model, Class<T> resultClass, JsonObject object, String key) throws EPMCException {
+	public static <T extends JANINode> T parseOptional(ModelJANI model, Class<T> resultClass, JsonObject object, String key) {
 		assert resultClass != null;
 		assert object != null;
 		assert key != null;
@@ -182,7 +180,7 @@ public final class UtilModelParser {
 		return result;
 	}
 	
-	public static JsonObjectBuilder addOptional(JsonObjectBuilder object, String key, JANINode value) throws EPMCException {
+	public static JsonObjectBuilder addOptional(JsonObjectBuilder object, String key, JANINode value) {
 	    assert object != null;
 	    assert key != null;
 	    if (value == null) {
@@ -204,15 +202,11 @@ public final class UtilModelParser {
 	 */
 	public static String toString(JANINode node) {
 		assert node != null;
-		try {
-			return node.generate().toString();
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+		return node.generate().toString();
 	}
 	
 	// TODO is this the right place for this function?
-	public static Expression restrictToVariableRange(Iterable<Variable> variables) throws EPMCException {
+	public static Expression restrictToVariableRange(Iterable<Variable> variables) {
 		assert variables != null;
 		Expression result = null;
 		for (Variable variable : variables) {
@@ -263,7 +257,7 @@ public final class UtilModelParser {
 	private UtilModelParser() {
 	}
 
-	public static String prettyString(JANINode node) throws EPMCException {
+	public static String prettyString(JANINode node) {
 		assert node != null;
 		return UtilJSON.prettyString(node.generate());
 	}

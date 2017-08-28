@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -96,7 +95,7 @@ public final class Formulas {
                 .build(), content);
     }
     
-    void addFormula(String name, String content) throws EPMCException {
+    void addFormula(String name, String content) {
         assert name != null;
         assert content != null;
         formulas.put(new ExpressionIdentifierStandard.Builder()
@@ -117,7 +116,7 @@ public final class Formulas {
     }
     
     void addConstant(String variable, Object value, JANIType type)
-            throws EPMCException {
+            {
         assert variable != null;
         assert value != null;
         assert type != null;
@@ -131,7 +130,7 @@ public final class Formulas {
     }
 
     void addConstant(String variable, String value, JANIType type)
-            throws EPMCException {
+            {
         assert variable != null;
         assert value != null;
         assert type != null;
@@ -159,7 +158,7 @@ public final class Formulas {
                 .build(), value);
     }
     
-    void addLabel(String label, String value) throws EPMCException {
+    void addLabel(String label, String value) {
         assert label != null;
         assert value != null;
         JANITypeBool typeBool = new JANITypeBool();
@@ -171,7 +170,7 @@ public final class Formulas {
                 .build(), parse(value));
     }
 
-    void check() throws EPMCException {
+    void check() {
         checkCyclic();
         checkNonConstantConst();
     }
@@ -179,9 +178,8 @@ public final class Formulas {
     /**
      * Checks whether there are cyclic const or formula definitions.
      * 
-     * @throws EPMCException thrown if there are cyclic definitions
      */
-    private void checkCyclic() throws EPMCException {
+    private void checkCyclic() {
         for (Entry<Expression, Expression> entry : constants.entrySet()) {
             Set<Expression> seen = new HashSet<>();
             ArrayList<Expression> path = new ArrayList<>();
@@ -251,9 +249,8 @@ public final class Formulas {
     /**
      * Checks for constant definitions which do not evaluate to constant values.
      * 
-     * @throws EPMCException thrown if non-constant constants found
      */
-    private void checkNonConstantConst() throws EPMCException {
+    private void checkNonConstantConst() {
         Set<Expression> seen = new HashSet<>();
         for (Entry<Expression, Expression> entry : constants.entrySet()) {
             ArrayList<Expression> path = new ArrayList<>();
@@ -309,11 +306,11 @@ public final class Formulas {
         return null;
     }
     
-    void expandFormulas() throws EPMCException {
+    void expandFormulas() {
         expand(formulas);
     }
 
-    void expandConstants() throws EPMCException {
+    void expandConstants() {
         Map<Expression,Expression> definedConstants = new HashMap<>();
         for (Entry<Expression,Expression> entry : constants.entrySet()) {
             if (entry.getValue() != null) {
@@ -398,20 +395,20 @@ public final class Formulas {
         return isConstantDefined(constantExpr);
     }
     
-    public void ensureNoUndefinedConstants() throws EPMCException {
+    public void ensureNoUndefinedConstants() {
         for (Entry<Expression,Expression> entry : constants.entrySet()) {
         	ExpressionIdentifierStandard key = (ExpressionIdentifierStandard) entry.getKey();
             ensure(entry.getValue() != null, ProblemsPRISM.CONST_UNDEFINED, key.getName());
         }
     }
     
-    private Expression parse(Reader reader, String string) throws EPMCException {
+    private Expression parse(Reader reader, String string) {
         assert reader != null;
         PrismExpressionParser parser = new PrismExpressionParser(reader);
         return parser.parseExpressionAsProperty(1, 1, string);
     }
 
-    private Expression parse(String string) throws EPMCException {
+    private Expression parse(String string) {
         assert string != null;
         StringReader reader = new StringReader(string);
         return parse(reader, string);

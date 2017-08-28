@@ -20,7 +20,6 @@
 
 package epmc.multiobjective;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -52,7 +51,7 @@ import epmc.value.operator.OperatorAddInverse;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
-            ValueArray bounds) throws EPMCException {
+            ValueArray bounds) {
         assert weights != null;
         assert q != null;
         assert bounds != null;
@@ -85,7 +84,7 @@ final class MultiObjectiveUtils {
 
     static ValueArrayAlgebra computeQuantifierBoundsArray(ModelChecker modelChecker,
             ExpressionMultiObjective property, boolean invert)
-                    throws EPMCException {
+                    {
         assert property != null;
         ValueAlgebra numMinValue = null;
         if (isNumericalQuery(property)) {
@@ -140,7 +139,7 @@ final class MultiObjectiveUtils {
     static IterationResult iterate(ValueArrayAlgebra weights,
             GraphExplicit graph,
             IterationRewards rewards)
-                    throws EPMCException {
+                    {
         assert weights != null;
         assert graph != null;
         assert rewards != null;
@@ -206,7 +205,7 @@ final class MultiObjectiveUtils {
 	}
 
 	private static ValueArrayAlgebra rewardsToWeighted(
-            IterationRewards rewards, ValueArrayAlgebra weights) throws EPMCException {
+            IterationRewards rewards, ValueArrayAlgebra weights) {
         assert rewards != null;
         assert weights != null;
         assert weights.size() == rewards.getNumObjectives();
@@ -232,7 +231,7 @@ final class MultiObjectiveUtils {
     }
 
     private static ValueArrayAlgebra combinationsToWeighted(IterationRewards combinations,
-            int[] choice, ValueArrayAlgebra weights) throws EPMCException {
+            int[] choice, ValueArrayAlgebra weights) {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();
@@ -271,7 +270,7 @@ final class MultiObjectiveUtils {
     }
 
     private static ValueArrayAlgebra chosenCombinationsToWeighted(IterationRewards combinations,
-            int[] choice, ValueArrayAlgebra weights) throws EPMCException {
+            int[] choice, ValueArrayAlgebra weights) {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();

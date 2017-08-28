@@ -35,7 +35,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.EnumerateSAT;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -98,7 +97,7 @@ public final class VariableValuesEnumerator {
 		this.expressionToType = expressionToType;
 	}
 	
-	public List<Map<Variable,Value>> enumerate() throws EPMCException {
+	public List<Map<Variable,Value>> enumerate() {
 		assert variables != null;
 		assert expression != null;
 		List<Map<Variable,Value>> result = computeRecursive(variables, expression);
@@ -107,7 +106,7 @@ public final class VariableValuesEnumerator {
 	
 	private List<Map<Variable, Value>> computeRecursive(
 			Map<String,Variable> variables,
-			Expression expression) throws EPMCException {
+			Expression expression) {
 		assert variables != null;
 		assert expression != null;
 		if (isFalse(expression)) {
@@ -147,7 +146,7 @@ public final class VariableValuesEnumerator {
 
 	// TODO continue here
 	
-	private boolean isSimpleRestriction(Expression expression) throws EPMCException {
+	private boolean isSimpleRestriction(Expression expression) {
 		assert expression != null;
 		if (isSingleVariableRestricted(expression)) {
 			return true;
@@ -165,7 +164,7 @@ public final class VariableValuesEnumerator {
 		return false;
 	}
 	
-	private Map<Variable,Value> computeSimpleRestricted(Expression expression) throws EPMCException {
+	private Map<Variable,Value> computeSimpleRestricted(Expression expression) {
 		assert expression != null;
 		if (isSingleVariableRestricted(expression)) {
 			ExpressionIdentifierStandard identifier = getIdentifier(expression);
@@ -205,7 +204,7 @@ public final class VariableValuesEnumerator {
 		return null;
 	}
 	
-	private List<Map<Variable, Value>> computeRestricted(Map<String, Variable> variables, Expression restriction) throws EPMCException {
+	private List<Map<Variable, Value>> computeRestricted(Map<String, Variable> variables, Expression restriction) {
 		ExpressionIdentifierStandard identifier = getIdentifier(restriction);
 		Expression literal = getLiteral(restriction);
 		Map<String,Variable> remainingVariables = new HashMap<>(variables);
@@ -230,7 +229,7 @@ public final class VariableValuesEnumerator {
 		}
 	}
 
-	private List<Map<Variable, Value>> computeRestricted(Map<String,Variable> variables, Expression restriction, Expression other) throws EPMCException {
+	private List<Map<Variable, Value>> computeRestricted(Map<String,Variable> variables, Expression restriction, Expression other) {
 		ExpressionIdentifierStandard identifier = getIdentifier(restriction);
 		Expression literal = getLiteral(restriction);
 		Value value = variables.get(identifier.getName()).getType().toType().newValue();
@@ -253,7 +252,7 @@ public final class VariableValuesEnumerator {
 		return result;
 	}
 
-	private boolean isLeftSingleVariableRestricted(Expression expression) throws EPMCException {
+	private boolean isLeftSingleVariableRestricted(Expression expression) {
 		assert expression != null;
 		if (!isAnd(expression)) {
 			return false;
@@ -262,7 +261,7 @@ public final class VariableValuesEnumerator {
 		return isSingleVariableRestricted(expressionOperator.getOperand1());
 	}
 
-	private boolean isRightSingleVariableRestricted(Expression expression) throws EPMCException {
+	private boolean isRightSingleVariableRestricted(Expression expression) {
 		assert expression != null;
 		if (!isAnd(expression)) {
 			return false;
@@ -290,7 +289,7 @@ public final class VariableValuesEnumerator {
 				: expressionOperator.getOperand2();
 	}
 	
-	private boolean isSingleVariableRestricted(Expression expression) throws EPMCException {
+	private boolean isSingleVariableRestricted(Expression expression) {
 		if (!isEq(expression)) {
 			return false;
 		}
@@ -306,7 +305,7 @@ public final class VariableValuesEnumerator {
 		return true;
 	}
 
-	private List<Map<Variable,Value>> enumerateCombinations(Map<String,Variable> variables) throws EPMCException {
+	private List<Map<Variable,Value>> enumerateCombinations(Map<String,Variable> variables) {
 		assert variables != null;
 		for (Variable variable : variables.values()) {
 			ensure(TypeEnumerable.isEnumerable(variable.getType().toType()),
@@ -356,7 +355,7 @@ public final class VariableValuesEnumerator {
 		return result;
 	}
 
-	private List<Map<Variable,Value>> generalEnumerate(Map<String,Variable> variables, Expression expression) throws EPMCException {
+	private List<Map<Variable,Value>> generalEnumerate(Map<String,Variable> variables, Expression expression) {
 		assert variables != null;
 		assert expression != null;
 		EnumeratorType enumType = Options.get().getEnum(OptionsJANIExplorer.JANI_EXPLORER_INITIAL_ENUMERATOR);
@@ -372,7 +371,7 @@ public final class VariableValuesEnumerator {
 	}
 
 	private List<Map<Variable, Value>> generalEnumerateBruteForce(Map<String, Variable> variables,
-			Expression expression) throws EPMCException {
+			Expression expression) {
 		assert variables != null;
 		assert expression != null;
 		for (Variable variable : variables.values()) {
@@ -423,7 +422,7 @@ public final class VariableValuesEnumerator {
 
 	private List<Map<Variable, Value>> generalEnumerateBDD(
 			Map<String, Variable> variables,
-			Expression expression) throws EPMCException {
+			Expression expression) {
 		Map<Expression, VariableDD> bddVariables = new LinkedHashMap<>();
 		ContextDD contextDD = ContextDD.get();
 		VariableDD[] ddVariableArray = new VariableDD[variables.size()];
@@ -475,13 +474,13 @@ public final class VariableValuesEnumerator {
                 .equals(OperatorAnd.AND);
     }
     
-    private Value evaluateValue(Expression expression) throws EPMCException {
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
         return evaluator.evaluate();
     }
     
-    private static boolean isFalse(Expression expression) throws EPMCException {
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
@@ -490,7 +489,7 @@ public final class VariableValuesEnumerator {
         return ValueBoolean.isFalse(expressionLiteral.getValue());
     }
     
-    private static boolean isTrue(Expression expression) throws EPMCException {
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;

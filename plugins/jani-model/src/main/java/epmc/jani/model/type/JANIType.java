@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANINode;
 import epmc.value.Type;
@@ -32,11 +31,11 @@ import epmc.value.Value;
 
 public interface JANIType extends JANINode {
 	
-	JANIType parseAsJANIType(JsonValue value) throws EPMCException;
+	JANIType parseAsJANIType(JsonValue value);
 	
-	Type toType() throws EPMCException;
+	Type toType();
 
-	Value getDefaultValue() throws EPMCException;
+	Value getDefaultValue();
 	
 	default JANIType replace(Map<Expression, Expression> map) {
 		return this;

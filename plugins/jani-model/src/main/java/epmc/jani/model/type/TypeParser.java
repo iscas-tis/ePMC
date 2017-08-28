@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.util.Util;
@@ -44,7 +43,7 @@ public final class TypeParser implements JANINode {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		Map<String,Class<? extends JANIType>> types = model.getTypes();

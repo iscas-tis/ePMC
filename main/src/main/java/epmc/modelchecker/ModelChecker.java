@@ -80,9 +80,8 @@ public final class ModelChecker implements Closeable {
      * The model parameter must not be {@code null}.
      * 
      * @param model model to create model checker for
-     * @throws EPMCException thrown in case of problems
      */
-    public ModelChecker(Model model) throws EPMCException {
+    public ModelChecker(Model model) {
         assert model != null;
         this.model = model;
         Options options = Options.get();
@@ -116,7 +115,7 @@ public final class ModelChecker implements Closeable {
     }
     
     public PropertySolver getSolverFor(Expression property, StateSet states)
-            throws EPMCException {
+            {
     	return getSolverFor(property, states, false);
     }
 
@@ -131,11 +130,10 @@ public final class ModelChecker implements Closeable {
      * @param property property to obtain solver for
      * @param states state set to obtain values for, or {@code null}
      * @return solver for given property and state set
-     * @throws EPMCException
      */
     public PropertySolver getSolverFor(Expression property, StateSet states,
     		boolean computeScheduler)
-            throws EPMCException {
+            {
         assert property != null;
         PropertySolver foundWithoutScheduler = null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
@@ -203,9 +201,8 @@ public final class ModelChecker implements Closeable {
      * 
      * @param property property to construct low-level model for
      * @return low-level model suitable for checking the given property
-     * @throws EPMCException thrown in case of problems
      */
-    private LowLevel prepareLowLevel(Expression property) throws EPMCException {
+    private LowLevel prepareLowLevel(Expression property) {
         assert property != null;
         PropertySolver solver = getSolverFor(property, null);
         Set<Object> graphProperties = solver.getRequiredGraphProperties();
@@ -231,9 +228,8 @@ public final class ModelChecker implements Closeable {
      * 
      * @param expression property to be checked
      * @return value obtained for the given property
-     * @throws EPMCException thrown in case of problems
      */
-    private ModelCheckerResult checkProperty(RawProperty property, Expression expression) throws EPMCException {
+    private ModelCheckerResult checkProperty(RawProperty property, Expression expression) {
     	assert property != null;
         assert expression != null;
         if (lowLevel != null) {
@@ -260,10 +256,9 @@ public final class ModelChecker implements Closeable {
      * @param property property to be checked
      * @param states set of states to check property for
      * @return result of checking property for states specified
-     * @throws EPMCException thrown in case of problems
      */
     public StateMap check(Expression property, StateSet states)
-            throws EPMCException {
+            {
         assert property != null;
         assert states != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
@@ -296,9 +291,8 @@ public final class ModelChecker implements Closeable {
      * @param property property to be checked
      * @param states states for which result shall be obtained
      * @return set of graph properties required
-     * @throws EPMCException
      */
-    public Set<Object> getRequiredGraphProperties(Expression property, StateSet states) throws EPMCException {
+    public Set<Object> getRequiredGraphProperties(Expression property, StateSet states) {
         assert property != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
@@ -313,7 +307,7 @@ public final class ModelChecker implements Closeable {
         return null;
     }
 
-    public Set<Object> getRequiredNodeProperties(Expression property, StateSet states) throws EPMCException {
+    public Set<Object> getRequiredNodeProperties(Expression property, StateSet states) {
         assert property != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
@@ -328,7 +322,7 @@ public final class ModelChecker implements Closeable {
         return null;
     }
 
-    public Set<Object> getRequiredEdgeProperties(Expression property, StateSet states) throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties(Expression property, StateSet states) {
         assert property != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
@@ -362,7 +356,7 @@ public final class ModelChecker implements Closeable {
     }
 
     public void ensureCanHandle(Expression property, StateSet states)
-            throws EPMCException {
+            {
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
             solver.setModelChecker(this);

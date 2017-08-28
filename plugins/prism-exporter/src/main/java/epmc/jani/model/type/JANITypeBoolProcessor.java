@@ -20,7 +20,6 @@
 
 package epmc.jani.model.type;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
@@ -28,7 +27,7 @@ public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeBool bool = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj instanceof JANITypeBool;
 
 		bool = (JANITypeBool) obj;
@@ -36,19 +35,19 @@ public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert bool != null;
 		
 		return "bool";
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert bool != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert bool != null;
 		
 		return false;

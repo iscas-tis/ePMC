@@ -20,7 +20,6 @@
 
 package epmc.graphsolver.preprocessor;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 
 public interface PreprocessorExplicit {
@@ -32,5 +31,5 @@ public interface PreprocessorExplicit {
 	
 	boolean canHandle();
 	
-	void process() throws EPMCException;
+	void process();
 }

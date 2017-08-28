@@ -26,7 +26,6 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.operator.OperatorSubtract;
 
@@ -55,17 +54,17 @@ public final class EvaluatorDDOperatorVectorSub implements EvaluatorDD {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         return UtilEvaluatorDD.canIntegerVectorOperator(expression, OperatorSubtract.SUBTRACT, variables);
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
         vector = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplSubtract);
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         dd = UtilEvaluatorDD.getDD(dd, vector, expression);
         assert dd != null;
         return dd;
@@ -81,7 +80,7 @@ public final class EvaluatorDDOperatorVectorSub implements EvaluatorDD {
         closed = UtilEvaluatorDD.close(closed, dd, vector);
     }
 
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
         return ContextDD.get();
     }
 }

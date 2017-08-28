@@ -31,7 +31,6 @@ import epmc.algorithms.dd.ComponentsDD;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -147,7 +146,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
      * flatten operation 
      * */
     public Set<Set<Expr>> flatten(Expression prop, Set<Expression> labels) 
-            throws EPMCException {
+            {
         if (prop instanceof ExpressionIdentifier
         		|| prop instanceof ExpressionLiteral) {   
             //this should not happen
@@ -347,7 +346,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
 //        return ret;
 //    }
 
-    public DD solve(Expression path, boolean isMin) throws EPMCException {
+    public DD solve(Expression path, boolean isMin) {
         this.negate = isMin;              
         this.path = path;
         //this.stateLabels = path.collectIdentifiers();
@@ -362,7 +361,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
 
     private boolean isBSCC(GraphDD graph, DD scc)
-            throws EPMCException {
+            {
         if (!nonDet) {
             return true;
         }
@@ -370,7 +369,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         return next.andNot(scc).isFalse();
     }
 
-    private DD post(GraphDD graph, DD nodes, DD trans) throws EPMCException {
+    private DD post(GraphDD graph, DD nodes, DD trans) {
         Permutation nextToPres = graph.getSwapPresNext();
         DD presAndActions = graph.getPresCube().and(graph.getActionCube());
         trans = trans.abstractAndExist(nodes, presAndActions);
@@ -379,7 +378,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }//move one , no more states reached
   
     /** find all the accepted BSCCs*/
-    private DD checkProperty(Expression property) throws EPMCException {
+    private DD checkProperty(Expression property) {
         // TODO Auto-generated method stub
         Expression propNorm = UtilLTL.getNormForm(property, stateLabels);
         Set<Set<Expr>> sets = flatten(propNorm,stateLabels);
@@ -409,7 +408,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
      * check whether this BSCC will be accepted 
      * , all Exprs in oset must be satisfied 
      * */
-    private boolean checkSCC(DD scc, Set<Expr> set) throws EPMCException {
+    private boolean checkSCC(DD scc, Set<Expr> set) {
         for (Expr expr : set) {
             DD prop = expr.expr; 
             switch(expr.op) {
@@ -432,7 +431,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         return true;
     }
 
-    private DD exploreNodeSpace(GraphDD graph) throws EPMCException {
+    private DD exploreNodeSpace(GraphDD graph) {
         DD sta = graph.getInitialNodes();
         DD pred = contextDD.newConstant(false);
 //        long nano = System.nanoTime();
@@ -450,12 +449,12 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
         return sta;
     }
     
-    private DD next(DD trans, DD from, DD pres, Permutation swap) throws EPMCException {
+    private DD next(DD trans, DD from, DD pres, Permutation swap) {
         return trans.abstractAndExist(from, pres).permuteWith(swap);
     }
     
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
-            throws EPMCException {
+            {
 //        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNot(target);
         DD zeroNodes = nodeSpace.andNot(someNodes).andNot(target);
@@ -508,7 +507,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
             this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
@@ -541,13 +540,13 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
     
     private StateMap solve(Expression quantifiedProp, StateSetDD forStates,
-            boolean min) throws EPMCException {
+            boolean min) {
         DD res = solve(quantifiedProp, min);
         return new StateMapDD(forStates.clone(), res);
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -570,7 +569,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
+    public Set<Object> getRequiredGraphProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.SEMANTICS);
     	required.add(CommonProperties.EXPRESSION_TO_DD);
@@ -578,7 +577,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.STATE);
     	required.add(CommonProperties.PLAYER);
@@ -586,7 +585,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+    public Set<Object> getRequiredEdgeProperties() {
     	Set<Object> required = new LinkedHashSet<>();
     	required.add(CommonProperties.WEIGHT);
     	return Collections.unmodifiableSet(required);

@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -30,7 +29,7 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 	private ExpressionFilter filter = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionFilter; 
 		
@@ -39,7 +38,7 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert filter != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -61,7 +60,7 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 		return prism.toString();
 	}
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert filter != null;
 		
 		for (Expression child : filter.getChildren()) {
@@ -71,7 +70,7 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert filter != null;
 		
 		boolean usesTransient = false;

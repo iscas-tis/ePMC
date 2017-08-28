@@ -34,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -49,7 +48,7 @@ public class LTLSolverExplicitTest {
     }
 
     @Test
-    public void clusterUntilTest() throws EPMCException {
+    public void clusterUntilTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -95,7 +94,7 @@ public class LTLSolverExplicitTest {
     // TODO ignored because labels not defined in PRISM file
     @Test
     @Ignore
-    public void firewireImplPatternTest() throws EPMCException {
+    public void firewireImplPatternTest() {
         Options options = prepareOptions();
         Map<String,String> constants = new HashMap<>();
         Value result;
@@ -111,7 +110,7 @@ public class LTLSolverExplicitTest {
     }
 
     @Test
-    public void dining_crypt3Test() throws EPMCException {
+    public void dining_crypt3Test() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -127,10 +126,9 @@ public class LTLSolverExplicitTest {
      * The test case helped to detect an issue in the initial state
      * computation of BDD-based breakpoint automata.
      * 
-     * @throws EPMCException expected not to be thrown
      */
     @Test
-    public void mdpttTest() throws EPMCException {
+    public void mdpttTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -148,7 +146,7 @@ public class LTLSolverExplicitTest {
     }
 
     @Test
-    public void mutualTest() throws EPMCException {
+    public void mutualTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -167,7 +165,7 @@ public class LTLSolverExplicitTest {
     }
 
     @Test
-    public void problemAndreaNavigationTest() throws EPMCException {
+    public void problemAndreaNavigationTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;

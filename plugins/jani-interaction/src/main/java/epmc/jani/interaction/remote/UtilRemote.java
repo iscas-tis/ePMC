@@ -59,10 +59,9 @@ public final class UtilRemote {
      * 
      * @param stream stream to read data/problems from
      * @return data about RMI connection to use
-     * @throws EPMCException thrown if the server indicates problems
      */
     public static RMIConnectionData readServerStatus(InputStream stream)
-            throws EPMCException {
+            {
         assert stream != null;
         Reader isr = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(isr);

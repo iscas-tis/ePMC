@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
@@ -92,7 +91,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
     @Override
-	public boolean canHandle() throws EPMCException {
+	public boolean canHandle() {
 	    assert property != null;
 	    if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
 	        return false;
@@ -116,14 +115,14 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.SEMANTICS);
 		return Collections.unmodifiableSet(required);
 	}
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
@@ -146,7 +145,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.WEIGHT);
 	    for (Expression objective : propertyMultiObjective.getOperands()) {
@@ -161,7 +160,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	@Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         StateSetExplicit initialStates = (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet();
@@ -187,9 +186,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
     /**
 	 * Compute values of required propositional properties and register their values.
 	 * 
-	 * @throws EPMCException thrown in case of problems during computation
 	 */
-	private void prepareRequiredPropositionals() throws EPMCException {
+	private void prepareRequiredPropositionals() {
 		GraphExplicit graph = modelChecker.getLowLevel();
 	    StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
 	    for (Expression objective : propertyMultiObjective.getOperands()) {
@@ -207,7 +205,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	    allStates.close();
 	}
 
-	private StateMap mainLoop(Product product, Value subtractNumericalFrom) throws EPMCException {
+	private StateMap mainLoop(Product product, Value subtractNumericalFrom) {
     	assert product != null;
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
@@ -249,7 +247,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         return prepareResult(numerical, feasible, bounds, subtractNumericalFrom, sched);
 	}
 
-	private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) throws EPMCException {
+	private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) {
 		assert product != null;
 		assert down != null;
 		assert bounds != null;
@@ -314,7 +312,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 	}
 
 	private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler)
-			throws EPMCException {
+			 {
         ValueArray resultValues;
         if (numerical) {
 //            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);

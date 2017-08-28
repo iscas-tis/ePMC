@@ -20,7 +20,6 @@
 
 package epmc.time;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeClockProcessor implements JANI2PRISMProcessorStrict {
@@ -28,7 +27,7 @@ public final class JANITypeClockProcessor implements JANI2PRISMProcessorStrict {
 	private JANITypeClock clock = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj instanceof JANITypeClock;
 
 		clock = (JANITypeClock) obj;
@@ -36,19 +35,19 @@ public final class JANITypeClockProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert clock != null;
 		
 		return "clock";
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert clock != null;
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert clock != null;
 		
 		return false;

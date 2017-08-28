@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -30,7 +29,7 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 	private TimeBound timeBound = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof TimeBound; 
 		
@@ -39,7 +38,7 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert timeBound != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -82,7 +81,7 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert timeBound != null;
 		
 		ProcessorRegistrar.getProcessor(timeBound.getLeft())
@@ -93,7 +92,7 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 	
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert timeBound != null;
 		
 		boolean usesTransient = false;

@@ -23,7 +23,6 @@ package epmc.propertysolver;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
@@ -99,7 +98,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	@Override
-	public StateMap solve() throws EPMCException {
+	public StateMap solve() {
 		assert property != null;
 		assert forStates != null;
 		assert property instanceof ExpressionQuantifier;
@@ -119,7 +118,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	public StateMap doSolve(Expression property, StateSet states, boolean min)
-			throws EPMCException {
+			 {
 		if (isNot(property)) {
 			ExpressionOperator propertyOperator = (ExpressionOperator) property;
 			property = propertyOperator.getOperand1();
@@ -160,7 +159,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-			throws EPMCException {
+			 {
 		assert pathTemporal != null;
 		Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
 		TimeBound timeBound = pathTemporal.getTimeBound();
@@ -322,7 +321,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	@Override
-	public boolean canHandle() throws EPMCException {
+	public boolean canHandle() {
 		assert property != null;
 		if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
 			return false;
@@ -383,14 +382,14 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.SEMANTICS);
 		return required;
 	}
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
@@ -404,7 +403,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.WEIGHT);
 		return required;

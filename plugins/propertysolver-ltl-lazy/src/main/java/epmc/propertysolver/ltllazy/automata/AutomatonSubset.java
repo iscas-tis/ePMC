@@ -29,7 +29,6 @@ import epmc.automaton.AutomatonStateBuechi;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
 import epmc.automaton.BuechiTransition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -54,7 +53,7 @@ public final class AutomatonSubset implements Automaton {
 		}
 		
 		@Override
-		public AutomatonSubset build() throws EPMCException {
+		public AutomatonSubset build() {
 			return new AutomatonSubset(this);
 		}
 
@@ -284,7 +283,7 @@ public final class AutomatonSubset implements Automaton {
     
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+            {
         AutomatonStateBuechiImpl subsetState = (AutomatonStateBuechiImpl) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(subsetState);
@@ -322,7 +321,7 @@ public final class AutomatonSubset implements Automaton {
     }
     
     private void lookupCache(AutomatonSubsetState rabinState)
-            throws EPMCException {
+            {
         int entryNr = 0;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {

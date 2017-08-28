@@ -22,7 +22,6 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -44,7 +43,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof Locations; 
 		
@@ -59,7 +58,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert locations != null;
 		
 		// PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
@@ -137,7 +136,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert locations != null;
 		
 		for (Location location : locations) {
@@ -147,7 +146,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert locations != null;
 		
 		boolean usesTransient = false;

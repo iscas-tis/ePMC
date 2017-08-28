@@ -23,7 +23,6 @@ package epmc.graphsolver.iterative.natives;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -105,13 +104,13 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
     	unboundedReachability();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
@@ -159,7 +158,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -177,7 +176,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void unboundedReachability() throws EPMCException {
+    private void unboundedReachability() {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
@@ -243,7 +242,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     
     private static void dtmcUnboundedJacobiNative(GraphExplicitSparse graph,
             Value values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -258,7 +257,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
 
     private static void dtmcUnboundedGaussseidelNative(
             GraphExplicitSparse graph, Value values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -274,7 +273,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private static void mdpUnboundedJacobiNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance) throws EPMCException {
+            double tolerance) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -292,7 +291,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private static void mdpUnboundedGaussseidelNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance) throws EPMCException {
+            double tolerance) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

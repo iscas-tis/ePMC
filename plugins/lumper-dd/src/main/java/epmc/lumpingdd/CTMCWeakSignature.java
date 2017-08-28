@@ -26,7 +26,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -52,7 +51,7 @@ public final class CTMCWeakSignature implements Signature {
 	private DD transStateSpace;
 
 	@Override
-	public void setOriginal(GraphDD original) throws EPMCException {
+	public void setOriginal(GraphDD original) {
 		this.original = original;
 		this.contextDD = original.getContextDD();
 		this.transRepr = new DoubleRepresentation();
@@ -74,7 +73,7 @@ public final class CTMCWeakSignature implements Signature {
 	}
 
 	@Override
-	public void setBlockIndexVar(VariableDD blockIndex) throws EPMCException {
+	public void setBlockIndexVar(VariableDD blockIndex) {
 		// Only do this after the block index variables have been created
 	    DD stateSpace = original.getNodeSpace().toMT();
 		transStateSpace = transRepr.fromTransWeights().multiply(stateSpace);
@@ -88,7 +87,7 @@ public final class CTMCWeakSignature implements Signature {
 	}
 
 	@Override
-	public DD computeSignatures(DD partitions) throws EPMCException {
+	public DD computeSignatures(DD partitions) {
 		Permutation p = original.getSwapPresNext();
         DD partitionsNext = partitions.permute(p);
         DD skipOwnPartition = contextDD.newConstant(1).subtractWith(partitions.clone());

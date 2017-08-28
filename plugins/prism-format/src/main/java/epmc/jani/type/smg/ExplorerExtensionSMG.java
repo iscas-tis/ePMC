@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -67,7 +66,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 
 	@Override
-	public void setModelExtension(ModelExtension modelExtension) throws EPMCException {
+	public void setModelExtension(ModelExtension modelExtension) {
 		assert modelExtension instanceof ModelExtensionSMG;
 		this.modelExtension = modelExtension;
 	}
@@ -84,7 +83,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 
 	@Override
-	public void setExplorer(ExplorerJANI explorer) throws EPMCException {
+	public void setExplorer(ExplorerJANI explorer) {
 		Map<Action, Integer> actionToNumber = UtilExplorer.computeActionToInteger(modelExtension.getModel());
 		actionToPlayer = new int[actionToNumber.size()];
 		automatonToPlayer = new int[modelExtension.getModel().getAutomata().size()];
@@ -116,7 +115,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 	
 	@Override
-	public void afterQuerySystem(NodeJANI node) throws EPMCException {
+	public void afterQuerySystem(NodeJANI node) {
 		int nodePlayer = -1;
 		if (system.isState()) {
 			int numSuccessors = system.getNumSuccessors();
@@ -139,7 +138,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 	
 	@Override
-	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) throws EPMCException {
+	public void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
 		if (!automaton.isState()) {
 			return;
 		}
@@ -158,14 +157,14 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException {
+	public ExplorerNodeProperty getNodeProperty(Object property) {
 		if (property instanceof SMGPlayer) {
 			return getPRISMGamesPlayer((SMGPlayer) property);
 		}
 		return null;
 	}
 	
-	private PropertyNodeSMGPlayer getPRISMGamesPlayer(SMGPlayer player) throws EPMCException {
+	private PropertyNodeSMGPlayer getPRISMGamesPlayer(SMGPlayer player) {
         assert player != null;
         Expression expression = player.getExpression();
         assert expression != null;
@@ -188,7 +187,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
 	}
 	
 	@Override
-	public ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException {
+	public ExplorerEdgeProperty getEdgeProperty(Object property) {
 		if (property == CommonProperties.WEIGHT) {
 			return system.getEdgeProperty(CommonProperties.WEIGHT);
 		}

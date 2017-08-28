@@ -22,7 +22,6 @@ package epmc.graphsolver.iterative.natives;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -106,7 +105,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     }
 
     @Override
-    public void solve() throws EPMCException {
+    public void solve() {
     	prepareIterGraph();
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
             unboundedCumulative();
@@ -116,7 +115,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
         Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative);
@@ -172,7 +171,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
+    private void prepareResultValues() {
     	TypeAlgebra typeWeight = TypeWeight.get();
     	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
     	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
@@ -190,7 +189,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     	objective.setResult(outputValues);
     }
 
-    private void unboundedCumulative() throws EPMCException {
+    private void unboundedCumulative() {
         Options options = Options.get();
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
@@ -259,7 +258,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     private static void dtmcUnboundedCumulativeJacobiNative(GraphExplicitSparse graph,
             Value values,
             IterationStopCriterion stopCriterion, double tolerance, Value cumul)
-                    throws EPMCException {
+                    {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -276,7 +275,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     private static void dtmcUnboundedCumulativeGaussseidelNative(
             GraphExplicitSparse graph, Value values,
             IterationStopCriterion stopCriterion, double tolerance, Value cumul)
-                    throws EPMCException {
+                    {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -293,7 +292,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     private static void mdpUnboundedCumulativeJacobiNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance, Value cumul) throws EPMCException {
+            double tolerance, Value cumul) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -313,7 +312,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
     private static void mdpUnboundedCumulativeGaussseidelNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,
-            double tolerance, Value cumul) throws EPMCException {
+            double tolerance, Value cumul) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

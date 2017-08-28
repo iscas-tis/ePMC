@@ -20,7 +20,6 @@
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.UtilValue;
@@ -94,13 +93,13 @@ public final class NodePropertyGeneral implements NodeProperty {
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         ensureSize(node);
         content.set(value, node);
     }
 
     @Override
-    public void set(int node, Object object) throws EPMCException {
+    public void set(int node, Object object) {
         assert object != null;
         assert ValueObject.isObject(value);
         ensureSize(node);
@@ -109,7 +108,7 @@ public final class NodePropertyGeneral implements NodeProperty {
     }    
 
     @Override
-    public void set(int node, Enum<?> object) throws EPMCException {
+    public void set(int node, Enum<?> object) {
         assert object != null;
         assert ValueEnum.isEnum(value);
         ensureSize(node);

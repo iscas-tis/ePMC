@@ -22,7 +22,6 @@ package epmc.expression;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.value.Type;
 
@@ -89,7 +88,6 @@ public interface Expression {
      * Get (or compute) type of the expression.
      * 
      * @return type of expression
-     * @throws EPMCException throw in case of problems
      */
-    Type getType(ExpressionToType expressionToType) throws EPMCException;
+    Type getType(ExpressionToType expressionToType);
 }

@@ -26,7 +26,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -56,7 +55,7 @@ public class DTMCWeakSignature implements Signature {
 	private DD trans;
 
 	@Override
-	public void setOriginal(GraphDD original) throws EPMCException {
+	public void setOriginal(GraphDD original) {
 		this.original = original;
 		this.contextDD = original.getContextDD();
 		this.transRepr = new DoubleRepresentation();
@@ -78,7 +77,7 @@ public class DTMCWeakSignature implements Signature {
 	}
 
 	@Override
-	public void setBlockIndexVar(VariableDD blockIndex) throws EPMCException {
+	public void setBlockIndexVar(VariableDD blockIndex) {
 		this.blockIndexVar = blockIndex;
 		this.trans = transRepr.fromTransWeights();
     	pVar = contextDD.newBoolean("p", 1).getValueEncoding(0).toMT();
@@ -90,7 +89,7 @@ public class DTMCWeakSignature implements Signature {
 	}
 
 	@Override
-	public DD computeSignatures(DD partitions) throws EPMCException {
+	public DD computeSignatures(DD partitions) {
         Permutation presNext = original.getSwapPresNext();
         TypeWeightTransition typeWeightTransition = TypeWeightTransition.get();
         ValueAlgebra zeroValue = UtilValue.newValue(typeWeightTransition, 0);

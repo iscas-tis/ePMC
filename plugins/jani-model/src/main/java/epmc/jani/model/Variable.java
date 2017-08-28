@@ -27,7 +27,6 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.jani.model.expression.ExpressionParser;
@@ -108,7 +107,7 @@ public final class Variable implements JANINode, JANIIdentifier {
 	}
 
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonObject object = UtilJSON.toObject(value);
@@ -143,7 +142,7 @@ public final class Variable implements JANINode, JANIIdentifier {
 	}
 
 	@Override
-	public JsonValue generate() throws EPMCException {
+	public JsonValue generate() {
 		JsonObjectBuilder result = Json.createObjectBuilder();
 		result.add(NAME, name);
 		assert type != null;
@@ -201,9 +200,8 @@ public final class Variable implements JANINode, JANIIdentifier {
 	 * Convert JANI type of variable to EPMC {@link Type}.
 	 * 
 	 * @return EPMC type
-	 * @throws EPMCException thrown in case of problems
 	 */
-	public Type toType() throws EPMCException {
+	public Type toType() {
 		return type.toType();
 	}
 	
@@ -221,7 +219,7 @@ public final class Variable implements JANINode, JANIIdentifier {
 		initialValue = expression;
 	}
 	
-	public void setInitial(Expression expression) throws EPMCException {
+	public void setInitial(Expression expression) {
 		if (expression == null) {
 			initialValue = null;
 		} else {
@@ -238,7 +236,7 @@ public final class Variable implements JANINode, JANIIdentifier {
 		return initialValue;
 	}
 	
-	public Expression getInitialValueOrNull() throws EPMCException {
+	public Expression getInitialValueOrNull() {
 		if (initialValue == null) {
 			return null;
 		} else {

@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.Actions;
 import epmc.jani.model.Automata;
 import epmc.jani.model.JANINode;
@@ -67,7 +66,7 @@ public final class PlayersJANI implements JANINode, List<PlayerJANI> {
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert value != null;
 		initialized = false;
 		players.clear();

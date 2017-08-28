@@ -23,7 +23,6 @@ package epmc.propertysolver.ltllazy;
 import java.util.Map;
 
 import epmc.automaton.OptionsAutomaton;
-import epmc.error.EPMCException;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
@@ -41,7 +40,7 @@ public final class AfterOptionsCreationLTLLazy implements AfterOptionsCreation {
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		
 		Category category = options.addCategory()

@@ -26,7 +26,6 @@ import java.util.Map;
 
 import com.google.common.base.CaseFormat;
 
-import epmc.error.EPMCException;
 import epmc.util.Util;
 
 /**
@@ -41,20 +40,20 @@ public final class UtilOptions {
     // TODO the options part of EPMC might not the most appropriate place for the static methods here
     
     // TODO documentation
-    public static <T> T getInstance(String identifier) throws EPMCException {
+    public static <T> T getInstance(String identifier) {
         assert identifier != null;
         Class<T> clazz = Options.get().get(identifier);
         ensure(clazz != null, ProblemsOptions.OPTIONS_OPTION_NOT_SET, identifier);
         return Util.getInstance(clazz);
     }
 
-    public static <T> T getInstance(Enum<?> identifier) throws EPMCException {
+    public static <T> T getInstance(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());
         return getInstance(identifierString);
     }
 
-    public static <T> T getSingletonInstance(Options options, String identifier) throws EPMCException {
+    public static <T> T getSingletonInstance(Options options, String identifier) {
         assert options != null;
         assert identifier != null;
         Class<T> clazz = options.get(identifier);
@@ -69,7 +68,7 @@ public final class UtilOptions {
     }
 
     public static <T> T getSingletonInstance(Options options,
-            Enum<?> identifier) throws EPMCException {
+            Enum<?> identifier) {
         assert options != null;
         assert identifier != null;
         String identifierString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());

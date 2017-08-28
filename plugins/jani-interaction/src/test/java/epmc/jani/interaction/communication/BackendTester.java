@@ -26,7 +26,6 @@ import java.util.Deque;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.communication.Backend;
 import epmc.jani.interaction.communication.BackendFeedback;
 import epmc.options.Options;
@@ -53,7 +52,7 @@ final class BackendTester {
 	private final Deque<String> pending = new ArrayDeque<>();
 	private boolean alive = true;
 	
-	BackendTester(Options options) throws EPMCException {
+	BackendTester(Options options) {
 		assert options != null;
 		backend = new Backend(feedback);
 	}

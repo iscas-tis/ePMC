@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 /**
@@ -55,7 +54,7 @@ public final class Actions implements JANINode, Map<String,Action>, Iterable<Act
 	}
 	
 	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
+	public JANINode parse(JsonValue value) {
 		assert model != null;
 		assert value != null;
 		JsonArray array = UtilJSON.toArrayObject(value);

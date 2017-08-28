@@ -22,7 +22,6 @@ package epmc.prism.exporter.plugin;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
 import epmc.options.Category;
@@ -49,7 +48,7 @@ public final class AfterOptionsCreationPRISMExporter implements AfterOptionsCrea
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
 		assert options != null;
 		addOptionsAndCommands(options);
     }

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -146,7 +145,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
+    public Type getType(ExpressionToType expressionToType) {
     	assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {

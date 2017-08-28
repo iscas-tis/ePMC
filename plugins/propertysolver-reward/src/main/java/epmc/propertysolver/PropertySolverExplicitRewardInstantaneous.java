@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
@@ -89,7 +88,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
 	}
 
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.SEMANTICS);
 		return Collections.unmodifiableSet(required);
@@ -97,7 +96,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
 
 
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
@@ -112,7 +111,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.WEIGHT);
 		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -121,7 +120,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
 	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public StateMap solve() {
 		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedProp = (ExpressionReward) propertyQuantifier.getQuantified();
         DirType dirType = ExpressionQuantifier.computeQuantifierDirType(propertyQuantifier);
@@ -136,7 +135,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     }
 
     public StateMap doSolve(Expression property, StateSetExplicit states, boolean min)
-            throws EPMCException {
+            {
         assert property != null;
         assert states != null;
         RewardSpecification rewardStructure = ((ExpressionReward) property).getReward();
@@ -180,7 +179,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -204,7 +203,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
         return IDENTIFIER;
     }
     
-    private Value evaluateValue(Expression expression) throws EPMCException {
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
         return evaluator.evaluate();

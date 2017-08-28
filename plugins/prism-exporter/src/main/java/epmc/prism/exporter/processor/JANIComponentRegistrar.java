@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
@@ -204,9 +203,8 @@ public class JANIComponentRegistrar {
 	 * Register a constant.
 	 * 
 	 * @param constant the constant to register
-	 * @throws EPMCException if the constant has been already registered
 	 */
-	public static void registerConstant(Constant constant) throws EPMCException {
+	public static void registerConstant(Constant constant) {
 		assert constant != null;
 
 		ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_CONSTANT_DEFINED_TWICE, constant.getName());
@@ -231,9 +229,8 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param automaton the the automaton the location belongs to
 	 * @param location the location to register
-	 * @throws EPMCException if the location has been already registered
 	 */
-	public static void registerLocation(Automaton automaton, Location location) throws EPMCException {
+	public static void registerLocation(Automaton automaton, Location location) {
 		assert automaton != null;
 		assert location != null;
 
@@ -296,9 +293,8 @@ public class JANIComponentRegistrar {
 	 * Register a variable.
 	 * 
 	 * @param variable the variable to register
-	 * @throws EPMCException if the variable has been already registered
 	 */
-	public static void registerVariable(Variable variable) throws EPMCException {
+	public static void registerVariable(Variable variable) {
 		assert variable != null;
 
 		ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE, variable.getName());
@@ -370,7 +366,7 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param variable the variable to register
 	 */
-	public static void registerGlobalVariable(Variable variable) throws EPMCException {
+	public static void registerGlobalVariable(Variable variable) {
 		assert variable != null;
 
 		if (variable.isTransient()) {
@@ -396,9 +392,8 @@ public class JANIComponentRegistrar {
 	 * @param reward the reward structure
 	 * @param action the action the expression refers to
 	 * @param expression the expression
-	 * @throws EPMCException if there is already a different expression associated with the reward and action
 	 */
-	public static void registerTransitionRewardExpression(Variable reward, Action action, Expression expression) throws EPMCException {
+	public static void registerTransitionRewardExpression(Variable reward, Action action, Expression expression) {
 		assert reward != null;
 		assert action != null;
 		assert expression != null;
@@ -428,9 +423,8 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param reward the reward structure
 	 * @param expression the expression
-	 * @throws EPMCException if there is already a different expression associated with the reward
 	 */
-	public static void registerStateRewardExpression(Variable reward, Expression expression) throws EPMCException {
+	public static void registerStateRewardExpression(Variable reward, Expression expression) {
 		assert reward != null;
 		assert expression != null;
 		assert reward.isTransient();
@@ -455,9 +449,8 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param variable the variable
 	 * @param automaton the automaton
-	 * @throws EPMCException if there is already a different automaton associated with the variable
 	 */
-	public static void registerNonTransientVariableAssignment(Variable variable, Automaton automaton) throws EPMCException {
+	public static void registerNonTransientVariableAssignment(Variable variable, Automaton automaton) {
 		assert variable != null;
 		assert automaton != null;
 		
@@ -493,7 +486,7 @@ public class JANIComponentRegistrar {
 		return Collections.unmodifiableSet(assignedVariables);
 	}
 	
-	public static String toPRISMRewards() throws EPMCException {
+	public static String toPRISMRewards() {
 		StringBuilder prism = new StringBuilder();
 		JANI2PRISMProcessorStrict processor; 
 
@@ -570,9 +563,8 @@ public class JANIComponentRegistrar {
 	 * 
 	 * @param action the wanted action
 	 * @return the associated name
-	 * @throws EPMCException if the action is not registered
 	 */
-	public static String getActionName(Action action) throws EPMCException {
+	public static String getActionName(Action action) {
 		assert action != null;
 		ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION, action.getName());
 
@@ -686,7 +678,7 @@ public class JANIComponentRegistrar {
 		return usesInitialConditions.booleanValue();
 	}
 	
-	public static String processInitialConditions() throws EPMCException {
+	public static String processInitialConditions() {
 		assert usesInitialConditions != null;
 		
 		StringBuilder prism = new StringBuilder();

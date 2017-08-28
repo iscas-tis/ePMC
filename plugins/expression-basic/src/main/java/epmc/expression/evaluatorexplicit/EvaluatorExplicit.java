@@ -22,7 +22,6 @@ package epmc.expression.evaluatorexplicit;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
@@ -45,9 +44,9 @@ public interface EvaluatorExplicit {
         default void setReturnType(Class<?> returnType) {
         }
 
-        boolean canHandle() throws EPMCException;
+        boolean canHandle();
         
-        EvaluatorExplicit build() throws EPMCException;
+        EvaluatorExplicit build();
     }
     
     String getIdentifier();
@@ -60,7 +59,7 @@ public interface EvaluatorExplicit {
      */
     Expression getExpression();
     
-    Value evaluate(Value... values) throws EPMCException;
+    Value evaluate(Value... values);
     
     Value getResultValue();
 }

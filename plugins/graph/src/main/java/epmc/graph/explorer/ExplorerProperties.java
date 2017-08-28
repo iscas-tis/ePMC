@@ -28,7 +28,6 @@ import java.util.Set;
 
 import com.google.common.base.MoreObjects;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -85,7 +84,7 @@ public final class ExplorerProperties implements Serializable {
     }
 
     public void setExplorerProperty(Object property, Value value)
-            throws EPMCException {
+            {
         assert property != null;
         assert value != null;
         assert explorerProperties.containsKey(property);

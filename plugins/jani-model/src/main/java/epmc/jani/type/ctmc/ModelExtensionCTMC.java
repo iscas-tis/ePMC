@@ -25,7 +25,6 @@ import static epmc.error.UtilError.ensure;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMC;
 import epmc.jani.model.Edge;
@@ -44,32 +43,32 @@ public final class ModelExtensionCTMC implements ModelExtensionSemantics {
 	}
 
 	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
+	public void setModel(ModelJANI model) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setNode(JANINode node) throws EPMCException {
+	public void setNode(JANINode node) {
 		this.node = node;
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setJsonValue(JsonValue value) throws EPMCException {
+	public void setJsonValue(JsonValue value) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void parseBefore() throws EPMCException {
+	public void parseBefore() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void parseAfter() throws EPMCException {
+	public void parseAfter() {
 		if (node instanceof Edge) {
 			Edge edge = (Edge) node;
 			ensure(edge.getRate() != null, ProblemsJANICTMC.JANI_CTMC_EDGE_REQUIRES_RATE);
@@ -81,7 +80,7 @@ public final class ModelExtensionCTMC implements ModelExtensionSemantics {
 	}
 
 	@Override
-	public void generate(JsonObjectBuilder generate) throws EPMCException {
+	public void generate(JsonObjectBuilder generate) {
 		// TODO Auto-generated method stub
 		
 	}

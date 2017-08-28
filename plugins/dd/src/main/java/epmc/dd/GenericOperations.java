@@ -28,7 +28,6 @@ import gnu.trove.map.hash.THashMap;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
@@ -155,7 +154,7 @@ final class GenericOperations {
     }
 
     long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD lowLevel, long... operands)
-            throws EPMCException {
+            {
         assert operator != null;
         assert lowLevel != null;
         assert lowLevel.getContextDD() == contextDD;
@@ -192,11 +191,10 @@ final class GenericOperations {
      * @param recursionDepth 
      * @param back2 
      * @return
-     * @throws EPMCException
      */
     private long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD libraryDD,
             Cache cache, long[] cacheEntry, Walker[] operands, int recursionDepth, BitSet[] backSets)
-            throws EPMCException {
+            {
         /* Check whether result has already been compute before. */
         for (int index = 0; index < operands.length; index++) {
             cacheEntry[index] = operands[index].uniqueId();

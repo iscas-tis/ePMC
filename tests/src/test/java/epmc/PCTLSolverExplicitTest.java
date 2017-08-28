@@ -30,7 +30,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -54,7 +53,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -78,7 +77,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void twoDiceTest() throws EPMCException {
+    public void twoDiceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-11;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -133,7 +132,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void cellTest() throws EPMCException {
+    public void cellTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -160,7 +159,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -212,7 +211,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void mutualTest() throws EPMCException {
+    public void mutualTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -228,7 +227,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void dining_crypt3Test() throws EPMCException {
+    public void dining_crypt3Test() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -247,7 +246,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void philLss4GloballyTest() throws EPMCException {
+    public void philLss4GloballyTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -264,7 +263,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void clusterBoundedUntilTest() throws EPMCException {
+    public void clusterBoundedUntilTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -282,7 +281,7 @@ public final class PCTLSolverExplicitTest {
     @Ignore
     // TODO where is the "RP" label specified?
     @Test
-    public void clusterGTest() throws EPMCException {
+    public void clusterGTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -299,7 +298,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void er12_1Test() throws EPMCException {
+    public void er12_1Test() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-13;
@@ -316,7 +315,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void hermanQualitativeTest() throws EPMCException {
+    public void hermanQualitativeTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -345,7 +344,7 @@ public final class PCTLSolverExplicitTest {
     
     // TODO get tests to provide correct results again
     @Test
-    public void hermanQuantitativeTest() throws EPMCException {
+    public void hermanQuantitativeTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -421,7 +420,7 @@ public final class PCTLSolverExplicitTest {
     
     
     @Test
-    public void beauquierTest() throws EPMCException {
+    public void beauquierTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -462,7 +461,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void leaderSynchronousTest() throws EPMCException {
+    public void leaderSynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -506,7 +505,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void leaderAsynchronousTest() throws EPMCException {
+    public void leaderAsynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -554,7 +553,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void rabinTest() throws EPMCException {
+    public void rabinTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -598,7 +597,7 @@ public final class PCTLSolverExplicitTest {
     
     @Ignore
     @Test
-    public void rabin4Test() throws EPMCException {
+    public void rabin4Test() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -648,7 +647,7 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void cyclinTest() throws EPMCException {
+    public void cyclinTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -670,7 +669,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void hermanOpenIntervalTest() throws EPMCException {
+    public void hermanOpenIntervalTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -689,7 +688,7 @@ public final class PCTLSolverExplicitTest {
     
     @Ignore
     @Test
-    public void philLssTest() throws EPMCException {
+    public void philLssTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);

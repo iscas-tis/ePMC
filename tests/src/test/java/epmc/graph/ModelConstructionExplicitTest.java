@@ -34,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.ModelNamesPRISM;
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ExploreStatistics;
 import epmc.modelchecker.TestHelper;
@@ -48,7 +47,7 @@ public class ModelConstructionExplicitTest {
     }
 
     @Test
-    public void labelsTypeTest() throws EPMCException {
+    public void labelsTypeTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         ExploreStatistics result;
@@ -60,7 +59,7 @@ public class ModelConstructionExplicitTest {
     }
     
     @Test
-    public void er12_1Test() throws EPMCException {
+    public void er12_1Test() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.PRISM_FLATTEN, false);
@@ -73,7 +72,7 @@ public class ModelConstructionExplicitTest {
     }
 
     @Test
-    public void thinkteamRetrialTest() throws EPMCException {
+    public void thinkteamRetrialTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.PRISM_FLATTEN, false);
@@ -91,7 +90,7 @@ public class ModelConstructionExplicitTest {
     }
     
     @Test
-    public void hermanTest() throws EPMCException {
+    public void hermanTest() {
         ExploreStatistics result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -215,7 +214,7 @@ public class ModelConstructionExplicitTest {
     }
     
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
         ExploreStatistics result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -247,7 +246,7 @@ public class ModelConstructionExplicitTest {
     }
     
     @Test
-    public void testAndSetTest() throws EPMCException {
+    public void testAndSetTest() {
         Options options = prepareOptions();
         ExploreStatistics result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -267,7 +266,7 @@ public class ModelConstructionExplicitTest {
     }
     
     @Test
-    public void brpTest() throws EPMCException {
+    public void brpTest() {
         Options options = prepareOptions();
         ExploreStatistics result;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -284,7 +283,7 @@ public class ModelConstructionExplicitTest {
     }
 
     @Test
-    public void clusterGTest() throws EPMCException {
+    public void clusterGTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         double tolerance = 1E-13;

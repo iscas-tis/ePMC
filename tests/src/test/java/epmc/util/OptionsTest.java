@@ -22,7 +22,6 @@ package epmc.util;
 
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.options.Options;
 import epmc.plugin.UtilPlugin;
@@ -30,7 +29,7 @@ import epmc.plugin.UtilPlugin;
 public class OptionsTest {
 
     @Test
-    public void testOptions() throws EPMCException {
+    public void testOptions() {
         Options options;
 
         // had some crashes when no arguments were present

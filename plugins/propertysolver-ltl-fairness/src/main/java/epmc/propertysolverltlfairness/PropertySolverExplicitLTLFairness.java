@@ -31,7 +31,6 @@ import java.util.Set;
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
 import epmc.algorithms.explicit.EndComponents;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
@@ -116,14 +115,14 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
 	
 	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
+	public Set<Object> getRequiredGraphProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.SEMANTICS);
 		return Collections.unmodifiableSet(required);
 	}
 	
 	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
+	public Set<Object> getRequiredNodeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.STATE);
 		required.add(CommonProperties.PLAYER);
@@ -136,7 +135,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
 
 	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
+	public Set<Object> getRequiredEdgeProperties() {
 		Set<Object> required = new LinkedHashSet<>();
 		required.add(CommonProperties.WEIGHT);
 		return Collections.unmodifiableSet(required);
@@ -258,7 +257,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	 * find all BSCCs that satisfied the Expression
 	 */
 	public BitSet getAcceptingBSCCs(GraphExplicit graph, Expression prop)
-			throws EPMCException {
+			 {
 		assert (!(prop instanceof ExpressionQuantifier));
 		Expression normFromProp = prop;
 		Set<Set<Expression>> clauses = PropertySolverExplicitLTLFairness
@@ -293,7 +292,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	 * FG l /\ GF l1 /\ GF l2 /\ ...
 	 */
 	private boolean checkBSCC(GraphExplicit graph, BitSet scc,
-			Set<Expression> set) throws EPMCException {
+			Set<Expression> set) {
 		Expression globalFormula = null;
 		List<Expression> finalFormulas = new LinkedList<>();
 		for (Expression formula : set) {
@@ -328,7 +327,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	 * check node whether its satisfies the given literal formula
 	 */
 	private boolean checkNode(GraphExplicit graph, int node, Set<Expression> labels,
-			Expression lit) throws EPMCException {
+			Expression lit) {
 		// lit may be combination of labels
         assert lit != null && !(lit instanceof ExpressionTemporal);
 		if (labels.contains(lit)) {
@@ -354,7 +353,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
     // usually we do not need to check this
 	private boolean isBSCC(GraphExplicit graph, BitSet ecc)
-			throws EPMCException {
+			 {
 		boolean isBSCC = true;
 		for (int node = ecc.nextSetBit(0); node >= 0; node = ecc
 				.nextSetBit(node + 1)) {
@@ -385,7 +384,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
 
 	@Override
-	public StateMap solve() throws EPMCException {
+	public StateMap solve() {
 		Semantics type = modelGraph
 				.getGraphPropertyObject(CommonProperties.SEMANTICS);
 		assert !SemanticsNonDet.isNonDet(type);
@@ -410,7 +409,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
 
 	private StateMap doSolve(GraphExplicit origGraph, StateSet states,
-			Expression quantifiedProp) throws EPMCException {
+			Expression quantifiedProp) {
 		// it seems that no need to rebuild the graph
 		GraphExplicit graph = origGraph;//builder.getOutputGraph();
 		log.send(MessagesLTLFairness.LTL_FAIRNESS_EXPLORING_STATE_SPACE);
@@ -422,7 +421,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	}
 	
     private StateMap prodToOrigResult(ValueArrayAlgebra iterResult,
-            GraphExplicit prodGraph, StateSet forStates) throws EPMCException {
+            GraphExplicit prodGraph, StateSet forStates) {
         // TODO implement more cleanly
         assert iterResult != null;
         assert prodGraph != null;
@@ -442,7 +441,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
 	
     /** solve linear equation system */
     private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+            {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);

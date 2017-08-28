@@ -20,7 +20,6 @@
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -30,7 +29,7 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 	private ExpressionReward reward = null;
 	
 	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
+	public JANI2PRISMProcessorStrict setElement(Object obj) {
 		assert obj != null;
 		assert obj instanceof ExpressionReward; 
 		
@@ -39,7 +38,7 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public String toPRISM() throws EPMCException {
+	public String toPRISM() {
 		assert reward != null;
 		
 		StringBuilder prism = new StringBuilder();
@@ -74,7 +73,7 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 	}
 
 	@Override
-	public void validateTransientVariables() throws EPMCException {
+	public void validateTransientVariables() {
 		assert reward != null;
 		
 		for (Expression child : reward.getChildren()) {
@@ -84,7 +83,7 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 	}
 	
 	@Override
-	public boolean usesTransientVariables() throws EPMCException {
+	public boolean usesTransientVariables() {
 		assert reward != null;
 		
 		boolean usesTransient = false;
