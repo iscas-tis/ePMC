@@ -67,7 +67,6 @@ public final class ValueDouble implements ValueReal {
         return value;
     }
 
-    @Override
     public void set(double value) {
         assert !isImmutable();
         this.value = value;

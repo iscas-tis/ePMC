@@ -110,13 +110,6 @@ public final class UtilValue {
         return value;
     }
 
-    public static <T extends ValueReal, U extends TypeReal> T newValueDouble(U type, double valueDouble) throws EPMCException {
-        @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
-        value.set(valueDouble);
-        return value;
-    }
-
     public static <T extends ValueAlgebra, U extends TypeAlgebra> T newValue(U type, int valueInt) {
         @SuppressWarnings("unchecked")
 		T value = (T) type.newValue();

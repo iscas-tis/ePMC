@@ -37,6 +37,4 @@ public interface ValueReal extends ValueNumber {
 	
 	@Override
 	TypeReal getType();
-	
-    void set(double value);
 }
