@@ -22,8 +22,6 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 
-//TODO move to expression-basic as soon as possible
-
 public interface ExpressionPropositional extends Expression {
     boolean isPropositional();
 
