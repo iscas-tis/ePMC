@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -30,10 +30,10 @@ import epmc.value.TypeArray;
  * @author Ernst Moritz Hahn
  */
 public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
-	static boolean isTernary(Type type) {
-		return type instanceof TypeTernary;
-	}
-	
+    static boolean isTernary(Type type) {
+        return type instanceof TypeTernary;
+    }
+
     /** String "ternary", for {@link #toString()}. */
     private final static String TERNARY = "ternary";
     /** Three different values: {@code true}, {@code false}, {@code unknown}. */
@@ -46,7 +46,7 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
     final static int UNKNOWN_NUMBER = 1;
     /** Integer representing value {@code true}. */
     final static int TRUE_NUMBER = 2;
-    
+
     /** Value storing {@code false} (made immutable in constructor). */
     private final ValueTernary valueFalse = new ValueTernary(this, Ternary.FALSE);
     /** Value storing {@code true} (made immutable in constructor). */
@@ -77,15 +77,15 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
     public ValueTernary getFalse() {
         return valueFalse;
     }
-    
+
     public ValueTernary getTrue() {
         return valueTrue;
     }
-    
+
     public ValueTernary getUnknown() {
         return valueUnknown;
     }
-        
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -102,12 +102,12 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
     public int getNumValues() {
         return NUM_VALUES;
     }
-    
+
     @Override
     public int getNumBits() {
         return NUM_BITS;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -120,15 +120,15 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }    
-    
-	@Override
+
+    @Override
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }

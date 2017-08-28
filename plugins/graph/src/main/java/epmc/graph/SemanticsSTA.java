@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for stochastic timed automata (STAs).
  */
 public enum SemanticsSTA implements SemanticsNonDet, SemanticsStochastic, SemanticsTimed {
-	/** Singleton element. */
-	STA;
-	
+    /** Singleton element. */
+    STA;
+
     /**
      * Checks whether this is a stochastic timed automaton (STA).
      * 
      * @return whether this is a stochastic timed automaton (STA)
      */
-	public static boolean isSTA(Semantics semantics) {
-		return semantics instanceof SemanticsSTA;
-	}
+    public static boolean isSTA(Semantics semantics) {
+        return semantics instanceof SemanticsSTA;
+    }
 }

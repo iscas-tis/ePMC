@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -35,7 +35,7 @@ public interface Type {
      * @return new value of this type
      */
     Value newValue();
-    
+
     /**
      * Check whether values of given type can be imported.
      * Importing is possible means that for the

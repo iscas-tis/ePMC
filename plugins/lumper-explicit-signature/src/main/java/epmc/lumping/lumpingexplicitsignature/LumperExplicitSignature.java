@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -57,23 +57,23 @@ final class LumperExplicitSignature implements LumperExplicit {
     private GraphSolverObjectiveExplicit quotient;
     private boolean[] blocksSeen;
     private int[] originalToQuotientState;
-    
+
     private int[] predecessorsFromTo;
     private int[] predecessors;
     private int[] successorsFromTo;
     private int[] successors;
     private ValueArray successorWeights;
-    
+
     private BlocksTodo todo;
     private Class<? extends Equivalence> equivalenceClass;
     private List<int[]> blocks;
     private RefMultiLocker refMultiLocker = new RefMultiLocker();
-	private GraphSolverObjectiveExplicit objective;
-    
+    private GraphSolverObjectiveExplicit objective;
+
     public LumperExplicitSignature(Class<? extends Equivalence> cls) {
         this.equivalenceClass = cls;
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -97,7 +97,7 @@ final class LumperExplicitSignature implements LumperExplicit {
             return result;
         }
     }
-    
+
     private class RefinementRunnable implements Runnable {
         private final Equivalence equivalence;
         private boolean[] blocksSeen;
@@ -113,9 +113,9 @@ final class LumperExplicitSignature implements LumperExplicit {
             equivalence.prepare();
             blocksSeen = new boolean[original.getNumNodes()];
         }
-        
+
         @Override
-		public void run() {
+        public void run() {
             try {
                 int i = 0;
                 while (true) {
@@ -145,12 +145,12 @@ final class LumperExplicitSignature implements LumperExplicit {
                 e.printStackTrace();
             }
         }
-        
+
         private void addTodosMulti(List<int[]> blocks, int[] partition, int blockNr,
                 int oldSize) {
             int blocksSize = blocks.size();
             int newBlocksSize = blocksSize - oldSize + 1;
-            
+
             for (int j = 0; j < newBlocksSize; j++) {
                 int bnr = j == 0 ? blockNr : oldSize + j - 1;
                 int[] block = blocks.get(bnr);
@@ -197,7 +197,7 @@ final class LumperExplicitSignature implements LumperExplicit {
             }
         }
     }
-    
+
     @Override
     public void lump() {
         this.blocksSeen = new boolean[original.getNumNodes()];
@@ -216,42 +216,42 @@ final class LumperExplicitSignature implements LumperExplicit {
         equivalence.prepareInitialPartition(this.originalToQuotientState);
         this.blocks = computeInitialBlocks(this.originalToQuotientState);
         Comparator<TodoElem> comparator = null;
-        
+
         comparator = new ComparatorSmallFirst();
 
         refinementLoopMultiThread(this, equivalence, comparator);
-//        refinementLoopSingleThread(this, equivalence, comparator);
+        //        refinementLoopSingleThread(this, equivalence, comparator);
 
         quotientGraph = equivalence.computeQuotient(this.originalToQuotientState, blocks);
-		GraphSolverObjectiveExplicit quotient;
-    	if (objective instanceof GraphSolverObjectiveExplicitLump) {
-			GraphSolverObjectiveExplicitLump quotientLump = new GraphSolverObjectiveExplicitLump();
-			quotientLump.setGraph(quotientGraph);
-			quotient = quotientLump;
-    	} else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-			GraphSolverObjectiveExplicitUnboundedReachability originalUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-			GraphSolverObjectiveExplicitUnboundedReachability quotientUnbounded = new GraphSolverObjectiveExplicitUnboundedReachability();
-			quotientUnbounded.setComputeScheduler(originalUnbounded.isComputeScheduler());
-			quotientUnbounded.setGraph(quotientGraph);
-			quotientUnbounded.setMin(originalUnbounded.isMin());
-			int numQuotientStates = quotientGraph.computeNumStates();
-			BitSet origTarget = originalUnbounded.getTarget();
-			BitSet origZero = originalUnbounded.getZeroSet();
-			BitSet quotTarget = new BitSetBoundedLongArray(numQuotientStates);
-			BitSet quotZero = new BitSetBoundedLongArray(numQuotientStates);
-			int numOrigStates = original.computeNumStates();
-			for (int origState = 0; origState < numOrigStates; origState++) {
-				int quotState = originalToQuotientState[origState];
-				quotTarget.set(quotState, origTarget.get(origState));
-				quotZero.set(quotState, origZero.get(origState));
-			}
-			quotientUnbounded.setTarget(quotTarget);
-			quotientUnbounded.setZeroSink(quotZero);
-			quotient = quotientUnbounded;
-    	} else {
-    		quotient = null;
-    		assert false;
-    	}
+        GraphSolverObjectiveExplicit quotient;
+        if (objective instanceof GraphSolverObjectiveExplicitLump) {
+            GraphSolverObjectiveExplicitLump quotientLump = new GraphSolverObjectiveExplicitLump();
+            quotientLump.setGraph(quotientGraph);
+            quotient = quotientLump;
+        } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
+            GraphSolverObjectiveExplicitUnboundedReachability originalUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+            GraphSolverObjectiveExplicitUnboundedReachability quotientUnbounded = new GraphSolverObjectiveExplicitUnboundedReachability();
+            quotientUnbounded.setComputeScheduler(originalUnbounded.isComputeScheduler());
+            quotientUnbounded.setGraph(quotientGraph);
+            quotientUnbounded.setMin(originalUnbounded.isMin());
+            int numQuotientStates = quotientGraph.computeNumStates();
+            BitSet origTarget = originalUnbounded.getTarget();
+            BitSet origZero = originalUnbounded.getZeroSet();
+            BitSet quotTarget = new BitSetBoundedLongArray(numQuotientStates);
+            BitSet quotZero = new BitSetBoundedLongArray(numQuotientStates);
+            int numOrigStates = original.computeNumStates();
+            for (int origState = 0; origState < numOrigStates; origState++) {
+                int quotState = originalToQuotientState[origState];
+                quotTarget.set(quotState, origTarget.get(origState));
+                quotZero.set(quotState, origZero.get(origState));
+            }
+            quotientUnbounded.setTarget(quotTarget);
+            quotientUnbounded.setZeroSink(quotZero);
+            quotient = quotientUnbounded;
+        } else {
+            quotient = null;
+            assert false;
+        }
 
         clear();
     }
@@ -287,16 +287,16 @@ final class LumperExplicitSignature implements LumperExplicit {
         for (int i = 0; i < blocksSize; i++) {
             todo.add(i);
         }
- 
+
         while (true) {
             int blockNr = todo.popNext();
             if (blockNr == BlocksTodo.DONE) {
                 break;
             }
             int[] block = blocks.get(blockNr);
-            
+
             List<int[]> newBlocks = equivalence.splitBlock(block, this.originalToQuotientState);
-            
+
             commit(blockNr, newBlocks);
         }
     }
@@ -318,7 +318,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         private boolean committing;
         private int refining;
         private int addTodos;
-        
+
         void enterRefine() throws InterruptedException {
             lock.lock();
             try {
@@ -332,7 +332,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 lock.unlock();
             }
         }
-        
+
         void leafRefine() {
             lock.lock();
             try {
@@ -342,7 +342,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 lock.unlock();
             }
         }
-        
+
         void enterCommit() throws InterruptedException {
             lock.lock();
             try {
@@ -362,7 +362,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 lock.unlock();
             }
         }
-        
+
         void leafCommit() {
             lock.lock();
             try {
@@ -372,7 +372,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 lock.unlock();
             }            
         }
-        
+
         void enterAddTodo() throws InterruptedException {
             lock.lock();
             try {
@@ -384,7 +384,7 @@ final class LumperExplicitSignature implements LumperExplicit {
                 lock.unlock();
             }
         }
-        
+
         void leafAddTodo() {
             lock.lock();
             try {
@@ -396,7 +396,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         }
 
     }
-    
+
     private void clear() {
         blocksSeen = null;
     }
@@ -440,7 +440,7 @@ final class LumperExplicitSignature implements LumperExplicit {
         }
         predecessorsFromTo[0] = 0;
     }
-    
+
     private ValueArray newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
@@ -450,7 +450,7 @@ final class LumperExplicitSignature implements LumperExplicit {
             int oldSize) {
         int blocksSize = blocks.size();
         int newBlocksSize = blocksSize - oldSize + 1;
-        
+
         for (int j = 0; j < newBlocksSize; j++) {
             int bnr = j == 0 ? blockNr : oldSize + j - 1;
             int[] block = blocks.get(bnr);
@@ -536,63 +536,63 @@ final class LumperExplicitSignature implements LumperExplicit {
             block[sizes[blockNr]] = i;
             sizes[blockNr]++;
         }
-        
+
         return result;
     }
 
     private int[] computeInitialPartition() {
-    	if (this.objective instanceof GraphSolverObjectiveExplicitLump) {
-    		GraphSolverObjectiveExplicitLump objectiveLump = (GraphSolverObjectiveExplicitLump) objective;
-    		int[] result = new int[objectiveLump.size()];
-    		for (int i = 0; i < result.length; i++) {
-    			result[i] = objectiveLump.getBlock(i);
-    		}
-    		return result;
-    	} else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-    		GraphSolverObjectiveExplicitUnboundedReachability objectiveReach = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-    		int numStates = objectiveReach.getGraph().computeNumStates();
-    		int[] result = new int[numStates];
-    		BitSet targets = objectiveReach.getTarget();
-    		for (int i = 0; i < numStates; i++) {
-    			result[i] = targets.get(i) ? 1 : 0;
-    		}
-    		UtilLump.fillGaps(result);
-    		return result;
-    	} else {
-    		return null;
-    	}
+        if (this.objective instanceof GraphSolverObjectiveExplicitLump) {
+            GraphSolverObjectiveExplicitLump objectiveLump = (GraphSolverObjectiveExplicitLump) objective;
+            int[] result = new int[objectiveLump.size()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = objectiveLump.getBlock(i);
+            }
+            return result;
+        } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
+            GraphSolverObjectiveExplicitUnboundedReachability objectiveReach = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+            int numStates = objectiveReach.getGraph().computeNumStates();
+            int[] result = new int[numStates];
+            BitSet targets = objectiveReach.getTarget();
+            for (int i = 0; i < numStates; i++) {
+                result[i] = targets.get(i) ? 1 : 0;
+            }
+            UtilLump.fillGaps(result);
+            return result;
+        } else {
+            return null;
+        }
     }
 
-	@Override
-	public void setOriginal(GraphSolverObjectiveExplicit objective) {
-		this.objective = objective;
-		original = objective.getGraph();
-	}
+    @Override
+    public void setOriginal(GraphSolverObjectiveExplicit objective) {
+        this.objective = objective;
+        original = objective.getGraph();
+    }
 
-	@Override
-	public GraphSolverObjectiveExplicit getQuotient() {
-		return quotient;
-	}
+    @Override
+    public GraphSolverObjectiveExplicit getQuotient() {
+        return quotient;
+    }
 
-	@Override
-	public void quotientToOriginal() {
-		if (objective instanceof GraphSolverObjectiveExplicitLump) {
-			
-		} else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-			GraphSolverObjectiveExplicitUnboundedReachability unboundedOrig = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-			GraphSolverObjectiveExplicitUnboundedReachability unboundedQuot = (GraphSolverObjectiveExplicitUnboundedReachability) quotient;
-			int numStatesOrig = original.computeNumStates();
-			ValueArray quotResult = unboundedQuot.getResult();
-			ValueArray origResult = UtilValue.newArray(quotResult.getType(), numStatesOrig);
-			Value entry = unboundedQuot.getResult().getType().getEntryType().newValue();
-			for (int origState = 0; origState < numStatesOrig; origState++) {
-				int quotState = originalToQuotientState[origState];
-				quotResult.get(entry, quotState);
-				origResult.set(entry, origState);
-			}
-			unboundedOrig.setResult(origResult);
-		} else {
-			assert false;
-		}
-	}
+    @Override
+    public void quotientToOriginal() {
+        if (objective instanceof GraphSolverObjectiveExplicitLump) {
+
+        } else if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
+            GraphSolverObjectiveExplicitUnboundedReachability unboundedOrig = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+            GraphSolverObjectiveExplicitUnboundedReachability unboundedQuot = (GraphSolverObjectiveExplicitUnboundedReachability) quotient;
+            int numStatesOrig = original.computeNumStates();
+            ValueArray quotResult = unboundedQuot.getResult();
+            ValueArray origResult = UtilValue.newArray(quotResult.getType(), numStatesOrig);
+            Value entry = unboundedQuot.getResult().getType().getEntryType().newValue();
+            for (int origState = 0; origState < numStatesOrig; origState++) {
+                int quotState = originalToQuotientState[origState];
+                quotResult.get(entry, quotState);
+                origResult.set(entry, origState);
+            }
+            unboundedOrig.setResult(origResult);
+        } else {
+            assert false;
+        }
+    }
 }

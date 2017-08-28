@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -58,7 +58,7 @@ public final class ModelDummy implements Model {
     @Override
     public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties,
             Set<Object> nodeProperties, Set<Object> edgeProperties)
-                    {
+    {
         return null;
     }
 

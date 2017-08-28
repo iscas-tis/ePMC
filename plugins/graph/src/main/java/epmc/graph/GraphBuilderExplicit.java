@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -89,7 +89,7 @@ public final class GraphBuilderExplicit {
         this.derivedEdgeProperties.add(property);
         return this;
     }
-    
+
     public GraphBuilderExplicit addSink(BitSet sink) {
         assert !isBuilt();
         assert sink != null;
@@ -108,7 +108,7 @@ public final class GraphBuilderExplicit {
         this.reorder = reorder;
         return this;
     }
-    
+
     public GraphBuilderExplicit setBackward(boolean backward) {
         assert !isBuilt();
         this.backward = backward;
@@ -157,7 +157,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareNodeProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph, List<Object> nodeProperties, ValueArrayInteger outputToInputNodes)
-                    {
+    {
         int numOutputNodes = outputToInputNodes.size();
         NodeProperty[] inputProperties = new NodeProperty[nodeProperties.size()];
         NodeProperty[] outputProperties = new NodeProperty[nodeProperties.size()];
@@ -177,7 +177,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareGraphProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph, List<Object> graphProperties)
-                    {
+    {
         for (Object property : graphProperties) {
             Value value = inputGraph.getGraphProperty(property);
             if (inputGraph.getGraphProperties().contains(property)) {
@@ -187,14 +187,14 @@ public final class GraphBuilderExplicit {
     }
 
     private GraphExplicit prepareGraph(GraphExplicit inputGraph, List<BitSet> sinkList, ValueArrayInteger inputToOutputNodes, boolean uniformise)
-            {
+    {
         GraphExplicit outputGraph = null;
         Semantics semanticsType = inputGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(semanticsType)) {
             BitSet sinks = computeSinks(sinkList);
             int numStates = 0;
             int numTotalOut = 0;
-          for (int inputNode = 0; inputNode < inputToOutputNodes.size(); inputNode++) {
+            for (int inputNode = 0; inputNode < inputToOutputNodes.size(); inputNode++) {
                 if (!sinks.get(inputNode)) {
                     numStates++;
                     numTotalOut += inputGraph.getNumSuccessors(inputNode);
@@ -255,7 +255,7 @@ public final class GraphBuilderExplicit {
         == graphProperties.size();
         return true;
     }
-    
+
     private static boolean assertNodeProperties(GraphExplicit inputGraph,
             List<Object> nodeProperties) {
         assert inputGraph != null;
@@ -281,7 +281,7 @@ public final class GraphBuilderExplicit {
     }
 
     private static List<BitSet> prepareParts(GraphExplicit inputGraph, boolean reorder)
-            {
+    {
         List<BitSet> result = new ArrayList<>();
         Semantics semanticsType = ValueObject.asObject(inputGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (reorder && SemanticsNonDet.isNonDet(semanticsType)) {
@@ -369,7 +369,7 @@ public final class GraphBuilderExplicit {
             }
         }
     }
-    
+
     private static void prepareTransitions(
             GraphExplicit outputGraph, GraphExplicit inputGraph,
             ValueArrayInteger inputToOutputNodes,
@@ -513,7 +513,7 @@ public final class GraphBuilderExplicit {
     private static void prepareInitialNodes(GraphExplicit outputGraph,
             GraphExplicit inputGraph, ValueArrayInteger inputToOutputNodes) {
         BitSet inputNodesInit = inputGraph.getInitialNodes();
-        
+
         BitSet outputNodesInit = outputGraph.getInitialNodes();
         for (int inputNode = inputNodesInit.nextSetBit(0); inputNode >= 0; inputNode = inputNodesInit.nextSetBit(inputNode+1)) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
@@ -524,7 +524,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareInputToOutputNodes(GraphExplicit inputGraph, List<BitSet> parts, List<BitSet> sinkList,
             ValueArrayInteger inputToOutputNodes, Value outputToInputNodes, TIntList partsBegin)
-            {
+    {
         BitSet inputNodes = UtilBitSet.newBitSetUnbounded();
         inputNodes.set(0, inputGraph.getNumNodes(), true);
         inputToOutputNodes.setSize(inputNodes.length());
@@ -545,21 +545,21 @@ public final class GraphBuilderExplicit {
             nextPart = buildInputToOutputPart(inputGraph, nextPart, part, sinkList, inputToOutputNodes);
             partsBegin.add(nextPart);
         }
-        */
+         */
     }
 
     private static void prepareOutputToInputNodes(GraphExplicit inputGraph,
             List<BitSet> parts, List<BitSet> sinkList,
             ValueArrayInteger inputToOutputNodes,
             ValueArrayInteger outputToInputNodes, TIntList partsBegin)
-                    {
+    {
         int numOutputNodes = 0;
         int numInputNodes = inputGraph.getNumNodes();
         for (int inputNode = 0; inputNode < numInputNodes; inputNode++) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
             numOutputNodes = Math.max(numOutputNodes, outputNode + 1);
         }
-        
+
         outputToInputNodes.setSize(numOutputNodes);
         for (int inputNode = 0; inputNode < numInputNodes; inputNode++) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
@@ -572,7 +572,7 @@ public final class GraphBuilderExplicit {
     private static void prepareProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph,
             List<Object> graphProperties, List<Object> nodeProperties, List<Object> edgeProperties)
-                    {
+    {
         for (Object property : graphProperties) {
             Type type = inputGraph.getGraphPropertyType(property);
             outputGraph.addSettableGraphProperty(property, type);
@@ -687,7 +687,7 @@ public final class GraphBuilderExplicit {
     public void setParts(List<BitSet> parts) {
         this.parts = parts;
     }
-    
+
     public GraphBuilderExplicit addDerivedGraphProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -695,7 +695,7 @@ public final class GraphBuilderExplicit {
         }
         return this;
     }
-    
+
     public GraphBuilderExplicit addDerivedNodeProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -703,7 +703,7 @@ public final class GraphBuilderExplicit {
         }
         return this;
     }
-    
+
     public GraphBuilderExplicit addDerivedEdgeProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -729,7 +729,7 @@ public final class GraphBuilderExplicit {
         setUniformise(true);
         return this;
     }
-    
+
     public GraphBuilderExplicit setReorder() {
         assert !isBuilt();
         setReorder(true);

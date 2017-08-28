@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -30,19 +30,19 @@ import epmc.expression.Expression;
 
 public interface EvaluatorDD extends Closeable {
     String getIdentifier();
-    
+
     void setVariables(Map<Expression,VariableDD> variables);
-    
+
     void setExpression(Expression expression);
 
     boolean canHandle();
-    
+
     void build();
 
     DD getDD();
-    
+
     List<DD> getVector();
-    
+
     @Override
     void close();
 }

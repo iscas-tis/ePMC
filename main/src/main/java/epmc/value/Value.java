@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -29,7 +29,7 @@ package epmc.value;
 public interface Value extends Comparable<Value> {
     @Override
     boolean equals(Object obj);
-   
+
     @Override
     int hashCode();
 
@@ -50,7 +50,7 @@ public interface Value extends Comparable<Value> {
      * @param value value to set this value to
      */
     void set(Value value);
-    
+
     void set(String value);
 
     /**

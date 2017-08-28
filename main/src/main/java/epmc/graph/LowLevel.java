@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -37,7 +37,7 @@ public interface LowLevel extends Closeable, ExpressionToType {
      * @return new set of initial states
      */
     StateSet newInitialStateSet();
-    
+
     @Override
     void close();
 }

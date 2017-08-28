@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -38,7 +38,7 @@ public final class OptionTypeInteger implements OptionType {
     private final static String INFO = "<integer>";
     /** Integer option type. */
     final static OptionTypeInteger INSTANCE = new OptionTypeInteger();
-    
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
@@ -47,7 +47,7 @@ public final class OptionTypeInteger implements OptionType {
      */
     private OptionTypeInteger() {   
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -61,12 +61,12 @@ public final class OptionTypeInteger implements OptionType {
             return null;
         }
     }
-    
+
     @Override
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();

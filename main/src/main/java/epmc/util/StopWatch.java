@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -57,7 +57,7 @@ public final class StopWatch {
         timeStarted = System.currentTimeMillis();
         this.running = running;
     }
-    
+
     /**
      * Stop the stop watch.
      * The function must not be called if the stop watch is not running.
@@ -69,7 +69,7 @@ public final class StopWatch {
         timePassed = timePassed + (time - timeStarted);
         timeStarted = 0;
     }
-    
+
     /**
      * Start the stop watch.
      * The function must not be called if the stop watch is running.
@@ -94,10 +94,10 @@ public final class StopWatch {
         } else {
             result = timePassed;
         }
-        
+
         return result;
     }
-    
+
     /**
      * Read the time in seconds the clock has been in running state.
      * 
@@ -110,8 +110,8 @@ public final class StopWatch {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-        .add(RUNNING, running)
-        .add(TIME, getTime())
-        .toString();
+                .add(RUNNING, running)
+                .add(TIME, getTime())
+                .toString();
     }
 }

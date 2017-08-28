@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -29,33 +29,33 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class PropertyNodeExpression implements ExplorerNodeProperty {
-	private final EvaluatorExplicit evaluator;
-	private final Type type;
-	private final Value[] values;
+    private final EvaluatorExplicit evaluator;
+    private final Type type;
+    private final Value[] values;
 
-	PropertyNodeExpression(ExplorerJANI explorer, Expression[] identifiers, Expression expression, Type type) {
-		assert explorer != null;
-		assert expression != null;
-		expression = UtilExpressionStandard.replace(expression, explorer.getModel().getConstants());
-		this.evaluator = UtilEvaluatorExplicit.newEvaluator(expression, explorer, identifiers);
-		this.type = type;
-		this.values = new Value[identifiers.length];
-	}
-	
-	@Override
-	public Value get() {
-		evaluator.evaluate(values);
-		return evaluator.getResultValue();
-	}
+    PropertyNodeExpression(ExplorerJANI explorer, Expression[] identifiers, Expression expression, Type type) {
+        assert explorer != null;
+        assert expression != null;
+        expression = UtilExpressionStandard.replace(expression, explorer.getModel().getConstants());
+        this.evaluator = UtilEvaluatorExplicit.newEvaluator(expression, explorer, identifiers);
+        this.type = type;
+        this.values = new Value[identifiers.length];
+    }
 
-	public void setVariableValues(Value[] values) {
-		for (int valueNr = 0; valueNr < values.length; valueNr++) {
-			this.values[valueNr] = values[valueNr];
-		}
-	}
-	
-	@Override
-	public Type getType() {
-		return type;
-	}
+    @Override
+    public Value get() {
+        evaluator.evaluate(values);
+        return evaluator.getResultValue();
+    }
+
+    public void setVariableValues(Value[] values) {
+        for (int valueNr = 0; valueNr < values.length; valueNr++) {
+            this.values[valueNr] = values[valueNr];
+        }
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }
 }

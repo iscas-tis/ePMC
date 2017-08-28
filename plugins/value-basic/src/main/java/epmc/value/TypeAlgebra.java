@@ -16,32 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Type;
 
 public interface TypeAlgebra extends Type {
-	static boolean isAlgebra(Type type) {
-		return type instanceof TypeAlgebra;
-	}
-	
-	static TypeAlgebra asAlgebra(Type type) {
-		if (isAlgebra(type)) {
-			return (TypeAlgebra) type;
-		} else {
-			return null;
-		}
-	}
-	
+    static boolean isAlgebra(Type type) {
+        return type instanceof TypeAlgebra;
+    }
+
+    static TypeAlgebra asAlgebra(Type type) {
+        if (isAlgebra(type)) {
+            return (TypeAlgebra) type;
+        } else {
+            return null;
+        }
+    }
+
     ValueAlgebra getZero();
-    
+
     ValueAlgebra getOne();
-        
+
     @Override
     TypeArrayAlgebra getTypeArray();
-    
+
     @Override
     ValueAlgebra newValue();
 }

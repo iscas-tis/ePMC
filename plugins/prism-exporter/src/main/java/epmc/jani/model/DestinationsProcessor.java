@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -25,65 +25,65 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 
-	private Destinations destinations = null;
-	private Automaton automaton = null;
+    private Destinations destinations = null;
+    private Automaton automaton = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
-		this.automaton = automaton;
-		return this;
-	}
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Destinations; 
-		
-		destinations = (Destinations) obj;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+        this.automaton = automaton;
+        return this;
+    }
 
-	@Override
-	public String toPRISM() {
-		assert destinations != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		boolean remaining = false;
-		for (Destination destination : destinations) {
-			JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(destination);
-			if (remaining) {
-				processor.setPrefix(" + ");
-			} else {
-				remaining = true;
-			}
-			prism.append(processor.setAutomaton(automaton)
-								  .toPRISM());
-		}
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert destinations != null;
-		
-		for (Destination destination : destinations) {
-			ProcessorRegistrar.getProcessor(destination)
-							  .validateTransientVariables();
-		}
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Destinations; 
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert destinations != null;
-		
-		boolean usesTransient = false;
-		for (Destination destination : destinations) {
-			usesTransient |= ProcessorRegistrar.getProcessor(destination)
-										 	   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        destinations = (Destinations) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert destinations != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        boolean remaining = false;
+        for (Destination destination : destinations) {
+            JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(destination);
+            if (remaining) {
+                processor.setPrefix(" + ");
+            } else {
+                remaining = true;
+            }
+            prism.append(processor.setAutomaton(automaton)
+                    .toPRISM());
+        }
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert destinations != null;
+
+        for (Destination destination : destinations) {
+            ProcessorRegistrar.getProcessor(destination)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert destinations != null;
+
+        boolean usesTransient = false;
+        for (Destination destination : destinations) {
+            usesTransient |= ProcessorRegistrar.getProcessor(destination)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

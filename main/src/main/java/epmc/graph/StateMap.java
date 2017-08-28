@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -43,37 +43,37 @@ public interface StateMap extends Closeable, Cloneable {
     StateMap apply(Operator operator, StateMap other);
 
     StateMap clone();
-    
+
     Value applyOver(Operator operator, StateSet over);
-    
+
     boolean isConstant();
 
     void getRange(Value range, StateSet of);
-    
+
     void getSomeValue(Value to, StateSet of);
 
     default void getSomeValue(Value to) {
         assert to != null;
         getSomeValue(to, getStateSet());
     }
-    
+
     default StateMap applyWith(Operator operator, StateMap operand)
-            {
+    {
         StateMap result = apply(operator, operand);
         close();
         operand.close();
         return result;
     }
-    
+
     default Value getSomeValue() {
         Value value = getType().newValue();
         getSomeValue(value);
         return value;
     }
-    
+
     Value subsumeResult(StateSet initialStates);
-    
+
     default Scheduler getScheduler() {
-    	return null;
+        return null;
     }
 }

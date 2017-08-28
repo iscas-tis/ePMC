@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -58,7 +58,7 @@ public final class GraphSolverConfigurationDD {
     }
 
     // TODO subsume objective, min, and time to one new parameter type
-    
+
     public void setObjective(GraphSolverObjectiveDD objective) {
         this.objective = objective;
     }
@@ -70,7 +70,7 @@ public final class GraphSolverConfigurationDD {
         configuration.solve();
         postprocessDD(explicitObjective);
     }
-    
+
     private GraphSolverObjectiveExplicit preprocessDD() {
         if (lumpBeforeGraphSolving) {
             lumpDD();
@@ -84,7 +84,7 @@ public final class GraphSolverConfigurationDD {
         objectiveUnboundedReachability.setTarget(target);
         return objectiveUnboundedReachability;
     }
-    
+
     private void postprocessDD(GraphSolverObjectiveExplicit explicitObjective) {
         this.resultDD = graphBuilderDD.valuesToDD(explicitObjective.getResult());
         graphBuilderDD.close();
@@ -130,7 +130,7 @@ public final class GraphSolverConfigurationDD {
         }
         sinksDD = quotientSinks;
     }
-    
+
     public GraphSolverObjectiveDD getObjective() {
         return objective;
     }

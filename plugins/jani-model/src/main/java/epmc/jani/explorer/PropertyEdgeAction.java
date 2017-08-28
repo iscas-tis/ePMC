@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -33,71 +33,71 @@ import epmc.value.ValueObject;
 import epmc.value.TypeObject.StorageType;
 
 public final class PropertyEdgeAction implements PropertyEdge {
-	private final Map<Action,Integer> actionToNumber = new HashMap<>();
-	private final Action[] numberToAction;
-	private final TypeObject type;
-	private final ValueObject value;
-	private int[] values = new int[1];
-	
-	PropertyEdgeAction(ExplorerJANI explorer) {
-		assert explorer != null;
-		ModelJANI model = explorer.getModel();
-		numberToAction = new Action[model.getActions().size() + 1];
-		int actionNumber = 0;
-		actionToNumber.put(model.getSilentAction(), actionNumber);
-		numberToAction[actionNumber] = model.getSilentAction();
-		actionNumber++;
-		for (Action action : model.getActions()) {
-			actionToNumber.put(action, actionNumber);
-			numberToAction[actionNumber] = action;
-			actionNumber++;
-		}
-		type = new TypeObject.Builder()
+    private final Map<Action,Integer> actionToNumber = new HashMap<>();
+    private final Action[] numberToAction;
+    private final TypeObject type;
+    private final ValueObject value;
+    private int[] values = new int[1];
+
+    PropertyEdgeAction(ExplorerJANI explorer) {
+        assert explorer != null;
+        ModelJANI model = explorer.getModel();
+        numberToAction = new Action[model.getActions().size() + 1];
+        int actionNumber = 0;
+        actionToNumber.put(model.getSilentAction(), actionNumber);
+        numberToAction[actionNumber] = model.getSilentAction();
+        actionNumber++;
+        for (Action action : model.getActions()) {
+            actionToNumber.put(action, actionNumber);
+            numberToAction[actionNumber] = action;
+            actionNumber++;
+        }
+        type = new TypeObject.Builder()
                 .setClazz(Action.class)
                 .setStorageClass(StorageType.NUMERATED_IDENTITY)
                 .build();
-		value = type.newValue();
-	}
+        value = type.newValue();
+    }
 
-	@Override
-	public Value get(int successor) {
-		Action action = numberToAction[values[successor]];
-		value.set(action);
-		return value;
-	}
-	
-	public int getInt(int successor) {
-		return values[successor];
-	}
+    @Override
+    public Value get(int successor) {
+        Action action = numberToAction[values[successor]];
+        value.set(action);
+        return value;
+    }
 
-	@Override
-	public Type getType() {
-		return type;
-	}
+    public int getInt(int successor) {
+        return values[successor];
+    }
 
-	public void set(int successor, Object value) {
-		assert value instanceof Action : value + " " + value.getClass();
-		assert actionToNumber.containsKey(value);
-		ensureSuccessorsSize(successor);
-		int actionNumber = actionToNumber.get(value);
-		values[successor] = actionNumber;
-	}
+    @Override
+    public Type getType() {
+        return type;
+    }
 
-	void set(int successor, int value) {
-		ensureSuccessorsSize(successor);
-		values[successor] = value;
-	}
+    public void set(int successor, Object value) {
+        assert value instanceof Action : value + " " + value.getClass();
+    assert actionToNumber.containsKey(value);
+    ensureSuccessorsSize(successor);
+    int actionNumber = actionToNumber.get(value);
+    values[successor] = actionNumber;
+    }
 
-	private void ensureSuccessorsSize(int successor) {
-		int numSuccessors = successor + 1;
-		if (numSuccessors < values.length) {
-			return;
-		}
-		int newLength = values.length;
-		while (newLength <= numSuccessors) {
-			newLength *= 2;
-		}
-		int[] newValues = Arrays.copyOf(values, newLength);
-		values = newValues;
-	}
+    void set(int successor, int value) {
+        ensureSuccessorsSize(successor);
+        values[successor] = value;
+    }
+
+    private void ensureSuccessorsSize(int successor) {
+        int numSuccessors = successor + 1;
+        if (numSuccessors < values.length) {
+            return;
+        }
+        int newLength = values.length;
+        while (newLength <= numSuccessors) {
+            newLength *= 2;
+        }
+        int[] newValues = Arrays.copyOf(values, newLength);
+        values = newValues;
+    }
 }

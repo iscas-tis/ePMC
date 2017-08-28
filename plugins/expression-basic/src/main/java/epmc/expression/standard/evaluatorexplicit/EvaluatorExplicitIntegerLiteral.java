@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -32,7 +32,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -48,7 +48,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         private Expression[] getVariables() {
             return variables;
         }
-        
+
         @Override
         public Builder setExpression(Expression expression) {
             this.expression = expression;
@@ -58,7 +58,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         private Expression getExpression() {
             return expression;
         }
-        
+
         @Override
         public boolean canHandle() {
             assert expression != null;
@@ -80,20 +80,20 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
             return new EvaluatorExplicitIntegerLiteral(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
     }
-    
+
     public final static String IDENTIFIER = "integer-literal";
     private final Expression[] variables;
     private final Expression expression;
     private final Value value;
     private final int valueInteger;
-    
+
     private EvaluatorExplicitIntegerLiteral(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
@@ -117,19 +117,19 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
     public Value evaluate(Value... values) {
         assert expression != null;
         assert variables != null;
         return value;
     }
-    
+
     @Override
     public int evaluateInteger(Value... values) {
         return valueInteger;
     }
-    
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;

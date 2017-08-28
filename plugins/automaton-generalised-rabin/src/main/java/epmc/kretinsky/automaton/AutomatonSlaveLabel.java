@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -29,7 +29,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
     private final AutomatonMojmir observerMojmir;
     private final int input;
     private int number;
-    
+
     AutomatonSlaveLabel(AutomatonSlaveState from, int input) {
         this.observerMojmir = from.getObserverMojmir();
         this.content = from.getContent();
@@ -73,7 +73,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         }
         return false;
     }
-    
+
     boolean isSuccess(boolean[] finalStates, int rank) {
         for (int stateNr = 0; stateNr < content.length; stateNr++) {
             if (content[stateNr] != rank) {
@@ -87,7 +87,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         }
         return false;
     }
-    
+
     @Override
     public int getNumber() {
         return number;
@@ -97,7 +97,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
     public void setNumber(int number) {
         this.number = number;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -105,7 +105,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         hash = input + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof AutomatonSlaveLabel)) {
@@ -120,7 +120,7 @@ final class AutomatonSlaveLabel implements AutomatonLabelUtil {
         }
         return true;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

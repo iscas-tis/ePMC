@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -27,11 +27,11 @@ public final class ProblemsMessages {
     private final static String PROBLEMS_MESSAGES = "ProblemsMessages";
     public final static Problem REMOTE = newProblem("remote");
     public final static Problem CHANNEL_FAILURE = newProblem("channel-failure");
-    
+
     private static Problem newProblem(String name) {
         return UtilError.newProblem(PROBLEMS_MESSAGES, name);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

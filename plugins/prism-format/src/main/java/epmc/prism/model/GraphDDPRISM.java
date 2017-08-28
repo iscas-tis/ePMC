@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -72,7 +72,7 @@ final class GraphDDPRISM implements GraphDD {
         MC,
         MDP_STATE
     }
-    
+
     private final GraphDDProperties properties;
     private final ModelPRISM model;
     private final ExpressionToDD expressionToDD;
@@ -106,10 +106,10 @@ final class GraphDDPRISM implements GraphDD {
     private final String RATE = "rate"; // rate action for MA
 
     /* constructors */
-    
+
     GraphDDPRISM(ModelPRISM model, Set<Object> nodeProperties,
             Set<Object> edgeProperties)
-            {
+    {
         this.properties = new GraphDDProperties(this);
         assert assertConstructorArguments(model, nodeProperties, edgeProperties);
         ensure(Options.get().getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
@@ -121,7 +121,7 @@ final class GraphDDPRISM implements GraphDD {
 
         this.log = Options.get().get(OptionsMessages.LOG);
         log.send(MessagesPRISM.BUILDING_DD_MODEL);
-        
+
         this.model = model;
         this.withWeights = edgeProperties.contains(CommonProperties.WEIGHT);
         this.variablesDD = new HashMap<>();
@@ -140,8 +140,8 @@ final class GraphDDPRISM implements GraphDD {
         this.presEqNext = computePresEqNext();
         this.initial = translateInitial();
         expressionToDD.putConstant(new ExpressionIdentifierStandard.Builder()
-        		.setName("\"init\"")
-        		.build(), initial);
+                .setName("\"init\"")
+                .build(), initial);
 
         ArrayList<DD> modulesDD = new ArrayList<>();
         for (Module module : model.getModules()) {
@@ -191,7 +191,7 @@ final class GraphDDPRISM implements GraphDD {
                 int number = model.getPRISMGamesPlayer(player);
             }
         }
-        
+
         processGraphProperties();
         processNodeProperties(nodeProperties);
         processEdgeProperties(edgeProperties);
@@ -220,23 +220,23 @@ final class GraphDDPRISM implements GraphDD {
         DD nodesAndStates = nodes.and(states);
         DD deadlock = nodesAndStates.abstractAndExist(transitionsBooleanForNext, nextCube).notWith().andWith(nodesAndStates.clone());
         nodesAndStates.dispose();
-        
+
         expressionToDD.putConstantWith(new ExpressionIdentifierStandard.Builder()
-        		.setName("\"deadlock\"")
-        		.build(), deadlock);
+                .setName("\"deadlock\"")
+                .build(), deadlock);
 
         this.transitionsBoolean = fixDeadlocks(transitionsBoolean, false, transEnc,
                 deadlock, presEqNext, actionVariable, nextToPres,
                 nondetVariables.values());
-        
+
         weight = fixDeadlocks(weight, withWeights, transEnc,
                 deadlock, presEqNext, actionVariable, nextToPres,
                 nondetVariables.values());
-        
+
         if (edgeProperties.contains(CommonProperties.WEIGHT)) {
-        	properties.registerEdgeProperty(CommonProperties.WEIGHT, weight);
+            properties.registerEdgeProperty(CommonProperties.WEIGHT, weight);
         }
-        
+
         transitionsBooleanForNext = this.transitionsBoolean.abstractExist(actionsCube);
         nodesAndStates = nodes.and(states);
         deadlock = nodesAndStates.abstractAndExist(transitionsBooleanForNext, nextCube).not().and(nodesAndStates);
@@ -244,20 +244,20 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private void processGraphProperties() {
-    	properties.registerGraphProperty(CommonProperties.SEMANTICS,
-    			new TypeObject.Builder()
+        properties.registerGraphProperty(CommonProperties.SEMANTICS,
+                new TypeObject.Builder()
                 .setClazz(Semantics.class)
                 .build());
-    	setGraphPropertyObject(CommonProperties.SEMANTICS,
-    			model.getSemantics());
-    	properties.registerGraphProperty(CommonProperties.EXPRESSION_TO_DD,
-    			new TypeObject.Builder()
+        setGraphPropertyObject(CommonProperties.SEMANTICS,
+                model.getSemantics());
+        properties.registerGraphProperty(CommonProperties.EXPRESSION_TO_DD,
+                new TypeObject.Builder()
                 .setClazz(expressionToDD.getClass())
                 .build());
-    	setGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD,
-    			expressionToDD);
+        setGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD,
+                expressionToDD);
     }
-    
+
     private void processNodeProperties(Set<Object> nodeProperties) {
         for (Object prop : nodeProperties) {
             if (prop == CommonProperties.STATE) {
@@ -293,7 +293,7 @@ final class GraphDDPRISM implements GraphDD {
             TransitionEncoding transEnc, DD sink, DD presEqNext,
             VariableDD actionVariable, Permutation nextToPres,
             Iterable<VariableDD> nondetVariables)
-            {
+    {
         DD result = transitions.clone();
         if (transEnc == TransitionEncoding.MC) {
             if (withWeights) {
@@ -343,7 +343,7 @@ final class GraphDDPRISM implements GraphDD {
 
     private static DD computeDeadlock(ModelPRISM model,
             ExpressionToDD expressionToDD, DD states)
-            {
+    {
         Map<String,Module> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module);
@@ -360,10 +360,10 @@ final class GraphDDPRISM implements GraphDD {
 
     private static Map<Expression,DD> computeCanMode(SystemDefinition system,
             Map<String, Module> modules, ExpressionToDD expressionToDD)
-                    {
+    {
         Expression noSync = new ExpressionIdentifierStandard.Builder()
-        		.setName("")
-        		.build();
+                .setName("")
+                .build();
         Map<Expression,DD> result = new HashMap<>();
         if (system.isModule()) {
             ModuleCommands module = modules.get(system.asModule().getModule()).asCommands();
@@ -484,10 +484,10 @@ final class GraphDDPRISM implements GraphDD {
 
     private static DD computeStates(TransitionEncoding transEnc,
             Iterable<VariableDD> nondetVariables)
-            {
+    {
         return ContextDD.get().newConstant(true);
     }
-    
+
     @Override
     public DD getInitialNodes() {
         assert !closed;
@@ -501,7 +501,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     /* private methods */
-        
+
     private List<DD> computeActionVars() {
         ArrayList<DD> result = new ArrayList<>();
         for (DD var : actionVariable.getDDVariables(0)) {
@@ -517,7 +517,7 @@ final class GraphDDPRISM implements GraphDD {
                 result.add(var.clone());
             }
         }
-        
+
         return result;
     }
 
@@ -579,8 +579,8 @@ final class GraphDDPRISM implements GraphDD {
     private TObjectIntMap<Expression> collectActions() {
         TObjectIntMap<Expression> actions = new TObjectIntHashMap<>();
         actions.put(new ExpressionIdentifierStandard.Builder()
-        		.setName("")
-        		.build(), 0);
+                .setName("")
+                .build(), 0);
         int nextActionNumber = 1;
         for (Module module : model.getModules()) {
             for (Expression expr : module.getAlphabet()) {
@@ -603,13 +603,13 @@ final class GraphDDPRISM implements GraphDD {
             else lower = 0;
             break;
         default:
-                break;
+            break;
         }
         return lower;
     }
-    
+
     private void computeVariableEncoding(Map<Expression,Type> variables)
-            {
+    {
         int lower = computeNonDetVarLower();
         switch (transEnc) {
         case MDP_STATE:
@@ -629,7 +629,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private Map<Expression,DD> translateModule(ModuleCommands module)
-            {
+    {
         int commandNr = 0;
         Map<Expression,DD> result = new HashMap<>();
         for (Command command : module.getCommands()) {
@@ -656,25 +656,25 @@ final class GraphDDPRISM implements GraphDD {
         }
         return result;
     }
-    
+
     private DD translateSystem() {
         Map<String,ModuleCommands> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module.asCommands());
         }
-//        Map<System,DD> 
-        
+        //        Map<System,DD> 
+
         // TODO continue here
         Map<Expression,DD> translated = translateSystem(model.getSystem(), modules);
         return null;
     }
-    
+
     private Map<Expression, DD> translateSystem(SystemDefinition system, Map<String, ModuleCommands> modules)
-            {
+    {
         Map<Expression,DD> result = new HashMap<>();
         Expression noSync = new ExpressionIdentifierStandard.Builder()
-        		.setName("")
-        		.build();
+                .setName("")
+                .build();
         if (system.isModule()) {
             SystemModule systemModule = system.asModule();
             String moduleName = systemModule.getModule();
@@ -743,15 +743,15 @@ final class GraphDDPRISM implements GraphDD {
         }
         return moduleDD;
     }
-    
+
     private DD translateCommand(Command command, Module module, int number)
-            {
+    {
         DD guard = expressionToDD.translate(command.getGuard());
         if (withWeights) {
             guard = guard.toMTWith();
         }
         DD commandDD = guard;
-        
+
         int action = actions.get(command.getLabel());
         DD actionDD = actionVariable.newIntValue(0, action);
         if (withWeights) {
@@ -762,10 +762,10 @@ final class GraphDDPRISM implements GraphDD {
         }
 
         boolean isMARateLine = (actions.get(
-        		new ExpressionIdentifierStandard.Builder()
-        		.setName(RATE)
-        		.build()) == action)
-                          && SemanticsMA.isMA(model.getSemantics());      // RATE should change for more elegant way
+                new ExpressionIdentifierStandard.Builder()
+                .setName(RATE)
+                .build()) == action)
+                && SemanticsMA.isMA(model.getSemantics());      // RATE should change for more elegant way
         int nonDetNumber = isMARateLine ? rateIndex : number;  // if MA has rate, set it with unique number
         if (transEnc == TransitionEncoding.MDP_STATE) {
             DD nondetDDPres = nondetVariables.get(module).newIntValue(0, nonDetNumber);
@@ -811,10 +811,10 @@ final class GraphDDPRISM implements GraphDD {
             playerDD = playerDD.orWith(expressionToDD.translate(command.getGuard()));
             players.set(playerNr, playerDD);
         }
-        
+
         return commandDD;
     }
-    
+
     private DD translateAlternative(Alternative alternative) {
         DD weight;
         if (withWeights) {
@@ -874,7 +874,7 @@ final class GraphDDPRISM implements GraphDD {
         nonDetStates.dispose();
         presEqNext.dispose();
         presCube.dispose();
-//        actionsCube.dispose();
+        //        actionsCube.dispose();
         for (DD var : presVars) {
             var.dispose();
         }
@@ -904,7 +904,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private DD translateStateReward(DD state, RewardStructure rewardStructure)
-            {
+    {
         assert state != null;
         assert rewardStructure != null;
         DD rewardDD = ContextDD.get().newConstant(0);
@@ -917,9 +917,9 @@ final class GraphDDPRISM implements GraphDD {
         }
         return rewardDD;
     }
-    
+
     private DD translateTransReward(DD state, RewardStructure rewardStructure)
-            {
+    {
         assert state != null;
         assert rewardStructure != null;
         DD rewardDD = ContextDD.get().newConstant(0);
@@ -937,17 +937,17 @@ final class GraphDDPRISM implements GraphDD {
     private DD newLabelDD(String labelString) {
         assert labelString != null;
         Expression label = new ExpressionIdentifierStandard.Builder()
-        		.setName(labelString)
-        		.build();
+                .setName(labelString)
+                .build();
         assert actions.containsKey(label);
         int action = actions.get(label);
         return actionVariable.newIntValue(0, action);
     }
-    
-    
+
+
     private static DD exploreNodeSpace(Log log,
             DD initial, DD trans, DD pres, Permutation swap)
-                    {
+    {
         StopWatch timer = new StopWatch(true);
         log.send(MessagesPRISM.EXPLORING);
         DD states = initial.clone();
@@ -964,8 +964,8 @@ final class GraphDDPRISM implements GraphDD {
         return states;
     }    
 
-	@Override
-	public GraphDDProperties getProperties() {
-		return properties;
-	}
+    @Override
+    public GraphDDProperties getProperties() {
+        return properties;
+    }
 }

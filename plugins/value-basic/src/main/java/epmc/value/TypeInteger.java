@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,41 +27,41 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     public static TypeInteger get(int lowerBound, int upperBound) {
         return ContextValue.get().makeUnique(new TypeInteger(lowerBound, upperBound));
     }
-    
+
     public static TypeInteger get() {
         return ContextValue.get().getType(TypeInteger.class);
     }
-    
+
     public static void set(TypeInteger type) {
         assert type != null;
         ContextValue.get().setType(TypeInteger.class, ContextValue.get().makeUnique(type));
     }
-    
+
     public static boolean isInteger(Type type) {
-    	return type instanceof TypeInteger;
+        return type instanceof TypeInteger;
     }
-    
+
     public static TypeInteger asInteger(Type type) {
-    	if (type instanceof TypeInteger) {
-    		return (TypeInteger) type;
-    	} else {
-    		return null;
-    	}
+        if (type instanceof TypeInteger) {
+            return (TypeInteger) type;
+        } else {
+            return null;
+        }
     }
-    
+
     public static boolean isIntegerBothBounded(Type type) {
-    	if (!isInteger(type)) {
-    		return false;
-    	}
-    	TypeInteger typeInteger = asInteger(type);
+        if (!isInteger(type)) {
+            return false;
+        }
+        TypeInteger typeInteger = asInteger(type);
         return typeInteger.isLeftBounded() && typeInteger.isRightBounded();
     }
 
     public static boolean isIntegerWithBounds(Type type) {
-    	if (!isInteger(type)) {
-    		return false;
-    	}
-    	TypeInteger typeInteger = asInteger(type);
+        if (!isInteger(type)) {
+            return false;
+        }
+        TypeInteger typeInteger = asInteger(type);
         return typeInteger.isLeftBounded() || typeInteger.isRightBounded();
     }
 
@@ -88,12 +88,12 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         this.upperBound = newValue(upperBound);
         this.upperBound.setImmutable();
     }
-    
-    private ValueInteger newValue(int value) {
-    	return new ValueInteger(this, value);
-	}
 
-	public TypeInteger() {
+    private ValueInteger newValue(int value) {
+        return new ValueInteger(this, value);
+    }
+
+    public TypeInteger() {
         this(Integer.MIN_VALUE, Integer.MAX_VALUE);
     }    
 
@@ -140,11 +140,11 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     public int getLowerInt() {
         return lowerBound.getInt();
     }
-    
+
     public int getUpperInt() {
         return upperBound.getInt();
     }
-    
+
     @Override
     public ValueInteger getLower() {
         return lowerBound;
@@ -154,20 +154,20 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     public ValueInteger getUpper() {
         return upperBound;
     }
-    
+
     public boolean isLeftBounded() {
         return lowerBound.getInt() != Integer.MIN_VALUE;
     }
-    
+
     public boolean isRightBounded() {
         return upperBound.getInt() != Integer.MAX_VALUE;
     }
-    
+
     @Override
     public int getNumBits() {
         return numBits;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -186,7 +186,7 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -195,7 +195,7 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         hash = upperBound.getInt() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public int getNumValues() {
         if (!TypeInteger.isIntegerBothBounded(this)) {
@@ -203,7 +203,7 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         }
         return getUpperInt() + 1 - getLowerInt();
     }
-    
+
     @Override
     public TypeArrayInteger getTypeArray() {
         if (TypeInteger.isIntegerBothBounded(this)) {

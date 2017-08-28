@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -44,7 +44,7 @@ import epmc.value.ValueContentDoubleArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedNative implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-native";
-    
+
     private static final class IterationNative {
         native static int double_mdp_multiobjectiveweighted_jacobi(int relative,
                 double precision, int numStates,
@@ -57,10 +57,10 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
                 int[] stateBounds, int[] nondetBounds, int[] targets,
                 double[] weights, double[] stopRewards, double[] transRewards,
                 double[] values, int[] scheduler);
-        
+
         private final static boolean loaded =
                 JNATools.registerLibrary(IterationNative.class, "valueiterationmultiobjective");
-        
+
         private final static int EPMC_ERROR_SUCCESS = 0;
         private final static int EPMC_ERROR_OUT_OF_ByteBuffer = 1;
     }
@@ -80,22 +80,22 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
             return false;
         }
-    	Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-    	if (!SemanticsMDP.isMDP(semantics)) {
-    		return false;
-    	}
+        Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsMDP.isMDP(semantics)) {
+            return false;
+        }
         Type typeWeight = TypeWeight.get();
         if (!TypeDouble.isDouble(typeWeight)) {
-        	return false;
+            return false;
         }
 
         return true;
@@ -103,8 +103,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	multiobjectiveWeighted();
+        prepareIterGraph();
+        multiobjectiveWeighted();
         prepareResultValues();
     }
 
@@ -124,8 +124,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
     }
 
     private void prepareResultValues() {
-    	this.outputValues = inputValues;
-    	objective.setResult(outputValues);
+        this.outputValues = inputValues;
+        objective.setResult(outputValues);
     }
 
     private void multiobjectiveWeighted() {
@@ -147,13 +147,13 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
             assert false;
         }
     }
-    
+
     /* auxiliary methods */
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -165,13 +165,13 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
         return true;
     }
 
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* native call to iteration algorithms */    
-    
+
     private static void mdpMultiobjectiveweightedJacobiNative(
             GraphExplicitSparseAlternate graph, Value stopRewards,
             Value transRewards,

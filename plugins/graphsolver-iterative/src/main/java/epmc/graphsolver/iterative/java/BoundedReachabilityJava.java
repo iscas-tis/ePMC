@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.java;
 
@@ -75,7 +75,7 @@ import epmc.value.operator.OperatorMin;
  */
 public final class BoundedReachabilityJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-bounded-reachability-java";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -91,20 +91,20 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
+        assert origGraph != null;
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)) {
             return false;
         }
         return true;
@@ -112,12 +112,12 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
 
     @Override
     public void solve() {
-    	prepareIterGraph();
+        prepareIterGraph();
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (SemanticsContinuousTime.isContinuousTime(semantics)) {
-        	ctBoundedReachability();
+            ctBoundedReachability();
         } else {
-        	dtBoundedReachability();
+            dtBoundedReachability();
         }
         prepareResultValues();
     }
@@ -133,14 +133,14 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         List<BitSet> sinks = null;
         if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-        	sinks = new ArrayList<>();
-        	GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        	if (bounded.getZeroSet() != null) {
-        		sinks.add(bounded.getZeroSet());
-        	}
-        	sinks.add(bounded.getTarget());
+            sinks = new ArrayList<>();
+            GraphSolverObjectiveExplicitBoundedReachability bounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+            if (bounded.getZeroSet() != null) {
+                sinks.add(bounded.getZeroSet());
+            }
+            sinks.add(bounded.getTarget());
         }
-        
+
         if (sinks != null) {
             builder.addSinks(sinks);
         }
@@ -161,8 +161,8 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         }
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
-        	GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        	targets = objectiveBoundedReachability.getTarget();
+            GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
+            targets = objectiveBoundedReachability.getTarget();
         }
         if (targets != null) {
             assert this.inputValues == null;
@@ -179,21 +179,21 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     }
 
     private void prepareResultValues() {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
     private void dtBoundedReachability() {
@@ -227,15 +227,15 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     }
 
     /* auxiliary methods */
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -246,7 +246,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovJava(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -257,16 +257,16 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-    
+
     /* implementation of iteration algorithms */    
-    
+
     private void ctmcBoundedJava(GraphExplicitSparse graph,
             ValueArray values, FoxGlynn foxGlynn) {
-    	ValueArrayAlgebra fg = foxGlynn.getArray();
+        ValueArrayAlgebra fg = foxGlynn.getArray();
         Value fgWeight = foxGlynn.getTypeReal().newValue();
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = UtilValue.newArray(values.getType(), numStates);
@@ -323,7 +323,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
 
     private static void dtmcBoundedJava(int bound,
             GraphExplicitSparse graph, ValueArrayAlgebra values)
-            		 {
+    {
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -410,6 +410,6 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
     }
 
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

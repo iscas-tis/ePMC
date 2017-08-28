@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
@@ -28,49 +28,49 @@ import epmc.util.BitSet;
 import epmc.value.Value;
 
 public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafra {
-	public final static class Builder implements AutomatonSafra.Builder, AutomatonRabin.Builder {
-		private Buechi buechi;
-		private BitSet init;
+    public final static class Builder implements AutomatonSafra.Builder, AutomatonRabin.Builder {
+        private Buechi buechi;
+        private BitSet init;
 
-		@Override
-		public Builder setBuechi(Buechi buechi) {
-			this.buechi = buechi;
-			return this;
-		}
-		
-		private Buechi getBuechi() {
-			return buechi;
-		}
+        @Override
+        public Builder setBuechi(Buechi buechi) {
+            this.buechi = buechi;
+            return this;
+        }
 
-		@Override
-		public Builder setInit(BitSet initialStates) {
-			this.init = initialStates;
-			return this;
-		}
-		
-		private BitSet getInit() {
-			return init;
-		}
-		
-		@Override
-		public AutomatonScheweRabin build() {
-			return new AutomatonScheweRabin(this);
-		}
-	}
-	
+        private Buechi getBuechi() {
+            return buechi;
+        }
+
+        @Override
+        public Builder setInit(BitSet initialStates) {
+            this.init = initialStates;
+            return this;
+        }
+
+        private BitSet getInit() {
+            return init;
+        }
+
+        @Override
+        public AutomatonScheweRabin build() {
+            return new AutomatonScheweRabin(this);
+        }
+    }
+
     public final static String IDENTIFIER = "schewe-rabin";
 
     private final AutomatonSchewe inner;
-    
-    private AutomatonScheweRabin(Builder builder) {
-    	AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
-    	scheweBuilder.setBuechi(builder.getBuechi());
-    	scheweBuilder.setInit(builder.getInit());
-    	scheweBuilder.setParity(false);
-    	this.inner = scheweBuilder.build();
-	}
 
-	@Override
+    private AutomatonScheweRabin(Builder builder) {
+        AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
+        scheweBuilder.setBuechi(builder.getBuechi());
+        scheweBuilder.setInit(builder.getInit());
+        scheweBuilder.setParity(false);
+        this.inner = scheweBuilder.build();
+    }
+
+    @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
@@ -87,7 +87,7 @@ public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafr
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            {
+    {
         inner.queryState(modelState, automatonState);
     }
 
@@ -125,12 +125,12 @@ public final class AutomatonScheweRabin implements AutomatonRabin, AutomatonSafr
     public int getNumPairs() {
         return inner.getNumPairs();
     }
-    
+
     @Override
     public String toString() {
         return inner.toString();
     }
-    
+
     @Override
     public Buechi getBuechi() {
         return inner.getBuechi();

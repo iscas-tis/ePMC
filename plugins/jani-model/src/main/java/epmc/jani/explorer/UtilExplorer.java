@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -37,56 +37,56 @@ import epmc.value.ValueAlgebra;
  * @author Ernst Moritz Hahn
  */
 public final class UtilExplorer {
-	/**
-	 * Check whether the probability sum of an automaton is one.
-	 * The check refers to the last node queried.
-	 * the automaton parameter must not be {@code null}.
-	 * 
-	 * @param automaton automaton to be checked
-	 */
-	public static void checkAutomatonProbabilitySum(ExplorerComponentAutomaton automaton) {
-		assert automaton != null;
-		int numSuccessors = automaton.getNumSuccessors();
-		ValueAlgebra probabilitySum = automaton.getProbabilitySum();
-		if (automaton.isNonDet() && automaton.isState()) {
-			return;
-		}
-		Value one = probabilitySum.getType().getOne();
-		ensure(numSuccessors == 0
-				|| probabilitySum.isOne()
-				|| probabilitySum.distance(one) < 1E-10,
-				ProblemsJANIExplorer.JANI_EXPLORER_PROBABILIY_SUM_NOT_ONE,
-				probabilitySum);
-	}
-	
-	/**
-	 * Computes a map from the actions of a model to the integers.
-	 * Subsequent calls of this method on the same model will lead to the same
-	 * result.
-	 * The action numbers computed will start with 0, will be different for each
-	 * action, and the highest number will be the number of actions minus 1.
-	 * The model parameter must not be {@code null}.
-	 * 
-	 * @param model the model to compute action map of
-	 * @return map from action to integers
-	 */
-	public static Map<Action, Integer> computeActionToInteger(ModelJANI model) {
-		assert model != null;
-		Map<Action,Integer> result = new LinkedHashMap<>();
-		int actionNumber = 0;
-		Actions actions = model.getActionsOrEmpty();
-		result.put(model.getSilentAction(), actionNumber);
-		actionNumber++;
-		for (Action action : actions) {
-			result.put(action, actionNumber);
-			actionNumber++;
-		}
-		return result;
-	}	
+    /**
+     * Check whether the probability sum of an automaton is one.
+     * The check refers to the last node queried.
+     * the automaton parameter must not be {@code null}.
+     * 
+     * @param automaton automaton to be checked
+     */
+    public static void checkAutomatonProbabilitySum(ExplorerComponentAutomaton automaton) {
+        assert automaton != null;
+        int numSuccessors = automaton.getNumSuccessors();
+        ValueAlgebra probabilitySum = automaton.getProbabilitySum();
+        if (automaton.isNonDet() && automaton.isState()) {
+            return;
+        }
+        Value one = probabilitySum.getType().getOne();
+        ensure(numSuccessors == 0
+                || probabilitySum.isOne()
+                || probabilitySum.distance(one) < 1E-10,
+                ProblemsJANIExplorer.JANI_EXPLORER_PROBABILIY_SUM_NOT_ONE,
+                probabilitySum);
+    }
 
-	/**
-	 * Private constructor to prevent instantiation of this class.
-	 */
-	private UtilExplorer() {
-	}
+    /**
+     * Computes a map from the actions of a model to the integers.
+     * Subsequent calls of this method on the same model will lead to the same
+     * result.
+     * The action numbers computed will start with 0, will be different for each
+     * action, and the highest number will be the number of actions minus 1.
+     * The model parameter must not be {@code null}.
+     * 
+     * @param model the model to compute action map of
+     * @return map from action to integers
+     */
+    public static Map<Action, Integer> computeActionToInteger(ModelJANI model) {
+        assert model != null;
+        Map<Action,Integer> result = new LinkedHashMap<>();
+        int actionNumber = 0;
+        Actions actions = model.getActionsOrEmpty();
+        result.put(model.getSilentAction(), actionNumber);
+        actionNumber++;
+        for (Action action : actions) {
+            result.put(action, actionNumber);
+            actionNumber++;
+        }
+        return result;
+    }	
+
+    /**
+     * Private constructor to prevent instantiation of this class.
+     */
+    private UtilExplorer() {
+    }
 }

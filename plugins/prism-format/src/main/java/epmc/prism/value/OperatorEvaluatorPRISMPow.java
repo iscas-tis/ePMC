@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.value;
 
@@ -32,30 +32,30 @@ import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 
 public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorPRISMPow.PRISM_POW;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		if (!TypeInteger.isInteger(types[0]) && !TypeDouble.isDouble(types[0])) {
-			return false;
-		}
-		if (!TypeInteger.isInteger(types[1]) && !TypeDouble.isDouble(types[1])) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorPRISMPow.PRISM_POW;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 2) {
+            return false;
+        }
+        if (!TypeInteger.isInteger(types[0]) && !TypeDouble.isDouble(types[0])) {
+            return false;
+        }
+        if (!TypeInteger.isInteger(types[1]) && !TypeDouble.isDouble(types[1])) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
@@ -63,30 +63,30 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
         assert types.length == 2 : types.length;
         boolean allInteger = true;
         for (Type type : types) {
-        	allInteger &= TypeInteger.isInteger(type);
+            allInteger &= TypeInteger.isInteger(type);
         }
         if (allInteger) {
-        	return TypeInteger.get();
+            return TypeInteger.get();
         } else {
-        	return TypeReal.get();
+            return TypeReal.get();
         }
     }
-    
+
     @Override
     public void apply(Value result, Value... operands) {
-    	if (ValueInteger.isInteger(result)) {
-    		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
-        	int value1 = ValueInteger.asInteger(operands[0]).getInt();
-        	int value2 = ValueInteger.asInteger(operands[1]).getInt();
-        	ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));
-    	} else if (ValueReal.isReal(result)) {
-        	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-        			: ValueInteger.asInteger(operands[0]).getInt();
-        	double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
-        			: ValueInteger.asInteger(operands[1]).getInt();
-        	ValueDouble.asDouble(result).set(Math.pow(value1, value2));
-    	} else {
-    		assert false : result.getType();
-    	}
+        if (ValueInteger.isInteger(result)) {
+            ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
+            int value1 = ValueInteger.asInteger(operands[0]).getInt();
+            int value2 = ValueInteger.asInteger(operands[1]).getInt();
+            ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));
+        } else if (ValueReal.isReal(result)) {
+            double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+                    : ValueInteger.asInteger(operands[0]).getInt();
+            double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
+                    : ValueInteger.asInteger(operands[1]).getInt();
+            ValueDouble.asDouble(result).set(Math.pow(value1, value2));
+        } else {
+            assert false : result.getType();
+        }
     }
 }

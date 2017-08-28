@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -29,11 +29,11 @@ public final class UtilExpressionSimplify {
         ContextExpressionSimplifier context = new ContextExpressionSimplifier();
         return context.simplify(expressionToType, expression);
     }
-    
+
     public static Expression simplify(ExpressionToType expressionToType, Expression expression) {
         return simplify(expressionToType, expression, null);
     }
-    
+
     private UtilExpressionSimplify() {
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -40,10 +40,10 @@ public class OptionTypeIntegerInterval implements OptionType {
         this.upper = upper;
         info = LBRACK + lower + COMMA + upper + RBRACK;
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue)
-            {
+    {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();

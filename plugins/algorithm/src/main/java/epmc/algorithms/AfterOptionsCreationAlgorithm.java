@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms;
 
@@ -36,9 +36,9 @@ public class AfterOptionsCreationAlgorithm implements AfterOptionsCreation {
     public void process(Options options) {
         assert options != null;
         options.addOption().setIdentifier(OptionsAlgorithm.DD_SCC_ALGORITHM)
-        	.setBundleName(OptionsAlgorithm.OPTIONS_ALGORITHM)
-        	.setType(new OptionTypeEnum(DdSccAlgorithm.class))
-        	.setDefault(DdSccAlgorithm.BLOEM)
-        	.setCommandLine().setGui().setWeb().build();
+        .setBundleName(OptionsAlgorithm.OPTIONS_ALGORITHM)
+        .setType(new OptionTypeEnum(DdSccAlgorithm.class))
+        .setDefault(DdSccAlgorithm.BLOEM)
+        .setCommandLine().setGui().setWeb().build();
     }
 }

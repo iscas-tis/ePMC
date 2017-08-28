@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -83,9 +83,9 @@ public final class UtilModelChecker {
         Map<String, Class<?>> engineMap = new OrderedMap<>(true);
         OptionTypeMap<Class<?>> engineType = new OptionTypeMap<>(engineMap);
         options.addOption().setIdentifier(OptionsModelChecker.ENGINE)
-            .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-            .setType(engineType)
-            .setCommandLine().setGui().setWeb().build();
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(engineType)
+        .setCommandLine().setGui().setWeb().build();
 
         Map<String,Class<?>> propertySolvers = new OrderedMap<>();
         options.set(OptionsModelChecker.PROPERTY_SOLVER_CLASS, propertySolvers);
@@ -93,34 +93,34 @@ public final class UtilModelChecker {
         options.set(OptionsModelChecker.SCHEDULER_PRINTER_CLASS, schedulerPrinters);
         OptionTypeStringListSubset<Class<?>> propertySolverType = new OptionTypeStringListSubset<>(propertySolvers);
         options.addOption().setIdentifier(OptionsModelChecker.PROPERTY_SOLVER)
-            .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-            .setType(propertySolverType)
-            .setCommandLine().setGui().setWeb().build();
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(propertySolverType)
+        .setCommandLine().setGui().setWeb().build();
 
         OptionTypeConstList typeConstList = OptionTypeConstList.getInstance();
         options.addOption().setIdentifier(OptionsModelChecker.CONST)
-            .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-            .setType(typeConstList).setCommandLine().build();
-        
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(typeConstList).setCommandLine().build();
+
         Map<String, Class<?>> propertyMap = new OrderedMap<>(true);
         options.set(OptionsModelChecker.PROPERTY_CLASS, propertyMap);
         OptionTypeMap<Class<?>> propertyInputType = new OptionTypeMap<>(propertyMap);
         options.addOption().setIdentifier(OptionsModelChecker.PROPERTY_INPUT_TYPE)
-            .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-            .setType(propertyInputType).setCommandLine().build();
-                
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(propertyInputType).setCommandLine().build();
+
         Map<String, Class<?>> modelMap = new OrderedMap<>(true);
         OptionTypeMap<Class<?>> modelInputType = new OptionTypeMap<>(modelMap);
         options.addOption().setIdentifier(OptionsModelChecker.MODEL_INPUT_TYPE)
-            .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-            .setType(modelInputType).setCommandLine().build();
-        
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(modelInputType).setCommandLine().build();
+
         options.addOption().setIdentifier(OptionsModelChecker.COMPUTE_SCHEDULER)
-        	.setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
-        	.setType(OptionTypeBoolean.getInstance())
-        	.setCommandLine().setGui().setWeb().build();
+        .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
+        .setType(OptionTypeBoolean.getInstance())
+        .setCommandLine().setGui().setWeb().build();
     }
-    
+
     /**
      * Private constructor to prevent creating instances of this class.
      */

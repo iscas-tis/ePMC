@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -51,9 +51,9 @@ public final class OptionTypeStringListSubset<V> implements OptionType {
     private final static String PIPE = "|";
     /** String containing ">". */
     private final static String GREATER_THAN = ">";
-    
+
     private Map<String,V> choices;
-    
+
     /**
      * Get string list subset option type.
      * The map parameter may not be {@code null} or contain {@code null} keys
@@ -72,7 +72,7 @@ public final class OptionTypeStringListSubset<V> implements OptionType {
     }
 
     // TODO check whether elements are actually map keys
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -101,7 +101,7 @@ public final class OptionTypeStringListSubset<V> implements OptionType {
         return result;
     }
 
-    
+
     @Override
     public String getInfo() {
         StringBuilder result = new StringBuilder();
@@ -117,17 +117,17 @@ public final class OptionTypeStringListSubset<V> implements OptionType {
         result.append(GREATER_THAN);
         return result.toString();
     }
-    
+
     @Override
     public Object getDefault() {
         return new SerializableKeyset<>(choices);
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         assert value != null;

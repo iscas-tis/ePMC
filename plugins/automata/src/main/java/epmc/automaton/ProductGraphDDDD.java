@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -58,7 +58,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     private GraphDD model;
 
     public ProductGraphDDDD(GraphDD model, DD modelInit, AutomatonDD automaton)
-            {
+    {
         this.model = model;
         this.properties = new GraphDDProperties(this);
         assert model != null;
@@ -100,20 +100,20 @@ public final class ProductGraphDDDD implements ProductGraphDD {
             Object semantics = model.getGraphPropertyObject(CommonProperties.SEMANTICS);
             properties.registerGraphProperty(CommonProperties.SEMANTICS,
                     new TypeObject.Builder()
-                            .setClazz(semantics.getClass())
-                            .build());
+                    .setClazz(semantics.getClass())
+                    .build());
             setGraphPropertyObject(CommonProperties.SEMANTICS, semantics);
         }
         properties.registerNodeProperty(CommonProperties.STATE, states);
         properties.registerNodeProperty(CommonProperties.PLAYER, player);
         properties.registerEdgeProperty(CommonProperties.WEIGHT, weight);
     }
-    
+
     public ProductGraphDDDD(GraphDD model, AutomatonDD automaton)
-            {
+    {
         this(model, model.getInitialNodes(), automaton);
     }
-    
+
     @Override
     public DD getInitialNodes() {
         return initial;
@@ -158,7 +158,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         ContextDD.get().dispose(actionVars);
         presCube.dispose();
         nextCube.dispose();
-//        actionCube.dispose();
+        //        actionCube.dispose();
         presAndActions.dispose();
     }
 
@@ -181,7 +181,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
     public GraphDDProperties getProperties() {
         return properties;
     }
-    
+
     private static DD exploreNodeSpace(GraphDD graph) {
         assert graph != null;
         Log log = Options.get().get(OptionsMessages.LOG);
@@ -193,7 +193,7 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         DD trans = graph.getTransitions().abstractExist(graph.getActionCube());
         while (!states.equals(predecessors)) {
             // only exploring new states important for Rabin semi-symbolic mtd
-//            DD andNot = states.andNot(predecessors);
+            //            DD andNot = states.andNot(predecessors);
             DD andNot = states.clone();
             predecessors.dispose();
             predecessors = states;
@@ -208,14 +208,14 @@ public final class ProductGraphDDDD implements ProductGraphDD {
         log.send(MessagesAutomaton.EXPLORING_DONE, timer.getTimeSeconds());
         return states;
     }
-    
+
     private static DD next(DD trans, DD from, DD pres, Permutation swap) {
         return trans.abstractAndExist(from, pres).permuteWith(swap);
     }
 
     @Override
-	public Type getType(Expression expression) {
-		assert expression != null;
-		return model.getType(expression);
-	}
+    public Type getType(Expression expression) {
+        assert expression != null;
+        return model.getType(expression);
+    }
 }

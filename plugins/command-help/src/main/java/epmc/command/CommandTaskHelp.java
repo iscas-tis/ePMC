@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -36,10 +36,10 @@ public class CommandTaskHelp implements CommandTask {
     }
 
     @Override
-	public void executeOnClient() {
+    public void executeOnClient() {
         System.out.println(UsagePrinter.getUsage());
     }
-    
+
     @Override
     public boolean isRunOnServer() {
         return false;

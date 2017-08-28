@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for timed automata (TAs).
  */
 public enum SemanticsTA implements SemanticsNonDet, SemanticsTimed {
-	/** Singleton element. */
-	TA;
-	
+    /** Singleton element. */
+    TA;
+
     /**
      * Checks whether this is a timed automaton (TA).
      * 
      * @return whether this is a timed automaton (TA)
      */
-	public static boolean isTA(Semantics semantics) {
-		return semantics instanceof SemanticsTA;
-	}
+    public static boolean isTA(Semantics semantics) {
+        return semantics instanceof SemanticsTA;
+    }
 }

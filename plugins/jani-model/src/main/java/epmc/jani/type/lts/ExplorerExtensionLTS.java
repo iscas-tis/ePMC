@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.lts;
 
@@ -31,43 +31,43 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 
 public final class ExplorerExtensionLTS implements ExplorerExtension {
-	public final static String IDENTIFIER = "lts";
-	private ExplorerJANI explorer;
-	private PropertyNodeGeneral state;
-	private PropertyNodeGeneral player;
+    public final static String IDENTIFIER = "lts";
+    private ExplorerJANI explorer;
+    private PropertyNodeGeneral state;
+    private PropertyNodeGeneral player;
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setExplorer(ExplorerJANI explorer) {
-		assert this.explorer == null;
-		assert explorer != null;
-		this.explorer = explorer;
-		state = new PropertyNodeGeneral(explorer, TypeBoolean.get());
-		state.set(true);
-		player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
-		player.set(Player.ONE);
-	}
-	
-	@Override
-	public void handleNoSuccessors(NodeJANI nodeJANI) {
-		/*
+    @Override
+    public void setExplorer(ExplorerJANI explorer) {
+        assert this.explorer == null;
+        assert explorer != null;
+        this.explorer = explorer;
+        state = new PropertyNodeGeneral(explorer, TypeBoolean.get());
+        state.set(true);
+        player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
+        player.set(Player.ONE);
+    }
+
+    @Override
+    public void handleNoSuccessors(NodeJANI nodeJANI) {
+        /*
 		NodeJANI[] successors = explorer.getSuccessors();
 		successors[0].set(nodeJANI);
-		*/
-	}
-	
-	@Override
-	public ExplorerNodeProperty getNodeProperty(Object property) {
-		if (property == CommonProperties.STATE) {
-			return state;
-		} else if (property == CommonProperties.PLAYER) {
-			return player;
-		} else {
-			return null;
-		}
-	}
+         */
+    }
+
+    @Override
+    public ExplorerNodeProperty getNodeProperty(Object property) {
+        if (property == CommonProperties.STATE) {
+            return state;
+        } else if (property == CommonProperties.PLAYER) {
+            return player;
+        } else {
+            return null;
+        }
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -43,7 +43,7 @@ final class VariableDDImpl implements VariableDD {
     private final static String LOWER = "lower";
     private final static String UPPER = "upper";
     private final static String COPIES = "copies";
-    
+
     private boolean closed;
     private final TypeEnumerable type;
     private final int copies;
@@ -54,7 +54,7 @@ final class VariableDDImpl implements VariableDD {
 
     VariableDDImpl(ContextDD contextDD, int copies, Type type, String name,
             List<List<DD>> ddVariables)
-            {
+    {
         assert contextDD != null;
         assert copies > 0;
         assert type != null;
@@ -62,7 +62,7 @@ final class VariableDDImpl implements VariableDD {
         assert !TypeInteger.isInteger(type) || TypeInteger.isIntegerBothBounded(type) :
             name + SPACE + TypeInteger.asInteger(type).getLowerInt() + SPACE + TypeInteger.asInteger(type).getUpperInt();
         assert name != null;
-        
+
         this.contextDD = contextDD;
         this.copies = copies;
         this.type = TypeEnumerable.asEnumerable(type);
@@ -72,7 +72,7 @@ final class VariableDDImpl implements VariableDD {
             valueEncodings.add(null);
         }
         this.name = name;
-        
+
         if (TypeInteger.isInteger(type)) {
             prepareIntegerDDVariables(ddVariables);
         } else if (TypeBoolean.isBoolean(type)) {
@@ -83,7 +83,7 @@ final class VariableDDImpl implements VariableDD {
     }
 
     VariableDDImpl(ContextDD contextDD, int copies, Type type, String name)
-            {
+    {
         this(contextDD, copies, type, name, null);
     }
 
@@ -124,7 +124,7 @@ final class VariableDDImpl implements VariableDD {
             this.ddVariables.add(var);
         }
     }
-    
+
     private void prepareGeneralDDVariables(List<List<DD>> ddVariables) {
         final int numValues = type.getNumValues();
         final int numBits = Integer.SIZE - Integer.numberOfLeadingZeros(numValues - 1);
@@ -209,7 +209,7 @@ final class VariableDDImpl implements VariableDD {
         assert copy < ddVariables.size();
         return ddVariables.get(copy);
     }
-    
+
     @Override
     public DD getValueEncoding(int copy) {
         assert alive();
@@ -218,7 +218,7 @@ final class VariableDDImpl implements VariableDD {
         if (valueEncodings.get(copy) == null) {
             valueEncodings.set(copy, computeValueEncoding(copy));
         }
-        
+
         return valueEncodings.get(copy);
     }
 
@@ -227,7 +227,7 @@ final class VariableDDImpl implements VariableDD {
         assert alive();
         return copies;
     }
-    
+
     @Override
     public String toString() {
         assert alive();
@@ -241,13 +241,13 @@ final class VariableDDImpl implements VariableDD {
         helper.add(COPIES, copies);
         return helper.toString();
     }
-    
+
     @Override
     public ContextDD getContext() {
         assert alive();
         return contextDD;
     }
-    
+
     @Override
     public void close() {
         if (!alive()) {
@@ -265,12 +265,12 @@ final class VariableDDImpl implements VariableDD {
             }
         }
     }
-    
+
     @Override
     public boolean alive() {
         return !closed && contextDD.alive();
     }
-    
+
     @Override
     public String getName() {
         return name;
@@ -289,7 +289,7 @@ final class VariableDDImpl implements VariableDD {
         assert isInteger();
         assert value >= TypeInteger.asInteger(getType()).getLowerInt();
         assert value <= TypeInteger.asInteger(getType()).getUpperInt();
-        
+
         value -= getLower();
         DD dd = getContext().newConstant(true);
         int bit = 1;
@@ -314,7 +314,7 @@ final class VariableDDImpl implements VariableDD {
         if (TypeInteger.isInteger(type)) {
             return newIntValue(copy, ValueInteger.asInteger(value).getInt());
         }
- 
+
         int valueNr = ValueEnumerable.asEnumerable(value).getValueNumber();
         assert valueNr >= 0;
         DD dd = getContext().newConstant(true);

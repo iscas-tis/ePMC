@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -31,70 +31,70 @@ import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMin;
 
 public enum OperatorEvaluatorMinDouble implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorMin.MIN;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
-			return false;
-		}
-		if (!TypeDouble.isDouble(types[0])
-				&& !TypeInteger.isInteger(types[0])) {
-			return false;
-		}
-		if (!TypeDouble.isDouble(types[1])
-				&& !TypeInteger.isInteger(types[1])) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorMin.MIN;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 2) {
+            return false;
+        }
+        if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
+            return false;
+        }
+        if (!TypeDouble.isDouble(types[0])
+                && !TypeInteger.isInteger(types[0])) {
+            return false;
+        }
+        if (!TypeDouble.isDouble(types[1])
+                && !TypeInteger.isInteger(types[1])) {
+            return false;
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorMin.MIN);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-    	return TypeDouble.get();
+        assert operator != null;
+        assert operator.equals(OperatorMin.MIN);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        return TypeDouble.get();
     }
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	double op1 = getDouble(operands[0]);
-    	double op2 = getDouble(operands[1]);
-    	ValueDouble.asDouble(result).set(Math.min(op1, op2));
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        double op1 = getDouble(operands[0]);
+        double op2 = getDouble(operands[1]);
+        ValueDouble.asDouble(result).set(Math.min(op1, op2));
     }
-    
+
     private static double getDouble(Value value) {
-    	assert value != null;
-    	assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
-    	: value.getType();
-    	if (ValueDouble.isDouble(value)) {
-    		return ValueDouble.asDouble(value).getDouble();
-    	} else if (ValueInteger.isInteger(value)) {
-    		return ValueInteger.asInteger(value).getInt();
-    	} else {
-    		assert false;
-    		return Double.NaN;
-    	}
+        assert value != null;
+        assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
+        : value.getType();
+        if (ValueDouble.isDouble(value)) {
+            return ValueDouble.asDouble(value).getDouble();
+        } else if (ValueInteger.isInteger(value)) {
+            return ValueInteger.asInteger(value).getInt();
+        } else {
+            assert false;
+            return Double.NaN;
+        }
     }
 }

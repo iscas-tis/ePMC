@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -42,7 +42,7 @@ public final class Permutation  {
     private final Map<LibraryDD,PermutationLibraryDD> libraryPermutations = new TCustomHashMap<>(new IdentityHashingStrategy<>());
     /** Maps each index to the new variable to which it is permuted. */
     private int[] array;
-    
+
     /**
      * Create new permutation.
      * The array parameter must represent a permutation. The length of this
@@ -107,7 +107,7 @@ public final class Permutation  {
             libraryPermutations.put(lowLevel, permutationLowLevel);
         }
     }
-    
+
     /**
      * Get context to which this permutation belongs.
      * 
@@ -116,7 +116,7 @@ public final class Permutation  {
     public ContextDD getContextDD() {
         return contextDD;
     }
-    
+
     /**
      * Get variable to which the variable is permuted.
      * 
@@ -132,7 +132,7 @@ public final class Permutation  {
             return variable;
         }
     }
-    
+
     /**
      * Get a DD library permutation for the given library.
      * The library parameter must not be {@code null}. The DD library must be a
@@ -150,7 +150,7 @@ public final class Permutation  {
         assert libraryPermutations.containsKey(libraryDD);
         return libraryPermutations.get(libraryDD);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

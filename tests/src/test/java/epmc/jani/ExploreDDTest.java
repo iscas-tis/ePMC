@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
@@ -48,7 +48,7 @@ import java.math.BigInteger;
  * @author Ernst Moritz Hahn
  */
 public final class ExploreDDTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -70,7 +70,7 @@ public final class ExploreDDTest {
         prepareOptions(options, ModelJANI.IDENTIFIER);
         return options;
     }
-    
+
     /**
      * Test to explore a minimal JANI model.
      * 
@@ -84,14 +84,14 @@ public final class ExploreDDTest {
         options.set(OptionsJANIModel.JANI_FIX_DEADLOCKS, false);
         Model model = null;
         boolean thrown = false;
-		try {
-			model = loadModel(options, MINIMAL);
-	        exploreModel(model);
-		} catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIDD.JANI_DD_DEADLOCK, e.getProblem());
-		}
-		Assert.assertTrue(thrown);		
+        try {
+            model = loadModel(options, MINIMAL);
+            exploreModel(model);
+        } catch (EPMCException e) {
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIDD.JANI_DD_DEADLOCK, e.getProblem());
+        }
+        Assert.assertTrue(thrown);		
     }
 
     /**
@@ -312,8 +312,8 @@ public final class ExploreDDTest {
         try {
             exploreModel(model);        	
         } catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIDD.JANI_DD_GLOBAL_MULTIPLE, e.getProblem());
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIDD.JANI_DD_GLOBAL_MULTIPLE, e.getProblem());
         }
         Assert.assertTrue(thrown);
     }

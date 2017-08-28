@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -54,7 +54,7 @@ import gnu.trove.set.TIntSet;
 public final class ProductGraphDDExplicit implements ProductGraphDD {
     private final static String AUTSTATE = "%auttstate";
     private final static String EXPR = "%expr";
-    
+
     private final GraphDDProperties properties;
     private final GraphDD model;
     private final Automaton automaton;
@@ -102,7 +102,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.falseValue = TypeBoolean.get().getFalse();
         this.trueValue = TypeBoolean.get().getTrue();
         ContextDD contextDD = ContextDD.get();
-        
+
         numStatesReserved = Options.get().getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);
         stateCounter = contextDD.newInteger(AUTSTATE, 2, 0, numStatesReserved - 1);
         this.presVars.addAll(contextDD.cubeToListClone(model.getPresCube()));
@@ -119,7 +119,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.stateToPresDd.put(automaton.getInitState(), ddAutInitPres.clone());
         this.stateToNextDd.put(automaton.getInitState(), ddAutInitNext);
         this.initial = modelInit.and(ddAutInitPres);
-        
+
         DD varEqExpressions = contextDD.newConstant(true);
         DD variablesCube = contextDD.newConstant(true);
         TIntArrayList exprVars = new TIntArrayList();
@@ -144,7 +144,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.expressions = expressions.toArray(new Expression[0]);
         this.swapPresNext = contextDD.newPermutationListDD(presVars, nextVars);
         this.presCube = contextDD.listToCube(presVars);
-        
+
         List<DD> presVarsAutomaton = stateCounter.getDDVariables(0);
         List<DD> nextVarsAutomaton = stateCounter.getDDVariables(1);
         DD same = contextDD.newConstant(true);
@@ -161,11 +161,11 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.transStateAut = contextDD.newConstant(false);
         this.nextCube = contextDD.listToCube(nextVars);
         this.actionCube = model.getActionCube().clone();
-        
+
         if (model.getGraphProperties().contains(CommonProperties.SEMANTICS)) {
             Object semantics = model.getGraphPropertyObject(CommonProperties.SEMANTICS);
             properties.registerGraphProperty(CommonProperties.SEMANTICS,
-            		new TypeObject.Builder()
+                    new TypeObject.Builder()
                     .setClazz(semantics.getClass())
                     .build());
             setGraphPropertyObject(CommonProperties.SEMANTICS,
@@ -181,10 +181,10 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     }
 
     public ProductGraphDDExplicit(GraphDD model, Automaton automaton, ExpressionToDD expressionToDD)
-            {
+    {
         this(model, model.getInitialNodes(), automaton, expressionToDD);
     }
-    
+
     @Override
     public DD getInitialNodes() {
         return initial;
@@ -201,7 +201,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         nonStateTransitionBoolean = nonStateTransitionBoolean.andWith(automatonStatesSame.clone());
         DD nextNonStates = nonStateTransitionBoolean.abstractExistWith(presActionsCube.clone());
         nextNonStates = nextNonStates.permuteWith(swapPresNext);
-        
+
         from = from.and(modelStates);
         DD fromAndVarEqExprs = from.and(varEqExpressions);
         DD assignmentsDD = fromAndVarEqExprs.abstractExist(presCube);
@@ -220,7 +220,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
                 TIntSet automatonStateSet = automatonStatesDD.findSatSet(presCubeAutomaton);
                 DD automatonStateDD = contextDD.intSetToDD(automatonStateSet, presCubeAutomaton);
                 int automatonState = ddToState.get(automatonStateDD);
-                
+
                 automaton.queryState(array, automatonState);
                 int nextAutomatonState = automaton.getSuccessorState();
                 DD presAutStateDD;
@@ -242,13 +242,13 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
                 DD nextModel = next(modelTrans, presModel, model.getPresCube(), model.getSwapPresNext());
                 presModel.dispose();
                 nextStates = nextStates.orWith(nextModel.andWith(presAutStateDD.clone()));
-                
+
                 DD autTr = automatonStateDD.and(nextAutStateDD).andWith(fromAssignment.clone());
                 transStateAut = transStateAut.orWith(autTr);
-                
+
                 int labeling = automaton.getSuccessorLabel();
                 this.labeling.put(automatonStateDD.and(fromAssignment), labeling);
-                
+
                 automatonStatesDD = automatonStatesDD.andNotWith(automatonStateDD);
             }
             automatonStatesDD.dispose();
@@ -304,23 +304,23 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     public Permutation getSwapPresNext() {
         return swapPresNext;
     }
-    
+
     public TObjectIntMap<DD> getLabeling() {
         return labeling;        
     }
-    
+
     public Automaton getAutomaton() {
         return automaton;
     }
-    
+
     public DD getAutomatonInit() {
         return autInit;
     }
-    
+
     public DD getAutomatonPresCube() {
         return presCubeAutomaton;
     }
-    
+
     public TObjectIntMap<DD> getAutomatonStates() {
         return ddToState;
     }
@@ -384,12 +384,12 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     public ContextDD getContextDD() {
         return model.getContextDD();
     }
-    
+
     @Override
     public GraphDDProperties getProperties() {
         return properties;
     }
-    
+
     private static DD exploreNodeSpace(ProductGraphDDExplicit graph) {
         assert graph != null;
         Log log = Options.get().get(OptionsMessages.LOG);
@@ -400,7 +400,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         DD predecessors = contextDD.newConstant(false);
         while (!states.equals(predecessors)) {
             // only exploring new states important for Rabin semi-symbolic mtd
-//            DD andNot = states.andNot(predecessors);
+            //            DD andNot = states.andNot(predecessors);
             DD andNot = states.clone();
             predecessors.dispose();
             predecessors = states;
@@ -415,9 +415,9 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return states;
     }
 
-	@Override
-	public Type getType(Expression expression) {
-		assert expression != null;
-		return model.getType(expression);
-	}
+    @Override
+    public Type getType(Expression expression) {
+        assert expression != null;
+        return model.getType(expression);
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -27,19 +27,19 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationPCTL implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "after-options-creation-pctl";
+    private final static String IDENTIFIER = "after-options-creation-pctl";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
-		solvers.put(PropertySolverExplicitPCTLUntil.IDENTIFIER, PropertySolverExplicitPCTLUntil.class);
-		solvers.put(PropertySolverExplicitPCTLNext.IDENTIFIER, PropertySolverExplicitPCTLNext.class);
-		solvers.put(PropertySolverDDPCTL.IDENTIFIER, PropertySolverDDPCTL.class);
-	}
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
+        solvers.put(PropertySolverExplicitPCTLUntil.IDENTIFIER, PropertySolverExplicitPCTLUntil.class);
+        solvers.put(PropertySolverExplicitPCTLNext.IDENTIFIER, PropertySolverExplicitPCTLNext.class);
+        solvers.put(PropertySolverDDPCTL.IDENTIFIER, PropertySolverDDPCTL.class);
+    }
 }

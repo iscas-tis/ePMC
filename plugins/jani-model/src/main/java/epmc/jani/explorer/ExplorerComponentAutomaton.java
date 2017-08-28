@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -65,629 +65,629 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class ExplorerComponentAutomaton implements ExplorerComponent {
-	private final static class ExpressionToTypeAutomaton implements ExpressionToType {
-		private final Map<Expression,Variable> variables = new LinkedHashMap<>();
-		
-		private ExpressionToTypeAutomaton(Collection<Variable> variables) {
-			assert variables != null;
-			for (Variable variable : variables) {
-				assert variable != null;
-			}
-			for (Variable variable : variables) {
-				this.variables.put(variable.getIdentifier(), variable);
-			}
-		}
-		
-		@Override
-		public Type getType(Expression expression) {
-			assert expression != null;
-			Variable variable = variables.get(expression);
-			if (variable == null) {
-				return null;
-			}
-			JANIType type = variable.getType();
-			if (type == null) {
-				return null;
-			}
-			return type.toType();
-		}
-	}
-	
-	/** Name of variable denoting location of automaton. */
-	private final static String LOCATION_IDENTIFIER = "%locId";
-	private final static String EDGE_IDENTIFIER = "%edge";
-	
-	/** Explorer to which this component belongs. */
-	private ExplorerJANI explorer;
-	/** Component which this explorer is supposed to explore. */
-	private Component component;
-	/** Component which this explorer is supposed to explore.
-	 * This field is used in case this class can handle the component. */
-	private ComponentAutomaton componentAutomaton;
-	/** Automaton which this explorer is supposed to explore. */
-	private Automaton automaton;
-	/**
-	 * Evaluators of the edges of the automaton.
-	 * The size of this array is the same as the number of components. In each
-	 * array element, the array of evaluators for the edge with the according
-	 * source location is stored.
-	 * */
-	private EdgeEvaluator[][] edgeEvaluators;
-	private AssignmentsEvaluator[] locationEvaluators;
-	
-	/** Type for the location set of this automaton. */
-	private TypeLocation typeLocation;
-	/** Type for the edge of a given transition.
-	 * To denote the situation that no edge is chosen yet (such as in a model
-	 * state), -1 is used. This variable is only used for nondeterministic
-	 * models with probabilities.
-	 * */
-	private Type typeEdge;
-	/** Enumerates variables.
-	 * The first number are occupied by the local variables of the automaton.
-	 * The following numbers correspond to the global variables of the
-	 * automaton.
-	 */
-	private Map<Variable,Integer> variableToNumber = new LinkedHashMap<>();
-	/**
-	 * Map from identifier of automaton to local identifiers.
-	 * This map is necessary, because automata may occur multiple times in
-	 * system specification, and we must use separate variables for each
-	 * instance.
-	 */
-	private Map<Expression,Expression> autVarToLocal = new LinkedHashMap<>();
-	/** Number of automata location variable, or -1 if unused. */
-	private int locationVarNr;
-	/** Number of edge currently selected, or -1 if non selected or unused. */
-	private int edgeVarNr;
-	/** Number of successors of queried node. */
-	private int numSuccessors;
-	/** Array of successors of queried node. */
-	private NodeJANI[] successors;
-	/** Property to store whether given node is a state. */
-	private PropertyNodeGeneral state;
-	/** Transition weight property. */
-	private PropertyEdgeGeneral weight;
-	/** Label/action property. */
-	private PropertyEdgeAction label;
-	/** Sum of weight of outgoing transitions. */
-	private ValueAlgebra probabilitySum;
-	/** Whether the model is nondeterministic. */
-	private boolean nonDet;
-	/** Whether the model is stochastic. */
-	private boolean stochastic;
-	/** Value zero of weight type. */
-	private ValueAlgebra weightZero;
-	/** Successor weight value being computed. */
-	private ValueAlgebra weightValue;
-	/** Automata name (interned string). */
-	private String name;
-	private int number;
-	private int[] actionFromTo;
-	
-	@Override
-	public void setExplorer(ExplorerJANI explorer) {
-		assert explorer != null;
-		this.explorer = explorer;
-	}
-	
-	@Override
-	public void setComponent(Component component) {
-		assert component != null;
-		this.component = component;
-	}
+    private final static class ExpressionToTypeAutomaton implements ExpressionToType {
+        private final Map<Expression,Variable> variables = new LinkedHashMap<>();
 
-	@Override
-	public boolean canHandle() {
-		if (!(component instanceof ComponentAutomaton)) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public void build() {
-		assert explorer != null;
-		assert component != null;
-		componentAutomaton = (ComponentAutomaton) component;
-		nonDet = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics());
-		stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
-		weightZero = TypeWeightTransition.get().getZero();
-		automaton = componentAutomaton.getAutomaton();
-		typeLocation = TypeLocation.get(automaton.getLocations());
-		buildTypeEdge();
-		probabilitySum = TypeWeightTransition.get().newValue();
-		weightValue = TypeWeightTransition.get().newValue();
-		prepareVariables();
-		prepareProperties();
-		name = componentAutomaton.getAutomaton().getName().intern();
-		number = componentAutomaton.getAutomaton().getNumber();
-		actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
-	}
+        private ExpressionToTypeAutomaton(Collection<Variable> variables) {
+            assert variables != null;
+            for (Variable variable : variables) {
+                assert variable != null;
+            }
+            for (Variable variable : variables) {
+                this.variables.put(variable.getIdentifier(), variable);
+            }
+        }
 
-	@Override
-	public void buildAfterVariables() {
-		buildEdgeEvaluators();
-		buildTransientValueEvaluators();
-		prepareSuccessors();
-	}
-	
-	private void prepareSuccessors() {
-		int maxNumSucc = 0;
-		if (nonDet && stochastic) {
-			for (int loc = 0; loc < edgeEvaluators.length; loc++) {
-				maxNumSucc = Math.max(maxNumSucc, edgeEvaluators[loc].length);
-				for (int i = 0; i < edgeEvaluators[loc].length; i++) {
-					maxNumSucc = Math.max(maxNumSucc,
-							edgeEvaluators[loc][i].getNumDestinations());
-				}
-			}
-		} else {
-			for (int loc = 0; loc < edgeEvaluators.length; loc++) {
-				int locMax = 0;
-				for (int i = 0; i < edgeEvaluators[loc].length; i++) {
-					locMax += Math.max(maxNumSucc,
-							edgeEvaluators[loc][i].getNumDestinations());
-				}
-				maxNumSucc = Math.max(maxNumSucc, locMax);
-			}			
-		}
-		successors = new NodeJANI[maxNumSucc];
-		for (int succ = 0; succ < maxNumSucc; succ++) {
-			successors[succ] = newNode();
-		}
-	}
+        @Override
+        public Type getType(Expression expression) {
+            assert expression != null;
+            Variable variable = variables.get(expression);
+            if (variable == null) {
+                return null;
+            }
+            JANIType type = variable.getType();
+            if (type == null) {
+                return null;
+            }
+            return type.toType();
+        }
+    }
 
-	private void prepareVariables() {
-		StateVariables stateVariables = explorer.getStateVariables();
-		if (typeLocation.getNumValues() > 1) {
-			Expression locationIdentifier = new ExpressionIdentifierStandard.Builder()
-					.setName(LOCATION_IDENTIFIER)
-					.setScope(this)
-					.build();
-			locationVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(locationIdentifier).setType(typeLocation).setPermanent(true).build());
-		} else {
-			locationVarNr = -1;
-		}
-		if (nonDet && stochastic) {
-			Expression edgeIdentifier = new ExpressionIdentifierStandard.Builder()
-					.setName(EDGE_IDENTIFIER)
-					.setScope(this)
-					.build();
-			edgeVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(edgeIdentifier).setType(typeEdge).setPermanent(false).setDecision(true).build());
-		}
-		for (Variable variable : automaton.getVariablesOrEmpty()) {
-			Expression identifier = new ExpressionIdentifierStandard.Builder()
-					.setName(variable.getName())
-					.setScope(this)
-					.build();
-			boolean store = !variable.isTransient();
-			variableToNumber.put(variable, stateVariables.add(new StateVariable.Builder().setIdentifier(identifier).setType(variable.toType()).setPermanent(store).setInitialValue(variable.getInitialValueOrNull()).build()));
-			autVarToLocal.put(variable.getIdentifier(), identifier);
-		}
-		for (Variable variable : explorer.getModel().getGlobalVariablesOrEmpty()) {
-			if (variable.isTransient() && !stateVariables.contains(variable.getIdentifier())) {
-				continue;
-			}
-			variableToNumber.put(variable, stateVariables.getVariableNumber(variable.getIdentifier()));
-		}
-	}
+    /** Name of variable denoting location of automaton. */
+    private final static String LOCATION_IDENTIFIER = "%locId";
+    private final static String EDGE_IDENTIFIER = "%edge";
 
-	/**
-	 * Build the type storing the edge number of an automaton.
-	 */
-	private void buildTypeEdge() {
-		TObjectIntMap<Location> locationNumEdges = new TObjectIntHashMap<>();
-		for (Edge edge : automaton.getEdges()) {
-			Location location = edge.getLocation();
-			locationNumEdges.put(location, locationNumEdges.get(location) + 1);
-		}
-		int maxNumEdges = 0;
-		for (TObjectIntIterator<Location> it = locationNumEdges.iterator(); it.hasNext();) {
-			it.advance();
-			maxNumEdges = Math.max(maxNumEdges, it.value());
-		}
-		typeEdge = TypeInteger.get(-1, maxNumEdges - 1);
-	}
+    /** Explorer to which this component belongs. */
+    private ExplorerJANI explorer;
+    /** Component which this explorer is supposed to explore. */
+    private Component component;
+    /** Component which this explorer is supposed to explore.
+     * This field is used in case this class can handle the component. */
+    private ComponentAutomaton componentAutomaton;
+    /** Automaton which this explorer is supposed to explore. */
+    private Automaton automaton;
+    /**
+     * Evaluators of the edges of the automaton.
+     * The size of this array is the same as the number of components. In each
+     * array element, the array of evaluators for the edge with the according
+     * source location is stored.
+     * */
+    private EdgeEvaluator[][] edgeEvaluators;
+    private AssignmentsEvaluator[] locationEvaluators;
 
-	/**
-	 * Build the edge evaluators of the component explorer
-	 * 
-	 */
-	private void buildEdgeEvaluators() {
-		Map<Action,Integer> actionToInteger = computeActionToInteger();
-		Locations locations = automaton.getLocations();
-		int[] locationsNumEdges = new int[locations.size()];
-		List<Edge> edges = resortEdges(automaton.getEdges());
-		for (Edge edge : automaton.getEdges()) {
-			locationsNumEdges[typeLocation.getNumber(edge.getLocation())]++;
-		}
-		edgeEvaluators = new EdgeEvaluator[locations.size()][];
-		for (int locNr = 0; locNr < locations.size(); locNr++) {
-			edgeEvaluators[locNr] = new EdgeEvaluator[locationsNumEdges[locNr]];
-		}
-		Arrays.fill(locationsNumEdges, 0);
-		
-		for (Edge edge : edges) {
-			Location location = edge.getLocation();
-			int locNr = typeLocation.getNumber(location);
-			EdgeEvaluator edgeEvaluator = new EdgeEvaluator.Builder()
-					.setActionNumbers(actionToInteger)
-					.setEdge(edge)
-					.setVariables(explorer.getStateVariables().getIdentifiersArray())
-					.setVariablesMap(variableToNumber)
-					.setLocationVariable(locationVarNr)
-					.setTypeLocation(typeLocation)
-					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
-					.build();
-			edgeEvaluators[locNr][locationsNumEdges[locNr]] = edgeEvaluator;
-			locationsNumEdges[locNr]++;
-		}
-	}
-	
-	private void buildTransientValueEvaluators() {
-		locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
-		int index = 0;
-		for (Location location : automaton.getLocations()) {
-			locationEvaluators[index] = new AssignmentsEvaluator.Builder()
-					.setAssignments(location.getTransientValueAssignmentsOrEmpty())
-					.setAutVarToLocal(autVarToLocal)
-					.setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
-					.setVariableMap(variableToNumber)
-					.setVariables(explorer.getStateVariables().getIdentifiersArray())
-					.build();
-			index++;
-		}
-	}
+    /** Type for the location set of this automaton. */
+    private TypeLocation typeLocation;
+    /** Type for the edge of a given transition.
+     * To denote the situation that no edge is chosen yet (such as in a model
+     * state), -1 is used. This variable is only used for nondeterministic
+     * models with probabilities.
+     * */
+    private Type typeEdge;
+    /** Enumerates variables.
+     * The first number are occupied by the local variables of the automaton.
+     * The following numbers correspond to the global variables of the
+     * automaton.
+     */
+    private Map<Variable,Integer> variableToNumber = new LinkedHashMap<>();
+    /**
+     * Map from identifier of automaton to local identifiers.
+     * This map is necessary, because automata may occur multiple times in
+     * system specification, and we must use separate variables for each
+     * instance.
+     */
+    private Map<Expression,Expression> autVarToLocal = new LinkedHashMap<>();
+    /** Number of automata location variable, or -1 if unused. */
+    private int locationVarNr;
+    /** Number of edge currently selected, or -1 if non selected or unused. */
+    private int edgeVarNr;
+    /** Number of successors of queried node. */
+    private int numSuccessors;
+    /** Array of successors of queried node. */
+    private NodeJANI[] successors;
+    /** Property to store whether given node is a state. */
+    private PropertyNodeGeneral state;
+    /** Transition weight property. */
+    private PropertyEdgeGeneral weight;
+    /** Label/action property. */
+    private PropertyEdgeAction label;
+    /** Sum of weight of outgoing transitions. */
+    private ValueAlgebra probabilitySum;
+    /** Whether the model is nondeterministic. */
+    private boolean nonDet;
+    /** Whether the model is stochastic. */
+    private boolean stochastic;
+    /** Value zero of weight type. */
+    private ValueAlgebra weightZero;
+    /** Successor weight value being computed. */
+    private ValueAlgebra weightValue;
+    /** Automata name (interned string). */
+    private String name;
+    private int number;
+    private int[] actionFromTo;
 
-	private List<Edge> resortEdges(Edges edges) {
-		assert edges != null;
-		ModelJANI model = edges.getModel();
-		assert model != null;
-		List<List<Edge>> actionToEdges = new ArrayList<>();
-		for (int actNr = 0; actNr < model.getActions().size() + 1; actNr++) {
-			actionToEdges.add(new ArrayList<>());
-		}
-		Map<Action, Integer> map = UtilExplorer.computeActionToInteger(model);
-		for (Edge edge : edges) {
-			int action = map.get(edge.getActionOrSilent());
-			actionToEdges.get(action).add(edge);
-		}
-		List<Edge> result = new ArrayList<>();
-		for (List<Edge> actionEdges : actionToEdges) {
-			result.addAll(actionEdges);
-		}
-		return result;
-	}
+    @Override
+    public void setExplorer(ExplorerJANI explorer) {
+        assert explorer != null;
+        this.explorer = explorer;
+    }
 
-	private Map<Action, Integer> computeActionToInteger() {
-		return UtilExplorer.computeActionToInteger(explorer.getModel());
-	}
+    @Override
+    public void setComponent(Component component) {
+        assert component != null;
+        this.component = component;
+    }
 
-	/**
-	 * Prepare the graph, node, and edge properties of this explorer.
-	 */
-	private void prepareProperties() {
-		PropertyNodeGeneral state = new PropertyNodeGeneral(this, TypeBoolean.get());
-		if (!nonDet) {
-			state.set(true);
-		}
-		this.state = state;
-		weight = new PropertyEdgeGeneral(this, TypeWeightTransition.get());
-		label = new PropertyEdgeAction(explorer);
-	}
+    @Override
+    public boolean canHandle() {
+        if (!(component instanceof ComponentAutomaton)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public Value getGraphProperty(Object property) {
-		assert property != null;
-		return null;
-	}
+    @Override
+    public void build() {
+        assert explorer != null;
+        assert component != null;
+        componentAutomaton = (ComponentAutomaton) component;
+        nonDet = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics());
+        stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
+        weightZero = TypeWeightTransition.get().getZero();
+        automaton = componentAutomaton.getAutomaton();
+        typeLocation = TypeLocation.get(automaton.getLocations());
+        buildTypeEdge();
+        probabilitySum = TypeWeightTransition.get().newValue();
+        weightValue = TypeWeightTransition.get().newValue();
+        prepareVariables();
+        prepareProperties();
+        name = componentAutomaton.getAutomaton().getName().intern();
+        number = componentAutomaton.getAutomaton().getNumber();
+        actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
+    }
 
-	@Override
-	public PropertyNode getNodeProperty(Object property) {
-		assert property != null;
-		if (property == CommonProperties.STATE) {
-			return state;
-		}
-		return null;
-	}
+    @Override
+    public void buildAfterVariables() {
+        buildEdgeEvaluators();
+        buildTransientValueEvaluators();
+        prepareSuccessors();
+    }
 
-	@Override
-	public PropertyEdge getEdgeProperty(Object property) {
-		assert property != null;
-		if (property == CommonProperties.WEIGHT) {
-			return weight;
-		} else if (property == CommonProperties.TRANSITION_LABEL) {
-			return label;
-		}
-		return null;
-	}
-	
-	@Override
-	public NodeJANI newNode() {
-		return explorer.newNode();
-	}
+    private void prepareSuccessors() {
+        int maxNumSucc = 0;
+        if (nonDet && stochastic) {
+            for (int loc = 0; loc < edgeEvaluators.length; loc++) {
+                maxNumSucc = Math.max(maxNumSucc, edgeEvaluators[loc].length);
+                for (int i = 0; i < edgeEvaluators[loc].length; i++) {
+                    maxNumSucc = Math.max(maxNumSucc,
+                            edgeEvaluators[loc][i].getNumDestinations());
+                }
+            }
+        } else {
+            for (int loc = 0; loc < edgeEvaluators.length; loc++) {
+                int locMax = 0;
+                for (int i = 0; i < edgeEvaluators[loc].length; i++) {
+                    locMax += Math.max(maxNumSucc,
+                            edgeEvaluators[loc][i].getNumDestinations());
+                }
+                maxNumSucc = Math.max(maxNumSucc, locMax);
+            }			
+        }
+        successors = new NodeJANI[maxNumSucc];
+        for (int succ = 0; succ < maxNumSucc; succ++) {
+            successors[succ] = newNode();
+        }
+    }
 
-	@Override
-	public Collection<NodeJANI> getInitialNodes() {
-		Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
-		Expression bounds = UtilModelParser.restrictToVariableRange(automaton.getVariablesOrEmpty());
-		initialExpression = UtilExpressionStandard.opAnd(initialExpression, bounds);
-		initialExpression = automaton.getModel().replaceConstants(initialExpression);
-		VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
-		enumerator.setExpression(initialExpression);
-		enumerator.setVariables(automaton.getVariablesNonTransient());
-		enumerator.setExpressionToType(explorer);
-		List<Map<Variable, Value>> enumerated = enumerator.enumerate();
-		List<NodeJANI> result = new ArrayList<>();
-		for (Location initialLocation : automaton.getInitialLocations()) {
-			for (Map<Variable, Value> initialValuesMap : enumerated) {
-				NodeJANI initialNode = newNode();
-				if (locationVarNr != -1) {
-					initialNode.setVariable(locationVarNr, initialLocation);
-				}
-				if (nonDet && stochastic) {
-					initialNode.setVariable(edgeVarNr, -1);
-				}
-				for (Entry<Variable, Value> entry : initialValuesMap.entrySet()) {
-					int varNr = variableToNumber.get(entry.getKey());
-					initialNode.setVariable(varNr, entry.getValue());
-				}
-				initialNode.unmark();
-				result.add(initialNode);
-			}
-		}
-		return result;
-	}
+    private void prepareVariables() {
+        StateVariables stateVariables = explorer.getStateVariables();
+        if (typeLocation.getNumValues() > 1) {
+            Expression locationIdentifier = new ExpressionIdentifierStandard.Builder()
+                    .setName(LOCATION_IDENTIFIER)
+                    .setScope(this)
+                    .build();
+            locationVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(locationIdentifier).setType(typeLocation).setPermanent(true).build());
+        } else {
+            locationVarNr = -1;
+        }
+        if (nonDet && stochastic) {
+            Expression edgeIdentifier = new ExpressionIdentifierStandard.Builder()
+                    .setName(EDGE_IDENTIFIER)
+                    .setScope(this)
+                    .build();
+            edgeVarNr = stateVariables.add(new StateVariable.Builder().setIdentifier(edgeIdentifier).setType(typeEdge).setPermanent(false).setDecision(true).build());
+        }
+        for (Variable variable : automaton.getVariablesOrEmpty()) {
+            Expression identifier = new ExpressionIdentifierStandard.Builder()
+                    .setName(variable.getName())
+                    .setScope(this)
+                    .build();
+            boolean store = !variable.isTransient();
+            variableToNumber.put(variable, stateVariables.add(new StateVariable.Builder().setIdentifier(identifier).setType(variable.toType()).setPermanent(store).setInitialValue(variable.getInitialValueOrNull()).build()));
+            autVarToLocal.put(variable.getIdentifier(), identifier);
+        }
+        for (Variable variable : explorer.getModel().getGlobalVariablesOrEmpty()) {
+            if (variable.isTransient() && !stateVariables.contains(variable.getIdentifier())) {
+                continue;
+            }
+            variableToNumber.put(variable, stateVariables.getVariableNumber(variable.getIdentifier()));
+        }
+    }
 
-	@Override
-	public void queryNode(NodeJANI node) {
-		if (nonDet && stochastic) {
-			queryNondetStochastic(node);
-		} else if (nonDet && !stochastic) {
-			queryNondetNonStochastic(node);			
-		} else {
-			queryNoNondet(node);
-		}
-	}
+    /**
+     * Build the type storing the edge number of an automaton.
+     */
+    private void buildTypeEdge() {
+        TObjectIntMap<Location> locationNumEdges = new TObjectIntHashMap<>();
+        for (Edge edge : automaton.getEdges()) {
+            Location location = edge.getLocation();
+            locationNumEdges.put(location, locationNumEdges.get(location) + 1);
+        }
+        int maxNumEdges = 0;
+        for (TObjectIntIterator<Location> it = locationNumEdges.iterator(); it.hasNext();) {
+            it.advance();
+            maxNumEdges = Math.max(maxNumEdges, it.value());
+        }
+        typeEdge = TypeInteger.get(-1, maxNumEdges - 1);
+    }
 
-	private void queryNoNondet(NodeJANI node) {
-		numSuccessors = 0;
-		assert node != null;
-		Value[] nodeValues = node.getValues();
-		int location;
-		if (locationVarNr == -1) {
-			location = 0;
-		} else {
-			location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
-		}
-		locationEvaluators[location].apply(node, node);
-		EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
-		int lastAction = 0;
-		actionFromTo[0] = 0;
-		for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
-			evaluator.setVariableValues(nodeValues);
-			if (evaluator.evaluateGuard()) {
-				Value rate = evaluator.hasRate() ? evaluator.evaluateRate() : null;
-				int numDestinations = evaluator.getNumDestinations();
-				for (int destNr = 0; destNr < numDestinations; destNr++) {
-					DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(destNr);
-					NodeJANI successor = successors[numSuccessors];
-					successor.unmark();
-//					successor.set(node);
-					ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
-					if (probability.isZero()) {
-						continue;
-					}
-					if (rate != null) {
-						weightValue.multiply(rate, probability);
-						this.weight.set(numSuccessors, weightValue);
-					} else {
-						this.weight.set(numSuccessors, probability);
-					}
-					probabilitySum.add(probabilitySum, probability);
-					int action = evaluator.getAction();
-					label.set(numSuccessors, action);
-					destinationEval.assignTo(node, successor);
-					successor.setNotSet(node);
-					if (lastAction != action) {
-						for (int act = lastAction + 1; act <= action; act++) {
-							actionFromTo[act] = numSuccessors;
-						}
-						lastAction = action;
-					}
-					numSuccessors++;
-				}
-			}
-		}
-		for (int act = lastAction + 1; act < actionFromTo.length; act++) {
-			actionFromTo[act] = numSuccessors;
-		}
-	}
+    /**
+     * Build the edge evaluators of the component explorer
+     * 
+     */
+    private void buildEdgeEvaluators() {
+        Map<Action,Integer> actionToInteger = computeActionToInteger();
+        Locations locations = automaton.getLocations();
+        int[] locationsNumEdges = new int[locations.size()];
+        List<Edge> edges = resortEdges(automaton.getEdges());
+        for (Edge edge : automaton.getEdges()) {
+            locationsNumEdges[typeLocation.getNumber(edge.getLocation())]++;
+        }
+        edgeEvaluators = new EdgeEvaluator[locations.size()][];
+        for (int locNr = 0; locNr < locations.size(); locNr++) {
+            edgeEvaluators[locNr] = new EdgeEvaluator[locationsNumEdges[locNr]];
+        }
+        Arrays.fill(locationsNumEdges, 0);
 
-	private void queryNondetStochastic(NodeJANI node) {
-		assert node != null;
-		numSuccessors = 0;
-		Value[] nodeValues = node.getValues();
-		int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
-		int location;
-		if (locationVarNr == -1) {
-			location = 0;
-		} else {
-			location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
-		}
-		EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
-		if (edge == -1) {
-			/* the node queries is a state node */
-			state.set(true);
-			int edgeNr = 0;
-			int lastAction = 0;
-			actionFromTo[0] = 0;
-			locationEvaluators[location].apply(node, node);
-			for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
-				evaluator.setVariableValues(nodeValues);
-				if (evaluator.evaluateGuard()) {
-					NodeJANI successor = successors[numSuccessors];
-					successor.unmark();
-					successor.set(node);
-					successor.setVariable(this.edgeVarNr, edgeNr);
-					weight.set(numSuccessors, weightZero);
-					int action = evaluator.getAction();
-					label.set(numSuccessors, action);
-					if (lastAction != action) {
-						for (int act = lastAction + 1; act <= action; act++) {
-							actionFromTo[act] = numSuccessors;
-						}
-						lastAction = action;
-					}
-					numSuccessors++;
-				}
-				edgeNr++;
-			}
-			for (int act = lastAction + 1; act < actionFromTo.length; act++) {
-				actionFromTo[act] = numSuccessors;
-			}
-		} else {
-			/* the node queried is a distribution node */
-			probabilitySum.set(0);
-			state.set(false);
-			EdgeEvaluator evaluator = locationEdgeEvaluators[edge];
-			Value rate = evaluator.hasRate() ? evaluator.evaluateRate() : null;
-			int numDestinations = evaluator.getNumDestinations();
-			for (int destNr = 0; destNr < numDestinations; destNr++) {
-				DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(destNr);
-				NodeJANI successor = successors[numSuccessors];
-				successor.unmark();
-//				successor.set(nodeAutomaton);
-				successor.setVariable(edgeVarNr, -1);
-				ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
-				if (probability.isZero()) {
-					continue;
-				}
-				if (rate != null) {
-					weightValue.multiply(rate, probability);
-					this.weight.set(numSuccessors, weightValue);
-				} else {
-					this.weight.set(numSuccessors, probability);
-				}
-				probabilitySum.add(probabilitySum, probability);
-				label.set(numSuccessors, 0);
-				destinationEval.assignTo(node, successor);
-				successor.setNotSet(node);
-				numSuccessors++;
-			}
-		}
-		for (ExplorerExtension extension : explorer.getExtensions()) {
-			extension.afterQueryAutomaton(this);
-		}
-	}
+        for (Edge edge : edges) {
+            Location location = edge.getLocation();
+            int locNr = typeLocation.getNumber(location);
+            EdgeEvaluator edgeEvaluator = new EdgeEvaluator.Builder()
+                    .setActionNumbers(actionToInteger)
+                    .setEdge(edge)
+                    .setVariables(explorer.getStateVariables().getIdentifiersArray())
+                    .setVariablesMap(variableToNumber)
+                    .setLocationVariable(locationVarNr)
+                    .setTypeLocation(typeLocation)
+                    .setAutVarToLocal(autVarToLocal)
+                    .setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
+                    .build();
+            edgeEvaluators[locNr][locationsNumEdges[locNr]] = edgeEvaluator;
+            locationsNumEdges[locNr]++;
+        }
+    }
 
-	private void queryNondetNonStochastic(NodeJANI node) {
-		numSuccessors = 0;
-		Value[] nodeValues = node.getValues();
-		int location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
-		EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
-		int lastAction = 0;
-		actionFromTo[0] = 0;
-		locationEvaluators[location].apply(node, node);
-		for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
-			evaluator.setVariableValues(nodeValues);
-			if (evaluator.evaluateGuard()) {
-				int action = evaluator.getAction();
-				label.set(numSuccessors, action);
-				DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(0);
-				NodeJANI successor = successors[numSuccessors];
-				successor.unmark();
-				destinationEval.assignTo(node, successor);
-				successor.setNotSet(node);
-				if (lastAction != action) {
-					for (int act = lastAction + 1; act <= action; act++) {
-						actionFromTo[act] = numSuccessors;
-					}
-					lastAction = action;
-				}
-				numSuccessors++;
-			}
-		}
-		for (int act = lastAction + 1; act < actionFromTo.length; act++) {
-			actionFromTo[act] = numSuccessors;
-		}
-	}
+    private void buildTransientValueEvaluators() {
+        locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
+        int index = 0;
+        for (Location location : automaton.getLocations()) {
+            locationEvaluators[index] = new AssignmentsEvaluator.Builder()
+                    .setAssignments(location.getTransientValueAssignmentsOrEmpty())
+                    .setAutVarToLocal(autVarToLocal)
+                    .setExpressionToType(new ExpressionToTypeAutomaton(this.variableToNumber.keySet()))
+                    .setVariableMap(variableToNumber)
+                    .setVariables(explorer.getStateVariables().getIdentifiersArray())
+                    .build();
+            index++;
+        }
+    }
 
-	
-	@Override
-	public int getNumSuccessors() {
-		return numSuccessors;
-	}
+    private List<Edge> resortEdges(Edges edges) {
+        assert edges != null;
+        ModelJANI model = edges.getModel();
+        assert model != null;
+        List<List<Edge>> actionToEdges = new ArrayList<>();
+        for (int actNr = 0; actNr < model.getActions().size() + 1; actNr++) {
+            actionToEdges.add(new ArrayList<>());
+        }
+        Map<Action, Integer> map = UtilExplorer.computeActionToInteger(model);
+        for (Edge edge : edges) {
+            int action = map.get(edge.getActionOrSilent());
+            actionToEdges.get(action).add(edge);
+        }
+        List<Edge> result = new ArrayList<>();
+        for (List<Edge> actionEdges : actionToEdges) {
+            result.addAll(actionEdges);
+        }
+        return result;
+    }
 
-	@Override
-	public NodeJANI getSuccessorNode(int succNr) {
-		assert succNr >= 0;
-		assert succNr < numSuccessors;
-		return successors[succNr];
-	}
+    private Map<Action, Integer> computeActionToInteger() {
+        return UtilExplorer.computeActionToInteger(explorer.getModel());
+    }
 
-	@Override
-	public ExplorerJANI getExplorer() {
-		return explorer;
-	}
+    /**
+     * Prepare the graph, node, and edge properties of this explorer.
+     */
+    private void prepareProperties() {
+        PropertyNodeGeneral state = new PropertyNodeGeneral(this, TypeBoolean.get());
+        if (!nonDet) {
+            state.set(true);
+        }
+        this.state = state;
+        weight = new PropertyEdgeGeneral(this, TypeWeightTransition.get());
+        label = new PropertyEdgeAction(explorer);
+    }
 
-	@Override
-	public int getNumNodeBits() {
-		return explorer.getNumNodeBits();
-	}
-	
-	@Override
-	public void setNumSuccessors(int numSuccessors) {
-		this.numSuccessors = numSuccessors;
-	}
+    @Override
+    public Value getGraphProperty(Object property) {
+        assert property != null;
+        return null;
+    }
 
-	@Override
-	public boolean isState(NodeJANI node) {
-		Value[] nodeValues = node.getValues();
-		int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
-		return edge == -1;
-	}
-	
-	@Override
-	public boolean isState() {
-		return state.getBoolean();
-	}
-	
-	public boolean isNonDet() {
-		return nonDet;
-	}
-	
-	public PropertyEdgeGeneral getWeight() {
-		return weight;
-	}
-	
-	public ValueAlgebra getProbabilitySum() {
-		return probabilitySum;
-	}
+    @Override
+    public PropertyNode getNodeProperty(Object property) {
+        assert property != null;
+        if (property == CommonProperties.STATE) {
+            return state;
+        }
+        return null;
+    }
 
-	public PropertyEdgeAction getActions() {
-		return label;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public int getNumber() {
-		return number;
-	}
-	
-	public int getActionFrom(int action) {
-		return actionFromTo[action];
-	}
-	
-	public int getActionTo(int action) {
-		return actionFromTo[action + 1];
-	}
+    @Override
+    public PropertyEdge getEdgeProperty(Object property) {
+        assert property != null;
+        if (property == CommonProperties.WEIGHT) {
+            return weight;
+        } else if (property == CommonProperties.TRANSITION_LABEL) {
+            return label;
+        }
+        return null;
+    }
 
-	@Override
-	public void close() {
-	}
+    @Override
+    public NodeJANI newNode() {
+        return explorer.newNode();
+    }
+
+    @Override
+    public Collection<NodeJANI> getInitialNodes() {
+        Expression initialExpression = automaton.getInitialStatesExpressionOrTrue();
+        Expression bounds = UtilModelParser.restrictToVariableRange(automaton.getVariablesOrEmpty());
+        initialExpression = UtilExpressionStandard.opAnd(initialExpression, bounds);
+        initialExpression = automaton.getModel().replaceConstants(initialExpression);
+        VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
+        enumerator.setExpression(initialExpression);
+        enumerator.setVariables(automaton.getVariablesNonTransient());
+        enumerator.setExpressionToType(explorer);
+        List<Map<Variable, Value>> enumerated = enumerator.enumerate();
+        List<NodeJANI> result = new ArrayList<>();
+        for (Location initialLocation : automaton.getInitialLocations()) {
+            for (Map<Variable, Value> initialValuesMap : enumerated) {
+                NodeJANI initialNode = newNode();
+                if (locationVarNr != -1) {
+                    initialNode.setVariable(locationVarNr, initialLocation);
+                }
+                if (nonDet && stochastic) {
+                    initialNode.setVariable(edgeVarNr, -1);
+                }
+                for (Entry<Variable, Value> entry : initialValuesMap.entrySet()) {
+                    int varNr = variableToNumber.get(entry.getKey());
+                    initialNode.setVariable(varNr, entry.getValue());
+                }
+                initialNode.unmark();
+                result.add(initialNode);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void queryNode(NodeJANI node) {
+        if (nonDet && stochastic) {
+            queryNondetStochastic(node);
+        } else if (nonDet && !stochastic) {
+            queryNondetNonStochastic(node);			
+        } else {
+            queryNoNondet(node);
+        }
+    }
+
+    private void queryNoNondet(NodeJANI node) {
+        numSuccessors = 0;
+        assert node != null;
+        Value[] nodeValues = node.getValues();
+        int location;
+        if (locationVarNr == -1) {
+            location = 0;
+        } else {
+            location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+        }
+        locationEvaluators[location].apply(node, node);
+        EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
+        int lastAction = 0;
+        actionFromTo[0] = 0;
+        for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
+            evaluator.setVariableValues(nodeValues);
+            if (evaluator.evaluateGuard()) {
+                Value rate = evaluator.hasRate() ? evaluator.evaluateRate() : null;
+                int numDestinations = evaluator.getNumDestinations();
+                for (int destNr = 0; destNr < numDestinations; destNr++) {
+                    DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(destNr);
+                    NodeJANI successor = successors[numSuccessors];
+                    successor.unmark();
+                    //					successor.set(node);
+                    ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
+                    if (probability.isZero()) {
+                        continue;
+                    }
+                    if (rate != null) {
+                        weightValue.multiply(rate, probability);
+                        this.weight.set(numSuccessors, weightValue);
+                    } else {
+                        this.weight.set(numSuccessors, probability);
+                    }
+                    probabilitySum.add(probabilitySum, probability);
+                    int action = evaluator.getAction();
+                    label.set(numSuccessors, action);
+                    destinationEval.assignTo(node, successor);
+                    successor.setNotSet(node);
+                    if (lastAction != action) {
+                        for (int act = lastAction + 1; act <= action; act++) {
+                            actionFromTo[act] = numSuccessors;
+                        }
+                        lastAction = action;
+                    }
+                    numSuccessors++;
+                }
+            }
+        }
+        for (int act = lastAction + 1; act < actionFromTo.length; act++) {
+            actionFromTo[act] = numSuccessors;
+        }
+    }
+
+    private void queryNondetStochastic(NodeJANI node) {
+        assert node != null;
+        numSuccessors = 0;
+        Value[] nodeValues = node.getValues();
+        int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
+        int location;
+        if (locationVarNr == -1) {
+            location = 0;
+        } else {
+            location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+        }
+        EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
+        if (edge == -1) {
+            /* the node queries is a state node */
+            state.set(true);
+            int edgeNr = 0;
+            int lastAction = 0;
+            actionFromTo[0] = 0;
+            locationEvaluators[location].apply(node, node);
+            for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
+                evaluator.setVariableValues(nodeValues);
+                if (evaluator.evaluateGuard()) {
+                    NodeJANI successor = successors[numSuccessors];
+                    successor.unmark();
+                    successor.set(node);
+                    successor.setVariable(this.edgeVarNr, edgeNr);
+                    weight.set(numSuccessors, weightZero);
+                    int action = evaluator.getAction();
+                    label.set(numSuccessors, action);
+                    if (lastAction != action) {
+                        for (int act = lastAction + 1; act <= action; act++) {
+                            actionFromTo[act] = numSuccessors;
+                        }
+                        lastAction = action;
+                    }
+                    numSuccessors++;
+                }
+                edgeNr++;
+            }
+            for (int act = lastAction + 1; act < actionFromTo.length; act++) {
+                actionFromTo[act] = numSuccessors;
+            }
+        } else {
+            /* the node queried is a distribution node */
+            probabilitySum.set(0);
+            state.set(false);
+            EdgeEvaluator evaluator = locationEdgeEvaluators[edge];
+            Value rate = evaluator.hasRate() ? evaluator.evaluateRate() : null;
+            int numDestinations = evaluator.getNumDestinations();
+            for (int destNr = 0; destNr < numDestinations; destNr++) {
+                DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(destNr);
+                NodeJANI successor = successors[numSuccessors];
+                successor.unmark();
+                //				successor.set(nodeAutomaton);
+                successor.setVariable(edgeVarNr, -1);
+                ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
+                if (probability.isZero()) {
+                    continue;
+                }
+                if (rate != null) {
+                    weightValue.multiply(rate, probability);
+                    this.weight.set(numSuccessors, weightValue);
+                } else {
+                    this.weight.set(numSuccessors, probability);
+                }
+                probabilitySum.add(probabilitySum, probability);
+                label.set(numSuccessors, 0);
+                destinationEval.assignTo(node, successor);
+                successor.setNotSet(node);
+                numSuccessors++;
+            }
+        }
+        for (ExplorerExtension extension : explorer.getExtensions()) {
+            extension.afterQueryAutomaton(this);
+        }
+    }
+
+    private void queryNondetNonStochastic(NodeJANI node) {
+        numSuccessors = 0;
+        Value[] nodeValues = node.getValues();
+        int location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+        EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
+        int lastAction = 0;
+        actionFromTo[0] = 0;
+        locationEvaluators[location].apply(node, node);
+        for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
+            evaluator.setVariableValues(nodeValues);
+            if (evaluator.evaluateGuard()) {
+                int action = evaluator.getAction();
+                label.set(numSuccessors, action);
+                DestinationEvaluator destinationEval = evaluator.getDestinationEvaluator(0);
+                NodeJANI successor = successors[numSuccessors];
+                successor.unmark();
+                destinationEval.assignTo(node, successor);
+                successor.setNotSet(node);
+                if (lastAction != action) {
+                    for (int act = lastAction + 1; act <= action; act++) {
+                        actionFromTo[act] = numSuccessors;
+                    }
+                    lastAction = action;
+                }
+                numSuccessors++;
+            }
+        }
+        for (int act = lastAction + 1; act < actionFromTo.length; act++) {
+            actionFromTo[act] = numSuccessors;
+        }
+    }
+
+
+    @Override
+    public int getNumSuccessors() {
+        return numSuccessors;
+    }
+
+    @Override
+    public NodeJANI getSuccessorNode(int succNr) {
+        assert succNr >= 0;
+        assert succNr < numSuccessors;
+        return successors[succNr];
+    }
+
+    @Override
+    public ExplorerJANI getExplorer() {
+        return explorer;
+    }
+
+    @Override
+    public int getNumNodeBits() {
+        return explorer.getNumNodeBits();
+    }
+
+    @Override
+    public void setNumSuccessors(int numSuccessors) {
+        this.numSuccessors = numSuccessors;
+    }
+
+    @Override
+    public boolean isState(NodeJANI node) {
+        Value[] nodeValues = node.getValues();
+        int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
+        return edge == -1;
+    }
+
+    @Override
+    public boolean isState() {
+        return state.getBoolean();
+    }
+
+    public boolean isNonDet() {
+        return nonDet;
+    }
+
+    public PropertyEdgeGeneral getWeight() {
+        return weight;
+    }
+
+    public ValueAlgebra getProbabilitySum() {
+        return probabilitySum;
+    }
+
+    public PropertyEdgeAction getActions() {
+        return label;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public int getActionFrom(int action) {
+        return actionFromTo[action];
+    }
+
+    public int getActionTo(int action) {
+        return actionFromTo[action + 1];
+    }
+
+    @Override
+    public void close() {
+    }
 }

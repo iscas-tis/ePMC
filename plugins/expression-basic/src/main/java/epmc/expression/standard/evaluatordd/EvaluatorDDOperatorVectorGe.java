@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -31,12 +31,12 @@ import epmc.value.operator.OperatorGe;
 
 public final class EvaluatorDDOperatorVectorGe implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-ge";
-    
+
     private Map<Expression, VariableDD> variables;
     private Expression expression;
     private DD dd;
     private boolean closed;
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;

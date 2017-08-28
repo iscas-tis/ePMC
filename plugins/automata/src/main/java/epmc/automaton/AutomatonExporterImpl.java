@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -56,7 +56,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     private OutputStream outStream;
     private Format format = Format.DOT;
     private Value[][] validInputs;
-    
+
     @Override
     public void setAutomaton(Automaton automaton) {
         this.automaton = automaton;
@@ -103,7 +103,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
                 out.println(label + "\"];");
             }
         }        
-        
+
         out.println("}");
     }
 
@@ -119,8 +119,8 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     }
 
     private Value[][] computeValidInputs(Automaton automaton)
-            {
-    	assert automaton != null;
+    {
+        assert automaton != null;
         ContextDD contextDD = ContextDD.get();
         Expression[] expressions = automaton.getExpressions();
         Set<Expression> identifiers = new HashSet<>();
@@ -132,10 +132,10 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
             variables.put(identifier, contextDD.newVariable(identifier.toString(), TypeBoolean.get(), 1));
         }
         ExpressionToDD checkE2D = new ExpressionToDD(variables);
-        
+
         List<Value[]> values = new ArrayList<>();
         int maxNumValues = (int) Math.pow(TypeBoolean.get().getNumValues(),
-        		expressions.length);
+                expressions.length);
         for (int entryNr = 0; entryNr < maxNumValues; entryNr++) {
             int usedNr = entryNr;
             DD check = contextDD.newConstant(true);
@@ -151,8 +151,8 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
                 value.setValueNumber(valueNr);
                 entry[exprNr] = value;
                 Expression literal = new ExpressionLiteral.Builder()
-                		.setValue(value)
-                		.build();
+                        .setValue(value)
+                        .build();
                 DD eq = checkE2D.translate(eq(expression, literal));
                 check = check.andWith(eq);
                 if (check.isFalse()) {
@@ -173,7 +173,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         return result;
     }
 
-	private TIntObjectMap<Object> exploreStates() {
+    private TIntObjectMap<Object> exploreStates() {
         TIntStack todo = new TIntArrayStack();
         assert automaton.getInitState() == 0;
         todo.push(0);
@@ -195,12 +195,12 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
 
         return result;
     }
-    
+
     private Expression eq(Expression a, Expression b) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorEq.EQ)
-        	.setOperands(a, b)
-        	.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorEq.EQ)
+                .setOperands(a, b)
+                .build();
     }
 
     @Override

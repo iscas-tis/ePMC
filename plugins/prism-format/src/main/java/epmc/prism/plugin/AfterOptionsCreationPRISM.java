@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.plugin;
 
@@ -33,27 +33,27 @@ import epmc.prism.model.convert.UtilPrismConverter;
 import epmc.prism.options.OptionsPRISM;
 
 public final class AfterOptionsCreationPRISM implements AfterOptionsCreation {
-	public final static String IDENTIFIER = "after-options-creation-prism";
+    public final static String IDENTIFIER = "after-options-creation-prism";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		OptionTypeMap<Class<?>> modelInputType = options.getType(OptionsModelChecker.MODEL_INPUT_TYPE);
-		assert modelInputType != null;
-		modelInputType.put(ModelPRISM.IDENTIFIER, ModelPRISM.class);
-		Map<String,Class<?>> propertyClasses = options.get(OptionsModelChecker.PROPERTY_CLASS);
-		assert propertyClasses != null;
-		propertyClasses.put(PropertyPRISM.IDENTIFIER, PropertyPRISM.class);
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        OptionTypeMap<Class<?>> modelInputType = options.getType(OptionsModelChecker.MODEL_INPUT_TYPE);
+        assert modelInputType != null;
+        modelInputType.put(ModelPRISM.IDENTIFIER, ModelPRISM.class);
+        Map<String,Class<?>> propertyClasses = options.get(OptionsModelChecker.PROPERTY_CLASS);
+        assert propertyClasses != null;
+        propertyClasses.put(PropertyPRISM.IDENTIFIER, PropertyPRISM.class);
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption().setBundleName(OptionsPRISM.PRISM_OPTIONS)
-        	.setIdentifier(OptionsPRISM.PRISM_FLATTEN)
-        	.setType(typeBoolean).setDefault(true)
-        	.setCommandLine().setGui().setWeb().build();
+        .setIdentifier(OptionsPRISM.PRISM_FLATTEN)
+        .setType(typeBoolean).setDefault(true)
+        .setCommandLine().setGui().setWeb().build();
         UtilPrismConverter.addOptions(options);
-	}
+    }
 }

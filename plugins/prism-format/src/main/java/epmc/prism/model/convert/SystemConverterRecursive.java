@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
@@ -49,157 +49,157 @@ import epmc.prism.model.SystemRename;
 import epmc.prism.model.SystemRestrictedParallel;
 
 final class SystemConverterRecursive implements SystemConverter {
-	/** Empty string. */
-	final static String EMPTY = "";
+    /** Empty string. */
+    final static String EMPTY = "";
 
-	private ModelPRISM modelPRISM;
-	private ModelJANI modelJANI;
-	/** Identifier for the silent action. */
-	private Expression silentActionIdentifier;
+    private ModelPRISM modelPRISM;
+    private ModelJANI modelJANI;
+    /** Identifier for the silent action. */
+    private Expression silentActionIdentifier;
 
-	@Override
-	public void setPRISMModel(ModelPRISM modelPrism) {
-		this.modelPRISM = modelPrism;
-	}
+    @Override
+    public void setPRISMModel(ModelPRISM modelPrism) {
+        this.modelPRISM = modelPrism;
+    }
 
-	@Override
-	public void setJANIModel(ModelJANI modelJani) {
-		this.modelJANI = modelJani;
-	}
+    @Override
+    public void setJANIModel(ModelJANI modelJani) {
+        this.modelJANI = modelJani;
+    }
 
-	@Override
-	public void convert() {
-		this.silentActionIdentifier = new ExpressionIdentifierStandard.Builder()
-				.setName(EMPTY)
-				.build();
-		Automata automata = modelJANI.getAutomata();
-		Actions actions = modelJANI.getActions();
-    	Component system = convertSystem(modelPRISM.getSystem(), automata, actions);
-    	modelJANI.setSystem(system);
-	}
-	
-	private Component convertSystem(SystemDefinition system,
-			Map<String,Automaton> automata,
-			Actions actions) {
-		assert system != null;
-		assert automata != null;
-		if (system.isModule()) {
-			return convertSystemModule(system.asModule(), automata, actions);
-		} else if (system.isAlphaParallel()) {
-			return convertSystemAlphaParallel(system.asAlphaParallel(), automata, actions);
-		} else if (system.isAsyncParallel()) {
-			return convertSystemAsyncParallel(system.asAsyncParallel(), automata, actions);
-		} else if (system.isHide()) {
-			return convertSystemHide(system.asHide(), automata, actions);
-		} else if (system.isRename()) {
-			return convertSystemRename(system.asRename(), automata, actions);
-		} else if (system.isRestrictedParallel()) {
-			return convertSystemRestrictedParallel(system.asRestrictedParallel(), automata, actions);
-		} else {
-			assert false; // TODO
-			return null;
-		}
-	}
+    @Override
+    public void convert() {
+        this.silentActionIdentifier = new ExpressionIdentifierStandard.Builder()
+                .setName(EMPTY)
+                .build();
+        Automata automata = modelJANI.getAutomata();
+        Actions actions = modelJANI.getActions();
+        Component system = convertSystem(modelPRISM.getSystem(), automata, actions);
+        modelJANI.setSystem(system);
+    }
 
-	private Component convertSystemModule(SystemModule systemModule, Map<String, Automaton> automata, Actions actions) {
-		String instance = systemModule.getModule();
-		Automaton automaton = automata.get(instance);
-		ComponentAutomaton result = new ComponentAutomaton();
-		result.setAutomaton(automaton);
-		return result;
-	}
+    private Component convertSystem(SystemDefinition system,
+            Map<String,Automaton> automata,
+            Actions actions) {
+        assert system != null;
+        assert automata != null;
+        if (system.isModule()) {
+            return convertSystemModule(system.asModule(), automata, actions);
+        } else if (system.isAlphaParallel()) {
+            return convertSystemAlphaParallel(system.asAlphaParallel(), automata, actions);
+        } else if (system.isAsyncParallel()) {
+            return convertSystemAsyncParallel(system.asAsyncParallel(), automata, actions);
+        } else if (system.isHide()) {
+            return convertSystemHide(system.asHide(), automata, actions);
+        } else if (system.isRename()) {
+            return convertSystemRename(system.asRename(), automata, actions);
+        } else if (system.isRestrictedParallel()) {
+            return convertSystemRestrictedParallel(system.asRestrictedParallel(), automata, actions);
+        } else {
+            assert false; // TODO
+            return null;
+        }
+    }
 
-	private Component convertSystemAlphaParallel(SystemAlphaParallel systemAlphaParallel, Map<String, Automaton> automata, Actions actions) {
-		SystemDefinition left = systemAlphaParallel.getLeft();
-		SystemDefinition right = systemAlphaParallel.getRight();
-		Component leftComponent = convertSystem(left, automata, actions);
-		Component rightComponent = convertSystem(right, automata, actions);
-		ComponentParallel result = new ComponentParallel();
-		result.setLeft(leftComponent);
-		result.setRight(rightComponent);
-		Set<Expression> mid = new HashSet<>();
-		mid.addAll(left.getAlphabet());
-		mid.retainAll(right.getAlphabet());
-		mid.remove(silentActionIdentifier);
-		result.addActions(mapActions(mid, actions));
-		return result;
-	}
+    private Component convertSystemModule(SystemModule systemModule, Map<String, Automaton> automata, Actions actions) {
+        String instance = systemModule.getModule();
+        Automaton automaton = automata.get(instance);
+        ComponentAutomaton result = new ComponentAutomaton();
+        result.setAutomaton(automaton);
+        return result;
+    }
 
-	private Component convertSystemAsyncParallel(SystemAsyncParallel systemAsyncParallel, Map<String, Automaton> automata,
-			Actions actions) {
-		SystemDefinition left = systemAsyncParallel.getLeft();
-		SystemDefinition right = systemAsyncParallel.getRight();
-		Component leftComponent = convertSystem(left, automata, actions);
-		Component rightComponent = convertSystem(right, automata, actions);
-		ComponentParallel result = new ComponentParallel();
-		result.setLeft(leftComponent);
-		result.setRight(rightComponent);
-		return result;
-	}
+    private Component convertSystemAlphaParallel(SystemAlphaParallel systemAlphaParallel, Map<String, Automaton> automata, Actions actions) {
+        SystemDefinition left = systemAlphaParallel.getLeft();
+        SystemDefinition right = systemAlphaParallel.getRight();
+        Component leftComponent = convertSystem(left, automata, actions);
+        Component rightComponent = convertSystem(right, automata, actions);
+        ComponentParallel result = new ComponentParallel();
+        result.setLeft(leftComponent);
+        result.setRight(rightComponent);
+        Set<Expression> mid = new HashSet<>();
+        mid.addAll(left.getAlphabet());
+        mid.retainAll(right.getAlphabet());
+        mid.remove(silentActionIdentifier);
+        result.addActions(mapActions(mid, actions));
+        return result;
+    }
 
-	private Component convertSystemHide(SystemHide systemHide, Map<String, Automaton> automata, Actions actions) {
-		ComponentRename result = new ComponentRename();
-		SystemDefinition inner = systemHide.getInner();
-		Component innerComponent = convertSystem(inner, automata, actions);
-		result.setRenamed(innerComponent);
-		result.addRenamings(hideActions(systemHide.getHidden(), actions));
-		return result;
-	}
+    private Component convertSystemAsyncParallel(SystemAsyncParallel systemAsyncParallel, Map<String, Automaton> automata,
+            Actions actions) {
+        SystemDefinition left = systemAsyncParallel.getLeft();
+        SystemDefinition right = systemAsyncParallel.getRight();
+        Component leftComponent = convertSystem(left, automata, actions);
+        Component rightComponent = convertSystem(right, automata, actions);
+        ComponentParallel result = new ComponentParallel();
+        result.setLeft(leftComponent);
+        result.setRight(rightComponent);
+        return result;
+    }
 
-	private Component convertSystemRename(SystemRename systemRename, Map<String, Automaton> automata,
-			Actions actions) {
-		SystemDefinition inner = systemRename.getInner();
-		Component innerComponent = convertSystem(inner, automata, actions);
-		ComponentRename result = new ComponentRename();
-		result.setRenamed(innerComponent);
-		result.addRenamings(renameActions(systemRename.getRenaming(), actions));
-		return result;
-	}
+    private Component convertSystemHide(SystemHide systemHide, Map<String, Automaton> automata, Actions actions) {
+        ComponentRename result = new ComponentRename();
+        SystemDefinition inner = systemHide.getInner();
+        Component innerComponent = convertSystem(inner, automata, actions);
+        result.setRenamed(innerComponent);
+        result.addRenamings(hideActions(systemHide.getHidden(), actions));
+        return result;
+    }
 
-	private Component convertSystemRestrictedParallel(SystemRestrictedParallel systemRestrictedParallel,
-			Map<String, Automaton> automata, Actions actions) {
-		SystemDefinition left = systemRestrictedParallel.getLeft();
-		SystemDefinition right = systemRestrictedParallel.getRight();
-		Component leftComponent = convertSystem(left, automata, actions);
-		Component rightComponent = convertSystem(right, automata, actions);
-		ComponentParallel result = new ComponentParallel();
-		result.addActions(mapActions(systemRestrictedParallel.getSync(), actions));
-		result.setLeft(leftComponent);
-		result.setRight(rightComponent);
-		return result;
-	}
+    private Component convertSystemRename(SystemRename systemRename, Map<String, Automaton> automata,
+            Actions actions) {
+        SystemDefinition inner = systemRename.getInner();
+        Component innerComponent = convertSystem(inner, automata, actions);
+        ComponentRename result = new ComponentRename();
+        result.setRenamed(innerComponent);
+        result.addRenamings(renameActions(systemRename.getRenaming(), actions));
+        return result;
+    }
 
-	private Map<Action, Action> renameActions(Map<Expression, Expression> renaming, Actions actions) {
-		Map<Action,Action> result = new LinkedHashMap<>();
-		for (Entry<Expression,Expression> entry : renaming.entrySet()) {
-			result.put(actions.get(entry.getKey()), actions.get(entry.getValue()));
-		}
-		return result;
-	}
+    private Component convertSystemRestrictedParallel(SystemRestrictedParallel systemRestrictedParallel,
+            Map<String, Automaton> automata, Actions actions) {
+        SystemDefinition left = systemRestrictedParallel.getLeft();
+        SystemDefinition right = systemRestrictedParallel.getRight();
+        Component leftComponent = convertSystem(left, automata, actions);
+        Component rightComponent = convertSystem(right, automata, actions);
+        ComponentParallel result = new ComponentParallel();
+        result.addActions(mapActions(systemRestrictedParallel.getSync(), actions));
+        result.setLeft(leftComponent);
+        result.setRight(rightComponent);
+        return result;
+    }
 
-	private Map<Action, Action> hideActions(Set<Expression> hidden, Actions actions) {
-		Map<Action,Action> result = new LinkedHashMap<>();
-		for (Expression expression : hidden) {
-			Action from = actions.get(expression);
-			result.put(from, getSilentAction());
-		}
-		return result;
-	}
+    private Map<Action, Action> renameActions(Map<Expression, Expression> renaming, Actions actions) {
+        Map<Action,Action> result = new LinkedHashMap<>();
+        for (Entry<Expression,Expression> entry : renaming.entrySet()) {
+            result.put(actions.get(entry.getKey()), actions.get(entry.getValue()));
+        }
+        return result;
+    }
 
-	private Collection<Action> mapActions(Collection<Expression> expressions, Actions allActions) {
-		assert expressions != null;
-		for (Expression expression : expressions) {
-			assert expression != null;
-		}
-		Set<Action> result = new LinkedHashSet<>();
-		for (Expression expression : expressions) {
-			ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
-			result.add(allActions.get(expressionIdentifier.getName()));
-		}
-		return result;
-	}
-	
-	private Action getSilentAction() {
-		return modelJANI.getSilentAction();
-	}
+    private Map<Action, Action> hideActions(Set<Expression> hidden, Actions actions) {
+        Map<Action,Action> result = new LinkedHashMap<>();
+        for (Expression expression : hidden) {
+            Action from = actions.get(expression);
+            result.put(from, getSilentAction());
+        }
+        return result;
+    }
+
+    private Collection<Action> mapActions(Collection<Expression> expressions, Actions allActions) {
+        assert expressions != null;
+        for (Expression expression : expressions) {
+            assert expression != null;
+        }
+        Set<Action> result = new LinkedHashSet<>();
+        for (Expression expression : expressions) {
+            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
+            result.add(allActions.get(expressionIdentifier.getName()));
+        }
+        return result;
+    }
+
+    private Action getSilentAction() {
+        return modelJANI.getSilentAction();
+    }
 }

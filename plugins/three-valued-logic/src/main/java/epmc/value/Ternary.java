@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -25,14 +25,14 @@ public enum Ternary implements Comparable<Ternary> {
     UNKNOWN,
     TRUE;
 
-	private final static String TRUE_STRING = "true";
-	private final static String FALSE_STRING = "false";
-	private final static String UNKNOWN_STRING = "unknown";
-	
+    private final static String TRUE_STRING = "true";
+    private final static String FALSE_STRING = "false";
+    private final static String UNKNOWN_STRING = "unknown";
+
     public boolean isFalse() {
         return this == FALSE;
     }
-    
+
     public boolean isUnknown() {
         return this == UNKNOWN;
     }
@@ -44,7 +44,7 @@ public enum Ternary implements Comparable<Ternary> {
     public boolean isKnown() {
         return this != UNKNOWN;
     }
-    
+
     public boolean getBoolean() {
         if (isTrue()) {
             return true;
@@ -55,7 +55,7 @@ public enum Ternary implements Comparable<Ternary> {
         }
         return false;
     }
-    
+
     @Override
     public String toString() {
         switch (this) {

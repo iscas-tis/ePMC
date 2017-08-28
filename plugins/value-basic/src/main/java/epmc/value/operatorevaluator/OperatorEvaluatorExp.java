@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -36,45 +36,45 @@ import epmc.value.operator.OperatorExp;
  * @author Ernst Moritz Hahn
  */
 public enum OperatorEvaluatorExp implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorExp.EXP;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeReal.isReal(types[0]) && !TypeInteger.isInteger(types[0])) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public TypeReal resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return TypeReal.get();
-	}
-	
-	@Override
-	public void apply(Value result, Value... operands) {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-    			: ValueInteger.asInteger(operands[0]).getInt();
-		ValueDouble.asDouble(result).set(Math.exp(value1));
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorExp.EXP;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        if (!TypeReal.isReal(types[0]) && !TypeInteger.isInteger(types[0])) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public TypeReal resultType(Operator operator, Type... types) {
+        assert operator != null;
+        assert types != null;
+        assert types.length >= 1;
+        assert types[0] != null;
+        return TypeReal.get();
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+                : ValueInteger.asInteger(operands[0]).getInt();
+        ValueDouble.asDouble(result).set(Math.exp(value1));
+    }
 }

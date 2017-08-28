@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -28,89 +28,89 @@ import epmc.time.TypeClock;
 
 public class VariableProcessor implements JANI2PRISMProcessorStrict {
 
-	private Variable variable = null;
-	private String prefix = null;
-	private boolean forDefinition = false;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Variable; 
-		
-		variable = (Variable) obj;
-		return this;
-	}
+    private Variable variable = null;
+    private String prefix = null;
+    private boolean forDefinition = false;
 
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	@Override
-	public JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) {
-		this.forDefinition = forDefinition;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Variable; 
 
-	@Override
-	public String toPRISM() {
-		assert variable != null;
-		
-		JANIComponentRegistrar.variableRenaming(variable, prefix);
-		if (forDefinition) {
-			return toPRISMForDefinition();
-		} else {
-			return variable.getName();
-		}
-	}
-	
-	private String toPRISMForDefinition() {
-		StringBuilder prism = new StringBuilder();
-		
-		String comment = variable.getComment();
-		if (comment != null) {
-			if (prefix != null) {
-				prism.append(prefix);
-			}
-			prism.append("// ")
-				 .append(comment)
-				 .append("\n");
-		}
+        variable = (Variable) obj;
+        return this;
+    }
 
-		if (prefix != null)	{
-			prism.append(prefix);
-		}
-		prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable))
-		     .append(" : ")
-		     .append(ProcessorRegistrar.getProcessor(variable.getType())
-		    		 				   .toPRISM());
-		
-		if (!JANIComponentRegistrar.areInitialConditionsUsed()) {
-			if (!(variable.toType() instanceof TypeClock)) {
-				Expression initial = variable.getInitialValueOrNull();
-				if (initial != null) {
-					prism.append(" init ")
-						 .append(ProcessorRegistrar.getProcessor(initial)
-								 				   .toPRISM());
-				}
-			}
-		}
-		
-		prism.append(";\n");
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert variable != null;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert variable != null;
-		
-		return variable.isTransient();
-	}	
+    @Override
+    public JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) {
+        this.forDefinition = forDefinition;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert variable != null;
+
+        JANIComponentRegistrar.variableRenaming(variable, prefix);
+        if (forDefinition) {
+            return toPRISMForDefinition();
+        } else {
+            return variable.getName();
+        }
+    }
+
+    private String toPRISMForDefinition() {
+        StringBuilder prism = new StringBuilder();
+
+        String comment = variable.getComment();
+        if (comment != null) {
+            if (prefix != null) {
+                prism.append(prefix);
+            }
+            prism.append("// ")
+            .append(comment)
+            .append("\n");
+        }
+
+        if (prefix != null)	{
+            prism.append(prefix);
+        }
+        prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable))
+        .append(" : ")
+        .append(ProcessorRegistrar.getProcessor(variable.getType())
+                .toPRISM());
+
+        if (!JANIComponentRegistrar.areInitialConditionsUsed()) {
+            if (!(variable.toType() instanceof TypeClock)) {
+                Expression initial = variable.getInitialValueOrNull();
+                if (initial != null) {
+                    prism.append(" init ")
+                    .append(ProcessorRegistrar.getProcessor(initial)
+                            .toPRISM());
+                }
+            }
+        }
+
+        prism.append(";\n");
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert variable != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert variable != null;
+
+        return variable.isTransient();
+    }	
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication;
 
@@ -40,7 +40,7 @@ import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
 
 public class WebSocketTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -60,11 +60,11 @@ public class WebSocketTest {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.NOTRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);        
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
         return options;
     }
 
@@ -79,7 +79,7 @@ public class WebSocketTest {
         CommandTaskJaniInteractionStartServer task = new CommandTaskJaniInteractionStartServer();
         task.executeOnClient();
     }
-    
+
     @Ignore
     @Test
     public void userManagementTest() {

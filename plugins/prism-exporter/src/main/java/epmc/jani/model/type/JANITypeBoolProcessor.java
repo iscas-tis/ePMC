@@ -16,40 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
-	
-	private JANITypeBool bool = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj instanceof JANITypeBool;
 
-		bool = (JANITypeBool) obj;
-		return this;
-	}
+    private JANITypeBool bool = null;
 
-	@Override
-	public String toPRISM() {
-		assert bool != null;
-		
-		return "bool";
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert bool != null;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj instanceof JANITypeBool;
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert bool != null;
-		
-		return false;
-	}	
+        bool = (JANITypeBool) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert bool != null;
+
+        return "bool";
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert bool != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert bool != null;
+
+        return false;
+    }	
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.jdd;
 
@@ -45,20 +45,20 @@ import jdd.bdd.Permutation;
 
 public final class LibraryDDJDD implements LibraryDD {
     public final static String IDENTIFIER = "jdd";
-    
+
     private final static class LowLevelPermutationJDD
     implements PermutationLibraryDD{
         private final Permutation bddPerm;
-        
+
         LowLevelPermutationJDD(Permutation bddPerm) {
             this.bddPerm = bddPerm;
         }
-        
+
         Permutation getPermutation() {
             return bddPerm;
         }
     }
-    
+
     private BDD bdd;
     private ContextDD contextDD;
     private Value oneValue;
@@ -67,20 +67,20 @@ public final class LibraryDDJDD implements LibraryDD {
     private int oneNode;
     private boolean alive;
     private final TIntList variables = new TIntArrayList();
-    
+
     @Override
     public long apply(Operator operator, Type type, long... operands)
-            {
+    {
         assert alive;
         assert operator != null;
         assert type != null;
         assert TypeBoolean.isBoolean(type);
         for (int opNr = 0; opNr < operands.length; opNr++) {
-        	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
+            assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         int result;
         if (operator.equals(OperatorId.ID)) {
-        	result = (int) operands[0];
+            result = (int) operands[0];
         } else if (operator.equals(OperatorNot.NOT)) {
             result = bdd.not((int) operands[0]);
         } else if (operator.equals(OperatorAnd.AND)) {
@@ -100,7 +100,7 @@ public final class LibraryDDJDD implements LibraryDD {
         } else if (operator.equals(OperatorIte.ITE)) {
             result = bdd.ite((int) operands[0], (int) operands[1], (int) operands[2]);
         } else {
-        	assert false;
+            assert false;
             return -1;
         }
         bdd.ref(result);
@@ -160,7 +160,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            {
+    {
         assert alive;
         assert dd >= 0;
         assert permutation != null;
@@ -263,7 +263,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            {
+    {
         assert alive;
         assert dd1 >= 0;
         assert dd2 >= 0;
@@ -284,7 +284,7 @@ public final class LibraryDDJDD implements LibraryDD {
             from[index] = variables.get(index);
             to[index] = variables.get(permutation[index]);
         }
-        
+
         Permutation jddPerm = bdd.createPermutation(from, to);
         return new LowLevelPermutationJDD(jddPerm);
     }
@@ -370,21 +370,21 @@ public final class LibraryDDJDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.isBoolean(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

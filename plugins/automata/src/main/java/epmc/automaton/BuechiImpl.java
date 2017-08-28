@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -64,9 +64,9 @@ import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorOr;
 
 public class BuechiImpl implements Buechi {
-	private final static String SPOT_PARAM_FORMULA = "-f";
-	private final static String SPOT_PARAM_LOW_OPTIMISATIONS = "--low";
-	
+    private final static String SPOT_PARAM_FORMULA = "-f";
+    private final static String SPOT_PARAM_LOW_OPTIMISATIONS = "--low";
+
     private final static String IDENTIFIER = "buechi-spot";
     private final String ltl2tgba;
     private final GraphExplicit automaton;
@@ -81,14 +81,14 @@ public class BuechiImpl implements Buechi {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     public BuechiImpl(Expression expression, Expression[] expressions)
-            {
+    {
         assert expression != null;
         // TODO does not work if used there
-//        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
-  //          expression = replaceNeOperator(expression);
-    //    }
+        //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
+        //          expression = replaceNeOperator(expression);
+        //    }
         this.ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
         OptionsAutomaton.Ltl2BaAutomatonBuilder builder = Options.get().getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
         Set<Expression> expressionsSeen = new HashSet<>();
@@ -118,7 +118,7 @@ public class BuechiImpl implements Buechi {
         int totalSize = 0;
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
-            	totalSize++;
+                totalSize++;
             }
         }
         this.evaluators = new EvaluatorExplicit[totalSize];
@@ -129,7 +129,7 @@ public class BuechiImpl implements Buechi {
                 BuechiTransition trans = labels.getObject(node, succNr);
                 Expression guard = trans.getExpression();
                 evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
-                		new ExpressionToTypeBoolean(expressions), expressions);
+                        new ExpressionToTypeBoolean(expressions), expressions);
                 totalSize++;
             }
         }
@@ -150,11 +150,11 @@ public class BuechiImpl implements Buechi {
 
     @Override
     public void query(Value[] get) {
-    	for (int i = 0; i < evaluators.length; i++) {
-    		evaluators[i].evaluate(get);
-    	}
+        for (int i = 0; i < evaluators.length; i++) {
+            evaluators[i].evaluate(get);
+        }
     }
-    
+
     private int findTrueState() {
         int trueState = -1;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -191,7 +191,7 @@ public class BuechiImpl implements Buechi {
             // statistics in a single call. Quite annoying. Check whether this
             // is possible once a new version of SPOT appears.
             final String[] autExecArgs = {ltl2tgba,
-            		SPOT_PARAM_FORMULA, spotFn,
+                    SPOT_PARAM_FORMULA, spotFn,
                     SPOT_PARAM_LOW_OPTIMISATIONS};
             final Process autProcess = Runtime.getRuntime().exec(autExecArgs);
             final BufferedReader autIn = new BufferedReader
@@ -206,7 +206,7 @@ public class BuechiImpl implements Buechi {
             }
             this.numLabels = ValueInteger.asInteger(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
             final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn, "--stats", "%d",
-                    "--low"};
+            "--low"};
             final Process detProcess = Runtime.getRuntime().exec(detExecArr);
             int detResult = detProcess.getInputStream().read();
             ensure(detResult != -1, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO);
@@ -228,27 +228,27 @@ public class BuechiImpl implements Buechi {
         }
         numLabels = 1;
     }
-    
+
     @Override
     public boolean isDeterministic() {
         return deterministic;
     }
-    
+
     @Override
     public int getNumLabels() {
         return numLabels;
     }
-    
+
     @Override
     public GraphExplicit getGraph() {
         return automaton;
     }
-    
+
     @Override
     public int getTrueState() {
         return trueState;
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!ExpressionLiteral.isLiteral(expression)) {
@@ -257,14 +257,14 @@ public class BuechiImpl implements Buechi {
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
-    
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
         return expressionLiteral.getValue();
     }
-    
+
     public static String expr2spot(Expression expression,
             Map<Expression, String> expr2str)  {
         assert expression != null;
@@ -348,7 +348,7 @@ public class BuechiImpl implements Buechi {
         expr2str.put(expression,  result);
         return result;
     }
-    
+
     private static boolean isAnd(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -365,7 +365,7 @@ public class BuechiImpl implements Buechi {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.NEXT;
     }
-    
+
     private static boolean isFinally(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -415,7 +415,7 @@ public class BuechiImpl implements Buechi {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isIff(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -424,7 +424,7 @@ public class BuechiImpl implements Buechi {
         return expressionOperator.getOperator()
                 .equals(OperatorIff.IFF);
     }
-    
+
     private static boolean isOr(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -433,7 +433,7 @@ public class BuechiImpl implements Buechi {
         return expressionOperator.getOperator()
                 .equals(OperatorOr.OR);
     }
-    
+
     private static boolean isImplies(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -442,7 +442,7 @@ public class BuechiImpl implements Buechi {
         return expressionOperator.getOperator()
                 .equals(OperatorImplies.IMPLIES);
     }
-    
+
     private static boolean isIte(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -451,9 +451,9 @@ public class BuechiImpl implements Buechi {
         return expressionOperator.getOperator()
                 .equals(OperatorIte.ITE);
     }
-    
+
     public static Expression replaceNeOperator(Expression expression)
-            {
+    {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
@@ -480,8 +480,8 @@ public class BuechiImpl implements Buechi {
 
     private static Expression not(Expression expression) {
         return new ExpressionOperator.Builder()
-            .setOperator(OperatorNot.NOT)
-            .setOperands(expression)
-            .build();
+                .setOperator(OperatorNot.NOT)
+                .setOperands(expression)
+                .build();
     }
 }

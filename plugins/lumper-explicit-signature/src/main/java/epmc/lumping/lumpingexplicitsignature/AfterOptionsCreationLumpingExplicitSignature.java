@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -27,20 +27,20 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationLumpingExplicitSignature implements AfterOptionsCreation {
-	public final static String IDENTIFIER = "after-options-creation-jani";
+    public final static String IDENTIFIER = "after-options-creation-jani";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		Map<String,Class<?>> lumpers = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
-		assert lumpers != null;
-		lumpers.put(LumperExplicitSignatureStrong.IDENTIFIER, LumperExplicitSignatureStrong.class);
-		lumpers.put(LumperExplicitSignatureWeakCTMC.IDENTIFIER, LumperExplicitSignatureWeakCTMC.class);
-	}
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        Map<String,Class<?>> lumpers = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
+        assert lumpers != null;
+        lumpers.put(LumperExplicitSignatureStrong.IDENTIFIER, LumperExplicitSignatureStrong.class);
+        lumpers.put(LumperExplicitSignatureWeakCTMC.IDENTIFIER, LumperExplicitSignatureWeakCTMC.class);
+    }
 
 }

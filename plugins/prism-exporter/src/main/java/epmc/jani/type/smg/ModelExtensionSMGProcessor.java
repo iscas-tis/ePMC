@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.smg;
 
@@ -28,46 +28,46 @@ import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExtended {
-	
-	private ModelExtensionSMG smg;
 
-	@Override
-	public JANI2PRISMProcessorExtended setElement(Object obj) {
-		assert obj instanceof ModelExtensionSMG;
-		
-		smg = (ModelExtensionSMG) obj;
-		return this;
-	}
+    private ModelExtensionSMG smg;
 
-	@Override
-	public String toPRISM() {
-		assert smg != null;
-		
-		return new StringBuilder().append(ModelExtensionSMG.IDENTIFIER)
-								  .append("\n")
-								  .append(ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM())
-								  .toString();
-	}
-	
-	
-	@Override
-	public List<String> getUnsupportedFeature() {
-		List<String> ll = new LinkedList<>();
-		ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_SMG);
-		return ll;
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert smg != null;
-		
-		ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
-	}
+    @Override
+    public JANI2PRISMProcessorExtended setElement(Object obj) {
+        assert obj instanceof ModelExtensionSMG;
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert smg != null;
-		
-		return ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();
-	}	
+        smg = (ModelExtensionSMG) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert smg != null;
+
+        return new StringBuilder().append(ModelExtensionSMG.IDENTIFIER)
+                .append("\n")
+                .append(ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM())
+                .toString();
+    }
+
+
+    @Override
+    public List<String> getUnsupportedFeature() {
+        List<String> ll = new LinkedList<>();
+        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_SMG);
+        return ll;
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert smg != null;
+
+        ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert smg != null;
+
+        return ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();
+    }	
 }

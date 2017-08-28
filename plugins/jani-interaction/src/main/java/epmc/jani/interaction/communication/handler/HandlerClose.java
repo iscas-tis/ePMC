@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication.handler;
 
@@ -30,27 +30,27 @@ import epmc.jani.interaction.communication.Backend;
  * @author Ernst Moritz Hahn
  */
 public final class HandlerClose implements Handler {
-	/** Type of messages this handler handles. */
-	public final static String TYPE = "close";
+    /** Type of messages this handler handles. */
+    public final static String TYPE = "close";
 
-	/** Backend in which this handler is used. */
-	private final Backend backend;
+    /** Backend in which this handler is used. */
+    private final Backend backend;
 
-	public HandlerClose(Backend backend) {
-		assert backend != null;
-		this.backend = backend;
-	}
-	
-	@Override
-	public String getType() {
-		return TYPE;
-	}
+    public HandlerClose(Backend backend) {
+        assert backend != null;
+        this.backend = backend;
+    }
 
-	@Override
-	public void handle(Object client, JsonObject object) {
-		assert client != null;
-		assert object != null;
-		backend.logOffClient(client);
-	}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    @Override
+    public void handle(Object client, JsonObject object) {
+        assert client != null;
+        assert object != null;
+        backend.logOffClient(client);
+    }
 
 }

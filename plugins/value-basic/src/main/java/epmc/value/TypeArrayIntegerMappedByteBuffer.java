@@ -16,46 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 final class TypeArrayIntegerMappedByteBuffer implements TypeArrayInteger {
     private final static String ARRAY_INDICATOR = "[](integer-mapped-byte-buffer)";
-	private final TypeInteger entryType;
+    private final TypeInteger entryType;
 
     TypeArrayIntegerMappedByteBuffer(TypeInteger entryType) {
-    	assert entryType != null;
-    	this.entryType = entryType;
+        assert entryType != null;
+        this.entryType = entryType;
     }
-    
+
     @Override
     public ValueArrayIntegerMappedByteBuffer newValue() {
         return new ValueArrayIntegerMappedByteBuffer(this);
     }
 
-	@Override
-	public TypeInteger getEntryType() {
-		return entryType;
-	}
+    @Override
+    public TypeInteger getEntryType() {
+        return entryType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TypeArrayIntegerMappedByteBuffer)) {
-			return false;
-		}
-		TypeArrayIntegerMappedByteBuffer other = (TypeArrayIntegerMappedByteBuffer) obj;
-		return this.getEntryType().equals(other.getEntryType());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TypeArrayIntegerMappedByteBuffer)) {
+            return false;
+        }
+        TypeArrayIntegerMappedByteBuffer other = (TypeArrayIntegerMappedByteBuffer) obj;
+        return this.getEntryType().equals(other.getEntryType());
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-	}
-	
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -64,8 +64,8 @@ final class TypeArrayIntegerMappedByteBuffer implements TypeArrayInteger {
         return builder.toString();
     }
 
-	@Override
-	public TypeArrayGeneric getTypeArray() {
-		return new TypeArrayGeneric(this);
-	}
+    @Override
+    public TypeArrayGeneric getTypeArray() {
+        return new TypeArrayGeneric(this);
+    }
 }

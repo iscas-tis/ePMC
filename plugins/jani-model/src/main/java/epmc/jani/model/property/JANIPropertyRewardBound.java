@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -45,135 +45,135 @@ import epmc.util.UtilJSON;
  * @author Andrea Turrini
  */
 public final class JANIPropertyRewardBound implements JANINode {
-	/** Identifier of this JANI expression type. */
-	public final static String IDENTIFIER = "property-reward-bound";
+    /** Identifier of this JANI expression type. */
+    public final static String IDENTIFIER = "property-reward-bound";
 
-	private final static String EXP = "exp";
-	private final static String ACCUMULATE = "accumulate";
-	private final static String BOUNDS = "bounds";
-	
-	private Map<String, ? extends JANIIdentifier> validIdentifiers;
-	private boolean forProperty;
-	private ModelJANI model;
-	
-	private boolean initialized;
-	private Expression exp;
-	private List<JANIPropertyAccumulateValue> accumulate;
-	private JANIPropertyInterval bounds;
-	
-	private void resetFields() {
-		initialized = false;
-		exp = null;
-		accumulate = null;
-		bounds = null;
-	}
-	
-	public JANIPropertyRewardBound() {
-		resetFields();
-	}
+    private final static String EXP = "exp";
+    private final static String ACCUMULATE = "accumulate";
+    private final static String BOUNDS = "bounds";
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert validIdentifiers != null;
-		assert value != null;
-		resetFields();
-		if (!forProperty) {
-			return null;
-		}
-		if (!(value instanceof JsonObject)) {
-			return null;
-		}
-		JsonObject object = (JsonObject) value;
-		if (!object.containsKey(EXP)) {
-			return null;
-		}
-		if (!object.containsKey(ACCUMULATE)) {
-			return null;
-		}
-		if (!object.containsKey(BOUNDS)) {
-			return null;
-		}
-		exp = ExpressionParser.parseExpression(model, object.get(EXP), validIdentifiers);
-		JsonArray accumulate = UtilJSON.getArray(object, ACCUMULATE);
-		this.accumulate = new ArrayList<>(accumulate.size());
-		for (JsonValue acc : accumulate) {
-			this.accumulate.add(UtilJSON.toOneOf(acc, JANIPropertyAccumulateValue.getAccumulateValues()));
-		}
-		bounds = new JANIPropertyInterval(); 
-		bounds.setForProperty(forProperty);
-		bounds.setIdentifiers(validIdentifiers);
-		bounds.setModel(model);
-		bounds.parse(object.get(BOUNDS));
-		initialized = (exp != null) && (accumulate != null) && (bounds != null);
-		return this;
-	}
+    private Map<String, ? extends JANIIdentifier> validIdentifiers;
+    private boolean forProperty;
+    private ModelJANI model;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(EXP, ExpressionParser.generateExpression(model, exp));
-		if (accumulate != null) {
-			JsonArrayBuilder accumulateBuilder = Json.createArrayBuilder();
-			for (JANIPropertyAccumulateValue acc : accumulate) {
-				accumulateBuilder.add(acc.toString());
-			}
-			builder.add(ACCUMULATE, accumulateBuilder);
-		}
-		builder.add(BOUNDS, bounds.generate());
-		return builder.build();
-	}
+    private boolean initialized;
+    private Expression exp;
+    private List<JANIPropertyAccumulateValue> accumulate;
+    private JANIPropertyInterval bounds;
 
-	public void setExp(Expression exp) {
-		this.exp = exp;
-	}
-	
-	public Expression getExp() {
-		return exp;
-	}
-	
-	public void setBounds(JANIPropertyInterval bounds) {
-		this.bounds = bounds;
-		initialized = (exp != null) && (accumulate != null) && (bounds != null);
-	}
-	
-	public JANIPropertyInterval getBounds() {
-		return bounds;
-	}
-	
-	public void setAccumulate(List<JANIPropertyAccumulateValue> accumulate) {
-		this.accumulate = accumulate;
-		initialized = (exp != null) && (accumulate != null) && (bounds != null);
-	}
-	
-	public List<JANIPropertyAccumulateValue> getAccumulate() {
-		assert accumulate != null;
-		return accumulate;
-	}
-	
-	public void setForProperty(boolean forProperty) {
-		this.forProperty = forProperty;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private void resetFields() {
+        initialized = false;
+        exp = null;
+        accumulate = null;
+        bounds = null;
+    }
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-		this.validIdentifiers = identifiers;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    public JANIPropertyRewardBound() {
+        resetFields();
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert validIdentifiers != null;
+        assert value != null;
+        resetFields();
+        if (!forProperty) {
+            return null;
+        }
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(EXP)) {
+            return null;
+        }
+        if (!object.containsKey(ACCUMULATE)) {
+            return null;
+        }
+        if (!object.containsKey(BOUNDS)) {
+            return null;
+        }
+        exp = ExpressionParser.parseExpression(model, object.get(EXP), validIdentifiers);
+        JsonArray accumulate = UtilJSON.getArray(object, ACCUMULATE);
+        this.accumulate = new ArrayList<>(accumulate.size());
+        for (JsonValue acc : accumulate) {
+            this.accumulate.add(UtilJSON.toOneOf(acc, JANIPropertyAccumulateValue.getAccumulateValues()));
+        }
+        bounds = new JANIPropertyInterval(); 
+        bounds.setForProperty(forProperty);
+        bounds.setIdentifiers(validIdentifiers);
+        bounds.setModel(model);
+        bounds.parse(object.get(BOUNDS));
+        initialized = (exp != null) && (accumulate != null) && (bounds != null);
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(EXP, ExpressionParser.generateExpression(model, exp));
+        if (accumulate != null) {
+            JsonArrayBuilder accumulateBuilder = Json.createArrayBuilder();
+            for (JANIPropertyAccumulateValue acc : accumulate) {
+                accumulateBuilder.add(acc.toString());
+            }
+            builder.add(ACCUMULATE, accumulateBuilder);
+        }
+        builder.add(BOUNDS, bounds.generate());
+        return builder.build();
+    }
+
+    public void setExp(Expression exp) {
+        this.exp = exp;
+    }
+
+    public Expression getExp() {
+        return exp;
+    }
+
+    public void setBounds(JANIPropertyInterval bounds) {
+        this.bounds = bounds;
+        initialized = (exp != null) && (accumulate != null) && (bounds != null);
+    }
+
+    public JANIPropertyInterval getBounds() {
+        return bounds;
+    }
+
+    public void setAccumulate(List<JANIPropertyAccumulateValue> accumulate) {
+        this.accumulate = accumulate;
+        initialized = (exp != null) && (accumulate != null) && (bounds != null);
+    }
+
+    public List<JANIPropertyAccumulateValue> getAccumulate() {
+        assert accumulate != null;
+        return accumulate;
+    }
+
+    public void setForProperty(boolean forProperty) {
+        this.forProperty = forProperty;
+    }
+
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
+
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.validIdentifiers = identifiers;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

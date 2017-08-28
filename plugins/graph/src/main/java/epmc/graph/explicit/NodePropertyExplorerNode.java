@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -48,20 +48,20 @@ final class NodePropertyExplorerNode implements NodeProperty {
         public ValueExplorerNode newValue() {
             return new ValueExplorerNode();
         }
-        
+
         @Override
         public TypeArray getTypeArray() {
             return typeArray;
         }
 
-		@Override
-		public boolean canImport(Type type) {
-	        assert type != null;
-	        if (this == type) {
-	            return true;
-	        }
-	        return false;
-		}
+        @Override
+        public boolean canImport(Type type) {
+            assert type != null;
+            if (this == type) {
+                return true;
+            }
+            return false;
+        }
     }
 
     private final class ValueExplorerNode implements Value {
@@ -71,7 +71,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
         private int node;
         /** Whether the value is immutable. */
         private boolean immutable;
-        
+
         @Override
         public Value clone() {
             ValueExplorerNode clone = new ValueExplorerNode();
@@ -93,7 +93,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
         public boolean isImmutable() {
             return immutable;
         }
-        
+
         @Override
         public String toString() {
             if (node == -1) {
@@ -103,7 +103,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
                     NodePropertyExplorerNode.this.node, this.node);
             return NodePropertyExplorerNode.this.node.toString();
         }
-        
+
         @Override
         public void set(Value value) {
             assert value != null;
@@ -112,38 +112,38 @@ final class NodePropertyExplorerNode implements NodeProperty {
             this.node = other.node;
         }
 
-		@Override
-		public int compareTo(Value other) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
+        @Override
+        public int compareTo(Value other) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
 
-		@Override
-		public double distance(Value other) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
+        @Override
+        public double distance(Value other) {
+            // TODO Auto-generated method stub
+            return 0;
+        }
 
-		@Override
-		public boolean isEq(Value other) {
-			// TODO Auto-generated method stub
-			return false;
-		}
+        @Override
+        public boolean isEq(Value other) {
+            // TODO Auto-generated method stub
+            return false;
+        }
 
-		@Override
-		public void set(String value) {
-			// TODO Auto-generated method stub
-			
-		}
+        @Override
+        public void set(String value) {
+            // TODO Auto-generated method stub
+
+        }
     }
-    
+
     private final class TypeArrayExplorerNode implements TypeArray {
         private final static String ARRAY_INDICATOR = "[](explorer-node)";
-		private final Type entryType;
+        private final Type entryType;
 
         protected TypeArrayExplorerNode(Type entryType) {
-        	assert entryType != null;
-        	this.entryType = entryType;
+            assert entryType != null;
+            this.entryType = entryType;
         }
 
         @Override
@@ -156,55 +156,55 @@ final class NodePropertyExplorerNode implements NodeProperty {
             return new ValueArrayExplorerNode(this);
         }
 
-		@Override
-		public Type getEntryType() {
-			return entryType;
-		}
+        @Override
+        public Type getEntryType() {
+            return entryType;
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			if (!(obj instanceof TypeArrayExplorerNode)) {
-				return false;
-			}
-			TypeArrayExplorerNode other = (TypeArrayExplorerNode) obj;
-			return this.getEntryType().equals(other.entryType);
-		}
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof TypeArrayExplorerNode)) {
+                return false;
+            }
+            TypeArrayExplorerNode other = (TypeArrayExplorerNode) obj;
+            return this.getEntryType().equals(other.entryType);
+        }
 
-		@Override
-		public int hashCode() {
-	        int hash = 0;
-	        hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-	        hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
-	        return hash;
-		}
-		
-		@Override
-	    public TypeArray getTypeArray() {
-	        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
-	    }
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
+            hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
+            return hash;
+        }
 
-	    @Override
-	    public String toString() {
-	        StringBuilder builder = new StringBuilder();
-	        builder.append(getEntryType());
-	        builder.append(ARRAY_INDICATOR);
-	        return builder.toString();
-	    }
+        @Override
+        public TypeArray getTypeArray() {
+            return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(getEntryType());
+            builder.append(ARRAY_INDICATOR);
+            return builder.toString();
+        }
     }
-    
+
     private final class ValueArrayExplorerNode implements ValueArray, ValueContentIntArray {
         /** Content of the array, storing indices of explorer nodes. */
         private int[] content;
-		private final TypeArrayExplorerNode type;
-		private boolean immutable;
-		private int size;
+        private final TypeArrayExplorerNode type;
+        private boolean immutable;
+        private int size;
 
         ValueArrayExplorerNode(TypeArrayExplorerNode type) {
-        	assert type != null;
-        	this.type = type;
+            assert type != null;
+            this.type = type;
             this.content = new int[0];
         }
-        
+
         @Override
         public ValueArrayExplorerNode clone() {
             ValueArrayExplorerNode clone = (ValueArrayExplorerNode) getType().newValue();
@@ -233,7 +233,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
             ValueExplorerNode other = (ValueExplorerNode) value;
             other.node = entry;
         }
-        
+
         @Override
         public int[] getIntArray() {
             return content;
@@ -248,41 +248,41 @@ final class NodePropertyExplorerNode implements NodeProperty {
             }
             return hash;
         }
-        
+
         @Override
         public TypeArrayExplorerNode getType() {
-			return type;
-		}
-        
+            return type;
+        }
+
         @Override
         public void setImmutable() {
-        	immutable = true;
+            immutable = true;
         }
-        
+
         @Override
         public boolean isImmutable() {
-        	return immutable;
+            return immutable;
         }
 
-		@Override
-		public void set(String value) {
-			// TODO Auto-generated method stub
-			
-		}
+        @Override
+        public void set(String value) {
+            // TODO Auto-generated method stub
 
-		@Override
-		public void setSize(int size) {
+        }
+
+        @Override
+        public void setSize(int size) {
             assert !isImmutable();
             content = new int[size];
             this.size = size;
-		}
+        }
 
-		@Override
-		public int size() {
-			return size;
-		}
+        @Override
+        public int size() {
+            return size;
+        }
     }
-    
+
     /** Graph this node property belongs to. */
     private final GraphExplicit graph;
     /** Explorer node used as return value. */
@@ -290,7 +290,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
     /** Type of this node property. */
     private final TypeExplorerNode type;
     private final TypeArrayExplorerNode typeArray;
-    
+
     /** Value used as return value. */
     private final ValueExplorerNode value;
     /** Node store to read nodes from. */
@@ -321,10 +321,10 @@ final class NodePropertyExplorerNode implements NodeProperty {
     }
 
     void setNumStates(int numStates) {
-    	assert numStates >= 0;
-    	this.numStates = numStates;
+        assert numStates >= 0;
+        this.numStates = numStates;
     }
-    
+
     @Override
     public GraphExplicit getGraph() {
         return graph;
@@ -344,7 +344,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
         return value;
     }
-    
+
     @SuppressWarnings("unchecked")
     @Override
     public <T> T getObject(int graphNode) {

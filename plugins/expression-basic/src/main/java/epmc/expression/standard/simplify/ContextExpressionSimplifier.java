@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
@@ -42,7 +42,7 @@ public final class ContextExpressionSimplifier {
             simplifierNr++;
         }
     }
-    
+
     public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         Expression result = expression;
         boolean changed = true;

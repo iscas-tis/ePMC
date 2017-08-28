@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.error;
 
@@ -77,11 +77,11 @@ public final class ProblemsPRISM {
     public final static Problem EXPRESSION_PARSER_UNKNOWN_FILTER_TYPE = newProblem("expression-parser-unknown-filter-type");
     public final static Problem EXPRESSION_PARSER_SYNTAX_ERROR = newProblem("expression-parser-syntax-error");
     public final static Problem PARSE_ERROR_MULTI_UNTIL = newProblem("parse-error-multi-until");
-	public static final Problem PRISM_ONE_MODEL_FILE = newProblem("prism-one-input-file");
+    public static final Problem PRISM_ONE_MODEL_FILE = newProblem("prism-one-input-file");
 
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(ERROR_PRISM, name);
+        assert name != null;
+        return UtilError.newProblem(ERROR_PRISM, name);
     }
 
     private ProblemsPRISM() {

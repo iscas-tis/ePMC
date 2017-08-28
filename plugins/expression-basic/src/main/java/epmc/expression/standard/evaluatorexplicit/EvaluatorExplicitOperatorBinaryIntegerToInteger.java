@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -46,7 +46,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -62,7 +62,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         private Expression[] getVariables() {
             return variables;
         }
-        
+
         @Override
         public Builder setExpression(Expression expression) {
             this.expression = expression;
@@ -72,7 +72,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         private Expression getExpression() {
             return expression;
         }
-        
+
         @Override
         public Builder setCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
             this.cache = cache;
@@ -82,7 +82,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
-        
+
         @Override
         public boolean canHandle() {
             assert expression != null;
@@ -125,26 +125,26 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             return new EvaluatorExplicitOperatorBinaryIntegerToInteger(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-        
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
-		
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
+
     }
-    
+
     @FunctionalInterface
     private static interface BinaryIntegerToInteger {
         int call(int a, int b);
     }
 
     public final static String IDENTIFIER = "operator-binary-integer-to-integer";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicitInteger[] operands;
@@ -153,14 +153,14 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
     private final BinaryIntegerToInteger binaryIntegerToInteger;
 
     private final OperatorEvaluator evaluator;
-    
+
     private EvaluatorExplicitOperatorBinaryIntegerToInteger(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
         expression = (ExpressionOperator) builder.getExpression();
         variables = builder.getVariables();
-//        Operator operator = ContextValue.get().getOperator(expression.getOperator());
+        //        Operator operator = ContextValue.get().getOperator(expression.getOperator());
         operands = new EvaluatorExplicitInteger[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];
@@ -197,7 +197,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
@@ -215,7 +215,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         evaluator.apply(result, operandValues);
         return result;
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -47,131 +47,131 @@ import epmc.util.UtilJSON;
  * @author Andrea Turrini
  */
 public final class JANIPropertyExpressionPathQuantifier implements JANIExpression {
-	/** Identifier of this JANI expression type. */
-	public final static String IDENTIFIER = "jani-property-expression-path-quantifier";
-	private final static String OP = "op";
-	private final static String FORALL = "∀";
-	private final static String EXISTS = "∃";
-	private final static String EXP = "exp";
-	private final static Map<String,DirType> STRING_TO_DIR_TYPE;
-	static {
-		Map<String,DirType> stringToDirType = new LinkedHashMap<>();
-		stringToDirType.put(FORALL, DirType.FORALL);
-		stringToDirType.put(EXISTS, DirType.EXISTS);
-		STRING_TO_DIR_TYPE = Collections.unmodifiableMap(stringToDirType);
-	}
-	
-	private Map<String, ? extends JANIIdentifier> validIdentifiers;
-	private ModelJANI model;
-	private boolean forProperty;
-	
-	private boolean initialized = false;
-	private DirType dirType;
-	private JANIExpression exp;
-	
-	private void resetFields() {
-		initialized = false;
-		dirType = null;
-		exp = null;
-	}
-	
-	public JANIPropertyExpressionPathQuantifier() {
-		resetFields();
-	}
+    /** Identifier of this JANI expression type. */
+    public final static String IDENTIFIER = "jani-property-expression-path-quantifier";
+    private final static String OP = "op";
+    private final static String FORALL = "∀";
+    private final static String EXISTS = "∃";
+    private final static String EXP = "exp";
+    private final static Map<String,DirType> STRING_TO_DIR_TYPE;
+    static {
+        Map<String,DirType> stringToDirType = new LinkedHashMap<>();
+        stringToDirType.put(FORALL, DirType.FORALL);
+        stringToDirType.put(EXISTS, DirType.EXISTS);
+        STRING_TO_DIR_TYPE = Collections.unmodifiableMap(stringToDirType);
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) {
-		assert model != null;
-		assert validIdentifiers != null;
-		assert value != null;
-		resetFields();
-		if (!forProperty) {
-			return null;
-		}
-		if (!(value instanceof JsonObject)) {
-			return null;
-		}
-		JsonObject object = (JsonObject) value;
-		if (!object.containsKey(OP)) {
-			return null;
-		}
-		if (!(object.get(OP) instanceof JsonString)) {
-			return null;
-		}
-		if (!object.containsKey(EXP)) {
-			return null;
-		}
-		dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
-		if (dirType == null) {
-			return null;
-		}
-		ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
-		exp = parser.parseAsJANIExpression(object.get(EXP));
-		if (exp == null) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    private Map<String, ? extends JANIIdentifier> validIdentifiers;
+    private ModelJANI model;
+    private boolean forProperty;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(OP, dirType.toString());
-		builder.add(EXP, exp.generate());
-		return builder.build();
-	}
+    private boolean initialized = false;
+    private DirType dirType;
+    private JANIExpression exp;
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
-		assert expression != null;
-		assert model != null;
-		assert validIdentifiers != null;
-		resetFields();
-//		TODO: fill when support for A and E operators is added to the core
-		initialized = (exp != null);
-		return null;
-	}
+    private void resetFields() {
+        initialized = false;
+        dirType = null;
+        exp = null;
+    }
 
-	@Override
-	public Expression getExpression() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-//		TODO: fill when support for A and E operators is added to the core
-		return null;
-	}
+    public JANIPropertyExpressionPathQuantifier() {
+        resetFields();
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-		this.validIdentifiers = identifiers;
-	}	
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
 
-	@Override
-	public void setForProperty(boolean forProperty) {
-		this.forProperty = forProperty;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert validIdentifiers != null;
+        assert value != null;
+        resetFields();
+        if (!forProperty) {
+            return null;
+        }
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(OP)) {
+            return null;
+        }
+        if (!(object.get(OP) instanceof JsonString)) {
+            return null;
+        }
+        if (!object.containsKey(EXP)) {
+            return null;
+        }
+        dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
+        if (dirType == null) {
+            return null;
+        }
+        ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
+        exp = parser.parseAsJANIExpression(object.get(EXP));
+        if (exp == null) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(OP, dirType.toString());
+        builder.add(EXP, exp.generate());
+        return builder.build();
+    }
+
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        assert validIdentifiers != null;
+        resetFields();
+        //		TODO: fill when support for A and E operators is added to the core
+        initialized = (exp != null);
+        return null;
+    }
+
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        //		TODO: fill when support for A and E operators is added to the core
+        return null;
+    }
+
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.validIdentifiers = identifiers;
+    }	
+
+    @Override
+    public void setForProperty(boolean forProperty) {
+        this.forProperty = forProperty;
+    }
+
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
+
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

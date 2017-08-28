@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -42,7 +42,7 @@ public final class OptionTypeString implements OptionType {
      */
     private OptionTypeString() {
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -50,12 +50,12 @@ public final class OptionTypeString implements OptionType {
         value = value.trim();
         return value;
     }
-    
+
     @Override
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.component;
 
@@ -33,98 +33,98 @@ import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProcessorStrict {
 
-	private ComponentSynchronisationVectors syncVectors = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ComponentSynchronisationVectors; 
-		
-		syncVectors = (ComponentSynchronisationVectors) obj;
-		return this;
-	}
+    private ComponentSynchronisationVectors syncVectors = null;
 
-	@Override
-	public String toPRISM() {
-		assert syncVectors != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		//Currently it only checks whether automata full-synchronize on common 
-		//actions and never synchronize on the internal action.
-		//This corresponds to the default behavior of PRISM.
-		
-		//TODO: add support for other synchronization methods supported by PRISM.
-		
-		List<SynchronisationVectorSync> syncs = syncVectors.getSyncs();
-		List<SynchronisationVectorElement> elements = syncVectors.getElements();
-		
-		for (SynchronisationVectorElement element : elements) {
-			ensure(element.getInputEnableOrEmpty().isEmpty(), 
-				   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_AUTOMATON_INPUT_ENABLED, 
-				   element.getAutomaton().getName());
-		}
-		
-		for (SynchronisationVectorSync sync : syncs) {
-			Action result = sync.getResult();
-			List<Action> actions = sync.getSynchronise();
-			if (JANIComponentRegistrar.isSilentAction(result)) {
-				int counter = 0;
-				for (Action synched : actions) {
-					if (synched != null) {
-						counter++;
-						ensure(JANIComponentRegistrar.isSilentAction(synched), 
-							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING,
-							   synched.getName());
-					}
-					ensure(counter == 1, 
-						   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
-				}
-			} else {
-				int lenght = actions.size();
-				for (int index = 0; index < lenght; index++) {
-					Action synched = actions.get(index);
-					Automaton automaton = elements.get(index).getAutomaton();
-					if (synched != null) {
-						ensure(synched.equals(result), 
-							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_RENAMING,
-							   synched.getName(), 
-							   result.getName());
-						boolean canSynchronize = false;
-						for (Edge edge : automaton.getEdges()) {
-							canSynchronize |= result.equals(edge.getActionOrSilent());
-						}
-						ensure(canSynchronize,
-							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
-							   automaton.getName(), 
-							   synched.getName());
-					} else {
-						boolean cannotSynchronize = true;
-						for (Edge edge : automaton.getEdges()) {
-							cannotSynchronize &= !result.equals(edge.getActionOrSilent());
-						}
-						ensure(cannotSynchronize,
-							   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
-							   automaton.getName(), 
-							   result.getName());
-					}
-				}
-			}
-		}
-		
-		
-		return prism.toString();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ComponentSynchronisationVectors; 
 
-	@Override
-	public void validateTransientVariables() {
-		assert syncVectors != null;
-	}
+        syncVectors = (ComponentSynchronisationVectors) obj;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert syncVectors != null;
+    @Override
+    public String toPRISM() {
+        assert syncVectors != null;
 
-		return false;
-	}
+        StringBuilder prism = new StringBuilder();
+
+        //Currently it only checks whether automata full-synchronize on common 
+        //actions and never synchronize on the internal action.
+        //This corresponds to the default behavior of PRISM.
+
+        //TODO: add support for other synchronization methods supported by PRISM.
+
+        List<SynchronisationVectorSync> syncs = syncVectors.getSyncs();
+        List<SynchronisationVectorElement> elements = syncVectors.getElements();
+
+        for (SynchronisationVectorElement element : elements) {
+            ensure(element.getInputEnableOrEmpty().isEmpty(), 
+                    ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_AUTOMATON_INPUT_ENABLED, 
+                    element.getAutomaton().getName());
+        }
+
+        for (SynchronisationVectorSync sync : syncs) {
+            Action result = sync.getResult();
+            List<Action> actions = sync.getSynchronise();
+            if (JANIComponentRegistrar.isSilentAction(result)) {
+                int counter = 0;
+                for (Action synched : actions) {
+                    if (synched != null) {
+                        counter++;
+                        ensure(JANIComponentRegistrar.isSilentAction(synched), 
+                                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING,
+                                synched.getName());
+                    }
+                    ensure(counter == 1, 
+                            ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
+                }
+            } else {
+                int lenght = actions.size();
+                for (int index = 0; index < lenght; index++) {
+                    Action synched = actions.get(index);
+                    Automaton automaton = elements.get(index).getAutomaton();
+                    if (synched != null) {
+                        ensure(synched.equals(result), 
+                                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_RENAMING,
+                                synched.getName(), 
+                                result.getName());
+                        boolean canSynchronize = false;
+                        for (Edge edge : automaton.getEdges()) {
+                            canSynchronize |= result.equals(edge.getActionOrSilent());
+                        }
+                        ensure(canSynchronize,
+                                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
+                                automaton.getName(), 
+                                synched.getName());
+                    } else {
+                        boolean cannotSynchronize = true;
+                        for (Edge edge : automaton.getEdges()) {
+                            cannotSynchronize &= !result.equals(edge.getActionOrSilent());
+                        }
+                        ensure(cannotSynchronize,
+                                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_NOT_SYNCHRONIZED,
+                                automaton.getName(), 
+                                result.getName());
+                    }
+                }
+            }
+        }
+
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert syncVectors != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert syncVectors != null;
+
+        return false;
+    }
 }

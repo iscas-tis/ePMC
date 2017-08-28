@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,24 +27,24 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
     static TypeReal get() {
         return ContextValue.get().getType(TypeReal.class);
     }
-    
+
     static void set(TypeReal type) {
         assert type != null;
         ContextValue.get().setType(TypeReal.class, type);
     }
-    
+
     static boolean isReal(Type type) {
-    	return type instanceof TypeReal;
+        return type instanceof TypeReal;
     }
-    
+
     static TypeReal asReal(Type type) {
-    	if (isReal(type)) {
-    		return (TypeReal) type;
-    	} else {
-    		return null;
-    	}
+        if (isReal(type)) {
+            return (TypeReal) type;
+        } else {
+            return null;
+        }
     }
-    
+
     @Override
     TypeArrayReal getTypeArray();
 
@@ -54,16 +54,16 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
     ValueReal getUnderflow();
 
     ValueReal getOverflow();
-        
-    @Override
-	ValueReal getPosInf();
 
     @Override
-	ValueReal getNegInf();
-    
+    ValueReal getPosInf();
+
     @Override
-	ValueReal getZero();
-    
+    ValueReal getNegInf();
+
     @Override
-	ValueReal getOne();    
+    ValueReal getZero();
+
+    @Override
+    ValueReal getOne();    
 }

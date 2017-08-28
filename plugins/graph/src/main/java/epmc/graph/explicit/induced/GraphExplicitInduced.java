@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit.induced;
 
@@ -88,17 +88,17 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     int getDecision(int node) {
-    	return scheduler.getDecision(node);
+        return scheduler.getDecision(node);
     }
-    
+
     @Override
     public String toString() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GraphExporterDOT.export(this, out);
         return out.toString();
     }
-    
-	@Override
-	public void close() {
-	}
+
+    @Override
+    public void close() {
+    }
 }

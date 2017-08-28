@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -39,7 +39,7 @@ final class IterationRewards {
     private final ValueArrayAlgebra[] rewards;
     private int currentState;
     private int currentCombination;
-    
+
     IterationRewards(GraphExplicitSparseAlternate graph, int numProperties) {
         assert graph != null;
         assert numProperties >= 0;
@@ -53,7 +53,7 @@ final class IterationRewards {
             this.rewards[propNr] = newValueArrayWeight(graph.getNumNondet());
         }
     }
-    
+
     int getNumStates() {
         return combinationsFromTo.length - 1;
     }
@@ -61,17 +61,17 @@ final class IterationRewards {
     int getNumObjectives() {
         return numProperties;
     }
-    
+
     int getNumNondet() {
         return graph.getNumNondet();
     }
-    
+
     int getNumEntries(int state) {
         assert state >= 0;
         assert state < combinationsFromTo.length;
         return combinationsFromTo[state + 1] - combinationsFromTo[state];
     }
-    
+
     boolean get(int state, int number, int objective) {
         assert state >= 0;
         assert state < combinationsFromTo.length;
@@ -92,7 +92,7 @@ final class IterationRewards {
         assert obj < numProperties;
         return rewards[obj];
     }
-    
+
     void addCombination(BitSet combination) {
         assert currentState < graph.computeNumStates();
         assert combination != null;
@@ -102,14 +102,14 @@ final class IterationRewards {
         }
         currentCombination++;
     }
-    
+
     void setReward(Value reward, int succ, int objective) {
         assert currentState < graph.computeNumStates();
         assert reward != null;
         int index = graph.getStateBounds().getInt(currentState) + succ;
         this.rewards[objective].set(reward, index);
     }
-    
+
     void finishState() {
         assert currentState < graph.computeNumStates();
         combinationsFromTo[currentState + 1] = currentCombination;
@@ -122,7 +122,7 @@ final class IterationRewards {
         }
         finishState();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -148,7 +148,7 @@ final class IterationRewards {
         builder.append("]");
         return builder.toString();
     }
-    
+
     private ValueArrayAlgebra newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);

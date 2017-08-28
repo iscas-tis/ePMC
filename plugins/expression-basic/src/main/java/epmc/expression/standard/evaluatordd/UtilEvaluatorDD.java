@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -43,28 +43,28 @@ import epmc.value.Value;
 
 public final class UtilEvaluatorDD {
     private final static String SPACE = " ";
-    
+
     private final static class ExpressionToTypeDD implements ExpressionToType {
-		private final Map<Expression, VariableDD> variables;
+        private final Map<Expression, VariableDD> variables;
 
-		private ExpressionToTypeDD(Map<Expression, VariableDD> variables) {
-    		this.variables = variables;
-    	}
+        private ExpressionToTypeDD(Map<Expression, VariableDD> variables) {
+            this.variables = variables;
+        }
 
-		@Override
-		public Type getType(Expression expression) {
-			assert expression != null;
-			if (variables == null) {
-				return null;
-			}
-			VariableDD variable = variables.get(expression);
-			if (variable == null) {
-				return null;
-			}
-			return variable.getType();
-		}
+        @Override
+        public Type getType(Expression expression) {
+            assert expression != null;
+            if (variables == null) {
+                return null;
+            }
+            VariableDD variable = variables.get(expression);
+            if (variable == null) {
+                return null;
+            }
+            return variable.getType();
+        }
     }
-    
+
     public static EvaluatorDD newEvaluator(Expression expression, Map<Expression,VariableDD> variables) {
         assert expression != null;
         assert variables != null;
@@ -86,16 +86,16 @@ public final class UtilEvaluatorDD {
         assert false : expression + SPACE + expression.getClass();
         return null;
     }
-    
+
     public static DD translate(Expression expression, Map<Expression,VariableDD> variables) {
         EvaluatorDD evaluator = newEvaluator(expression, variables);
         DD result = evaluator.getDD();
         evaluator.close();
         return result;
     }
-    
+
     public static DD assign(VariableDD variable, int copy, Expression value, Map<Expression,VariableDD> variables)
-            {
+    {
         assert variable != null;
         assert copy >= 0;
         assert copy < variable.getNumCopies();
@@ -113,7 +113,7 @@ public final class UtilEvaluatorDD {
         return result;
     }
 
-    
+
     public static DD getDD(DD singleDD, List<DD> vector, Expression expression) {
         if (singleDD != null) {
             assert singleDD.alive();
@@ -122,7 +122,7 @@ public final class UtilEvaluatorDD {
         assert vector != null;
         ContextDD contextDD = vector.get(0).getContext();
         Type type = TypeInteger.get();
-//        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
+        //        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
         if (type == null || TypeInteger.isInteger(type)) {
             int digVal = 1;
             ValueInteger value = TypeInteger.get()
@@ -157,7 +157,7 @@ public final class UtilEvaluatorDD {
         assert singleDD.alive();
         return singleDD;
     }
-    
+
     public static boolean canVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) {
         assert expression != null;
         assert operator != null;
@@ -192,7 +192,7 @@ public final class UtilEvaluatorDD {
                 return false;
             }
             if (!canIntegerVectorOperator(operand, operator, variables)) {
-            	return false;
+                return false;
             }
         }
         return true;
@@ -201,11 +201,11 @@ public final class UtilEvaluatorDD {
     public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorOneArg operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0]));
     }
-    
+
     public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgs operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1]));
     }
-    
+
     public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorThreeArgs operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1], operands[2]));
     }
@@ -240,7 +240,7 @@ public final class UtilEvaluatorDD {
     public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgsSingleDDResult operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1]));
     }
-    
+
     public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorSingleDDResult operator) {
         assert expression != null;
         List<EvaluatorDD> inner = new ArrayList<>();

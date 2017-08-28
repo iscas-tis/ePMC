@@ -619,7 +619,7 @@ public abstract class NanoWSD extends NanoHTTPD {
             } else if (this._payloadLength == 127) {
                 long _payloadLength =
                         (long) checkedRead(in.read()) << 56 | (long) checkedRead(in.read()) << 48 | (long) checkedRead(in.read()) << 40 | (long) checkedRead(in.read()) << 32
-                                | checkedRead(in.read()) << 24 | checkedRead(in.read()) << 16 | checkedRead(in.read()) << 8 | checkedRead(in.read());
+                        | checkedRead(in.read()) << 24 | checkedRead(in.read()) << 16 | checkedRead(in.read()) << 8 | checkedRead(in.read());
                 if (_payloadLength < 65536) {
                     throw new WebSocketException(CloseCode.ProtocolError, "Invalid data frame 4byte length. (not using minimal length encoding)");
                 }
@@ -711,7 +711,7 @@ public abstract class NanoWSD extends NanoHTTPD {
             } else {
                 out.write(isMasked() ? 0xFF : 127);
                 out.write(this._payloadLength >>> 56 & 0); // integer only
-                                                           // contains
+                // contains
                 // 31 bit
                 out.write(this._payloadLength >>> 48 & 0);
                 out.write(this._payloadLength >>> 40 & 0);
@@ -790,10 +790,10 @@ public abstract class NanoWSD extends NanoHTTPD {
             ar[a++] = NanoWSD.ALPHABET[b2 & mask];
         }
         switch (size % 3) {
-            case 1:
-                ar[--a] = '=';
-            case 2:
-                ar[--a] = '=';
+        case 1:
+            ar[--a] = '=';
+        case 2:
+            ar[--a] = '=';
         }
         return new String(ar);
     }

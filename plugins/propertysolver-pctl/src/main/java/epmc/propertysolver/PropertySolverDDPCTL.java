@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -82,8 +82,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     private Expression property;
     private Semantics type;
     private boolean qualitative;
-	private StateSet forStates;
-	private Expression inner;
+    private StateSet forStates;
+    private Expression inner;
 
     @Override
 
@@ -95,10 +95,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
     private DD solve(boolean min, Expression property, boolean qualitative,
             StateSet forStates)
-            {
+    {
         if (isNot(property)) {
-        	ExpressionOperator propertyOperator = (ExpressionOperator) property;
-        	property = propertyOperator.getOperand1();
+            ExpressionOperator propertyOperator = (ExpressionOperator) property;
+            property = propertyOperator.getOperand1();
             negate = true;
             min = !min;
         } else if (isRelease(property)) {
@@ -129,7 +129,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         this.inner = property;
 
         if (isNext(property)) {
-//            Expression inner = property.getOperand1();
+            //            Expression inner = property.getOperand1();
             // TODO implement
         } else {
             return solveUntil(forStates);
@@ -148,7 +148,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         DD rightDD = expressionToDD.translate(rightExpr);
         DD targetDD = rightDD.and(nodeSpace);
         DD failDD = nodeSpace.clone().andWith(leftDD.not(), rightDD.not());
-        
+
         leftDD.dispose();
         rightDD.dispose();
         if (!timeBound.isRightBounded()) {
@@ -179,7 +179,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private DD checkUntilQuantitative(DD targetDD, DD failDD)
-            {
+    {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
         TimeBound timeBound = innerTemporal.getTimeBound();
@@ -190,7 +190,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         Semantics semantics = modelGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         GraphBuilderDD converter = new GraphBuilderDD(modelGraph, sinks, SemanticsNonDet.isNonDet(semantics));
         if (SemanticsContinuousTime.isContinuousTime(type)
-        		&& timeBound.isRightBounded()) {
+                && timeBound.isRightBounded()) {
             converter.setUniformise(true);
         }
         GraphExplicit graph = converter.buildGraph();
@@ -336,7 +336,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private DD checkUntilQualitative(DD targetDD, DD failDD)
-            {
+    {
         DD nodeSpace = modelGraph.getNodeSpace();
         Value oneHalf = UtilValue.newValue(TypeReal.get(), "1/2");
         Value zero = TypeReal.get().getZero();
@@ -345,20 +345,20 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return result;
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
     @Override
     public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
-        	this.modelGraph = modelChecker.getLowLevel();
+            this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -413,57 +413,57 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	required.add(CommonProperties.SEMANTICS);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         Set<Expression> inners = UtilPCTL.collectPCTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return Collections.unmodifiableSet(required);
     }    
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
 
     private ContextDD getContextDD() {
-    	return ContextDD.get();
-	}
+        return ContextDD.get();
+    }
 
     private Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorNot.NOT)
-    			.setPositional(expression.getPositional())
-    			.setOperands(expression)
-    			.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorNot.NOT)
+                .setPositional(expression.getPositional())
+                .setOperands(expression)
+                .build();
     }
-    
+
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -472,7 +472,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isNext(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -480,7 +480,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.NEXT;
     }
-    
+
     private static boolean isFinally(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -488,7 +488,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
     }
-    
+
     private static boolean isGlobally(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -496,7 +496,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
     }
-    
+
     private static boolean isRelease(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -504,7 +504,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
     }
-    
+
     private static boolean isUntil(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;

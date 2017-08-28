@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cacbdd;
 
@@ -41,25 +41,25 @@ public class AfterOptionsCreationCacBDD implements AfterOptionsCreation {
     public void process(Options options) {
         assert options != null;
         Category category = options.addCategory()
-        		.setBundleName(OptionsDDCacBDD.OPTIONS_DD_CACBDD)
-        		.setIdentifier(OptionsDDCacBDD.DD_CACBDD_CATEGORY)
-        		.setParent(OptionsDD.DD_CATEGORY)
-        		.build();
-        
+                .setBundleName(OptionsDDCacBDD.OPTIONS_DD_CACBDD)
+                .setIdentifier(OptionsDDCacBDD.DD_CACBDD_CATEGORY)
+                .setParent(OptionsDD.DD_CATEGORY)
+                .build();
+
         Map<String,Class<? extends LibraryDD>> ddLibraryClasses = options.get(OptionsDD.DD_LIBRARY_CLASS);
         assert ddLibraryClasses != null;
         ddLibraryClasses.put(LibraryDDCacBDD.IDENTIFIER, LibraryDDCacBDD.class);
         OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         options.addOption().setBundleName(OptionsDDCacBDD.OPTIONS_DD_CACBDD)
-        	.setIdentifier(OptionsDDCacBDD.DD_CACBDD_MAX_NUM_VARIABLES)
-        	.setType(typeInteger).setDefault("65535")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDCacBDD.DD_CACBDD_MAX_NUM_VARIABLES)
+        .setType(typeInteger).setDefault("65535")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsDDCacBDD.OPTIONS_DD_CACBDD)
-        	.setIdentifier(OptionsDDCacBDD.DD_CACBDD_MAX_CACHE_SIZE)
-        	.setType(typeInteger).setDefault("0")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDCacBDD.DD_CACBDD_MAX_CACHE_SIZE)
+        .setType(typeInteger).setDefault("0")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
     }
 
 }

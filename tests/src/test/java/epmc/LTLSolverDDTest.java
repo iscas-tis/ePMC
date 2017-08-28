@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -47,7 +47,7 @@ public class LTLSolverDDTest {
     private final static String LTL_LAZY_USE_BREAKPOINT_SINGLETONS = "ltl-lazy-use-breakpoint-singletons";
     private final static String LTL_LAZY_USE_RABIN = "ltl-lazy-use-rabin";
     private final static String LTL_LAZY_INCREMENTAL = "ltl-lazy-incremental";
-    
+
     @BeforeClass
     public static void initialise() {
         prepare();
@@ -66,11 +66,11 @@ public class LTLSolverDDTest {
         // U-1
         result = computeResult(options, ModelNamesPRISM.CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U (right_n!=N)) ]");
         assertEquals("0.5094707891071129", result, tolerance);
-        
+
         // U-2
         result = computeResult(options, ModelNamesPRISM.CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U (right_n!=N))) ]");
         assertEquals("0.5096360303752221", result, tolerance);
-        
+
         // U-3
         result = computeResult(options, ModelNamesPRISM.CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U (right_n!=N)))) ]");
         assertEquals("0.5096412753408213", result, tolerance);
@@ -90,7 +90,7 @@ public class LTLSolverDDTest {
         // U-7
         result = computeResult(options, ModelNamesPRISM.CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U ((left_n=N-4) U ((left_n=N-5) U ((left_n=N-6) U ((left_n=N-7) U (right_n!=N)))))))) ]");
         assertEquals("0.5096417890890955", result, tolerance);
-        
+
         // U-8
         result = computeResult(options, ModelNamesPRISM.CLUSTER_MODEL, "P=? [(left_n=N) U ((left_n=N-1) U ((left_n=N-2) U ((left_n=N-3) U ((left_n=N-4) U ((left_n=N-5) U ((left_n=N-6) U ((left_n=N-7) U ((left_n=N-8) U (right_n!=N))))))))) ]");
         assertEquals("0.5096417891616309", result, tolerance);
@@ -105,13 +105,13 @@ public class LTLSolverDDTest {
         double tolerance = 1E-12;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-//        constants.put("N", "16");
+        //        constants.put("N", "16");
         options.set(OptionsModelChecker.CONST, constants);
         // U-1
         result = computeResult(options, CLUSTER_DTMC_1, "P=? [(left_n=N) U (((left_n=N-1) & (right_n!=N)) U (right_n!=N)) ]");
         System.out.println(result);
-//        assertEquals("0.5094707891071129", result, tolerance);
-        
+        //        assertEquals("0.5094707891071129", result, tolerance);
+
         close(options);
     }
 
@@ -147,7 +147,7 @@ public class LTLSolverDDTest {
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         constants.put("K", "3");
-//        options.set(Option.MDP_ENCODING_MODE, Options.MDPEncoding.STATE_DISTRIBUTION);
+        //        options.set(Option.MDP_ENCODING_MODE, Options.MDPEncoding.STATE_DISTRIBUTION);
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         options.set(OptionsModelChecker.CONST, constants);
         options.set(LTL_LAZY_USE_SUBSET, false);
@@ -159,8 +159,8 @@ public class LTLSolverDDTest {
         assertEquals(1, result, tolerance);
         close(options);
     }
-    
-    
+
+
     @Test
     public void zeroconfTest() {
         Options options = prepareOptions();
@@ -174,14 +174,14 @@ public class LTLSolverDDTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ZEROCONF_SIMPLE, "P=?[(F( s=-1 )) & true ]");
         assertEquals("0.9831102937590025", result, tolerance);
-        
+
         constants.put("n", "15");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ZEROCONF_SIMPLE, "P=?[(F( s=-1 )) & true ]");
         assertEquals("0.9912806035987779", result, tolerance);
         close(options);
     }
-    
+
     @Test
     public void zeroconfBugFoundByLiYongTest() {
         Options options = prepareOptions();
@@ -190,14 +190,14 @@ public class LTLSolverDDTest {
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
-//        options.set(OptionsAutomaton.LTL2BA_DET_NEG, OptionsAutomaton.Ltl2BaDetNeg.NEVER);
+        //        options.set(OptionsAutomaton.LTL2BA_DET_NEG, OptionsAutomaton.Ltl2BaDetNeg.NEVER);
         options.set("ltl2ba-det-neg", "never");
         options.set(LTL_LAZY_USE_SUBSET, false);
         options.set(LTL_LAZY_USE_BREAKPOINT, false);
         options.set(LTL_LAZY_USE_BREAKPOINT_SINGLETONS, false);        
         options.set(LTL_LAZY_USE_RABIN, true);
         options.set(LTL_LAZY_INCREMENTAL, false);
-        
+
         constants.put("n", "1");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ZEROCONF_SIMPLE, "P=?[!(((G (F (s=-2))) | (F (G (s=-1)))) & ((G (F (s=0))) | (F (G (s=n)))))]");
@@ -223,7 +223,7 @@ public class LTLSolverDDTest {
         assertEquals("1/36", result1, tolerance * 4);
         close(options);
     }
-    
+
     /**
      * Test model provided by Li Yong.
      * The test case helped to detect an issue in the initial state
@@ -248,5 +248,5 @@ public class LTLSolverDDTest {
 
         close(options);
     }
-    
+
 }

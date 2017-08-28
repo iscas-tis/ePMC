@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -30,15 +30,15 @@ import epmc.expression.Expression;
 //Notice: objects of this class are immutable by purpose.
 //Do not modify the class to make them mutable.
 public final class SystemModule implements SystemDefinition {
-	private final static String QUOT = "\"";
-	private final static String SPACE = " ";
-	
+    private final static String QUOT = "\"";
+    private final static String SPACE = " ";
+
     private ModelPRISM model;
     private final Positional positional;
     private final List<SystemDefinition> children = new ArrayList<>();
     private final String module;
     private final String instanceName;
-    
+
     SystemModule(String module, String instanceName, Positional positional) {
         assert module != null;
         this.positional = positional;
@@ -49,11 +49,11 @@ public final class SystemModule implements SystemDefinition {
     public SystemModule(String module, Positional positional) {
         this(module, null, positional);
     }
-    
+
     public String getModule() {
         return module;
     }
-    
+
     @Override
     public String toString() {
         return module;
@@ -70,7 +70,7 @@ public final class SystemModule implements SystemDefinition {
         assert false : QUOT + module + QUOT + SPACE + SPACE + QUOT + getModel().getModules() + QUOT;
         return null;
     }
-    
+
     String getInstanceName() {
         return instanceName;
     }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
@@ -32,38 +32,38 @@ import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorLog;
 
 public enum OperatorEvaluatorLog implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorLog.LOG;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeDouble.isDouble(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorLog.LOG;
+    }
+
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        for (Type type : types) {
+            if (!TypeDouble.isDouble(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorLog.LOG);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
+        assert operator != null;
+        assert operator.equals(OperatorLog.LOG);
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
         Type upper = UtilValue.upper(types);
         if (!TypeReal.isReal(upper)) {
             return null;
@@ -74,13 +74,13 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
 
     @Override
     public void apply(Value result, Value... operands) {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-    			: ValueInteger.asInteger(operands[0]).getInt();
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
+                : ValueInteger.asInteger(operands[0]).getInt();
         ValueDouble.asDouble(result).set(Math.log(value1));
     }
 }

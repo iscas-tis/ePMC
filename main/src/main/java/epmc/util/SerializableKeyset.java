@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -46,7 +46,7 @@ public final class SerializableKeyset<K,V> implements Set<K>,Serializable {
         assert map != null;
         this.map = map;
     }
-    
+
     @Override
     public int size() {
         return map.size();

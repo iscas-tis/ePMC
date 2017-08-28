@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -54,7 +54,7 @@ public interface ExplorerEdgeProperty {
      * @return value for edge with the given number of the node queried last
      */
     Value get(int successor);
-    
+
     /**
      * Obtain type of the values returned by {@link #get(int)}.
      * 

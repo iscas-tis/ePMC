@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -38,10 +38,10 @@ public interface ExplorerNode extends Cloneable, BitStoreable {
 
     @Override
     int hashCode();
-    
+
     @Override
     void read(BitStream reader);
-    
+
     @Override
     void write(BitStream writer);
 

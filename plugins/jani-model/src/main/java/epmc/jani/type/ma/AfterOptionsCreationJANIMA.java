@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.ma;
 
@@ -32,38 +32,38 @@ import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
 
 public class AfterOptionsCreationJANIMA implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "jani-ma";
+    private final static String IDENTIFIER = "jani-ma";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
+    @Override
+    public void process(Options options) {
         Map<String,Class<ModelExtension>> modelExtensions = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {
-        	modelExtensions = new OrderedMap<>();
+            modelExtensions = new OrderedMap<>();
             options.set(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS, modelExtensions);
         }
         Map<String,Class<? extends ExplorerExtension>> explorerExtensions = options.get(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS);
         if (explorerExtensions == null) {
-        	explorerExtensions = new OrderedMap<>();
+            explorerExtensions = new OrderedMap<>();
         }
         explorerExtensions.put(ExplorerExtensionMA.IDENTIFIER, ExplorerExtensionMA.class);
         options.set(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS, explorerExtensions);
         addSemantics(options);
-	}
-	
-	private void addSemantics(Options options) {
-		assert options != null;
-		Map<String, Class<? extends ModelExtensionSemantics>> modelSemanticTypes =
-				options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
+    }
+
+    private void addSemantics(Options options) {
+        assert options != null;
+        Map<String, Class<? extends ModelExtensionSemantics>> modelSemanticTypes =
+                options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
         if (modelSemanticTypes == null) {
-        	modelSemanticTypes = new OrderedMap<>(true);
+            modelSemanticTypes = new OrderedMap<>(true);
         }
-		modelSemanticTypes.put(ModelExtensionMA.IDENTIFIER, ModelExtensionMA.class);
+        modelSemanticTypes.put(ModelExtensionMA.IDENTIFIER, ModelExtensionMA.class);
         options.set(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS, modelSemanticTypes);
-	}
+    }
 
 }

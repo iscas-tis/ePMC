@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.command;
 
@@ -27,20 +27,20 @@ import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
 
 public final class CommandTaskJANIInteractionAddUser implements CommandTask {
-	/** Unique identifier of JANI interaction add user command. */
-	public final static String IDENTIFIER = "jani-interaction-add-user";
+    /** Unique identifier of JANI interaction add user command. */
+    public final static String IDENTIFIER = "jani-interaction-add-user";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void executeOnClient() {
-		Database storage = new Database();
-		UserManager userManager = new UserManager(storage);
-		String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
-		String password = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
-		userManager.createUser(username, password);
-	}
+    @Override
+    public void executeOnClient() {
+        Database storage = new Database();
+        UserManager userManager = new UserManager(storage);
+        String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
+        String password = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
+        userManager.createUser(username, password);
+    }
 }

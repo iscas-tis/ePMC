@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -42,13 +42,13 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.operator.OperatorMax;
 
 final class DownClosure {
-	private final static String SLACK_VARIABLE = "v";
-	private final static String WEIGHT_VARIABLE = "w%d";
-	private final static String DIFFERENCE_VARIABLE = "d";
+    private final static String SLACK_VARIABLE = "v";
+    private final static String WEIGHT_VARIABLE = "w%d";
+    private final static String DIFFERENCE_VARIABLE = "d";
     private final ConstraintSolverConfiguration contextSolver;
     private final int dimension;
     private final List<IterationResult> elements = new ArrayList<>();
-    
+
     DownClosure(int dimension) {
         assert dimension >= 0;
         assert TypeReal.isReal(TypeWeight.get());
@@ -56,14 +56,14 @@ final class DownClosure {
         this.contextSolver = new ConstraintSolverConfiguration();
         contextSolver.requireFeature(Feature.LP);
     }
-    
+
     void add(IterationResult entry) {
         assert entry != null;
         elements.add(entry);
     }
-    
+
     ValueArrayAlgebra findSeparating(ValueArrayAlgebra outside, boolean numerical)
-            {
+    {
         assert outside != null;
         assert outside.size() == dimension;            
         if (elements.size() == 0) {
@@ -74,42 +74,42 @@ final class DownClosure {
     }
 
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
-    		boolean numerical) {
-    	assert outside != null;
+            boolean numerical) {
+        assert outside != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
-    	ValueAlgebra lowerBound = TypeWeight.get().newValue();
-    	lowerBound.set(zero);
-    	ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
-    	if (unrestrictedResult == null) {
-    		return null;
-    	}
-    	lowerBound.set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
-    	ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
-    	if (restrictedResult != null) {
-    		return restrictedResult;
-    	}
-    	ValueAlgebra entry = TypeWeight.get().newValue();
-    	ValueAlgebra sum = TypeWeight.get().newValue();
-    	for (int i = 0; i < unrestrictedResult.size(); i++) {
-    		unrestrictedResult.get(entry, i);
-    		if (entry.isZero()) {
-    			unrestrictedResult.set(lowerBound, i);
-    			sum.add(sum, lowerBound);
-    		} else {
-    			sum.add(sum, entry);
-    		}
-    	}
-    	for (int i = 0; i < unrestrictedResult.size(); i++) {
-    		unrestrictedResult.get(entry, i);
-    		entry.divide(entry, sum);
-    		unrestrictedResult.set(entry, i);
-    	}
-    	return unrestrictedResult;
+        ValueAlgebra lowerBound = TypeWeight.get().newValue();
+        lowerBound.set(zero);
+        ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
+        if (unrestrictedResult == null) {
+            return null;
+        }
+        lowerBound.set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
+        ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
+        if (restrictedResult != null) {
+            return restrictedResult;
+        }
+        ValueAlgebra entry = TypeWeight.get().newValue();
+        ValueAlgebra sum = TypeWeight.get().newValue();
+        for (int i = 0; i < unrestrictedResult.size(); i++) {
+            unrestrictedResult.get(entry, i);
+            if (entry.isZero()) {
+                unrestrictedResult.set(lowerBound, i);
+                sum.add(sum, lowerBound);
+            } else {
+                sum.add(sum, entry);
+            }
+        }
+        for (int i = 0; i < unrestrictedResult.size(); i++) {
+            unrestrictedResult.get(entry, i);
+            entry.divide(entry, sum);
+            unrestrictedResult.set(entry, i);
+        }
+        return unrestrictedResult;
     }
-    
+
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
             boolean numerical, Value lowerBound)
-            {
+    {
         Value zero = TypeWeight.get().getZero();
         Value one = TypeWeight.get().getOne();
         ConstraintSolver problem = contextSolver.newProblem();
@@ -119,7 +119,7 @@ final class DownClosure {
         }
         int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get());
         int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(), TypeReal.get().getNegInf(), TypeReal.get().getPosInf());
-        
+
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
         problemWeights = newValueArrayWeight(dimension + 1);
@@ -133,9 +133,9 @@ final class DownClosure {
         problemWeights.set(-1, dimension);
         problemVariables[dimension] = vLpVar;
         problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, zero);
-        
+
         for (IterationResult element : elements) {
-        	ValueArrayAlgebra array = element.getQ();
+            ValueArrayAlgebra array = element.getQ();
             problemWeights = newValueArrayWeight(dimension + 2);
             problemVariables = new int[dimension + 2];
             for (int dim = 0; dim < dimension; dim++) {
@@ -157,7 +157,7 @@ final class DownClosure {
             problemVariables[0] = wLpVars[dim];
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, lowerBound);
         }
-        
+
         problemWeights = newValueArrayWeight(dimension);
         problemVariables = new int[dimension];
         for (int dim = 0; dim < dimension; dim++) {
@@ -165,7 +165,7 @@ final class DownClosure {
             problemVariables[dim] = wLpVars[dim];
         }
         problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
-        
+
         if (numerical) {
             problemWeights = newValueArrayWeight(1);
             problemVariables = new int[1];
@@ -175,7 +175,7 @@ final class DownClosure {
             entry.set(minIncrease);
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
         }
-        
+
         problemWeights = newValueArrayWeight(1);
         problemVariables = new int[1];
         problemWeights.set(1, 0);
@@ -202,7 +202,7 @@ final class DownClosure {
     }
 
     private ValueArrayAlgebra findSeparatingEmptyEntries(
-    		ValueArrayAlgebra outside,
+            ValueArrayAlgebra outside,
             boolean numerical) {
         boolean outsideNonZero = false;
         ValueAlgebra entry = newValueWeight();
@@ -237,7 +237,7 @@ final class DownClosure {
         }
         /*
         separating.set(1,  1);
-        */
+         */
         normalise(separating);
         return separating;
     }
@@ -256,7 +256,7 @@ final class DownClosure {
             array.set(entry, i);
         }
     }
-    
+
     public void improveNumerical(ValueArray current) {
         assert current != null;
         assert current.size() == dimension;
@@ -318,7 +318,7 @@ final class DownClosure {
             problemVariables[elementNr] = wLpVars[elementNr];
         }
         problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
-        
+
         // maximise first dimension
         problemWeights = newValueArrayWeight(1);
         problemVariables = new int[1];
@@ -338,7 +338,7 @@ final class DownClosure {
             problem.close();
             return;
         }
-        */
+         */
         ValueArrayAlgebra result = newValueArrayWeight(dimension);
         for (int dim = 0; dim < dimension; dim++) {
             solverResult.get(entry, wLpVars[dim]);
@@ -398,7 +398,7 @@ final class DownClosure {
             problemVariables[elementNr] = wLpVars[elementNr];
         }
         problem.addConstraint(problemWeights, problemVariables, ConstraintType.EQ, one);
-        
+
         problem.setDirection(Direction.FEASIBILITY);
         if (!problem.solve().isSat()) {
             problem.close();
@@ -422,21 +422,21 @@ final class DownClosure {
         builder.append(")");
         return builder.toString();
     }
-    
+
     private ValueArrayAlgebra newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
-    
+
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
-    
+
     IterationResult get(int index) {
-    	return elements.get(index);
+        return elements.get(index);
     }
-    
+
     int size() {
-    	return elements.size();
+        return elements.size();
     }
 }

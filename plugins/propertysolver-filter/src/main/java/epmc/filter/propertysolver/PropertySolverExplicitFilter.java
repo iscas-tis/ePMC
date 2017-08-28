@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.filter.propertysolver;
 
@@ -70,37 +70,37 @@ import epmc.value.operator.OperatorOr;
  * @author Ernst Moritz Hahn
  */
 public final class PropertySolverExplicitFilter implements PropertySolver {
-	/** Identifier of this property solver class. */
+    /** Identifier of this property solver class. */
     public final static String IDENTIFIER = "filter-explicit";
     /** Model checker used in the property solver class. */
     private ModelChecker modelChecker;
     /** Property to be handled by this solver. */
-	private Expression property;
-	private ExpressionFilter propertyFilter;
-	private StateSet forStates;
-    
-    @Override
-	public String getIdentifier() {
-	    return IDENTIFIER;
-	}
+    private Expression property;
+    private ExpressionFilter propertyFilter;
+    private StateSet forStates;
 
-	@Override
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
     public void setModelChecker(ModelChecker modelChecker) {
-		assert modelChecker != null;
+        assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		this.propertyFilter = ExpressionFilter.asFilter(property);
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        this.propertyFilter = ExpressionFilter.asFilter(property);
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-    
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
     @Override
     public StateMap solve() {
         assert forStates != null;
@@ -140,7 +140,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             prop.getExplicitIthValue(propEntry, i);
             states.getExplicitIthValue(statesEntry, i);
             if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
-            	accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
+                accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
                     if (!ValueAlgebra.asAlgebra(propEntry).isZero()) {
                         getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
@@ -157,10 +157,10 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             Value num = UtilValue.newValue(TypeNumber.asNumber(resultValue.getType()), numStatesInFilter);
             ValueAlgebra.asAlgebra(resultValue).divide(resultValue, num);
         }
-        
+
         ValueArray resultValues = null;
         if (propertyFilter.isSameResultForAllStates()) {
-        	resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
+            resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
             resultValues.set(resultValue, 0);
         } else if (propertyFilter.isArgMin() || propertyFilter.isArgMax()) {
             resultValues = UtilValue.newArray(typeProperty.getTypeArray(), forStates.size());
@@ -186,7 +186,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         } else {
             result = UtilGraph.newStateMap((StateSetExplicit) forStates.clone(), resultValues);
         }
-        
+
         return result;
     }
 
@@ -203,65 +203,65 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         modelChecker.ensureCanHandle(propertyFilter.getProp(), allStates);
         modelChecker.ensureCanHandle(propertyFilter.getStates(), allStates);
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	return Collections.unmodifiableSet(required);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getStates(), allStates));
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
+        Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getStates(), allStates));
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
 
     private static void accumulate(FilterType type, Value resultValue, Value value) {
-    	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
-    	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
         switch (type) {
         case ARGMAX: case MAX:
-        	max.apply(resultValue, resultValue, value);
+            max.apply(resultValue, resultValue, value);
             break;
         case ARGMIN: case MIN:
-        	min.apply(resultValue, resultValue, value);
+            min.apply(resultValue, resultValue, value);
             break;
         case AVG:
             ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
             break;
         case COUNT:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
+            ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
                     ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
                             : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
             break;
         case EXISTS:
-        	or.apply(resultValue, resultValue, value);
+            or.apply(resultValue, resultValue, value);
             break;
         case FIRST:
             break;
         case FORALL:
-        	and.apply(resultValue, resultValue, value);
+            and.apply(resultValue, resultValue, value);
             break;
         case PRINT:
             break;
@@ -277,19 +277,19 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case STATE:
             break;
         case SUM:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
+            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
             break;
         default:
             throw new RuntimeException();
         }
     }
-    
+
     /**
      * Get log used.
      * 
      * @return log used
      */
     private Log getLog() {
-    	return Options.get().get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
     }
 }

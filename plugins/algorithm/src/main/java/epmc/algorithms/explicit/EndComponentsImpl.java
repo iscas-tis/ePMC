@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms.explicit;
 
@@ -286,7 +286,7 @@ public class EndComponentsImpl implements EndComponents {
             this.hasNext = isEndComponent;
         }
     }
-    
+
     private void removeLeavingAttr(GraphExplicit graph,
             BitSet existingStates, int[] remaining,
             BitSet scc, int[] leaving, int leavingIndex) {

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.isat3.plugin;
 
@@ -34,26 +34,26 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationISat3 implements AfterOptionsCreation {
-	public final static String IDENTIFIER = "constraintsolver-isat3";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    public final static String IDENTIFIER = "constraintsolver-isat3";
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		
-		Map<String,Class<?>> solvers = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
-		assert solvers != null;
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process(Options options) {
+        assert options != null;
+
+        Map<String,Class<?>> solvers = options.get(OptionsConstraintsolver.CONSTRAINTSOLVER_SOLVER_CLASS);
+        assert solvers != null;
         solvers.put(ConstraintSolverISat3Textual.IDENTIFIER, ConstraintSolverISat3Textual.class);		
-        
+
         Category category = options.addCategory()
-        		.setBundleName(OptionsISat3.OPTIONS_ISAT3)
-        		.setIdentifier(OptionsISat3.ISAT3_CATEGORY)
-        		.setParent(OptionsConstraintsolver.CONSTRAINTSOLVER_CATEGORY)
-        		.build();
+                .setBundleName(OptionsISat3.OPTIONS_ISAT3)
+                .setIdentifier(OptionsISat3.ISAT3_CATEGORY)
+                .setParent(OptionsConstraintsolver.CONSTRAINTSOLVER_CATEGORY)
+                .build();
         OptionTypeStringList typeCommand = new OptionTypeStringList("command");
         List<String> defaultCommandLine = new ArrayList<>();
         defaultCommandLine.add("isat3");
@@ -61,23 +61,23 @@ public final class AfterOptionsCreationISat3 implements AfterOptionsCreation {
         defaultCommandLine.add("-v");
         defaultCommandLine.add("{0}");
         options.addOption()
-        	.setBundleName(OptionsISat3.OPTIONS_ISAT3)
-        	.setIdentifier(OptionsISat3.ISAT3_COMMAND_LINE)
-        	.setCategory(category)
-        	.setType(typeCommand)
-        	.setDefault(defaultCommandLine)
-        	.setCommandLine().setGui().setWeb()
-        	.build();
-        
+        .setBundleName(OptionsISat3.OPTIONS_ISAT3)
+        .setIdentifier(OptionsISat3.ISAT3_COMMAND_LINE)
+        .setCategory(category)
+        .setType(typeCommand)
+        .setDefault(defaultCommandLine)
+        .setCommandLine().setGui().setWeb()
+        .build();
+
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption()
-        	.setBundleName(OptionsISat3.OPTIONS_ISAT3)
-        	.setIdentifier(OptionsISat3.ISAT3_KEEP_TEMPORARY_FILES)
-        	.setCategory(category)
-        	.setType(typeBoolean)
-        	.setDefault(false)
-        	.setCommandLine().setGui().setWeb()
-        	.build();
-	}
+        .setBundleName(OptionsISat3.OPTIONS_ISAT3)
+        .setIdentifier(OptionsISat3.ISAT3_KEEP_TEMPORARY_FILES)
+        .setCategory(category)
+        .setType(typeBoolean)
+        .setDefault(false)
+        .setCommandLine().setGui().setWeb()
+        .build();
+    }
 
 }

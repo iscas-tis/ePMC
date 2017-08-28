@@ -16,38 +16,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.smtlib;
 
 final class SMTLibOperator {
-	static class Builder {
-		private String identifier;
+    static class Builder {
+        private String identifier;
 
-		Builder setIdentifier(String identifier) {
-			this.identifier = identifier;
-			return this;
-		}
-		
-		String getIdentifier() {
-			return identifier;
-		}
+        Builder setIdentifier(String identifier) {
+            this.identifier = identifier;
+            return this;
+        }
 
-		SMTLibOperator build() {
-			return new SMTLibOperator(this);
-		}
-	}
+        String getIdentifier() {
+            return identifier;
+        }
 
-	private String identifer;
-	
-	private SMTLibOperator(Builder builder) {
-		assert builder != null;
-		assert builder.getIdentifier() != null;
-		
-		identifer = builder.getIdentifier();
-	}
-	
-	String getIdentifer() {
-		return identifer;
-	}	
+        SMTLibOperator build() {
+            return new SMTLibOperator(this);
+        }
+    }
+
+    private String identifer;
+
+    private SMTLibOperator(Builder builder) {
+        assert builder != null;
+        assert builder.getIdentifier() != null;
+
+        identifer = builder.getIdentifier();
+    }
+
+    String getIdentifer() {
+        return identifer;
+    }	
 }

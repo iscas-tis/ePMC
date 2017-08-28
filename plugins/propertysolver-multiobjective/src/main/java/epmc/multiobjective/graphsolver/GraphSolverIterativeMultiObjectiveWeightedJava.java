@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -42,7 +42,7 @@ import epmc.value.ValueArrayAlgebra;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
@@ -58,26 +58,26 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitMultiObjectiveWeighted)) {
             return false;
         }
-    	Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-    	if (!SemanticsMDP.isMDP(semantics)) {
-    		return false;
-    	}
+        Semantics semantics = origGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsMDP.isMDP(semantics)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	multiobjectiveWeighted();
+        prepareIterGraph();
+        multiobjectiveWeighted();
         prepareResultValues();
     }
 
@@ -97,8 +97,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     }
 
     private void prepareResultValues() {
-    	this.outputValues = inputValues;
-    	objective.setResult(outputValues);
+        this.outputValues = inputValues;
+        objective.setResult(outputValues);
     }
 
     private void multiobjectiveWeighted() {
@@ -120,9 +120,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             assert false;
         }
     }
-    
+
     /* auxiliary methods */
-    
+
     private static void compDiff(double[] distance, ValueAlgebra previous,
             Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
@@ -137,11 +137,11 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         }
         distance[0] = Math.max(distance[0], thisDistance);
     }
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -152,13 +152,13 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         }
         return true;
     }
-    
+
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     /* implementation/native call of/to iteration algorithms */    
-    
+
     private void mdpMultiobjectiveweightedJacobiJava(
             GraphExplicitSparseAlternate graph, ValueArrayAlgebra stopRewards,
             ValueArrayAlgebra transRewards,
@@ -172,8 +172,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
         ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT)
-        		.asSparseNondetOnlyNondet()
-        		.getContent());
+                .asSparseNondetOnlyNondet()
+                .getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
@@ -302,8 +302,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             }
         } while (distance[0] > tolerance / 2);
     }    
-    
+
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
@@ -53,7 +53,7 @@ public final class ProblemsPlugin {
     public final static Problem PLUGIN_PLUGIN_SPECIFIED_TWICE = newProblem("plugin-plugin-specified-twice");
     public final static Problem PLUGIN_PLUGIN_DEPENDENCIES_MISSING = newProblem("plugin-plugin-dependencies-missing");
     public final static Problem PLUGIN_READ_PLUGIN_LIST_IO_EXCEPTION = newProblem("plugin-read-plugin-list-io-exception");
-    
+
     private static Problem newProblem(String name) {
         assert name != null;
         return UtilError.newProblem(PROBLEMS_PLUGIN, name);

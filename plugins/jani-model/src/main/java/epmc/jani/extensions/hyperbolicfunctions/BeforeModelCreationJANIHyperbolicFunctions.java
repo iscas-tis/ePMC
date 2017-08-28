@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.hyperbolicfunctions;
 
@@ -24,22 +24,22 @@ import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 
 public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani-hyperbolic-functions";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani-hyperbolic-functions";
 
-	@Override
-	public void process() {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsinh.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcosh.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtanh.INSTANCE);
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	}
+    @Override
+    public void process() {
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsinh.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcosh.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtanh.INSTANCE);
+
+    }
 }

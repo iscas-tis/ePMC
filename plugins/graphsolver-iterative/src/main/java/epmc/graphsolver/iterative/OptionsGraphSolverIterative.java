@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative;
 
 public enum OptionsGraphSolverIterative {
-	/** Base name of resource file for options description. */
-	OPTIONS_GRAPH_SOLVER_ITERATIVE,
+    /** Base name of resource file for options description. */
+    OPTIONS_GRAPH_SOLVER_ITERATIVE,
 
-	GRAPHSOLVER_ITERATIVE_CATEGORY,
+    GRAPHSOLVER_ITERATIVE_CATEGORY,
     GRAPHSOLVER_ITERATIVE_METHOD,
     GRAPHSOLVER_ITERATIVE_TOLERANCE,
     GRAPHSOLVER_ITERATIVE_STOP_CRITERION,

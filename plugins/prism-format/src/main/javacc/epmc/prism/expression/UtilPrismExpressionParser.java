@@ -25,153 +25,153 @@ import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorOr;
 
 public final class UtilPrismExpressionParser {
-	public final static class InfoExpression {
-		private long line;
-		private long column;
-		private int exprStart;
-		private int exprEnd;
-		private String string;
-		
-		InfoExpression(String string) {
-			this.string = string;
-		}
-		
-		public void setLine(long line) {
-			this.line = line;
-		}
-		
-		public void setColumn(long column) {
-			this.column = column;
-		}
-		
-		public void setStart(int exprStart) {
-			this.exprStart = exprStart;
-		}
-		
-		public void setEnd(int exprEnd) {
-			this.exprEnd = exprEnd;
-		}
-		
-		public Positional toPositional() {
-			String content = null;
-			if (string != null) {
-				content = string.substring(exprStart, exprEnd);
-			}
-			return new Positional.Builder()
-					.setLine(line)
-					.setColumn(column)
-					.setContent(content)
-					.build();
-		}
-	}
-	
-	private static final class ParseValueProviderReal implements ExpressionLiteral.ValueProvider {
-		private final String string;
+    public final static class InfoExpression {
+        private long line;
+        private long column;
+        private int exprStart;
+        private int exprEnd;
+        private String string;
 
-		private ParseValueProviderReal(String string) {
-			assert string != null;
-			this.string = string;
-		}
-		
-		@Override
-		public Value provideValue() {
-			return UtilValue.newValue(TypeReal.get(), string);
-		}
-	}
+        InfoExpression(String string) {
+            this.string = string;
+        }
 
-	private static final class ParseValueProviderInteger implements ExpressionLiteral.ValueProvider {
-		private final String string;
+        public void setLine(long line) {
+            this.line = line;
+        }
 
-		private ParseValueProviderInteger(String string) {
-			assert string != null;
-			this.string = string;
-		}
-		
-		@Override
-		public Value provideValue() {
-			return UtilValue.newValue(TypeInteger.get(), string);
-		}
-	}
+        public void setColumn(long column) {
+            this.column = column;
+        }
 
-	private static final class ParseValueProviderBoolean implements ExpressionLiteral.ValueProvider {
-		private final String string;
+        public void setStart(int exprStart) {
+            this.exprStart = exprStart;
+        }
 
-		private ParseValueProviderBoolean(String string) {
-			assert string != null;
-			this.string = string;
-		}
-		
-		@Override
-		public Value provideValue() {
-			return UtilValue.newValue(TypeBoolean.get(), string);
-		}
-	}
+        public void setEnd(int exprEnd) {
+            this.exprEnd = exprEnd;
+        }
 
-	public static ExpressionLiteral.ValueProvider newParseValueProviderReal(String string) {
-		assert string != null;
-		return new ParseValueProviderReal(string);
-	}
+        public Positional toPositional() {
+            String content = null;
+            if (string != null) {
+                content = string.substring(exprStart, exprEnd);
+            }
+            return new Positional.Builder()
+                    .setLine(line)
+                    .setColumn(column)
+                    .setContent(content)
+                    .build();
+        }
+    }
 
-	public static ExpressionLiteral.ValueProvider newParseValueProviderInteger(String string) {
-		assert string != null;
-		return new ParseValueProviderInteger(string);
-	}
+    private static final class ParseValueProviderReal implements ExpressionLiteral.ValueProvider {
+        private final String string;
 
-	public static ExpressionLiteral.ValueProvider newParseValueProviderBoolean(String string) {
-		assert string != null;
-		return new ParseValueProviderBoolean(string);
-	}
+        private ParseValueProviderReal(String string) {
+            assert string != null;
+            this.string = string;
+        }
+
+        @Override
+        public Value provideValue() {
+            return UtilValue.newValue(TypeReal.get(), string);
+        }
+    }
+
+    private static final class ParseValueProviderInteger implements ExpressionLiteral.ValueProvider {
+        private final String string;
+
+        private ParseValueProviderInteger(String string) {
+            assert string != null;
+            this.string = string;
+        }
+
+        @Override
+        public Value provideValue() {
+            return UtilValue.newValue(TypeInteger.get(), string);
+        }
+    }
+
+    private static final class ParseValueProviderBoolean implements ExpressionLiteral.ValueProvider {
+        private final String string;
+
+        private ParseValueProviderBoolean(String string) {
+            assert string != null;
+            this.string = string;
+        }
+
+        @Override
+        public Value provideValue() {
+            return UtilValue.newValue(TypeBoolean.get(), string);
+        }
+    }
+
+    public static ExpressionLiteral.ValueProvider newParseValueProviderReal(String string) {
+        assert string != null;
+        return new ParseValueProviderReal(string);
+    }
+
+    public static ExpressionLiteral.ValueProvider newParseValueProviderInteger(String string) {
+        assert string != null;
+        return new ParseValueProviderInteger(string);
+    }
+
+    public static ExpressionLiteral.ValueProvider newParseValueProviderBoolean(String string) {
+        assert string != null;
+        return new ParseValueProviderBoolean(string);
+    }
 
     static ExpressionOperator newOperator(Operator operator, Expression... operands) {
-		return new ExpressionOperator.Builder()
-				.setOperator(operator)
-				.setOperands(operands)
-				.build();
-	}
+        return new ExpressionOperator.Builder()
+                .setOperator(operator)
+                .setOperands(operands)
+                .build();
+    }
 
-	static ExpressionOperator newOperator(Operator operator, Expression operand1, Expression operand2, InfoExpression info) {
-		Positional positional = info != null ? info.toPositional() : null;
-		return new ExpressionOperator.Builder()
-				.setOperator(operator)
-				.setOperands(operand1, operand2)
-				.setPositional(positional)
-				.build();
-	}
+    static ExpressionOperator newOperator(Operator operator, Expression operand1, Expression operand2, InfoExpression info) {
+        Positional positional = info != null ? info.toPositional() : null;
+        return new ExpressionOperator.Builder()
+                .setOperator(operator)
+                .setOperands(operand1, operand2)
+                .setPositional(positional)
+                .build();
+    }
 
-	static ExpressionOperator newOperator(Operator operator, Expression operand, InfoExpression info) {
-		Positional positional = info != null ? info.toPositional() : null;
-		return new ExpressionOperator.Builder()
-				.setOperator(operator)
-				.setOperands(operand)
-				.setPositional(positional)
-				.build();
-	}
+    static ExpressionOperator newOperator(Operator operator, Expression operand, InfoExpression info) {
+        Positional positional = info != null ? info.toPositional() : null;
+        return new ExpressionOperator.Builder()
+                .setOperator(operator)
+                .setOperands(operand)
+                .setPositional(positional)
+                .build();
+    }
 
-	static Expression and(Expression a, Expression b, InfoExpression info) {
-		return newOperator(OperatorAnd.AND, a, b, info);
-	}
+    static Expression and(Expression a, Expression b, InfoExpression info) {
+        return newOperator(OperatorAnd.AND, a, b, info);
+    }
 
-	static Expression not(Expression expression, InfoExpression info) {
-		return newOperator(OperatorNot.NOT, expression, info);
+    static Expression not(Expression expression, InfoExpression info) {
+        return newOperator(OperatorNot.NOT, expression, info);
     }
 
     static Expression addInverse(Expression expression) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorAddInverse.ADD_INVERSE)
-    			.setOperands(expression)
-    			.build();
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorAddInverse.ADD_INVERSE)
+                .setOperands(expression)
+                .build();
     }
 
     static Expression or(Expression a, Expression b, InfoExpression info) {
-    	return newOperator(OperatorOr.OR, a, b, info);
+        return newOperator(OperatorOr.OR, a, b, info);
     }
 
     static Expression iff(Expression a, Expression b, InfoExpression info) {
-    	return newOperator(OperatorIff.IFF, a, b, info);
+        return newOperator(OperatorIff.IFF, a, b, info);
     }
 
     static Expression implies(Expression a, Expression b, InfoExpression info) {
-    	return newOperator(OperatorImplies.IMPLIES, a, b, info);
+        return newOperator(OperatorImplies.IMPLIES, a, b, info);
     }
 
     static ExpressionReward newRewardSteadyState(Expression structure) {
@@ -183,7 +183,7 @@ public final class UtilPrismExpressionParser {
 
     static TimeBound newTimeBound(Expression left, Expression right,
             boolean leftOpen, boolean rightOpen) {
-    	return new TimeBound.Builder()
+        return new TimeBound.Builder()
                 .setLeft(left)
                 .setRight(right)
                 .setLeftOpen(leftOpen)
@@ -221,7 +221,7 @@ public final class UtilPrismExpressionParser {
 
     static ExpressionReward newRewardReachability
     (Expression structure, Expression reachSet, InfoExpression info) {
-		Positional positional = info != null ? info.toPositional() : null;
+        Positional positional = info != null ? info.toPositional() : null;
         return new ExpressionReward.Builder()
                 .setRewardType(RewardType.REACHABILITY)
                 .setReward(structure)
@@ -276,14 +276,14 @@ public final class UtilPrismExpressionParser {
     }
 
     static ExpressionLiteral getTrue() {
-    	return new ExpressionLiteral.Builder()
-    			.setPositional(new Positional.Builder()
-    					.setContent("true")
-    					.build())
-    			.setValueProvider(new ParseValueProviderBoolean("true"))
-    			.build();
+        return new ExpressionLiteral.Builder()
+                .setPositional(new Positional.Builder()
+                        .setContent("true")
+                        .build())
+                .setValueProvider(new ParseValueProviderBoolean("true"))
+                .build();
     }
-    
-	private UtilPrismExpressionParser() {
-	}
+
+    private UtilPrismExpressionParser() {
+    }
 }

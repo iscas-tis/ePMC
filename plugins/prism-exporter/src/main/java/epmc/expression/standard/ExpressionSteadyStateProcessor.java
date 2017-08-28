@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,45 +26,45 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionSteadyState steadyState = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof ExpressionSteadyState; 
-		
-		steadyState = (ExpressionSteadyState) obj;
-		return this;
-	}
+    private ExpressionSteadyState steadyState = null;
 
-	@Override
-	public String toPRISM() {
-		assert steadyState != null;
-		
-		return ProcessorRegistrar.getProcessor(steadyState.getOperand1())
-								 .toPRISM();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionSteadyState; 
 
-	@Override
-	public void validateTransientVariables() {
-		assert steadyState != null;
-		
-		for (Expression child: steadyState.getChildren()) {
-			ProcessorRegistrar.getProcessor(child)
-							  .validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert steadyState != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : steadyState.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        steadyState = (ExpressionSteadyState) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert steadyState != null;
+
+        return ProcessorRegistrar.getProcessor(steadyState.getOperand1())
+                .toPRISM();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert steadyState != null;
+
+        for (Expression child: steadyState.getChildren()) {
+            ProcessorRegistrar.getProcessor(child)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert steadyState != null;
+
+        boolean usesTransient = false;
+        for (Expression child : steadyState.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

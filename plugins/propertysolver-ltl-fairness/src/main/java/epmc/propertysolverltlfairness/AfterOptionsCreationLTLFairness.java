@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
@@ -28,24 +28,24 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public final class AfterOptionsCreationLTLFairness implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "after-options-ltl-fairness";
+    private final static String IDENTIFIER = "after-options-ltl-fairness";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
-		assert solvers != null;
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
+        assert solvers != null;
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
-		solvers.put(PropertySolverDDLTLFairness.IDENTIFIER, PropertySolverDDLTLFairness.class);
-		solvers.put(PropertySolverExplicitLTLFairness.IDENTIFIER, PropertySolverExplicitLTLFairness.class);
-		options.addOption().setBundleName(OptionsLTLFairness.OPTIONS_LTL_FAIRNESS)
-			.setIdentifier(OptionsLTLFairness.LTL_FAIRNESS_SCC_SKIP_TRANSIENT)
-			.setType(typeBoolean).setDefault(true)
-			.setCommandLine().setGui().setWeb().build();
-	}
+        solvers.put(PropertySolverDDLTLFairness.IDENTIFIER, PropertySolverDDLTLFairness.class);
+        solvers.put(PropertySolverExplicitLTLFairness.IDENTIFIER, PropertySolverExplicitLTLFairness.class);
+        options.addOption().setBundleName(OptionsLTLFairness.OPTIONS_LTL_FAIRNESS)
+        .setIdentifier(OptionsLTLFairness.LTL_FAIRNESS_SCC_SKIP_TRANSIENT)
+        .setType(typeBoolean).setDefault(true)
+        .setCommandLine().setGui().setWeb().build();
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.error;
 
@@ -52,48 +52,48 @@ public final class Positional implements Serializable {
         private long line;
         private long column;
         private String content;
-        
+
         public Builder setPart(long part) {
             this.part = part;
             return this;
         }
-        
+
         private long getPart() {
             return part;
         }
-        
+
         public Builder setLine(long line) {
             this.line = line;
             return this;
         }
-        
+
         private long getLine() {
             return line;
         }
-        
+
         public Builder setColumn(long column) {
             this.column = column;
             return this;
         }
-        
+
         private long getColumn() {
             return column;
         }
-        
+
         public Builder setContent(String content) {
             this.content = content;
             return this;
         }
-        
+
         private String getContent() {
             return content;
         }
-        
+
         public Positional build() {
             return new Positional(this);
         }
     }
-    
+
     /** Serial version UID - 1L, as I don't know any better. */
     private static final long serialVersionUID = 1L;
     // TODO change to String? Otherwise, might not be clear whether referring
@@ -106,7 +106,7 @@ public final class Positional implements Serializable {
     private final long column;
     /** User-readable representation of this positional. */
     private final String content;
-    
+
     private Positional(Builder builder) {
         assert builder != null;
         assert builder.getPart() >= 0;
@@ -120,7 +120,7 @@ public final class Positional implements Serializable {
         if (content == null) {
             content = part + COMMA + line + COMMA + column;
         }
-        */
+         */
         this.content = content;
     }
 
@@ -128,7 +128,7 @@ public final class Positional implements Serializable {
     public String toString() {
         return content;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -165,7 +165,7 @@ public final class Positional implements Serializable {
     public String getContent() {
         return content;
     }
-    
+
     /**
      * Obtain the number of the part of the model the position refers to.
      * Numbers start with 0.

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,12 +27,12 @@ import epmc.value.TypeArray;
 public final class TypeArrayGeneric implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](generic)";
     private final Type entryType;
-    
+
     public TypeArrayGeneric(Type entryType) {
         assert entryType != null;
         this.entryType = entryType;
     }
-    
+
     @Override
     public ValueArrayGeneric newValue() {
         return new ValueArrayGeneric(this);
@@ -70,9 +70,9 @@ public final class TypeArrayGeneric implements TypeArray {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-    
+
     @Override
-	public TypeArray getTypeArray() {
+    public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

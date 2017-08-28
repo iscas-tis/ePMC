@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,32 +27,32 @@ import epmc.value.ValueArray;
 
 final class ValueArrayBoolean implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
-	private final TypeArrayBoolean type;
+    private final TypeArrayBoolean type;
     private long[] content;
-	private boolean immutable;
-	private int size;
-    
+    private boolean immutable;
+    private int size;
+
     ValueArrayBoolean(TypeArrayBoolean type) {
-    	this.type = type;
+        this.type = type;
         int numLongs = ((size() - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[numLongs];
     }
-    
-	@Override
-	public void setSize(int size) {
+
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         int num = ((size - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[num];
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
+    @Override
+    public int size() {
+        return size;
+    }
 
-     @Override
+    @Override
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
@@ -66,7 +66,7 @@ final class ValueArrayBoolean implements ValueArray {
             content[offset] &= ~(1L << index);
         }
     }
-    
+
     @Override
     public void get(Value value, int index) {
         assert value != null;
@@ -76,7 +76,7 @@ final class ValueArrayBoolean implements ValueArray {
         int offset = index >> 6;
         ValueBoolean.asBoolean(value).set((content[offset] & (1L << index)) != 0);
     }    
-    
+
     public int nextSetBit(int index) {
         assert index >= 0;
         assert index < size();
@@ -96,35 +96,35 @@ final class ValueArrayBoolean implements ValueArray {
         }
         return -1;
     }
-    
+
     @Override
     public int hashCode() {
-    	return Arrays.hashCode(content);
-    }
-    
-    @Override
-    public TypeArrayBoolean getType() {
-    	return type;
-    }
-    
-    @Override
-    public void setImmutable() {
-    	immutable = true;
-    }
-    
-    @Override
-    public boolean isImmutable() {
-    	return immutable;
+        return Arrays.hashCode(content);
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public TypeArrayBoolean getType() {
+        return type;
+    }
+
+    @Override
+    public void setImmutable() {
+        immutable = true;
+    }
+
+    @Override
+    public boolean isImmutable() {
+        return immutable;
+    }
+
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

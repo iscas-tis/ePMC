@@ -16,20 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.preprocessor;
 
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 
 public interface PreprocessorExplicit {
-	String getIdentifier();
-	
-	void setObjective(GraphSolverObjectiveExplicit objective);
-	
-	GraphSolverObjectiveExplicit getObjective();
-	
-	boolean canHandle();
-	
-	void process();
+    String getIdentifier();
+
+    void setObjective(GraphSolverObjectiveExplicit objective);
+
+    GraphSolverObjectiveExplicit getObjective();
+
+    boolean canHandle();
+
+    void process();
 }

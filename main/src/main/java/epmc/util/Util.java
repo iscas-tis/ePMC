@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -105,7 +105,7 @@ public final class Util {
         int line = Thread.currentThread().getStackTrace()[2].getLineNumber();
         return line;
     }
-    
+
     /**
      * Obtain entry from manifest.
      * None of the parameters may be {@code null}. If no entry with the given
@@ -150,7 +150,7 @@ public final class Util {
         }
         return builder.toString();
     }
-    
+
     /**
      * Print current stack trace to standard output.
      * This function is meant for debugging purposes.
@@ -178,7 +178,7 @@ public final class Util {
         }
         return null;
     }
-    
+
     /**
      * Obtain a resource from class loader of given class as string.
      * None of the parameters may be {@code null}. In case the resource could
@@ -323,21 +323,21 @@ public final class Util {
         }
         return null;
     }
-    
-	public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler) {
-		Map<String,Class<SchedulerPrinter>> schedulerPrinters = Options.get().get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
-		assert schedulerPrinters != null;
-		for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {
-			SchedulerPrinter printer = Util.getInstance(entry.getValue());
-			printer.setScheduler(scheduler);
-			printer.setLowLevel(graph);
-			printer.setOutput(out);
-			if (printer.canHandle()) {
-				printer.print();
-				return;
-			}
-		}
-	}
+
+    public static void printScheduler(OutputStream out, LowLevel graph, Scheduler scheduler) {
+        Map<String,Class<SchedulerPrinter>> schedulerPrinters = Options.get().get(OptionsModelChecker.SCHEDULER_PRINTER_CLASS);
+        assert schedulerPrinters != null;
+        for (Entry<String, Class<SchedulerPrinter>> entry : schedulerPrinters.entrySet()) {
+            SchedulerPrinter printer = Util.getInstance(entry.getValue());
+            printer.setScheduler(scheduler);
+            printer.setLowLevel(graph);
+            printer.setOutput(out);
+            if (printer.canHandle()) {
+                printer.print();
+                return;
+            }
+        }
+    }
 
     /**
      * Private constructor to prevent instantiation of this class.

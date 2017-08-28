@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -101,40 +101,40 @@ public final class UtilValue {
         }
         return allTypesKnown;
     }
-    
+
     public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
         @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
+        T value = (T) type.newValue();
         value.set(valueString);
         return value;
     }
 
     public static <T extends ValueAlgebra, U extends TypeAlgebra> T newValue(U type, int valueInt) {
         @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
+        T value = (T) type.newValue();
         value.set(valueInt);
         return value;
     }
 
     public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int size) {
-    	assert type != null;
-    	assert size >= 0;
+        assert type != null;
+        assert size >= 0;
         @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
+        T value = (T) type.newValue();
         value.setSize(size);
         return value;
     }
-    
+
     @SuppressWarnings("unchecked")
-	public static <T extends Type> T upper(T a, T b) {
-    	assert a != null;
+    public static <T extends Type> T upper(T a, T b) {
+        assert a != null;
         assert b != null;
         T upper = null;
         if (TypeInteger.isInteger(a) && TypeInteger.isInteger(b)) {
             int lowerBound = Math.min(TypeInteger.asInteger(a).getLowerInt(),
-            		TypeInteger.asInteger(b).getLowerInt());
+                    TypeInteger.asInteger(b).getLowerInt());
             int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
-            		TypeInteger.asInteger(b).getUpperInt());
+                    TypeInteger.asInteger(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
             if (a.canImport(b)) {
@@ -152,17 +152,17 @@ public final class UtilValue {
     }
 
     public static <T extends Value> T clone(T value) {
-    	assert value != null;
-    	@SuppressWarnings("unchecked")
-		T clone = (T) value.getType().newValue();
-    	clone.set(value);
-    	return clone;
+        assert value != null;
+        @SuppressWarnings("unchecked")
+        T clone = (T) value.getType().newValue();
+        clone.set(value);
+        return clone;
     }
-    
+
     public static <T extends ValueArray> T ensureSize(T array, int size) {
-    	if (size <= array.size()) {
-    		return array;
-    	}
+        if (size <= array.size()) {
+            return array;
+        }
         int newSize = 1;
         while (newSize < size) {
             newSize <<= 1;
@@ -170,8 +170,8 @@ public final class UtilValue {
         T result = newArray(array.getType(), newSize);
         Value entry = array.getType().getEntryType().newValue();
         for (int i = 0; i < array.size(); i++) {
-        	array.get(entry, i);
-        	result.set(entry, i);
+            array.get(entry, i);
+            result.set(entry, i);
         }
         return result;
     }
@@ -188,33 +188,33 @@ public final class UtilValue {
         Value entryAccThis = array.getType().getEntryType().newValue();
         Value entryAccOther = array.getType().getEntryType().newValue();
         for (int entry = 0; entry < totalSize; entry++) {
-        	array.get(entryAccThis, entry);
-        	other.get(entryAccOther, entry);
-        	if (!entryAccThis.isEq(entryAccOther)) {
-        		return false;
-        	}
+            array.get(entryAccThis, entry);
+            other.get(entryAccOther, entry);
+            if (!entryAccThis.isEq(entryAccOther)) {
+                return false;
+            }
         }
         return true;
     }
-    
+
     public static String arrayToString(ValueArray array) {
         StringBuilder builder = new StringBuilder();
         Value entry = array.getType().getEntryType().newValue();
         builder.append("[");
         for (int entryNr = 0; entryNr < array.size(); entryNr++) {
-        	array.get(entry, entryNr);
-        	builder.append(entry);
-        	if (entryNr < array.size() - 1) {
-        		builder.append(",");
-        	}
+            array.get(entry, entryNr);
+            builder.append(entry);
+            if (entryNr < array.size() - 1) {
+                builder.append(",");
+            }
         }
         builder.append("]");
         return builder.toString();
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private UtilValue() {
-	}
+    private UtilValue() {
+    }
 }

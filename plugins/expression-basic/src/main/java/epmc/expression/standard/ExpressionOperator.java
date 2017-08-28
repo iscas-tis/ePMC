@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -49,32 +49,32 @@ public final class ExpressionOperator implements ExpressionPropositional {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setOperands(List<Expression> operands) {
             this.operands = operands;
             return this;
         }
-        
+
         private List<Expression> getOperands() {
             return operands;
         }
-        
+
         public Builder setOperands(Expression... operands) {
             this.operands = Arrays.asList(operands);
             return this;
         }
-        
+
         public Builder setOperator(Operator operator) {
-        	this.operator = operator;
-        	return this;
+            this.operator = operator;
+            return this;
         }
 
         public Operator getOperator() {
-        	return operator;
+            return operator;
         }
 
         public ExpressionOperator build() {
@@ -83,17 +83,17 @@ public final class ExpressionOperator implements ExpressionPropositional {
     }
 
     public static boolean isOperator(Expression expression) {
-    	return expression instanceof ExpressionOperator;
+        return expression instanceof ExpressionOperator;
     }
 
     public static ExpressionOperator asOperator(Expression expression) {
-    	if (isOperator(expression)) {
-    		return (ExpressionOperator) expression;
-    	} else {
-    		return null;
-    	}
+        if (isOperator(expression)) {
+            return (ExpressionOperator) expression;
+        } else {
+            return null;
+        }
     }
-    
+
     private final Positional positional;
     private final List<Expression> operands = new ArrayList<>();
     private final Operator operator;
@@ -106,7 +106,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         }
         this.operands.addAll(builder.getOperands());
         if (builder.getOperator() != null) {
-        	this.operator = builder.getOperator();
+            this.operator = builder.getOperator();
         } else {
             throw new RuntimeException();
         }
@@ -118,7 +118,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public List<Expression> getOperands() {
         return getChildren();
     }
-    
+
     public Expression getOperand1() {
         return getOperands().get(0);
     }
@@ -132,9 +132,9 @@ public final class ExpressionOperator implements ExpressionPropositional {
     }
 
     public Operator getOperator() {
-    	return operator;
+        return operator;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionOperator.Builder()
@@ -146,12 +146,12 @@ public final class ExpressionOperator implements ExpressionPropositional {
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
+        assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
-        
+
         List<Expression> operands = getOperands();
         Type[] opTypes = new Type[operands.size()];
         for (int opNr = 0; opNr < opTypes.length; opNr++) {
@@ -167,7 +167,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         ensure(result != null, ProblemsExpression.VALUE_INCONSISTENT_INFO);
         return result;
     }
-    
+
     @Override
     public boolean isPropositional() {
         for (Expression operand : getOperands()) {
@@ -175,10 +175,10 @@ public final class ExpressionOperator implements ExpressionPropositional {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         return operands;
@@ -188,18 +188,18 @@ public final class ExpressionOperator implements ExpressionPropositional {
     public Positional getPositional() {
         return positional;
     }
-    
-    
+
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(operator);
         builder.append("(");
         for (int index = 0; index < operands.size(); index++) {
-        	builder.append(operands.get(index));
-        	if (index < operands.size() - 1) {
-        		builder.append(",");
-        	}
+            builder.append(operands.get(index));
+            if (index < operands.size() - 1) {
+                builder.append(",");
+            }
         }
         builder.append(")");
         if (getPositional() != null) {
@@ -227,7 +227,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         }
         return this.operator.equals(other.operator);
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -240,12 +240,12 @@ public final class ExpressionOperator implements ExpressionPropositional {
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionOperator.Builder()
-				.setOperands(operands)
-				.setOperator(operator)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionOperator.Builder()
+                .setOperands(operands)
+                .setOperator(operator)
+                .setPositional(positional)
+                .build();
+    }
 }

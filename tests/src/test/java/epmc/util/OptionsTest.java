@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -41,7 +41,7 @@ public class OptionsTest {
         options.parseOptions(noArgs, false);
 
         String[] helpArgs = {"help"};
-        
+
         options = UtilOptionsEPMC.newOptions();
         options.parseOptions(helpArgs, true);
         options.reset();
@@ -50,7 +50,7 @@ public class OptionsTest {
 
         options.getShortUsage();
         // check whether we forgot to specify resource strings
-//        options.getUsage();
+        //        options.getUsage();
     }
 
 }

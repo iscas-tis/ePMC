@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -28,22 +28,22 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public static TypeDouble get() {
         return ContextValue.get().getType(TypeDouble.class);
     }
-    
+
     public static void set(TypeDouble type) {
         assert type != null;
         ContextValue.get().setType(TypeDouble.class, ContextValue.get().makeUnique(type));
     }
 
     public static boolean isDouble(Type type) {
-    	return type instanceof TypeDouble;
+        return type instanceof TypeDouble;
     }
 
     public static boolean isDouble(Value value) {
-    	return isDouble(value.getType());
+        return isDouble(value.getType());
     }
 
     private final static String DOUBLE = "double";
-    
+
     private final ValueDouble valueOne = new ValueDouble(this, 1.0);
     private final ValueDouble valueZero = new ValueDouble(this, 0.0);
     private final ValueDouble valuePosInf = new ValueDouble(this, Double.POSITIVE_INFINITY);
@@ -69,7 +69,7 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
             this.upper.setImmutable();
         }
     }
-    
+
     @Override
     public boolean canImport(Type a) {
         assert a != null;
@@ -87,7 +87,7 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public ValueDouble newValue() {
         return new ValueDouble(this);
     }
-    
+
     @Override
     public ValueDouble getZero() {
         return valueZero;
@@ -117,12 +117,12 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public ValueDouble getNegInf() {
         return valueNegInf;
     }
-    
+
     @Override
     public int getNumBits() {
         return Double.SIZE;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -135,24 +135,24 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public ValueDouble getLower() {
         return lower;
     }
-    
+
     @Override
     public ValueDouble getUpper() {
         return upper;
     }
-    
+
     @Override
     public TypeArrayDouble getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayDouble(this));

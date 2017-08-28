@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -32,7 +32,7 @@ public final class StateReward implements Reward {
     private Positional positional;
     private final Expression guard;
     private final Expression value;
-    
+
     public StateReward(Expression guard, Expression value, Positional positional) {
         this.positional = positional;
         assert guard != null;
@@ -40,15 +40,15 @@ public final class StateReward implements Reward {
         this.guard = guard;
         this.value = value;
     }
-    
+
     public Expression getGuard() {
         return guard;
     }
-    
+
     public Expression getValue() {
         return value;
     }
-    
+
     @Override
     public String toString() {
         return guard + " : " + value;

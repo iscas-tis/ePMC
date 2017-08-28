@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -47,16 +47,16 @@ public final class ContextValue {
     /** Map used to make types unique. */
     private final Map<Type,Type> typesUnique = new HashMap<>();
     /** The value context used in the model checking process. */
-	private static ContextValue CONTEXT_VALUE;
+    private static ContextValue CONTEXT_VALUE;
 
     public static void set(ContextValue contextValue) {
-    	ContextValue.CONTEXT_VALUE = contextValue;
+        ContextValue.CONTEXT_VALUE = contextValue;
     }
-    
+
     public static ContextValue get() {
-    	return CONTEXT_VALUE;
+        return CONTEXT_VALUE;
     }
-    
+
     /**
      * Get type identified by object.
      * Obtain the type previously set by
@@ -76,7 +76,7 @@ public final class ContextValue {
         T result = (T) types.get(key);
         return result;
     }
-    
+
     /**
      * Sets an object to identify a given type.
      * The type can later be obtained using {@link #getType(Object)}.
@@ -92,7 +92,7 @@ public final class ContextValue {
         assert type != null;
         types.put(key, makeUnique(type));
     }
-    
+
     /**
      * Returns a unique instance of the given type object.
      * The method checks whether there already exists a type for which
@@ -119,28 +119,28 @@ public final class ContextValue {
         }
         return result;
     }
-    
+
     public void addOperatorEvaluator(OperatorEvaluator evaluator) {
-    	assert evaluator != null;
-    	operatorEvaluators.add(evaluator);
+        assert evaluator != null;
+        operatorEvaluators.add(evaluator);
     }
-    
+
     public List<OperatorEvaluator> getOperatorEvaluators() {
-		return operatorEvaluatorsExternal;
-	}
-    
+        return operatorEvaluatorsExternal;
+    }
+
     public OperatorEvaluator getOperatorEvaluator(Operator operator, Type...types) {
-    	assert operator != null;
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-    	for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
-    		if (evaluator.getOperator().equals(operator)
-    				&& evaluator.canApply(types)) {
-    			return evaluator;
-    		}
-    	}
-    	return null;
+        assert operator != null;
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
+            if (evaluator.getOperator().equals(operator)
+                    && evaluator.canApply(types)) {
+                return evaluator;
+            }
+        }
+        return null;
     }
 }

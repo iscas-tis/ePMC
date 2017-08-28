@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumpingdd;
 
@@ -29,33 +29,33 @@ import epmc.graph.dd.GraphDD;
 import epmc.lumpingdd.transrepresentation.TransitionRepresentation;
 
 public interface Signature {
-	/**
-	 * Set the original graph that the lumper works on
-	 * The signature can use this to decide whether it can
-	 * lump.
-	 */
-	public void setOriginal(GraphDD original);
-	
-	/**
-	 * Decides whether this class can lump the original graph
-	 */
-	public boolean canLump(List<Expression> validFor);
-	
-	/**
-	 * Set the variable that defines the block indices
-	 */
-	public void setBlockIndexVar(VariableDD partitionsVar);
-	
-	/**
-	 * Compute the signatures for the given partition
-	 * @param partitions The current partition
-	 * @return A DD defining the new signature for each state
-	 */
-	public DD computeSignatures(DD partitions);
+    /**
+     * Set the original graph that the lumper works on
+     * The signature can use this to decide whether it can
+     * lump.
+     */
+    public void setOriginal(GraphDD original);
 
-	/**
-	 * Get the transition representation associated with
-	 * this signature.
-	 */
-	public TransitionRepresentation getTransitionRepresentation();
+    /**
+     * Decides whether this class can lump the original graph
+     */
+    public boolean canLump(List<Expression> validFor);
+
+    /**
+     * Set the variable that defines the block indices
+     */
+    public void setBlockIndexVar(VariableDD partitionsVar);
+
+    /**
+     * Compute the signatures for the given partition
+     * @param partitions The current partition
+     * @return A DD defining the new signature for each state
+     */
+    public DD computeSignatures(DD partitions);
+
+    /**
+     * Get the transition representation associated with
+     * this signature.
+     */
+    public TransitionRepresentation getTransitionRepresentation();
 }

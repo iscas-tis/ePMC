@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -33,7 +33,7 @@ import epmc.options.Options;
 
 public final class EvaluatorDDVariable implements EvaluatorDD {
     public final static String IDENTIFIER = "variable";
-    
+
     private Map<Expression, VariableDD> variables;
     private Expression expression;
     private DD dd;
@@ -71,7 +71,7 @@ public final class EvaluatorDDVariable implements EvaluatorDD {
         boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
         VariableDD variableDD = variables.get(expression);
-        
+
         if (useVector && variableDD.isInteger()) {
             List<DD> origVec = new ArrayList<>(contextDD.clone(variableDD.getDDVariables(0)));
             origVec.add(contextDD.newConstant(false));

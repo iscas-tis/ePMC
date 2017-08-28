@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
@@ -29,38 +29,38 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 final class NodePropertyPlayerToState implements NodeProperty {
-	private final GraphExplicit graph;
-	private final NodeProperty playerProperty;
-	private final ValueBoolean value;
+    private final GraphExplicit graph;
+    private final NodeProperty playerProperty;
+    private final ValueBoolean value;
 
-	NodePropertyPlayerToState(GraphExplicit graph, NodeProperty player) {
-		assert graph != null;
-		assert player != null;
-		this.graph = graph;
-		this.playerProperty = player;
-		this.value = TypeBoolean.get().newValue();
-	}
-	
-	@Override
-	public GraphExplicit getGraph() {
-		return graph;
-	}
+    NodePropertyPlayerToState(GraphExplicit graph, NodeProperty player) {
+        assert graph != null;
+        assert player != null;
+        this.graph = graph;
+        this.playerProperty = player;
+        this.value = TypeBoolean.get().newValue();
+    }
 
-	@Override
-	public Value get(int node) {
-		Player player = playerProperty.getEnum(node);
-		value.set(player == Player.ONE || player == Player.TWO);
-		return value;
-	}
+    @Override
+    public GraphExplicit getGraph() {
+        return graph;
+    }
 
-	@Override
-	public void set(int node, Value value) {
-		assert value != null;
-		assert false;
-	}
+    @Override
+    public Value get(int node) {
+        Player player = playerProperty.getEnum(node);
+        value.set(player == Player.ONE || player == Player.TWO);
+        return value;
+    }
 
-	@Override
-	public Type getType() {
-		return value.getType();
-	}
+    @Override
+    public void set(int node, Value value) {
+        assert value != null;
+        assert false;
+    }
+
+    @Override
+    public Type getType() {
+        return value.getType();
+    }
 }

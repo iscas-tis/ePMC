@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -47,7 +47,7 @@ public interface ValueArray extends Value {
     public static boolean isArray(Value value) {
         return value instanceof ValueArray;
     }
-    
+
     /**
      * Cast given value to array type.
      * If the type is not an array value, {@code null} will be returned.
@@ -65,20 +65,20 @@ public interface ValueArray extends Value {
 
     @Override
     TypeArray getType();
-        
+
     void setSize(int size);
-    
+
     int size();
 
     void get(Value presStateProb, int index);
-    
+
     void set(Value value, int index);
 
     @Override
     default void set(Value op) {
         assert !isImmutable();
         if (this == op) {
-        	return;
+            return;
         }
         ValueArray opArray = ValueArray.asArray(op);
         setSize(opArray.size());
@@ -89,14 +89,14 @@ public interface ValueArray extends Value {
             set(entryAcc, index);
         }
     }    
-    
+
     @Override
     default boolean isEq(Value other) {
-    	assert other != null;
-    	assert isArray(other);
+        assert other != null;
+        assert isArray(other);
         ValueArray otherArray = ValueArray.asArray(other);
         if (size() != otherArray.size()) {
-        	return false;
+            return false;
         }
         Value entryAccThis = getType().getEntryType().newValue();
         Value entryAccOther = getType().getEntryType().newValue();
@@ -109,10 +109,10 @@ public interface ValueArray extends Value {
         }
         return true;
     }
-    
+
     @Override
     default int compareTo(Value other) {
-    	assert other != null;
+        assert other != null;
         assert !isImmutable();
         ValueArray opArray = ValueArray.asArray(other);
         int sizeCmp = Integer.compare(size(), opArray.size());
@@ -132,7 +132,7 @@ public interface ValueArray extends Value {
         }
         return 0;
     }
-    
+
     @Override
     default double distance(Value other) {
         assert other != null;

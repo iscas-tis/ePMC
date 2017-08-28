@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,30 +27,30 @@ import epmc.value.ValueArray;
 
 final class ValueArrayTernary implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
-	private final TypeArrayTernary type;
+    private final TypeArrayTernary type;
     private long[] content;
-	private boolean immutable;
-	private int size;
+    private boolean immutable;
+    private int size;
 
     ValueArrayTernary(TypeArrayTernary type) {
-    	assert type != null;
-    	this.type = type;
+        assert type != null;
+        this.type = type;
         int numBits = size() * getBitsPerEntry();
         int numLongs = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[numLongs];
     }
-    
+
     @Override
     public ValueArray clone() {
-    	ValueArrayTernary other = new ValueArrayTernary(getType());
-    	other.set(this);
-    	return other;
+        ValueArrayTernary other = new ValueArrayTernary(getType());
+        other.set(this);
+        return other;
     }
 
     private int getBitsPerEntry() {
         return getType().getEntryType().getNumBits();
     }
-    
+
     @Override
     public void set(Value value, int index) {
         assert !isImmutable();
@@ -71,7 +71,7 @@ final class ValueArrayTernary implements ValueArray {
             }
         }
     }
-    
+
     @Override
     public void get(Value value, int index) {
         assert value != null;
@@ -82,59 +82,59 @@ final class ValueArrayTernary implements ValueArray {
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         ValueTernary.asTernary(value).set(Ternary.values()[number]);
     }
-    
+
     @Override
     public TypeArrayTernary getType() {
-    	return type;
+        return type;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = Arrays.hashCode(content) + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public void setImmutable() {
-    	immutable = true;
+        immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setSize(int size) {
+    }
+
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[num];
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

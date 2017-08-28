@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -33,7 +33,7 @@ import epmc.messages.Message;
 public final class MessagesDD {
     /** Base name of resource file for message description. */
     public final static String MESSAGES_DD = "MessagesDD";
-    
+
     /** Total time spent in routines operating on decision diagrams. */
     public final static Message DD_TOTAL_TIME = newMessage().setIdentifier("dd-total-time").build();
     /** Total time spent converting decision diagrams from one libary to another. */
@@ -51,7 +51,7 @@ public final class MessagesDD {
     private static Message.Builder newMessage() {
         return new Message.Builder().setBundle(MESSAGES_DD);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

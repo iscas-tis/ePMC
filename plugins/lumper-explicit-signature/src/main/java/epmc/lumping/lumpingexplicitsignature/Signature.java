@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -26,7 +26,7 @@ final class Signature implements Comparable<Signature> {
     int[] blocks;
     ValueAlgebra[] values;
     int size;
-    
+
     @Override
     public int compareTo(Signature other) {
         if (this.size < other.size) {
@@ -49,7 +49,7 @@ final class Signature implements Comparable<Signature> {
         }
         return 0;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -62,7 +62,7 @@ final class Signature implements Comparable<Signature> {
         }
         return hash;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
@@ -66,7 +66,7 @@ final class PluginLoader {
      * working on Linux, you must check whether the plugin loader also still
      * works on windows after a change.
      */
-    
+
     /** String "plugins:\n" for {@link #toString()} method. */
     private final static String TOSTRING_PLUGINS = "plugins:\n";
     /** String "\n" for {@link #toString()} method. */
@@ -121,7 +121,7 @@ final class PluginLoader {
     private final static String CLASS_FILE_ENDING = ".class";
     /** String containing a single space. */
     private final static String SPACE = " ";
-    
+
     /** Class loader constructed by this plugin loader. */
     private final ClassLoader classLoader;
     /** List of all plugins loaded. */
@@ -132,7 +132,7 @@ final class PluginLoader {
     private final Options options;
 
     PluginLoader(Options options, List<String> pluginPathStrings)
-            {
+    {
         assert options != null;
         assert pluginPathStrings != null;
         for (String name : pluginPathStrings) {
@@ -188,7 +188,7 @@ final class PluginLoader {
 
         return result;
     }
-    
+
     List<Class<? extends PluginInterface>> getPluginInterfaceClasses() {
         return classes;
     }
@@ -227,11 +227,11 @@ final class PluginLoader {
     }
 
     private void readClassFileNames(Path path, boolean isJAR, Plugin plugin, Path directory)
-            {
+    {
         assert path != null;
         assert plugin != null;
         assert directory != null;
-        
+
         if (Files.isRegularFile(path) && path.toString().endsWith(CLASS_FILE_ENDING)) {
             readClassFileNamesClass(path, isJAR, plugin, directory);
         } else if (Files.isRegularFile(path) && path.toString().endsWith(JAR_ENDING)) {
@@ -246,7 +246,7 @@ final class PluginLoader {
         assert path != null;
         assert plugin != null;
         assert path != null;
-        
+
         String pathString = null;
         if (isJAR) {
             /* subpath in following line is indeed necessary, don't remove */
@@ -292,7 +292,7 @@ final class PluginLoader {
 
     @SuppressWarnings(UNCHECKED)
     private void processClass(Plugin plugin, Class<?> clazz)
-            {
+    {
         assert plugin != null;
         assert clazz != null;
         if (isPluginClass(clazz)) {
@@ -367,7 +367,7 @@ final class PluginLoader {
     }
 
     private List<Plugin> loadPlugins(ClassLoader classLoader, List<Path> pluginPaths)
-            {
+    {
         assert classLoader != null;
         assert pluginPaths != null;
         for (Path path : pluginPaths) {
@@ -472,9 +472,9 @@ final class PluginLoader {
         assert path != null;
         if (!Files.isDirectory(path)) {
             try {
-            	// TODO leads to resource leak;
-            	// however, cannot return path of already closed file system
-            	FileSystem system = FileSystems.newFileSystem(path,
+                // TODO leads to resource leak;
+                // however, cannot return path of already closed file system
+                FileSystem system = FileSystems.newFileSystem(path,
                         PluginLoader.class.getClassLoader());
                 Iterator<Path> iterator = system.getRootDirectories().iterator();
                 assert iterator.hasNext();
@@ -534,7 +534,7 @@ final class PluginLoader {
                 Path embeddedPluginPath = embeddedPluginsPath.resolve(pluginSub);
                 ensure(Files.exists(embeddedPluginPath), ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_FOUND, embeddedPluginPath);
                 ensure(Files.isReadable(embeddedPluginPath), ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_READABLE, embeddedPluginPath);
-//                checkPluginPath(embeddedPluginPath);
+                //                checkPluginPath(embeddedPluginPath);
                 assert Files.isDirectory(embeddedPluginPath) || !origIsJar;
                 result.add(embeddedPluginPath);
             }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -26,42 +26,42 @@ import epmc.jani.model.ModelExtension;
 import epmc.value.Value;
 
 public interface ExplorerExtension {
-	String getIdentifier();
-	
-	default void setExplorer(ExplorerJANI explorer) {
-	}
-	
-	default boolean isUsedGetNodeProperty() {
-		return false;
-	}
-	
-	default Value getGraphProperty(Object property) {
-		return null;
-	}
-	
-	default ExplorerNodeProperty getNodeProperty(Object property) {
-		return null;
-	}
-	
-	default ExplorerEdgeProperty getEdgeProperty(Object property) {
-		return null;
-	}
-	
-	default void handleNoSuccessors(NodeJANI node) {
-	}
-	
-	default void handleSelfLoop(NodeJANI node) {
-	}
-	
-	default void beforeQuerySystem(NodeJANI nodeJANI) {
-	}
-	
-	default void afterQuerySystem(NodeJANI node) {
-	}
-	
-	default void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
-	}
+    String getIdentifier();
 
-	default void setModelExtension(ModelExtension modelExtension) {
-	}
+    default void setExplorer(ExplorerJANI explorer) {
+    }
+
+    default boolean isUsedGetNodeProperty() {
+        return false;
+    }
+
+    default Value getGraphProperty(Object property) {
+        return null;
+    }
+
+    default ExplorerNodeProperty getNodeProperty(Object property) {
+        return null;
+    }
+
+    default ExplorerEdgeProperty getEdgeProperty(Object property) {
+        return null;
+    }
+
+    default void handleNoSuccessors(NodeJANI node) {
+    }
+
+    default void handleSelfLoop(NodeJANI node) {
+    }
+
+    default void beforeQuerySystem(NodeJANI nodeJANI) {
+    }
+
+    default void afterQuerySystem(NodeJANI node) {
+    }
+
+    default void afterQueryAutomaton(ExplorerComponentAutomaton automaton) {
+    }
+
+    default void setModelExtension(ModelExtension modelExtension) {
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -36,7 +36,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class Expression2CommandTest {
-	private final static String USER_DIR = TestHelper.USER_DIR;
+    private final static String USER_DIR = TestHelper.USER_DIR;
     private final static String PLUGIN_DIR = System.getProperty(USER_DIR) + "/target/classes/";
 
     @BeforeClass
@@ -50,7 +50,7 @@ public final class Expression2CommandTest {
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
         return options;
     }
-    
+
     @Test
     public void asdfTest() {
         Options options = prepareExpression2CommandOptions();
@@ -60,20 +60,20 @@ public final class Expression2CommandTest {
         options.set(OptionsModelChecker.CONST, constants);
         options.set(Options.COMMAND, OptionsCommandExpression2Automaton.EXPRESSION2AUTOMATON);
         options.set(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE, "schewe-rabin");
- //       execute(options, "Pmax=? [ (!\"z1\") U (\"z2\")  ] ");
-//        execute(options, "P>=1 [ (F (\"z1\"))  ]");
-//        execute(options, "P>=1 [ (G(F (\"z1\")))  ]");
-//        execute(options, "P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) ]");
-//        execute(options, "P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) & (G(F (\"z3\"))) & (G(F (\"z4\"))) ]");
-//        execute(options, "P>=1 [ F (\"z1\" & (F(\"z2\")))  ]");
-//        execute(options, "P>=1 [ G(F (\"z1\" & (F(\"z2\"))))  ]");
-//        execute(options, "P>=1 [ ((!\"z1\") U (\"z2\")) & ((!\"z4\") U (\"z2\")) ]");
-//        execute(options, "P>=1 [ (G(a)) & (F(b)) ]");
-//        execute(options, "P>=1 [ (G(a)) & (G(F(b))) ]");
-//        execute(options, "P>=1 [ (G(a)) & (F(G(b))) ]");
-//        execute(options, "P>=1 [ (G(F (\"z1\" & (F(\"z2\" & (F(\"z4\" & (F(\"z3\"))))))))) ]");
-//        execute(options, "P>=1 [ !((F(G (a))) & (G(F(!a)))) ]");
+        //       execute(options, "Pmax=? [ (!\"z1\") U (\"z2\")  ] ");
+        //        execute(options, "P>=1 [ (F (\"z1\"))  ]");
+        //        execute(options, "P>=1 [ (G(F (\"z1\")))  ]");
+        //        execute(options, "P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) ]");
+        //        execute(options, "P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) & (G(F (\"z3\"))) & (G(F (\"z4\"))) ]");
+        //        execute(options, "P>=1 [ F (\"z1\" & (F(\"z2\")))  ]");
+        //        execute(options, "P>=1 [ G(F (\"z1\" & (F(\"z2\"))))  ]");
+        //        execute(options, "P>=1 [ ((!\"z1\") U (\"z2\")) & ((!\"z4\") U (\"z2\")) ]");
+        //        execute(options, "P>=1 [ (G(a)) & (F(b)) ]");
+        //        execute(options, "P>=1 [ (G(a)) & (G(F(b))) ]");
+        //        execute(options, "P>=1 [ (G(a)) & (F(G(b))) ]");
+        //        execute(options, "P>=1 [ (G(F (\"z1\" & (F(\"z2\" & (F(\"z4\" & (F(\"z3\"))))))))) ]");
+        //        execute(options, "P>=1 [ !((F(G (a))) & (G(F(!a)))) ]");
 
-//        assertEquals("0.96484375", result, 1E-8);
+        //        assertEquals("0.96484375", result, 1E-8);
     }
 }

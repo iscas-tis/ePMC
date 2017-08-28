@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -40,23 +40,23 @@ public class AfterOptionsCreationCommandExpression2Automaton implements AfterOpt
     @Override
     public void process(Options options) {
         assert options != null;
-        
+
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);
         assert commandTaskClasses != null;
         options.addCommand()
-        	.setBundleName(OptionsCommandExpression2Automaton.OPTIONS_COMMAND_EXPRESSION2AUTOMATON)
-        	.setIdentifier(CommandTaskExpression2Automaton.IDENTIFIER)
-        	.setCommandLine()
-        	.setGui()
-        	.setWeb()
-        	.build();
+        .setBundleName(OptionsCommandExpression2Automaton.OPTIONS_COMMAND_EXPRESSION2AUTOMATON)
+        .setIdentifier(CommandTaskExpression2Automaton.IDENTIFIER)
+        .setCommandLine()
+        .setGui()
+        .setWeb()
+        .build();
         commandTaskClasses.put(OptionsCommandExpression2Automaton.EXPRESSION2AUTOMATON.name().toLowerCase(), CommandTaskExpression2Automaton.class);
         Map<String, Class<?>> automatonMap = options.get(OptionsAutomaton.AUTOMATON_CLASS);
         OptionTypeMap<Class<?>> typeAutomaton = new OptionTypeMap<>(automatonMap);
         options.addOption().setBundleName(OptionsCommandExpression2Automaton.OPTIONS_COMMAND_EXPRESSION2AUTOMATON)
-        	.setIdentifier(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE)
-        	.setType(typeAutomaton)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(OptionsAutomaton.AUTOMATON_CATEGORY).build();
+        .setIdentifier(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE)
+        .setType(typeAutomaton)
+        .setCommandLine().setGui().setWeb()
+        .setCategory(OptionsAutomaton.AUTOMATON_CATEGORY).build();
     }
 }

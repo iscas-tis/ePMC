@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -54,7 +54,7 @@ public final class LogTest implements Log {
      * printed.
      */
     private final long timeStarted;
-	private final boolean translate;
+    private final boolean translate;
 
     public LogTest(Options options, LogType logType) {
         assert options != null;
@@ -63,7 +63,7 @@ public final class LogTest implements Log {
         translate = (logType != LogType.NOTRANSLATE);
         silent = (logType == LogType.SILENT);
     }
-    
+
     @Override
     public void send(Message message, Object... parameters) {
         if (silent) {
@@ -112,12 +112,12 @@ public final class LogTest implements Log {
     public EPMCException getException() {
         return exception;
     }
-    
+
     private String translateTimeStamp(long time) {
         assert time >= 0;
         return UtilMessages.translateTimeStamp(options, timeStarted, time);
     }
-    
+
     public ModelCheckerResults getResults() {
         return results;
     }

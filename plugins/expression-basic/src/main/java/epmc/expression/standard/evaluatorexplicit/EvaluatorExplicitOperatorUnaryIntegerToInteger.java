@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -41,7 +41,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -53,7 +53,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -63,7 +63,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -73,7 +73,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
@@ -116,16 +116,16 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             return new EvaluatorExplicitOperatorUnaryIntegerToInteger(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		public ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        public ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
 
     @FunctionalInterface
@@ -134,7 +134,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     }
 
     public final static String IDENTIFIER = "operator-unary-integer-to-integer";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicitInteger[] operands;
@@ -143,7 +143,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
     private final OperatorEvaluator evaluator;
-    
+
     private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
@@ -176,7 +176,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
@@ -194,7 +194,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         evaluator.apply(result, operandValues);
         return result;
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

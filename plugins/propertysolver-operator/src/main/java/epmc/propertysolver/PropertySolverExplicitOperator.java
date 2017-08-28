@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -46,34 +46,34 @@ import epmc.value.ValueArray;
 public final class PropertySolverExplicitOperator implements PropertySolver {
     public final static String IDENTIFIER = "operator-explicit";
     private ModelChecker modelChecker;
-	private Expression property;
-	private ExpressionOperator propertyOperator;
-	private StateSet forStates;
-    
+    private Expression property;
+    private ExpressionOperator propertyOperator;
+    private StateSet forStates;
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionOperator) {
-			this.propertyOperator = (ExpressionOperator) property;
-		}
-	}
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-    
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionOperator) {
+            this.propertyOperator = (ExpressionOperator) property;
+        }
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
     @Override
     public StateMap solve() {
         assert forStates != null;
         Type type = propertyOperator.getType(modelChecker.getLowLevel());
-        
+
         List<StateMapExplicit> innerResults = new ArrayList<>();
         boolean allConstant = true;
         for (Expression innerProperty : propertyOperator.getOperands()) {
@@ -93,7 +93,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
         ValueArray resultValues;
 
         if (allConstant) {
-        	resultValues = UtilValue.newArray(new TypeArrayConstant(type), forStates.size());
+            resultValues = UtilValue.newArray(new TypeArrayConstant(type), forStates.size());
         } else {
             resultValues = UtilValue.newArray(type.getTypeArray(), forStates.size());
         }
@@ -128,38 +128,38 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
             modelChecker.ensureCanHandle(operand, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
     public Set<Object> getRequiredGraphProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
+        Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression operand : propertyOperator.getOperands()) {
             required.addAll(modelChecker.getRequiredGraphProperties(operand, allStates));
         }
-    	return required;
+        return required;
     }
 
     @Override
     public Set<Object> getRequiredNodeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
+        Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression operand : propertyOperator.getOperands()) {
             required.addAll(modelChecker.getRequiredNodeProperties(operand, allStates));
         }
-    	return required;
+        return required;
     }
-    
+
     @Override
     public Set<Object> getRequiredEdgeProperties() {
-    	Set<Object> required = new LinkedHashSet<>();
+        Set<Object> required = new LinkedHashSet<>();
         for (Expression operand : propertyOperator.getOperands()) {
-        	required.addAll(modelChecker.getRequiredEdgeProperties(operand, forStates));
+            required.addAll(modelChecker.getRequiredEdgeProperties(operand, forStates));
         }
-    	return required;
+        return required;
     }
 
     @Override

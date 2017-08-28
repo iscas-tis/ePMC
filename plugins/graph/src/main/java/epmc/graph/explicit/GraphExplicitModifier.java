@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -83,9 +83,9 @@ public final class GraphExplicitModifier {
             }
         }
     }
-    
+
     private static Value computeUniformisationRate(GraphExplicit graph)
-            {
+    {
         ValueAlgebra result = newValueWeight();
         ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
@@ -105,13 +105,13 @@ public final class GraphExplicitModifier {
         }
         return result;
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
     private GraphExplicitModifier() {
     }
-    
+
     private static ValueAlgebra newValueWeight() {
         return TypeWeight.get().newValue();
     }

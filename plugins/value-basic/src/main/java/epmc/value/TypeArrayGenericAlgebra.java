@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -25,12 +25,12 @@ import epmc.value.ContextValue;
 public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
     private final static String ARRAY_INDICATOR = "[](generic-algebra)";
     private final TypeAlgebra entryType;
-    
+
     public TypeArrayGenericAlgebra(TypeAlgebra entryType) {
         assert entryType != null;
         this.entryType = entryType;
     }
-    
+
     @Override
     public ValueArrayGenericAlgebra newValue() {
         return new ValueArrayGenericAlgebra(this);
@@ -68,9 +68,9 @@ public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-    
+
     @Override
-	public TypeArray getTypeArray() {
+    public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

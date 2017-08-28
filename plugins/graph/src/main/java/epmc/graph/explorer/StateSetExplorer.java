@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -47,7 +47,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
      * @param collection collection of which to construct nodes
      */
     @SuppressWarnings("unchecked")
-	StateSetExplorer(Explorer explorer, Collection<T> collection) {
+    StateSetExplorer(Explorer explorer, Collection<T> collection) {
         assert explorer != null;
         assert collection != null;
         for (ExplorerNode node : collection) {
@@ -58,7 +58,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
             this.nodes.add((T) node.clone());
         }
     }
-    
+
     @Override
     public int size() {
         return nodes.size();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -25,54 +25,54 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class LocationProcessor implements JANI2PRISMProcessorStrict {
 
-	private Location location = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Location; 
-		
-		location = (Location) obj;
-		return this;
-	}
+    private Location location = null;
 
-	@Override
-	public String toPRISM() {
-		assert location != null;
-		
-		return "";
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert location != null;
-		
-		TimeProgress timeProgress = location.getTimeProgress();
-		if (timeProgress != null) {
-			ProcessorRegistrar.getProcessor(timeProgress)
-							  .validateTransientVariables();
-		}
-		for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-			ProcessorRegistrar.getProcessor(assignment)
-							  .validateTransientVariables();
-		}
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Location; 
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert location != null;
-		
-		boolean usesTransient = false;
-		TimeProgress timeProgress = location.getTimeProgress();
-		if (timeProgress != null) {
-			usesTransient |= ProcessorRegistrar.getProcessor(timeProgress)
-											   .usesTransientVariables();
-		}
-		for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(assignment)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        location = (Location) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert location != null;
+
+        return "";
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert location != null;
+
+        TimeProgress timeProgress = location.getTimeProgress();
+        if (timeProgress != null) {
+            ProcessorRegistrar.getProcessor(timeProgress)
+            .validateTransientVariables();
+        }
+        for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
+            ProcessorRegistrar.getProcessor(assignment)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert location != null;
+
+        boolean usesTransient = false;
+        TimeProgress timeProgress = location.getTimeProgress();
+        if (timeProgress != null) {
+            usesTransient |= ProcessorRegistrar.getProcessor(timeProgress)
+                    .usesTransientVariables();
+        }
+        for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(assignment)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

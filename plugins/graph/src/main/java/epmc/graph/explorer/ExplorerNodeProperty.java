@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -49,15 +49,15 @@ public interface ExplorerNodeProperty {
      * @return value for node queried last
      */
     Value get();
-    
+
     /**
      * Obtain type of the values returned by {@link #get()}.
      * 
      * @return type of the values returned by {@link #get()}
      */
     Type getType();
-    
-    
+
+
     /* default methods */
 
     /**

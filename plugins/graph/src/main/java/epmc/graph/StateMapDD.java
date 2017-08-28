@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -48,20 +48,20 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     private final DD valuesDD;
     private final Type type;
     private int refs = 1;
-    
+
     // note: consumes arguments states, valuesExplicit, and valuesDD
     public StateMapDD(StateSetDD states, DD valuesDD) {
         this.valuesDD = valuesDD;
         this.states = states;
         this.type = valuesDD.getType();
     }
-        
+
     @Override
     public StateMapDD clone() {
         refs++;
         return this;
     }
-    
+
     @Override
     public void close() {
         if (closed()) {
@@ -76,7 +76,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
             valuesDD.dispose();
         }
     }
-    
+
     public DD getValuesDD() {
         assert !closed();
         assert valuesDD != null;
@@ -94,7 +94,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         assert !closed();
         return type;
     }
-    
+
     @Override
     public StateSet getStateSet() {
         return states;
@@ -112,7 +112,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         StateMapDD result = new StateMapDD((StateSetDD) to.clone(), valuesDD.clone());
         return result;
     }
-    
+
     @Override
     public String toString() {
         if (closed()) {
@@ -125,10 +125,10 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         builder.append("}");
         return builder.toString();
     }
-    
+
     @Override
     public StateMap apply(Operator operator, StateMap operand)
-            {
+    {
         assert !closed();
         assert operator != null;
         assert operand != null;
@@ -151,7 +151,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         }
         return result;
     }
-    
+
     @Override
     public boolean isConstant() {
         assert !closed();
@@ -160,7 +160,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         }
         return valuesDD.isLeaf();
     }
-    
+
     private boolean closed() {
         return refs == 0;
     }
@@ -174,19 +174,19 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
         StateSetDD overDD = (StateSetDD) over;
         return valuesDD.applyOverSat(operator, overDD.getStatesDD());
     }
-    
+
     @Override
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
         range.set(TypeInterval.get().newValue(min, max));
     }
-    
+
     private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
         return ValueBoolean.asBoolean(result).getBoolean();
     }    
-    
+
     @Override
     public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
@@ -207,7 +207,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
                 allTrue = isAllTrue(initialStates);
                 return allTrue
                         ? TypeBoolean.get().getTrue()
-                        : TypeBoolean.get().getFalse();
+                                : TypeBoolean.get().getFalse();
             } else if (hasMinAndMaxElements(initialStates)) {
                 Value range = TypeInterval.get().newValue();
                 getRange(range, initialStates);
@@ -218,13 +218,13 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
             }
         }
     }
-    
+
     private boolean hasMinAndMaxElements(StateSet of) {
         if (TypeReal.isReal(getType())) {
             return true;
         }
         getRange(TypeInterval.get().newValue(),
-        		getStateSet());
+                getStateSet());
         return true;
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -36,24 +36,24 @@ public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObj
     public void setGraph(GraphExplicit graph) {
         this.graph = graph;
     }
-    
+
     @Override
     public GraphExplicit getGraph() {
         return graph;
     }
-    
+
     public void setMin(boolean min) {
         this.min = min;
     }
-    
+
     public boolean isMin() {
         return min;
     }
-    
+
     public void setValues(ValueArrayAlgebra values) {
         this.values = values;
     }
-    
+
     public ValueArrayAlgebra getValues() {
         return values;
     }
@@ -61,16 +61,16 @@ public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObj
     public void setTime(Value time) {
         this.time = time;
     }
-    
+
     public Value getTime() {
         return time;
     }
-    
+
     @Override
     public void setResult(ValueArray result) {
         this.result = ValueArrayAlgebra.asArrayAlgebra(result);
     }
-    
+
     @Override
     public ValueArrayAlgebra getResult() {
         return result;

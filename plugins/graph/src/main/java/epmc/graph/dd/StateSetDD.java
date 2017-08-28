@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.dd;
 
@@ -42,7 +42,7 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         refs++;
         return this;
     }
-    
+
     @Override
     public void close() {
         if (closed()) {
@@ -56,14 +56,14 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
             statesDD.dispose();
         }
     }
-    
+
     @Override
     public int size() {
         assert !closed();
         GraphDD graphDD = (GraphDD) lowLevel;
         return statesDD.countSat(graphDD.getPresCube()).intValue();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert !closed();
@@ -80,7 +80,7 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         }        
         return true;
     }
-    
+
     @Override
     public boolean isSubsetOf(StateSet states) {
         assert !closed();
@@ -89,11 +89,11 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         StateSetDD other = (StateSetDD) states;
         return statesDD.andNot(other.statesDD).isFalseWith();
     }
-    
+
     public DD getStatesDD() {
         return statesDD;
     }
-    
+
     private boolean closed() {
         return refs == 0;
     }

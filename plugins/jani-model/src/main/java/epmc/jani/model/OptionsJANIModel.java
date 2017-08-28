@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -26,16 +26,16 @@ package epmc.jani.model;
  * @author Ernst Moritz Hahn
  */
 public enum OptionsJANIModel {
-	/** Base name of resource file for options description. */
-	OPTIONS_JANI_MODEL,
-	/** Category of JANI model options. */
-	JANI_MODEL_CATEGORY,
-	/** Option whether deadlocks are allowed and will be fixed automatically. */
+    /** Base name of resource file for options description. */
+    OPTIONS_JANI_MODEL,
+    /** Category of JANI model options. */
+    JANI_MODEL_CATEGORY,
+    /** Option whether deadlocks are allowed and will be fixed automatically. */
     JANI_FIX_DEADLOCKS,
     /** Number of action encoding bits to reserve. */
     JANI_ACTION_BITS,
-	/** Storage point for JANI model extensions. */
-	JANI_MODEL_EXTENSION_CLASS,
+    /** Storage point for JANI model extensions. */
+    JANI_MODEL_EXTENSION_CLASS,
     /** JANI model extension semantics. */
-	JANI_MODEL_EXTENSION_SEMANTICS,
+    JANI_MODEL_EXTENSION_SEMANTICS,
 }

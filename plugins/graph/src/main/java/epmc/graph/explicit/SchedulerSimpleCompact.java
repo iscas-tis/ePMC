@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -50,7 +50,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
     private int numEntryBits;
     /** Decisions for the nodes of the graph. */
     private final long[] content;
-	private final int numNodes;
+    private final int numNodes;
 
     /**
      * Constructs a new space-efficient array-based simple scheduler.
@@ -81,7 +81,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
             this.content = new long[numLongs];
         }
     }
-    
+
     /**
      * Construct a new simple simple scheduler.
      * The graph parameter must not be {@code null}.
@@ -93,7 +93,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
     public SchedulerSimpleCompact(GraphExplicit graph) {
         this(graph, null);
     }
-    
+
     @Override
     public void set(int node, int decision) {
         decision++;
@@ -117,15 +117,15 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
         for (int bitNr = 0; bitNr < numEntryBits; bitNr++) {
             int bitIndex = node * numEntryBits + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         number--;
         return number;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -139,9 +139,9 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
         builder.append(SQUARE_BRACKETS_CLOSE);
         return builder.toString();
     }
-    
+
     @Override
     public SchedulerSimple clone() {
-    	return new SchedulerSimpleCompact(graph, content.clone());
+        return new SchedulerSimpleCompact(graph, content.clone());
     }    
 }

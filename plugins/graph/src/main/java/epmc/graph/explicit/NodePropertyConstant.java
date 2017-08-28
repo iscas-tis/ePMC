@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -34,7 +34,7 @@ public final class NodePropertyConstant implements NodeProperty {
     private GraphExplicit graph;
     /** Value returned by {@link #get()} . */
     private final Value value;
-    
+
     /**
      * Create new constant node property.
      * None of parameters may be {@code null}.

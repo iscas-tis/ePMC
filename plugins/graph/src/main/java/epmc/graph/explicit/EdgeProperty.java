@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -32,14 +32,14 @@ import epmc.value.ValueObject;
  */
 public interface EdgeProperty  {
     /* methods to be implemented by implementing classes */
-    
+
     /**
      * Get the graph to which the edge property belongs.
      * 
      * @return graph to which the edge property belongs
      */
     GraphExplicit getGraph();
-    
+
     /**
      * Get value for an edge of the node queried last.
      * The value obtained is the value for the edge with the given number of the
@@ -60,7 +60,7 @@ public interface EdgeProperty  {
      * @return value for edge with the given number of the node queried last
      */
     Value get(int node, int successor);
-    
+
     /**
      * Set value for edge of node queried last.
      * The value is set for the edge with the given number of the node from the
@@ -82,7 +82,7 @@ public interface EdgeProperty  {
      * @param value value to set for the edge
      */
     void set(int node,  int successor, Value value);
-    
+
     /**
      * Obtain type of the values returned by {@link #get(int)}.
      * 
@@ -92,7 +92,7 @@ public interface EdgeProperty  {
 
 
     /* default methods */
-    
+
     /**
      * Return value of this node as object.
      * In addition to the requirements of {@link #get(int)}, the edge property

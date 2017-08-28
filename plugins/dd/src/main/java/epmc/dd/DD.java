@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -78,7 +78,7 @@ public final class DD implements Cloneable {
     private StackTraceElement[] createdTrace;
     /** In debug mode, stores the stack at the point the node was disposed. */
     private StackTraceElement[] disposeTrace;
-    
+
     DD(LibraryDD lowLevelDD, long uniqueId) {
         assert lowLevelDD != null;
         this.libraryDD = lowLevelDD;
@@ -90,13 +90,13 @@ public final class DD implements Cloneable {
         }
         this.alive = true;
     }
-    
+
     @Override
     public String toString() {
         assert alive() : alreadyDeadMessage();
         return getContext().toString(this);
     }
-    
+
     /**
      * Get the context to which this node belongs.
      * 
@@ -105,7 +105,7 @@ public final class DD implements Cloneable {
     public ContextDD getContext() {
         return context;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert alive() : alreadyDeadMessage();
@@ -115,17 +115,17 @@ public final class DD implements Cloneable {
         DD other = (DD) obj;
         return libraryDD.equals(uniqueId, other.uniqueId());
     }
-    
+
     @Override
     public final int hashCode() {
         assert alive() : alreadyDeadMessage();
         return libraryDD.hashCode(uniqueId);
     }
-    
+
     long uniqueId() {
         return uniqueId;
     }
-    
+
     /**
      * Checks whether this node is still alive and may be used.
      * The node is alive if it has not been disposed and its context has not
@@ -136,17 +136,17 @@ public final class DD implements Cloneable {
     public boolean alive() {
         return getContext().alive() && alive;
     }
-    
+
     public LibraryDD getLowLevel() {
         return libraryDD;
     }
-    
+
     @Override
     public DD clone() {
         assert alive() : alreadyDeadMessage();
         return libraryDD.getContextDD().cloneDD(this);
     }
-    
+
     /**
      * Dispose the DD node.
      * After disposing the node, it may not be longer be operated with, that is,
@@ -156,14 +156,14 @@ public final class DD implements Cloneable {
      */
     public void dispose() {
         assert alive : alreadyDeadMessage();
-        alive = false;
-        getContext().removeDD(this);
-        if (getContext().isDebugDD()) {
-            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            this.disposeTrace = trace.clone();
-        }
+    alive = false;
+    getContext().removeDD(this);
+    if (getContext().isDebugDD()) {
+        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+        this.disposeTrace = trace.clone();
     }
-    
+    }
+
     /**
      * Checks whether the node has not been disposed.
      * The function does still return true if the node has not been disposed but
@@ -174,12 +174,12 @@ public final class DD implements Cloneable {
     boolean internalAlive() {
         return alive;
     }
-    
+
     String buildCreateTraceString() {
         assert createdTrace != null;
         return Util.stackTraceToString(createdTrace);
     }
-    
+
     String buildCloseTraceString() {
         assert disposeTrace != null;
         return Util.stackTraceToString(disposeTrace);
@@ -189,11 +189,11 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return getContext().support(this);
     }
-    
+
     public Type getType() {
         return getContext().getType(this);
     }
-    
+
     private String alreadyDeadMessage() {
         if (getContext().isDebugDD()) {
             return "DD already closed. Allocated at\n"
@@ -208,7 +208,7 @@ public final class DD implements Cloneable {
         assert operator != null;
         return getContext().apply(operator, this);
     }
-    
+
     public DD apply(DD other, Operator operator) {
         return getContext().apply(operator, this, other);
     }
@@ -216,7 +216,7 @@ public final class DD implements Cloneable {
     public DD apply(DD other1, DD other2, Operator operator) {
         return getContext().apply(operator, this, other1, other2);
     }
-    
+
     public DD add(DD other) {
         return apply(other, OperatorAdd.ADD);
     }
@@ -238,7 +238,7 @@ public final class DD implements Cloneable {
         other.dispose();
         return result;
     }
-    
+
     public DD divide(DD other) {
         return apply(other, OperatorDivide.DIVIDE);
     }
@@ -286,7 +286,7 @@ public final class DD implements Cloneable {
         dispose();
         return result;
     }
-    
+
     public DD lt(DD other) {
         return apply(other, OperatorLt.LT);
     }
@@ -294,7 +294,7 @@ public final class DD implements Cloneable {
     public DD le(DD other) {
         return apply(other, OperatorLe.LE);
     }
-    
+
     public DD leWith(DD other) {
         DD result = le(other);
         other.dispose();
@@ -309,7 +309,7 @@ public final class DD implements Cloneable {
         assert other.isBoolean();
         return apply(other, OperatorAnd.AND);
     }
-    
+
     public DD and(DD... others) {
         assert others != null;
         for (DD other : others) {
@@ -341,7 +341,7 @@ public final class DD implements Cloneable {
             other.dispose();
         }
         dispose();
-        
+
         return result;
     }
 
@@ -361,7 +361,7 @@ public final class DD implements Cloneable {
             other.dispose();
         }
         dispose();
-        
+
         return result;
     }
 
@@ -379,7 +379,7 @@ public final class DD implements Cloneable {
             result = result.or(other);
             resultOld.dispose();
         }
-        
+
         return result;
     }
 
@@ -438,7 +438,7 @@ public final class DD implements Cloneable {
         assert other.alive() : other.alreadyDeadMessage();
         return apply(other, OperatorOr.OR);
     }
-    
+
     public DD orWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
@@ -548,7 +548,7 @@ public final class DD implements Cloneable {
         DD result = iff(other);
         dispose();
         other.dispose();
-        
+
         return result;
     }
 
@@ -611,7 +611,7 @@ public final class DD implements Cloneable {
         assert cube != null;
         return getContext().abstractExist(this, cube);
     }
-    
+
     public DD abstractExist(DD... cubes) {
         assert alive() : alreadyDeadMessage();
         assert cubes != null;
@@ -627,7 +627,7 @@ public final class DD implements Cloneable {
         allCubes.dispose();
         return result;
     }
-    
+
     public DD abstractExistWith(DD... cubes) {
         assert alive() : alreadyDeadMessage();
         assert cubes != null;
@@ -654,7 +654,7 @@ public final class DD implements Cloneable {
         assert cube != null;
         return getContext().abstractSum(this, cube);
     }
-    
+
     public DD abstractSumWith(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
@@ -681,7 +681,7 @@ public final class DD implements Cloneable {
         assert cube != null;
         return getContext().abstractMin(this, cube);
     }
-    
+
     public DD abstractAndExist(DD other, DD cube) {
         assert alive() : alreadyDeadMessage();
         assert other != null;
@@ -690,12 +690,12 @@ public final class DD implements Cloneable {
     }
 
     /* other public functions */
-    
+
     public boolean isLeaf() {
         assert alive() : alreadyDeadMessage();
         return getContext().isLeaf(this);
     }
-    
+
     public Value value() {
         assert alive() : alreadyDeadMessage();
         return getContext().getValue(this);
@@ -705,7 +705,7 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return getContext().variable(this);
     }
-    
+
     public DD permute(Permutation permutation) {
         assert alive() : alreadyDeadMessage();
         assert permutation != null;
@@ -762,7 +762,7 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return isLeaf() && ValueBoolean.isFalse(value());
     }
-    
+
     public boolean isFalseWith() {
         assert alive() : alreadyDeadMessage();
         boolean result = isFalse();
@@ -774,24 +774,24 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return isLeaf() && ValueBoolean.isTrue(value());
     }
-    
+
     public boolean isTrueWith() {
         assert alive() : alreadyDeadMessage();
         boolean result = isLeaf() && ValueBoolean.isTrue(value());
         dispose();
         return result;
     }
-    
+
     public Set<VariableDD> highLevelSupport() {
         assert alive() : alreadyDeadMessage();
         return getContext().highLevelSupport(this);
     }
-    
+
     public Walker walker(boolean autoComplement) {
         assert alive() : alreadyDeadMessage();
         return getContext().walker(this, autoComplement);
     }
-    
+
     public SupportWalker supportWalker(DD support, boolean stopAtFalse, boolean stopAtZero) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -799,7 +799,7 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support, stopAtFalse, stopAtZero);
     }
-    
+
     public SupportWalker supportWalker(DD support) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -807,7 +807,7 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support);
     }
-    
+
     public SupportWalker supportWalker(DD support, Collection<Value> stopWhere) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -815,7 +815,7 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support, stopWhere);
     }
-    
+
     public SupportWalker supportWalkerWith(DD support) {
         SupportWalker result = supportWalker(support);
         dispose();
@@ -829,8 +829,8 @@ public final class DD implements Cloneable {
         support.dispose();
         return result;
     }
-    
-    
+
+
     public Walker walker() {
         assert alive() : alreadyDeadMessage();
         return getContext().walker(this, true);        
@@ -846,17 +846,17 @@ public final class DD implements Cloneable {
     public boolean isComplement() {
         return getContext().isComplement(this);
     }
-    
+
     /* internal functions */
-    
+
     public DD toMT(Value forTrue, Value forFalse) {
         return getContext().toMT(this, forTrue, forFalse);
     }
-    
+
     public DD toMT(int forTrue, int forFalse) {
         return getContext().toMT(this, forTrue, forFalse);
     }
-    
+
     public DD toMTWith(int forTrue, int forFalse) {
         DD result = toMT(forTrue, forFalse);
         dispose();
@@ -878,7 +878,7 @@ public final class DD implements Cloneable {
         dispose();
         return result;
     }
-    
+
     public void printSupport() {
         getContext().printSupport(this);
     }
@@ -891,7 +891,7 @@ public final class DD implements Cloneable {
         return getContext().abstractExist(this, nextVars);
     }
 
- // TODO get rid of dependency to TIntSet
+    // TODO get rid of dependency to TIntSet
     public TIntSet findSatSet(DD cube) {
         return getContext().findSatSet(this, cube);
     }
@@ -908,7 +908,7 @@ public final class DD implements Cloneable {
     }
 
     public Value applyOverSat(Operator operator, DD support, DD sat)
-            {
+    {
         assert operator != null;
         assert assertValidDD(sat);
         assert TypeBoolean.isBoolean(sat.getType());
@@ -916,23 +916,23 @@ public final class DD implements Cloneable {
     }
 
     public Value maxOverSat(DD sat)
-            {
+    {
         return getContext().maxOverSat(this, sat);
     }
 
     public Value minOverSat(DD sat)
-            {
+    {
         return getContext().minOverSat(this, sat);
     }
-    
+
     public DD supportDD() {
         return getContext().supportDD(this);
     }
-    
+
     public boolean assertCube() {
         return getContext().assertCube(this);
     }
-    
+
     public DD xor(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
@@ -954,7 +954,7 @@ public final class DD implements Cloneable {
         }
         return result;
     }
-    
+
     public boolean isBoolean() {
         assert alive() : alreadyDeadMessage();
         return getContext().isBoolean(this);
@@ -965,7 +965,7 @@ public final class DD implements Cloneable {
         assert dd.alive() : dd.alreadyDeadMessage();
         return true;
     }
-    
+
     public Value getSomeLeafValue() {
         assert alive() : alreadyDeadMessage();
         return getContext().getSomeLeafValue(this);
@@ -1009,7 +1009,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    
+
     public DD multiply(int value) {
         assert alive() : alreadyDeadMessage();
         DD constant = getContext().newConstant(value);
@@ -1050,7 +1050,7 @@ public final class DD implements Cloneable {
         assert other.isBoolean();
         return andNot(other).isFalseWith();
     }
-    
+
     public boolean isSubsetWith(DD other)  {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
@@ -1103,7 +1103,7 @@ public final class DD implements Cloneable {
     public void collectValues(Set<Value> values, DD sat) {
         getContext().collectValues(values, this, sat);
     }
-    
+
     public boolean assertSupport(DD... support) {
         return getContext().assertSupport(this, support);
     }

@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
 public interface AutomatonRabin extends Automaton {
-	interface Builder extends Automaton.Builder {
-		@Override
-		AutomatonRabin build();
-	}
-	
+    interface Builder extends Automaton.Builder {
+        @Override
+        AutomatonRabin build();
+    }
+
     int getNumPairs();
 }

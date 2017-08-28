@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
@@ -37,56 +37,56 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class JANITypeBool implements JANIType {
-	public final static String IDENTIFIER = "bool";
-	/** Identifier for boolean type. */
-	private final static String BOOL = "bool";
-	/** Whether the last try to parse type was successful. */
-	private ModelJANI model;
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    public final static String IDENTIFIER = "bool";
+    /** Identifier for boolean type. */
+    private final static String BOOL = "bool";
+    /** Whether the last try to parse type was successful. */
+    private ModelJANI model;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIType(value);
-	}
-	
-	@Override 
-	public JANIType parseAsJANIType(JsonValue value) {
-		if (!(value instanceof JsonString)) {
-			return null;
-		}
-		JsonString valueString = (JsonString) value;
-		if (!valueString.getString().equals(BOOL)) {
-			return null;
-		}
-		return this;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		return UtilJSON.toStringValue(BOOL);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIType(value);
+    }
 
-	@Override
-	public Type toType() {
-		return TypeBoolean.get();
-	}
+    @Override 
+    public JANIType parseAsJANIType(JsonValue value) {
+        if (!(value instanceof JsonString)) {
+            return null;
+        }
+        JsonString valueString = (JsonString) value;
+        if (!valueString.getString().equals(BOOL)) {
+            return null;
+        }
+        return this;
+    }
 
-	@Override
-	public Value getDefaultValue() {
-		return TypeBoolean.get().getFalse();
-	}
+    @Override
+    public JsonValue generate() {
+        return UtilJSON.toStringValue(BOOL);
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public Type toType() {
+        return TypeBoolean.get();
+    }
+
+    @Override
+    public Value getDefaultValue() {
+        return TypeBoolean.get().getFalse();
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

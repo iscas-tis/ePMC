@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -31,9 +31,9 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 
 public final class ExpressionDeadlock implements ExpressionIdentifier {
-	private final static String DEADLOCK = "\"deadlock\"";
+    private final static String DEADLOCK = "\"deadlock\"";
     private final Positional positional;
-    
+
     public ExpressionDeadlock(Positional positional) {
         this.positional = positional;
     }
@@ -45,27 +45,27 @@ public final class ExpressionDeadlock implements ExpressionIdentifier {
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
+        assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
         }
-    	return TypeBoolean.get();
+        return TypeBoolean.get();
     }
-    
+
     @Override
     public List<Expression> getChildren() {
-    	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
-    	return DEADLOCK;
+        return DEADLOCK;
     }
 
     @Override
@@ -76,22 +76,22 @@ public final class ExpressionDeadlock implements ExpressionIdentifier {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        
+
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionDeadlock(positional);
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionDeadlock(positional);
+    }
 
-	@Override
-	public boolean isPropositional() {
-		return true;
-	}
+    @Override
+    public boolean isPropositional() {
+        return true;
+    }
 }

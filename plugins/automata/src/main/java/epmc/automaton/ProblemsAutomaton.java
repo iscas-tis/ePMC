@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -41,10 +41,10 @@ public final class ProblemsAutomaton {
      * encode (num-vars)^2 different states.
      * */
     public final static Problem DD_INSUFFICIENT_STATES = newProblem("dd-insufficient-states");
-    
+
     /* TODO split off this part for Buechi model construction by SPOT to plugin,
      *  then move these options there. */
-    
+
     /** An I/O problem called while calling SPOT or reading its output. */
     public final static Problem LTL2BA_SPOT_PROBLEM_IO = newProblem("ltl2ba-spot-problem-io");
     /** A problem occurred while trying to parse the output of SPOT. */
@@ -63,7 +63,7 @@ public final class ProblemsAutomaton {
         assert name != null;
         return UtilError.newProblem(PROBLEMS_AUTOMATON, name);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

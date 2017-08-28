@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -82,7 +82,7 @@ public final class RawProperties implements Serializable,Iterable<RawProperty> {
         assert property != null;
         return properties.add(property);
     }
-    
+
     /**
      * Add a new constant.
      * {@code definition} may be {@code null} to indicate undefined constants
@@ -111,7 +111,7 @@ public final class RawProperties implements Serializable,Iterable<RawProperty> {
         assert definition != null;
         labels.put(name, definition);
     }
-    
+
     /**
      * Obtain list of properties.
      * 
@@ -120,7 +120,7 @@ public final class RawProperties implements Serializable,Iterable<RawProperty> {
     public List<RawProperty> getProperties() {
         return properties;
     }
-    
+
     /**
      * Obtain map mapping constants to definition (or {@code null}).
      * Note that the map returned is read-only.
@@ -142,7 +142,7 @@ public final class RawProperties implements Serializable,Iterable<RawProperty> {
         assert constant != null;
         return constantTypes.get(constant);
     }
-    
+
     /**
      * Obtain map mapping labels to definitions.
      * Note that the map returned is read-only.
@@ -152,12 +152,12 @@ public final class RawProperties implements Serializable,Iterable<RawProperty> {
     public Map<String,String> getLabels() {
         return labelsExternal;
     }
-    
+
     @Override
     public Iterator<RawProperty> iterator() {
         return properties.iterator();
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

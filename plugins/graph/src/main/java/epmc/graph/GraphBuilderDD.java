@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -156,7 +156,7 @@ public final class GraphBuilderDD implements Closeable {
             numNodesComputed += sinks.size();
         }
         numNodes = numNodesComputed;
-        
+
         this.presNumbers.push(0);        
         DD oldPresNodes = presNodes;
         presNodes = presNodes.andNot(this.sinks);
@@ -175,7 +175,7 @@ public final class GraphBuilderDD implements Closeable {
         ContextDD.get().dispose(nextRepresentants);
         nextNodes.dispose();
         ContextDD.get().dispose(nextSinks);
-        
+
         this.nextCube = this.presCube.permute(swap);
         lowMapNext = this.nextNodes.newNodeMapInt();
         SupportWalkerNodeMapInt sumMapNext = this.nextNodes.newNodeMapInt();
@@ -187,7 +187,7 @@ public final class GraphBuilderDD implements Closeable {
         this.transitions = buildTransitions(graphDD, presNodes, this.sinks,
                 this.representants, cubeDD);
         presNodes.dispose();
-        
+
         if(nondet && stateEncoding) {
             actionsEnabled = new TIntIntMap[numNonsinkNodes];
             nondetOffset = new int[numNonsinkNodes];
@@ -201,11 +201,11 @@ public final class GraphBuilderDD implements Closeable {
         }
         numNodesInclNondet = numNodesComputed;
     }
-    
+
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet) {
         this(graphDD, sinks, nondet, true);
     }
-    
+
     private void countIntermediateStates(TIntIntMap[] actionsEnabled) {
         if (transitions.isZero()) {
             return;
@@ -226,7 +226,7 @@ public final class GraphBuilderDD implements Closeable {
             backTrans();
         }
     }
-    
+
     private SupportWalker buildTransitions(GraphDD graphDD, DD nodeSpace,
             DD[] sinks, DD[] representants, DD cube) {
         DD transition = graphDD.getEdgeProperty(CommonProperties.WEIGHT).clone();
@@ -240,7 +240,7 @@ public final class GraphBuilderDD implements Closeable {
     }
 
     private static DD[] chooseRepresentants(DD[] sinks, DD cube, DD states)
-            {
+    {
         DD[] representants = new DD[sinks.length];
         for (int number = 0; number < sinks.length; number++) {
             DD sinkAndStates = sinks[number].and(states);
@@ -251,7 +251,7 @@ public final class GraphBuilderDD implements Closeable {
 
     private static SupportWalker buildSinks(DD nodes, DD[] sinks,
             DD[] representants, DD cube, boolean stop)
-            {
+    {
         DD nonSinks = nodes.andNot(sinks);
         DD combined = nonSinks.toMT();
         int number = 2;
@@ -273,12 +273,12 @@ public final class GraphBuilderDD implements Closeable {
         }
         SupportWalker result = combined.supportWalker(cube, stopWhere);
         combined.dispose();
-        
+
         return result;
     }
 
     private static boolean assertSinks(List<DD> sinks, GraphDD graphDD)
-            {
+    {
         assert sinks != null;
         ContextDD contextDD = ContextDD.get();
         DD allSinks = contextDD.newConstant(false);
@@ -329,7 +329,7 @@ public final class GraphBuilderDD implements Closeable {
     int getNumNodes() {
         return numNodes;
     }
-    
+
     private int nodeNumber() {
         assert presNodes.isLeaf();
         int leafValue = ValueInteger.asInteger(presNodes.value()).getInt();
@@ -341,11 +341,11 @@ public final class GraphBuilderDD implements Closeable {
             return leafValue - 2 + numNonsinkNodes;
         }
     }
-    
+
     private int actionNumber() {
         return currentAction >>> (31 - actionDepth);
     }
-    
+
     private int presNodeNumber() {
         assert presNodes.isLeaf();
         int number = presNumbers.peek();
@@ -368,7 +368,7 @@ public final class GraphBuilderDD implements Closeable {
     private Value value() {
         return transitions.value();
     }
-    
+
     private void lowTrans() {
         int cubeVar = transitions.variable();
         int presNodesVar = presNodes.variable();
@@ -381,11 +381,11 @@ public final class GraphBuilderDD implements Closeable {
             nextNumbers.push(nextNumbers.peek());
         } else {
             currentAction = currentAction >>> 1;
-            actionDepth++;
+        actionDepth++;
         }
         transitions.low();
     }
-    
+
     void highTrans() {
         int cubeVar = transitions.variable();
         int presNodesVar = presNodes.variable();
@@ -410,7 +410,7 @@ public final class GraphBuilderDD implements Closeable {
     }
 
     void backTrans() {
-   		transitions.back();
+        transitions.back();
         int cubeVar = transitions.variable();
         if (presVars.get(cubeVar)) {
             presNodes.back();
@@ -530,7 +530,7 @@ public final class GraphBuilderDD implements Closeable {
         explicitBuilder.build();
         return explicitBuilder.getOutputGraph();
     }
-    
+
     private int[] computeNodeOrderMap() {
         this.nodeOrderMap = new int[numNodes];
         for (int i = 0; i < nodeOrderMap.length; i++) {
@@ -604,7 +604,7 @@ public final class GraphBuilderDD implements Closeable {
         ddToBitSet(target.supportWalker(presCubeDD, false, false), result);
         return result;
     }
-    
+
     private void ddToBitSet(SupportWalker target, BitSet bitset) {
         if (!isValidDDtoBitSet()) {
             return;
@@ -621,7 +621,7 @@ public final class GraphBuilderDD implements Closeable {
             backDDToBitSet(target);
         }
     }
-    
+
     public ValueArray ddToValueArray(DD target) {
         assert !closed;
         Value entry = newValueWeight();
@@ -629,14 +629,14 @@ public final class GraphBuilderDD implements Closeable {
         ddToValueArray(target.supportWalker(presCubeDD), result, entry);
         return result;
     }
-    
+
     private ValueArray newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
-    
+
     private void ddToValueArray(SupportWalker target, ValueArray array, Value entry)
-            {
+    {
         if (!isValidDDtoBitSet()) {
             return;
         }
@@ -674,7 +674,7 @@ public final class GraphBuilderDD implements Closeable {
         int number = presNumbers.peek();
         number += lowMapPres.getInt();
         presNumbers.push(number);
-        
+
         presNodes.high();
         target.high();
     }
@@ -699,12 +699,12 @@ public final class GraphBuilderDD implements Closeable {
         }
         return result;
     }
-    
+
     private DD valuesToDDRec(ValueArray explResult) {
         if (!isValidValuesToDD()) {
             return ContextDD.get().newConstant(0);
         }
-        
+
         if (isLeafValuesToDD()) {
             int presNode = nodeNumber();
             if (presNode < numNonsinkNodes) {
@@ -750,7 +750,7 @@ public final class GraphBuilderDD implements Closeable {
         int number = presNumbers.peek();
         number += lowMapPres.getInt();
         presNumbers.push(number);
-        
+
         presNodes.high();
     }
 
@@ -768,7 +768,7 @@ public final class GraphBuilderDD implements Closeable {
         assert !closed;
         return this.unifRate;
     }
-    
+
     @Override
     public void close() {
         if (closed) {
@@ -779,7 +779,7 @@ public final class GraphBuilderDD implements Closeable {
         ContextDD.get().dispose(sinks);
         ContextDD.get().dispose(representants);
     }
-    
+
     private Value newValueWeight() {
         return TypeWeight.get().newValue();
     }

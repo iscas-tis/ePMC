@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -28,64 +28,64 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 
-	private AssignmentSimple assignment = null;
-	private String prefix = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof AssignmentSimple; 
-		
-		assignment = (AssignmentSimple) obj;
-		return this;
-	}
+    private AssignmentSimple assignment = null;
+    private String prefix = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	@Override
-	public String toPRISM() {
-		assert assignment != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		if (prefix != null)	{
-			prism.append(prefix);
-		}
-		prism.append("(")
-			 .append(ProcessorRegistrar.getProcessor(assignment.getRef())
-					 				   .toPRISM())
-			 .append("'=")
-			 .append(ProcessorRegistrar.getProcessor(assignment.getValue())
-					 				   .toPRISM())
-			 .append(")");
-		return prism.toString();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof AssignmentSimple; 
 
-	@Override
-	public void validateTransientVariables() {
-		assert assignment != null;
-		
-		ensure(!ProcessorRegistrar.getProcessor(assignment.getValue())
-								  .usesTransientVariables(), 
-				ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE, 
-				assignment.getRef()
-						  .getName());
-	}
-	
-	@Override
-	public boolean usesTransientVariables() {
-		assert assignment != null;
-		
-		boolean usesTransient = false;
-		usesTransient |= ProcessorRegistrar.getProcessor(assignment.getRef())
-										   .usesTransientVariables();
-		usesTransient |= ProcessorRegistrar.getProcessor(assignment.getValue())
-										   .usesTransientVariables();
-		
-		return usesTransient;
-	}	
+        assignment = (AssignmentSimple) obj;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert assignment != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        if (prefix != null)	{
+            prism.append(prefix);
+        }
+        prism.append("(")
+        .append(ProcessorRegistrar.getProcessor(assignment.getRef())
+                .toPRISM())
+        .append("'=")
+        .append(ProcessorRegistrar.getProcessor(assignment.getValue())
+                .toPRISM())
+        .append(")");
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert assignment != null;
+
+        ensure(!ProcessorRegistrar.getProcessor(assignment.getValue())
+                .usesTransientVariables(), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE, 
+                assignment.getRef()
+                .getName());
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert assignment != null;
+
+        boolean usesTransient = false;
+        usesTransient |= ProcessorRegistrar.getProcessor(assignment.getRef())
+                .usesTransientVariables();
+        usesTransient |= ProcessorRegistrar.getProcessor(assignment.getValue())
+                .usesTransientVariables();
+
+        return usesTransient;
+    }	
 }

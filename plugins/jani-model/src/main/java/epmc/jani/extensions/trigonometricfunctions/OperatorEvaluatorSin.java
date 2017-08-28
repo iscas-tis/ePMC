@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.trigonometricfunctions;
 
@@ -36,42 +36,42 @@ import epmc.value.ValueNumber;
  * @author Ernst Moritz Hahn
  */
 public enum OperatorEvaluatorSin implements OperatorEvaluator {
-	INSTANCE;
+    INSTANCE;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorSin.SIN;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorSin.SIN;
+    }
 
-	@Override
-	public void apply(Value result, Value... operands) {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		ValueDouble resultDouble = ValueDouble.asDouble(result);
-		ValueNumber operandNumber = ValueNumber.asNumber(operands[0]);
-		resultDouble.set(Math.sin(operandNumber.getDouble()));
-	}
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert types != null;
-		return UtilValue.algebraicResultNonIntegerType(types);
-	}
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        ValueDouble resultDouble = ValueDouble.asDouble(result);
+        ValueNumber operandNumber = ValueNumber.asNumber(operands[0]);
+        resultDouble.set(Math.sin(operandNumber.getDouble()));
+    }
+
+    @Override
+    public Type resultType(Operator operator, Type... types) {
+        assert types != null;
+        return UtilValue.algebraicResultNonIntegerType(types);
+    }
 }

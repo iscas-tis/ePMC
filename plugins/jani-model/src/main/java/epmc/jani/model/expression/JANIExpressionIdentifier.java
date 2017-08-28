@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.expression;
 
@@ -40,96 +40,96 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class JANIExpressionIdentifier implements JANIExpression {
-	public final static String IDENTIFIER = "identifier";
-	
-	private Map<String, ? extends JANIIdentifier> validIdentifiers;
-	private ModelJANI model;
+    public final static String IDENTIFIER = "identifier";
 
-	private boolean initialized;
-	private ExpressionIdentifierStandard identifier;
-	
-	private void resetFields() {
-		initialized = false;
-		identifier = null;
-	}
-	
-	public JANIExpressionIdentifier() {
-		resetFields();
-	}
+    private Map<String, ? extends JANIIdentifier> validIdentifiers;
+    private ModelJANI model;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private boolean initialized;
+    private ExpressionIdentifierStandard identifier;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    private void resetFields() {
+        initialized = false;
+        identifier = null;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) {
-		assert model != null;
-		assert validIdentifiers != null;
-		assert value != null;
-		resetFields();
-		if (!(value instanceof JsonString)) {
-			return null;
-		}
-		if (validIdentifiers != null) {
-			JANIIdentifier janiIdentifier = UtilJSON.toOneOf(value, validIdentifiers);
-			identifier = janiIdentifier.getIdentifier();
-		} else {
-			identifier = new ExpressionIdentifierStandard.Builder()
-					.setName(value.toString())
-					.build();
-		}
-		initialized = true;
-		return this;
-	}
+    public JANIExpressionIdentifier() {
+        resetFields();
+    }
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-		return UtilJSON.toStringValue(identifier.getName());
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
-		assert expression != null;
-		assert model != null;
-		assert validIdentifiers != null;
-		resetFields();
-		if (!(expression instanceof ExpressionIdentifier)) {
-			return null;
-		}
-		this.identifier = (ExpressionIdentifierStandard) expression;
-		initialized = true;
-		return this;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public Expression getExpression() {
-		assert initialized;
-		assert model != null;
-		assert validIdentifiers != null;
-		return identifier;
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-		this.validIdentifiers = identifiers;
-	}
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert validIdentifiers != null;
+        assert value != null;
+        resetFields();
+        if (!(value instanceof JsonString)) {
+            return null;
+        }
+        if (validIdentifiers != null) {
+            JANIIdentifier janiIdentifier = UtilJSON.toOneOf(value, validIdentifiers);
+            identifier = janiIdentifier.getIdentifier();
+        } else {
+            identifier = new ExpressionIdentifierStandard.Builder()
+                    .setName(value.toString())
+                    .build();
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        return UtilJSON.toStringValue(identifier.getName());
+    }
+
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        assert validIdentifiers != null;
+        resetFields();
+        if (!(expression instanceof ExpressionIdentifier)) {
+            return null;
+        }
+        this.identifier = (ExpressionIdentifierStandard) expression;
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        assert validIdentifiers != null;
+        return identifier;
+    }
+
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.validIdentifiers = identifiers;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

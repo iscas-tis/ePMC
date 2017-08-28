@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -25,38 +25,38 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class RateProcessor implements JANI2PRISMProcessorStrict {
 
-	private Rate rate = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) {
-		assert obj != null;
-		assert obj instanceof Rate; 
-		
-		rate = (Rate) obj;
-		return this;
-	}
+    private Rate rate = null;
 
-	@Override
-	public String toPRISM() {
-		assert rate != null;
-		
-		return ProcessorRegistrar.getProcessor(rate.getExp())
-							     .toPRISM();
-	}
-	
-	@Override
-	public void validateTransientVariables() {
-		assert rate != null;
-		
-		ProcessorRegistrar.getProcessor(rate.getExp())
-						  .validateTransientVariables();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Rate; 
 
-	@Override
-	public boolean usesTransientVariables() {
-		assert rate != null;
-		
-		return ProcessorRegistrar.getProcessor(rate.getExp())
-								 .usesTransientVariables();
-	}	
+        rate = (Rate) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert rate != null;
+
+        return ProcessorRegistrar.getProcessor(rate.getExp())
+                .toPRISM();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert rate != null;
+
+        ProcessorRegistrar.getProcessor(rate.getExp())
+        .validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert rate != null;
+
+        return ProcessorRegistrar.getProcessor(rate.getExp())
+                .usesTransientVariables();
+    }	
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -40,7 +40,7 @@ public final class ExpressionMultiObjective implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
@@ -49,16 +49,16 @@ public final class ExpressionMultiObjective implements Expression {
             this.operands = operands;
             return this;
         }
-        
+
         private List<Expression> getOperands() {
             return operands;
         }
-        
+
         public ExpressionMultiObjective build() {
             return new ExpressionMultiObjective(this);
         }
     }
-    
+
     private final Positional positional;
     private final List<Expression> children = new ArrayList<>();
     private final List<Expression> childrenExternal = Collections.unmodifiableList(children);
@@ -69,13 +69,13 @@ public final class ExpressionMultiObjective implements Expression {
         for (Expression operand : builder.getOperands()) {
             assert operand != null;
             // TODO
-//          assert child instanceof ExpressionQuantifier : child.getClass();
+            //          assert child instanceof ExpressionQuantifier : child.getClass();
 
         }
         this.children.addAll(builder.getOperands());
         this.positional = builder.getPositional();
     }
-    
+
     public Expression getOperand1() {
         return getChildren().get(0);
     }
@@ -89,9 +89,9 @@ public final class ExpressionMultiObjective implements Expression {
     }
 
     public List<Expression> getOperands() {
-    	return childrenExternal;
+        return childrenExternal;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new Builder()
@@ -102,7 +102,7 @@ public final class ExpressionMultiObjective implements Expression {
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
+        assert expressionToType != null;
         Type result = expressionToType.getType(this);
         if (result != null) {
             return result;
@@ -114,7 +114,7 @@ public final class ExpressionMultiObjective implements Expression {
             return TypeBoolean.get();
         }
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         return children;
@@ -124,7 +124,7 @@ public final class ExpressionMultiObjective implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
         List<Expression> children = getChildren();
@@ -159,7 +159,7 @@ public final class ExpressionMultiObjective implements Expression {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -170,7 +170,7 @@ public final class ExpressionMultiObjective implements Expression {
         }
         return hash;
     }
-    
+
     private boolean isQuantEq(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionQuantifier)) {
@@ -180,11 +180,11 @@ public final class ExpressionMultiObjective implements Expression {
         return expressionQuantifier.getCompareType().isEq();
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionMultiObjective.Builder()
-				.setOperands(children)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionMultiObjective.Builder()
+                .setOperands(children)
+                .setPositional(positional)
+                .build();
+    }
 }

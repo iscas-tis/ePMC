@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.sylvan;
 
@@ -41,33 +41,33 @@ public class AfterOptionsCreationSylvan implements AfterOptionsCreation {
     public void process(Options options) {
         assert options != null;
         Category category = options.addCategory()
-        		.setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
-        		.setIdentifier(OptionsDDSylvan.DD_SYLVAN_CATEGORY)
-        		.setParent(OptionsDD.DD_CATEGORY)
-        		.build();
+                .setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
+                .setIdentifier(OptionsDDSylvan.DD_SYLVAN_CATEGORY)
+                .setParent(OptionsDD.DD_CATEGORY)
+                .build();
         Map<String,Class<? extends LibraryDD>> ddLibraryClasses = options.get(OptionsDD.DD_LIBRARY_CLASS);
         assert ddLibraryClasses != null;
         ddLibraryClasses.put(LibraryDDSylvan.IDENTIFIER, LibraryDDSylvan.class);
         OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         options.addOption().setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
-        	.setIdentifier(OptionsDDSylvan.DD_SYLVAN_WORKERS)
-        	.setType(typeInteger).setDefault("1")
-        	.setCommandLine().setGui()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDSylvan.DD_SYLVAN_WORKERS)
+        .setType(typeInteger).setDefault("1")
+        .setCommandLine().setGui()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
-        	.setIdentifier(OptionsDDSylvan.DD_SYLVAN_INIT_CACHE_SIZE)
-        	.setType(typeInteger).setDefault("262144")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDSylvan.DD_SYLVAN_INIT_CACHE_SIZE)
+        .setType(typeInteger).setDefault("262144")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
-        	.setIdentifier(OptionsDDSylvan.DD_SYLVAN_INIT_NODES)
-        	.setType(typeInteger).setDefault("1000000")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDSylvan.DD_SYLVAN_INIT_NODES)
+        .setType(typeInteger).setDefault("1000000")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsDDSylvan.OPTIONS_DD_SYLVAN)
-        	.setIdentifier(OptionsDDSylvan.DD_SYLVAN_CACHE_GRANULARITY)
-        	.setType(typeInteger).setDefault("4")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsDDSylvan.DD_SYLVAN_CACHE_GRANULARITY)
+        .setType(typeInteger).setDefault("4")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
     }
 }

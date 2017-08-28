@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.component;
 
@@ -40,72 +40,72 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class SystemParser implements JANINode {
-	/** String to identify the type of composition. */
-	private final static String COMPOSITION = "composition";
-	/** Maps composition names to its representing classes */
-	private final static Map<String,Class<? extends Component>> COMPOSITIONS;
-	
-	static {
-		Map<String,Class<? extends Component>> compositions = new LinkedHashMap<>();
-		compositions.put(ComponentParallel.IDENTIFIER, ComponentParallel.class);
-		compositions.put(ComponentRename.IDENTIFIER, ComponentRename.class);
-		compositions.put(ComponentAutomaton.IDENTIFIER, ComponentAutomaton.class);
-		COMPOSITIONS = Collections.unmodifiableMap(compositions);
-	}
+    /** String to identify the type of composition. */
+    private final static String COMPOSITION = "composition";
+    /** Maps composition names to its representing classes */
+    private final static Map<String,Class<? extends Component>> COMPOSITIONS;
 
-	/** System component parsed by this system parser. */
-	private Component systemComponent;
-	private ModelJANI model;
+    static {
+        Map<String,Class<? extends Component>> compositions = new LinkedHashMap<>();
+        compositions.put(ComponentParallel.IDENTIFIER, ComponentParallel.class);
+        compositions.put(ComponentRename.IDENTIFIER, ComponentRename.class);
+        compositions.put(ComponentAutomaton.IDENTIFIER, ComponentAutomaton.class);
+        COMPOSITIONS = Collections.unmodifiableMap(compositions);
+    }
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    /** System component parsed by this system parser. */
+    private Component systemComponent;
+    private ModelJANI model;
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		JsonObject object = UtilJSON.toObject(value);
-		Class<? extends Component> composition;
-		if (object.containsKey(COMPOSITION)) {
-			composition = UtilJSON.toOneOf(object, COMPOSITION, COMPOSITIONS);			
-		} else {
-			composition = ComponentSynchronisationVectors.class;
-		}
-		try {
-			systemComponent = composition.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
-			assert false;
-		}
-		systemComponent.setModel(model);
-		systemComponent.parse(value);
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		assert false;
-		return null;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	/**
-	 * Return the parsed system component.
-	 * 
-	 * @return parsed system component
-	 */
-	public Component getSystemComponent() {
-		return systemComponent;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        JsonObject object = UtilJSON.toObject(value);
+        Class<? extends Component> composition;
+        if (object.containsKey(COMPOSITION)) {
+            composition = UtilJSON.toOneOf(object, COMPOSITION, COMPOSITIONS);			
+        } else {
+            composition = ComponentSynchronisationVectors.class;
+        }
+        try {
+            systemComponent = composition.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            assert false;
+        }
+        systemComponent.setModel(model);
+        systemComponent.parse(value);
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert false;
+        return null;
+    }
+
+    /**
+     * Return the parsed system component.
+     * 
+     * @return parsed system component
+     */
+    public Component getSystemComponent() {
+        return systemComponent;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

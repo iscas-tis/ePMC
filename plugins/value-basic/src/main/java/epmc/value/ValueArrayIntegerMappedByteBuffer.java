@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -31,23 +31,23 @@ import java.nio.file.StandardOpenOption;
 import epmc.value.Value;
 
 final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
-	private final static String TMP_PREFIX = "valueArrayIntegerMappedByteBuffer";
-	private final static String TMP_ENDING = "dat";
+    private final static String TMP_PREFIX = "valueArrayIntegerMappedByteBuffer";
+    private final static String TMP_ENDING = "dat";
     private FileChannel channel;
     private MappedByteBuffer buffer;
-	private TypeArrayIntegerMappedByteBuffer type;
-	private boolean immutable;
-	private int size;
+    private TypeArrayIntegerMappedByteBuffer type;
+    private boolean immutable;
+    private int size;
 
     ValueArrayIntegerMappedByteBuffer(TypeArrayIntegerMappedByteBuffer type) {
-    	assert type != null;
-    	this.type = type;
+        assert type != null;
+        this.type = type;
         try {
             Path tmpFile = Files.createTempFile("valueArrayIntegerMappedByteBuffer", "dat");
             channel = FileChannel.open(tmpFile, StandardOpenOption.WRITE, StandardOpenOption.READ, StandardOpenOption.DELETE_ON_CLOSE);
             buffer = channel.map(MapMode.READ_WRITE, 0, 0);
         } catch (IOException e) {
-        	throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -59,7 +59,7 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
         result = buffer.getInt(index * 4);
         return result;
     }
-    
+
     @Override
     public ValueArrayIntegerMappedByteBuffer clone() {
         ValueArrayIntegerMappedByteBuffer result = new ValueArrayIntegerMappedByteBuffer(getType());
@@ -74,12 +74,12 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
 
     @Override
     public void get(Value value, int index) {
-    	ValueAlgebra.asAlgebra(value).set(getInt(index));
+        ValueAlgebra.asAlgebra(value).set(getInt(index));
     }
 
     @Override
     public TypeArrayIntegerMappedByteBuffer getType() {
-    	return type;
+        return type;
     }
 
     @Override
@@ -88,7 +88,7 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
         assert index < size();
         buffer.putInt(index * 4, value);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -98,26 +98,26 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
         }
         return hash;
     }
-    
+
     @Override
     public void setImmutable() {
-    	this.immutable = true;
+        this.immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setSize(int size) {
-		assert size >= 0;
+    }
+
+    @Override
+    public void setSize(int size) {
+        assert size >= 0;
         try {
             Path tmpFile = Files.createTempFile(TMP_PREFIX, TMP_ENDING);
             channel.close();
@@ -127,15 +127,15 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
             assert false;
         }
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

@@ -16,24 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Value;
 
 final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray {
-	private final static String SPACE = " ";
-	private final TypeArrayIntegerJava type;
+    private final static String SPACE = " ";
+    private final TypeArrayIntegerJava type;
     private int[] content;
-	private boolean immutable;
-	private int size;
+    private boolean immutable;
+    private int size;
 
     ValueArrayIntegerJava(TypeArrayIntegerJava type) {
         this.type = type;
         this.content = new int[0];
     }
-    
+
     @Override
     public ValueArrayIntegerJava clone() {
         ValueArrayIntegerJava clone = (ValueArrayIntegerJava) getType().newValue();
@@ -50,14 +50,14 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
         assert index < size() : index + SPACE + size();
         content[index] = ValueInteger.asInteger(value).getInt();
     }
-    
-	@Override
-	public void set(int entry, int index) {
+
+    @Override
+    public void set(int entry, int index) {
         assert !isImmutable();
         assert index >= 0;
         assert index < size() : index + SPACE + size();
         content[index] = entry;		
-	}
+    }
 
     @Override
     public void get(Value value, int index) {
@@ -68,7 +68,7 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
         int entry = content[index];
         ValueAlgebra.asAlgebra(value).set(entry);
     }
-    
+
     @Override
     public int[] getIntArray() {
         return content;
@@ -90,43 +90,43 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
         }
         return hash;
     }
-    
+
     @Override
     public TypeArrayIntegerJava getType() {
-		return type;
-	}
-    
+        return type;
+    }
+
     @Override
     public void setImmutable() {
-    	this.immutable = true;
+        this.immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
-    	return immutable;
+        return immutable;
     }
 
-	@Override
-	public void set(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void set(String value) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void setSize(int size) {
+    }
+
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         content = new int[size];
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

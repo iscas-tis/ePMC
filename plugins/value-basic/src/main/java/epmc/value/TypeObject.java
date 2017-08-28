@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -25,18 +25,18 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeObject implements TypeNumBitsKnown {
-	public static boolean isObject(Type type) {
-		return type instanceof TypeObject;
-	}
-	
-	public TypeObject asObject(Type type) {
-		if (type instanceof TypeObject) {
-			return (TypeObject) type;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isObject(Type type) {
+        return type instanceof TypeObject;
+    }
+
+    public TypeObject asObject(Type type) {
+        if (type instanceof TypeObject) {
+            return (TypeObject) type;
+        } else {
+            return null;
+        }
+    }
+
     public final static class Builder {
         private Class<?> clazz;
         private StorageType storageType = StorageType.DIRECT;
@@ -45,31 +45,31 @@ public final class TypeObject implements TypeNumBitsKnown {
             this.clazz = clazz;
             return this;
         }
-        
+
         private Class<?> getClazz() {
             return clazz;
         }
-        
+
         public Builder setStorageClass(StorageType storageType) {
             this.storageType = storageType;
             return this;
         }
-        
+
         private StorageType getStorageType() {
             return storageType;
         }
-        
+
         public TypeObject build() {
             return ContextValue.get().makeUnique(new TypeObject(this));
         }
     }
-    
+
     public enum StorageType {
         DIRECT,
         NUMERATED_NORMAL,
         NUMERATED_IDENTITY
     }
-    
+
     private final Class<?> usedClass;
     private final StorageType storageType;
 
@@ -93,12 +93,12 @@ public final class TypeObject implements TypeNumBitsKnown {
     public Class<?> getUsedClass() {
         return usedClass;
     }
-    
+
     @Override
     public ValueObject newValue() {
         return new ValueObject(this);
     }
-    
+
 
     public ValueObject newValue(Object object) {
         assert object != null;
@@ -126,7 +126,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -134,7 +134,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         hash = usedClass.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -145,28 +145,28 @@ public final class TypeObject implements TypeNumBitsKnown {
         builder.append(")");
         return builder.toString();
     }
-    
+
     @Override
     public int getNumBits() {
         return Integer.SIZE;
     }
-    
+
     StorageType getStorageType() {
         return storageType;
     }
-    
+
     boolean isDirect() {
         return storageType == StorageType.DIRECT;
     }
-    
+
     boolean isNumeratedNormal() {
         return storageType == StorageType.NUMERATED_NORMAL;
     }
-    
+
     boolean isNumeratedIdentity() {
         return storageType == StorageType.NUMERATED_IDENTITY;
     }
-    
+
     @Override
     public TypeArray getTypeArray() {
         if (isDirect()) {

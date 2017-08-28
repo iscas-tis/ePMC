@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -24,6 +24,6 @@ import epmc.graph.dd.GraphDD;
 
 public interface GraphSolverObjectiveDD {
     void setGraph(GraphDD graph);
-    
+
     GraphDD getGraph();
 }

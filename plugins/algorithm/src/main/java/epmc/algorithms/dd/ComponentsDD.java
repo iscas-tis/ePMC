@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms.dd;
 
@@ -53,24 +53,24 @@ public class ComponentsDD implements Closeable {
             this.u = u.clone();
             this.s = s.clone();
         }
-        
+
         DD getU() {
             return u;
         }
-        
+
         DD getS() {
             return s;
         }
-        
+
         boolean isUEmpty() {
             return u.isFalse();
         }
-        
+
         void setS(DD s) {
             this.s.dispose();
             this.s = s;
         }
-        
+
         @Override
         protected Spine clone() {
             return new Spine(u, s);
@@ -86,7 +86,7 @@ public class ComponentsDD implements Closeable {
             s.dispose();
         }
     }
-    
+
     private static class SkelResult implements Closeable, Cloneable {
         private final DD fwSet;
         private final DD newSet;
@@ -104,11 +104,11 @@ public class ComponentsDD implements Closeable {
         DD getFw() {
             return fwSet;
         }
-        
-         DD getNewSet() {
+
+        DD getNewSet() {
             return newSet;
         }
-        
+
         DD getNewNode() {
             return newNode;
         }
@@ -124,13 +124,13 @@ public class ComponentsDD implements Closeable {
             newNode.dispose();
             P.dispose();
         }
-        
+
         @Override
         protected SkelResult clone() {
             return new SkelResult(fwSet, newSet, newNode, P);
         }
     }
-    
+
     private enum Where {
         FIRST,
         SECOND
@@ -144,7 +144,7 @@ public class ComponentsDD implements Closeable {
         private final SkelResult skelResult;
         private final DD scc;
         private boolean closed;
-        
+
         public StackEntry(Where where, DD nodes, DD edges, Spine spine,
                 SkelResult skelResult, DD scc) {
             assert edges.assertSupport(graph.getPresCube(), graph.getNextCube());
@@ -203,7 +203,7 @@ public class ComponentsDD implements Closeable {
     private final DD nodes;
     private final DD presAndActions;
     private final DD nextAndActions;
-    
+
     public ComponentsDD(GraphDD graph, DD nodes, boolean onlyBSCC, boolean skipTransient) {
         assert graph != null;
         assert nodes != null;
@@ -230,11 +230,11 @@ public class ComponentsDD implements Closeable {
             startSCCs(nodes);
         }
     }
-    
+
     public ComponentsDD(GraphDD graph, DD nodes, boolean skipTransient) {
         this(graph, nodes, true, skipTransient);
     }
-    
+
     public DD next() {
         assert !closed;
         if (isNondet) {
@@ -258,7 +258,7 @@ public class ComponentsDD implements Closeable {
         edges.dispose();
         spine.close();
     }
-    
+
     private DD nextSCC() {
         DD found = null;
         while (found == null && !stack.isEmpty()) {
@@ -370,7 +370,7 @@ public class ComponentsDD implements Closeable {
     }
 
     private DD restrictTrans(Permutation nextToPres, DD edges, DD nodes)
-            {
+    {
         edges = edges.and(nodes);
         DD permNodes = nodes.permute(nextToPres);
         edges = edges.andWith(permNodes);
@@ -396,7 +396,7 @@ public class ComponentsDD implements Closeable {
         trans = trans.permuteWith(nextToPres);
         return trans;
     }
-    
+
     private SkelResult skelFwd(GraphDD graph, DD nodes, DD edges, Spine spine) {
         assert nodes != null;
         assert edges != null;
@@ -445,7 +445,7 @@ public class ComponentsDD implements Closeable {
         P.dispose();
         return result;
     }
-    
+
     private void startMECs(DD nodes) {
         startSCCs(nodes);
     }
@@ -472,13 +472,13 @@ public class ComponentsDD implements Closeable {
             DD prob = player.clone().eqWith(ContextDD.get().newConstant(Player.STOCHASTIC));
             DD nondetProb = player.clone().eqWith(ContextDD.get().newConstant(Player.ONE_STOCHASTIC));
 
-//            DD presCube = graph.getPresCube();
+            //            DD presCube = graph.getPresCube();
             DD nextCube = graph.getNextCube();
             DD actionsCube = graph.getActionCube();
             DD nextAndActions = nextCube.and(actionsCube);
 
             DD validActions = transitions.and(nodes).abstractExistWith(nextCube.clone());
-            
+
             DD scc = orig.clone();
             DD sccPred = ContextDD.get().newConstant(false);
             while (!scc.equals(sccPred)) {
@@ -489,10 +489,10 @@ public class ComponentsDD implements Closeable {
                 DD sccProb = scc.and(prob);
                 DD sccNondet = scc.and(nondet);
                 DD sccNondetProb = scc.and(nondetProb);
-                
+
                 DD sccProbStay = sccNext.not().abstractAndExistWith(transitionsNoActions.clone(), nextCube.clone());
                 sccProbStay = sccProbStay.notWith().andWith(sccProb);
-                
+
                 DD sccNondetStay = sccNondet.and(sccNext);
                 sccNondetStay = sccNondetStay.abstractAndExistWith(transitionsNoActions.clone(), nextCube.clone());                
 
@@ -500,7 +500,7 @@ public class ComponentsDD implements Closeable {
                 sccNondetProbStay = sccNondetProbStay.abstractImpliesForall(validActions, actionsCube);
                 sccNondetProbStay = sccNondetProbStay.notWith().andWith(sccNondetProb);
                 sccNext.dispose();
-                
+
                 scc = sccProbStay.orWith(sccNondetStay, sccNondetProbStay);
             }
             nondet.dispose();
@@ -532,9 +532,9 @@ public class ComponentsDD implements Closeable {
             this.forallExist = forallExist;
         }
     }
-    
+
     private static DD attract(GraphDD graph, DD targetParam, DD other, boolean stochForall, boolean oneForall, boolean twoForall)
-            {
+    {
         assert graph != null;
         assert targetParam != null;
         assert other != null;
@@ -554,10 +554,10 @@ public class ComponentsDD implements Closeable {
         existForall.dispose();
         return result;
     }
-    
+
     public static DD attract(GraphDD graph, DD targetParam, DD other,
             DD forall, DD exist, DD forallExist, DD existForall)
-            {
+    {
         ContextDD contextDD = ContextDD.get();
         DD target = targetParam.clone();
         DD prevOther = contextDD.newConstant(false);
@@ -583,14 +583,14 @@ public class ComponentsDD implements Closeable {
         }
         transitionParts.addAll(allParts);
         DD stateActionValid = transitions.abstractExist(nextCube);
-        
+
         boolean stop = false;
         while (!stop) {
             prevOther.dispose();
             prevOther = set;
-            
+
             DD targetNodesNext = target.permute(graph.getSwapPresNext());
-            
+
             // forall
             DD otherForallOne;
             if (forall.isFalse()) {
@@ -604,13 +604,13 @@ public class ComponentsDD implements Closeable {
             // exist
             DD otherExistOne;
             if (exist.isFalse()) {
-               otherExistOne = contextDD.newConstant(false);
+                otherExistOne = contextDD.newConstant(false);
             } else {
                 DD otherExist = set.and(exist);
                 otherExistOne = targetNodesNext.abstractAndExist(transitionsNoActions, nextCube);
                 otherExistOne = otherExistOne.andWith(otherExist);
             }
-            
+
             // forall-exist
             DD otherForallExistOne;
             if (forallExist.isFalse()) {
@@ -622,7 +622,7 @@ public class ComponentsDD implements Closeable {
                     DD andEx = targetNodesNext.abstractAndExist(transPart, nextCube);
                     otherForallExistOne = otherForallExistOne.andWith(andEx);
                 }
-                */
+                 */
                 DD otherForallExist = set.and(forallExist);
                 otherForallExistOne = targetNodesNext.abstractAndExist(transitions, nextCube);
                 otherForallExistOne = otherForallExistOne.notWith();
@@ -630,7 +630,7 @@ public class ComponentsDD implements Closeable {
                 otherForallExistOne = otherForallExistOne.abstractExistWith(actionCube.clone()).notWith();
                 otherForallExistOne = otherForallExist.andWith(otherForallExistOne);
             }
-            
+
             // exist-forall
             DD otherExistForallOne;
             if (existForall.isFalse()) {
@@ -641,9 +641,9 @@ public class ComponentsDD implements Closeable {
                 otherExistForallOne = otherExistForallOne.abstractExistWith(actionCube.clone()).notWith();
                 otherExistForallOne = otherExistForall.andWith(otherExistForallOne);
             }
-            
+
             targetNodesNext.dispose();
-            
+
             DD pre = otherForallOne.orWith(otherExistOne, otherForallExistOne, otherExistForallOne);
             DD targetNew = target.clone().orWith(pre.clone());
             if (target.equals(targetNew)) {
@@ -662,10 +662,10 @@ public class ComponentsDD implements Closeable {
         stateActionValid.dispose();
         return target;
     }
-    
+
     private static QuantTypes computeQuantTypes(DD player, boolean stochForall, boolean oneForall, boolean twoForall)
-            {
-    	ContextDD contextDD = ContextDD.get();
+    {
+        ContextDD contextDD = ContextDD.get();
         DD forall = contextDD.newConstant(false);
         DD exist = contextDD.newConstant(false);
         DD existForall = contextDD.newConstant(false);
@@ -696,17 +696,17 @@ public class ComponentsDD implements Closeable {
         } else {
             assert false;
         }
-        
+
         return new QuantTypes(forall, exist, existForall, forallExist);
     }
 
     public static DD reachMaxOne(GraphDD graph, DD target, DD nodeSpace)
-            {
+    {
         return reachPre(graph, target, nodeSpace, false, true);
     }
-    
+
     public static DD reachMaxSome(GraphDD graph, DD target, DD nodeSpace)
-            {
+    {
         return reachPre(graph, target, nodeSpace, false, false);
     }
 
@@ -717,7 +717,7 @@ public class ComponentsDD implements Closeable {
         blockFalse.dispose();
         return result;
     }
-    
+
     public static DD reachPre(GraphDD graph, DD target, DD nodes,
             DD block, boolean min, boolean one) {
         assert graph != null;

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.flatten;
 
@@ -24,9 +24,9 @@ import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 
 public interface FlatterComponent {
-	void setComponent(Component component);
-	
-	boolean canHandle();
-	
-	ComponentAutomaton flatten();
+    void setComponent(Component component);
+
+    boolean canHandle();
+
+    ComponentAutomaton flatten();
 }

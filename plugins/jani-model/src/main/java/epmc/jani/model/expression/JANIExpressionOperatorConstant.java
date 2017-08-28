@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.expression;
 
@@ -45,111 +45,111 @@ import epmc.value.Operator;
  * @author Ernst Moritz Hahn
  */
 public final class JANIExpressionOperatorConstant implements JANIExpression {
-	public final static String IDENTIFIER = "operator-constant";
-	private final static String CONSTANT = "constant";
-	
-	private ModelJANI model;
-	
-	private boolean initialized;
-	private JANIOperator operator;
-	
-	private void resetFields() {
-		initialized = false;
-		operator = null;
-	}
-	
-	public JANIExpressionOperatorConstant() {
-		resetFields();
-	}
+    public final static String IDENTIFIER = "operator-constant";
+    private final static String CONSTANT = "constant";
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		resetFields();
-		if (!(value instanceof JsonObject)) {
-			return null;
-		}
-		JsonObject object = (JsonObject) value;
-		if (!object.containsKey(CONSTANT)) {
-			return null;
-		}
-		if (!(object.get(CONSTANT) instanceof JsonString)) {
-			return null;
-		}
-		JANIOperators operators = model.getJANIOperators();
-		operator = UtilJSON.toOneOf(object, CONSTANT, operators::getOperatorByJANI);
-		if (operator.getArity() != 0) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    private ModelJANI model;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(CONSTANT, operator.getJANI());
-		return builder.build();
-	}
+    private boolean initialized;
+    private JANIOperator operator;
+
+    private void resetFields() {
+        initialized = false;
+        operator = null;
+    }
+
+    public JANIExpressionOperatorConstant() {
+        resetFields();
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
+
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        resetFields();
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(CONSTANT)) {
+            return null;
+        }
+        if (!(object.get(CONSTANT) instanceof JsonString)) {
+            return null;
+        }
+        JANIOperators operators = model.getJANIOperators();
+        operator = UtilJSON.toOneOf(object, CONSTANT, operators::getOperatorByJANI);
+        if (operator.getArity() != 0) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(CONSTANT, operator.getJANI());
+        return builder.build();
+    }
 
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
-		assert expression != null;
-		assert model != null;
-		resetFields();
-		if (!(expression instanceof ExpressionOperator)) {
-			return null;
-		}
-		ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-		operator = getJANIOperators().getOperator(expressionOperator.getOperator());
-		if (operator.getArity() != 0) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        resetFields();
+        if (!(expression instanceof ExpressionOperator)) {
+            return null;
+        }
+        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        operator = getJANIOperators().getOperator(expressionOperator.getOperator());
+        if (operator.getArity() != 0) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public Expression getExpression() {
-		assert initialized;
-		assert model != null;
-		Operator operator = this.operator.getOperator();
-		return new ExpressionOperator.Builder()
-				.setOperator(operator)
-				.setOperands()
-				.build();
-	}
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        Operator operator = this.operator.getOperator();
+        return new ExpressionOperator.Builder()
+                .setOperator(operator)
+                .setOperands()
+                .build();
+    }
 
-	private JANIOperators getJANIOperators() {
-		assert model != null;
-		return model.getJANIOperators();
-	}
+    private JANIOperators getJANIOperators() {
+        assert model != null;
+        return model.getJANIOperators();
+    }
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-	}	
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }	
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

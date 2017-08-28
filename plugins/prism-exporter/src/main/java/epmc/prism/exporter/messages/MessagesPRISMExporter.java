@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.messages;
 
@@ -40,7 +40,7 @@ public final class MessagesPRISMExporter {
     public final static Message PRISM_EXPORTER_PRISM_MODEL_CREATION_DONE = newMessage().setIdentifier("prism-exporter-prism-model-creation-done").build();
     public final static Message PRISM_EXPORTER_PRISM_FILE_CREATION = newMessage().setIdentifier("prism-exporter-prism-file-creation").build();
     public final static Message PRISM_EXPORTER_PRISM_FILE_CREATION_DONE = newMessage().setIdentifier("prism-exporter-prism-file-creation-done").build();
-    
+
     /**
      * Creates a new message with given identifier with this resource bundle.
      * The parameter may not be {@code null}.
@@ -55,6 +55,6 @@ public final class MessagesPRISMExporter {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private MessagesPRISMExporter() {
-	}
+    private MessagesPRISMExporter() {
+    }
 }

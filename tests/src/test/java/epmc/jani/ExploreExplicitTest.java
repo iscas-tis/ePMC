@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
@@ -61,11 +61,11 @@ public final class ExploreExplicitTest {
      */
     private final static Options prepareJANIOptions() {
         Options options = UtilOptionsEPMC.newOptions();
-        
+
         prepareOptions(options, LogType.TRANSLATE, ModelJANI.IDENTIFIER);
         return options;
     }
-    
+
     /**
      * Test to explore a minimal JANI model.
      * 
@@ -77,14 +77,14 @@ public final class ExploreExplicitTest {
         options.set(OptionsJANIModel.JANI_FIX_DEADLOCKS, false);
         Model model = null;
         boolean thrown = false;
-		try {
-			model = loadModel(options, MINIMAL);
-	        exploreModel(model);
-		} catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_DEADLOCK, e.getProblem());
-		}
-		Assert.assertTrue(thrown);		
+        try {
+            model = loadModel(options, MINIMAL);
+            exploreModel(model);
+        } catch (EPMCException e) {
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_DEADLOCK, e.getProblem());
+        }
+        Assert.assertTrue(thrown);		
     }
 
     /**
@@ -298,8 +298,8 @@ public final class ExploreExplicitTest {
         try {
             exploreModel(model);        	
         } catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE, e.getProblem());
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE, e.getProblem());
         }
         Assert.assertTrue(thrown);
     }
@@ -333,7 +333,7 @@ public final class ExploreExplicitTest {
         Assert.assertEquals(new BigInteger("4660"), statistics.getNumStates());
         Assert.assertEquals(new BigInteger("12037"), statistics.getNumTransitions());
     }
-    
+
     /**
      * Test for multiple initial states test.
      * 
@@ -359,7 +359,7 @@ public final class ExploreExplicitTest {
         ExploreStatistics statistics = exploreModel(model);
         System.out.println(statistics);
     }
-    
+
     @Test
     public void brpTest() {
         Options options = prepareJANIOptions();

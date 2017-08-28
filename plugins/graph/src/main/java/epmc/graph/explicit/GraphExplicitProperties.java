@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -51,7 +51,7 @@ public final class GraphExplicitProperties implements Serializable {
     private final static String NODE_PROPERTIES = "nodeProperties";
     /** String "edgeProperties". */
     private final static String EDGE_PROPERTIES = "edgeProperties";
-    
+
     private transient final BitSet exploredNodes;
     private transient int[] predecessorBounds;
     private transient int[] predecessorTargets;
@@ -63,22 +63,22 @@ public final class GraphExplicitProperties implements Serializable {
     private final Map<Object,EdgeProperty> edgeProperties = new LinkedHashMap<>();
     private final Map<Object,EdgeProperty> edgePropertiesExternal = Collections.unmodifiableMap(edgeProperties);
     private boolean predecessorsComputed;
-    
+
     public GraphExplicitProperties(GraphExplicit graph) {
         assert graph != null;
         this.graph = graph;
         exploredNodes = UtilBitSet.newBitSetUnbounded();
     }
-    
+
     // TODO maybe this method should be removed later
     public Set<Object> getGraphProperties() {
         return graphPropertiesExternal.keySet();
     }
-    
+
     public Map<Object,Value> getGraphPropertiesMap() {
         return graphPropertiesExternal;
     }
-    
+
     public Value getGraphProperty(Object property) {
         assert property != null;
         return graphProperties.get(property);
@@ -99,14 +99,14 @@ public final class GraphExplicitProperties implements Serializable {
     }
 
     public void setGraphProperty(Object property, Value value)
-            {
+    {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property) : property;
         getGraphProperty(property).set(value);
     }
 
-    
+
     public void registerNodeProperty(Object propertyName,
             NodeProperty property) {
         assert propertyName != null;
@@ -117,7 +117,7 @@ public final class GraphExplicitProperties implements Serializable {
         }
         nodeProperties.put(propertyName, property);
     }
-    
+
     public NodeProperty getNodeProperty(Object property) {
         assert property != null;
         return nodeProperties.get(property);
@@ -127,11 +127,11 @@ public final class GraphExplicitProperties implements Serializable {
     public Set<Object> getNodeProperties() {
         return nodePropertiesExternal.keySet();
     }
-    
+
     public Map<Object,NodeProperty> getNodePropertiesMap() {
         return nodePropertiesExternal;
     }
-    
+
     public void registerEdgeProperty(Object propertyName,
             EdgeProperty property) {
         assert propertyName != null;
@@ -142,7 +142,7 @@ public final class GraphExplicitProperties implements Serializable {
         }
         edgeProperties.put(propertyName, property);
     }
-    
+
 
     public EdgeProperty getEdgeProperty(Object property) {
         assert property != null;
@@ -153,7 +153,7 @@ public final class GraphExplicitProperties implements Serializable {
     public Set<Object> getEdgeProperties() {
         return edgePropertiesExternal.keySet();
     }
-    
+
     public Map<Object,EdgeProperty> getEdgePropertiesMap() {
         return edgePropertiesExternal;
     }
@@ -216,7 +216,7 @@ public final class GraphExplicitProperties implements Serializable {
             predecessorBounds[node + 1] += predecessorBounds[node];
         }
     }
-    
+
     public void computePredecessors(BitSet states) {
         predecessorTargets = null;
         predecessorBounds = new int[states.length() + 1];
@@ -274,24 +274,24 @@ public final class GraphExplicitProperties implements Serializable {
         int index = predecessorBounds[currentNode] + predecessorNumber;
         return predecessorTargets[index];
     }
-    
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-        .add(GRAPH_PROPERTIES, graphProperties)
-        .add(NODE_PROPERTIES, nodeProperties)
-        .add(EDGE_PROPERTIES, edgeProperties)
-        .toString();
+                .add(GRAPH_PROPERTIES, graphProperties)
+                .add(NODE_PROPERTIES, nodeProperties)
+                .add(EDGE_PROPERTIES, edgeProperties)
+                .toString();
     }
-    
+
     public void removeGraphProperty(Object property) {
         graphProperties.remove(property);
     }
-    
+
     public void removeNodeProperty(Object property) {
         nodeProperties.remove(property);
     }
-    
+
     public void removeEdgeProperty(Object property) {
         edgeProperties.remove(property);
     }

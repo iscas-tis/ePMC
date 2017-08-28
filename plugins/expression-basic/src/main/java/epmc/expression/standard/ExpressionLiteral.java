@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -40,63 +40,63 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionLiteral implements ExpressionPropositional {
-	@FunctionalInterface
-	public interface ValueProvider {
-		Value provideValue();
-	}
-	
-	public static boolean isLiteral(Expression expression) {
-		return expression instanceof ExpressionLiteral;
-	}
-	
-	public static ExpressionLiteral asLiteral(Expression expression) {
-		if (isLiteral(expression)) {
-			return (ExpressionLiteral) expression;
-		} else {
-			return null;
-		}
-	}
-	
+    @FunctionalInterface
+    public interface ValueProvider {
+        Value provideValue();
+    }
+
+    public static boolean isLiteral(Expression expression) {
+        return expression instanceof ExpressionLiteral;
+    }
+
+    public static ExpressionLiteral asLiteral(Expression expression) {
+        if (isLiteral(expression)) {
+            return (ExpressionLiteral) expression;
+        } else {
+            return null;
+        }
+    }
+
     public final static class Builder {
         private Value value;
-		private ValueProvider valueProvider;
+        private ValueProvider valueProvider;
         private Positional positional;
 
         public Builder setValue(Value value) {
             this.value = value;
             return this;
         }
-        
+
         private Value getValue() {
             return value;
         }
-        
+
         public Builder setValueProvider(ValueProvider valueProvider) {
-        	assert valueProvider != null;
-        	this.valueProvider = valueProvider;
-        	return this;
+            assert valueProvider != null;
+            this.valueProvider = valueProvider;
+            return this;
         }
-        
+
         private ValueProvider getValueProvider() {
-        	return valueProvider;
+            return valueProvider;
         }
-        
+
         public Builder setPositional(Positional positional) {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public ExpressionLiteral build() {
             return new ExpressionLiteral(this);
         }
     }
-    
+
     private final Value value;
-	private final ValueProvider valueProvider;
+    private final ValueProvider valueProvider;
     private final Positional positional;
 
     private ExpressionLiteral(Builder builder) {
@@ -104,29 +104,29 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         assert (builder.getValue() != null) != (builder.getValueProvider() != null);
         this.positional = builder.getPositional();
         if (builder.getValue() != null) {
-        	this.valueProvider = null;
+            this.valueProvider = null;
             this.value = UtilValue.clone(builder.getValue());
             this.value.setImmutable();
         } else if (builder.getValueProvider() != null) {
-        	this.valueProvider = builder.getValueProvider();
-        	this.value = null;
+            this.valueProvider = builder.getValueProvider();
+            this.value = null;
         } else {
             throw new RuntimeException();
         }
     }
 
     public Value getValue() {
-    	if (value != null) {
-    		return value;
-    	} else if (valueProvider != null) {
-    		Value result = valueProvider.provideValue();
-    		result.setImmutable();
-    		return result;
-    	} else {
-    		throw new RuntimeException();
-    	}
+        if (value != null) {
+            return value;
+        } else if (valueProvider != null) {
+            Value result = valueProvider.provideValue();
+            result.setImmutable();
+            return result;
+        } else {
+            throw new RuntimeException();
+        }
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         assert children != null;
@@ -136,21 +136,21 @@ public final class ExpressionLiteral implements ExpressionPropositional {
 
     @Override
     public Type getType(ExpressionToType expressionToType) {
-    	assert expressionToType != null;
-    	if (value != null) {
-    		return value.getType();
-    	} else if (valueProvider != null) {
-    		return valueProvider.provideValue().getType();
-    	} else {
-    		throw new RuntimeException();
-    	}
+        assert expressionToType != null;
+        if (value != null) {
+            return value.getType();
+        } else if (valueProvider != null) {
+            return valueProvider.provideValue().getType();
+        } else {
+            throw new RuntimeException();
+        }
     }
-    
+
     @Override
     public boolean isPropositional() {
         return true;
     }
-        
+
     @Override
     public List<Expression> getChildren() {
         return Collections.emptyList();
@@ -160,18 +160,18 @@ public final class ExpressionLiteral implements ExpressionPropositional {
     public Positional getPositional() {
         return positional;
     }    
-    
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
         if (value != null) {
-        	builder.append(value);
+            builder.append(value);
         } else if (valueProvider != null) {
-        	builder.append(valueProvider);
-        	builder.append(":");
-        	builder.append(valueProvider.provideValue());
+            builder.append(valueProvider);
+            builder.append(":");
+            builder.append(valueProvider.provideValue());
         } else {
-        	throw new RuntimeException();
+            throw new RuntimeException();
         }
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -197,18 +197,18 @@ public final class ExpressionLiteral implements ExpressionPropositional {
             }
         }
         if ((this.value != null) != (other.value != null)) {
-        	return false;
+            return false;
         }
         if (value != null && !this.value.equals(other.value)) {
-        	return false;
+            return false;
         }
         if (valueProvider != null &&
-        		!this.valueProvider.equals(other.valueProvider)) {
-        	return false;
+                !this.valueProvider.equals(other.valueProvider)) {
+            return false;
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -218,11 +218,11 @@ public final class ExpressionLiteral implements ExpressionPropositional {
             hash = expression.hashCode() + (hash << 6) + (hash << 16) - hash;
         }
         if (value != null) {
-        	hash = value.hashCode() + (hash << 6) + (hash << 16) - hash;
+            hash = value.hashCode() + (hash << 6) + (hash << 16) - hash;
         } else if (valueProvider != null) {
-        	hash = valueProvider.hashCode() + (hash << 6) + (hash << 16) - hash;        	
+            hash = valueProvider.hashCode() + (hash << 6) + (hash << 16) - hash;        	
         } else {
-        	throw new RuntimeException();
+            throw new RuntimeException();
         }
         return hash;
     }
@@ -287,17 +287,17 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         return falseExpr;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		Builder builder = new ExpressionLiteral.Builder();
-		if (value != null) {
-			builder.setValue(value);
-		} else if (valueProvider != null) {
-			builder.setValueProvider(valueProvider);
-		} else {
-			assert false;
-		}
-		builder.setPositional(positional);
-		return builder.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        Builder builder = new ExpressionLiteral.Builder();
+        if (value != null) {
+            builder.setValue(value);
+        } else if (valueProvider != null) {
+            builder.setValueProvider(valueProvider);
+        } else {
+            assert false;
+        }
+        builder.setPositional(positional);
+        return builder.build();
+    }
 }

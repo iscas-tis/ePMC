@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -55,88 +55,88 @@ public final class Command implements Serializable, Cloneable {
             this.options = options;
             return this;
         }
-        
+
         private Options getOptions() {
             return options;
         }
-        
+
         public Builder setBundleName(String bundleName) {
             this.bundleName = bundleName;
             return this;
         }
-        
+
         public Builder setBundleName(Enum<?> bundleName) {
             this.bundleName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, bundleName.name());
             return this;
         }
-        
+
         private String getBundleName() {
             return bundleName;
         }
-        
+
         public Builder setIdentifier(String identifier) {
             this.identifier = identifier;
             return this;
         }
-        
+
         private String getIdentifier() {
             return identifier;
         }
-        
+
         public Builder setCommandLine(boolean commandLine) {
             this.commandLine = commandLine;
             return this;
         }
-        
+
         public Builder setCommandLine() {
             commandLine = true;
             return this;
         }
-        
+
         private boolean isCommandLine() {
             return commandLine;
         }
-        
+
         public Builder setGui(boolean gui) {
             this.gui = gui;
             return this;
         }
-        
+
         public Builder setGui() {
             gui = true;
             return this;
         }
-        
+
         private boolean isGui() {
             return gui;
         }
-        
+
         public Builder setWeb(boolean web) {
             this.web = web;
             return this;
         }
-        
+
         public Builder setWeb() {
             web = true;
             return this;
         }
-        
+
         private boolean isWeb() {
             return web;
         }
-        
+
         public Command build() {
             Command result = new Command(this);
             options.addCommand(result);
             return result;
         }
 
-		public Builder setIdentifier(Enum<?> identifier) {
+        public Builder setIdentifier(Enum<?> identifier) {
             this.identifier = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());
             return this;
-		}
+        }
     }
-    
+
     /** Serial version UID - 1L as I don't know any better. */
     private static final long serialVersionUID = 1L;
     /** Prefix for the short description of the command. */
@@ -144,7 +144,7 @@ public final class Command implements Serializable, Cloneable {
     /** Prefix for the long description of the command. */
     private final static String LONG_ = "long-";
     /** {@link Options} the command is part of */
-    
+
     private final Options options;
     /** Base name of the resource bundle containing the description. */
     private final String bundle;
@@ -196,7 +196,7 @@ public final class Command implements Serializable, Cloneable {
                 Thread.currentThread().getContextClassLoader());
         return poMsg.getString(SHORT_ + identifier);
     }
-    
+
     /**
      * Obtain long user-readable description of the command.
      * The description is not restricted in size but shall concisely describe
@@ -222,7 +222,7 @@ public final class Command implements Serializable, Cloneable {
                 .setWeb(web)
                 .build();
     }
-    
+
     /**
      * Returns whether the command is available from the command line.
      * 
@@ -231,7 +231,7 @@ public final class Command implements Serializable, Cloneable {
     public boolean isCommandLine() {
         return commandLine;
     }
-    
+
     /**
      * Returns whether the command is available from the standalone GUI.
      * 
@@ -248,7 +248,7 @@ public final class Command implements Serializable, Cloneable {
     public boolean isWeb() {
         return web;
     }
-    
+
     /**
      * Obtain base name of resource bundle used.
      * 
@@ -266,7 +266,7 @@ public final class Command implements Serializable, Cloneable {
     Options getOptions() {
         return options;
     }
-    
+
     Builder toBuilder() {
         return new Builder()
                 .setBundleName(bundle)

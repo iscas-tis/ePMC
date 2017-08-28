@@ -16,13 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.ctmc;
 
 public enum OptionsJANICTMC {
-	/** Base name of resource file for options description. */
-	OPTIONS_JANI_CTMC,
-	/** Option whether to allow multiple transitions remaining for CTMCs, */
+    /** Base name of resource file for options description. */
+    OPTIONS_JANI_CTMC,
+    /** Option whether to allow multiple transitions remaining for CTMCs, */
     JANI_CTMC_ALLOW_MULTI_TRANSITION,
 }

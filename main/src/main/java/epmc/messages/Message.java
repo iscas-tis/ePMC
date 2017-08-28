@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -52,7 +52,7 @@ public final class Message implements Serializable {
         private String identifier;
         /** Whether the build message is a warning. */
         private boolean warning;
-        
+
         /**
          * Set resource bundle name to use for message.
          * This method must not be called after calling {@link #build()}.
@@ -65,7 +65,7 @@ public final class Message implements Serializable {
             this.bundle = bundle;
             return this;
         }
-        
+
         /**
          * Get resource bundle name to use for message.
          * 
@@ -74,7 +74,7 @@ public final class Message implements Serializable {
         private String getBundle() {
             return bundle;
         }
-        
+
         /**
          * Set identifier to use for message.
          * This method must not be called after calling {@link #build()}.
@@ -87,7 +87,7 @@ public final class Message implements Serializable {
             this.identifier = identifier;
             return this;
         }
-        
+
         /**
          * Get identifier to use for message.
          * 
@@ -96,7 +96,7 @@ public final class Message implements Serializable {
         private String getIdentifier() {
             return identifier;
         }
-        
+
         /**
          * Set whether message to construct is a warning.
          * This method must not be called after calling {@link #build()}.
@@ -109,7 +109,7 @@ public final class Message implements Serializable {
             this.warning = warning;
             return this;
         }
-        
+
         /**
          * Get whether message to construct is a warning.
          * 
@@ -118,7 +118,7 @@ public final class Message implements Serializable {
         private boolean isWarning() {
             return warning;
         }
-        
+
         /**
          * Set message to be constructed to be a warning.
          * This method must not be called after calling {@link #build()}.
@@ -130,7 +130,7 @@ public final class Message implements Serializable {
             this.warning = true;
             return this;
         }
-        
+
         /**
          * Construct message with according parameters set.
          * This method must only be called once.
@@ -155,7 +155,7 @@ public final class Message implements Serializable {
     private final String name;
     /** Whether this message is a warning. */
     private final boolean warning;
-    
+
     /**
      * Create a new message.
      * The information to create the message is read from the builder parameter.
@@ -176,7 +176,7 @@ public final class Message implements Serializable {
         name = builder.getIdentifier();
         warning = builder.isWarning();
     }
-    
+
     /**
      * Get identifier of the message.
      * The identifier is used in the resource bundle to
@@ -203,12 +203,12 @@ public final class Message implements Serializable {
                 Thread.currentThread().getContextClassLoader());
         return messages.getString(this.name);
     }
-    
+
     @Override
     public String toString() {
         return name;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -227,7 +227,7 @@ public final class Message implements Serializable {
     public boolean isWarning() {
         return warning;
     }
-    
+
     @Override
     public int hashCode() {
         return name.hashCode();

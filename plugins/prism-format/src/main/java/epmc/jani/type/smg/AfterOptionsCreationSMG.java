@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.smg;
 
@@ -31,23 +31,23 @@ import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
 
 public final class AfterOptionsCreationSMG implements AfterOptionsCreation {
-	public final static String IDENTIFIER = "after-options-creation-smg";
+    public final static String IDENTIFIER = "after-options-creation-smg";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		Map<String, Class<? extends ModelExtensionSemantics>> janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
-		assert janiToSemantics != null;
-		janiToSemantics.put(ModelExtensionSMG.IDENTIFIER, ModelExtensionSMG.class);
+    @Override
+    public void process(Options options) {
+        Map<String, Class<? extends ModelExtensionSemantics>> janiToSemantics = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_SEMANTICS);
+        assert janiToSemantics != null;
+        janiToSemantics.put(ModelExtensionSMG.IDENTIFIER, ModelExtensionSMG.class);
         Map<String,Class<? extends ExplorerExtension>> explorerExtensions = options.get(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS);
         if (explorerExtensions == null) {
-        	explorerExtensions = new OrderedMap<>();
+            explorerExtensions = new OrderedMap<>();
         }
         explorerExtensions.put(ExplorerExtensionSMG.IDENTIFIER, ExplorerExtensionSMG.class);
         options.set(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS, explorerExtensions);
-	}
+    }
 }

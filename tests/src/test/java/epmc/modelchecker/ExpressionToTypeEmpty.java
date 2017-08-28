@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -25,9 +25,9 @@ import epmc.expression.ExpressionToType;
 import epmc.value.Type;
 
 final class ExpressionToTypeEmpty implements ExpressionToType {
-	@Override
-	public Type getType(Expression expression) {
-		assert expression != null;
-		return null;
-	}
+    @Override
+    public Type getType(Expression expression) {
+        assert expression != null;
+        return null;
+    }
 }

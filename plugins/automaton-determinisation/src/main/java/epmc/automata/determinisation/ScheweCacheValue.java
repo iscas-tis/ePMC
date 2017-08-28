@@ -16,17 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
 final class ScheweCacheValue {
     final AutomatonScheweState state;
     final AutomatonScheweLabeling labeling;
-    
+
     ScheweCacheValue(AutomatonScheweState state, AutomatonScheweLabeling labeling) {
         this.state = state;
         this.labeling = labeling;
     }
-    
+
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -113,10 +113,10 @@ public final class ModelChecker implements Closeable {
         }
         return result;
     }
-    
+
     public PropertySolver getSolverFor(Expression property, StateSet states)
-            {
-    	return getSolverFor(property, states, false);
+    {
+        return getSolverFor(property, states, false);
     }
 
     // TODO currently used my multi objective plugin, but should be private
@@ -132,8 +132,8 @@ public final class ModelChecker implements Closeable {
      * @return solver for given property and state set
      */
     public PropertySolver getSolverFor(Expression property, StateSet states,
-    		boolean computeScheduler)
-            {
+            boolean computeScheduler)
+    {
         assert property != null;
         PropertySolver foundWithoutScheduler = null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
@@ -143,20 +143,20 @@ public final class ModelChecker implements Closeable {
             solver.setForStates(states);
             solver.setComputeScheduler(computeScheduler);
             if (computeScheduler && solver.canHandle() && !solver.canComputeScheduler()) {
-            	foundWithoutScheduler = solver;
+                foundWithoutScheduler = solver;
             }
             if (solver.canHandle() && (!computeScheduler || solver.canComputeScheduler())) {
                 return solver;
             }
         }
         if (foundWithoutScheduler != null) {
-        	// TODO log warning
-        	return foundWithoutScheduler;
+            // TODO log warning
+            return foundWithoutScheduler;
         }
         fail(ProblemsModelChecker.NO_SOLVER_AVAILABLE, property);
         return null;
     }
-    
+
     /**
      * Get model the model checker is used for.
      * 
@@ -182,7 +182,7 @@ public final class ModelChecker implements Closeable {
             Expression expression = model.getPropertyList().getParsedProperty(property);
             ModelCheckerResult propRes = null;
             try {
-            	propRes = checkProperty(property, expression);
+                propRes = checkProperty(property, expression);
             } catch (EPMCException e) {
                 propRes = new ModelCheckerResult(property, e);
             }
@@ -213,7 +213,7 @@ public final class ModelChecker implements Closeable {
                 OptionsModelChecker.ENGINE);
         return model.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
     }
-    
+
     /**
      * Check the given property.
      * In contrast to {@link #check(Expression, StateSet)},
@@ -230,13 +230,13 @@ public final class ModelChecker implements Closeable {
      * @return value obtained for the given property
      */
     private ModelCheckerResult checkProperty(RawProperty property, Expression expression) {
-    	assert property != null;
+        assert property != null;
         assert expression != null;
         if (lowLevel != null) {
             lowLevel.close();
         }
         lowLevel = prepareLowLevel(expression);
-        
+
         StateMap stateMap = check(expression, lowLevel.newInitialStateSet());
         Value value = stateMap.subsumeResult(lowLevel.newInitialStateSet());
         Scheduler scheduler = stateMap.getScheduler();
@@ -258,7 +258,7 @@ public final class ModelChecker implements Closeable {
      * @return result of checking property for states specified
      */
     public StateMap check(Expression property, StateSet states)
-            {
+    {
         assert property != null;
         assert states != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
@@ -277,7 +277,7 @@ public final class ModelChecker implements Closeable {
     // TODO the following three methods should be subsumed.
     // Therefore, we would need an auxiliary class containing graph, edge, and
     // node properties.
-    
+
     /**
      * Get graph properties required to check given property.
      * Low-level models have to be constructed in such a way that they have the
@@ -345,7 +345,7 @@ public final class ModelChecker implements Closeable {
     private Log getLog() {
         return Options.get().get(OptionsMessages.LOG);
     }
-    
+
     /**
      * Get engine used for model checking.
      * 
@@ -356,7 +356,7 @@ public final class ModelChecker implements Closeable {
     }
 
     public void ensureCanHandle(Expression property, StateSet states)
-            {
+    {
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
             solver.setModelChecker(this);
@@ -378,7 +378,7 @@ public final class ModelChecker implements Closeable {
     public <T extends LowLevel> T getLowLevel() {
         return (T) lowLevel;
     }
-    
+
     @Override
     public void close() {
         if (closed) {

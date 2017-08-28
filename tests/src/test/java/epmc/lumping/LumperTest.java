@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping;
 
@@ -76,7 +76,7 @@ public final class LumperTest {
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         Map<String,Object> constants = new HashMap<>();
-        
+
         constants.put("N", "50");
         constants.put("T", "1");
         options.set(OptionsModelChecker.CONST, constants);
@@ -102,7 +102,7 @@ public final class LumperTest {
         System.out.println(result.computeNumStates());
         close(options);
     }
-    
+
     @Test
     public void clusterTest() {
         Options options = prepareOptions();
@@ -113,10 +113,10 @@ public final class LumperTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = TestHelperLump.computeQuotient(options, ModelNamesPRISM.CLUSTER_MODEL, "filter(min, P=? [ (\"minimum\") U<=0.5 (\"premium\")  ], \"minimum\");");
         System.out.println(result.computeNumStates());
-        
+
         ExploreStatistics statistics = exploreModel(options, ModelNamesPRISM.CLUSTER_MODEL);
         System.out.println(statistics.getNumStates());
-        
+
 
         constants.put("N", "128");
         options.set(OptionsModelChecker.CONST, constants);
@@ -132,7 +132,7 @@ public final class LumperTest {
 
         close(options);
     }
-    
+
     @Test
     public void cyclinTest() {
         Options options = prepareOptions();

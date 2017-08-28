@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -51,7 +51,7 @@ public final class PropertiesDummy implements Properties {
     private final Map<String,Type> constantTypes = new LinkedHashMap<>();
     /** Labels stored. */
     private final Map<String,Expression> labels = new LinkedHashMap<>();
-    
+
     @Override
     public void parseProperties(InputStream... inputs) {
         assert inputs != null;
@@ -62,7 +62,7 @@ public final class PropertiesDummy implements Properties {
             parseProperties(input);
         }
     }
-    
+
     /**
      * Parse properties from a single input stream.
      * The input stream parameter must not be {@code null}.

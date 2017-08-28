@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -48,7 +48,7 @@ public final class EPMC {
     private final static String EMPTY = "";
     /** String ": ".*/
     private final static String SPACE_COLON = ": ";
-    
+
     /**
      * The {@code main} entry point of EPMC.
      * 
@@ -77,7 +77,7 @@ public final class EPMC {
             System.exit(1);
         }
     }
-    
+
     /**
      * Prepare options from command line arguments.
      * The command line arguments parameters must not be {@code null} and must
@@ -102,7 +102,7 @@ public final class EPMC {
         options.set(OptionsEPMC.LOCALE, locale);
         return options;
     }
-    
+
     /**
      * Start the command to be executed with output shown in standard output.
      * The command to be executed will be read for {@link Options#COMMAND}.
@@ -183,7 +183,7 @@ public final class EPMC {
             Scheduler scheduler = log.getScheduler(property);
             LowLevel lowLevel = log.getLowLevel(property);
             if (scheduler != null) {
-            	Util.printScheduler(System.out, lowLevel, scheduler);
+                Util.printScheduler(System.out, lowLevel, scheduler);
             }
         }
         if (log.getCommonResult() != null) {

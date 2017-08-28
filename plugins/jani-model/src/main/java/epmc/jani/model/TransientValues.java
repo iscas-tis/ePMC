@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -40,138 +40,138 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class TransientValues implements JANINode, Set<TransientValue> {
-	/** Map mapping Strings to valid variables. */
-	private Map<String,JANIIdentifier> validIdentifiers;	
-	/** Set of transient values. */
-	private final Set<TransientValue> transientValues = new LinkedHashSet<>();
-	/** Model to which these assignments belong. */
-	private ModelJANI model;
+    /** Map mapping Strings to valid variables. */
+    private Map<String,JANIIdentifier> validIdentifiers;	
+    /** Set of transient values. */
+    private final Set<TransientValue> transientValues = new LinkedHashSet<>();
+    /** Model to which these assignments belong. */
+    private ModelJANI model;
 
-	/**
-	 * Set valid variable assignments.
-	 * This method must be called exactly once before parsing. It must not be
-	 * called with a {@code null} parameter or with a parameter containing {@code
-	 * null} entries.
-	 * 
-	 * @param variables variables which can be assigned
-	 */
-	void setValidIdentifiers(Map<String,JANIIdentifier> variables) {
-		assert this.validIdentifiers == null;
-		assert variables != null;
-		for (Entry<String, JANIIdentifier> entry : variables.entrySet()) {
-			assert entry.getKey() != null;
-			assert entry.getValue() != null;
-		}
-		this.validIdentifiers = variables;
-	}
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		assert validIdentifiers != null;
-		JsonArray array = UtilJSON.toArrayObject(value);
-		for (JsonValue transientValue : array) {
-			transientValues.add(UtilModelParser.parse(model, () -> {
-						TransientValue trv = new TransientValue();
-						trv.setModel(model);
-						trv.setValidIdentifiers(validIdentifiers);
-						return trv;
-			}, transientValue));
-		}
-		return this;
-	}
+    /**
+     * Set valid variable assignments.
+     * This method must be called exactly once before parsing. It must not be
+     * called with a {@code null} parameter or with a parameter containing {@code
+     * null} entries.
+     * 
+     * @param variables variables which can be assigned
+     */
+    void setValidIdentifiers(Map<String,JANIIdentifier> variables) {
+        assert this.validIdentifiers == null;
+        assert variables != null;
+        for (Entry<String, JANIIdentifier> entry : variables.entrySet()) {
+            assert entry.getKey() != null;
+            assert entry.getValue() != null;
+        }
+        this.validIdentifiers = variables;
+    }
 
-	@Override
-	public JsonValue generate() {
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (TransientValue transientValue : transientValues) {
-			result.add(transientValue.generate());
-		}
-		return result.build();
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public int size() {
-		return transientValues.size();
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return transientValues.isEmpty();
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        assert validIdentifiers != null;
+        JsonArray array = UtilJSON.toArrayObject(value);
+        for (JsonValue transientValue : array) {
+            transientValues.add(UtilModelParser.parse(model, () -> {
+                TransientValue trv = new TransientValue();
+                trv.setModel(model);
+                trv.setValidIdentifiers(validIdentifiers);
+                return trv;
+            }, transientValue));
+        }
+        return this;
+    }
 
-	@Override
-	public void clear() {
-		assert false;
-	}
+    @Override
+    public JsonValue generate() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (TransientValue transientValue : transientValues) {
+            result.add(transientValue.generate());
+        }
+        return result.build();
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
-	
-	public void addAssignment(TransientValue assignment) {
-		transientValues.add(assignment);
-	}
+    @Override
+    public int size() {
+        return transientValues.size();
+    }
 
-	@Override
-	public boolean contains(Object o) {
-		return transientValues.contains(o);
-	}
+    @Override
+    public boolean isEmpty() {
+        return transientValues.isEmpty();
+    }
 
-	@Override
-	public Iterator<TransientValue> iterator() {
-		return transientValues.iterator();
-	}
+    @Override
+    public void clear() {
+        assert false;
+    }
 
-	@Override
-	public Object[] toArray() {
-		return transientValues.toArray();
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 
-	@Override
-	public <T> T[] toArray(T[] a) {
-		return transientValues.toArray(a);
-	}
+    public void addAssignment(TransientValue assignment) {
+        transientValues.add(assignment);
+    }
 
-	@Override
-	public boolean add(TransientValue e) {
-		return transientValues.add(e);
-	}
+    @Override
+    public boolean contains(Object o) {
+        return transientValues.contains(o);
+    }
 
-	@Override
-	public boolean remove(Object o) {
-		return transientValues.remove(o);
-	}
+    @Override
+    public Iterator<TransientValue> iterator() {
+        return transientValues.iterator();
+    }
 
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		return transientValues.containsAll(c);
-	}
+    @Override
+    public Object[] toArray() {
+        return transientValues.toArray();
+    }
 
-	@Override
-	public boolean addAll(Collection<? extends TransientValue> c) {
-		return transientValues.addAll(c);
-	}
+    @Override
+    public <T> T[] toArray(T[] a) {
+        return transientValues.toArray(a);
+    }
 
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		return transientValues.retainAll(c);
-	}
+    @Override
+    public boolean add(TransientValue e) {
+        return transientValues.add(e);
+    }
 
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		return transientValues.removeAll(c);
-	}
+    @Override
+    public boolean remove(Object o) {
+        return transientValues.remove(o);
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return transientValues.containsAll(c);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends TransientValue> c) {
+        return transientValues.addAll(c);
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return transientValues.retainAll(c);
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return transientValues.removeAll(c);
+    }
 }

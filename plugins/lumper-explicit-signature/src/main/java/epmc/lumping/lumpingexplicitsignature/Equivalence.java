@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -28,29 +28,29 @@ import epmc.value.ValueArray;
 
 interface Equivalence {
     // TODO following methods group should be removed
-    
+
     void setSuccessorsFromTo(int[] successorsFromTo);
-    
+
     void setSuccessorStates(int[] successorStates);
-    
+
     void setSuccessorWeights(ValueArray weights);
-    
+
     void setPrecessorsFromTo(int[] predecessorsFromTo);
-    
+
     void setPrecessorStates(int[] predecessorStates);
 
-    
+
     void prepare();
 
     void prepareInitialPartition(int[] partition);
-    
+
     List<int[]> splitBlock(int[] block, int[] partition)
-           ;
+    ;
 
     GraphExplicit computeQuotient(int[] originalToQuotientState,
             List<int[]> blocks);
 
-	void setObjective(GraphSolverObjectiveExplicit objective);
-	
+    void setObjective(GraphSolverObjectiveExplicit objective);
+
     boolean canHandle();
 }

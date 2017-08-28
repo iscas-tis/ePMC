@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -41,11 +41,11 @@ public class AfterOptionsCreationCommandCheck implements AfterOptionsCreation {
         Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);
         assert commandTaskClasses != null;
         options.addCommand()
-        	.setBundleName(OptionsCommandCheck.OPTIONS_COMMAND_CHECK)
-        	.setIdentifier(CommandTaskCheck.IDENTIFIER)
-        	.setCommandLine()
-        	.setGui()
-        	.setWeb().build();
+        .setBundleName(OptionsCommandCheck.OPTIONS_COMMAND_CHECK)
+        .setIdentifier(CommandTaskCheck.IDENTIFIER)
+        .setCommandLine()
+        .setGui()
+        .setWeb().build();
         commandTaskClasses.put(OptionsCommandCheck.CHECK.name().toLowerCase(), CommandTaskCheck.class);
     }
 }

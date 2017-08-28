@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
@@ -35,51 +35,51 @@ import epmc.value.ValueNumber;
  * @author Ernst Moritz Hahn
  */
 public enum OperatorEvaluatorAbs implements OperatorEvaluator {
-	INSTANCE;
-	
-	@Override
-	public Operator getOperator() {
-		return OperatorAbs.ABS;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeNumber.isNumber(types[0])) {
-			return false;
-		}
-		return true;
-	}
+    INSTANCE;
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return types[0];
-	}
+    @Override
+    public Operator getOperator() {
+        return OperatorAbs.ABS;
+    }
 
-	@Override
-	public void apply(Value result, Value... operands) {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		if (ValueDouble.isDouble(result)) {
-			double value = ValueNumber.asNumber(operands[0]).getDouble();
-			ValueDouble.asDouble(result).set(Math.abs(value));
-		} else if (ValueInteger.isInteger(result)) {
-			int value = ValueNumber.asNumber(operands[0]).getInt();
-			ValueInteger.asInteger(result).set(Math.abs(value));			
-		} else {
-			assert false;
-		}
-	}
+    @Override
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        if (!TypeNumber.isNumber(types[0])) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Type resultType(Operator operator, Type... types) {
+        assert operator != null;
+        assert types != null;
+        assert types.length >= 1;
+        assert types[0] != null;
+        return types[0];
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        if (ValueDouble.isDouble(result)) {
+            double value = ValueNumber.asNumber(operands[0]).getDouble();
+            ValueDouble.asDouble(result).set(Math.abs(value));
+        } else if (ValueInteger.isInteger(result)) {
+            int value = ValueNumber.asNumber(operands[0]).getInt();
+            ValueInteger.asInteger(result).set(Math.abs(value));			
+        } else {
+            assert false;
+        }
+    }
 }

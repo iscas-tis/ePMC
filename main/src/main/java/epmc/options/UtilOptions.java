@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -36,9 +36,9 @@ import epmc.util.Util;
  * @author Ernst Moritz Hahn
  */
 public final class UtilOptions {
-    
+
     // TODO the options part of EPMC might not the most appropriate place for the static methods here
-    
+
     // TODO documentation
     public static <T> T getInstance(String identifier) {
         assert identifier != null;
@@ -60,7 +60,7 @@ public final class UtilOptions {
         ensure(clazz != null, ProblemsOptions.OPTIONS_OPTION_NOT_SET, identifier);
         return Util.getSingletonInstance(clazz);
     }
-    
+
     public static <T> T  getInstance(Options options,
             Enum<?> identifier, String command) {
         String identifierString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());

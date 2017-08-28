@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -35,7 +35,7 @@ public interface BitStoreable {
      * @param reader bit stream to read object from
      */
     void read(BitStream reader);
-    
+
     /**
      * Write object to given bit stream.
      * 

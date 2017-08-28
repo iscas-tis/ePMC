@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lumping;
 
@@ -43,7 +43,7 @@ public interface LumperDD {
      * @return unique identifier of lumping class
      */
     String getIdentifier();
-    
+
     /**
      * Set model checker object to use for lumping.
      * Setting the model checker object allows the lumper to use auxiliary
@@ -62,7 +62,7 @@ public interface LumperDD {
      * @param graph graph to be lumped
      */
     void setOriginal(GraphDD graph);
-    
+
     /**
      * Requires that a given property is maintained by the lumping.
      * The method can be called several times to ensure the validity of several
@@ -96,7 +96,7 @@ public interface LumperDD {
      * @return whether lumper can perform lumping for the given configuration
      */
     boolean canLump();
-    
+
     /**
      * Perform lumping for given configuration.
      * The method may only be called if an immediately preceding call to {@link
@@ -116,7 +116,7 @@ public interface LumperDD {
     GraphDD getQuotient();
 
     Expression getQuotientExpression(Expression expression)
-           ;
+    ;
 
     DD originalToQuotient(DD original);
 

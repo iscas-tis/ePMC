@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -35,7 +35,7 @@ public final class ProblemsDD {
     public final static Problem SYLVAN_NATIVE_LOAD_FAILED = newProblem("sylvan-native-load-failed");
     public final static Problem NO_BDD_LIBRARY_AVAILABLE = newProblem("no-bdd-library-available");
     public final static Problem NO_MTBDD_LIBRARY_AVAILABLE = newProblem("no-mtbdd-library-available");
-    
+
     private static Problem newProblem(String name) {
         return UtilError.newProblem(PROBLEMS_DD, name);
     }

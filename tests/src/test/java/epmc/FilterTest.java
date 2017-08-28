@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -71,7 +71,7 @@ public class FilterTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, CHAIN, "filter(sum,s*s,true)");
         assertEquals(770, result, tolerance);
-        
+
         constants.put("N", "10");
         constants.put("M", "3");
         options.set(OptionsModelChecker.CONST, constants);

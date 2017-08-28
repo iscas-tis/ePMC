@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -41,7 +41,7 @@ public interface EPMCChannel extends java.rmi.Remote {
     void send(EPMCException exception) throws RemoteException;
 
     void send(String name, JsonValue result) throws RemoteException;    
-    
+
     /**
      * Send back a status message to the client.
      * 

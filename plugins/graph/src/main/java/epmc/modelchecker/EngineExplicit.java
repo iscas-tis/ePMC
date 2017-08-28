@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -32,7 +32,7 @@ import epmc.modelchecker.Engine;
 public enum EngineExplicit implements Engine {
     /** The singleton instance of this engine. */
     ENGINE_EXPLICIT;
-    
+
     /** Unique identifier of the engine. */
     public final static String IDENTIFIER = "explicit";
 
@@ -40,7 +40,7 @@ public enum EngineExplicit implements Engine {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     /**
      * Obtain the singleton object of this engine.
      * 

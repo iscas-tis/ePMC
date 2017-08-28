@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -38,7 +38,7 @@ import epmc.options.Options;
  * @author Ernst Moritz Hahn
  */
 public final class PowTypeTest {
-	
+
     @BeforeClass
     public static void initialise() {
         prepare();

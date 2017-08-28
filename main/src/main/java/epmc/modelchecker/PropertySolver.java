@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -41,14 +41,14 @@ public interface PropertySolver {
      * @return identifier for this solver
      */
     String getIdentifier();
-    
+
     /**
      * Sets the model checker for this property solver.
      * 
      * @param modelChecker model checker to set
      */
     void setModelChecker(ModelChecker modelChecker);
-    
+
     /**
      * Set the property to be checked.
      * The property must not be {@code null}.
@@ -56,7 +56,7 @@ public interface PropertySolver {
      * @param property property to be checked
      */
     void setProperty(Expression property);
-    
+
     /**
      * Set for which states the property shall be solved.
      * The set of states must not be {@code null}.
@@ -67,7 +67,7 @@ public interface PropertySolver {
 
     default void setComputeScheduler(boolean computeScheduler) {
     }
-    
+
     /**
      * Checks whether a property can be decided by this solver.
      * If the property can be solved, the method will return true.
@@ -84,9 +84,9 @@ public interface PropertySolver {
     boolean canHandle();
 
     default boolean canComputeScheduler() {
-    	return false;
+        return false;
     }
-    
+
     /**
      * Obtain set of identifiers of graph properties required by this solver.
      * 
@@ -107,7 +107,7 @@ public interface PropertySolver {
      * @return set of identifiers of edge properties required by this solver
      */
     Set<Object> getRequiredEdgeProperties();
-    
+
     /**
      * Decide given property.
      * 

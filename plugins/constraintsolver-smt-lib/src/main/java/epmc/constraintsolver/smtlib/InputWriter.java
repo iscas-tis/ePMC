@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.smtlib;
 
@@ -66,257 +66,257 @@ import epmc.value.operator.OperatorOr;
 import epmc.value.operator.OperatorSubtract;
 
 final class InputWriter {
-	private final static String SPACE = " ";
-	private final static String COLON = ":";
-	private final static String LANGLE = "(";
-	private final static String RANGLE = ")";
-	private final static String GEQ = ">=";
-	private final static String LEQ = "<=";
-	private final static String ASSERT = "assert";
-	private final static String DECLARE_CONST = "declare-const";
-	private final static String DECLARE_FUN = "declare-fun";
-	private final static String SET_OPTION = "set-option";
-	private final static String PRINT_SUCCESS = "print-success";
-	private final static String PRODUCE_MODELS = "produce-models";
-	private final static String GET_VALUE = "get-value";
-	private final static String FALSE = "false";
-	private final static String TRUE = "true";
-	private final static String SET_LOGIC = "set-logic";
-	private final static String CHECK_SAT = "check-sat";
-	private final static String TYPE_BOOLEAN = "Boolean";
-	private final static String TYPE_INT = "Int";
-	private final static String TYPE_REAL = "Real";
-	private final static String QF_NRA = "QF_NRA";
-	private final static String QF_NIA = "QF_NIA";
-	private final static String AUFLIRA = "AUFLIRA";
-	private final static Map<Operator,SMTLibOperator> EPMC_TO_SMTLIB;
-	static {
-		Map<Operator,SMTLibOperator> iscasMCToISMTLib = new HashMap<>();
-		iscasMCToISMTLib.put(OperatorAnd.AND, newOperator()
-				.setIdentifier("and").build());
-		iscasMCToISMTLib.put(OperatorOr.OR, newOperator()
-				.setIdentifier("or").build());
-		/* "nand" not supported */ 
-		/* "nor" not supported */ 
-		/* "xor" not supported */ 
-		iscasMCToISMTLib.put(OperatorIff.IFF, newOperator()
-				.setIdentifier("nxor").build());
-		iscasMCToISMTLib.put(OperatorImplies.IMPLIES, newOperator()
-				.setIdentifier("impl").build());
-		iscasMCToISMTLib.put(OperatorNot.NOT, newOperator()
-				.setIdentifier("not").build());
+    private final static String SPACE = " ";
+    private final static String COLON = ":";
+    private final static String LANGLE = "(";
+    private final static String RANGLE = ")";
+    private final static String GEQ = ">=";
+    private final static String LEQ = "<=";
+    private final static String ASSERT = "assert";
+    private final static String DECLARE_CONST = "declare-const";
+    private final static String DECLARE_FUN = "declare-fun";
+    private final static String SET_OPTION = "set-option";
+    private final static String PRINT_SUCCESS = "print-success";
+    private final static String PRODUCE_MODELS = "produce-models";
+    private final static String GET_VALUE = "get-value";
+    private final static String FALSE = "false";
+    private final static String TRUE = "true";
+    private final static String SET_LOGIC = "set-logic";
+    private final static String CHECK_SAT = "check-sat";
+    private final static String TYPE_BOOLEAN = "Boolean";
+    private final static String TYPE_INT = "Int";
+    private final static String TYPE_REAL = "Real";
+    private final static String QF_NRA = "QF_NRA";
+    private final static String QF_NIA = "QF_NIA";
+    private final static String AUFLIRA = "AUFLIRA";
+    private final static Map<Operator,SMTLibOperator> EPMC_TO_SMTLIB;
+    static {
+        Map<Operator,SMTLibOperator> iscasMCToISMTLib = new HashMap<>();
+        iscasMCToISMTLib.put(OperatorAnd.AND, newOperator()
+                .setIdentifier("and").build());
+        iscasMCToISMTLib.put(OperatorOr.OR, newOperator()
+                .setIdentifier("or").build());
+        /* "nand" not supported */ 
+        /* "nor" not supported */ 
+        /* "xor" not supported */ 
+        iscasMCToISMTLib.put(OperatorIff.IFF, newOperator()
+                .setIdentifier("nxor").build());
+        iscasMCToISMTLib.put(OperatorImplies.IMPLIES, newOperator()
+                .setIdentifier("impl").build());
+        iscasMCToISMTLib.put(OperatorNot.NOT, newOperator()
+                .setIdentifier("not").build());
 
-		iscasMCToISMTLib.put(OperatorAddInverse.ADD_INVERSE, newOperator()
-				.setIdentifier("-").build());
-		iscasMCToISMTLib.put(OperatorAdd.ADD, newOperator()
-				.setIdentifier("+").build());
-		iscasMCToISMTLib.put(OperatorSubtract.SUBTRACT, newOperator()
-				.setIdentifier("-").build());
-		iscasMCToISMTLib.put(OperatorMultiply.MULTIPLY, newOperator()
-				.setIdentifier("*").build());
-		iscasMCToISMTLib.put(OperatorDivide.DIVIDE, newOperator()
-				.setIdentifier("/").build());
-		/* "abs" not supported */ 
-		iscasMCToISMTLib.put(OperatorMin.MIN, newOperator()
-				.setIdentifier("min").build());
-		iscasMCToISMTLib.put(OperatorMax.MAX, newOperator()
-				.setIdentifier("max").build());
-		/* "exp" not supported */
-		/* "exp2" not supported */
-		/* "exp10" not supported */
-		iscasMCToISMTLib.put(OperatorLog.LOG, newOperator()
-				.setIdentifier("log").build());
-		/* "log2" not supported */
-		/* "log10" not supported */
-		/* "sin" not supported */
-		/* "cos" not supported */
-		/* "pow" not supported */
-		/* "nrt" not supported */
-		
-		iscasMCToISMTLib.put(OperatorLt.LT, newOperator()
-				.setIdentifier("<").build());
-		iscasMCToISMTLib.put(OperatorLe.LE, newOperator()
-				.setIdentifier("<=").build());
-		iscasMCToISMTLib.put(OperatorEq.EQ, newOperator()
-				.setIdentifier("=").build());
-		iscasMCToISMTLib.put(OperatorNe.NE, newOperator()
-				.setIdentifier("!=").build());
-		iscasMCToISMTLib.put(OperatorGt.GT, newOperator()
-				.setIdentifier(">").build());
-		iscasMCToISMTLib.put(OperatorGe.GE, newOperator()
-				.setIdentifier(">=").build());
+        iscasMCToISMTLib.put(OperatorAddInverse.ADD_INVERSE, newOperator()
+                .setIdentifier("-").build());
+        iscasMCToISMTLib.put(OperatorAdd.ADD, newOperator()
+                .setIdentifier("+").build());
+        iscasMCToISMTLib.put(OperatorSubtract.SUBTRACT, newOperator()
+                .setIdentifier("-").build());
+        iscasMCToISMTLib.put(OperatorMultiply.MULTIPLY, newOperator()
+                .setIdentifier("*").build());
+        iscasMCToISMTLib.put(OperatorDivide.DIVIDE, newOperator()
+                .setIdentifier("/").build());
+        /* "abs" not supported */ 
+        iscasMCToISMTLib.put(OperatorMin.MIN, newOperator()
+                .setIdentifier("min").build());
+        iscasMCToISMTLib.put(OperatorMax.MAX, newOperator()
+                .setIdentifier("max").build());
+        /* "exp" not supported */
+        /* "exp2" not supported */
+        /* "exp10" not supported */
+        iscasMCToISMTLib.put(OperatorLog.LOG, newOperator()
+                .setIdentifier("log").build());
+        /* "log2" not supported */
+        /* "log10" not supported */
+        /* "sin" not supported */
+        /* "cos" not supported */
+        /* "pow" not supported */
+        /* "nrt" not supported */
 
-		EPMC_TO_SMTLIB = Collections.unmodifiableMap(iscasMCToISMTLib);
-	}
-	private static SMTLibOperator.Builder newOperator() {
-		return new SMTLibOperator.Builder();
-	}
-		
-	private final OutputStream outStream;
-	private final ConstraintSolverSMTLib solver;
-	private final SMTLibVersion version;
-	
-	InputWriter(ConstraintSolverSMTLib solver, OutputStream outStream) {
-		assert solver != null;
-		assert outStream != null;
-		this.solver = solver;
-		this.outStream = outStream;
-		version = Options.get().get(OptionsSMTLib.SMTLIB_VERSION);
-	}
+        iscasMCToISMTLib.put(OperatorLt.LT, newOperator()
+                .setIdentifier("<").build());
+        iscasMCToISMTLib.put(OperatorLe.LE, newOperator()
+                .setIdentifier("<=").build());
+        iscasMCToISMTLib.put(OperatorEq.EQ, newOperator()
+                .setIdentifier("=").build());
+        iscasMCToISMTLib.put(OperatorNe.NE, newOperator()
+                .setIdentifier("!=").build());
+        iscasMCToISMTLib.put(OperatorGt.GT, newOperator()
+                .setIdentifier(">").build());
+        iscasMCToISMTLib.put(OperatorGe.GE, newOperator()
+                .setIdentifier(">=").build());
 
-	void write() {
-		try (PrintStream out = new PrintStream(outStream);) {
-			setOption(out, PRINT_SUCCESS, FALSE);
-			setOption(out, PRODUCE_MODELS, TRUE);
-			String logic = computeLogic();
-			command(out, SET_LOGIC, logic);
-			writeVariableDeclarations(out);
-			writeConstraints(out);
-			command(out, CHECK_SAT);
-			for (SMTLibVariable variable : solver.getVariables()) {
-				command(out, GET_VALUE, (Object) new String[]{variable.getName()});
-			}
-		}		
-	}
+        EPMC_TO_SMTLIB = Collections.unmodifiableMap(iscasMCToISMTLib);
+    }
+    private static SMTLibOperator.Builder newOperator() {
+        return new SMTLibOperator.Builder();
+    }
 
-	private void writeVariableDeclarations(PrintStream out)  {
-		for (SMTLibVariable variable : solver.getVariables()) {
-			String typeString = typeToString(variable.getType());
-			String name = variable.getName();
-			if (version == SMTLibVersion.V20) {
-				command(out, DECLARE_FUN, name, new Object[0], typeString);
-			} else if (version == SMTLibVersion.V25) {
-				command(out, DECLARE_CONST, name, typeString);
-			} else {
-				assert false;
-			}
-			Value lower = variable.getLower();
-			Expression varExpr = null;
-			if (lower != null && !ValueAlgebra.asAlgebra(lower).isNegInf()) {
-				varExpr = UtilModelChecker.parseExpression(lower.toString());
-				command(out, ASSERT,
-						LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
-			}
-			Value upper = variable.getUpper();
-			if (upper != null && !ValueAlgebra.asAlgebra(upper).isPosInf()) {
-				varExpr = UtilModelChecker.parseExpression(upper.toString());
-				command(out, ASSERT,
-						LANGLE + LEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
-			}
-		}
-	}
-	
-	private void writeConstraints(PrintStream out) {
-		for (Expression expression : solver.getConstraints()) {
-			command(out, ASSERT, expression);
-		}
-	}
-	
-	private SExpression translateExpression(Expression expression) {
-		assert expression != null;
-		if (expression instanceof ExpressionIdentifier) {
-			ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
-			return newSExpression(expressionIdentifier.getName());
-		} else if (ExpressionLiteral.isLiteral(expression)) {
-			return newSExpression(getValue(expression).toString());
-		} else if (expression instanceof ExpressionOperator) {
-			return translateExpressionOperator((ExpressionOperator) expression);
-		} else {
-			assert false;
-			return null;
-		}
-	}
+    private final OutputStream outStream;
+    private final ConstraintSolverSMTLib solver;
+    private final SMTLibVersion version;
 
-	private SExpression translateExpressionOperator(ExpressionOperator expression)
-			 {
-		SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperator());
-		assert operator != null : expression.getOperator();
-		SExpression[] result = new SExpression[expression.getChildren().size() + 1];
-		result[0] = newSExpression(operator.getIdentifer());
-		
-		int i = 0;
-		for (Expression operand : expression.getOperands()) {
-			result[i + 1] = translateExpression(operand);
-			i++;
-		}
-			
-		return newSExpression(result);
-	}
-	
-	private void setOption(PrintStream out, String option, String value) {
-		out.print(LANGLE + SET_OPTION + SPACE + COLON);
-		out.print(option);
-		out.print(SPACE);
-		out.print(value);
-		out.println(RANGLE);
-	}
-	
-	private void command(PrintStream out, String command, Object... parameters) {
-		assert command != null;
-		assert parameters != null;
-		out.print(LANGLE);
-		out.print(command);
-		if (parameters.length > 0) {
-			out.print(SPACE);
-		}
-		for (int i = 0; i < parameters.length; i++) {
-			writeObject(out, parameters[i]);
-			if (i < parameters.length - 1) {
-				out.print(SPACE);
-			}
-		}
-		out.println(RANGLE);
-	}
-	
-	private void writeObject(PrintStream out, Object object)
-			 {
-		if (object instanceof Object[]) {
-			out.print(LANGLE);
-			Object[] array = (Object[]) object;
-			for (int j = 0; j < array.length; j++) {
-				writeObject(out, array[j]);
-				if (j < array.length - 1) {
-					out.print(SPACE);
-				}
-			}
-			out.print(RANGLE);
-		} else if (object instanceof Expression) {
-			out.print(translateExpression((Expression) object));
-		} else {
-			out.print(object);
-		}
-	}
+    InputWriter(ConstraintSolverSMTLib solver, OutputStream outStream) {
+        assert solver != null;
+        assert outStream != null;
+        this.solver = solver;
+        this.outStream = outStream;
+        version = Options.get().get(OptionsSMTLib.SMTLIB_VERSION);
+    }
 
-	private String computeLogic() {
-		boolean hasReal = false;
-		boolean hasInt = false;
-		for (SMTLibVariable variable : solver.getVariables()) {
-			hasReal = hasReal | !TypeInteger.isInteger(variable.getType()) && TypeReal.isReal(variable.getType());
-			hasInt = hasInt | TypeInteger.isInteger(variable.getType());
-		}
-		if (hasReal && !hasInt) {
-			return QF_NRA;
-		} else if (!hasReal && hasInt) {
-			return QF_NIA;			
-		} else {
-			return AUFLIRA;
-		}
-	}
-	
-	private String typeToString(Type type) {
-		assert type != null;
-		if (TypeBoolean.isBoolean(type)) {
-			return TYPE_BOOLEAN;
-		} else if (TypeInteger.isInteger(type)) {
-			return TYPE_INT;
-		} else if (TypeReal.isReal(type)) {
-			return TYPE_REAL;
-		} else {
-			assert false : type;
-			return null;
-		}
-	}
-	
+    void write() {
+        try (PrintStream out = new PrintStream(outStream);) {
+            setOption(out, PRINT_SUCCESS, FALSE);
+            setOption(out, PRODUCE_MODELS, TRUE);
+            String logic = computeLogic();
+            command(out, SET_LOGIC, logic);
+            writeVariableDeclarations(out);
+            writeConstraints(out);
+            command(out, CHECK_SAT);
+            for (SMTLibVariable variable : solver.getVariables()) {
+                command(out, GET_VALUE, (Object) new String[]{variable.getName()});
+            }
+        }		
+    }
+
+    private void writeVariableDeclarations(PrintStream out)  {
+        for (SMTLibVariable variable : solver.getVariables()) {
+            String typeString = typeToString(variable.getType());
+            String name = variable.getName();
+            if (version == SMTLibVersion.V20) {
+                command(out, DECLARE_FUN, name, new Object[0], typeString);
+            } else if (version == SMTLibVersion.V25) {
+                command(out, DECLARE_CONST, name, typeString);
+            } else {
+                assert false;
+            }
+            Value lower = variable.getLower();
+            Expression varExpr = null;
+            if (lower != null && !ValueAlgebra.asAlgebra(lower).isNegInf()) {
+                varExpr = UtilModelChecker.parseExpression(lower.toString());
+                command(out, ASSERT,
+                        LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
+            }
+            Value upper = variable.getUpper();
+            if (upper != null && !ValueAlgebra.asAlgebra(upper).isPosInf()) {
+                varExpr = UtilModelChecker.parseExpression(upper.toString());
+                command(out, ASSERT,
+                        LANGLE + LEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
+            }
+        }
+    }
+
+    private void writeConstraints(PrintStream out) {
+        for (Expression expression : solver.getConstraints()) {
+            command(out, ASSERT, expression);
+        }
+    }
+
+    private SExpression translateExpression(Expression expression) {
+        assert expression != null;
+        if (expression instanceof ExpressionIdentifier) {
+            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
+            return newSExpression(expressionIdentifier.getName());
+        } else if (ExpressionLiteral.isLiteral(expression)) {
+            return newSExpression(getValue(expression).toString());
+        } else if (expression instanceof ExpressionOperator) {
+            return translateExpressionOperator((ExpressionOperator) expression);
+        } else {
+            assert false;
+            return null;
+        }
+    }
+
+    private SExpression translateExpressionOperator(ExpressionOperator expression)
+    {
+        SMTLibOperator operator = EPMC_TO_SMTLIB.get(expression.getOperator());
+        assert operator != null : expression.getOperator();
+        SExpression[] result = new SExpression[expression.getChildren().size() + 1];
+        result[0] = newSExpression(operator.getIdentifer());
+
+        int i = 0;
+        for (Expression operand : expression.getOperands()) {
+            result[i + 1] = translateExpression(operand);
+            i++;
+        }
+
+        return newSExpression(result);
+    }
+
+    private void setOption(PrintStream out, String option, String value) {
+        out.print(LANGLE + SET_OPTION + SPACE + COLON);
+        out.print(option);
+        out.print(SPACE);
+        out.print(value);
+        out.println(RANGLE);
+    }
+
+    private void command(PrintStream out, String command, Object... parameters) {
+        assert command != null;
+        assert parameters != null;
+        out.print(LANGLE);
+        out.print(command);
+        if (parameters.length > 0) {
+            out.print(SPACE);
+        }
+        for (int i = 0; i < parameters.length; i++) {
+            writeObject(out, parameters[i]);
+            if (i < parameters.length - 1) {
+                out.print(SPACE);
+            }
+        }
+        out.println(RANGLE);
+    }
+
+    private void writeObject(PrintStream out, Object object)
+    {
+        if (object instanceof Object[]) {
+            out.print(LANGLE);
+            Object[] array = (Object[]) object;
+            for (int j = 0; j < array.length; j++) {
+                writeObject(out, array[j]);
+                if (j < array.length - 1) {
+                    out.print(SPACE);
+                }
+            }
+            out.print(RANGLE);
+        } else if (object instanceof Expression) {
+            out.print(translateExpression((Expression) object));
+        } else {
+            out.print(object);
+        }
+    }
+
+    private String computeLogic() {
+        boolean hasReal = false;
+        boolean hasInt = false;
+        for (SMTLibVariable variable : solver.getVariables()) {
+            hasReal = hasReal | !TypeInteger.isInteger(variable.getType()) && TypeReal.isReal(variable.getType());
+            hasInt = hasInt | TypeInteger.isInteger(variable.getType());
+        }
+        if (hasReal && !hasInt) {
+            return QF_NRA;
+        } else if (!hasReal && hasInt) {
+            return QF_NIA;			
+        } else {
+            return AUFLIRA;
+        }
+    }
+
+    private String typeToString(Type type) {
+        assert type != null;
+        if (TypeBoolean.isBoolean(type)) {
+            return TYPE_BOOLEAN;
+        } else if (TypeInteger.isInteger(type)) {
+            return TYPE_INT;
+        } else if (TypeReal.isReal(type)) {
+            return TYPE_REAL;
+        } else {
+            assert false : type;
+        return null;
+        }
+    }
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);

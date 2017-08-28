@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.options;
 
@@ -26,6 +26,6 @@ package epmc.prism.options;
  * @author Ernst Moritz Hahn
  */
 public enum OptionsPRISM {
-	PRISM_OPTIONS,
+    PRISM_OPTIONS,
     PRISM_FLATTEN
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -28,13 +28,13 @@ public final class ValueArrayGeneric implements ValueArray {
     private final TypeArrayGeneric type;
     private Value[] content;
     private boolean immutable;
-	private int size;
+    private int size;
 
     ValueArrayGeneric(TypeArrayGeneric type) {
         this.type = type;
         this.content = new Value[0];
     }
-    
+
     @Override
     public ValueArrayGeneric clone() {
         ValueArrayGeneric clone = getType().newValue();
@@ -80,12 +80,12 @@ public final class ValueArrayGeneric implements ValueArray {
     public TypeArrayGeneric getType() {
         return type;
     }
-    
+
     @Override
     public void setImmutable() {
         immutable = true;
     }
-    
+
     @Override
     public boolean isImmutable() {
         return immutable;
@@ -94,28 +94,28 @@ public final class ValueArrayGeneric implements ValueArray {
     @Override
     public void set(String value) {
         // TODO Auto-generated method stub
-        
+
     }
 
-	@Override
-	public void setSize(int size) {
+    @Override
+    public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;
         Type entryType = getType().getEntryType();
         this.content = new Value[size];
         for (int index = 0; index < size; index++) {
-        	this.content[index] = entryType.newValue();
+            this.content[index] = entryType.newValue();
         }
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -37,20 +37,20 @@ public interface Buechi {
     String getIdentifier();    
 
     boolean isDeterministic();
-    
+
     Expression[] getExpressions();
 
     int getNumLabels();
-    
+
     int getTrueState();
 
     GraphExplicit getGraph();
-    
+
     void query(Value[] get);
-    
-    
+
+
     /* default methods */
-    
+
     default int getNumStates() {
         return getGraph().getNumNodes();
     }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -39,128 +39,128 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class Actions implements JANINode, Map<String,Action>, Iterable<Action> {
-	/** Unique map of this actions set. */
-	private final Map<String,Action> actions = new LinkedHashMap<>();
-	private ModelJANI model;
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    /** Unique map of this actions set. */
+    private final Map<String,Action> actions = new LinkedHashMap<>();
+    private ModelJANI model;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		JsonArray array = UtilJSON.toArrayObject(value);
-		for (JsonValue act : array) {
-			Action action = new Action();
-			action.setModel(model);
-			action.parse(act);
-			UtilJSON.ensureUnique(action.getName(), actions);
-			actions.put(action.getName(), action);
-		}
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (Action action : actions.values()) {			
-			result.add(action.generate());
-		}
-		return result.build();
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	/**
-	 * Get map of action names to actions.
-	 * The map returned is unmodifiable. This method may only be called after
-	 * the object has been parsed.
-	 * 
-	 * @return map of action names to actions.
-	 */
-	public Map<String, Action> getAction() {
-		return actions;
-	}
-	
-	public void addAction(Action action) {
-		actions.put(action.getName(), action);
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        JsonArray array = UtilJSON.toArrayObject(value);
+        for (JsonValue act : array) {
+            Action action = new Action();
+            action.setModel(model);
+            action.parse(act);
+            UtilJSON.ensureUnique(action.getName(), actions);
+            actions.put(action.getName(), action);
+        }
+        return this;
+    }
 
-	@Override
-	public int size() {
-		return actions.size();
-	}
+    @Override
+    public JsonValue generate() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (Action action : actions.values()) {			
+            result.add(action.generate());
+        }
+        return result.build();
+    }
 
-	@Override
-	public boolean isEmpty() {
-		return actions.isEmpty();
-	}
+    /**
+     * Get map of action names to actions.
+     * The map returned is unmodifiable. This method may only be called after
+     * the object has been parsed.
+     * 
+     * @return map of action names to actions.
+     */
+    public Map<String, Action> getAction() {
+        return actions;
+    }
 
-	@Override
-	public boolean containsKey(Object key) {
-		return actions.containsKey(key);
-	}
+    public void addAction(Action action) {
+        actions.put(action.getName(), action);
+    }
 
-	@Override
-	public boolean containsValue(Object value) {
-		return actions.containsValue(value);
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 
-	@Override
-	public Action get(Object key) {
-		return actions.get(key);
-	}
+    @Override
+    public int size() {
+        return actions.size();
+    }
 
-	@Override
-	public Action put(String key, Action value) {
-		assert false;
-		return null;
-	}
+    @Override
+    public boolean isEmpty() {
+        return actions.isEmpty();
+    }
 
-	@Override
-	public Action remove(Object key) {
-		assert false;
-		return null;
-	}
+    @Override
+    public boolean containsKey(Object key) {
+        return actions.containsKey(key);
+    }
 
-	@Override
-	public void putAll(Map<? extends String, ? extends Action> m) {
-		assert false;
-	}
+    @Override
+    public boolean containsValue(Object value) {
+        return actions.containsValue(value);
+    }
 
-	@Override
-	public void clear() {
-		assert false;
-	}
+    @Override
+    public Action get(Object key) {
+        return actions.get(key);
+    }
 
-	@Override
-	public Set<String> keySet() {
-		return actions.keySet();
-	}
+    @Override
+    public Action put(String key, Action value) {
+        assert false;
+        return null;
+    }
 
-	@Override
-	public Collection<Action> values() {
-		return actions.values();
-	}
+    @Override
+    public Action remove(Object key) {
+        assert false;
+        return null;
+    }
 
-	@Override
-	public Set<java.util.Map.Entry<String, Action>> entrySet() {
-		return actions.entrySet();
-	}
+    @Override
+    public void putAll(Map<? extends String, ? extends Action> m) {
+        assert false;
+    }
 
-	@Override
-	public Iterator<Action> iterator() {
-		return actions.values().iterator();
-	}
+    @Override
+    public void clear() {
+        assert false;
+    }
+
+    @Override
+    public Set<String> keySet() {
+        return actions.keySet();
+    }
+
+    @Override
+    public Collection<Action> values() {
+        return actions.values();
+    }
+
+    @Override
+    public Set<java.util.Map.Entry<String, Action>> entrySet() {
+        return actions.entrySet();
+    }
+
+    @Override
+    public Iterator<Action> iterator() {
+        return actions.values().iterator();
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
@@ -26,33 +26,33 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class NodePropertyRestricted implements NodeProperty {
-	private final GraphExplicitRestricted graph;
-	private final NodeProperty original;
+    private final GraphExplicitRestricted graph;
+    private final NodeProperty original;
 
-	NodePropertyRestricted(GraphExplicitRestricted graph, NodeProperty original) {
-		assert graph != null;
-		assert original != null;
-		this.graph = graph;
-		this.original = original;
-	}
-	
-	@Override
-	public GraphExplicit getGraph() {
-		return graph;
-	}
+    NodePropertyRestricted(GraphExplicitRestricted graph, NodeProperty original) {
+        assert graph != null;
+        assert original != null;
+        this.graph = graph;
+        this.original = original;
+    }
 
-	@Override
-	public Value get(int node) {
-		return original.get(node);
-	}
+    @Override
+    public GraphExplicit getGraph() {
+        return graph;
+    }
 
-	@Override
-	public void set(int node, Value value) {
-		assert false;
-	}
+    @Override
+    public Value get(int node) {
+        return original.get(node);
+    }
 
-	@Override
-	public Type getType() {
-		return original.getType();
-	}
+    @Override
+    public void set(int node, Value value) {
+        assert false;
+    }
+
+    @Override
+    public Type getType() {
+        return original.getType();
+    }
 }

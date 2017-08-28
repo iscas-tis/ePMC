@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -131,7 +131,7 @@ public final class Analyse {
      * @return parsed model
      */
     private static Model parseModel(RawModel rawModel)
-            {
+    {
         Model model;
         if (rawModel == null || rawModel.getModelInputStreams().length == 0) {
             model = new ModelDummy();
@@ -144,7 +144,7 @@ public final class Analyse {
         if (rawModel.getPropertyInputStreams() != null) {
             properties.parseProperties(rawModel.getPropertyInputStreams());
         }
-    
+
         return model;
     }
 
@@ -198,7 +198,7 @@ public final class Analyse {
      * 
      */
     private static void processBeforeModelCreations()
-            {
+    {
         Options options = Options.get();
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;

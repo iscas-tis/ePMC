@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -26,7 +26,7 @@ public enum RewardType {
     CUMULATIVE("C<="),
     INSTANTANEOUS("I="),
     DISCOUNTED("D=");
-    
+
     private final String string;
 
     private RewardType(String string) {
@@ -37,23 +37,23 @@ public enum RewardType {
     public String toString() {
         return string;
     }
-    
+
     public boolean isReachability() {
         return this == REACHABILITY;
     }
-    
+
     public boolean isSteadystate() {
         return this == STEADYSTATE;
     }
-    
+
     public boolean isCumulative() {
         return this == CUMULATIVE;
     }
-    
+
     public boolean isInstantaneous() {
         return this == INSTANTANEOUS;
     }
-    
+
     public boolean isDiscounted() {
         return this == DISCOUNTED;
     }

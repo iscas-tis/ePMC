@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.natives;
 
@@ -84,20 +84,20 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
+        assert origGraph != null;
         Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
             return false;
         }
         return true;
@@ -105,8 +105,8 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
 
     @Override
     public void solve() {
-    	prepareIterGraph();
-    	unboundedReachability();
+        prepareIterGraph();
+        unboundedReachability();
         prepareResultValues();
     }
 
@@ -123,10 +123,10 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         sinks = new ArrayList<>();
         GraphSolverObjectiveExplicitUnboundedReachability unbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         if (unbounded.getZeroSet() != null) {
-        	sinks.add(unbounded.getZeroSet());
+            sinks.add(unbounded.getZeroSet());
         }
         sinks.add(unbounded.getTarget());
-        
+
         if (sinks != null) {
             builder.addSinks(sinks);
         }
@@ -140,11 +140,11 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         }
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-        	GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        	targets = objectiveUnboundedReachability.getTarget();
+            GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+            targets = objectiveUnboundedReachability.getTarget();
         }
         if (targets != null) {
-//        	System.out.println("TT " + targets);
+            //        	System.out.println("TT " + targets);
             assert this.inputValues == null;
             int numStates = iterGraph.computeNumStates();
             this.inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
@@ -159,21 +159,21 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     }
 
     private void prepareResultValues() {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
     private void unboundedReachability() {
@@ -203,15 +203,15 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     }
 
     /* auxiliary methods */
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -222,7 +222,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovNative(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -233,13 +233,13 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-    
+
     /* implementation/native call of/to iteration algorithms */    
-    
+
     private static void dtmcUnboundedJacobiNative(GraphExplicitSparse graph,
             Value values,
             IterationStopCriterion stopCriterion, double tolerance) {
@@ -269,7 +269,7 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
-    
+
     private static void mdpUnboundedJacobiNative(
             GraphExplicitSparseAlternate graph, boolean min,
             Value values, IterationStopCriterion stopCriterion,

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,20 +24,20 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public interface ValueArrayAlgebra extends ValueArray {
-	public static boolean isArrayAlgebra(Value value) {
-		return value instanceof ValueArrayAlgebra;
-	}
-	
-	public static ValueArrayAlgebra asArrayAlgebra(Value value) {
-		if (isArrayAlgebra(value)) {
-			return (ValueArrayAlgebra) value;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isArrayAlgebra(Value value) {
+        return value instanceof ValueArrayAlgebra;
+    }
+
+    public static ValueArrayAlgebra asArrayAlgebra(Value value) {
+        if (isArrayAlgebra(value)) {
+            return (ValueArrayAlgebra) value;
+        } else {
+            return null;
+        }
+    }
+
     void set(int entry, int index);
-    
+
     @Override
     TypeArrayAlgebra getType();
 }

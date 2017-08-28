@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -53,39 +53,39 @@ public final class ExpressionTemporal implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setChildren(List<Expression> children) {
             this.children = children;
             return this;
         }
-        
+
         public Builder setChildren(Expression... children) {
             this.children = Arrays.asList(children);
             return this;
         }
-        
+
         private List<Expression> getChildren() {
             return children;
         }
-        
+
         public Builder setType(TemporalType type) {
             this.type = type;
             return this;
         }
-        
+
         private TemporalType getType() {
             return type;
         }
-        
+
         public Builder setLeftOpen(List<Boolean> leftOpen) {
             this.leftOpen = leftOpen;
             return this;
         }
-        
+
         public Builder setLeftOpen(boolean... leftOpen) {
             this.leftOpen = new ArrayList<>();
             for (boolean open : leftOpen) {
@@ -93,16 +93,16 @@ public final class ExpressionTemporal implements Expression {
             }
             return this;
         }
-        
+
         private List<Boolean> getLeftOpen() {
             return leftOpen;
         }
-        
+
         public Builder setRightOpen(List<Boolean> rightOpen) {
             this.rightOpen = rightOpen;
             return this;
         }
-        
+
         public Builder setRightOpen(boolean... rightOpen) {
             this.rightOpen = new ArrayList<>();
             for (boolean open : rightOpen) {
@@ -110,16 +110,16 @@ public final class ExpressionTemporal implements Expression {
             }
             return this;
         }
-        
+
         private List<Boolean> getRightOpen() {
             return rightOpen;
         }
-        
+
         public ExpressionTemporal build() {
             return new ExpressionTemporal(this);
         }
     }
-    
+
     private final Positional positional;
     private final List<Expression> children = new ArrayList<>();
     private final TemporalType type;
@@ -210,11 +210,11 @@ public final class ExpressionTemporal implements Expression {
         this.leftOpen = new ArrayList<>(leftOpen);
         this.rightOpen = new ArrayList<>(rightOpen);
     }
-    
+
     public ExpressionTemporal(Expression operand, TemporalType type, TimeBound bound, Positional positional) {
         this(Arrays.asList(new Expression[]{operand,
-                        bound.getLeft(), bound.getRight()}),
-                        type,
+                bound.getLeft(), bound.getRight()}),
+                type,
                 Collections.singletonList(bound.isLeftOpen()),
                 Collections.singletonList(bound.isRightOpen()), positional);
     }
@@ -227,7 +227,7 @@ public final class ExpressionTemporal implements Expression {
                 Collections.singletonList(bound.isLeftOpen()),
                 Collections.singletonList(bound.isRightOpen()), positional);
     }
-    
+
     public ExpressionTemporal(Expression operand, TemporalType type, Positional positional) {
         this(Collections.singletonList(operand),
                 type,
@@ -240,7 +240,7 @@ public final class ExpressionTemporal implements Expression {
         this(prepareChildren(expressions, timeBounds), type,
                 prepareLeftOpen(timeBounds), prepareRightOpen(timeBounds), positional);
     }
-    
+
     private static List<Expression> prepareChildren(List<Expression> ops,
             List<TimeBound> timeBounds) {
         ArrayList<Expression> children = new ArrayList<>();
@@ -271,7 +271,7 @@ public final class ExpressionTemporal implements Expression {
     public TemporalType getTemporalType() {
         return type;
     }
-    
+
     public boolean hasTimeBounds() {
         for (int boundNr = 0; boundNr < getNumOps(); boundNr++) {
             if (!getTimeBound().isUnbounded()) {
@@ -280,7 +280,7 @@ public final class ExpressionTemporal implements Expression {
         }
         return false;
     }
-    
+
     public TimeBound getTimeBound(int num) {
         assert getNumOps() + 2 * num + 1 <= getChildren().size();
         Expression left = getChildren().get(getNumOps() + 2 * num);
@@ -300,12 +300,12 @@ public final class ExpressionTemporal implements Expression {
     public List<Expression> getOperands() {
         return Collections.unmodifiableList(getChildren().subList(0, getNumOps()));
     }
-    
+
     private List<Expression> getBounds() {
         return Collections.unmodifiableList(getChildren().subList(getNumOps(),
                 getChildren().size()));
     }
-    
+
     public Expression getOperand1() {
         return getChildren().get(0);
     }
@@ -314,7 +314,7 @@ public final class ExpressionTemporal implements Expression {
         assert getNumOps() >= 2;
         return getChildren().get(1);
     }
-    
+
     public int getNumOps() {
         switch (type) {
         case NEXT: case FINALLY: case GLOBALLY:
@@ -328,7 +328,7 @@ public final class ExpressionTemporal implements Expression {
             return -1;
         }
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionTemporal.Builder()
@@ -358,7 +358,7 @@ public final class ExpressionTemporal implements Expression {
         }
         return TypeWeight.get();
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         return children;
@@ -368,7 +368,7 @@ public final class ExpressionTemporal implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
         Iterator<Expression> opIter;
@@ -377,39 +377,39 @@ public final class ExpressionTemporal implements Expression {
         case NEXT: case FINALLY: case GLOBALLY: {
             builder.append(type);
             // TODO
-//            builder.append(getTimeBound(null));
+            //            builder.append(getTimeBound(null));
             builder.append("(");
             builder.append(getChildren().get(0));
             builder.append(")");
             break;
         }
         case UNTIL: case RELEASE:
-        	if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
-        		builder.append("F");
-        		builder.append("(");
-        		builder.append(getOperand2());
-        		builder.append(")");
-        	} else
-        		if (type == TemporalType.RELEASE && getNumOps() == 2
-        		&& isFalse(getOperand2())) {
-        			builder.append("G");
-        			builder.append("(");
-        			builder.append(getOperand1());
-        			builder.append(")");
-        		} else {
-        			opIter = getOperands().iterator();
-        			while (opIter.hasNext()) {
-        				Expression child = opIter.next();
-        				builder.append("(");
-        				builder.append(child);
-        				builder.append(")");
-        				if (opIter.hasNext()) {
-        					builder.append(type);
-        					//TODO
-//                        	builder.append(getTimeBound(null, timeBoundIndex));
-        				}
-        			}
-        		}
+            if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
+                builder.append("F");
+                builder.append("(");
+                builder.append(getOperand2());
+                builder.append(")");
+            } else
+                if (type == TemporalType.RELEASE && getNumOps() == 2
+                && isFalse(getOperand2())) {
+                    builder.append("G");
+                    builder.append("(");
+                    builder.append(getOperand1());
+                    builder.append(")");
+                } else {
+                    opIter = getOperands().iterator();
+                    while (opIter.hasNext()) {
+                        Expression child = opIter.next();
+                        builder.append("(");
+                        builder.append(child);
+                        builder.append(")");
+                        if (opIter.hasNext()) {
+                            builder.append(type);
+                            //TODO
+                            //                        	builder.append(getTimeBound(null, timeBoundIndex));
+                        }
+                    }
+                }
             break;
         default:
             assert (false);
@@ -440,7 +440,7 @@ public final class ExpressionTemporal implements Expression {
         return this.type == other.type && this.leftOpen.equals(other.leftOpen)
                 && this.rightOpen.equals(other.rightOpen);
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -458,7 +458,7 @@ public final class ExpressionTemporal implements Expression {
         }
         return hash;
     }
-    
+
     private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -467,7 +467,7 @@ public final class ExpressionTemporal implements Expression {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isFalse(getValue(expressionLiteral));
     }
-    
+
     private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
@@ -476,7 +476,7 @@ public final class ExpressionTemporal implements Expression {
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return ValueBoolean.isTrue(getValue(expressionLiteral));
     }
-    
+
     private static Value getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
@@ -484,14 +484,14 @@ public final class ExpressionTemporal implements Expression {
         return expressionLiteral.getValue();
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionTemporal.Builder()
-				.setChildren(children)
-				.setLeftOpen(leftOpen)
-				.setRightOpen(rightOpen)
-				.setType(type)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionTemporal.Builder()
+                .setChildren(children)
+                .setLeftOpen(leftOpen)
+                .setRightOpen(rightOpen)
+                .setType(type)
+                .setPositional(positional)
+                .build();
+    }
 }

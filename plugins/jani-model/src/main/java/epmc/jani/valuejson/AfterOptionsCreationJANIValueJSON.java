@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.valuejson;
 
@@ -27,21 +27,21 @@ import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
 public class AfterOptionsCreationJANIValueJSON implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "jani-valuejson";
+    private final static String IDENTIFIER = "jani-valuejson";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) {
-		assert options != null;
-		List<Class<? extends ValueJSON>> valueJsonClasses = new ArrayList<>();
-		valueJsonClasses.add(0, ValueJSONGeneral.class);
-		valueJsonClasses.add(0, ValueJSONBoolean.class);
-		valueJsonClasses.add(0, ValueJSONInt.class);
-		valueJsonClasses.add(0, ValueJSONDouble.class);
-		options.set(OptionsJANIValueJSON.JANI_VALUEJSON_CLASS, valueJsonClasses);
-	}
+    @Override
+    public void process(Options options) {
+        assert options != null;
+        List<Class<? extends ValueJSON>> valueJsonClasses = new ArrayList<>();
+        valueJsonClasses.add(0, ValueJSONGeneral.class);
+        valueJsonClasses.add(0, ValueJSONBoolean.class);
+        valueJsonClasses.add(0, ValueJSONInt.class);
+        valueJsonClasses.add(0, ValueJSONDouble.class);
+        options.set(OptionsJANIValueJSON.JANI_VALUEJSON_CLASS, valueJsonClasses);
+    }
 }

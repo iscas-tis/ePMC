@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -88,7 +88,7 @@ public final class LogCommandLine implements Log {
         translate = options.getBoolean(OptionsMessages.TRANSLATE_MESSAGES);
         timeStarted = System.currentTimeMillis();
     }
-    
+
     @Override
     public void send(Message message, Object... parameters) {
         if (silent) {
@@ -124,15 +124,15 @@ public final class LogCommandLine implements Log {
         if (result.getProperty() == null) {
             commonResult = result.getResult();
         } else {
-        	results.put(result.getProperty(), result.getResult());
-        	Scheduler scheduler = result.getScheduler();
-        	if (scheduler != null) {
-        		schedulers.put(result.getProperty(), scheduler);
-        	}
-        	LowLevel lowLevel = result.getLowLevel();
-        	if (lowLevel != null) {
-        		lowLevels.put(result.getProperty(), lowLevel);
-        	}
+            results.put(result.getProperty(), result.getResult());
+            Scheduler scheduler = result.getScheduler();
+            if (scheduler != null) {
+                schedulers.put(result.getProperty(), scheduler);
+            }
+            LowLevel lowLevel = result.getLowLevel();
+            if (lowLevel != null) {
+                lowLevels.put(result.getProperty(), lowLevel);
+            }
         }
     }
 
@@ -145,7 +145,7 @@ public final class LogCommandLine implements Log {
     public boolean isSilent() {
         return silent;
     }
-    
+
     /**
      * Get exception thrown.
      * 
@@ -154,7 +154,7 @@ public final class LogCommandLine implements Log {
     public EPMCException getException() {
         return exception;
     }
-    
+
     /**
      * Translate time in ms since epoche to {@link String}.
      * The time parameter must be larger or equal to 0.
@@ -166,7 +166,7 @@ public final class LogCommandLine implements Log {
         assert time >= 0;
         return UtilMessages.translateTimeStamp(options, timeStarted, time);
     }
-    
+
     /**
      * Get common result obtained.
      * 
@@ -175,7 +175,7 @@ public final class LogCommandLine implements Log {
     public Object getCommonResult() {
         return commonResult;
     }
-    
+
     /**
      * Get properties for which results were computed.
      * 
@@ -196,14 +196,14 @@ public final class LogCommandLine implements Log {
         assert property != null;
         return results.get(property);
     }
-    
+
     public Scheduler getScheduler(RawProperty property) {
-    	assert property != null;
-    	return schedulers.get(property);
+        assert property != null;
+        return schedulers.get(property);
     }
-    
+
     public LowLevel getLowLevel(RawProperty property) {
-    	assert property != null;
-    	return lowLevels.get(property);
+        assert property != null;
+        return lowLevels.get(property);
     }
 }

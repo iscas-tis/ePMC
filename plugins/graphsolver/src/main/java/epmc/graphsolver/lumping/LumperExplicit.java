@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lumping;
 
@@ -50,7 +50,7 @@ public interface LumperExplicit {
      * @param objective graph solver objective to use
      */
     void setOriginal(GraphSolverObjectiveExplicit objective);
-    
+
     /**
      * Checks whether lumper can perform lumping for the given configuration.
      * 
@@ -70,7 +70,7 @@ public interface LumperExplicit {
      * @return whether lumper can perform lumping for the given configuration
      */
     boolean canLump();
-    
+
     /**
      * Perform lumping for given configuration.
      * The method may only be called if an immediately preceding call to {@link
@@ -88,6 +88,6 @@ public interface LumperExplicit {
      * @return quotient model
      */
     GraphSolverObjectiveExplicit getQuotient();
-    
+
     void quotientToOriginal();
 }

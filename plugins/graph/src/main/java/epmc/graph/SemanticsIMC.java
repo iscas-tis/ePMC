@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for interactive Markov chains (IMCs).
  */
 public enum SemanticsIMC implements SemanticsContinuousTime, SemanticsNonDet, SemanticsStochastic {
-	/** Singleton element. */
-	IMC;
-	
+    /** Singleton element. */
+    IMC;
+
     /**
      * Checks whether this is an interactive Markov chain (IMC).
      * 
      * @return whether this is an interactive Markov chain (IMC)
      */
-	public static boolean isIMC(Semantics semantics) {
-		return semantics instanceof SemanticsIMC;
-	}
+    public static boolean isIMC(Semantics semantics) {
+        return semantics instanceof SemanticsIMC;
+    }
 }

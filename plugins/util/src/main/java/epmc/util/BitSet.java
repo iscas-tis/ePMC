@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -64,18 +64,18 @@ package epmc.util;
  */
 public interface BitSet {
     /* methods to be implemented by implementing classes */
-    
+
     void set(int bitIndex, boolean value);
 
     boolean get(int bitIndex);
-    
+
     int size();
-    
+
     BitSet clone();
 
     /* default methods - for efficiency, implementations might also want to
      * override some or most of the following methods */
-    
+
     default int length() {
         int bitIndex = size() - 1;
         while (bitIndex >= 0) {
@@ -84,10 +84,10 @@ public interface BitSet {
             }
             bitIndex--;
         }
-        
+
         return 0;
     }
-    
+
     default int nextSetBit(int index) {
         assert index >= 0;
         int size = size();
@@ -110,12 +110,12 @@ public interface BitSet {
             index++;
         }
     }
-    
+
     default void flip(int bitIndex) {
         assert bitIndex >= 0;
         set(bitIndex, !get(bitIndex));
     }
-    
+
     default void clear(int fromIndex, int toIndex) {
         assert fromIndex >= 0;
         assert fromIndex <= toIndex;
@@ -123,7 +123,7 @@ public interface BitSet {
             clear(bitIndex);
         }
     }
-    
+
     default void and(BitSet operand1, BitSet operand2) {
         assert operand1 != null;
         assert operand2 != null;
@@ -153,11 +153,11 @@ public interface BitSet {
     default void clear(int bitIndex) {
         set(bitIndex, false);
     }
-    
+
     default void and(BitSet other) {
         and(this, other);
     }
-    
+
     default void andNot(BitSet operand1, BitSet operand2) {
         int size = Math.max(operand1.size(), operand2.size());
         for (int bitIndex = 0; bitIndex < size; bitIndex++) {
@@ -165,7 +165,7 @@ public interface BitSet {
         }
         clear(size, size());
     }
-    
+
     default void andNot(BitSet other) {
         assert other != null;
         andNot(this, other);
@@ -179,11 +179,11 @@ public interface BitSet {
         }
         return cardinality;
     }
-    
+
     default void clear() {
         clear(0, size());
     }
-    
+
     default void flip(int fromIndex, int toIndex) {
         assert fromIndex >= 0;
         assert fromIndex <= toIndex;
@@ -191,23 +191,23 @@ public interface BitSet {
             flip(bitIndex);
         }
     }
-    
+
     default void set(int bitIndex) {
         set(bitIndex, true);
     }
-    
+
     default void set(int fromIndex, int toIndex) {
         for (int bitIndex = fromIndex; bitIndex < toIndex; bitIndex++) {
             set(bitIndex);
         }
     }
-    
+
     default void set(int fromIndex, int toIndex, boolean value) {
         for (int bitIndex = fromIndex; bitIndex < toIndex; bitIndex++) {
             set(bitIndex, value);
         }
     }
-    
+
     default boolean intersects(BitSet set) {
         int size = Math.min(size(), set.size());
         for (int bitIndex = 0; bitIndex < size; bitIndex++) {
@@ -217,7 +217,7 @@ public interface BitSet {
         }
         return false;
     }
-    
+
     default java.util.BitSet toJavaBitSet() {
         int size = size();
         java.util.BitSet result = new java.util.BitSet(size());
@@ -230,7 +230,7 @@ public interface BitSet {
     default boolean isEmpty() {
         return cardinality() == 0;
     }
-    
+
     default void or(BitSet other) {
         or(this, other);
     }

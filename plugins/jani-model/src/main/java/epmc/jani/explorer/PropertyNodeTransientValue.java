@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -24,25 +24,25 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 public final class PropertyNodeTransientValue implements PropertyNode {
-	private final ExplorerJANI explorer;
-	private final int varNr;
-	private final Type type;
+    private final ExplorerJANI explorer;
+    private final int varNr;
+    private final Type type;
 
-	PropertyNodeTransientValue(ExplorerJANI explorer, int varNr) {
-		assert explorer != null;
-		assert varNr >= 0;
-		this.explorer = explorer;
-		this.varNr = varNr;
-		this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariableIdentifiers().get(varNr)).getType();
-	}
-	
-	@Override
-	public Value get() {
-		return explorer.getQueriedNode().getValue(varNr);
-	}
+    PropertyNodeTransientValue(ExplorerJANI explorer, int varNr) {
+        assert explorer != null;
+        assert varNr >= 0;
+        this.explorer = explorer;
+        this.varNr = varNr;
+        this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariableIdentifiers().get(varNr)).getType();
+    }
 
-	@Override
-	public Type getType() {
-		return type;
-	}	
+    @Override
+    public Value get() {
+        return explorer.getQueriedNode().getValue(varNr);
+    }
+
+    @Override
+    public Type getType() {
+        return type;
+    }	
 }

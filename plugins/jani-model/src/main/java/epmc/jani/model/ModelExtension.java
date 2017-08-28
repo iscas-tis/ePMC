@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -31,29 +31,29 @@ import javax.json.JsonValue;
  * @author Ernst Moritz Hahn
  */
 public interface ModelExtension {
-	String getIdentifier();
-	
-	default void setModel(ModelJANI model) {
-	}
-	
+    String getIdentifier();
 
-	default ModelJANI getModel() {
-		return null;
-	}
+    default void setModel(ModelJANI model) {
+    }
 
-	
-	default void setNode(JANINode node) {
-	}
-	
-	default void setJsonValue(JsonValue value) {
-	}
 
-	default void parseBefore() {
-	}
-	
-	default void parseAfter() {
-	}
-	
-	default void generate(JsonObjectBuilder generate) {
-	}
+    default ModelJANI getModel() {
+        return null;
+    }
+
+
+    default void setNode(JANINode node) {
+    }
+
+    default void setJsonValue(JsonValue value) {
+    }
+
+    default void parseBefore() {
+    }
+
+    default void parseAfter() {
+    }
+
+    default void generate(JsonObjectBuilder generate) {
+    }
 }

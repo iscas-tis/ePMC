@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.expression;
 
@@ -42,87 +42,87 @@ import epmc.value.ValueInteger;
  * @author Ernst Moritz Hahn
  */
 public final class JANIExpressionInt implements JANIExpression {
-	public final static String IDENTIFIER = "int";
-	
-	private boolean initialized = false;
+    public final static String IDENTIFIER = "int";
 
-	/** Model to which this JANI node belongs. */
-	private ModelJANI model;
+    private boolean initialized = false;
 
-	/** Integer literal this expression stores. */
-	private int number;
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    /** Model to which this JANI node belongs. */
+    private ModelJANI model;
 
-	@Override
-	public JANINode parse(JsonValue value) {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) {
-		assert model != null;
-		assert value != null;
-		initialized = false;
-		if (!(value instanceof JsonNumber)) {
-			return null;
-		}
-		JsonNumber number = (JsonNumber) value;
-		if (!number.isIntegral()) {
-			return null;
-		}
-		this.number = number.intValue();
-		initialized = true;
-		return this;
-	}
+    /** Integer literal this expression stores. */
+    private int number;
 
-	@Override
-	public JsonValue generate() {
-		assert initialized;
-		assert model != null;
-		return UtilJSON.toIntegerValue(number);
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) {
-		assert expression != null;
-		assert model != null;
-		initialized = false;
-		if (!(expression instanceof ExpressionLiteral)) {
-			return null;
-		}
-		ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-		if (!ValueInteger.isInteger(expressionLiteral.getValue())) {
-			return null;
-		}
-		number = ValueInteger.asInteger(expressionLiteral.getValue()).getInt();
-		initialized = true;
-		return this;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public Expression getExpression() {
-		assert initialized;
-		assert model != null;
-		return new ExpressionLiteral.Builder()
-				.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), number))
-				.build();
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        initialized = false;
+        if (!(value instanceof JsonNumber)) {
+            return null;
+        }
+        JsonNumber number = (JsonNumber) value;
+        if (!number.isIntegral()) {
+            return null;
+        }
+        this.number = number.intValue();
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        return UtilJSON.toIntegerValue(number);
+    }
+
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        initialized = false;
+        if (!(expression instanceof ExpressionLiteral)) {
+            return null;
+        }
+        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+        if (!ValueInteger.isInteger(expressionLiteral.getValue())) {
+            return null;
+        }
+        number = ValueInteger.asInteger(expressionLiteral.getValue()).getInt();
+        initialized = true;
+        return this;
+    }
+
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        return new ExpressionLiteral.Builder()
+                .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), number))
+                .build();
+    }
+
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

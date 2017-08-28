@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lp;
 
@@ -58,15 +58,15 @@ import epmc.value.ValueContentIntArray;
  */
 public final class GraphSolverLP implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-lp";
-    
+
     private GraphExplicit graph;
-//    private boolean min;
+    //    private boolean min;
     private ValueArray values;
     private int numConstrints;
     private int numVariables;
     private Value scheduler;
     private BitSet targets;
-	private GraphSolverObjectiveExplicit objective;
+    private GraphSolverObjectiveExplicit objective;
 
     @Override
     public String getIdentifier() {
@@ -77,11 +77,11 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     public void setGraphSolverObjective(
             GraphSolverObjectiveExplicit obj) {
         this.objective = obj;
-//        this.min = configuration.isMin();            /* do not know what is this*/
+        //        this.min = configuration.isMin();            /* do not know what is this*/
         GraphSolverObjectiveExplicitUnboundedReachability objective = (GraphSolverObjectiveExplicitUnboundedReachability) obj;
         this.graph = objective.getGraph();
         this.targets = objective.getTarget();
-//        this.scheduler = configuration.getInputScheduler();
+        //        this.scheduler = configuration.getInputScheduler();
     }
 
     @Override
@@ -96,7 +96,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         }
         return false;
     }
-    
+
     /** according to canSolve, we only accept unbounded reachability 
      * of DTMC and MDP , do not worry about other things */
     @Override
@@ -113,12 +113,12 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         }
         objective.setResult(values);
     }
-    
+
     /** will implement if it is necessary in future */
     private void abstractScheduler() {
         int[] schedulerJava = ValueContentIntArray.getContent(scheduler);
         Arrays.fill(schedulerJava, -1);
-//        for()
+        //        for()
     }
 
     /** computed ZERO states in DTMC, that is, they can not reach target states with positive probability
@@ -127,7 +127,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         graph.computePredecessors();
         BitSet oldPrev = targets.clone();
         BitSet reachSome = targets.clone();
-//        BitSet visited = new BitSet();
+        //        BitSet visited = new BitSet();
         System.out.println("Starting to compute Prob0 states ...");
         StopWatch timer = new StopWatch(true);
         while(oldPrev.cardinality() != 0 ) { /* some new predecessors */
@@ -141,17 +141,17 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             }
             oldPrev.andNot(reachSome); /* if there is new predecessors */
         }
-//        System.out.println("reachSome: " + reachSome);
+        //        System.out.println("reachSome: " + reachSome);
         BitSet nodes = UtilBitSet.newBitSetUnbounded();
         nodes.set(0, graph.getNumNodes(), true);
         nodes.andNot(reachSome);
         System.out.println("Done for computing Prob0 states in " + timer.getTimeSeconds() + " secs...");
         return nodes;
     }
-    
+
     /** for MCs, every state is state in MC, no need to check whether it is state */
     private ValueArray solveMCLP(GraphExplicit graph, BitSet acc) 
-            {
+    {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
@@ -161,12 +161,12 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         this.numConstrints = 0;
         this.numVariables = 0;
         /** zero states calculation */
-//        System.out.println("buildGraph: " + acc);
-//        GraphExporter.export(graph, System.out);
+        //        System.out.println("buildGraph: " + acc);
+        //        GraphExporter.export(graph, System.out);
         /** I assume that after configuration, all zero states are not in the graph,
          * apparently, they do not delete those */
         BitSet zeroStates = computeProb0();
-//        System.out.println("zero: " + zeroStates);
+        //        System.out.println("zero: " + zeroStates);
         /** prepare variables for the LP problem */
         ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration();
         contextConstraintSolver.requireFeature(Feature.LP);
@@ -188,10 +188,10 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 lpProblem.addConstraint(new Value[]{one}, new int[] {varIndex}, ConstraintType.EQ, zero);
                 numConstrints ++;            
             }
-            
+
             assert numVariables == node : "not incremental manner";
             ++ numVariables ;
-            
+
         }
         /** input all the constraints , first x_i = 1*/
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
@@ -209,7 +209,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
             row[0] = one;
             varsIndex[0] = node;                /* directly use this node index */
-            
+
             for(int i = 1 ; i < row.length ; i ++) {
                 row[i] = zero;
             }
@@ -242,7 +242,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             /** if input x4 - 0.5x0 - 0.5x5 - 0.5x6- 0.5x0 = 0, then all coefficient will be 0,
              * i.e. 0 = 0, this is quite annoying, so I modify above code to fix this */
             if(canAdd) {
-                 
+
                 if(jIndex == row.length) {
                     lpProblem.addConstraint(row, varsIndex, ConstraintType.EQ, zero);
                 }else {
@@ -252,12 +252,12 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     System.arraycopy(varsIndex, 0, varArr, 0, jIndex);
                     lpProblem.addConstraint(rowArr, varArr, ConstraintType.EQ, zero);
                 }
-                
+
                 numConstrints ++;
             }
-            
+
         }
-//        System.out.println("LP problem: \n" + lpProblem.toString());
+        //        System.out.println("LP problem: \n" + lpProblem.toString());
         /** finally, set objective and direction, min sum x_i for all i */
         StopWatch timer = new StopWatch(true);
         ConstraintSolverResult status = lpProblem.solve();
@@ -266,30 +266,30 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         System.out.println("LP problem: numVars =" + this.numVariables + " , numConstr=" + this.numConstrints);
         ValueArray result = lpProblem.getResultVariablesValuesSingleType();
         lpProblem.close();
-//        System.out.println("result: " + result);
+        //        System.out.println("result: " + result);
         /** do not know whether we need vars, turns out that we do not need it */
         return result;
     }
-    
-    
+
+
     private ValueArray solveMDPLP(GraphExplicit graph, BitSet acc) {
-  
+
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = typeWeight.getOne();
         Value zero = typeWeight.getZero();
-        
+
         this.numConstrints = 0;
         this.numVariables = 0;
         /** zero states calculation */
-//        System.out.println("buildGraph: " + acc);
-//        GraphExporter.export(graph, System.out);
+        //        System.out.println("buildGraph: " + acc);
+        //        GraphExporter.export(graph, System.out);
         /** I assume that after configuration, all zero states are not in the graph,
          * apparently, they do not delete those */
         BitSet zeroStates = computeProb0();
-        
+
         /** prepare variables for the LP problem */
         ConstraintSolverConfiguration contextConstraintSolver = new ConstraintSolverConfiguration();
         contextConstraintSolver.requireFeature(Feature.LP);
@@ -298,7 +298,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
         Value[] objRow = new Value[graph.getNumNodes()];
         int[] objVars = new int[graph.getNumNodes()];
-        
+
         for (int node = 0; node < graph.getNumNodes(); node++) {
             int varIndex = lpProblem.addVariable("x_" + node, typeWeight);
             /** every variable must be in [0, 1] */
@@ -321,20 +321,20 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 objRow[node] = zero;
             }
             objVars[node] = varIndex;
-            
+
             assert numVariables == node : "not incremental manner";
             ++ numVariables ;
         }
-        
+
         /** input all the constraints , first x_i = 1*/
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
         undecided.set(0, graph.getNumNodes(), true);
         undecided.andNot(acc);
         undecided.andNot(zeroStates);
-        
+
         ValueAlgebra minusOne = typeWeight.newValue();
         minusOne.subtract(zero, one);
-        
+
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
         for(int node = undecided.nextSetBit(0); 
@@ -348,12 +348,12 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     lpProblem.addConstraint(new Value[]{one, minusOne}, new int[]{node, succ}, ConstraintType.GE, zero);
                 }
             } else if(numSuccessors > 0){
-                
+
                 Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
                 int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
                 row[0] = typeWeight.getOne();
                 varsIndex[0] = node;                /* directly use this node index */
-                
+
                 int jIndex = 1;
                 for (int succNr = 0; succNr < numSuccessors; succNr ++) {
                     int succ = graph.getSuccessorNode(node, succNr);  /* can not occur two times */
@@ -377,21 +377,21 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     lpProblem.addConstraint(row, varsIndex, ConstraintType.EQ, zero);
                     numConstrints ++;
                 }
-                
+
             }
         }
-//        System.out.println("LP problem: \n" + lpProblem.toString());
+        //        System.out.println("LP problem: \n" + lpProblem.toString());
         /** finally, set objective and direction, min sum x_i for all i */
         lpProblem.setDirection(Direction.MIN);
         lpProblem.setObjective(objRow, objVars);
-//        System.out.println("LP sytem for MDP: \n" + lpProblem.toString());
+        //        System.out.println("LP sytem for MDP: \n" + lpProblem.toString());
         StopWatch timer = new StopWatch(true);
         ConstraintSolverResult status = lpProblem.solve();
         assert status == ConstraintSolverResult.SAT : "UNSAT equation system";
         System.out.println("Done for solving LP problem for MDP in " + timer.getTimeSeconds() + " secs");
         System.out.println("LP problem: numVars =" + this.numVariables + " , numConstr=" + this.numConstrints);
         ValueArray result = lpProblem.getResultVariablesValuesSingleType();
-//        System.out.println("result: " + result);
+        //        System.out.println("result: " + result);
         lpProblem.close();
         /** do not know whether we need vars, turns out that we do not need it */
         return result;
