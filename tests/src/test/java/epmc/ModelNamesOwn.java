@@ -44,7 +44,10 @@ public final class ModelNamesOwn {
     public final static String MA_DISABLING_RATE = PREFIX + "ma-disabling-rate.prism";
     public final static String POW_TYPE = PREFIX + "pow-type.prism";
     public final static String NAVIGATION_1 = PREFIX + "navigation_1.prism";
-
+    public static final String INCONSISTENT_OPERATOR = PREFIX + "inconsistent-operator.prism";
+    public static final String INCONSISTENT_OPERATOR_INIT = PREFIX + "inconsistent-operator-init.prism";
+    public static final String WRONG_ASSIGNMENT_INIT = PREFIX + "wrong-assignment-init.prism";
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */

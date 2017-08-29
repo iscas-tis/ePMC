@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 
 import epmc.error.EPMCException;
+import epmc.error.Positional;
 import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
 import epmc.main.options.OptionsEPMC;
@@ -70,6 +71,38 @@ public final class EPMC {
             MessageFormat formatter = new MessageFormat(EMPTY);
             formatter.applyPattern(message);
             String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
+            Positional positional = e.getPositional();
+            if (positional != null) {
+                if (positional.getContent() != null) {
+                    System.err.print(positional.getContent());
+                    if (positional.getPart() > 0
+                            || positional.getLine() > 0
+                            || positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }
+                }
+                if (positional.getPart() > 0) {
+                    System.err.print("part: " + positional.getPart());
+                    if (positional.getLine() > 0 || positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }
+                }
+                if (positional.getLine() > 0) {
+                    System.err.print("line: " + positional.getLine());
+                    if (positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }                    
+                }
+                if (positional.getColumn() > 0) {
+                    System.err.print("column: " + positional.getColumn());
+                }
+                if (positional.getContent() != null
+                        || positional.getPart() > 0
+                        || positional.getLine() > 0
+                        || positional.getColumn() > 0) {
+                    System.err.print(": ");
+                }
+            }
             System.err.println(formattedMessage);
             if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
                 e.printStackTrace();

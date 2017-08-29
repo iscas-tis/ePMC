@@ -127,6 +127,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         Expression assignment = entry.getValue();
         assignment = entry.getModel().replaceConstants(assignment);
         assignment = UtilExpressionStandard.replace(assignment, autVarToLocal);
+        assignment.getType(builder.getExpressionToType());
         assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
         expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
     }

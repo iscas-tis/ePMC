@@ -23,6 +23,7 @@ package epmc.modelchecker;
 import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.main.options.OptionsEPMC;
@@ -126,20 +128,16 @@ public final class TestHelper {
         for (InputStream input : inputs) {
             assert input != null;
         }
-        try {
-            Model model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
-            assert model != null;
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            assert classloader != null;
-            InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
-            model.read(inputsArray);
-            if (propertyStream != null) {
-                model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
-            }
-            return model;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Model model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
+        assert model != null;
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        assert classloader != null;
+        InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
+        model.read(inputsArray);
+        if (propertyStream != null) {
+            model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
         }
+        return model;
     }
 
     public static Model loadModel(Options options,
@@ -151,30 +149,34 @@ public final class TestHelper {
             List<String> modelFiles, String propertiesFile) {
         assert options != null;
         assert modelFiles != null;
-        try {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            assert classloader != null;
-            List<InputStream> inputs = new ArrayList<>();
-            for (String modelFile : modelFiles) {
-                InputStream input = classloader.getResourceAsStream(modelFile);
-                if (input == null) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        assert classloader != null;
+        List<InputStream> inputs = new ArrayList<>();
+        for (String modelFile : modelFiles) {
+            InputStream input = classloader.getResourceAsStream(modelFile);
+            if (input == null) {
+                try {
                     input = new FileInputStream(modelFile);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
-                assert input != null : modelFile;
-                inputs.add(input);
             }
-            InputStream propertyStream = null;
-            if (propertiesFile != null) {
-                propertyStream = classloader.getResourceAsStream(propertiesFile);
-                if (propertyStream == null) {
-                    propertyStream = new FileInputStream(propertiesFile);
-                }
-                assert propertyStream != null : propertiesFile;
-            }
-            return loadModel(options, inputs, propertyStream);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            assert input != null : modelFile;
+            inputs.add(input);
         }
+        InputStream propertyStream = null;
+        if (propertiesFile != null) {
+            propertyStream = classloader.getResourceAsStream(propertiesFile);
+            if (propertyStream == null) {
+                try {
+                    propertyStream = new FileInputStream(propertiesFile);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            assert propertyStream != null : propertiesFile;
+        }
+        return loadModel(options, inputs, propertyStream);
     }
 
     public static Model loadModel(Options options,
@@ -217,17 +219,13 @@ public final class TestHelper {
     public static void addProperty(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            Properties properties = model.getPropertyList();
-            RawProperty rawProp = new RawProperty();
-            rawProp.setDefinition(property);
-            rawProp.setDescription(null);
-            ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
-            properties.parseProperties(new InputStream[]{input});
-            assert properties.getRawProperties().size() >= 1;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Properties properties = model.getPropertyList();
+        RawProperty rawProp = new RawProperty();
+        rawProp.setDefinition(property);
+        rawProp.setDescription(null);
+        ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
+        properties.parseProperties(new InputStream[]{input});
+        assert properties.getRawProperties().size() >= 1;
     }
 
     public static Log prepareLog(Options options, LogType logType) {
@@ -437,17 +435,13 @@ public final class TestHelper {
 
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
-        try {
-            Options options = Options.get();
-            ModelChecker checker = new ModelChecker(model);
-            LogTest log = options.get(OptionsMessages.LOG);
-            log.getResults().clear();
-            checker.check();
-            checker.close();
-            return log.getResults();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Options options = Options.get();
+        ModelChecker checker = new ModelChecker(model);
+        LogTest log = options.get(OptionsMessages.LOG);
+        log.getResults().clear();
+        checker.check();
+        checker.close();
+        return log.getResults();
     }
 
     public static Map<String,Value> computeResultsMapName(Model model) {
@@ -481,47 +475,37 @@ public final class TestHelper {
         assert options != null;
         assert modelFile != null;
         assert property != null;
-        try {
-            Model model = loadModel(options, modelFile);
-            assert model != null;
-            return computeResult(model, property);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Model model = loadModel(options, modelFile);
+        assert model != null;
+        return computeResult(model, property);
     }
 
     public static Value computeResult(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            addProperty(model, property);
-            ModelCheckerResults results = computeResults(model);
-            assert results.getProperties().size() == 1;
-            Object result = results.get(results.getProperties().iterator().next());
-            if (result instanceof Exception) {
-                throw new RuntimeException((Exception) result);
-            }
-            return (Value) result;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        addProperty(model, property);
+        ModelCheckerResults results = computeResults(model);
+        assert results.getProperties().size() == 1;
+        Object result = results.get(results.getProperties().iterator().next());
+        if (result instanceof EPMCException) {
+            throw (EPMCException) result;
+        } else if (result instanceof Exception) {
+            throw new RuntimeException((Exception) result);
         }
+        return (Value) result;
     }
 
     public static Value computeScheduler(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            addProperty(model, property);
-            ModelCheckerResults results = computeResults(model);
-            assert results.getProperties().size() == 1;
-            Object result = results.get(results.getProperties().iterator().next());
-            if (result instanceof Exception) {
-                throw new RuntimeException((Exception) result);
-            }
-            return (Value) result;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        addProperty(model, property);
+        ModelCheckerResults results = computeResults(model);
+        assert results.getProperties().size() == 1;
+        Object result = results.get(results.getProperties().iterator().next());
+        if (result instanceof Exception) {
+            throw new RuntimeException((Exception) result);
         }
+        return (Value) result;
     }
 
     public static void processAfterCommandExecution()
