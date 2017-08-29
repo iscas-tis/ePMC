@@ -27,6 +27,7 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.Type;
+import static epmc.error.UtilError.ensure;
 
 public final class ExpressionIdentifierStandard implements ExpressionIdentifier {
     public static boolean isIdentifierStandard(Expression expression) {
@@ -116,7 +117,9 @@ public final class ExpressionIdentifierStandard implements ExpressionIdentifier 
     @Override
     public Type getType(ExpressionToType expressionToType) {
         assert expressionToType != null;
-        return expressionToType.getType(this);
+        Type result = expressionToType.getType(this);
+        ensure(result != null, ProblemsExpression.EXPRESSION_INCONSISTENT_IDENTIFIER_STANDARD, positional, name);
+        return result;
     }
 
     @Override

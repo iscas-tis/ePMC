@@ -126,7 +126,8 @@ public final class Positional implements Serializable {
 
     @Override
     public String toString() {
-        return content;
+        return String.format("positional(%s, %d, %d, %d)",
+                content, part, line, column);
     }
 
     @Override
