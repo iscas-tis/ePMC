@@ -191,7 +191,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] stopRewardsMem = ValueContentDoubleArray.getContent(stopRewards);
         int[] schedulerMem = scheduler.getDecisions();
@@ -215,7 +215,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledNative implements 
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] stopRewardsMem = ValueContentDoubleArray.getContent(stopRewards);
         int[] schedulerMem = scheduler.getDecisions();
