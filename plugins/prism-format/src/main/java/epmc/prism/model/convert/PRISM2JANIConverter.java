@@ -20,14 +20,19 @@
 
 package epmc.prism.model.convert;
 
+import static epmc.error.UtilError.ensure;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
 import epmc.error.EPMCException;
@@ -81,6 +86,7 @@ import epmc.jani.model.type.JANITypeReal;
 import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
 import epmc.options.Options;
+import epmc.prism.error.ProblemsPRISM;
 import epmc.prism.model.Alternative;
 import epmc.prism.model.Command;
 import epmc.prism.model.Formulas;
@@ -263,13 +269,151 @@ public final class PRISM2JANIConverter {
         rewardsConverter.attachRewards();
     }
 
+    private Set<String> getIdentifierNames(Expression exp) {
+    	Set<String> set = new HashSet<>();
+
+    	if (exp == null) {
+    		return set;
+    	}
+    	if (exp instanceof ExpressionIdentifierStandard) {
+    		set.add(((ExpressionIdentifierStandard) exp).getName());
+    	} else {
+    		for (Expression child : exp.getChildren()) {
+    			set.addAll(getIdentifierNames(child));
+    		}
+    	}
+    	return set;
+    }
+    
+	private enum GraphMarking {
+		UNMARK,
+		TEMPORARY_MARK,
+		PERMANENT_MARK
+	}
+	
+	final class GraphNode {
+		public final String node;
+		public GraphMarking mark = GraphMarking.UNMARK;
+		
+		public GraphNode(String n) {
+			node = n;
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof GraphNode) {
+				GraphNode other = (GraphNode)o;
+				return node.equals(other.node);
+			}
+			return false;
+		}
+		
+		@Override
+		public String toString() {
+			return node;
+		}
+		
+		@Override
+		public int hashCode() {
+			return node.hashCode();
+		}
+	};
+	
+	final class GraphEdge {
+		public final GraphNode source;
+		public final GraphNode target;
+		
+		public GraphEdge(GraphNode s, GraphNode t) {
+			source = s;
+			target = t;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof GraphEdge) {
+				GraphEdge other = (GraphEdge)o;
+				return source.equals(other.source) && target.equals(other.target);
+			}
+			return false;
+		}
+		
+		@Override
+		public String toString() {
+			return source + " --> " + target;
+		}
+		
+		@Override
+		public int hashCode() {
+			return 92821 * source.hashCode() + target.hashCode();
+		}
+	};
+	
+	void visit(GraphNode n, Map<GraphNode,Set<GraphEdge>> edges, String path, List<GraphNode> sortedNodes) {
+		switch (n.mark) {
+		case PERMANENT_MARK:
+			break;
+		case TEMPORARY_MARK:
+            ensure(false,
+                    ProblemsPRISM.CONST_CYCLIC,
+                    new Object[]{n.node, path});
+			break;
+		case UNMARK:
+			n.mark = GraphMarking.TEMPORARY_MARK;
+			Set<GraphEdge> nodeEdges = edges.get(n);
+			for(GraphEdge e : nodeEdges) {
+				visit(e.target, edges, path + " --> " + e.target, sortedNodes);
+			}
+			n.mark = GraphMarking.PERMANENT_MARK;
+			sortedNodes.add(0, n);
+		}
+	}
+
+	/*
+	 * Implemented following https://en.wikipedia.org/wiki/Topological_sort#Depth-first_search
+	 */
+	private Queue<String> dependencyTopologicalSort(PropertiesImpl properties) {
+    	Deque<GraphNode> unmarked = new LinkedList<>();
+    	Map<GraphNode,Set<GraphEdge>> edges = new HashMap<>();
+    	
+    	for (String usingName : properties.getConstants().keySet()) {
+    		GraphNode using = new GraphNode(usingName);
+    		if (!unmarked.contains(using)) {
+    			unmarked.add(using);
+    		}
+			edges.putIfAbsent(using, new HashSet<>());
+    		for (String usedName : getIdentifierNames(properties.getConstantValue(usingName))) {
+    			GraphNode used = new GraphNode(usedName);
+        		Set<GraphEdge> edgesFromUsed = edges.get(used);
+        		if (edgesFromUsed == null) {
+        			edgesFromUsed = new HashSet<>();
+        			edges.put(used, edgesFromUsed);
+        		}
+    			edgesFromUsed.add(new GraphEdge(used, using));
+    		}
+    	}
+    	
+    	List<GraphNode> sortedNodes = new LinkedList<>();
+    	
+    	while (!unmarked.isEmpty()) {
+    		GraphNode n = unmarked.removeFirst(); 
+    		visit(n, edges, n.node, sortedNodes);
+    	}
+    	
+    	Queue<String> sortedNames = new LinkedList<>();
+    	for (GraphNode n : sortedNodes) {
+    		sortedNames.add(n.node);
+    	}
+    	return sortedNames;
+    }
+    
     private Constants buildConstants() {
+    	String name = null;
         PropertiesImpl properties = modelPRISM.getPropertyList();
-        Set<String> prismConstants = properties.getConstants().keySet();
         Constants janiConstants = new Constants();
         janiConstants.setModel(modelJANI);
         Formulas formulas = modelPRISM.getFormulas();
-        for (String name : prismConstants) {
+        Queue<String> variables = dependencyTopologicalSort(properties);
+        while ((name = variables.poll()) != null) {
             ExpressionIdentifierStandard identifier = new ExpressionIdentifierStandard.Builder()
                     .setName(name)
                     .build();
