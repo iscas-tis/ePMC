@@ -444,7 +444,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         assert type != null;
         EdgePropertySparseNondet edgeProperty;
         if (getEdgeProperties().contains(property)) {
-            return getEdgeProperty(property);
+            return (EdgePropertySparseNondet) getEdgeProperty(property);
         }
         if (property == CommonProperties.WEIGHT) {
             edgeProperty = new EdgePropertySparseNondetOnlyNondet(this, type);
@@ -467,11 +467,15 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         return ValueContentIntArray.getContent(stateBounds);
     }
 
+    public ValueArrayInteger getNondetBounds() {
+        return nondetBounds;
+    }
+    
     public int[] getNondetBoundsJava() {
         return ValueContentIntArray.getContent(nondetBounds);
     }
 
-    public Value getTargets() {
+    public ValueArrayInteger getTargets() {
         return successors;
     }
 
@@ -557,7 +561,11 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
     }
 
     @Override
-    public EdgePropertySparseNondet getEdgeProperty(Object property) {
+    public EdgeProperty getEdgeProperty(Object property) {
+        return properties.getEdgeProperty(property);
+    }
+
+    public EdgePropertySparseNondet getEdgePropertySparseNondet(Object property) {
         return (EdgePropertySparseNondet) properties.getEdgeProperty(property);
     }
 

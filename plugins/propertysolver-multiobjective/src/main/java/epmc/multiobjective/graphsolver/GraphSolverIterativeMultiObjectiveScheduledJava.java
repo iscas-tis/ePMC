@@ -181,7 +181,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
@@ -244,7 +244,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
