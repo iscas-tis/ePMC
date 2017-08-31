@@ -738,7 +738,7 @@ public final class CheckExplicitTest {
         model = loadModel(options, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
 
         Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_1"));
+        assertEquals(true, result.get("Property_0"));
     }
 
     //No support yet for S

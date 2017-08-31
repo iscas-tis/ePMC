@@ -55,7 +55,7 @@ public final class ExportPRISMToJaniModels {
 
     @Test
     public void convertSingle() {
-        export(FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
+        export(String.format(COIN_MODEL, 2), COIN_PROPERTY);
     }
 
     @Test
