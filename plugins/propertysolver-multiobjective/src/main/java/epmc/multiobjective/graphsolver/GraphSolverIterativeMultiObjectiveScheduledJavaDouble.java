@@ -185,7 +185,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
-        double weights[] = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
+        double weights[] = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT)
                 .asSparseNondetOnlyNondet()
                 .getContent());
         double[] presValues = values;
@@ -241,7 +241,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         double[] transRewards = ValueContentDoubleArray.getContent(transRewardsV);
         double[] values = ValueContentDoubleArray.getContent(valuesV);
         Arrays.fill(values, 0.0);
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT)
                 .asSparseNondetOnlyNondet()
                 .getContent());
         double distance;
