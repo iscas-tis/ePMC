@@ -24,18 +24,17 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
-import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorFloor;
+import epmc.value.operator.OperatorDivideIgnoreZero;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
+public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorFloor.FLOOR;
+        return OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO;
     }
 
     @Override
@@ -44,7 +43,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length != 1) {
+        if (types.length != 2) {
             return false;
         }
         for (Type type : types) {
@@ -58,12 +57,12 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorFloor.FLOOR);
+        assert operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        return TypeInteger.get();
+        return UtilValue.upper(types);
     }
 
     @Override
@@ -73,9 +72,10 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int floor = (int) Math.floor(value);
-        // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        if (ValueAlgebra.asAlgebra(operands[1]).isZero()) {
+            result.set(operands[0]);
+        } else {
+            ValueAlgebra.asAlgebra(result).divide(operands[0], operands[1]);
+        }
     }
 }

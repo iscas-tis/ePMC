@@ -23,20 +23,20 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
-import epmc.value.TypeReal;
+import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
-import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorLog;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorNe;
 
-public enum OperatorEvaluatorLog implements OperatorEvaluator {
+public enum OperatorEvaluatorNeDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorLog.LOG;
+        return OperatorNe.NE;
     }
 
     @Override
@@ -45,11 +45,14 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length != 1) {
+        if (types.length != 2) {
+            return false;
+        }
+        if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type)) {
+            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
                 return false;
             }
         }
@@ -59,17 +62,12 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorLog.LOG);
+        assert operator.equals(OperatorNe.NE);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        Type upper = UtilValue.upper(types);
-        if (!TypeReal.isReal(upper)) {
-            return null;
-        }
-        Type result = TypeReal.get();
-        return result;
+        return TypeBoolean.get();
     }
 
     @Override
@@ -79,8 +77,8 @@ public enum OperatorEvaluatorLog implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-                : ValueInteger.asInteger(operands[0]).getInt();
-        ValueDouble.asDouble(result).set(Math.log(value1));
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
+        ValueBoolean.asBoolean(result).set(Math.abs(op1 - op2) > 1E-6);
     }
 }

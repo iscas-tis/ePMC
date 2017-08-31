@@ -23,10 +23,11 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorDivideIgnoreZero;
 
 public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
@@ -47,7 +48,7 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
                 return false;
             }
         }
@@ -62,7 +63,7 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        return UtilValue.upper(types);
+        return TypeDouble.get();
     }
 
     @Override
@@ -72,10 +73,14 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        if (ValueAlgebra.asAlgebra(operands[1]).isZero()) {
-            result.set(operands[0]);
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
+        double resultDouble;
+        if (op2 == 0.0) {
+            resultDouble = 0.0;
         } else {
-            ValueAlgebra.asAlgebra(result).divide(operands[0], operands[1]);
+            resultDouble = op1 / op2;
         }
+        ValueDouble.asDouble(result).set(resultDouble);
     }
 }

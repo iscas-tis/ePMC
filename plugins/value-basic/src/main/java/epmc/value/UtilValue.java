@@ -212,6 +212,26 @@ public final class UtilValue {
         return builder.toString();
     }
 
+    public static double getDouble(Value value) {
+        assert value != null;
+        assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
+        : value.getType();
+        if (ValueDouble.isDouble(value)) {
+            return ValueDouble.asDouble(value).getDouble();
+        } else if (ValueInteger.isInteger(value)) {
+            return ValueInteger.asInteger(value).getInt();
+        } else {
+            assert false;
+            return Double.NaN;
+        }
+    }
+
+    public static int getInt(Value value) {
+        assert value != null;
+        assert ValueInteger.isInteger(value) : value.getType();
+        return ValueInteger.asInteger(value).getInt();
+    }
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
