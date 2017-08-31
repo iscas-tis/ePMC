@@ -182,7 +182,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT)
+        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT)
                 .asSparseNondetOnlyNondet()
                 .getContent());
         ValueAlgebra stopReward = newValueWeight();
@@ -262,7 +262,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra objWeight = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();

@@ -47,7 +47,7 @@ public final class ValueArrayConstant implements ValueArray {
         assert value != null;
         assert content.getType().canImport(value.getType());
         assert index >= 0;
-        assert index < size();
+        assert index < size() : index + " " + size();
         content.set(value);
     }
 

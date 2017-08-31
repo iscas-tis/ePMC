@@ -167,7 +167,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         int[] schedulerJava = scheduler.getDecisions();
         Arrays.fill(schedulerJava, -1);
         Diff diffOp = getDiff();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT)
                 .asSparseNondetOnlyNondet()
                 .getContent());
         double distance;
@@ -240,7 +240,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
         Arrays.fill(values, 0.0);
         Diff diffOp = getDiff();
         Arrays.fill(schedulerJava, -1);
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT)
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT)
                 .asSparseNondetOnlyNondet()
                 .getContent());
         double distance;
