@@ -23,20 +23,20 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
+import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
-import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorPow;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorGe;
 
-public enum OperatorEvaluatorPow implements OperatorEvaluator {
+public enum OperatorEvaluatorGeDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorPow.POW;
+        return OperatorGe.GE;
     }
 
     @Override
@@ -46,6 +46,9 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
             assert type != null;
         }
         if (types.length != 2) {
+            return false;
+        }
+        if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
             return false;
         }
         for (Type type : types) {
@@ -59,13 +62,12 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorPow.POW);
+        assert operator.equals(OperatorGe.GE);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        assert types.length == 2 : types.length;
-        return TypeReal.get();
+        return TypeBoolean.get();
     }
 
     @Override
@@ -75,10 +77,8 @@ public enum OperatorEvaluatorPow implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-                : ValueInteger.asInteger(operands[0]).getInt();
-        double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
-                : ValueInteger.asInteger(operands[1]).getInt();
-        ValueDouble.asDouble(result).set(Math.pow(value1, value2));
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
+        ValueBoolean.asBoolean(result).set(op1 + 1E-6 >= op2);
     }
 }

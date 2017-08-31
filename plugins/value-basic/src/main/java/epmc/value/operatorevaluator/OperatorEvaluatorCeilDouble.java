@@ -25,17 +25,18 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
+import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorFloor;
+import epmc.value.operator.OperatorCeil;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
+public enum OperatorEvaluatorCeilDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorFloor.FLOOR;
+        return OperatorCeil.CEIL;
     }
 
     @Override
@@ -58,12 +59,17 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorFloor.FLOOR);
+        assert operator.equals(OperatorCeil.CEIL);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        return TypeInteger.get();
+        Type result;
+        if (!(TypeReal.isReal(types[0]) || TypeInteger.isInteger(types[0]))) {
+            return null;
+        }
+        result = TypeInteger.get();
+        return result;
     }
 
     @Override
@@ -74,8 +80,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
             assert operand != null;
         }
         double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int floor = (int) Math.floor(value);
-        // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        int ceil = (int) Math.ceil(value);
+        ValueAlgebra.asAlgebra(result).set(ceil);
     }
 }

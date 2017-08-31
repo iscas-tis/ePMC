@@ -23,19 +23,18 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorFloor;
+import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorMax;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
+public enum OperatorEvaluatorMaxInt implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorFloor.FLOOR;
+        return OperatorMax.MAX;
     }
 
     @Override
@@ -44,13 +43,13 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length != 1) {
+        if (types.length != 2) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeInteger.isInteger(type)) {
                 return false;
-            }
+            }            
         }
         return true;
     }
@@ -58,7 +57,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorFloor.FLOOR);
+        assert operator.equals(OperatorMax.MAX);
         assert types != null;
         for (Type type : types) {
             assert type != null;
@@ -73,9 +72,8 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int floor = (int) Math.floor(value);
-        // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        int op1 = UtilValue.getInt(operands[0]);
+        int op2 = UtilValue.getInt(operands[1]);
+        ValueInteger.asInteger(result).set(Math.max(op1, op2));
     }
 }

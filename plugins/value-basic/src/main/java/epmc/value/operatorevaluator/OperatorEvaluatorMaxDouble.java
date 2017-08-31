@@ -25,9 +25,9 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMax;
 
 public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
@@ -79,22 +79,8 @@ public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = getDouble(operands[0]);
-        double op2 = getDouble(operands[1]);
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
         ValueDouble.asDouble(result).set(Math.max(op1, op2));
-    }
-
-    private static double getDouble(Value value) {
-        assert value != null;
-        assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
-        : value.getType();
-        if (ValueDouble.isDouble(value)) {
-            return ValueDouble.asDouble(value).getDouble();
-        } else if (ValueInteger.isInteger(value)) {
-            return ValueInteger.asInteger(value).getInt();
-        } else {
-            assert false;
-            return Double.NaN;
-        }
     }
 }
