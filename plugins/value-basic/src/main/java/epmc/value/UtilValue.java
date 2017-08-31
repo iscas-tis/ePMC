@@ -82,16 +82,6 @@ public final class UtilValue {
         return upper;
     }
 
-    public static Type booleanResultType(Type[] types) {
-        for (Type type : types) {
-            if (type == null || !TypeBoolean.isBoolean(type)) {
-                return null;
-            }
-        }
-        Type result = TypeBoolean.get();
-        return result;
-    }
-
     public static boolean allTypesKnown(Type... types) {
         boolean allTypesKnown = true;
         for (Type type : types) {
