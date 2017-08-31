@@ -736,6 +736,8 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("filter(forall, (pay>0) => P>=1 [ F \"done\" & parity!=func(mod, N, 2) ])"));
     }
 
+    //too slow
+    @Ignore
     @Test
     public void testPRISM_DiningCrypt_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
