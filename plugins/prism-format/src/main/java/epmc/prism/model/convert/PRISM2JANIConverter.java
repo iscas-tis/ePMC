@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import java.util.Set;
 
 import epmc.error.EPMCException;
@@ -76,6 +75,7 @@ import epmc.jani.model.property.ExpressionInitial;
 import epmc.jani.model.property.JANIProperties;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.model.type.JANITypeBool;
+import epmc.jani.model.type.JANITypeBounded;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.modelchecker.Properties;
@@ -178,6 +178,10 @@ public final class PRISM2JANIConverter {
         assert modelPRISM != null;
         this.modelPRISM = modelPRISM;
         modelJANI = new ModelJANI();
+        modelJANI.getJANIOperators().add()
+        	.setJANI("prism_pow")
+        	.setEPMC(OperatorPRISMPow.PRISM_POW)
+        	.setArity(2).build();
         modelJANI.setName(modelPRISM.getIdentifier());
         this.tauAction = new Action();
         tauAction.setModel(modelJANI);
@@ -289,7 +293,7 @@ public final class PRISM2JANIConverter {
             constant.setIdentifier(identifier);
             constant.setType(type);
             Expression value = properties.getConstantValue(name);
-            constant.setValue(value);
+            constant.setValue(value == null ? null : prism2jani(value));
             janiConstants.put(name, constant);
         }
         return janiConstants;
@@ -514,7 +518,8 @@ public final class PRISM2JANIConverter {
     private InitialStates computeInitialStates() {
         InitialStates initialStates = new InitialStates();
         initialStates.setModel(modelJANI);
-        initialStates.setExp(modelPRISM.getInitialNodes());
+        Expression expInit = modelPRISM.getInitialNodes();
+        initialStates.setExp(expInit == null ? null : prism2jani(expInit));
         return initialStates;
     }
 
@@ -546,13 +551,25 @@ public final class PRISM2JANIConverter {
     private Variable convertVariable(ExpressionIdentifierStandard identifier, JANIType type,
             Expression varInit) {
         String varName = identifier.getName();
-        type.setModel(modelJANI);
+        JANIType fixedType;
+        if (type instanceof JANITypeBounded) {
+        	JANITypeBounded casted = (JANITypeBounded)type;
+        	Expression low = casted.getLowerBound();
+        	Expression up = casted.getUpperBound();
+        	JANITypeBounded fixedTypeB = new JANITypeBounded();
+        	fixedTypeB.setLowerBound(low == null ? null : prism2jani(low));
+        	fixedTypeB.setUpperBound(up == null ? null : prism2jani(up));
+        	fixedType = fixedTypeB;
+        } else {
+        	fixedType = type;
+        }
+        fixedType.setModel(modelJANI);
         Variable variable = new Variable();
         variable.setModel(modelJANI);
         variable.setName(varName);
         variable.setIdentifier(identifier);
         variable.setAutomaton(null);
-        variable.setType(type);
+        variable.setType(fixedType);
         variable.setInitial(varInit == null ? null : prism2jani(varInit));
         return variable;
     }
@@ -563,13 +580,13 @@ public final class PRISM2JANIConverter {
             ModuleCommands moduleCommands = (ModuleCommands) module;
             for (Command command : moduleCommands.getCommands()) {
                 ExpressionIdentifierStandard exprAct = (ExpressionIdentifierStandard) command.getAction();
-                if (!result.containsKey(exprAct)
+                if (!result.containsKey(exprAct.getName())
                         && !exprAct.getName().equals(EMPTY)) {
                     Action action = new Action();
                     action.setName(exprAct.getName());
                     result.addAction(action);
                     result.addAction(action);
-                } else if (!result.containsKey(exprAct)
+                } else if (!result.containsKey(exprAct.getName())
                         && exprAct.getName().equals(EMPTY)) {
                     result.addAction(tauAction);
                 }
@@ -606,8 +623,8 @@ public final class PRISM2JANIConverter {
             //in JANI, time progress (conditions)
             TimeProgress timeProgress = new TimeProgress();
             timeProgress.setModel(modelJANI);
-            Expression invEx = prism2jani(module.getInvariants());
-            timeProgress.setExp(invEx);
+            Expression invEx = module.getInvariants();
+            timeProgress.setExp(invEx == null ? null : prism2jani(invEx));
             location.setTimeProgress(timeProgress);
         }
         Set<Location> initialLocations = new LinkedHashSet<>();
@@ -628,14 +645,18 @@ public final class PRISM2JANIConverter {
             }
             Guard guard = new Guard();
             guard.setModel(modelJANI);
-            guard.setExp(prism2jani(command.getGuard()));
+            Expression expGuard = command.getGuard();
+            guard.setExp(expGuard == null ? null : prism2jani(expGuard));
             edge.setGuard(guard);
             Destinations destinations = edge.getDestinations();
 
             Expression totalWeight = null;
             if (SemanticsCTMC.isCTMC(modelPRISM.getSemantics())) {
                 for (Alternative alternative : command.getAlternatives()) {
-                    Expression weight = prism2jani(alternative.getWeight());
+                    Expression weight = alternative.getWeight();
+                    if (weight != null) {
+                    	weight = prism2jani(weight);
+                    }
                     if (totalWeight == null) {
                         totalWeight = weight;
                     } else {
@@ -651,7 +672,10 @@ public final class PRISM2JANIConverter {
             for (Alternative alternative : command.getAlternatives()) {
                 Destination destination = new Destination();
                 destination.setModel(modelJANI);
-                Expression probability = prism2jani(alternative.getWeight());
+                Expression probability = alternative.getWeight();
+                if (probability != null) {
+                	probability = prism2jani(probability);
+                }
                 if (totalWeight != null) {
                     probability = UtilExpressionStandard.opDivide(probability, totalWeight);
                 }
@@ -668,7 +692,8 @@ public final class PRISM2JANIConverter {
                     AssignmentSimple assignment = new AssignmentSimple();
                     assignment.setModel(modelJANI);
                     assignment.setRef(variable);
-                    assignment.setValue(entry.getValue());
+                    Expression value = entry.getValue();
+                    assignment.setValue(value == null ? null : prism2jani(value));
                     assignments.addAssignment(assignment);
                 }
                 destination.setAssignments(assignments);
