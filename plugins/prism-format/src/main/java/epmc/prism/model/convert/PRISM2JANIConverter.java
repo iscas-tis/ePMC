@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import java.util.Set;
 
 import epmc.error.EPMCException;
@@ -63,7 +62,6 @@ import epmc.jani.model.Edge;
 import epmc.jani.model.Edges;
 import epmc.jani.model.Guard;
 import epmc.jani.model.InitialStates;
-import epmc.jani.model.JANIOperator;
 import epmc.jani.model.Location;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
@@ -582,13 +580,13 @@ public final class PRISM2JANIConverter {
             ModuleCommands moduleCommands = (ModuleCommands) module;
             for (Command command : moduleCommands.getCommands()) {
                 ExpressionIdentifierStandard exprAct = (ExpressionIdentifierStandard) command.getAction();
-                if (!result.containsKey(exprAct)
+                if (!result.containsKey(exprAct.getName())
                         && !exprAct.getName().equals(EMPTY)) {
                     Action action = new Action();
                     action.setName(exprAct.getName());
                     result.addAction(action);
                     result.addAction(action);
-                } else if (!result.containsKey(exprAct)
+                } else if (!result.containsKey(exprAct.getName())
                         && exprAct.getName().equals(EMPTY)) {
                     result.addAction(tauAction);
                 }
