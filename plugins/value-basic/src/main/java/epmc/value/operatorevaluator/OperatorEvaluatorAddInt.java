@@ -23,20 +23,18 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
+import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorCeil;
+import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorAdd;
 
-public enum OperatorEvaluatorCeil implements OperatorEvaluator {
+public enum OperatorEvaluatorAddInt implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorCeil.CEIL;
+        return OperatorAdd.ADD;
     }
 
     @Override
@@ -45,13 +43,11 @@ public enum OperatorEvaluatorCeil implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length != 1) {
+        if (types.length != 2) {
             return false;
         }
-        for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
-                return false;
-            }
+        if (!TypeInteger.isInteger(types[0]) || !TypeInteger.isInteger(types[1])) {
+            return false;
         }
         return true;
     }
@@ -59,17 +55,12 @@ public enum OperatorEvaluatorCeil implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorCeil.CEIL);
+        assert operator.equals(OperatorAdd.ADD);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        Type result;
-        if (!(TypeReal.isReal(types[0]) || TypeInteger.isInteger(types[0]))) {
-            return null;
-        }
-        result = TypeInteger.get();
-        return result;
+        return TypeInteger.get();
     }
 
     @Override
@@ -79,8 +70,9 @@ public enum OperatorEvaluatorCeil implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int ceil = (int) Math.ceil(value);
-        ValueAlgebra.asAlgebra(result).set(ceil);
+        assert operands.length >= 2;
+        int op1 = UtilValue.getInt(operands[0]);
+        int op2 = UtilValue.getInt(operands[1]);
+        ValueInteger.asInteger(result).set(op1 + op2);
     }
 }

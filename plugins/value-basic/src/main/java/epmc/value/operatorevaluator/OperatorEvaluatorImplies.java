@@ -62,7 +62,7 @@ public enum OperatorEvaluatorImplies implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        return UtilValue.booleanResultType(types);
+        return TypeBoolean.get();
     }
 
     @Override

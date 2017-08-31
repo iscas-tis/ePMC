@@ -28,7 +28,7 @@ import epmc.value.Value;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMod;
 
-public enum OperatorEvaluatorIntegerMod implements OperatorEvaluator {
+public enum OperatorEvaluatorModInt implements OperatorEvaluator {
     INSTANCE;
 
     @Override

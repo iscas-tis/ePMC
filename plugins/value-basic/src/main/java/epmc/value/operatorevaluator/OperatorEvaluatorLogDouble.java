@@ -23,19 +23,19 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
+import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorFloor;
+import epmc.value.ValueDouble;
+import epmc.value.operator.OperatorLog;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
+public enum OperatorEvaluatorLogDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorFloor.FLOOR;
+        return OperatorLog.LOG;
     }
 
     @Override
@@ -48,7 +48,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
                 return false;
             }
         }
@@ -58,12 +58,12 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorFloor.FLOOR);
+        assert operator.equals(OperatorLog.LOG);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        return TypeInteger.get();
+        return TypeDouble.get();
     }
 
     @Override
@@ -73,9 +73,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int floor = (int) Math.floor(value);
-        // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        double value1 = UtilValue.getDouble(operands[0]);
+        ValueDouble.asDouble(result).set(Math.log(value1));
     }
 }

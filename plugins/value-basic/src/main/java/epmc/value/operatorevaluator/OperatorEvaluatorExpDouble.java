@@ -23,11 +23,12 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorExp;
 
 /**
@@ -35,7 +36,7 @@ import epmc.value.operator.OperatorExp;
  * 
  * @author Ernst Moritz Hahn
  */
-public enum OperatorEvaluatorExp implements OperatorEvaluator {
+public enum OperatorEvaluatorExpDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
@@ -52,7 +53,7 @@ public enum OperatorEvaluatorExp implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeReal.isReal(types[0]) && !TypeInteger.isInteger(types[0])) {
+        if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
             return false;
         }
         return true;
@@ -64,7 +65,7 @@ public enum OperatorEvaluatorExp implements OperatorEvaluator {
         assert types != null;
         assert types.length >= 1;
         assert types[0] != null;
-        return TypeReal.get();
+        return TypeDouble.get();
     }
 
     @Override
@@ -73,8 +74,7 @@ public enum OperatorEvaluatorExp implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-                : ValueInteger.asInteger(operands[0]).getInt();
-        ValueDouble.asDouble(result).set(Math.exp(value1));
+        double operand = UtilValue.getDouble(operands[0]);
+        ValueDouble.asDouble(result).set(Math.exp(operand));
     }
 }
