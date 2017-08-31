@@ -23,19 +23,18 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorFloor;
+import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorAddInverse;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
+public enum OperatorEvaluatorAddInverseInt implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorFloor.FLOOR;
+        return OperatorAddInverse.ADD_INVERSE;
     }
 
     @Override
@@ -47,10 +46,8 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
-                return false;
-            }
+        if (!TypeInteger.isInteger(types[0])) {
+            return false;
         }
         return true;
     }
@@ -58,7 +55,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorFloor.FLOOR);
+        assert operator.equals(OperatorAddInverse.ADD_INVERSE);
         assert types != null;
         for (Type type : types) {
             assert type != null;
@@ -73,9 +70,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
-        int floor = (int) Math.floor(value);
-        // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        int operand = UtilValue.getInt(operands[0]);
+        ValueInteger.asInteger(result).set(-operand);
     }
 }
