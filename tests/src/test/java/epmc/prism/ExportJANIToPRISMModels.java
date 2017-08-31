@@ -310,12 +310,12 @@ public final class ExportJANIToPRISMModels {
 
         JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);
         System.out.println("Converting");       
-        try (PrintWriter out = new PrintWriter(prismFilename)) {
+        try (PrintWriter out = new PrintWriter(prismFilename + "-exported")) {
             out.println(converter.convertModel().toString());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        try (PrintWriter out = new PrintWriter(propertyFilename)) {
+        try (PrintWriter out = new PrintWriter(propertyFilename + "-exported")) {
             out.println(converter.convertProperties().toString());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);

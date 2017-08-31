@@ -585,7 +585,6 @@ public final class PRISM2JANIConverter {
                     Action action = new Action();
                     action.setName(exprAct.getName());
                     result.addAction(action);
-                    result.addAction(action);
                 } else if (!result.containsKey(exprAct.getName())
                         && exprAct.getName().equals(EMPTY)) {
                     result.addAction(tauAction);
