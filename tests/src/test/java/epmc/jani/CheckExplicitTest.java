@@ -3220,6 +3220,8 @@ public final class CheckExplicitTest {
         assertEquals("223934.2427029740", result.get("Property_16"), 2.0E-7);
     }
 
+    //too slow
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3242,6 +3244,8 @@ public final class CheckExplicitTest {
         assertEquals("223934.2428000538", result.get("Property_16"), 2.0E-7);
     }
 
+    //too slow
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
