@@ -104,11 +104,11 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public StateMapDD restrict(StateSet to) {
         assert !closed();
         assert to != null;
-        assert to.isSubsetOf(states);
+        assert to instanceof StateSetDD;
+        assert ((StateSetDD) to).isSubsetOf(states);
         if (states.equals(to)) {
             return clone();
         }
-        assert to instanceof StateSetDD;
         StateMapDD result = new StateMapDD((StateSetDD) to.clone(), valuesDD.clone());
         return result;
     }

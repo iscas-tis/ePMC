@@ -132,11 +132,11 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     public StateMapExplicit restrict(StateSet to) {
         assert !closed();
         assert to != null;
-        assert to.isSubsetOf(states);
+        assert to instanceof StateSetExplicit;
+        assert ((StateSetExplicit) to).isSubsetOf(states);
         if (states.equals(to)) {
             return clone();
         }
-        assert to instanceof StateSetExplicit;
         StateSetExplicit toExplicit = (StateSetExplicit) to;
         int oldStateNr = 0;
         Value helper = type.newValue();

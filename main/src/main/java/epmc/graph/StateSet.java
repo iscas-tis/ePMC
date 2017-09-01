@@ -31,11 +31,5 @@ public interface StateSet extends Closeable, Cloneable {
     @Override
     void close();
 
-    boolean isSubsetOf(StateSet states);
-
     StateSet clone();
-
-    default boolean isEmpty() {
-        return size() == 0;
-    }
 }
