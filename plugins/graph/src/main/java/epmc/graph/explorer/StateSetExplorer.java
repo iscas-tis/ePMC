@@ -68,7 +68,6 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
     public void close() {
     }
 
-    @Override
     public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplorer;

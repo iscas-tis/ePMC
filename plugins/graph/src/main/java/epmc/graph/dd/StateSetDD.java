@@ -81,7 +81,6 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         return true;
     }
 
-    @Override
     public boolean isSubsetOf(StateSet states) {
         assert !closed();
         assert states != null;

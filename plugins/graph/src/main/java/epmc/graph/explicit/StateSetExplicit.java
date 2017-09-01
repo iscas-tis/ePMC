@@ -79,7 +79,6 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
         return true;
     }
 
-    @Override
     public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplicit;
