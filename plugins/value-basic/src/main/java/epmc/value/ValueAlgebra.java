@@ -48,8 +48,6 @@ public interface ValueAlgebra extends Value {
 
     void multiply(Value operand1, Value operand2);
 
-    void addInverse(Value operand);
-
     boolean isZero();
 
     boolean isOne();

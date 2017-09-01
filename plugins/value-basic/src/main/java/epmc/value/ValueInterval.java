@@ -273,12 +273,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange {
     }
 
     @Override
-    public void addInverse(Value operand) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean isNegInf() {
         // TODO Auto-generated method stub
         return false;

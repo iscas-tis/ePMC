@@ -32,7 +32,6 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorAdd;
-import epmc.value.operatorevaluator.OperatorEvaluatorAddInverse;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorAnd;
@@ -104,7 +103,6 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAdd.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInt.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInverse.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInverseDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInverseInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAnd.INSTANCE);
