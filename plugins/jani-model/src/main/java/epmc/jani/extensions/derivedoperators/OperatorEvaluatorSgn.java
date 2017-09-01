@@ -20,6 +20,7 @@
 
 package epmc.jani.extensions.derivedoperators;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -27,6 +28,7 @@ import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorAddInverse;
 
 public enum OperatorEvaluatorSgn implements OperatorEvaluator {
     INSTANCE;
@@ -68,12 +70,13 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         assert operands[0] != null;
         Value zero = TypeInteger.get().getZero();
         Value one = TypeInteger.get().getOne();
+        OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
         if (operands[0].isEq(zero)) {
             result.set(zero);
         } else if (ValueAlgebra.asAlgebra(operands[0]).isGt(zero)) {
             result.set(one);
         } else if (ValueAlgebra.asAlgebra(operands[0]).isLt(zero)) {
-            ValueAlgebra.asAlgebra(result).addInverse(one);
+            addInverse.apply(ValueAlgebra.asAlgebra(result), one);
         } else {
             assert false;
         }

@@ -69,6 +69,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorNot;
 
@@ -241,7 +242,8 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
                     sum.add(sum, succWeight);
                 }
                 jump.multiply(leftValue, sum);
-                jump.addInverse(jump);
+                OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, jump.getType());
+                addInverse.apply(jump, jump);
                 exp.apply(jump, jump);
                 values.get(entry, state);
                 entry.multiply(entry, jump);

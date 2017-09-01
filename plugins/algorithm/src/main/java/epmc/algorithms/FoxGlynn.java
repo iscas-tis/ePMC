@@ -30,6 +30,7 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorCeil;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorFloor;
@@ -90,9 +91,10 @@ public final class FoxGlynn {
         epsilon.multiply(this.epsilon, sqrt_2_pi);
         ValueReal kReal = typeReal.newValue();
         ValueReal maxError = typeReal.newValue();
+        OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
         if (m < 25) {
             ValueReal minusLambda = typeReal.newValue();
-            minusLambda.addInverse(lambda);
+            addInverse.apply(minusLambda, lambda);
             ValueReal expMinusLambda = typeReal.newValue();
             exp.apply(expMinusLambda, minusLambda);
             if (minusLambda.isLt(tau)) {
@@ -126,7 +128,7 @@ public final class FoxGlynn {
                 }
                 maxError.multiply(kReal, kReal);
                 maxError.multiply(oneHalf, maxError);
-                maxError.addInverse(maxError);
+                addInverse.apply(maxError, maxError);
                 exp.apply(maxError, maxError);
                 maxError.multiply(bl, maxError);
                 maxError.divide(maxError, kReal);
@@ -160,7 +162,7 @@ public final class FoxGlynn {
             kReal.set(k);
             maxError.multiply(kReal, kReal);
             maxError.multiply(oneHalf, maxError);
-            maxError.addInverse(maxError);
+            addInverse.apply(maxError, maxError);
             exp.apply(maxError, maxError);
             kTimesEpsilon.multiply(kReal, epsilon);
             if (kTimesEpsilon.isGt(maxError)) {
@@ -209,7 +211,7 @@ public final class FoxGlynn {
                 result.divide(result, lambda);
                 result.add(log_c_m_inf, result);
             } else {
-                result.addInverse(lambda);
+                addInverse.apply(result, lambda);
                 if (0 != left) {
                     ValueReal iReal = UtilValue.newValue(typeReal, i);
                     ValueReal result_1 = UtilValue.newValue(typeReal, m+1);

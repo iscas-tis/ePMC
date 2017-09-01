@@ -70,12 +70,6 @@ public final class ValueClock implements ValueAlgebra {
     }
 
     @Override
-    public void addInverse(Value operand) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean isZero() {
         // TODO Auto-generated method stub
         return false;

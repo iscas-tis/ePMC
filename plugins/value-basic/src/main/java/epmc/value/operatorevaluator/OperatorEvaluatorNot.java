@@ -24,7 +24,6 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorNot;
