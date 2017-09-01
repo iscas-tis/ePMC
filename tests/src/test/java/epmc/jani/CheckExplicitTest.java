@@ -738,7 +738,7 @@ public final class CheckExplicitTest {
         model = loadModel(options, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
 
         Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_1"));
+        assertEquals(true, result.get("Property_0"));
     }
 
     //No support yet for S
@@ -3220,6 +3220,8 @@ public final class CheckExplicitTest {
         assertEquals("223934.2427029740", result.get("Property_16"), 2.0E-7);
     }
 
+    //too slow
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3242,6 +3244,8 @@ public final class CheckExplicitTest {
         assertEquals("223934.2428000538", result.get("Property_16"), 2.0E-7);
     }
 
+    //too slow
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
