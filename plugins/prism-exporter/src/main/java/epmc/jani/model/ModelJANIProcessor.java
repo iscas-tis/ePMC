@@ -119,7 +119,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 
         // Global variables to be registered
         for (Variable variable : jani.getGlobalVariables()) {
-            JANIComponentRegistrar.registerVariable(variable);
+            JANIComponentRegistrar.registerIdentifier(variable);
         }
 
         // Variable assignment to be registered
