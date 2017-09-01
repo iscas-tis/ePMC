@@ -35,6 +35,7 @@ import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.Constant;
 import epmc.jani.model.InitialStates;
+import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.Location;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Variable;
@@ -106,14 +107,12 @@ public class JANIComponentRegistrar {
     }
 
     private static Set<String> usedNames;
-    private static Map<Constant, String> constantNames;
-    private static Map<String, String> constantNameNames;
 
     private static Set<Variable> globalVariables;
 
-    private static Map<Variable, String> variableNames;
-    private static Map<String, Variable> variableByName;
-    private static Map<String, String> variableNameNames;
+    private static Map<JANIIdentifier, String> identifierNames;
+    private static Map<String, JANIIdentifier> identifierByName;
+    private static Map<String, String> identifierNameNames;
     private static Map<Variable, Map<Action, Expression>> rewardTransitionExpressions;
     private static Map<Variable, Expression> rewardStateExpressions;
 
@@ -135,22 +134,18 @@ public class JANIComponentRegistrar {
     private static boolean isTimedModel;
 
     private static int reward_counter;
-    private static int variable_counter;
+    private static int identifier_counter;
     private static int action_counter;
-    private static int constant_counter;
     private static int location_counter_name;
     private static int location_counter_id;
 
     static void reset() {
         usedNames = new HashSet<>(); 
 
-        constantNames = new HashMap<>();
-        constantNameNames = new HashMap<>();
-
         globalVariables  = new HashSet<>();
-        variableNames = new HashMap<>();
-        variableByName = new HashMap<>();
-        variableNameNames = new HashMap<>();
+        identifierNames = new HashMap<>();
+        identifierByName = new HashMap<>();
+        identifierNameNames = new HashMap<>();
 
         rewardTransitionExpressions = new HashMap<>();
         rewardStateExpressions = new HashMap<>();
@@ -170,9 +165,8 @@ public class JANIComponentRegistrar {
 
         isTimedModel = false;
         reward_counter = 0;
-        variable_counter = 0;
+        identifier_counter = 0;
         action_counter = 0;
-        constant_counter = 0;
         location_counter_name = 0;
         location_counter_id = 0;
     }
@@ -197,31 +191,6 @@ public class JANIComponentRegistrar {
 
     public static Set<Variable> getUnassignedClockVariables() {
         return Collections.unmodifiableSet(unassignedClockVariables);
-    }
-
-    /**
-     * Register a constant.
-     * 
-     * @param constant the constant to register
-     */
-    public static void registerConstant(Constant constant) {
-        assert constant != null;
-
-        ensure(!constantNames.containsKey(constant), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_CONSTANT_DEFINED_TWICE, constant.getName());
-        if (!constantNames.containsKey(constant)) {
-            String name;
-            name = constant.getName();
-            if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
-                name = "constant_" + constant_counter;
-            }
-            while (usedNames.contains(name)) {
-                name = "constant_" + constant_counter;
-                constant_counter++;
-            }
-            usedNames.add(name);
-            constantNames.put(constant, name);
-            constantNameNames.put(constant.getName(), name);
-        }
     }
 
     /**
@@ -290,72 +259,72 @@ public class JANIComponentRegistrar {
     }
 
     /**
-     * Register a variable.
+     * Register a JANI identifier.
      * 
-     * @param variable the variable to register
+     * @param identifier the identifier to register
      */
-    public static void registerVariable(Variable variable) {
-        assert variable != null;
+    public static void registerIdentifier(JANIIdentifier identifier) {
+        assert identifier != null;
 
-        ensure(!variableNames.containsKey(variable), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_VARIABLE_DEFINED_TWICE, variable.getName());
-        if (!variableNames.containsKey(variable)) {
-            variableByName.put(variable.getName(), variable);
+        ensure(!identifierNames.containsKey(identifier), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_IDENTIFIER_DEFINED_TWICE, identifier.getName());
+        if (!identifierNames.containsKey(identifier)) {
+            identifierByName.put(identifier.getName(), identifier);
             String name;
-            if (variable.isTransient()) {
+            if ((identifier instanceof Variable) && (((Variable)identifier).isTransient())) {
                 do {
                     name = "\"reward_" + reward_counter + "\"";
                     reward_counter++;
                 } while (usedNames.contains(name));
             } else {
-                name = variable.getName();
+                name = identifier.getName();
                 if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
-                    name = "variable_" + variable_counter;
+                    name = "identifier_" + identifier_counter;
                 }
                 while (usedNames.contains(name)) {
-                    name = "variable_" + variable_counter;
-                    variable_counter++;
+                    name = "identifier_" + identifier_counter;
+                    identifier_counter++;
                 }
             }
             usedNames.add(name);
-            variableNames.put(variable, name);
-            variableNameNames.put(variable.getName(), name);
+            identifierNames.put(identifier, name);
+            identifierNameNames.put(identifier.getName(), name);
         }
     }
 
     /**
-     * Return the unique name for the variable respecting the PRISM syntax
+     * Return the unique name for the identifier respecting the PRISM syntax
      * 
-     * @param variable the wanted variable
-     * @return the associated name or {@code null} if such a variable is unknown
+     * @param identifier the wanted identifier
+     * @return the associated name or {@code null} if such an identifier is unknown
      */
-    public static String getVariableNameByVariable(Variable variable) {
-        assert variable != null;
+    public static String getIdentifierNameByIdentifier(JANIIdentifier identifier) {
+        assert identifier != null;
 
-        return variableNames.get(variable);
+        return identifierNames.get(identifier);
     }
 
     /**
-     * Return the unique name for the variable respecting the PRISM syntax
+     * Return the unique name for the identifier respecting the PRISM syntax
      * 
      * @param name the wanted name
-     * @return the associated name or {@code null} if such a variable is unknown
+     * @return the associated name or {@code null} if such an identifier is unknown
      */
-    public static String getVariableNameByName(String name) {
+    public static String getIdentifierNameByName(String name) {
         assert name != null;
 
-        return variableNameNames.get(name);
+        return identifierNameNames.get(name);
     }
 
     /**
-     * Return the variable for the given name
+     * Return the identifier for the given name
      * 
      * @param name the wanted name
      * @return the associated variable or {@code null} if such a name is unknown
      */
-    public static Variable getVariableByName(String name) {
+    public static JANIIdentifier getIdentifierByName(String name) {
         assert name != null;
 
-        return variableByName.get(name);
+        return identifierByName.get(name);
     }
 
     /**
@@ -399,8 +368,8 @@ public class JANIComponentRegistrar {
         assert expression != null;
         assert reward.isTransient();
 
-        ensure(variableNames.containsKey(reward), 
-                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE, 
+        ensure(identifierNames.containsKey(reward), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_IDENTIFIER, 
                 reward.getName());
 
         Map<Action, Expression> mapAE = rewardTransitionExpressions.get(reward);
@@ -411,10 +380,10 @@ public class JANIComponentRegistrar {
         Expression oldAssgn = mapAE.get(action);
         if (oldAssgn == null) {
             mapAE.put(action, expression);
-        } else {
-            ensure(expression.equals(oldAssgn), 
-                    ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS, 
-                    getVariableNameByVariable(reward));
+//        } else {
+//            ensure(expression.equals(oldAssgn), 
+//                    ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS, 
+//                    getIdentifierNameByIdentifier(reward));
         }
     }
 
@@ -429,8 +398,8 @@ public class JANIComponentRegistrar {
         assert expression != null;
         assert reward.isTransient();
 
-        ensure(variableNames.containsKey(reward), 
-                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_VARIABLE, 
+        ensure(identifierNames.containsKey(reward), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_IDENTIFIER, 
                 "Variable used but not declared:", 
                 reward.getName());
 
@@ -440,7 +409,7 @@ public class JANIComponentRegistrar {
         } else {
             ensure(expression.equals(oldExp), 
                     ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS, 
-                    getVariableNameByVariable(reward));
+                    getIdentifierNameByIdentifier(reward));
         }
     }
 
@@ -464,7 +433,7 @@ public class JANIComponentRegistrar {
         } else {
             ensure(automaton.equals(oldAut), 
                     ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA, 
-                    getVariableNameByVariable(variable));
+                    getIdentifierNameByIdentifier(variable));
         }
 
         Set<Variable> assignedVariables = automatonAssignsVariables.get(automaton);
@@ -494,39 +463,42 @@ public class JANIComponentRegistrar {
         Action action;
 
         boolean remaining = false;
-        for (Entry<Variable, String> entry: variableNames.entrySet()) {
-            Variable reward = entry.getKey();
-            String name = entry.getValue();
-            if (!reward.isTransient()) {
-                continue;
-            }
-            if (remaining) {
-                prism.append("\n");
-            } else {
-                remaining = true;
-            }
-            prism.append("// Original variable name: ").append(reward.getName()).append("\n")
-            .append("// New name: ").append(name).append("\n");
-            prism.append("rewards ").append(name).append("\n");
-            expression = rewardStateExpressions.get(reward);
-            if (expression != null) {
-                processor = ProcessorRegistrar.getProcessor(expression);
-                prism.append(ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM().toString()).append(";\n");
-            }
-            Map<Action, Expression> mapAA = rewardTransitionExpressions.get(reward);
-            if (mapAA != null) {
-                for(Entry<Action, Expression> entryAA : mapAA.entrySet()) {
-                    action = entryAA.getKey();
-                    processor = ProcessorRegistrar.getProcessor(action);
-                    prism.append(ModelJANIProcessor.INDENT).append(processor.toPRISM().toString()).append(" true : ");
-
-                    expression = entryAA.getValue();
-                    processor = ProcessorRegistrar.getProcessor(expression);
-                    prism.append(processor.toPRISM().toString()).append(";\n");
-
-                }
-            }
-            prism.append("endrewards\n");
+        for (Entry<JANIIdentifier, String> entry: identifierNames.entrySet()) {
+        	JANIIdentifier identifier = entry.getKey();
+        	if (identifier instanceof Variable) {
+	            Variable reward = (Variable) identifier;
+	            String name = entry.getValue();
+	            if (!reward.isTransient()) {
+	                continue;
+	            }
+	            if (remaining) {
+	                prism.append("\n");
+	            } else {
+	                remaining = true;
+	            }
+	            prism.append("// Original variable name: ").append(reward.getName()).append("\n")
+	            .append("// New name: ").append(name).append("\n");
+	            prism.append("rewards ").append(name).append("\n");
+	            expression = rewardStateExpressions.get(reward);
+	            if (expression != null) {
+	                processor = ProcessorRegistrar.getProcessor(expression);
+	                prism.append(ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM().toString()).append(";\n");
+	            }
+	            Map<Action, Expression> mapAA = rewardTransitionExpressions.get(reward);
+	            if (mapAA != null) {
+	                for(Entry<Action, Expression> entryAA : mapAA.entrySet()) {
+	                    action = entryAA.getKey();
+	                    processor = ProcessorRegistrar.getProcessor(action);
+	                    prism.append(ModelJANIProcessor.INDENT).append(processor.toPRISM().toString()).append(" true : ");
+	
+	                    expression = entryAA.getValue();
+	                    processor = ProcessorRegistrar.getProcessor(expression);
+	                    prism.append(processor.toPRISM().toString()).append(";\n");
+	
+	                }
+	            }
+	            prism.append("endrewards\n");
+        	}
         }
 
         return prism.toString();
@@ -580,13 +552,16 @@ public class JANIComponentRegistrar {
     public static String constantsRenaming() {
         StringBuilder sb = new StringBuilder();
 
-        for (Entry<Constant,String> entry : constantNames.entrySet()) {
-            Constant constant = entry.getKey();
-            String name = entry.getValue();
-            if (! constant.getName().equals(name)) {
-                sb.append("// Original constant name: ").append(constant.getName()).append("\n")
-                .append("// New name: ").append(name).append("\n\n");
-            }
+        for (Entry<JANIIdentifier,String> entry : identifierNames.entrySet()) {
+        	JANIIdentifier identifier = entry.getKey();
+        	if (identifier instanceof Constant) {
+	            Constant constant = (Constant) identifier;
+	            String name = entry.getValue();
+	            if (! constant.getName().equals(name)) {
+	                sb.append("// Original constant name: ").append(constant.getName()).append("\n")
+	                .append("// New name: ").append(name).append("\n\n");
+	            }
+        	}
         }
 
         return sb.toString();		
@@ -595,15 +570,18 @@ public class JANIComponentRegistrar {
     public static String globalVariablesRenaming() {
         StringBuilder sb = new StringBuilder();
 
-        for (Entry<Variable,String> entry : variableNames.entrySet()) {
-            Variable variable = entry.getKey();
-            if (globalVariables.contains(variable)) {
-                String name = entry.getValue();
-                if (! variable.getName().equals(name)) {
-                    sb.append("// Original variable name: ").append(variable.getName()).append("\n")
-                    .append("// New name: ").append(name).append("\n\n");
-                }
-            }
+        for (Entry<JANIIdentifier,String> entry : identifierNames.entrySet()) {
+        	JANIIdentifier identifier = entry.getKey();
+        	if (identifier instanceof Variable) {
+	            Variable variable = (Variable) identifier;
+	            if (globalVariables.contains(variable)) {
+	                String name = entry.getValue();
+	                if (! variable.getName().equals(name)) {
+	                    sb.append("// Original variable name: ").append(variable.getName()).append("\n")
+	                    .append("// New name: ").append(name).append("\n\n");
+	                }
+	            }
+        	}
         }
 
         return sb.toString();		
@@ -612,7 +590,7 @@ public class JANIComponentRegistrar {
     public static String variableRenaming(Variable variable, String prefix) {
         StringBuilder sb = new StringBuilder();
 
-        String name = variableNames.get(variable);
+        String name = identifierNames.get(variable);
         if (! variable.getName().equals(name)) {
             sb.append(prefix).append("// Original variable name: ").append(variable.getName()).append("\n")
             .append(prefix).append("// New name: ").append(name).append("\n\n");

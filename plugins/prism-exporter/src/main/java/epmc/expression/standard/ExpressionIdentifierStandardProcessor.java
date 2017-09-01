@@ -20,6 +20,8 @@
 
 package epmc.expression.standard;
 
+import epmc.jani.model.JANIIdentifier;
+import epmc.jani.model.Variable;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
@@ -40,7 +42,7 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
     public String toPRISM() {
         assert identifier != null;
 
-        return JANIComponentRegistrar.getVariableNameByName(identifier.getName());
+        return JANIComponentRegistrar.getIdentifierNameByName(identifier.getName());
     }
 
     @Override
@@ -52,7 +54,11 @@ public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcesso
     public boolean usesTransientVariables() {
         assert identifier != null;
 
-        return JANIComponentRegistrar.getVariableByName(identifier.getName())
-                .isTransient();
+        JANIIdentifier jid = JANIComponentRegistrar.getIdentifierByName(identifier.getName());
+        if (jid instanceof Variable) {
+        	return ((Variable) jid).isTransient();
+        } else {
+        	return false;
+        }
     }
 }
