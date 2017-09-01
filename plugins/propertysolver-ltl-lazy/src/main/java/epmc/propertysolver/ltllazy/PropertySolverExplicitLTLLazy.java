@@ -41,6 +41,7 @@ import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsMDP;
@@ -912,6 +913,9 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             return false;
         }
         if (propertyQuantifier.getQuantified() instanceof ExpressionReward) {
+            return false;
+        }
+        if (propertyQuantifier.getQuantified() instanceof ExpressionSteadyState) {
             return false;
         }
         if (!TypeReal.isReal(TypeWeight.get())) {
