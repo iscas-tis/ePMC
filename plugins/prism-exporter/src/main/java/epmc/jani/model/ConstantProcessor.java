@@ -35,7 +35,7 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
         assert obj instanceof Constant; 
 
         constant = (Constant) obj;
-        JANIComponentRegistrar.registerConstant(constant);
+        JANIComponentRegistrar.registerIdentifier(constant);
         return this;
     }
 

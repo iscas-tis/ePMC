@@ -81,7 +81,7 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
         if (prefix != null)	{
             prism.append(prefix);
         }
-        prism.append(JANIComponentRegistrar.getVariableNameByVariable(variable))
+        prism.append(JANIComponentRegistrar.getIdentifierNameByIdentifier(variable))
         .append(" : ")
         .append(ProcessorRegistrar.getProcessor(variable.getType())
                 .toPRISM());
