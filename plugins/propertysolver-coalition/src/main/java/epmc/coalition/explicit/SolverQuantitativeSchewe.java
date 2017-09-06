@@ -56,6 +56,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.TypeObject.StorageType;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorSubtract;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
 
@@ -489,10 +490,11 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         QuantitativeResult result = reach(induced, reach, computeStrategyP1);
         ValueArrayAlgebra probabilities = result.getProbabilities();
         ValueAlgebra value = probabilities.getType().getEntryType().newValue();
-        Value one = value.getType().getOne();
+        ValueAlgebra one = value.getType().getOne();
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, one.getType(), value.getType());
         for (int i = 0; i < probabilities.size(); i++) {
             probabilities.get(value, i);
-            value.subtract(one, value);
+            subtract.apply(value, one, value);
             probabilities.set(value, i);			
         }
         return result;

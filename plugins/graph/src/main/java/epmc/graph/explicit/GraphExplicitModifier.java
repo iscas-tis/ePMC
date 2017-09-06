@@ -28,6 +28,7 @@ import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorSubtract;
 
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) {
@@ -64,6 +65,7 @@ public final class GraphExplicitModifier {
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
@@ -76,7 +78,7 @@ public final class GraphExplicitModifier {
                     weight.divide(weight, uniformisationRate);
                     weightProp.set(node, succNr, weight);
                 }
-                weight.subtract(uniformisationRate, sum);
+                subtract.apply(weight, uniformisationRate, sum);
                 weight.divide(weight, uniformisationRate);
                 weightProp.set(node, graph.getNumSuccessors(node) - 1, weight);
                 graph.setSuccessorNode(node, graph.getNumSuccessors(node) - 1, node);

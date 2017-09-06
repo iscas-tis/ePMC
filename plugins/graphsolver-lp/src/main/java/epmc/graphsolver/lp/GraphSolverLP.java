@@ -44,12 +44,15 @@ import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueContentIntArray;
+import epmc.value.operator.OperatorSubtract;
 
 // TODO make sure that this thing still works and write some JUnit tests
 
@@ -201,6 +204,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         for(int node = undecided.nextSetBit(0); 
                 node >= 0 ; 
                 node = undecided.nextSetBit(node + 1)) {
@@ -222,14 +226,14 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 Value tranProb = weightProp.get(node, succNr);
                 ValueAlgebra prob = typeWeight.newValue();
                 if (visited[succ] == 0) {
-                    prob.subtract(zero, tranProb);
+                    subtract.apply(prob, zero, tranProb);
                     row[jIndex] = prob;
                     varsIndex[jIndex] = succ;     /* directly use this node index */
                     jIndex ++;
                     visited[succ] = jIndex;       /* index + 1 */
-                }else { /** not first time be successor */
+                } else { /** not first time be successor */
                     int j = visited[succ] - 1;
-                    prob.subtract(row[j], tranProb);
+                    subtract.apply(prob, row[j], tranProb);
                     row[j] = prob;
                 }
             }
@@ -333,7 +337,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         undecided.andNot(zeroStates);
 
         ValueAlgebra minusOne = typeWeight.newValue();
-        minusOne.subtract(zero, one);
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        subtract.apply(minusOne, zero, one);
 
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
@@ -360,7 +365,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     /** if it is the first time */
                     Value tranProb = weightProp.get(node, succNr);
                     ValueAlgebra prob = typeWeight.newValue();
-                    prob.subtract(zero, tranProb);
+                    subtract.apply(prob, zero, tranProb);
                     row[jIndex] = prob;
                     varsIndex[jIndex] = succ;     /* directly use this node index */
                     jIndex ++;
