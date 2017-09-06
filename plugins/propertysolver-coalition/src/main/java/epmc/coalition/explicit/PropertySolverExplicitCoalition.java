@@ -59,6 +59,8 @@ import epmc.options.UtilOptions;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeWeight;
@@ -68,6 +70,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSubtract;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 
@@ -425,12 +428,13 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         // TODO check!
         ValueAlgebra entry = solverResult.getType().getEntryType().newValue();
         ValueAlgebra one = TypeWeight.get().getOne();
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         for (int i = 0; i < forStates.size(); i++) {
             int node = forStates.getExplicitIthState(i);
             //int modelState = nodeAutomaton.getInt();
             solverResult.get(entry, node);
             if (isMin) {
-                entry.subtract(one, entry);
+                subtract.apply(entry, one, entry);
             }
             resultValues.set(entry, i);
         }

@@ -22,7 +22,6 @@ package epmc.graph;
 
 import java.io.Closeable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import epmc.dd.ContextDD;
@@ -58,6 +57,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorSubtract;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
@@ -439,6 +439,7 @@ public final class GraphBuilderDD implements Closeable {
         graph.addSettableNodeProperty(CommonProperties.STATE, TypeBoolean.get());
         graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
         graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         TypeWeight typeWeight = TypeWeight.get();
         TypeBoolean typeBoolean = TypeBoolean.get();
         TypeEnum typePlayer = TypeEnum.get(Player.class);
@@ -508,7 +509,7 @@ public final class GraphBuilderDD implements Closeable {
             }
             if (uniformise) {
                 graph.setSuccessorNode(nodeNr, thisTargets.size(), nodeNr);
-                weight.subtract(unifRate, sum);
+                subtract.apply(weight, unifRate, sum);
                 weight.divide(weight, unifRate);
                 edgePropertyWeight.set(nodeNr, thisTargets.size(), weight);
             } else if (thisTargets.size() == 0) {
