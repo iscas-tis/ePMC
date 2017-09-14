@@ -163,7 +163,7 @@ public final class DestinationEvaluator {
         zeroReal = UtilValue.newValue(TypeReal.get(), 0);
     }
 
-    Value evaluateProbability(NodeJANI node) {
+    ValueAlgebra evaluateProbability(NodeJANI node) {
         ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
         ensure(result.isGe(zeroReal), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
         return result;
