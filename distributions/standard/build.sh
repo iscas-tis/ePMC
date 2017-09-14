@@ -30,5 +30,5 @@ prepare_plugin propertysolver-ltl-lazy
 prepare_plugin dd-cudd
 prepare_plugin dd-cudd-mtbdd
 prepare_plugin automaton-determinisation
-prepare_plugin jani-exporter
+# prepare_plugin jani-exporter
 assemble_end standard
