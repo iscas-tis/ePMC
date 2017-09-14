@@ -561,7 +561,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                 successor.unmark();
                 //				successor.set(nodeAutomaton);
                 successor.setVariable(edgeVarNr, -1);
-                ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
+                ValueAlgebra probability = destinationEval.evaluateProbability(node);
                 if (probability.isZero()) {
                     continue;
                 }
