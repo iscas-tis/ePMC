@@ -49,7 +49,7 @@ public final class NodeJANI implements ExplorerNode {
     private final boolean[] storeVariables;
     private final int numBits;
     private final StateVariables stateVariables;
-    private Value[] initialValues;
+    private final Value[] initialValues;
 
     public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) {
         assert explorer != null;
