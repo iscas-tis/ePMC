@@ -78,6 +78,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
     private NodeJANI[] successors;
     private PropertyEdgeGeneral weight;
     private ValueAlgebra prodWeight;
+    private boolean[] isState;
 
     @Override
     public void setExplorer(ExplorerJANI model) {
@@ -165,6 +166,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         }
         prodWeight = TypeWeightTransition.get().newValue();
         weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get());
+        isState = new boolean[automata.length];
     }
 
     @Override
@@ -187,6 +189,11 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
     }
 
     private void queryNodeTwoLayer(NodeJANI node) {
+        int autNr = 0;
+        for (ExplorerComponentAutomaton automaton : automata) {
+            isState[autNr] = automaton.isState(node);
+            autNr++;
+        }
         boolean state = isState(node);
         this.state.set(state);
         if (state) {
@@ -239,7 +246,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         int numSuccessors = 1;
         for (int autNr = 0; autNr < automata.length; autNr++) {
             ExplorerComponentAutomaton automaton = automata[autNr];
-            if (!automaton.isState(node)) {
+            if (!isState[autNr]) {
                 automaton.queryNode(node);
                 numSuccessors *= automaton.getNumSuccessors();
             }
@@ -254,7 +261,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
             successor.unmark();
             for (int autNr = 0; autNr < automata.length; autNr++) {
                 ExplorerComponentAutomaton automaton = automata[autNr];
-                if (automaton.isState(node)) {
+                if (isState[autNr]) {
                     continue;
                 }
                 int numAutSuccessors = automaton.getNumSuccessors();
@@ -399,8 +406,8 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
     @Override
     public boolean isState(NodeJANI node) {
         boolean state = true;
-        for (ExplorerComponentAutomaton automaton : automata) {
-            state &= automaton.isState(node);
+        for (boolean is : isState) {
+            state &= is;
         }
         return state;
     }
