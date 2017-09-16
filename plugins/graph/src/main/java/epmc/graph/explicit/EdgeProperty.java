@@ -24,6 +24,7 @@ import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueObject;
+import epmc.value.ValueSetString;
 
 /**
  * Edge property of a graph.
@@ -124,7 +125,7 @@ public interface EdgeProperty  {
      */
     default void set(int node, int successor, String value) {
         Value tmpValue = getType().newValue();
-        tmpValue.set(value);
+        ValueSetString.asValueSetString(tmpValue).set(value);
         set(node, successor, tmpValue);
     }
 }

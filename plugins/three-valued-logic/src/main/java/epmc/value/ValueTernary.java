@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueTernary implements ValueEnumerable, ValueBitStoreable {
+public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, ValueSetString {
     public static boolean isTernary(Value value) {
         return value instanceof ValueTernary;
     }

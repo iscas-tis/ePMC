@@ -44,12 +44,6 @@ public final class ValueArrayJANIDecision implements ValueArray {
     }
 
     @Override
-    public void set(String value) {
-        assert value != null;
-        assert false;
-    }
-
-    @Override
     public void setImmutable() {
         this.immutable = true;
     }

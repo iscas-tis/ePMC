@@ -99,12 +99,6 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     }
 
     @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;

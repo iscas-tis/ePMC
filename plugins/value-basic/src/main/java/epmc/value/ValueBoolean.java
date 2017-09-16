@@ -25,7 +25,7 @@ import static epmc.error.UtilError.fail;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable {
+public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, ValueSetString {
     public static boolean isBoolean(Value value) {
         return value instanceof ValueBoolean;
     }

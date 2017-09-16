@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Value;
 
-public final class ValueInterval implements ValueAlgebra, ValueRange {
+public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
     public static boolean isInterval(Value value) {
         return value instanceof ValueInterval;
     }

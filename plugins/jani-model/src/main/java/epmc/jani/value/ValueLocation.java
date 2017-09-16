@@ -199,10 +199,4 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
         ValueLocation otherLocation = (ValueLocation) other;
         return Math.abs(locationNumber - otherLocation.locationNumber);
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
 }

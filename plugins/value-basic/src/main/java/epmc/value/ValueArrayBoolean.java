@@ -116,13 +116,7 @@ final class ValueArrayBoolean implements ValueArray {
     public boolean isImmutable() {
         return immutable;
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
+    
     @Override
     public String toString() {
         return UtilValue.arrayToString(this);

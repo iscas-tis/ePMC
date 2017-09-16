@@ -27,15 +27,6 @@ package epmc.value;
  * @author Ernst Moritz Hahn
  */
 public interface Value extends Comparable<Value> {
-    @Override
-    boolean equals(Object obj);
-
-    @Override
-    int hashCode();
-
-    @Override
-    String toString();
-
     /**
      * Get type with which this value was created.
      * 
@@ -50,8 +41,6 @@ public interface Value extends Comparable<Value> {
      * @param value value to set this value to
      */
     void set(Value value);
-
-    void set(String value);
 
     /**
      * Sets value to be immutable.

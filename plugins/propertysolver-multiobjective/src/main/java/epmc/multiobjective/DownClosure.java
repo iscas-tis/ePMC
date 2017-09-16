@@ -39,6 +39,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorMax;
 
 final class DownClosure {
@@ -83,7 +84,7 @@ final class DownClosure {
         if (unrestrictedResult == null) {
             return null;
         }
-        lowerBound.set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
+        ValueSetString.asValueSetString(lowerBound).set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
         ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
         if (restrictedResult != null) {
             return restrictedResult;
@@ -172,7 +173,7 @@ final class DownClosure {
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[0];
             String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
-            entry.set(minIncrease);
+            ValueSetString.asValueSetString(entry).set(minIncrease);
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
         }
 
@@ -225,7 +226,7 @@ final class DownClosure {
         if (numerical) {
             ValueAlgebra smallValue = TypeWeight.get().newValue();
             String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
-            smallValue.set(minIncrease);
+            ValueSetString.asValueSetString(smallValue).set(minIncrease);
             separating.get(entry, 0);
             if (entry.isZero()) {
                 separating.set(smallValue, 0);

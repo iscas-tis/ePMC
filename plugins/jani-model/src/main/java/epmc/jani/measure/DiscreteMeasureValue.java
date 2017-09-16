@@ -120,10 +120,4 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
         // TODO Auto-generated method stub
         return 0;
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
 }

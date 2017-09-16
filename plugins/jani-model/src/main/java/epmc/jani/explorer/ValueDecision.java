@@ -2,8 +2,9 @@ package epmc.jani.explorer;
 
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.ValueSetString;
 
-public final class ValueDecision implements Value {
+public final class ValueDecision implements Value, ValueSetString {
     private final static String LBRACE = "(";
     private final static String RBRACE = ")";
     private final static String COMMA = ",";
@@ -68,7 +69,7 @@ public final class ValueDecision implements Value {
         String[] strings = value.split(COMMA);
         for (int index = 0; index < values.length; index++) {
             strings[index] = strings[index].trim();
-            values[index].set(strings[index]);
+            ValueSetString.asValueSetString(values[index]).set(strings[index]);
         }
     }
 

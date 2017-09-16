@@ -26,6 +26,7 @@ import java.io.IOException;
 import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.ValueSetString;
 
 final class ISatOutputReader {
     private final static char LBRACK_C = '[';
@@ -101,7 +102,7 @@ final class ISatOutputReader {
 
     private static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
-        value.set(valueString);
+        ValueSetString.asValueSetString(value).set(valueString);
         return value;
     }
 }

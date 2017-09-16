@@ -39,6 +39,7 @@ import epmc.value.TypeObject.StorageType;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.ValueSetString;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TByteArrayList;
 import gnu.trove.list.array.TIntArrayList;
@@ -150,7 +151,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         public void set(int currentNode, int successor, String value) {
             assert value != null;
             assert successor >= 0;
-            helper.set(value);
+            ValueSetString.asValueSetString(helper).set(value);
             set(currentNode, successor, helper);
         }
 

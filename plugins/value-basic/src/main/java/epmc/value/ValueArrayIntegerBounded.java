@@ -128,12 +128,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         return immutable;
     }
     @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void set(int value, int index) {
         assert !isImmutable();
         assert index >= 0;
