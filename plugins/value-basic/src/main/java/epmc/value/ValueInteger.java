@@ -25,7 +25,7 @@ import static epmc.error.UtilError.fail;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable {
+public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable, ValueSetString {
     public static boolean isInteger(Value value) {
         return value instanceof ValueInteger;
     }

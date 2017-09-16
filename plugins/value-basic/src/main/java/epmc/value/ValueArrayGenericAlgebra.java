@@ -100,12 +100,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     }
 
     @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void setSize(int size) {
         assert !isImmutable();
         assert size >= 0;

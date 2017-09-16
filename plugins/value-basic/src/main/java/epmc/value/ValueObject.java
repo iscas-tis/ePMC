@@ -132,10 +132,4 @@ public final class ValueObject implements Value {
         ValueObject otherObject = asObject(other);
         return content.equals(otherObject.content);
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
 }

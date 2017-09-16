@@ -129,12 +129,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
             // TODO Auto-generated method stub
             return false;
         }
-
-        @Override
-        public void set(String value) {
-            // TODO Auto-generated method stub
-
-        }
     }
 
     private final class TypeArrayExplorerNode implements TypeArray {
@@ -262,12 +256,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         @Override
         public boolean isImmutable() {
             return immutable;
-        }
-
-        @Override
-        public void set(String value) {
-            // TODO Auto-generated method stub
-
         }
 
         @Override

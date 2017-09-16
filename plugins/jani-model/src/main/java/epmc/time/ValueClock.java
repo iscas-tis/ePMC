@@ -110,10 +110,4 @@ public final class ValueClock implements ValueAlgebra {
         // TODO Auto-generated method stub
         return 0;
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
 }

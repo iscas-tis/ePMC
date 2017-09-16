@@ -110,12 +110,6 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
     }
 
     @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void setSize(int size) {
         assert size >= 0;
         try {

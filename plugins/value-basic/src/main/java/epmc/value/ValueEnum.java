@@ -180,10 +180,4 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         assert number < type.getNumValues() : number;
         set(type.getEnumClass().getEnumConstants()[number]);
     }
-
-    @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
 }

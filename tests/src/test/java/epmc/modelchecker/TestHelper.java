@@ -69,6 +69,7 @@ import epmc.util.Util;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.ValueSetString;
 
 /**
  * Static auxiliary methods and constants for JUnit tests.
@@ -359,7 +360,7 @@ public final class TestHelper {
         assert expected != null;
         assert tolerance >= 0.0;
         Value actualValue = expected.getType().newValue();
-        actualValue.set("" + actual);
+        ValueSetString.asValueSetString(actualValue).set("" + actual);
         assertEquals(null, expected, actualValue, tolerance);
     }
 
@@ -368,7 +369,7 @@ public final class TestHelper {
         assert actual != null;
         assert tolerance >= 0.0;
         Value expectedValue = actual.getType().newValue();
-        expectedValue.set("" + expected);
+        ValueSetString.asValueSetString(expectedValue).set("" + expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
 
@@ -411,7 +412,7 @@ public final class TestHelper {
     public static void assertEquals(boolean expected, Value actual) {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
-        expectedValue.set(Boolean.toString(expected));
+        ValueSetString.asValueSetString(expectedValue).set(Boolean.toString(expected));
         assertTrue(expectedValue.isEq(actual));
     }
 
@@ -547,7 +548,7 @@ public final class TestHelper {
 
     public static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
-        value.set(valueString);
+        ValueSetString.asValueSetString(value).set(valueString);
         return value;
     }
 

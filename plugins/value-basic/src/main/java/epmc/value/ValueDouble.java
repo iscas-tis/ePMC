@@ -25,7 +25,7 @@ import static epmc.error.UtilError.fail;
 import epmc.options.Options;
 import epmc.value.Value;
 
-public final class ValueDouble implements ValueReal {
+public final class ValueDouble implements ValueReal, ValueSetString {
     public static boolean isDouble(Value value) {
         return value instanceof ValueDouble;
     }

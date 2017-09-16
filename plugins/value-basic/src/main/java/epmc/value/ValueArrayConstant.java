@@ -81,12 +81,6 @@ public final class ValueArrayConstant implements ValueArray {
     }
 
     @Override
-    public void set(String value) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void setSize(int size) {
         assert size >= 0;
         this.size = size;

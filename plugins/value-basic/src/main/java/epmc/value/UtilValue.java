@@ -95,7 +95,7 @@ public final class UtilValue {
     public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
         @SuppressWarnings("unchecked")
         T value = (T) type.newValue();
-        value.set(valueString);
+        ValueSetString.asValueSetString(value).set(valueString);
         return value;
     }
 

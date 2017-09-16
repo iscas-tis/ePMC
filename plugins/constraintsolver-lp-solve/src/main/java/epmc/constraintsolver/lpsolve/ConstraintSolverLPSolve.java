@@ -54,6 +54,7 @@ import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
 import epmc.value.ValueReal;
+import epmc.value.ValueSetString;
 
 public final class ConstraintSolverLPSolve implements ConstraintSolver {
     public final static String IDENTIFIER = "lp-solve";
@@ -434,8 +435,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         ValueReal resultValue = TypeReal.get().newValue();
         if (ValueDouble.isDouble(resultValue)) {
             ValueDouble.asDouble(resultValue).set(result);
+        } else if (ValueSetString.isValueSetString(resultValue)) {
+            ValueSetString.asValueSetString(resultValue).set(Double.toString(result));
         } else {
-            resultValue.set(Double.toString(result));
+            assert false;
         }
         return resultValue;
     }
@@ -450,8 +453,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
             if (ValueDouble.isDouble(entry)) {
                 ValueDouble.asDouble(entry).set(doubleVal);
+            } else if (ValueSetString.isValueSetString(entry)) {
+                ValueSetString.asValueSetString(entry).set(Double.toString(doubleVal));
             } else {
-                entry.set(Double.toString(doubleVal));
+                assert false;
             }
             result.set(entry, i);
         }
@@ -468,8 +473,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             Value entry = typeReal.newValue();
             if (ValueDouble.isDouble(entry)) {
                 ValueDouble.asDouble(entry).set(doubleVal);
+            } else if (ValueSetString.isValueSetString(entry)) {
+                ValueSetString.asValueSetString(entry).set(Double.toString(doubleVal));
             } else {
-                entry.set(Double.toString(doubleVal));
+                assert false;
             }
             result[i] = entry;
         }
