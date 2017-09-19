@@ -39,7 +39,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
 
     private final TypeArrayObjectNumerated type;
     private long[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayObjectNumerated(TypeArrayObjectNumerated type, boolean objectIdentity) {
@@ -64,7 +63,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert ValueObject.isObject(value);
         assert getType().getEntryType().canImport(value.getType());
@@ -174,18 +172,7 @@ final class ValueArrayObjectNumerated implements ValueArray {
     }
 
     @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;

@@ -27,7 +27,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     private final static String SPACE = " ";
     private final TypeArrayGenericAlgebra type;
     private ValueAlgebra[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayGenericAlgebra(TypeArrayGenericAlgebra type) {
@@ -43,7 +42,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     }
 
     void setContent(Type entryType, Value[] content) {
-        assert !isImmutable();
         for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);
         }
@@ -90,18 +88,7 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         TypeAlgebra entryType = getType().getEntryType();
         this.content = new ValueAlgebra[size];

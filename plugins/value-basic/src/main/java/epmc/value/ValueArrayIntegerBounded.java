@@ -40,7 +40,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
      * variable here because the computation would be too expensive.
      * */
     private final int bitsPerEntry;
-    private boolean immutable;
     private int size;
 
     ValueArrayIntegerBounded(TypeArrayIntegerBounded type) {
@@ -119,17 +118,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-    @Override
     public void set(int value, int index) {
-        assert !isImmutable();
         assert index >= 0;
         assert index < size();
         assert value >= lower : value + SPACE + lower;
@@ -149,7 +138,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
 
     @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;

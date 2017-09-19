@@ -58,11 +58,8 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
                 UtilValue.clone(TypeReal.get().getZero()));
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         this.immutable = true;
-        lower.setImmutable();
-        upper.setImmutable();
     }
 
     public ValueReal getIntervalLower() {
@@ -224,8 +221,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         return type;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
 

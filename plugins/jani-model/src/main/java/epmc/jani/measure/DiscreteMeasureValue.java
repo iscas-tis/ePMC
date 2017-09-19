@@ -78,18 +78,6 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
         return null;
     }
 
-    @Override
-    public void setImmutable() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean isImmutable() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
     public void add(Value operand1, Value operand2) {
         //		this.operator = ContextValue.get().getOperator(OperatorAdd.IDENTIFIER);
         this.operands = new DiscreteMeasure[2];

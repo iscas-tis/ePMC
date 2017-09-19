@@ -107,13 +107,11 @@ final class ValueArrayBoolean implements ValueArray {
         return type;
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
     

@@ -137,7 +137,6 @@ public final class SupportWalker {
         this.stopWhere = new Value[stopWhere.length];
         for (int index = 0; index < stopWhere.length; index++) {
             this.stopWhere[index] = UtilValue.clone(stopWhere[index]);
-            this.stopWhere[index].setImmutable();
         }
         this.variables = computeVariables(support);
         goBackStack = new int[variables.length];
@@ -217,7 +216,6 @@ public final class SupportWalker {
         while (iter.hasNext()) {
             iter.advance();
             Value value = UtilValue.clone(iter.key());
-            value.setImmutable();
             valueEnumerator.put(value, valueNumber);
             leafValues[valueNumber] = value;
             valueNumber++;

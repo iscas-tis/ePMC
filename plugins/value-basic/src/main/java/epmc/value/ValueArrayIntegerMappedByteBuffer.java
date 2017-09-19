@@ -36,7 +36,6 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
     private FileChannel channel;
     private MappedByteBuffer buffer;
     private TypeArrayIntegerMappedByteBuffer type;
-    private boolean immutable;
     private int size;
 
     ValueArrayIntegerMappedByteBuffer(TypeArrayIntegerMappedByteBuffer type) {
@@ -97,16 +96,6 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
             hash = entry + (hash << 6) + (hash << 16) - hash;
         }
         return hash;
-    }
-
-    @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

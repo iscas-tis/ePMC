@@ -27,7 +27,6 @@ import epmc.value.ValueArray;
 public final class ValueArrayGeneric implements ValueArray {
     private final TypeArrayGeneric type;
     private Value[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayGeneric(TypeArrayGeneric type) {
@@ -43,7 +42,6 @@ public final class ValueArrayGeneric implements ValueArray {
     }
 
     void setContent(Type entryType, Value[] content) {
-        assert !isImmutable();
         for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);
         }
@@ -82,18 +80,7 @@ public final class ValueArrayGeneric implements ValueArray {
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         Type entryType = getType().getEntryType();
         this.content = new Value[size];

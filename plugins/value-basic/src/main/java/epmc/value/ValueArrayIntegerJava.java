@@ -26,7 +26,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     private final static String SPACE = " ";
     private final TypeArrayIntegerJava type;
     private int[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayIntegerJava(TypeArrayIntegerJava type) {
@@ -43,7 +42,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
@@ -53,7 +51,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
 
     @Override
     public void set(int entry, int index) {
-        assert !isImmutable();
         assert index >= 0;
         assert index < size() : index + SPACE + size();
         content[index] = entry;		
@@ -97,18 +94,7 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     }
 
     @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         content = new int[size];
         this.size = size;

@@ -59,9 +59,9 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
      * The value context parameter may not be {@code null}.
      */
     public TypeTernary() {
-        valueFalse.setImmutable();
-        valueTrue.setImmutable();
-        valueUnknown.setImmutable();
+//        valueFalse.setImmutable();
+  //      valueTrue.setImmutable();
+    //    valueUnknown.setImmutable();
     }
 
     public static TypeTernary get() {

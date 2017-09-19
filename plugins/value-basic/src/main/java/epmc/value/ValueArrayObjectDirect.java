@@ -26,7 +26,6 @@ import epmc.value.ValueArray;
 final class ValueArrayObjectDirect implements ValueArray {
     private final TypeArrayObjectDirect type;
     private Object[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayObjectDirect(TypeArrayObjectDirect type) {
@@ -43,7 +42,6 @@ final class ValueArrayObjectDirect implements ValueArray {
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert ValueObject.isObject(value);
         assert index >= 0;
@@ -80,18 +78,7 @@ final class ValueArrayObjectDirect implements ValueArray {
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         if (this.content.length < size) {
             content = new Object[size];

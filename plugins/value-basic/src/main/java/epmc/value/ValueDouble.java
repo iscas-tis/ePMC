@@ -259,13 +259,11 @@ public final class ValueDouble implements ValueReal, ValueSetString {
 
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         this.immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
 

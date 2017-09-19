@@ -54,9 +54,6 @@ final class SMTLibVariable {
 
         Builder setLower(Value lower) {
             this.lower = lower == null ? null : UtilValue.clone(lower);
-            if (this.lower != null) {
-                this.lower.setImmutable();
-            }
             return this;
         }
 
@@ -66,9 +63,6 @@ final class SMTLibVariable {
 
         Builder setUpper(Value upper) {
             this.upper = upper == null ? null : UtilValue.clone(upper);
-            if (this.upper != null) {
-                this.upper.setImmutable();
-            }
             return this;
         }
 

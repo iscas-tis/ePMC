@@ -69,8 +69,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         private final static String NULL = "null";
         /** Index of node in {@link NodePropertyExplorerNode#nodeStore}. */
         private int node;
-        /** Whether the value is immutable. */
-        private boolean immutable;
 
         @Override
         public Value clone() {
@@ -82,16 +80,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         @Override
         public Type getType() {
             return type;
-        }
-
-        @Override
-        public void setImmutable() {
-            this.immutable = true;
-        }
-
-        @Override
-        public boolean isImmutable() {
-            return immutable;
         }
 
         @Override
@@ -190,7 +178,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         /** Content of the array, storing indices of explorer nodes. */
         private int[] content;
         private final TypeArrayExplorerNode type;
-        private boolean immutable;
         private int size;
 
         ValueArrayExplorerNode(TypeArrayExplorerNode type) {
@@ -208,7 +195,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
 
         @Override
         public void set(Value value, int index) {
-            assert !isImmutable();
             assert value != null;
             assert getType().getEntryType().canImport(value.getType());
             assert index >= 0;
@@ -249,18 +235,7 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
 
         @Override
-        public void setImmutable() {
-            immutable = true;
-        }
-
-        @Override
-        public boolean isImmutable() {
-            return immutable;
-        }
-
-        @Override
         public void setSize(int size) {
-            assert !isImmutable();
             content = new int[size];
             this.size = size;
         }

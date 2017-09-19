@@ -76,7 +76,6 @@ public interface ValueArray extends Value {
 
     @Override
     default void set(Value op) {
-        assert !isImmutable();
         if (this == op) {
             return;
         }
@@ -113,7 +112,6 @@ public interface ValueArray extends Value {
     @Override
     default int compareTo(Value other) {
         assert other != null;
-        assert !isImmutable();
         ValueArray opArray = ValueArray.asArray(other);
         int sizeCmp = Integer.compare(size(), opArray.size());
         if (sizeCmp != 0) {

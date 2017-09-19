@@ -106,7 +106,6 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         if (builder.getValue() != null) {
             this.valueProvider = null;
             this.value = UtilValue.clone(builder.getValue());
-            this.value.setImmutable();
         } else if (builder.getValueProvider() != null) {
             this.valueProvider = builder.getValueProvider();
             this.value = null;
@@ -120,7 +119,6 @@ public final class ExpressionLiteral implements ExpressionPropositional {
             return value;
         } else if (valueProvider != null) {
             Value result = valueProvider.provideValue();
-            result.setImmutable();
             return result;
         } else {
             throw new RuntimeException();
