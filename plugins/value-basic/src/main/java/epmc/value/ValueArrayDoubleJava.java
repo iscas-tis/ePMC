@@ -38,7 +38,6 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     private final static String SPACE = " ";
     private double[] content;
     private final TypeArrayDouble type;
-    private boolean immutable;
     private final ValueDouble entry;
     private int size;
 
@@ -58,7 +57,6 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert getType().getEntryType().canImport(value.getType()) : value;
         assert index >= 0 : index;
@@ -113,18 +111,7 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         content = new double[size];
         this.size = size;

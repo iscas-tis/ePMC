@@ -49,7 +49,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
 
     private Ternary value;
     private final TypeTernary type;
-    private boolean immutable;
 
     ValueTernary(TypeTernary type, Ternary value) {
         assert type != null;
@@ -66,13 +65,11 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     public void set(Ternary value) {
-        assert !isImmutable();
         this.value = value;
 
     }
 
     public void set(boolean value) {
-        assert !isImmutable();
         this.value = value ? Ternary.TRUE : Ternary.FALSE;
 
     }
@@ -112,7 +109,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
 
     @Override
     public void set(Value from) {
-        assert !isImmutable();
         assert ValueBoolean.isBoolean(from) || ValueTernary.isTernary(from);
         if (ValueBoolean.isBoolean(from)) {
             set(ValueBoolean.asBoolean(from).getBoolean());
@@ -133,7 +129,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
 
     @Override
     public void read(BitStream reader) {
-        assert !isImmutable();
         assert reader != null;
         int ord = 0;
         if (reader.read()) {
@@ -202,16 +197,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
             assert false;
             return -1;
         }
-    }
-
-    @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

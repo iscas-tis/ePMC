@@ -175,13 +175,11 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
         }
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         this.immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
 

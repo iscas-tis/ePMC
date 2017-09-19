@@ -4,7 +4,6 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
 public final class ValueClock implements ValueAlgebra {
-    private boolean immutable;
     private TypeClock type;
     private int value;
 
@@ -23,16 +22,6 @@ public final class ValueClock implements ValueAlgebra {
     @Override
     public TypeClock getType() {
         return type;
-    }
-
-    @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

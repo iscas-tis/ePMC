@@ -182,7 +182,6 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         long currentNumber = nextNumber;
         //        currentNumber |= (long) value.getTypeNumber() << 32;
         Value clone = UtilValue.clone(value);
-        clone.setImmutable();
         numberToValue.put(currentNumber, clone);
         valueToNumber.put(clone, currentNumber);
         nextNumber++;

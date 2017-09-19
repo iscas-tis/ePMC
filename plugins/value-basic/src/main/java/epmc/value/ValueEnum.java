@@ -158,13 +158,11 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
         return value.ordinal();
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         this.immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
 

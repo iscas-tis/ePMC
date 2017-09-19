@@ -33,7 +33,6 @@ public final class ValueArrayJANIDecision implements ValueArray {
     private final int bitsPerEntry;
     private final DecisionBitStream stream = new DecisionBitStream();
     private long content[] = new long[0];
-    private boolean immutable;
     private int bitIndex;
     private int size;
 
@@ -41,16 +40,6 @@ public final class ValueArrayJANIDecision implements ValueArray {
         assert type != null;
         this.type = type;
         bitsPerEntry = type.getEntryType().getTotalNumBits();
-    }
-
-    @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

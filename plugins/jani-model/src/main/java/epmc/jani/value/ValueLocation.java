@@ -62,7 +62,6 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
 
     @Override
     public void read(BitStream reader) {
-        assert !isImmutable();
         assert reader != null;
         locationNumber = 0;
         int marker = 1;
@@ -95,16 +94,6 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
     @Override
     public TypeLocation getType() {
         return type;
-    }
-
-    @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

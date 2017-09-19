@@ -26,7 +26,6 @@ import epmc.value.ValueArray;
 public final class ValueArrayConstant implements ValueArray {
     private final TypeArrayConstant type;
     private final Value content;
-    private boolean immutable;
     private int size;
 
     ValueArrayConstant(TypeArrayConstant type) {
@@ -43,7 +42,6 @@ public final class ValueArrayConstant implements ValueArray {
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert content.getType().canImport(value.getType());
         assert index >= 0;
@@ -69,17 +67,7 @@ public final class ValueArrayConstant implements ValueArray {
     public TypeArrayConstant getType() {
         return type;
     }
-
-    @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
+    
     @Override
     public void setSize(int size) {
         assert size >= 0;

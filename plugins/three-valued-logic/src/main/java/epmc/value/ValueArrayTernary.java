@@ -29,7 +29,6 @@ final class ValueArrayTernary implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
     private final TypeArrayTernary type;
     private long[] content;
-    private boolean immutable;
     private int size;
 
     ValueArrayTernary(TypeArrayTernary type) {
@@ -53,7 +52,6 @@ final class ValueArrayTernary implements ValueArray {
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
@@ -103,18 +101,7 @@ final class ValueArrayTernary implements ValueArray {
     }
 
     @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;

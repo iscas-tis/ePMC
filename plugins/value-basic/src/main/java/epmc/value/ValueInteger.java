@@ -263,13 +263,11 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
         return value - getType().getLowerInt();
     }
 
-    @Override
-    public void setImmutable() {
+    void setImmutable() {
         this.immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
 

@@ -11,7 +11,6 @@ public final class ValueDecision implements Value, ValueSetString {
     private final TypeDecision type;
     private final int[] variables;
     private final Value[] values;
-    private boolean immutable;
 
     ValueDecision(TypeDecision type) {
         assert type != null;
@@ -71,16 +70,6 @@ public final class ValueDecision implements Value, ValueSetString {
             strings[index] = strings[index].trim();
             ValueSetString.asValueSetString(values[index]).set(strings[index]);
         }
-    }
-
-    @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
     }
 
     @Override

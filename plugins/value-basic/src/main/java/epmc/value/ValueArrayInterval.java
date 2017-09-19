@@ -25,7 +25,6 @@ import epmc.value.Value;
 public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContentDoubleArray {
     private final TypeArrayInterval type;
     private ValueArrayAlgebra content;
-    private boolean immutable;
     private int size;
 
     ValueArrayInterval(TypeArrayInterval type) {
@@ -48,7 +47,6 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
         assert ValueInterval.isInterval(value);
         assert index >= 0;
@@ -59,7 +57,6 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
 
     @Override
     public void set(int entry, int index) {
-        assert !isImmutable();
         assert index >= 0;
         assert index < size() : index + " " + size();
         content.set(entry, index * 2);
@@ -89,18 +86,7 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     }
 
     @Override
-    public void setImmutable() {
-        this.immutable = true;
-    }
-
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
     public void setSize(int size) {
-        assert !isImmutable();
         assert size >= 0;
         content = UtilValue.newArray(getType().getTypeArrayReal(), size * 2);
         this.size = size;
