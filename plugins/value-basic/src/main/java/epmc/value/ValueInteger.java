@@ -294,12 +294,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public void divide(Value operand1, Value operand2) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public boolean isNegInf() {
         // TODO Auto-generated method stub
         return false;

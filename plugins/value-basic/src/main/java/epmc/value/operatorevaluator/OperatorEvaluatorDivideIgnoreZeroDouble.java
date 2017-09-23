@@ -26,7 +26,7 @@ import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorDivideIgnoreZero;
 
 public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator {
@@ -72,10 +72,12 @@ public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator
         for (Value operand : operands) {
             assert operand != null;
         }
-        if (ValueAlgebra.asAlgebra(operands[1]).isZero()) {
-            result.set(operands[0]);
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
+        if (op2 == 0.0) {
+            ValueDouble.asDouble(result).set(op1);            
         } else {
-            ValueAlgebra.asAlgebra(result).divide(operands[0], operands[1]);
+            ValueDouble.asDouble(result).set(op1 / op2);
         }
     }
 }

@@ -42,8 +42,6 @@ public interface ValueAlgebra extends Value {
 
     void add(Value operand1, Value operand2);
 
-    void divide(Value operand1, Value operand2);
-
     void subtract(Value operand1, Value operand2);
 
     void multiply(Value operand1, Value operand2);

@@ -27,10 +27,12 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.sexpression.SExpression;
 import epmc.sexpression.SExpressionParser;
 import epmc.sexpression.UtilSExpression;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorDivide;
 
 final class OutputReader {
     private final static String SAT = "sat";
@@ -85,8 +87,9 @@ final class OutputReader {
                     assert valueExpr.getChild(0).getAtomic().equals(DIV);
                     Value num = UtilValue.newValue(varType, valueExpr.getChild(1).getAtomic());
                     Value den = UtilValue.newValue(varType, valueExpr.getChild(2).getAtomic());
+                    OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, num.getType(), den.getType());
                     result.values[varNr] = varType.newValue();
-                    ValueAlgebra.asAlgebra(result.values[varNr]).divide(num, den);
+                    divide.apply(result.values[varNr], num, den);
                 }
             }
         } while (line != null);

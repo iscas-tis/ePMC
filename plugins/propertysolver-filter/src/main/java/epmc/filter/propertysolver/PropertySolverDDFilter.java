@@ -40,12 +40,16 @@ import epmc.graph.dd.StateSetDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
+import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorDivide;
 
 /**
  * Solver for filter properties for the DD engine.
@@ -177,7 +181,8 @@ public final class PropertySolverDDFilter implements PropertySolver {
             Value avg = property.applyOverSat(OperatorAdd.ADD, getModel().getPresCube(), checkFor);
             int numStates = checkFor.countSat(getModel().getPresCube()).intValue();
             Value numStatesValue = UtilValue.newValue(TypeInteger.get(), numStates);
-            ValueAlgebra.asAlgebra(avg).divide(avg, numStatesValue);
+            OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, avg.getType(), numStatesValue.getType());
+            divide.apply(avg, avg, numStatesValue);
             checkFor.dispose();
             result = getContextDD().newConstant(avg);
             break;

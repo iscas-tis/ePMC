@@ -32,9 +32,12 @@ import epmc.jani.explorer.NodeJANI;
 import epmc.jani.explorer.PropertyEdgeGeneral;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeEnum;
 import epmc.value.TypeWeightTransition;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorDivide;
 
 public final class ExplorerExtensionDTMC implements ExplorerExtension {
     public final static String IDENTIFIER = "dtmc";
@@ -47,7 +50,8 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
     private ValueAlgebra dtmcAligned;
     private ValueAlgebra zero;
     private ValueAlgebra one;
-
+    private OperatorEvaluator divide;
+    
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -68,6 +72,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         dtmcAligned = TypeWeightTransition.get().newValue();
         zero = TypeWeightTransition.get().getZero();
         one = TypeWeightTransition.get().getOne();
+        divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override
@@ -110,7 +115,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         }
         if (!dtmcSum.isEq(one)) {
             for (int succ = 0; succ < numSuccessors; succ++) {
-                dtmcAligned.divide(systemWeight.get(succ), dtmcSum);
+                divide.apply(dtmcAligned, systemWeight.get(succ), dtmcSum);
                 systemWeight.set(succ, dtmcAligned);
             }
         }
