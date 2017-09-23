@@ -75,6 +75,10 @@ public enum OperatorEvaluatorDivideDouble implements OperatorEvaluator {
         }
         double op1 = UtilValue.getDouble(operands[0]);
         double op2 = UtilValue.getDouble(operands[1]);
-        ValueDouble.asDouble(result).set(op1 / op2);
+        if (op2 == 0.0) {
+            ValueDouble.asDouble(result).set(0);            
+        } else {
+            ValueDouble.asDouble(result).set(op1 / op2);
+        }
     }
 }

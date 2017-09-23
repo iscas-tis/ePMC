@@ -40,6 +40,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorMax;
 
 final class DownClosure {
@@ -89,6 +90,7 @@ final class DownClosure {
         if (restrictedResult != null) {
             return restrictedResult;
         }
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra entry = TypeWeight.get().newValue();
         ValueAlgebra sum = TypeWeight.get().newValue();
         for (int i = 0; i < unrestrictedResult.size(); i++) {
@@ -102,7 +104,7 @@ final class DownClosure {
         }
         for (int i = 0; i < unrestrictedResult.size(); i++) {
             unrestrictedResult.get(entry, i);
-            entry.divide(entry, sum);
+            divide.apply(entry, entry, sum);
             unrestrictedResult.set(entry, i);
         }
         return unrestrictedResult;
@@ -246,6 +248,7 @@ final class DownClosure {
     private void normalise(ValueArrayAlgebra array) {
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra sum = newValueWeight();
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         entry.set(0);
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);
@@ -253,7 +256,7 @@ final class DownClosure {
         }
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);
-            entry.divide(entry, sum);
+            divide.apply(entry, entry, sum);
             array.set(entry, i);
         }
     }

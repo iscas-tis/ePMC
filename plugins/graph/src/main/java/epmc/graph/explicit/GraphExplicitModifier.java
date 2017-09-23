@@ -27,6 +27,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
 
@@ -38,6 +39,7 @@ public final class GraphExplicitModifier {
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
@@ -47,7 +49,7 @@ public final class GraphExplicitModifier {
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     weight.set(weightProp.get(node, succNr));
-                    weight.divide(weight, sum);
+                    divide.apply(weight, weight, sum);
                     weightProp.set(node, succNr, weight);
                 }
             }
@@ -62,6 +64,7 @@ public final class GraphExplicitModifier {
         }
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
@@ -75,11 +78,11 @@ public final class GraphExplicitModifier {
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
                     weight.set(weightProp.get(node, succNr));
-                    weight.divide(weight, uniformisationRate);
+                    divide.apply(weight, weight, uniformisationRate);
                     weightProp.set(node, succNr, weight);
                 }
                 subtract.apply(weight, uniformisationRate, sum);
-                weight.divide(weight, uniformisationRate);
+                divide.apply(weight, weight, uniformisationRate);
                 weightProp.set(node, graph.getNumSuccessors(node) - 1, weight);
                 graph.setSuccessorNode(node, graph.getNumSuccessors(node) - 1, node);
             }

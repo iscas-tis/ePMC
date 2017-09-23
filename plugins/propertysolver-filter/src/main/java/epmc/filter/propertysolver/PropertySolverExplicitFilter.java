@@ -58,6 +58,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
@@ -155,7 +156,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 ProblemsFilter.FILTER_STATE_MORE_THAN_ONE, property);
         if (propertyFilter.isAvg()) {
             Value num = UtilValue.newValue(TypeNumber.asNumber(resultValue.getType()), numStatesInFilter);
-            ValueAlgebra.asAlgebra(resultValue).divide(resultValue, num);
+            OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, resultValue.getType(), num.getType());
+            divide.apply(ValueAlgebra.asAlgebra(resultValue), resultValue, num);
         }
 
         ValueArray resultValues = null;

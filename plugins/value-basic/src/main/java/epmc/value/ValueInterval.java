@@ -232,27 +232,18 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public void subtract(Value operand1, Value operand2)
-    {
+    public void subtract(Value operand1, Value operand2) {
         lower.subtract(getLower(operand1), getLower(operand2));
         upper.subtract(getUpper(operand1), getUpper(operand2));
     }
 
     @Override
-    public void multiply(Value operand1, Value operand2)
-    {
+    public void multiply(Value operand1, Value operand2) {
         lower.multiply(getLower(operand1), getLower(operand2));
         upper.multiply(getUpper(operand1), getUpper(operand2));
     }
 
-    @Override
-    public void divide(Value operand1, Value operand2)
-    {
-        lower.divide(getLower(operand1), getLower(operand2));
-        upper.divide(getUpper(operand1), getUpper(operand2));
-    }
-
-    private Value getLower(Value operand) {
+    public static Value getLower(Value operand) {
         if (isInterval(operand)) {
             return ValueInterval.asInterval(operand).getIntervalLower();
         } else {
@@ -260,7 +251,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         }
     }
 
-    private Value getUpper(Value operand) {
+    public static Value getUpper(Value operand) {
         if (isInterval(operand)) {
             return ValueInterval.asInterval(operand).getIntervalUpper();
         } else {

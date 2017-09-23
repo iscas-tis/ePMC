@@ -56,6 +56,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
 import gnu.trove.iterator.TIntIterator;
@@ -448,6 +449,7 @@ public final class GraphBuilderDD implements Closeable {
         ValueAlgebra one = typeWeight.getOne();
         ValueAlgebra sum = typeWeight.newValue();
         unifRate = typeWeight.newValue();
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueBoolean state = typeBoolean.newValue();
         ValueEnum player = typePlayer.newValue();
         ArrayList<TIntList> targets = new ArrayList<>(numNodesInclNondet);
@@ -501,7 +503,7 @@ public final class GraphBuilderDD implements Closeable {
                 } else {
                     weight.set(thisProbs.get(succNr));
                     if (uniformise) {
-                        weight.divide(weight, unifRate);
+                        divide.apply(weight, weight, unifRate);
                     }
                 }
                 graph.setSuccessorNode(nodeNr, succNr, succNode);
@@ -510,7 +512,7 @@ public final class GraphBuilderDD implements Closeable {
             if (uniformise) {
                 graph.setSuccessorNode(nodeNr, thisTargets.size(), nodeNr);
                 subtract.apply(weight, unifRate, sum);
-                weight.divide(weight, unifRate);
+                divide.apply(weight, weight, unifRate);
                 edgePropertyWeight.set(nodeNr, thisTargets.size(), weight);
             } else if (thisTargets.size() == 0) {
                 graph.setSuccessorNode(nodeNr, 0, nodeNr);

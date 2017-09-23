@@ -155,20 +155,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public void divide(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 / doubleOp2);
-        // TODO hack to avoid NaNs in ContextDD
-        if (doubleOp2 == 0.0) {
-            set(0);
-        }
-    }
-
-    @Override
     public void subtract(Value op1, Value op2) {
         assert !isImmutable() : this;
         assert op1 != null;

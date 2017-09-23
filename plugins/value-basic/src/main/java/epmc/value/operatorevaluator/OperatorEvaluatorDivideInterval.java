@@ -20,22 +20,23 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
+import epmc.value.TypeInterval;
+import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
-import epmc.value.operator.OperatorDivideIgnoreZero;
+import epmc.value.ValueInterval;
+import epmc.value.operator.OperatorDivide;
 
-public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
+public enum OperatorEvaluatorDivideInterval implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO;
+        return OperatorDivide.DIVIDE;
     }
 
     @Override
@@ -48,9 +49,12 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeInterval.isInterval(type) && !TypeReal.isReal(type) && !TypeInteger.isInteger(type)) {
                 return false;
             }
+        }
+        if (!TypeInterval.isInterval(types[0]) && !TypeInterval.isInterval(types[0])) {
+            return false;
         }
         return true;
     }
@@ -58,12 +62,12 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO);
+        assert operator.equals(OperatorDivide.DIVIDE);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        return TypeDouble.get();
+        return TypeInterval.get();
     }
 
     @Override
@@ -73,14 +77,14 @@ public enum OperatorEvaluatorDivideIgnoreZero implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = UtilValue.getDouble(operands[0]);
-        double op2 = UtilValue.getDouble(operands[1]);
-        double resultDouble;
-        if (op2 == 0.0) {
-            resultDouble = 0.0;
-        } else {
-            resultDouble = op1 / op2;
-        }
-        ValueDouble.asDouble(result).set(resultDouble);
+        Value resultLower = ValueInterval.getLower(result);
+        Value resultUpper = ValueInterval.getUpper(result);
+        Value op1Lower = ValueInterval.getLower(operands[0]);
+        Value op1Upper = ValueInterval.getUpper(operands[0]);
+        Value op2Lower = ValueInterval.getLower(operands[1]);
+        Value op2Upper = ValueInterval.getUpper(operands[1]);
+        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, op1Lower.getType(), op2Lower.getType());
+        divide.apply(resultLower, op1Lower, op2Lower);
+        divide.apply(resultUpper, op1Upper, op2Upper);
     }
 }
