@@ -151,11 +151,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public double norm() {
-        return Math.abs(getInt());
-    }
-
-    @Override
     public boolean isLt(Value operand) {
         assert operand != null;
         if (!ValueInteger.isInteger(operand) && !ValueDouble.isDouble(operand)) {

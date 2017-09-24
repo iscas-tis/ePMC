@@ -190,11 +190,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public double norm() {
-        return Math.abs(getDouble());
-    }
-
-    @Override
     public int getInt() {
         return (int) getDouble();
     }

@@ -264,9 +264,4 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         // TODO Auto-generated method stub
         return false;
     }
-
-    @Override
-    public double norm() {
-        return Math.max(lower.norm(), upper.norm());
-    }
 }

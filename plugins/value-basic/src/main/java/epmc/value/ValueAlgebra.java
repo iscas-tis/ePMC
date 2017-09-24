@@ -88,9 +88,6 @@ public interface ValueAlgebra extends Value {
         return ValueAlgebra.asAlgebra(other).isLt(this);
     }    
 
-    double norm();
-
-
     @Override
     default boolean isEq(Value other) {
         return distance(other) < 1E-6;

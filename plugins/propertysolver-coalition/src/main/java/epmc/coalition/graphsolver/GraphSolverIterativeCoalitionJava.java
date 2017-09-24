@@ -237,8 +237,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
             return;
         }
         double thisDistance = previous.distance(current);
+        ValueAlgebra zero = previous.getType().getZero();
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
-            double presNorm = previous.norm();
+            double presNorm = previous.distance(zero);
             if (presNorm != 0.0) {
                 thisDistance /= presNorm;
             }
