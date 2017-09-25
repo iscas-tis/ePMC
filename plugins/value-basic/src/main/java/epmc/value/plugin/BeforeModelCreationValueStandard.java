@@ -36,6 +36,8 @@ import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorAnd;
 import epmc.value.operatorevaluator.OperatorEvaluatorCeilDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorDistanceDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorDistanceInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideIgnoreZeroDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideInterval;
@@ -152,6 +154,8 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSqrtDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInterval.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceDouble.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceInterval.INSTANCE);
     }
 
     private static void addTypes() {

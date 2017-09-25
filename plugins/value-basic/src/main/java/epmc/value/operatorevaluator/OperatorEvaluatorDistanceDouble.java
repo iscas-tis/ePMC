@@ -18,29 +18,25 @@
 
  *****************************************************************************/
 
-package epmc.jani.extensions.derivedoperators;
+package epmc.value.operatorevaluator;
 
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeNumber;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.ValueInteger;
-import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorAbs;
+import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorDistance;
 
-/**
- * Operator to compute absolute value of a value.
- * 
- * @author Ernst Moritz Hahn
- */
-public enum OperatorEvaluatorAbs implements OperatorEvaluator {
+public enum OperatorEvaluatorDistanceDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorAbs.ABS;
+        return OperatorDistance.DISTANCE;
     }
 
     @Override
@@ -49,11 +45,14 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length != 1) {
+        if (types.length != 2) {
             return false;
         }
-        if (!TypeNumber.isNumber(types[0])) {
-            return false;
+        for (Type type : types) {
+            if (!TypeDouble.isDouble(type)
+                    && !TypeInteger.isInteger(type)) {
+                return false;
+            }
         }
         return true;
     }
@@ -61,26 +60,24 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
+        assert operator.equals(OperatorAdd.ADD);
         assert types != null;
-        assert types.length >= 1;
-        assert types[0] != null;
-        return types[0];
+        for (Type type : types) {
+            assert type != null;
+        }
+        return TypeDouble.get();
     }
 
     @Override
     public void apply(Value result, Value... operands) {
         assert result != null;
         assert operands != null;
-        assert operands.length >= 1;
-        assert operands[0] != null;
-        if (ValueDouble.isDouble(result)) {
-            double value = ValueNumber.asNumber(operands[0]).getDouble();
-            ValueDouble.asDouble(result).set(Math.abs(value));
-        } else if (ValueInteger.isInteger(result)) {
-            int value = ValueNumber.asNumber(operands[0]).getInt();
-            ValueInteger.asInteger(result).set(Math.abs(value));			
-        } else {
-            assert false;
+        for (Value operand : operands) {
+            assert operand != null;
         }
+        assert operands.length >= 2;
+        double op1 = UtilValue.getDouble(operands[0]);
+        double op2 = UtilValue.getDouble(operands[1]);
+        ValueDouble.asDouble(result).set(Math.abs(op1 - op2));
     }
 }
