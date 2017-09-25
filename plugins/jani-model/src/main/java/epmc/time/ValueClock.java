@@ -81,4 +81,10 @@ public final class ValueClock implements ValueAlgebra {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    @Override
+    public boolean isEq(Value other) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

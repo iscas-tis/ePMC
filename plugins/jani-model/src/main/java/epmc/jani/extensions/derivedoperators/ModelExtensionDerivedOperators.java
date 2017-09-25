@@ -24,6 +24,7 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
+import epmc.value.operator.OperatorAbs;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorImplies;

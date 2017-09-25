@@ -72,9 +72,4 @@ public interface ValueAlgebra extends Value {
     default boolean isGt(Value other) {
         return ValueAlgebra.asAlgebra(other).isLt(this);
     }    
-
-    @Override
-    default boolean isEq(Value other) {
-        return distance(other) < 1E-6;
-    }
 }

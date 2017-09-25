@@ -223,11 +223,11 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         upper.multiply(getUpper(operand1), getUpper(operand2));
     }
 
-    public static Value getLower(Value operand) {
+    public static ValueAlgebra getLower(Value operand) {
         if (isInterval(operand)) {
             return ValueInterval.asInterval(operand).getIntervalLower();
         } else {
-            return operand;
+            return ValueAlgebra.asAlgebra(operand);
         }
     }
 
@@ -243,5 +243,12 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     public boolean isNegInf() {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    @Override
+    public boolean isEq(Value other) {
+        Value otherLower = ValueInterval.getLower(other);
+        Value otherUpper = ValueInterval.getUpper(other);
+        return lower.isEq(otherLower) && upper.isEq(otherUpper);
     }
 }

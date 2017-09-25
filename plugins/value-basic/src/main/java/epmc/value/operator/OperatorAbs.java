@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.jani.extensions.derivedoperators;
+package epmc.value.operator;
 
 import epmc.value.Operator;
 
