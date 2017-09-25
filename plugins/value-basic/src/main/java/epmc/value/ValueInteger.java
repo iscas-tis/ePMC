@@ -126,16 +126,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public void subtract(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueInteger.isInteger(op1);
-        assert ValueInteger.isInteger(op2);
-        set(ValueInteger.asInteger(op1).getInt() - ValueInteger.asInteger(op2).getInt());
-    }
-
-    @Override
     public boolean isZero() {
         return getInt() == 0;
     }

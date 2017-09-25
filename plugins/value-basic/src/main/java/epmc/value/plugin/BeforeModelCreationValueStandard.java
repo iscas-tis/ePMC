@@ -79,9 +79,9 @@ import epmc.value.operatorevaluator.OperatorEvaluatorNot;
 import epmc.value.operatorevaluator.OperatorEvaluatorOr;
 import epmc.value.operatorevaluator.OperatorEvaluatorPowDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSqrtDouble;
-import epmc.value.operatorevaluator.OperatorEvaluatorSubtract;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInterval;
 
 public final class BeforeModelCreationValueStandard implements BeforeModelCreation {
     private final static String IDENTIFIER = "before-model-creation-value-standard";
@@ -148,10 +148,10 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorNot.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorOr.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPowDouble.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtract.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSqrtDouble.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInterval.INSTANCE);
     }
 
     private static void addTypes() {

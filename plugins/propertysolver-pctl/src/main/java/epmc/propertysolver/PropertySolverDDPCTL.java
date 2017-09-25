@@ -62,7 +62,9 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
@@ -71,6 +73,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverDDPCTL implements PropertySolver {
     public final static String IDENTIFIER = "pctl-dd";
@@ -212,11 +215,12 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ValueAlgebra leftValue = timeBound.getLeftValue();
         ValueAlgebra rightValue = timeBound.getRightValue();
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
         if (timeBound.isRightBounded()) {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 Value unifRate = converter.getUnifRate();
                 ValueReal rate = TypeReal.get().newValue();
-                rate.subtract(rightValue, leftValue);
+                subtract.apply(rate, rightValue, leftValue);
                 rate.multiply(rate, unifRate);
                 assert !rate.isPosInf();
                 GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();

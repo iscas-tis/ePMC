@@ -72,6 +72,7 @@ import epmc.value.ValueObject;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit-next";
@@ -181,11 +182,12 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         //        ValueArray result = typeArray.newValue(computeForStates.length());
 
         solveNext(pathTemporal, expressions, evalValues, evaluators, min);
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
             for (int i = 0; i < resultValues.size(); i++) {
                 resultValues.get(entry, i);
-                entry.subtract(one, entry);
+                subtract.apply(entry, one, entry);
                 resultValues.set(entry, i);
             }
         }

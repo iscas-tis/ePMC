@@ -155,16 +155,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public void subtract(Value op1, Value op2) {
-        assert !isImmutable() : this;
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 - doubleOp2);
-    }
-
-    @Override
     public double distance(Value op) {
         assert op != null;
         if (!getType().canImport(op.getType())) {
