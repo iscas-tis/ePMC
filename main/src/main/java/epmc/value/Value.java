@@ -26,7 +26,7 @@ package epmc.value;
  * 
  * @author Ernst Moritz Hahn
  */
-public interface Value extends Comparable<Value> {
+public interface Value {
     /**
      * Get type with which this value was created.
      * 

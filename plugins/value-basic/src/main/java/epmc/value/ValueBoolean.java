@@ -149,19 +149,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public int compareTo(Value other) {
-        assert other != null;
-        assert ValueBoolean.isBoolean(other);
-        if (!this.value && ValueBoolean.asBoolean(other).getBoolean()) {
-            return -1;
-        } else if (this.value == ValueBoolean.asBoolean(other).getBoolean()) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-
-    @Override
     public void set(String string) {
         assert string != null;
         string = string.toLowerCase();

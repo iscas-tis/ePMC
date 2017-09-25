@@ -120,12 +120,6 @@ public final class ValueObject implements Value {
     }
 
     @Override
-    public int compareTo(Value other) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     public boolean isEq(Value other) {
         ValueObject otherObject = asObject(other);
         return content.equals(otherObject.content);

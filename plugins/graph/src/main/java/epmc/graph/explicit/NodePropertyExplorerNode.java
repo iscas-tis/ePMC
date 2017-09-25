@@ -101,12 +101,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
 
         @Override
-        public int compareTo(Value other) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
         public double distance(Value other) {
             // TODO Auto-generated method stub
             return 0;

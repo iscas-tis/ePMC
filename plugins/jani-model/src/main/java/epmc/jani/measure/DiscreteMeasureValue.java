@@ -20,12 +20,10 @@
 
 package epmc.jani.measure;
 
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
-    private Operator operator;
     private DiscreteMeasure[] operands;
 
     @Override
@@ -89,12 +87,6 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
     public void set(Value value) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public int compareTo(Value other) {
-        // TODO Auto-generated method stub
-        return 0;
     }
 
     @Override

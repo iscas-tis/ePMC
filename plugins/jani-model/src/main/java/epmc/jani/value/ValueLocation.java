@@ -178,12 +178,6 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
     }
 
     @Override
-    public int compareTo(Value other) {
-        ValueLocation otherLocation = (ValueLocation) other;
-        return Integer.compare(locationNumber, otherLocation.locationNumber);
-    }
-
-    @Override
     public double distance(Value other) {
         ValueLocation otherLocation = (ValueLocation) other;
         return Math.abs(locationNumber - otherLocation.locationNumber);
