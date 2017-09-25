@@ -52,19 +52,6 @@ public interface ValueAlgebra extends Value {
 
     boolean isNegInf();
 
-    // TODO move
-    @Override
-    default int compareTo(Value other) {
-        if (isEq(other)) {
-            return 0;
-        } else if (isLt(other)) {
-            return -1;
-        } else {
-            assert isGt(other) : this + " " + other;
-            return 1;
-        }
-    }
-
     // TODO move?
     default boolean isLt(Value other) {
         assert false;

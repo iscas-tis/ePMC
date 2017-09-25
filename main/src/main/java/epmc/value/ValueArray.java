@@ -110,28 +110,6 @@ public interface ValueArray extends Value {
     }
 
     @Override
-    default int compareTo(Value other) {
-        assert other != null;
-        ValueArray opArray = ValueArray.asArray(other);
-        int sizeCmp = Integer.compare(size(), opArray.size());
-        if (sizeCmp != 0) {
-            return sizeCmp;
-        }
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
-        int totalSize = size();
-        for (int entry = 0; entry < totalSize; entry++) {
-            get(entryAccThis, entry);
-            opArray.get(entryAccOther, entry);
-            int cmpEntry = entryAccThis.compareTo(entryAccOther);
-            if (cmpEntry != 0) {
-                return cmpEntry;
-            }
-        }
-        return 0;
-    }
-
-    @Override
     default double distance(Value other) {
         assert other != null;
         if (!isArray(other)) {

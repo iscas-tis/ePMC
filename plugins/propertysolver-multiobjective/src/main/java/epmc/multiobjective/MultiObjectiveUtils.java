@@ -79,7 +79,16 @@ final class MultiObjectiveUtils {
             weightsXboundsEntry.multiply(weightsEntry, boundsEntry);
             weightsXboundsSum.add(weightsXboundsSum, weightsXboundsEntry);
         }
-        return weightsXqSum.compareTo(weightsXboundsSum);
+        if (weightsXqSum.isEq(weightsXboundsSum)) {
+            return 0;
+        } else if (weightsXqSum.isLt(weightsXboundsSum)) {
+            return -1;
+        } else if (weightsXqSum.isGt(weightsXboundsSum)) {
+            return 1;
+        } else {
+            assert false;
+            return Integer.MIN_VALUE;
+        }
     }
 
     static ValueArrayAlgebra computeQuantifierBoundsArray(ModelChecker modelChecker,

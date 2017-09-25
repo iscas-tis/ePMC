@@ -153,14 +153,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public int compareTo(Value other) {
-        assert other != null;
-        assert ValueBoolean.isBoolean(other) || ValueTernary.isTernary(other);
-        Ternary otherTernary = UtilTernary.getTernary(other);
-        return value.compareTo(otherTernary);
-    }
-
-    @Override
     public void set(String string) {
         assert string != null;
         string = string.toLowerCase().trim();

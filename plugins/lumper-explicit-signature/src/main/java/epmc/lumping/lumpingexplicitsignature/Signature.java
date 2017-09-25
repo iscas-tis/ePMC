@@ -22,33 +22,10 @@ package epmc.lumping.lumpingexplicitsignature;
 
 import epmc.value.ValueAlgebra;
 
-final class Signature implements Comparable<Signature> {
+final class Signature {
     int[] blocks;
     ValueAlgebra[] values;
     int size;
-
-    @Override
-    public int compareTo(Signature other) {
-        if (this.size < other.size) {
-            return -1;
-        } if (this.size > other.size) {
-            return 1;
-        }
-        for (int i = 0; i < size; i++) {
-            if (this.blocks[i] < other.blocks[i]) {
-                return -1;
-            } else if (this.blocks[i] > other.blocks[i]) {
-                return 1;
-            }
-        }
-        for (int i = 0; i < size; i++) {
-            int cmp = this.values[i].compareTo(other.values[i]);
-            if (cmp != 0) {
-                return cmp;
-            }
-        }
-        return 0;
-    }
 
     @Override
     public int hashCode() {

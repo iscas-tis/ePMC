@@ -146,14 +146,6 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public int compareTo(Value other) {
-        assert other != null;
-        assert ValueEnum.isEnum(other);
-        assert this.getType().getEnumClass() == TypeEnum.asEnum(other.getType()).getEnumClass();
-        return Integer.compare(value.ordinal(), ((ValueEnum) other).value.ordinal());
-    }
-
-    @Override
     public int getValueNumber() {
         return value.ordinal();
     }

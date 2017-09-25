@@ -203,20 +203,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public int compareTo(Value other) {
-        assert !isImmutable();
-        assert other != null;
-        assert isInterval(other);
-        ValueInterval otherInterval = ValueInterval.asInterval(other);
-        int lowerCmp = lower.compareTo(otherInterval.getIntervalLower());
-        if (lowerCmp != 0) {
-            return lowerCmp;
-        }
-        int upperCmp = upper.compareTo(otherInterval.getIntervalUpper());
-        return upperCmp;
-    }
-
-    @Override
     public TypeInterval getType() {
         return type;
     }

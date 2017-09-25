@@ -24,20 +24,6 @@ public final class ValueDecision implements Value, ValueSetString {
     }
 
     @Override
-    public int compareTo(Value value) {
-        assert value != null;
-        assert value instanceof ValueDecision;
-        ValueDecision other = (ValueDecision) value;
-        for (int i = 0; i < values.length; i++) {
-            int cmp = values[i].compareTo(other.values[i]);
-            if (cmp != 0) {
-                return cmp;
-            }
-        }
-        return 0;
-    }
-
-    @Override
     public Type getType() {
         return type;
     }
