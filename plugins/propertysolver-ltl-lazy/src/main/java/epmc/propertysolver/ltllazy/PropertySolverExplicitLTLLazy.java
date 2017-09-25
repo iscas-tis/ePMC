@@ -72,7 +72,9 @@ import epmc.propertysolver.ltllazy.automata.AutomatonSubsetState;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
@@ -85,6 +87,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorSubtract;
 
 public class PropertySolverExplicitLTLLazy implements PropertySolver {
     public final static String IDENTIFIER = "ltl-explicit";
@@ -829,8 +832,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         return result;
     }
 
-    private StateMap doSolve(Expression property, StateSet forStates, boolean min)
-    {
+    private StateMap doSolve(Expression property, StateSet forStates, boolean min) {
         this.forStates = (StateSetExplicit) forStates;
         Semantics type = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(type)) {
@@ -847,11 +849,12 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             innerResult = checkTemporalLTLNonIncremental(buechi);
         }
 
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, innerResult.getType(), innerResult.getType());
         if (negate.getBoolean()) {
             ValueAlgebra entry = TypeAlgebra.asAlgebra(innerResult.getType()).newValue();
             for (int i = 0; i < innerResult.size(); i++) {
                 innerResult.getExplicitIthValue(entry, i);
-                entry.subtract(TypeAlgebra.asAlgebra(innerResult.getType()).getOne(), entry);
+                subtract.apply(entry, TypeAlgebra.asAlgebra(innerResult.getType()).getOne(), entry);
                 innerResult.setExplicitIthValue(entry, i);
             }
         }

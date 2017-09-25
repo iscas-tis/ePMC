@@ -20,16 +20,19 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
-import epmc.value.UtilValue;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
+import epmc.value.TypeInterval;
+import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorSubtract;
 
-public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
+public enum OperatorEvaluatorSubtractInterval implements OperatorEvaluator {
     INSTANCE;
 
     @Override
@@ -46,8 +49,13 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
+        if ((TypeInteger.isInteger(types[0]) || TypeReal.isReal(types[0]))
+                && (TypeInteger.isInteger(types[1]) || TypeReal.isReal(types[1]))) {
+            return false;
+        }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)
+                    && !TypeInterval.isInterval(type)) {
                 return false;
             }
         }
@@ -62,7 +70,7 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        return UtilValue.algebraicResultType(types);
+        return TypeInterval.get();
     }
 
     @Override
@@ -72,6 +80,14 @@ public enum OperatorEvaluatorSubtract implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueAlgebra.asAlgebra(result).subtract(operands[0], operands[1]);
+        Value resultLower = ValueInterval.getLower(result);
+        Value resultUpper = ValueInterval.getUpper(result);
+        Value op1Lower = ValueInterval.getLower(operands[0]);
+        Value op1Upper = ValueInterval.getUpper(operands[0]);
+        Value op2Lower = ValueInterval.getLower(operands[1]);
+        Value op2Upper = ValueInterval.getUpper(operands[1]);
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, op1Lower.getType(), op2Lower.getType());
+        subtract.apply(resultLower, op1Lower, op2Lower);
+        subtract.apply(resultUpper, op1Upper, op2Upper);
     }
 }

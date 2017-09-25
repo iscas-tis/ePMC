@@ -41,12 +41,6 @@ public final class ValueClock implements ValueAlgebra {
     }
 
     @Override
-    public void subtract(Value operand1, Value operand2) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public void multiply(Value operand1, Value operand2) {
         // TODO Auto-generated method stub
 

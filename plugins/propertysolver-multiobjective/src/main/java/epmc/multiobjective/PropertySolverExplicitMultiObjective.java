@@ -48,6 +48,8 @@ import epmc.modelchecker.PropertySolver;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.util.BitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
@@ -57,6 +59,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
     public final static String IDENTIFIER = "multiobjective-explicit";
@@ -319,8 +322,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             resultValues = newValueArrayWeight(forStates.size());
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);
+            OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(),  TypeWeight.get());
             if (!ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf()) {
-                entry.subtract(subtractNumericalFrom, entry);
+                subtract.apply(entry, subtractNumericalFrom, entry);
             }
             for (int i = 0; i < forStates.size(); i++) {
                 resultValues.set(entry, i);

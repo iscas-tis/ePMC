@@ -56,7 +56,9 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
 import epmc.value.TypeInteger;
@@ -68,6 +70,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit";
@@ -309,11 +312,12 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             values.get(val, i);
             resultValues.set(val, i);
         }
+        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, typeWeight, typeWeight);
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
             for (int i = 0; i < resultValues.size(); i++) {
                 resultValues.get(entry, i);
-                entry.subtract(one, entry);
+                subtract.apply(entry, one, entry);
                 resultValues.set(entry, i);
             }
         }
