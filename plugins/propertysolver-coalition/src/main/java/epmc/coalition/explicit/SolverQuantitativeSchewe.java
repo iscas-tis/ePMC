@@ -47,13 +47,20 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
+import epmc.value.ValueReal;
+import epmc.value.ValueSetString;
 import epmc.value.TypeObject.StorageType;
+import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorSubtract;
@@ -81,7 +88,8 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     /** Time spent for reachability computations during initialisation. */
     private StopWatch initReach;
     /** Comparison tolerance used. */
-    private double compareTolerance;
+    private ValueReal compareTolerance;
+    private ValueReal smallNumber;
 
     @Override
     public String getIdentifier() {
@@ -102,7 +110,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
 
     @Override
     public QuantitativeResult solve() {
-        compareTolerance = Options.get().getDouble(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE);
+        compareTolerance = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(compareTolerance).set(Options.get().getString(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE));
+        smallNumber = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(smallNumber).set("1E-24");
         StopWatch totalTime = new StopWatch(true);
         getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_START);
         reduceOutput = Options.get().get(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_SILENCE_INTERNAL);
@@ -193,9 +204,15 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         BitSet zeroNodes = UtilBitSet.newBitSetUnbounded();
         Value zero = TypeWeight.get().getZero();
         Value entry = newValueWeight();
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        ValueAlgebra distanceVal = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
             quantiRes.getProbabilities().get(entry, subNode);
-            if (entry.distance(zero) < 1E-24) {
+            distance.apply(distanceVal, entry, zero);
+            lt.apply(cmp, distanceVal, smallNumber);
+            if (cmp.getBoolean()) {
                 int origNode = subGraph.subToOrig(subNode);
                 zeroNodes.set(origNode);
             }
@@ -283,8 +300,6 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                     newValue.add(newValue, weighted);
                 }
             }
-            assert value.distance(newValue) < 1E-8 : node + SPACE + player
-            + SPACE + value + SPACE + newValue;
         }
         return true;
     }
@@ -304,6 +319,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         QuantitativeResult evaluatedResult = null;
         int numDirectImprovements = 0;
         int numIndirectImprovements = 0;
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get());
+        Value distanceVal = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         while (changed) {
             mdpEvaluateTime.start();
             evaluatedResult = evaluateMDP(strategies);
@@ -321,7 +340,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                 for (int succ = 0; succ < numSuccessors; succ++) {
                     int succNode = game.getSuccessorNode(node, succ);
                     values.get(succValue, succNode);
-                    if (succValue.isGt(value) && !(succValue.distance(value) < compareTolerance)) {
+                    
+                    distance.apply(distanceVal, succValue, value);
+                    lt.apply(cmp, distanceVal, compareTolerance);
+                    if (succValue.isGt(value) && !(cmp.getBoolean())) {
                         doChange = true;
                     }
                 }
@@ -405,6 +427,10 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         Value value = newValueWeight();
         ValueAlgebra succValue = newValueWeight();
         NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get());
+        Value distanceVal = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int node = 0; node < numNodes; node++) {
             values.get(value, node);
             Player player = playerProperty.getEnum(node);
@@ -412,11 +438,13 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
             for (int succ = 0; succ < numSuccessors; succ++) {
                 int succState = game.getSuccessorNode(node, succ);
                 values.get(succValue, succState);
+                distance.apply(distanceVal, succValue, value);
+                lt.apply(cmp, distanceVal, compareTolerance);
                 if (player == Player.STOCHASTIC
                         || player == Player.ONE && succValue.isGe(value)
-                        || player == Player.ONE && succValue.distance(value) < compareTolerance
+                        || player == Player.ONE && cmp.getBoolean()
                         || player == Player.TWO && succValue.isLe(value)
-                        || player == Player.TWO && succValue.distance(value)< compareTolerance) {
+                        || player == Player.TWO && cmp.getBoolean()) {
                     result.set(node * maxNumSuccessors + succ);
                 }
             }
