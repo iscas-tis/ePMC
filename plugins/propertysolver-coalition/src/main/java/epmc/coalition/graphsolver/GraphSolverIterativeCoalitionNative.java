@@ -51,15 +51,24 @@ import epmc.util.JNATools;
 import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueObject;
+import epmc.value.ValueReal;
+import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorLt;
 
 /**
  * Iterative solver to solve game-related graph problems.
@@ -331,7 +340,12 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         seen.or(target);
         ValueAlgebra nodeValue = newValueWeight();
         ValueAlgebra predValue = newValueWeight();
-        double tolerance = Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4;
+        ValueReal tolerance = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(tolerance).set(Double.toString(Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4));
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        ValueReal distanceValue = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         do {
             BitSet swap = previousNodes;
             previousNodes = newNodes;
@@ -366,7 +380,9 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
                     for (int predNr = 0; predNr < origGraph.getProperties().getNumPredecessors(node); predNr++) {
                         int pred = origGraph.getProperties().getPredecessorNode(node, predNr);
                         values.get(predValue, pred);
-                        if (!seen.get(pred) && predValue.distance(nodeValue) < tolerance) {
+                        distance.apply(distanceValue, predValue, nodeValue);
+                        lt.apply(cmp, distanceValue, tolerance);
+                        if (!seen.get(pred) && cmp.getBoolean()) {
                             strategy.set(pred, origGraph.getSuccessorNumber(pred, node));
                             seen.set(pred);
                             newNodes.set(pred);
@@ -382,7 +398,6 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
             if ((player == Player.ONE || player == Player.TWO)
                     && !seen.get(node) && !target.get(node)) {
                 values.get(nodeValue, node);
-                assert nodeValue.distance(TypeWeight.get().getZero()) < tolerance : node + " " + nodeValue;
                 strategy.set(node, 0);
             }
         }
