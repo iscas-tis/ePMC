@@ -28,7 +28,12 @@ import java.util.Map;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeReal;
+import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
+import epmc.value.operator.OperatorDistance;
 import epmc.value.ValueAlgebra;
 
 /**
@@ -51,12 +56,16 @@ public final class UtilExplorer {
         if (automaton.isNonDet() && automaton.isState()) {
             return;
         }
+        /*
         Value one = probabilitySum.getType().getOne();
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeReal.get(), TypeReal.get());
         ensure(numSuccessors == 0
                 || probabilitySum.isOne()
                 || probabilitySum.distance(one) < 1E-10,
                 ProblemsJANIExplorer.JANI_EXPLORER_PROBABILIY_SUM_NOT_ONE,
                 probabilitySum);
+                */
     }
 
     /**

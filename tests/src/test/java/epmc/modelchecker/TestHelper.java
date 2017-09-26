@@ -67,9 +67,15 @@ import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
 import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.Value;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorLt;
 
 /**
  * Static auxiliary methods and constants for JUnit tests.
@@ -344,7 +350,15 @@ public final class TestHelper {
                     + " actual value \""+ actual + "\" are incompatible",
                     false);
         }
-        assertTrue(message, expected.distance(actual) < tolerance);
+        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, expected.getType(), actual.getType());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        Value distanceValue = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        distance.apply(distanceValue, expected, actual);
+        Value toleranceV = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(toleranceV).set(Double.toString(tolerance));
+        lt.apply(cmp, distanceValue, toleranceV);
+        assertTrue(message, cmp.getBoolean());
     }
 
     public static void assertEquals(Value expected, Value actual,
