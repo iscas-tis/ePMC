@@ -155,16 +155,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public double distance(Value op) {
-        assert op != null;
-        if (!getType().canImport(op.getType())) {
-            return op.distance(this);
-        }
-        ValueNumber opNumber = ValueNumber.asNumber(op);
-        return Math.abs(value - opNumber.getDouble());
-    }
-
-    @Override
     public boolean isZero() {
         return getDouble() == 0.0;
     }

@@ -176,10 +176,4 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
         assert locationNumber < type.getNumLocations();
         this.locationNumber = number;
     }
-
-    @Override
-    public double distance(Value other) {
-        ValueLocation otherLocation = (ValueLocation) other;
-        return Math.abs(locationNumber - otherLocation.locationNumber);
-    }
 }

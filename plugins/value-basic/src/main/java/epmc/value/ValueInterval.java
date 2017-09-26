@@ -181,28 +181,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public double distance(Value other) {
-        assert other != null;
-        if (isInterval(other)) {
-            ValueInterval otherInterval = (ValueInterval) other;
-            double lowerDistance = lower.distance(otherInterval.getIntervalLower());
-            double upperDistance = upper.distance(otherInterval.getIntervalUpper());
-            return Math.max(lowerDistance, upperDistance);
-        } else if (ValueInteger.isInteger(other)) {
-            double lowerDistance = lower.distance(other);
-            double upperDistance = upper.distance(other);
-            return Math.max(lowerDistance, upperDistance);        	
-        } else if (ValueReal.isReal(other)) {
-            double lowerDistance = lower.distance(other);
-            double upperDistance = upper.distance(other);
-            return Math.max(lowerDistance, upperDistance);        	
-        } else {
-            assert false;
-            return Double.NaN;
-        }
-    }
-
-    @Override
     public TypeInterval getType() {
         return type;
     }

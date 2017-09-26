@@ -94,10 +94,4 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
         // TODO Auto-generated method stub
         return false;
     }
-
-    @Override
-    public double distance(Value other) {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 }

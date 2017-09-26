@@ -59,13 +59,6 @@ public final class ValueDecision implements Value, ValueSetString {
     }
 
     @Override
-    public double distance(Value other) {
-        assert other != null;
-        assert other instanceof ValueDecision;
-        return isEq(other) ? 0.0 : 1.0;
-    }
-
-    @Override
     public boolean isEq(Value other) {
         assert other != null;
         assert other instanceof ValueDecision;

@@ -109,27 +109,4 @@ public interface ValueArray extends Value {
         return true;
     }
 
-    @Override
-    default double distance(Value other) {
-        assert other != null;
-        if (!isArray(other)) {
-            return Double.POSITIVE_INFINITY;
-        }
-        ValueArray otherArray = ValueArray.asArray(other);
-        if (this.size() != otherArray.size()) {
-            return Double.POSITIVE_INFINITY;
-        }
-        ValueArray opArray = ValueArray.asArray(other);
-        double maxDistance = 0.0;
-        int totalSize = size();
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = opArray.getType().getEntryType().newValue();
-        for (int entry = 0; entry < totalSize; entry++) {
-            get(entryAccThis, entry);
-            opArray.get(entryAccOther, entry);
-            double entryDistance = entryAccThis.distance(entryAccOther);
-            Math.max(maxDistance, entryDistance);
-        }
-        return maxDistance;
-    }
 }

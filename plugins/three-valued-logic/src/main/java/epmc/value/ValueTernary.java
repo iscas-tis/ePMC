@@ -192,12 +192,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public double distance(Value other) {
-        ValueTernary otherTernary = asTernary(other);
-        return value.equals(otherTernary.value) ? 0.0 : 1.0;
-    }
-
-    @Override
     public void setValueNumber(int number) {
         assert getType().canImport(getType()) : value;
         assert number >= 0 : number;

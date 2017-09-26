@@ -114,12 +114,6 @@ public final class ValueObject implements Value {
     }
 
     @Override
-    public double distance(Value other) {
-        ValueObject otherObject = asObject(other);
-        return content.equals(otherObject.content) ? 0.0 : 1.0;
-    }
-
-    @Override
     public boolean isEq(Value other) {
         ValueObject otherObject = asObject(other);
         return content.equals(otherObject.content);
