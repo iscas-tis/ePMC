@@ -42,8 +42,6 @@ public interface Value {
      */
     void set(Value value);
 
-    double distance(Value other);
-
     /**
      * Check whether value is equal to another value.
      * In contrast to the {@link #equals(Object)} method, this method usually

@@ -65,6 +65,8 @@ import epmc.value.ValueObject;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
@@ -89,6 +91,23 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
     private int maxEnd;
+    private final OperatorEvaluator distanceEvaluator;
+    private final OperatorEvaluator maxEvaluator;
+    private final OperatorEvaluator divideEvaluator;
+    private final OperatorEvaluator gtEvaluator;
+    private final ValueReal thisDistance;
+    private final ValueReal zeroDistance;
+    private final ValueBoolean cmp;
+
+    public GraphSolverIterativeCoalitionJava() {
+        distanceEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        maxEvaluator = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        divideEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        gtEvaluator = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        thisDistance = TypeReal.get().newValue();
+        zeroDistance = TypeReal.get().newValue();
+        cmp = TypeBoolean.get().newValue();
+    }
 
     @Override
     public String getIdentifier() {
@@ -238,20 +257,20 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     /* auxiliary methods */
 
-    private static void compDiff(double[] distance, ValueAlgebra previous,
+    private void compDiff(ValueReal distance, ValueAlgebra previous,
             Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
-        double thisDistance = previous.distance(current);
+        distanceEvaluator.apply(thisDistance, previous, current);
         ValueAlgebra zero = previous.getType().getZero();
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
-            double presNorm = previous.distance(zero);
-            if (presNorm != 0.0) {
-                thisDistance /= presNorm;
+            distanceEvaluator.apply(zeroDistance, previous, zero);
+            if (!zeroDistance.isZero()) {
+                divideEvaluator.apply(thisDistance, thisDistance, zeroDistance);
             }
         }
-        distance[0] = Math.max(distance[0], thisDistance);
+        maxEvaluator.apply(distance, distance, thisDistance);
     }
 
     private static boolean isSparseNondet(GraphExplicit graph) {
@@ -291,14 +310,16 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
         Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
         Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
-            distance[0] = 0.0;
+            distance.set(TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
@@ -341,7 +362,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
-        } while (distance[0] > precision / 2);
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
     }
 
     private void tpgUnboundedJacobiJava(
@@ -359,7 +381,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
@@ -367,8 +389,10 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
-            distance[0] = 0.0;
+            distance.set(TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
@@ -414,7 +438,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
             ValueArrayAlgebra swap = nextValues;
             nextValues = presValues;
             presValues = swap;
-        } while (distance[0] > precision / 2);
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
         for (int state = 0; state < minEnd; state++) {
             presValues.get(presStateProb, state);
             values.set(presStateProb, state);

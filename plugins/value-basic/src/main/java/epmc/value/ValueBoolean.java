@@ -171,12 +171,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public double distance(Value other) {
-        ValueBoolean otherBoolean = asBoolean(other);
-        return value == otherBoolean.value ? 0.0 : 1.0;
-    }
-
-    @Override
     public int getValueNumber() {
         return value ? 1 : 0;
     }

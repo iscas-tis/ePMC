@@ -159,12 +159,6 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public double distance(Value other) {
-        ValueEnum otherEnum = asEnum(other);
-        return value == otherEnum.value ? 0.0 : 1.0;
-    }
-
-    @Override
     public void setValueNumber(int number) {
         assert number >= 0 : number;
         assert number < type.getNumValues() : number;

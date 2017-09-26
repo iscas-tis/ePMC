@@ -257,15 +257,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public double distance(Value other) {
-        if (isInteger(other)) {
-            return this.value - ValueInteger.asInteger(other).getInt();
-        } else {
-            return other.distance(this);
-        }
-    }
-
-    @Override
     public void setValueNumber(int number) {
         assert getType().canImport(getType()) : value;
         assert number >= 0 : number;
