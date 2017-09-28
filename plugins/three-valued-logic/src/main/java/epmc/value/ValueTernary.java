@@ -120,14 +120,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public boolean isEq(Value operand) {
-        assert operand != null;
-        assert ValueBoolean.isBoolean(operand) || ValueTernary.isTernary(operand);
-        Ternary operandTernary = UtilTernary.getTernary(operand);
-        return operandTernary == value;
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert reader != null;
         int ord = 0;

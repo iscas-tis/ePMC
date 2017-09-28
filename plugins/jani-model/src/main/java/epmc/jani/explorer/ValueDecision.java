@@ -59,19 +59,6 @@ public final class ValueDecision implements Value, ValueSetString {
     }
 
     @Override
-    public boolean isEq(Value other) {
-        assert other != null;
-        assert other instanceof ValueDecision;
-        ValueDecision otherDecision = (ValueDecision) other;
-        for (int index = 0; index < values.length; index++) {
-            if (!values[index].isEq(otherDecision.values[index])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof ValueDecision)) {
             return false;

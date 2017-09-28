@@ -175,22 +175,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public boolean isEq(Value operand) {
-        assert operand != null;
-        assert operand != null;
-        assert ValueInteger.isInteger(operand) || ValueDouble.isDouble(operand) :
-            operand.getType() + SPACE + operand;
-        if (ValueInteger.isInteger(operand)) {
-            return getInt() == ValueInteger.asInteger(operand).getInt();            
-        } else if (ValueDouble.isDouble(operand)) {
-            return Math.abs(getInt() - ValueNumber.asNumber(operand).getDouble()) < 1E-6;
-        } else {
-            assert false;
-            return false;
-        }
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert !isImmutable();
         assert reader != null;

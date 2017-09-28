@@ -75,6 +75,7 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorLt;
 
 /**
@@ -427,7 +428,10 @@ public final class TestHelper {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
         ValueSetString.asValueSetString(expectedValue).set(Boolean.toString(expected));
-        assertTrue(expectedValue.isEq(actual));
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, expectedValue.getType(), actual.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        eq.apply(cmp, expectedValue, actual);
+        assertTrue(cmp.getBoolean());
     }
 
     public static void assertEquals(String message,

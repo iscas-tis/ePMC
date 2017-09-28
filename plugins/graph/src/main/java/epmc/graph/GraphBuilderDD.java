@@ -57,6 +57,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
 import gnu.trove.iterator.TIntIterator;
@@ -448,6 +449,8 @@ public final class GraphBuilderDD implements Closeable {
         ValueAlgebra zero = typeWeight.getZero();
         ValueAlgebra one = typeWeight.getOne();
         ValueAlgebra sum = typeWeight.newValue();
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, typeWeight, typeWeight);
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         unifRate = typeWeight.newValue();
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueBoolean state = typeBoolean.newValue();
@@ -498,7 +501,8 @@ public final class GraphBuilderDD implements Closeable {
             for (int succNr = 0; succNr < thisTargets.size(); succNr++) {
                 int succNode = thisTargets.get(succNr);
                 weight.set(zero);
-                if (sum.isEq(zero)) {
+                eq.apply(cmp, sum, zero);
+                if (cmp.getBoolean()) {
                     weight.set(zero);
                 } else {
                     weight.set(thisProbs.get(succNr));

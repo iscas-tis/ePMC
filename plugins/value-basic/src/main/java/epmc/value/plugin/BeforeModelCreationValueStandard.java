@@ -41,9 +41,10 @@ import epmc.value.operatorevaluator.OperatorEvaluatorDistanceInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideIgnoreZeroDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorDivideInterval;
-import epmc.value.operatorevaluator.OperatorEvaluatorEq;
+import epmc.value.operatorevaluator.OperatorEvaluatorEqBoolean;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorEqInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorExpDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorFloor;
 import epmc.value.operatorevaluator.OperatorEvaluatorGe;
@@ -111,9 +112,9 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDivideDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDivideInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDivideIgnoreZeroDouble.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEq.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqInt.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqBoolean.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorFloor.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorExpDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGe.INSTANCE);
@@ -156,6 +157,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceInterval.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqInterval.INSTANCE);
     }
 
     private static void addTypes() {

@@ -20,16 +20,21 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.UtilValue;
+import epmc.value.TypeInteger;
+import epmc.value.TypeInterval;
+import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInterval;
+import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 
-public enum OperatorEvaluatorEq implements OperatorEvaluator {
+public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
     INSTANCE;
 
     @Override
@@ -46,23 +51,28 @@ public enum OperatorEvaluatorEq implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
+        for (Type type : types) {
+            if (!TypeInterval.isInterval(type)
+                    && !TypeReal.isReal(type)
+                    && !TypeInteger.isInteger(type)) {
+                return false;
+            }
+        }
+        if (!TypeInterval.isInterval(types[0]) && !TypeInterval.isInterval(types[0])) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorEq.EQ);
+        assert operator.equals(OperatorDivide.DIVIDE);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        Type result = null;
-        if (UtilValue.allTypesKnown(types) && UtilValue.upper(types) == null) {
-            return null;
-        }
-        result = TypeBoolean.get();
-        return result;
+        return TypeBoolean.get();
     }
 
     @Override
@@ -72,6 +82,22 @@ public enum OperatorEvaluatorEq implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueBoolean.asBoolean(result).set(operands[0].isEq(operands[1]));
+        Value op1Lower = ValueInterval.getLower(operands[0]);
+        Value op1Upper = ValueInterval.getUpper(operands[0]);
+        Value op2Lower = ValueInterval.getLower(operands[1]);
+        Value op2Upper = ValueInterval.getUpper(operands[1]);
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, op1Lower.getType(), op2Lower.getType());
+        eq.apply(cmp, op1Lower, op2Lower);
+        if (!cmp.getBoolean()) {
+            ValueBoolean.asBoolean(result).set(false);
+            return;
+        }
+        eq.apply(cmp, op1Upper, op2Upper);
+        if (!cmp.getBoolean()) {
+            ValueBoolean.asBoolean(result).set(false);
+            return;
+        }
+        ValueBoolean.asBoolean(result).set(true);
     }
 }
