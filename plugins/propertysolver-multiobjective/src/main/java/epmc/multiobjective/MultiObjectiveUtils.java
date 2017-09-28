@@ -39,15 +39,20 @@ import epmc.modelchecker.ModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
 import epmc.propertysolver.PropertySolverExplicitReward;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorEq;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -70,6 +75,8 @@ final class MultiObjectiveUtils {
         ValueAlgebra weightsEntry = newValueWeight();
         ValueAlgebra qEntry = newValueWeight();
         ValueAlgebra boundsEntry = newValueWeight();
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
             q.get(qEntry, dim);
@@ -79,7 +86,8 @@ final class MultiObjectiveUtils {
             weightsXboundsEntry.multiply(weightsEntry, boundsEntry);
             weightsXboundsSum.add(weightsXboundsSum, weightsXboundsEntry);
         }
-        if (weightsXqSum.isEq(weightsXboundsSum)) {
+        eq.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
             return 0;
         } else if (weightsXqSum.isLt(weightsXboundsSum)) {
             return -1;

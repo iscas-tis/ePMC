@@ -87,26 +87,5 @@ public interface ValueArray extends Value {
             opArray.get(entryAcc, index);
             set(entryAcc, index);
         }
-    }    
-
-    @Override
-    default boolean isEq(Value other) {
-        assert other != null;
-        assert isArray(other);
-        ValueArray otherArray = ValueArray.asArray(other);
-        if (size() != otherArray.size()) {
-            return false;
-        }
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
-        for (int entry = 0; entry < size(); entry++) {
-            get(entryAccThis, entry);
-            otherArray.get(entryAccOther, entry);
-            if (!entryAccThis.isEq(entryAccOther)) {
-                return false;
-            }
-        }
-        return true;
     }
-
 }

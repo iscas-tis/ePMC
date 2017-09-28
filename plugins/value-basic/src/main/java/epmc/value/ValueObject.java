@@ -112,10 +112,4 @@ public final class ValueObject implements Value {
     boolean isImmutable() {
         return immutable;
     }
-
-    @Override
-    public boolean isEq(Value other) {
-        ValueObject otherObject = asObject(other);
-        return content.equals(otherObject.content);
-    }
 }

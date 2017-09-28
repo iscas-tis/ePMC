@@ -25,6 +25,8 @@ import java.util.Collection;
 
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -32,6 +34,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorEq;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
@@ -104,6 +107,8 @@ public final class SupportWalker {
     private int trueIndex = Integer.MIN_VALUE;
     private int falseIndex = Integer.MIN_VALUE;
     private int zeroIndex = Integer.MIN_VALUE;
+    private final OperatorEvaluator eq;
+    private final ValueBoolean cmp;
 
     // TODO extend stop-at
 
@@ -124,6 +129,8 @@ public final class SupportWalker {
         this.trueIndex = trueIndex;
         this.falseIndex = falseIndex;
         this.zeroIndex = zeroIndex;
+        eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, leafValues[0].getType(), leafValues[0].getType());
+        cmp = TypeBoolean.get().newValue();
     }
 
     SupportWalker(DD node, DD support, Value[] stopWhere) {
@@ -140,6 +147,8 @@ public final class SupportWalker {
         }
         this.variables = computeVariables(support);
         goBackStack = new int[variables.length];
+        eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, leafValues[0].getType(), leafValues[0].getType());
+        cmp = TypeBoolean.get().newValue();
         buildDiagram(node, support);
     }
 
@@ -292,10 +301,12 @@ public final class SupportWalker {
             Value nodeValue = node.value();
             for (Value stop : stopWhere) {
                 // TODO check following, probably very inefficient
-                if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
-                        && stop.isEq(nodeValue)) {
-                    stopAt = true;
-                    break;
+                if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null) {
+                    eq.apply(cmp, stop, nodeValue);
+                    if (cmp.getBoolean()) {
+                        stopAt = true;
+                        break;
+                    }
                 }
             }
         }

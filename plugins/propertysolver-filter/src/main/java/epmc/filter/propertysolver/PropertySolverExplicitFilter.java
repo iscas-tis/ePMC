@@ -59,6 +59,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
@@ -161,6 +162,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         }
 
         ValueArray resultValues = null;
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         if (propertyFilter.isSameResultForAllStates()) {
             resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
             resultValues.set(resultValue, 0);
@@ -178,7 +181,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                     allState = allStates.getExplicitIthState(allStatesNr);
                 }
                 prop.getExplicitIthValue(propEntry, allStatesNr);
-                compare.set(propEntry.isEq(resultValue));
+                eq.apply(cmp, propEntry, resultValue);
+                compare.set(cmp.getBoolean());
                 resultValues.set(compare, forStatesNr);
             }
         }

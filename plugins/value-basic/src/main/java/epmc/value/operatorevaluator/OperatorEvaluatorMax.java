@@ -22,14 +22,18 @@ package epmc.value.operatorevaluator;
 
 import static epmc.error.UtilError.ensure;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.ProblemsValueBasic;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
+import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorMax;
 
 public enum OperatorEvaluatorMax implements OperatorEvaluator {
@@ -77,11 +81,14 @@ public enum OperatorEvaluatorMax implements OperatorEvaluator {
         }
         Value operand1 = operands[0];
         Value operand2 = operands[1];
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operand2.getType(), operand1.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        eq.apply(cmp, operand2, operand1);
         if (ValueAlgebra.asAlgebra(operand1).isGt(operand2)) {
             result.set(operand1);
         } else if (ValueAlgebra.asAlgebra(operand2).isGt(operand1)) {
             result.set(operand2);
-        } else if (operand2.isEq(operand1)) {
+        } else if (cmp.getBoolean()) {
             result.set(operand1);
         } else {
             ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);

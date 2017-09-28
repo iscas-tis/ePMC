@@ -41,18 +41,4 @@ public interface Value {
      * @param value value to set this value to
      */
     void set(Value value);
-
-    /**
-     * Check whether value is equal to another value.
-     * In contrast to the {@link #equals(Object)} method, this method usually
-     * should not perform an exact comparison. Values of different types such
-     * as an integer value and a double value might be considered equal. Also,
-     * values which differ by a certain epsilon, e.g. 1E-6, might be
-     * considered equal, in particular when working with values such as
-     * doubles for which basic operations are not exact.
-     * 
-     * @param other value to compare value to 
-     * @return {@code true} if values are approximately equal
-     */
-    boolean isEq(Value other);
 }

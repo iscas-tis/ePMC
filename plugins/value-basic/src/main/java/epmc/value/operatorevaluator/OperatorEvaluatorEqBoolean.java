@@ -20,28 +20,20 @@
 
 package epmc.value.operatorevaluator;
 
-import static epmc.error.UtilError.ensure;
-
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
-import epmc.value.ProblemsValueBasic;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
-import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorMin;
 
-public enum OperatorEvaluatorMin implements OperatorEvaluator {
+public enum OperatorEvaluatorEqBoolean implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorMin.MIN;
+        return OperatorEq.EQ;
     }
 
     @Override
@@ -54,7 +46,7 @@ public enum OperatorEvaluatorMin implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeBoolean.isBoolean(type)) {
                 return false;
             }
         }
@@ -64,12 +56,12 @@ public enum OperatorEvaluatorMin implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorMin.MIN);
+        assert operator.equals(OperatorEq.EQ);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        return UtilValue.algebraicResultType(types);
+        return TypeBoolean.get();
     }
 
     @Override
@@ -79,19 +71,8 @@ public enum OperatorEvaluatorMin implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        Value operand1 = operands[0];
-        Value operand2 = operands[1];
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operand2.getType(), operand1.getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        eq.apply(cmp, operand2, operand1);
-        if (ValueAlgebra.asAlgebra(operand1).isLt(operand2)) {
-            result.set(operand1);
-        } else if (ValueAlgebra.asAlgebra(operand2).isLt(operand1)) {
-            result.set(operand2);
-        } else if (cmp.getBoolean()) {
-            result.set(operand1);
-        } else {
-            ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
-        }
+        ValueBoolean.asBoolean(result).set(
+                ValueBoolean.asBoolean(operands[0]).getBoolean()
+                == ValueBoolean.asBoolean(operands[1]).getBoolean());
     }
 }

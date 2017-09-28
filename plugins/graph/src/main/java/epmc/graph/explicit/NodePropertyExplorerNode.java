@@ -99,12 +99,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
             ValueExplorerNode other = (ValueExplorerNode) value;
             this.node = other.node;
         }
-
-        @Override
-        public boolean isEq(Value other) {
-            // TODO Auto-generated method stub
-            return false;
-        }
     }
 
     private final class TypeArrayExplorerNode implements TypeArray {

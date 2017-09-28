@@ -233,10 +233,4 @@ public final class ValueDouble implements ValueReal, ValueSetString {
         // TODO Auto-generated method stub
         return false;
     }
-
-    @Override
-    public boolean isEq(Value other) {
-        double otherDouble = UtilValue.getDouble(other);
-        return Math.abs(value - otherDouble) < 1E-6;
-    }
 }

@@ -25,10 +25,13 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorEq;
 
 public enum OperatorEvaluatorSgn implements OperatorEvaluator {
     INSTANCE;
@@ -71,7 +74,10 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         Value zero = TypeInteger.get().getZero();
         Value one = TypeInteger.get().getOne();
         OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
-        if (operands[0].isEq(zero)) {
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        eq.apply(cmp, operands[0], zero);
+        if (cmp.getBoolean()) {
             result.set(zero);
         } else if (ValueAlgebra.asAlgebra(operands[0]).isGt(zero)) {
             result.set(one);

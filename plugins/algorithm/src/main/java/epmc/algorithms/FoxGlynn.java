@@ -26,13 +26,16 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorCeil;
 import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorFloor;
 import epmc.value.operator.OperatorLog;
@@ -392,8 +395,11 @@ public final class FoxGlynn {
         assert this.tau.isGt(this.zero);
         assert this.epsilon.isGt(this.tau);
         assert this.epsilon.isGt(this.zero);
-
-        if (this.lambda.isEq(zero)) {
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeReal.get(), TypeReal.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        
+        eq.apply(cmp, this.lambda, zero);
+        if (cmp.getBoolean()) {
             left = 0;
             right = 0;
             values = UtilValue.newArray(typeArray, 1);

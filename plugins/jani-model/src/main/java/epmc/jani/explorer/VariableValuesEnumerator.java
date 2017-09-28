@@ -51,6 +51,9 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
 import epmc.options.Options;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -187,7 +190,10 @@ public final class VariableValuesEnumerator {
             common.retainAll(right.keySet());
             if (!common.isEmpty()) {
                 for (Variable entry : common) {
-                    if (!left.get(entry).isEq(right.get(entry))) {
+                    OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, left.get(entry).getType(), right.get(entry).getType());;
+                    ValueBoolean cmp = TypeBoolean.get().newValue();
+                    eq.apply(cmp, left.get(entry), right.get(entry));
+                    if (!cmp.getBoolean()) {
                         return Collections.emptyMap();
                     }
                 }

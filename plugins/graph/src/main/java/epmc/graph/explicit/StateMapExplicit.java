@@ -40,6 +40,7 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorId;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
@@ -53,6 +54,8 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     private final Value helper2;
     private final Scheduler scheduler;
     private int refs = 1;
+    private final OperatorEvaluator eq;
+    private final ValueBoolean cmp;
 
     public StateMapExplicit(StateSetExplicit states,
             ValueArray valuesExplicit) {
@@ -69,6 +72,8 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         this.helper = type.newValue();
         this.helper2 = type.newValue();
         this.scheduler = scheduler;
+        this.eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, type, type);
+        cmp = TypeBoolean.get().newValue();
     }
 
     @Override
@@ -229,7 +234,8 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         getExplicitIthValue(helper2, 0);            
         for (int i = 0; i < size(); i++) {
             getExplicitIthValue(helper, i);
-            if (!helper.isEq(helper2)) {
+            eq.apply(cmp, helper, helper2);
+            if (!cmp.getBoolean()) {
                 return false;
             }
         }

@@ -59,6 +59,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
@@ -218,6 +219,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
+        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         do {
             weights = down.findSeparating(bounds, numerical);
             if (weights == null) {
@@ -225,7 +228,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 break;
             }
             IterationResult iterResult = MultiObjectiveUtils.iterate(weights, iterGraph, combinations);
-            if (iterResult.getQ().isEq(bounds)) {
+            eq.apply(cmp, iterResult.getQ(), bounds);
+            if (cmp.getBoolean()) {
                 feasible = true;
                 break;
             }

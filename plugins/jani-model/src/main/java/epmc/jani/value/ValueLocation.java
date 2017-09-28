@@ -155,17 +155,6 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
     }
 
     @Override
-    public boolean isEq(Value other) {
-        assert other != null;
-        assert other instanceof ValueLocation;
-        ValueLocation otherLocation = (ValueLocation) other;
-        if (this.locationNumber == otherLocation.locationNumber) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public int getValueNumber() {
         return locationNumber;
     }

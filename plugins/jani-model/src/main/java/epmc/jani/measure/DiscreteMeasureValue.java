@@ -88,10 +88,4 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
         // TODO Auto-generated method stub
 
     }
-
-    @Override
-    public boolean isEq(Value other) {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }

@@ -110,14 +110,6 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public boolean isEq(Value other) {
-        assert other != null;
-        assert ValueEnum.isEnum(other);
-        assert this.getType().getEnumClass() == TypeEnum.asEnum(other.getType()).getEnumClass();
-        return this.value == ((ValueEnum) other).value;
-    }
-
-    @Override
     public void write(BitStream writer) {
         assert writer != null;
         int value = this.value.ordinal();
