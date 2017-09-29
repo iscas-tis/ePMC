@@ -38,13 +38,16 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 import epmc.sexpression.SExpression;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorAnd;
@@ -54,6 +57,7 @@ import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIff;
 import epmc.value.operator.OperatorImplies;
+import epmc.value.operator.OperatorIsNegInf;
 import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLog;
 import epmc.value.operator.OperatorLt;
@@ -180,6 +184,7 @@ final class InputWriter {
     }
 
     private void writeVariableDeclarations(PrintStream out)  {
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (SMTLibVariable variable : solver.getVariables()) {
             String typeString = typeToString(variable.getType());
             String name = variable.getName();
@@ -192,7 +197,9 @@ final class InputWriter {
             }
             Value lower = variable.getLower();
             Expression varExpr = null;
-            if (lower != null && !ValueAlgebra.asAlgebra(lower).isNegInf()) {
+            OperatorEvaluator isNegInf = ContextValue.get().getOperatorEvaluator(OperatorIsNegInf.IS_NEG_INF, lower.getType());
+            isNegInf.apply(cmp, lower);
+            if (lower != null && !cmp.getBoolean()) {
                 varExpr = UtilModelChecker.parseExpression(lower.toString());
                 command(out, ASSERT,
                         LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);

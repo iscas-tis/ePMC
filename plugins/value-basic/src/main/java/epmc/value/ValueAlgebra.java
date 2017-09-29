@@ -52,8 +52,6 @@ public interface ValueAlgebra extends Value {
 
     boolean isPosInf();
 
-    boolean isNegInf();
-
     // TODO move?
     default boolean isLe(Value other) {
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, getType(), other.getType());

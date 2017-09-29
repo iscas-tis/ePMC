@@ -70,8 +70,6 @@ import epmc.value.operator.OperatorSubtract;
 public final class SolverQuantitativeSchewe implements SolverQuantitative {
     /** Identifier of this solver. */
     public static String IDENTIFIER = "schewe";
-    /** String containing a single space. */
-    private final static String SPACE = " ";
     private GraphExplicit game;
     /** Whether to compute a strategy for the even player. */
     private boolean computeStrategyP0;

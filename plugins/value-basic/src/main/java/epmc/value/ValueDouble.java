@@ -220,10 +220,4 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     boolean isImmutable() {
         return immutable;
     }
-
-    @Override
-    public boolean isNegInf() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }
