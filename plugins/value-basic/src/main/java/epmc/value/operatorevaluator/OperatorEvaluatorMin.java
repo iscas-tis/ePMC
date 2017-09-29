@@ -20,7 +20,7 @@
 
 package epmc.value.operatorevaluator;
 
-import static epmc.error.UtilError.ensure;
+import static epmc.error.UtilError.fail;
 
 import epmc.value.ContextValue;
 import epmc.value.Operator;
@@ -31,9 +31,9 @@ import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMin;
 
 public enum OperatorEvaluatorMin implements OperatorEvaluator {
@@ -82,16 +82,23 @@ public enum OperatorEvaluatorMin implements OperatorEvaluator {
         Value operand1 = operands[0];
         Value operand2 = operands[1];
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operand2.getType(), operand1.getType());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, operand2.getType(), operand1.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        eq.apply(cmp, operand2, operand1);
-        if (ValueAlgebra.asAlgebra(operand1).isLt(operand2)) {
+        lt.apply(cmp, operand1, operand2);
+        if (cmp.getBoolean()) {
             result.set(operand1);
-        } else if (ValueAlgebra.asAlgebra(operand2).isLt(operand1)) {
-            result.set(operand2);
-        } else if (cmp.getBoolean()) {
-            result.set(operand1);
-        } else {
-            ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
+            return;
         }
+        lt.apply(cmp, operand2, operand1);
+        if (cmp.getBoolean()) {
+            result.set(operand2);
+            return;
+        }
+        eq.apply(cmp, operand2, operand1);
+        if (cmp.getBoolean()) {
+            result.set(operand1);
+            return;
+        }
+        fail(ProblemsValueBasic.VALUES_INCOMPARABLE);
     }
 }

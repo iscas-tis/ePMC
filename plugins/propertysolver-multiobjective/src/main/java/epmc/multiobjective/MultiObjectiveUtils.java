@@ -53,6 +53,8 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorLt;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -76,6 +78,8 @@ final class MultiObjectiveUtils {
         ValueAlgebra qEntry = newValueWeight();
         ValueAlgebra boundsEntry = newValueWeight();
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
@@ -89,14 +93,17 @@ final class MultiObjectiveUtils {
         eq.apply(cmp, weightsXqSum, weightsXboundsSum);
         if (cmp.getBoolean()) {
             return 0;
-        } else if (weightsXqSum.isLt(weightsXboundsSum)) {
-            return -1;
-        } else if (weightsXqSum.isGt(weightsXboundsSum)) {
-            return 1;
-        } else {
-            assert false;
-            return Integer.MIN_VALUE;
         }
+        lt.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
+            return -1;
+        }
+        gt.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
+            return 1;
+        }
+        assert false;
+        return Integer.MIN_VALUE;
     }
 
     static ValueArrayAlgebra computeQuantifierBoundsArray(ModelChecker modelChecker,

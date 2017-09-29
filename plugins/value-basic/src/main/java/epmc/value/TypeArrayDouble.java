@@ -24,6 +24,14 @@ public final class TypeArrayDouble implements TypeArrayReal {
     private final static String ARRAY_INDICATOR = "[](double)";
     private final TypeDouble entryType;
 
+    public static boolean isArrayDouble(Type type) {
+        return type instanceof TypeArrayDouble;
+    }
+    
+    public TypeArrayDouble asArrayDouble(Type type) {
+        return (TypeArrayDouble) type;
+    }
+    
     TypeArrayDouble(TypeDouble entryType) {
         assert entryType != null;
         this.entryType = entryType;
