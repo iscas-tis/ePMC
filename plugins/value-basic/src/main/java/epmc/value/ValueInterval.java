@@ -216,10 +216,4 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
             return operand;
         }
     }
-
-    @Override
-    public boolean isNegInf() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }

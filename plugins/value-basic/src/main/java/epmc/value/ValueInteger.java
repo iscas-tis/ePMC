@@ -239,10 +239,4 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     public void pow(ValueInteger a, ValueInteger b) {
         value = (int) Math.pow(a.value, b.value);
     }
-
-    @Override
-    public boolean isNegInf() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 }
