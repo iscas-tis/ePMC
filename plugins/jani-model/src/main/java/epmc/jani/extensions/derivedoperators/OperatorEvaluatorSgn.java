@@ -32,6 +32,8 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorLt;
 
 public enum OperatorEvaluatorSgn implements OperatorEvaluator {
     INSTANCE;
@@ -75,16 +77,24 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         Value one = TypeInteger.get().getOne();
         OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, operands[0].getType(), zero.getType());
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, operands[0].getType(), zero.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, operands[0], zero);
         if (cmp.getBoolean()) {
             result.set(zero);
-        } else if (ValueAlgebra.asAlgebra(operands[0]).isGt(zero)) {
-            result.set(one);
-        } else if (ValueAlgebra.asAlgebra(operands[0]).isLt(zero)) {
-            addInverse.apply(ValueAlgebra.asAlgebra(result), one);
-        } else {
-            assert false;
+            return;
         }
+        lt.apply(cmp, operands[0], zero);
+        if (cmp.getBoolean()) {
+            result.set(one);
+            return;
+        }
+        gt.apply(cmp, operands[0], zero);
+        if (cmp.getBoolean()) {
+            addInverse.apply(ValueAlgebra.asAlgebra(result), one);
+            return;
+        }
+        assert false;
     }
 }

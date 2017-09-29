@@ -175,13 +175,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public boolean isLt(Value operand) {
-        assert operand != null;
-        double op2Double = castOrImport(operand);
-        return getDouble() < op2Double;
-    }
-
-    @Override
     public void set(int operand) {
         assert !isImmutable();
         set((double) operand);

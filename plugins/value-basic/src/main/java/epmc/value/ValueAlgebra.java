@@ -22,6 +22,7 @@ package epmc.value;
 
 import epmc.value.Value;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorLt;
 
 public interface ValueAlgebra extends Value {
     @Override
@@ -54,17 +55,19 @@ public interface ValueAlgebra extends Value {
     boolean isNegInf();
 
     // TODO move?
-    default boolean isLt(Value other) {
-        assert false : this.getType() + " " + other.getType();
-        return false;
-    }
-
-    // TODO move?
     default boolean isLe(Value other) {
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, getType(), other.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, this, other);
-        return isLt(other) || cmp.getBoolean();
+        if (cmp.getBoolean()) {
+            return true;
+        }
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, other.getType(), getType());
+        lt.apply(cmp, this, other);
+        if (cmp.getBoolean()) {
+            return true;
+        }
+        return false;
     }
 
     // TODO move?
@@ -74,6 +77,9 @@ public interface ValueAlgebra extends Value {
 
     // TODO move?
     default boolean isGt(Value other) {
-        return ValueAlgebra.asAlgebra(other).isLt(this);
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, other.getType(), getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        lt.apply(cmp, other, this);
+        return cmp.getBoolean();
     }    
 }

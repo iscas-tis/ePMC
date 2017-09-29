@@ -23,19 +23,19 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
+import epmc.value.TypeArrayDouble;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueArrayDoubleJava;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorEq;
 
-public enum OperatorEvaluatorLt implements OperatorEvaluator {
+public enum OperatorEvaluatorEqArrayDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorLt.LT;
+        return OperatorEq.EQ;
     }
 
     @Override
@@ -48,7 +48,7 @@ public enum OperatorEvaluatorLt implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeArrayDouble.isArrayDouble(type)) {
                 return false;
             }
         }
@@ -58,18 +58,12 @@ public enum OperatorEvaluatorLt implements OperatorEvaluator {
     @Override
     public Type resultType(Operator operator, Type... types) {
         assert operator != null;
-        assert operator.equals(OperatorLt.LT);
+        assert operator.equals(OperatorEq.EQ);
         assert types != null;
         for (Type type : types) {
             assert type != null;
         }
-        for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
-                return null;
-            }
-        }
-        Type result = TypeBoolean.get();
-        return result;
+        return TypeBoolean.get();
     }
 
     @Override
@@ -79,6 +73,22 @@ public enum OperatorEvaluatorLt implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueBoolean.asBoolean(result).set(ValueAlgebra.asAlgebra(operands[0]).isLt(operands[1]));
+        ValueArrayDoubleJava op1 = ValueArrayDoubleJava.asValueArrayDoubleJava(operands[0]);
+        ValueArrayDoubleJava op2 = ValueArrayDoubleJava.asValueArrayDoubleJava(operands[1]);
+        ValueBoolean resultBoolean = ValueBoolean.asBoolean(result);
+        if (op1.size() != op2.size()) {
+            resultBoolean.set(false);
+            return;
+        }
+        double[] arr1 = op1.getDoubleArray();
+        double[] arr2 = op2.getDoubleArray();
+        for (int i = 0; i < arr1.length; i++) {
+            if (Math.abs(arr1[i] - arr2[i]) >= 1E-6) {
+                resultBoolean.set(false);
+                return;
+            }
+        }
+        resultBoolean.set(true);
+        return;
     }
 }
