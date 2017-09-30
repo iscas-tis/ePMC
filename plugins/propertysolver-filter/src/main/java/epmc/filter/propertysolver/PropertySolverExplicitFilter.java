@@ -27,6 +27,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
+import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.UtilExpressionStandard;
@@ -50,7 +51,10 @@ import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayConstant;
 import epmc.value.TypeBoolean;
+import epmc.value.TypeInteger;
+import epmc.value.TypeInterval;
 import epmc.value.TypeNumber;
+import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -121,7 +125,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             }
         }
         allStates.close();
-        Value resultValue = propertyFilter.initialAccumulatorValue(modelChecker.getLowLevel(), propEntry);
+        Value resultValue = initialAccumulatorValue(propertyFilter.getFilterType(), modelChecker.getLowLevel(), propEntry);
         int numStatesInFilter = 0;
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
@@ -290,6 +294,27 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         }
     }
 
+    private static Value initialAccumulatorValue(FilterType type, ExpressionToType expressionToType, Value value) {
+        assert expressionToType != null;
+        assert value != null;
+        switch (type) {
+        case COUNT:
+            return UtilValue.clone(TypeInteger.get().getZero());
+        case EXISTS:
+            return UtilValue.clone(TypeBoolean.get().getFalse());
+        case FORALL:
+            return UtilValue.clone(TypeBoolean.get().getTrue());
+        case RANGE:
+            return TypeInterval.get().newValue(value, value);
+        case AVG:
+            return TypeWeight.get().getZero();
+        case SUM:
+            return TypeWeight.get().getZero();
+        default:
+            return UtilValue.clone(value);
+        }
+    }
+    
     /**
      * Get log used.
      * 

@@ -25,13 +25,11 @@ import static epmc.error.UtilError.ensure;
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
-import epmc.value.UtilValue;
 import epmc.value.ValueBoolean;
 import epmc.error.Positional;
 import epmc.expression.Expression;
@@ -248,25 +246,6 @@ public final class ExpressionFilter implements Expression {
 
     public Expression getStates() {
         return states;
-    }
-
-    public Value initialAccumulatorValue(ExpressionToType expressionToType, Value value) {
-        assert expressionToType != null;
-        assert value != null;
-        switch (type) {
-        case COUNT:
-            return UtilValue.clone(TypeInteger.get().getZero());
-        case EXISTS:
-            return UtilValue.clone(TypeBoolean.get().getFalse());
-        case FORALL:
-            return UtilValue.clone(TypeBoolean.get().getTrue());
-        case RANGE:
-            return TypeInterval.get().newValue(value, value);
-        case AVG: case SUM:
-            return UtilValue.clone(TypeAlgebra.asAlgebra(getType(expressionToType)).getZero());
-        default:
-            return UtilValue.clone(value);
-        }
     }
 
     public boolean isPrint() {
