@@ -20,7 +20,7 @@
 
 package epmc.expression.standard.simplify;
 
-import epmc.value.TypeAlgebra;
+import epmc.value.TypeInterval;
 import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorSubtract;
 import epmc.expression.Expression;
@@ -48,7 +48,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
             return new ExpressionLiteral.Builder()
-                    .setValue(TypeAlgebra.asAlgebra(expressionOperator.getType(expressionToType)).getZero())
+                    .setValue(TypeInterval.get().getZero())
                     .build();
         }
         return null;

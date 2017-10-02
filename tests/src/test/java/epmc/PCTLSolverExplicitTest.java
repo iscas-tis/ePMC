@@ -38,10 +38,6 @@ import epmc.value.Value;
 import epmc.value.ValueInterval;
 import static org.junit.Assert.assertTrue;
 
-// TODO just started with setting up tests, will have to add a few more
-
-// TODO fix for continuous time
-
 public final class PCTLSolverExplicitTest {
     private final static int[] NUMBERS_PHIL_LSS = new int[]{3,4};
     private final static int[] K_PHIL_LSS = new int[]{4,5,6};
