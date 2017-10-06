@@ -46,7 +46,6 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
@@ -58,6 +57,7 @@ import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIff;
 import epmc.value.operator.OperatorImplies;
 import epmc.value.operator.OperatorIsNegInf;
+import epmc.value.operator.OperatorIsPosInf;
 import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLog;
 import epmc.value.operator.OperatorLt;
@@ -205,7 +205,9 @@ final class InputWriter {
                         LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
             }
             Value upper = variable.getUpper();
-            if (upper != null && !ValueAlgebra.asAlgebra(upper).isPosInf()) {
+            OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, TypeReal.get());
+            isPosInf.apply(cmp, lower);
+            if (upper != null && !cmp.getBoolean()) {
                 varExpr = UtilModelChecker.parseExpression(upper.toString());
                 command(out, ASSERT,
                         LANGLE + LEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);

@@ -22,6 +22,6 @@ package epmc.value.operator;
 
 import epmc.value.Operator;
 
-public enum OperatorIsNegInf implements Operator {
-    IS_NEG_INF
+public enum OperatorIsPosInf implements Operator {
+    IS_POS_INF
 }

@@ -60,6 +60,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIsPosInf;
 import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
@@ -213,14 +214,16 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         assert product != null;
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
-        ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf());
+        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        isPosInf.apply(cmp, subtractNumericalFrom);
+        ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !cmp.getBoolean());
         int numAutomata = product.getNumAutomata();
         DownClosure down = new DownClosure(numAutomata);
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
         do {
             weights = down.findSeparating(bounds, numerical);
             if (weights == null) {
@@ -318,8 +321,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         return new SchedulerInitialRandomisedImpl(probabilities, schedulers);
     }
 
-    private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler)
-    {
+    private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler) {
         ValueArray resultValues;
         if (numerical) {
             //            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
@@ -327,7 +329,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);
             OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(),  TypeWeight.get());
-            if (!ValueAlgebra.asAlgebra(subtractNumericalFrom).isPosInf()) {
+            OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
+            ValueBoolean cmp = TypeBoolean.get().newValue();
+            isPosInf.apply(cmp, subtractNumericalFrom);
+            if (!cmp.getBoolean()) {
                 subtract.apply(entry, subtractNumericalFrom, entry);
             }
             for (int i = 0; i < forStates.size(); i++) {

@@ -171,11 +171,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public boolean isPosInf() {
-        return false;
-    }
-
-    @Override
     public boolean checkRange() {
         return ValueRange.checkRange(lower) && ValueRange.checkRange(upper) && lower.isLe(upper);
     }

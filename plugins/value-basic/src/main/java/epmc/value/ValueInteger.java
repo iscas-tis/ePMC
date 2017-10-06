@@ -137,11 +137,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public boolean isPosInf() {
-        return false;
-    }
-
-    @Override
     public boolean isGt(Value operand) {
         assert operand != null;
         if (!ValueInteger.isInteger(operand) && !ValueDouble.isDouble(operand)) {

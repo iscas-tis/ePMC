@@ -365,7 +365,6 @@ public final class FoxGlynn {
         assert TypeReal.isReal(omega.getType());
         assert TypeReal.isReal(epsilon.getType());
         assert lambda.isGe(TypeReal.get().getZero()) : lambda;
-        assert !lambda.isPosInf();
         this.typeReal = TypeReal.get();
 
         /* store input parameters and derived stuff */

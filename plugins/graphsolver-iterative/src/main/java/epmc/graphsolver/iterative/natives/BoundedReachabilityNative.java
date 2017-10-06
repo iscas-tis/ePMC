@@ -205,7 +205,6 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
         assert iterGraph != null : "iterGraph == null";
         assert lambda != null : "lambda == null";
         assert ValueReal.isReal(lambda) : lambda;
-        assert !lambda.isPosInf() : lambda;
         Options options = Options.get();
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);

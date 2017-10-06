@@ -24,10 +24,16 @@ import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
+import epmc.value.operator.OperatorIsPosInf;
 
 // TODO complete documentation
 
@@ -133,11 +139,17 @@ public final class TimeBound {
 
     private boolean isPosInf(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueAlgebra.asAlgebra(expressionLiteral.getValue()).isPosInf();
+        if (!ValueReal.isReal(expressionLiteral.getValue())) {
+            return false;
+        }
+        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        isPosInf.apply(cmp, expressionLiteral.getValue());
+        return cmp.getBoolean();
     }
 
     @Override
@@ -253,7 +265,7 @@ public final class TimeBound {
         if (!(getRight() instanceof ExpressionLiteral)) {
             return true;
         }
-        return !ValueAlgebra.asAlgebra(getValue(getRight())).isPosInf();
+        return !isPosInf(right);
     }
 
     /**
