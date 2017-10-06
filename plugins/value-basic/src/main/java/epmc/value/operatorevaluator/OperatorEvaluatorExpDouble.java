@@ -73,7 +73,7 @@ public enum OperatorEvaluatorExpDouble implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        double operand = UtilValue.getDouble(operands[0]);
+        double operand = UtilValue.getDoubleOrInt(operands[0]);
         ValueDouble.asDouble(result).set(Math.exp(operand));
     }
 }

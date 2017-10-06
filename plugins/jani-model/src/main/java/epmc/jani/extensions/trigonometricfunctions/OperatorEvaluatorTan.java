@@ -25,6 +25,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
+import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
@@ -67,6 +68,6 @@ public enum OperatorEvaluatorTan implements OperatorEvaluator {
     @Override
     public Type resultType(Type... types) {
         assert types != null;
-        return UtilValue.algebraicResultNonIntegerType(types);
+        return TypeReal.get();
     }
 }

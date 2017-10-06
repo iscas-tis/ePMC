@@ -75,8 +75,8 @@ public enum OperatorEvaluatorAddDouble implements OperatorEvaluator {
             assert operand != null;
         }
         assert operands.length >= 2;
-        double op1 = UtilValue.getDouble(operands[0]);
-        double op2 = UtilValue.getDouble(operands[1]);
+        double op1 = UtilValue.getDoubleOrInt(operands[0]);
+        double op2 = UtilValue.getDoubleOrInt(operands[1]);
         ValueDouble.asDouble(result).set(op1 + op2);
     }
 }

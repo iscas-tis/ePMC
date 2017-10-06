@@ -25,7 +25,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
-import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
@@ -48,11 +47,8 @@ public enum OperatorEvaluatorIsNegInfDouble implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0]) && TypeDouble.isDouble(types[1])) {
-            return false;
-        }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.isDouble(type)) {
                 return false;
             }
         }
