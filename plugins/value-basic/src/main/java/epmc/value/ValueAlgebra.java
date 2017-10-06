@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.value.Value;
-import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLt;
 
 public interface ValueAlgebra extends Value {
@@ -49,14 +48,6 @@ public interface ValueAlgebra extends Value {
     boolean isZero();
 
     boolean isOne();
-
-    // TODO move?
-    default boolean isGe(Value other) {
-        OperatorEvaluator le = ContextValue.get().getOperatorEvaluator(OperatorLe.LE, other.getType(), getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        le.apply(cmp, other, this);
-        return cmp.getBoolean();
-    }
 
     // TODO move?
     default boolean isGt(Value other) {
