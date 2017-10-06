@@ -38,6 +38,7 @@ import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorFloor;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLog;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorPow;
@@ -92,6 +93,7 @@ public final class FoxGlynn {
         OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, typeReal);
         OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, typeReal, typeReal);
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, typeReal, typeReal);
         ValueBoolean cmp = TypeBoolean.get().newValue();
         ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
@@ -177,7 +179,8 @@ public final class FoxGlynn {
             addInverse.apply(maxError, maxError);
             exp.apply(maxError, maxError);
             kTimesEpsilon.multiply(kReal, epsilon);
-            if (kTimesEpsilon.isGt(maxError)) {
+            gt.apply(cmp, kTimesEpsilon, maxError);
+            if (cmp.getBoolean()) {
                 break;
             }
         }
@@ -232,7 +235,8 @@ public final class FoxGlynn {
                     logOp.apply(result_1, result_1);
                     result_1.multiply(iReal, result_1);
                     result_1.add(log_c_m_inf, result_1);
-                    if (result_1.isGt(result)) {
+                    gt.apply(cmp, result_1, result);
+                    if (cmp.getBoolean()) {
                         result.set(result_1);
                     }
                 }
@@ -279,6 +283,8 @@ public final class FoxGlynn {
         ValueReal leftSide = typeReal.newValue();
         ValueReal oldEntry = typeReal.newValue();
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int j = m - left; j > 0; j--) {
             leftSide.set(j+left);
             values.get(oldEntry, j);
@@ -303,7 +309,8 @@ public final class FoxGlynn {
                 q.set(j + 1 + left);
                 divide.apply(q, lambda, q);
                 divide.apply(tauDq, tau, q);
-                if (entry.isGt(tauDq)) {
+                gt.apply(cmp, entry, tauDq);
+                if (cmp.getBoolean()) {
                     entry.multiply(q, entry);
                     values.set(entry,  j + 1);
                 } else {
@@ -330,7 +337,6 @@ public final class FoxGlynn {
         ValueReal entryJ = typeReal.newValue();
         ValueReal entryT = typeReal.newValue();
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, typeReal, typeReal);
-        ValueBoolean cmp = TypeBoolean.get().newValue();
         while (j < t) {
             values.get(entryJ, j);
             values.get(entryT, t);
@@ -396,10 +402,6 @@ public final class FoxGlynn {
         this.bigNumber = UtilValue.newValue(typeReal, "1.0e+10");
         this.vm1922272 = ValueReal.asReal(UtilValue.newValue(typeReal, "-1.922272"));
 
-        assert this.omega.isGt(this.zero);
-        assert this.tau.isGt(this.zero);
-        assert this.epsilon.isGt(this.tau);
-        assert this.epsilon.isGt(this.zero);
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeReal.get(), TypeReal.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         

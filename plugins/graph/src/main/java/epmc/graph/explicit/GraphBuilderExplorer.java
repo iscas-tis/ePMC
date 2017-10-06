@@ -356,8 +356,7 @@ public final class GraphBuilderExplorer {
         return successorNodes;
     }
 
-    private static BitStoreableToNumber newNodeStore(Explorer explorer)
-    {
+    private static BitStoreableToNumber newNodeStore(Explorer explorer) {
         int numBits = explorer.getNumNodeBits();
         return UtilGraph.newNodeStore(numBits);
     }
