@@ -55,9 +55,7 @@ public enum OperatorEvaluatorMaxInt implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorMax.MAX);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

@@ -55,9 +55,7 @@ public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

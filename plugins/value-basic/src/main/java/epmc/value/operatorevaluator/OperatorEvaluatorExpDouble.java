@@ -60,8 +60,7 @@ public enum OperatorEvaluatorExpDouble implements OperatorEvaluator {
     }
 
     @Override
-    public TypeReal resultType(Operator operator, Type... types) {
-        assert operator != null;
+    public TypeReal resultType(Type... types) {
         assert types != null;
         assert types.length >= 1;
         assert types[0] != null;

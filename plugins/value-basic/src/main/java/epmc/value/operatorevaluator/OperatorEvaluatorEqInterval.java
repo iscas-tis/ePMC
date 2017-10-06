@@ -31,7 +31,6 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
-import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 
 public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
@@ -65,9 +64,7 @@ public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorDivide.DIVIDE);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

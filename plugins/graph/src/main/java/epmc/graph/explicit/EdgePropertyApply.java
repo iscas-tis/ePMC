@@ -75,7 +75,7 @@ public final class EdgePropertyApply implements EdgeProperty {
         this.evaluator = evaluator;
         this.operands = operands;
         this.callOperands = new Value[operands.length];
-        Type type = evaluator.resultType(operator, types);
+        Type type = evaluator.resultType(types);
         this.value = type.newValue();
     }
 

@@ -162,7 +162,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
         }
         OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, opTypes);
         ensure(evaluator != null, ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, positional, Arrays.toString(opTypes));
-        result = evaluator.resultType(operator, opTypes);
+        result = evaluator.resultType(opTypes);
         assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         return result;
     }

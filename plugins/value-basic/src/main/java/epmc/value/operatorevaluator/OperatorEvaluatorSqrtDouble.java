@@ -29,7 +29,6 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorSqrt;
 
 public enum OperatorEvaluatorSqrtDouble implements OperatorEvaluator {
@@ -58,9 +57,7 @@ public enum OperatorEvaluatorSqrtDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorAddInverse.ADD_INVERSE);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

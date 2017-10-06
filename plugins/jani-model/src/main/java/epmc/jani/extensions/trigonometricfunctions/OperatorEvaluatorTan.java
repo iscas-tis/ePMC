@@ -65,7 +65,7 @@ public enum OperatorEvaluatorTan implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
+    public Type resultType(Type... types) {
         assert types != null;
         return UtilValue.algebraicResultNonIntegerType(types);
     }

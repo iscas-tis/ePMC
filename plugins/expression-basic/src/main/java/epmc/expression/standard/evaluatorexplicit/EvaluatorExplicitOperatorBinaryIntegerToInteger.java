@@ -190,7 +190,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             binaryIntegerToInteger = null;
         }
         evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
-        result = evaluator.resultType(operator, types).newValue();
+        result = evaluator.resultType(types).newValue();
     }
 
     @Override

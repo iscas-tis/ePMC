@@ -54,9 +54,8 @@ public enum OperatorEvaluatorAsinh implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
+    public Type resultType(Type... types) {
         assert types != null;
-        assert operator != null;
         return UtilValue.algebraicResultNonIntegerType(types);
     }
 

@@ -56,8 +56,7 @@ public enum OperatorEvaluatorIsPosInfDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;
