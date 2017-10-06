@@ -71,7 +71,7 @@ public enum OperatorEvaluatorLogDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value1 = UtilValue.getDouble(operands[0]);
+        double value1 = UtilValue.getDoubleOrInt(operands[0]);
         ValueDouble.asDouble(result).set(Math.log(value1));
     }
 }

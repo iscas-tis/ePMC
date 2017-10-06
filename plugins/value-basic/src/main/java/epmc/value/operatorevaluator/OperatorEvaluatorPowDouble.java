@@ -73,8 +73,8 @@ public enum OperatorEvaluatorPowDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value1 = UtilValue.getDouble(operands[0]);
-        double value2 = UtilValue.getDouble(operands[1]);
+        double value1 = UtilValue.getDoubleOrInt(operands[0]);
+        double value2 = UtilValue.getDoubleOrInt(operands[1]);
         ValueDouble.asDouble(result).set(Math.pow(value1, value2));
     }
 }

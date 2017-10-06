@@ -25,7 +25,6 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
@@ -57,12 +56,7 @@ public enum OperatorEvaluatorNe implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        Type result = null;
-        if (UtilValue.allTypesKnown(types) && UtilValue.upper(types) == null) {
-            return null;
-        }
-        result = TypeBoolean.get();
-        return result;
+        return TypeBoolean.get();
     }
 
     @Override

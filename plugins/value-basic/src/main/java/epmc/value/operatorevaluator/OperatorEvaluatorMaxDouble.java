@@ -77,8 +77,8 @@ public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = UtilValue.getDouble(operands[0]);
-        double op2 = UtilValue.getDouble(operands[1]);
+        double op1 = UtilValue.getDoubleOrInt(operands[0]);
+        double op2 = UtilValue.getDoubleOrInt(operands[1]);
         ValueDouble.asDouble(result).set(Math.max(op1, op2));
     }
 }

@@ -26,43 +26,23 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class UtilValue {
-    public static Type algebraicResultNonIntegerType(Type[] types) {
-        Type upper = upper(types);
-        if (allTypesKnown(types) && upper == null) {
-            return null;
-        } else {
-            Type result;
-            if (TypeAlgebra.isAlgebra(upper)) {
-                result = upper;
-            } else if (TypeArray.isArray(upper)) {
-                // TODO dimensions check
-                result = upper;
-            } else {
-                return null;
-            }
-            if (TypeInteger.isInteger(result)) {
-                result = TypeReal.get();
-            }
-            return result;
-        }
-    }
-
+    private final static String LBRACK = "[";
+    private final static String RBRACK = "]";
+    private final static String COMMA = ",";
+    private final static String UNCHECKED = "unchecked";
+    
     public static Type algebraicResultType(Type[] types) {
         Type upper = upper(types);
-        if (allTypesKnown(types) && upper == null) {
-            return null;
+        Type result;
+        if (TypeAlgebra.isAlgebra(upper)) {
+            result = upper;
+        } else if (TypeArray.isArray(upper)) {
+            // TODO dimensions check
+            result = upper;
         } else {
-            Type result;
-            if (TypeAlgebra.isAlgebra(upper)) {
-                result = upper;
-            } else if (TypeArray.isArray(upper)) {
-                // TODO dimensions check
-                result = upper;
-            } else {
-                return null;
-            }
-            return result;
+            return null;
         }
+        return result;
     }
 
     public static Type upper(Type... types) {
@@ -82,25 +62,15 @@ public final class UtilValue {
         return upper;
     }
 
-    public static boolean allTypesKnown(Type... types) {
-        boolean allTypesKnown = true;
-        for (Type type : types) {
-            if (type == null) {
-                allTypesKnown = false;
-            }
-        }
-        return allTypesKnown;
-    }
-
     public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings(UNCHECKED)
         T value = (T) type.newValue();
         ValueSetString.asValueSetString(value).set(valueString);
         return value;
     }
 
     public static <T extends ValueAlgebra, U extends TypeAlgebra> T newValue(U type, int valueInt) {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings(UNCHECKED)
         T value = (T) type.newValue();
         value.set(valueInt);
         return value;
@@ -109,13 +79,13 @@ public final class UtilValue {
     public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int size) {
         assert type != null;
         assert size >= 0;
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings(UNCHECKED)
         T value = (T) type.newValue();
         value.setSize(size);
         return value;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings(UNCHECKED)
     public static <T extends Type> T upper(T a, T b) {
         assert a != null;
         assert b != null;
@@ -143,7 +113,7 @@ public final class UtilValue {
 
     public static <T extends Value> T clone(T value) {
         assert value != null;
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings(UNCHECKED)
         T clone = (T) value.getType().newValue();
         clone.set(value);
         return clone;
@@ -169,19 +139,19 @@ public final class UtilValue {
     public static String arrayToString(ValueArray array) {
         StringBuilder builder = new StringBuilder();
         Value entry = array.getType().getEntryType().newValue();
-        builder.append("[");
+        builder.append(LBRACK);
         for (int entryNr = 0; entryNr < array.size(); entryNr++) {
             array.get(entry, entryNr);
             builder.append(entry);
             if (entryNr < array.size() - 1) {
-                builder.append(",");
+                builder.append(COMMA);
             }
         }
-        builder.append("]");
+        builder.append(RBRACK);
         return builder.toString();
     }
 
-    public static double getDouble(Value value) {
+    public static double getDoubleOrInt(Value value) {
         assert value != null;
         assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
         : value.getType();
@@ -193,6 +163,12 @@ public final class UtilValue {
             assert false;
             return Double.NaN;
         }
+    }
+    
+    public static double getDouble(Value value) {
+        assert value != null;
+        assert ValueDouble.isDouble(value) : value.getType();
+        return ValueDouble.asDouble(value).getDouble();
     }
 
     public static int getInt(Value value) {

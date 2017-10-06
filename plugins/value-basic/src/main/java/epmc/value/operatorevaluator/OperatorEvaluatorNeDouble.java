@@ -75,8 +75,8 @@ public enum OperatorEvaluatorNeDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = UtilValue.getDouble(operands[0]);
-        double op2 = UtilValue.getDouble(operands[1]);
+        double op1 = UtilValue.getDoubleOrInt(operands[0]);
+        double op2 = UtilValue.getDoubleOrInt(operands[1]);
         ValueBoolean.asBoolean(result).set(Math.abs(op1 - op2) > 1E-6);
     }
 }

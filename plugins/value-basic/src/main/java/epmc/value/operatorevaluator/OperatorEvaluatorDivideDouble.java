@@ -71,8 +71,8 @@ public enum OperatorEvaluatorDivideDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = UtilValue.getDouble(operands[0]);
-        double op2 = UtilValue.getDouble(operands[1]);
+        double op1 = UtilValue.getDoubleOrInt(operands[0]);
+        double op2 = UtilValue.getDoubleOrInt(operands[1]);
         if (op2 == 0.0) {
             ValueDouble.asDouble(result).set(0);            
         } else {
