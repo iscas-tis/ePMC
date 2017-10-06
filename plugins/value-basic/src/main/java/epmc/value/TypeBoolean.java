@@ -25,6 +25,8 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
+    private final static String BOOL = "bool";
+    
     private final ValueBoolean valueFalse = new ValueBoolean(this, false);
     private final ValueBoolean valueTrue = new ValueBoolean(this, true);
 
@@ -71,7 +73,7 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("bool");
+        builder.append(BOOL);
         return builder.toString();
     }
 
