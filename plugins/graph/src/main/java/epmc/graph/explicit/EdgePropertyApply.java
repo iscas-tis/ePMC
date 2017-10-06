@@ -39,7 +39,6 @@ public final class EdgePropertyApply implements EdgeProperty {
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get(int)}. */
     private final OperatorEvaluator evaluator;
-    private final Operator operator;
     /** Node properties {@link #get(int)} of which {@link #operator} is applied. */
     private final EdgeProperty[] operands;
     /** Values used to perform apply. */
@@ -71,7 +70,6 @@ public final class EdgePropertyApply implements EdgeProperty {
             types[operandNr] = operands[operandNr].getType();
         }
         OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
-        this.operator = identifier;
         this.evaluator = evaluator;
         this.operands = operands;
         this.callOperands = new Value[operands.length];
