@@ -172,7 +172,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
 
     @Override
     public boolean checkRange() {
-        return ValueRange.checkRange(lower) && ValueRange.checkRange(upper) && lower.isLe(upper);
+        return ValueRange.checkRange(lower) && ValueRange.checkRange(upper);
     }
 
     @Override

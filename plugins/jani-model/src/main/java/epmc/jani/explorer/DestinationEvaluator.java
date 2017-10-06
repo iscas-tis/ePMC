@@ -33,12 +33,16 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeReal;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
-import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorGe;
 
 /**
  * Evaluator for edge destinations.
@@ -130,9 +134,11 @@ public final class DestinationEvaluator {
     /** Assignments performed by this evaluator. */
     private final AssignmentsEvaluator assignments;
     /** Zero real. */
-    private final Value zeroReal;
+    private final ValueAlgebra zeroWeight;
     /** Number of location variable in the automaton evaluator belongs to. */
     private final int locationVariable;
+    private final OperatorEvaluator ge;
+    private final ValueBoolean cmp = TypeBoolean.get().newValue();
 
     private DestinationEvaluator(Builder builder) {
         assert builder != null;
@@ -160,12 +166,14 @@ public final class DestinationEvaluator {
                 .setVariableMap(variableMap)
                 .setVariables(variables)
                 .build();
-        zeroReal = UtilValue.newValue(TypeReal.get(), 0);
+        zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
+        ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     ValueAlgebra evaluateProbability(NodeJANI node) {
         ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
-        ensure(result.isGe(zeroReal), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
+        ge.apply(cmp, result, zeroWeight);
+        ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
         return result;
     }
 

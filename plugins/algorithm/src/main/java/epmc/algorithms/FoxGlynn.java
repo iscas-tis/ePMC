@@ -364,7 +364,6 @@ public final class FoxGlynn {
         assert TypeReal.isReal(tau.getType());
         assert TypeReal.isReal(omega.getType());
         assert TypeReal.isReal(epsilon.getType());
-        assert lambda.isGe(TypeReal.get().getZero()) : lambda;
         this.typeReal = TypeReal.get();
 
         /* store input parameters and derived stuff */
@@ -397,7 +396,6 @@ public final class FoxGlynn {
         this.bigNumber = UtilValue.newValue(typeReal, "1.0e+10");
         this.vm1922272 = ValueReal.asReal(UtilValue.newValue(typeReal, "-1.922272"));
 
-        assert this.lambda.isGe(this.zero);
         assert this.omega.isGt(this.zero);
         assert this.tau.isGt(this.zero);
         assert this.epsilon.isGt(this.tau);
