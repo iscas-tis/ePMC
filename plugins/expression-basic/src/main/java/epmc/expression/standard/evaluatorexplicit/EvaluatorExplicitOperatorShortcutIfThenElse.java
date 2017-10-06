@@ -135,7 +135,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             opNr++;
         }
         OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(expression.getOperator(), types).newValue();
+        result = evaluator.resultType(types).newValue();
     }
 
     @Override

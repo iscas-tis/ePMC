@@ -61,7 +61,7 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
+    public Type resultType(Type... types) {
         assert types != null;
         assert types.length == 0;
         return TypeReal.get();

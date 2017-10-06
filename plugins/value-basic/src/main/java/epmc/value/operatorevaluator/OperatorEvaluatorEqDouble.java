@@ -60,9 +60,7 @@ public enum OperatorEvaluatorEqDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorEq.EQ);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

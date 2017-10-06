@@ -25,8 +25,7 @@ public final class OperatorEvaluatorNot implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
+    public Type resultType(Type... types) {
         for (Type type : types) {
             assert type != null;
         }

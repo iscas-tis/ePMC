@@ -30,7 +30,6 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAbs;
-import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
@@ -67,9 +66,7 @@ public enum OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorAdd.ADD);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

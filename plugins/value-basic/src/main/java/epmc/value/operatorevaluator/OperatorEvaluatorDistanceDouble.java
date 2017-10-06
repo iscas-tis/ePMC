@@ -28,7 +28,6 @@ import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 
 public enum OperatorEvaluatorDistanceDouble implements OperatorEvaluator {
@@ -58,9 +57,7 @@ public enum OperatorEvaluatorDistanceDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert operator != null;
-        assert operator.equals(OperatorAdd.ADD);
+    public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {
             assert type != null;

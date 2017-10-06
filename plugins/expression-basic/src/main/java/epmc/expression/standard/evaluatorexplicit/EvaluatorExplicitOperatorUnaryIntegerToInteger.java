@@ -169,7 +169,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             unaryIntegerToInteger = null;
         }
         evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(expression.getOperator(), types).newValue();
+        result = evaluator.resultType(types).newValue();
     }
 
     @Override

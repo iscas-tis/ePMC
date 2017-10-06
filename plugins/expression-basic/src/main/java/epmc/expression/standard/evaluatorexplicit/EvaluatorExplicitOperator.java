@@ -139,8 +139,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
         evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
         assert evaluator != null : operator + " " + Arrays.toString(types) + " " + operands[0];
-        assert evaluator.resultType(operator, types) != null : operator;
-        result = evaluator.resultType(operator, types).newValue();
+        assert evaluator.resultType(types) != null : operator;
+        result = evaluator.resultType(types).newValue();
     }
 
     @Override

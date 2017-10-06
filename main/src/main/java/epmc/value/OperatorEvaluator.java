@@ -5,7 +5,7 @@ public interface OperatorEvaluator {
 
     boolean canApply(Type... types);
 
-    Type resultType(Operator operator, Type... types);
+    Type resultType(Type... types);
 
     void apply(Value result, Value... operands);
 }
