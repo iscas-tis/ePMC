@@ -25,18 +25,17 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
-import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIsNegInf;
+import epmc.value.operator.OperatorIsPosInf;
 
-public enum OperatorEvaluatorIsNegInfDouble implements OperatorEvaluator {
+public enum OperatorEvaluatorIsPosInfDouble implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorIsNegInf.IS_NEG_INF;
+        return OperatorIsPosInf.IS_POS_INF;
     }
 
     @Override
@@ -48,11 +47,8 @@ public enum OperatorEvaluatorIsNegInfDouble implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0]) && TypeDouble.isDouble(types[1])) {
-            return false;
-        }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.isDouble(type)) {
                 return false;
             }
         }
@@ -77,6 +73,6 @@ public enum OperatorEvaluatorIsNegInfDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double op1 = UtilValue.getDouble(operands[0]);
-        ValueBoolean.asBoolean(result).set(op1 == Double.NEGATIVE_INFINITY);
+        ValueBoolean.asBoolean(result).set(op1 == Double.POSITIVE_INFINITY);
     }
 }

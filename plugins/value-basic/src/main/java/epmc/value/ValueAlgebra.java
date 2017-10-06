@@ -50,8 +50,6 @@ public interface ValueAlgebra extends Value {
 
     boolean isOne();
 
-    boolean isPosInf();
-
     // TODO move?
     default boolean isLe(Value other) {
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, getType(), other.getType());

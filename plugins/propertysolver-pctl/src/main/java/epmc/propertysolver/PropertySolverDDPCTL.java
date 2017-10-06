@@ -222,7 +222,6 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 ValueReal rate = TypeReal.get().newValue();
                 subtract.apply(rate, rightValue, leftValue);
                 rate.multiply(rate, unifRate);
-                assert !rate.isPosInf();
                 GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();
                 objective.setGraph(graph);
                 objective.setMin(min);

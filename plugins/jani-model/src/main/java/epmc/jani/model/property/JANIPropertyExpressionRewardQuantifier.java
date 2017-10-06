@@ -50,7 +50,11 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.expression.JANIExpression;
 import epmc.util.UtilJSON;
-import epmc.value.ValueAlgebra;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorIsPosInf;
 
 /**
  * JANI expected quantifier expression.
@@ -395,11 +399,14 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
 
     private static boolean isPosInf(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueAlgebra.asAlgebra(expressionLiteral.getValue()).isPosInf();
+        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        isPosInf.apply(cmp, expressionLiteral.getValue());
+        return cmp.getBoolean();
     }
 
     private static ExpressionReward newRewardInstantaneous

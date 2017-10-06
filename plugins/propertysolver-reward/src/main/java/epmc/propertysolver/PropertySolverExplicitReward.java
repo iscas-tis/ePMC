@@ -61,9 +61,12 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
@@ -71,7 +74,9 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorIsPosInf;
 
 // TODO check whether this works for JANI MDPs - probably not
 
@@ -189,7 +194,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         ExpressionReward quantifiedReward = ExpressionReward.asReward(property);
         RewardType rewardType = quantifiedReward.getRewardType();
-        if (rewardType.isCumulative() && !time.isPosInf()) {
+        if (rewardType.isCumulative() && !isPosInf(time)) {
             GraphSolverObjectiveExplicitBoundedCumulative objective = new GraphSolverObjectiveExplicitBoundedCumulative();
             objective.setGraph(graph);
             objective.setMin(min);
@@ -198,7 +203,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             configuration.setObjective(objective);
             configuration.solve();
             values = objective.getResult();
-        } else if (rewardType.isReachability() || (rewardType.isCumulative() && time.isPosInf())) {
+        } else if (rewardType.isReachability() || (rewardType.isCumulative() && isPosInf(time))) {
             GraphSolverObjectiveExplicitUnboundedCumulative objective = new GraphSolverObjectiveExplicitUnboundedCumulative();
             objective.setStateRewards(cumulRewards);
             objective.setGraph(graph);
@@ -394,5 +399,15 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
         return evaluator.evaluate();
+    }
+    
+    private boolean isPosInf(Value value) {
+        if (!ValueReal.isReal(value)) {
+            return false;
+        }
+        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, value.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        isPosInf.apply(cmp, value);
+        return cmp.getBoolean();
     }
 }

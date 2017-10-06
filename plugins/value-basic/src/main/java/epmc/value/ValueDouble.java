@@ -165,11 +165,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public boolean isPosInf() {
-        return getDouble() == Double.POSITIVE_INFINITY;
-    }
-
-    @Override
     public int getInt() {
         return (int) getDouble();
     }
