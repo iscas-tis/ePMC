@@ -93,11 +93,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public ValueBoolean clone() {
-        return new ValueBoolean(getType(), value);
-    }
-
-    @Override
     public boolean equals(Object obj) {
         assert obj != null;
         if (!(obj instanceof ValueBoolean)) {
