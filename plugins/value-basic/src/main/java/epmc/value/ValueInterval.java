@@ -21,6 +21,7 @@
 package epmc.value;
 
 import epmc.value.Value;
+import epmc.value.operator.OperatorGe;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
     public static boolean isInterval(Value value) {
@@ -109,23 +110,28 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
 
     }
 
-    @Override
     public boolean isGe(Value operand) {
         assert operand != null;
         assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
+        OperatorEvaluator ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeReal.get(), TypeReal.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         if (isInterval(operand)) {
             ValueInterval opIv = ValueInterval.asInterval(operand);
-            if (!getIntervalLower().isGe(opIv.getIntervalLower())) {
+            ge.apply(cmp, getIntervalLower(), opIv.getIntervalLower());
+            if (!cmp.getBoolean()) {
                 return false;
             }
-            if (!getIntervalUpper().isGe(opIv.getIntervalUpper())) {
+            ge.apply(cmp, getIntervalUpper(), opIv.getIntervalUpper());
+            if (!cmp.getBoolean()) {
                 return false;
             }
         } else {
-            if (!getIntervalLower().isGe(operand)) {
+            ge.apply(cmp, getIntervalLower(), operand);
+            if (!cmp.getBoolean()) {
                 return false;
             }
-            if (!getIntervalUpper().isGe(operand)) {
+            ge.apply(cmp, getIntervalUpper(), operand);
+            if (!cmp.getBoolean()) {
                 return false;
             }
         }
