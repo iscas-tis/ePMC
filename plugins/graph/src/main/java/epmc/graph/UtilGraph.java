@@ -115,8 +115,7 @@ public final class UtilGraph {
      * @param property subformula to register result of
      * @param results result resulting from checking subformula
      */
-    public static void registerResult(GraphExplicit lowLevel, Expression property, StateMapExplicit results)
-    {
+    public static void registerResult(GraphExplicit lowLevel, Expression property, StateMapExplicit results) {
         assert lowLevel != null;
         assert property != null;
         assert results != null;
