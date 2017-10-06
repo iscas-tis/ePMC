@@ -60,6 +60,7 @@ import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 import epmc.value.TypeObject.StorageType;
 import epmc.value.operator.OperatorDistance;
+import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
@@ -426,9 +427,13 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         ValueAlgebra succValue = newValueWeight();
         NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
         OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get());
+        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         Value distanceVal = TypeReal.get().newValue();
-        ValueBoolean cmp = TypeBoolean.get().newValue();
+        ValueBoolean distanceCmp = TypeBoolean.get().newValue();
+        OperatorEvaluator ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator le = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
+        ValueBoolean cmpGe = TypeBoolean.get().newValue();
+        ValueBoolean cmpLe = TypeBoolean.get().newValue();
         for (int node = 0; node < numNodes; node++) {
             values.get(value, node);
             Player player = playerProperty.getEnum(node);
@@ -437,12 +442,14 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                 int succState = game.getSuccessorNode(node, succ);
                 values.get(succValue, succState);
                 distance.apply(distanceVal, succValue, value);
-                lt.apply(cmp, distanceVal, compareTolerance);
+                lt.apply(distanceCmp, distanceVal, compareTolerance);
+                ge.apply(cmpGe, succValue, value);
+                le.apply(cmpLe, succValue, value);
                 if (player == Player.STOCHASTIC
-                        || player == Player.ONE && succValue.isGe(value)
-                        || player == Player.ONE && cmp.getBoolean()
-                        || player == Player.TWO && succValue.isLe(value)
-                        || player == Player.TWO && cmp.getBoolean()) {
+                        || player == Player.ONE && cmpGe.getBoolean()
+                        || player == Player.ONE && distanceCmp.getBoolean()
+                        || player == Player.TWO && cmpLe.getBoolean()
+                        || player == Player.TWO && distanceCmp.getBoolean()) {
                     result.set(node * maxNumSuccessors + succ);
                 }
             }

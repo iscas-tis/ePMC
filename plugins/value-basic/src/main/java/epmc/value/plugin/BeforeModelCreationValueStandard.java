@@ -61,7 +61,6 @@ import epmc.value.operatorevaluator.OperatorEvaluatorIsNegInfDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorIsPosInfDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorModInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorIte;
-import epmc.value.operatorevaluator.OperatorEvaluatorLe;
 import epmc.value.operatorevaluator.OperatorEvaluatorLeDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorLeInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorLogDouble;
@@ -130,7 +129,6 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIff.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorImplies.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIte.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorLe.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorLeDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorLeInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorLogDouble.INSTANCE);
