@@ -34,11 +34,16 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorNe;
@@ -119,15 +124,21 @@ public final class UtilCoalition {
     public static boolean isTrivialTrue(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
+        ValueBoolean cmpOne = TypeBoolean.get().newValue();
+        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        isOne.apply(cmpOne, compareTo);
         return isQuantGe(property) && compareTo.isZero()
-                || isQuantLe(property) && compareTo.isOne();
+                || isQuantLe(property) && cmpOne.getBoolean();
     }
 
     public static boolean isTrivialFalse(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
+        ValueBoolean cmpOne = TypeBoolean.get().newValue();
+        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        isOne.apply(cmpOne, compareTo);
         return isQuantLt(property) && compareTo.isZero()
-                || isQuantGt(property) && compareTo.isOne();
+                || isQuantGt(property) && cmpOne.getBoolean();
     }
 
     public static boolean isStrictEven(ExpressionCoalition property) {
@@ -138,7 +149,10 @@ public final class UtilCoalition {
     public static boolean isQualitative(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
-        return compareTo != null && (compareTo.isZero() || compareTo.isOne());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        isOne.apply(cmp, compareTo);
+        return compareTo != null && (compareTo.isZero() || cmp.getBoolean());
     }
 
     private static boolean isQuantLe(Expression expression) {

@@ -18,31 +18,10 @@
 
  *****************************************************************************/
 
-package epmc.value;
+package epmc.value.operator;
 
-import epmc.value.Value;
+import epmc.value.Operator;
 
-public interface ValueAlgebra extends Value {
-    @Override
-    TypeAlgebra getType();
-
-    static boolean isAlgebra(Value value) {
-        return value instanceof ValueAlgebra;
-    }
-
-    static ValueAlgebra asAlgebra(Value value) {
-        if (isAlgebra(value)) {
-            return (ValueAlgebra) value;
-        } else {
-            return null;
-        }
-    }
-
-    void set(int value);
-
-    void add(Value operand1, Value operand2);
-
-    void multiply(Value operand1, Value operand2);
-
-    boolean isZero();
+public enum OperatorIsZero implements Operator {
+    IS_ZERO
 }

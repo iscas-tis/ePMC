@@ -214,10 +214,6 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
             }
             inputValues.get(val, iterState);
             outputValues.set(val, origNode);
-            assert player == Player.STOCHASTIC
-                    || !objective.getTarget().get(origNode)
-                    || val.isOne()
-                    : origNode + " " + val + " " + player + " " + objective.getTarget().get(origNode);
         }
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
             Player player = playerProp.getEnum(origNode);

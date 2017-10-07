@@ -131,11 +131,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public boolean isOne() {
-        return getInt() == 1;
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert !isImmutable();
         assert reader != null;

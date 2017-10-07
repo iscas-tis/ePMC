@@ -75,6 +75,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSubtract;
 
@@ -100,8 +101,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private DD solve(boolean min, Expression property, boolean qualitative,
-            StateSet forStates)
-    {
+            StateSet forStates) {
         if (isNot(property)) {
             ExpressionOperator propertyOperator = (ExpressionOperator) property;
             property = propertyOperator.getOperand1();
@@ -386,8 +386,11 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
             op = propertyQuantifier.getCompareType().asExOpType();
+            OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compare.getType());
+            ValueBoolean cmp = TypeBoolean.get().newValue();
+            isOne.apply(cmp, compare.getSomeValue());
             if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
-                    || ValueAlgebra.asAlgebra(compare.getSomeValue()).isOne())) {
+                    || cmp.getBoolean())) {
                 qualitative = true;
             }
         }

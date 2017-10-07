@@ -160,11 +160,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public boolean isOne() {
-        return getDouble() == 1.0;
-    }
-
-    @Override
     public int getInt() {
         return (int) getDouble();
     }
