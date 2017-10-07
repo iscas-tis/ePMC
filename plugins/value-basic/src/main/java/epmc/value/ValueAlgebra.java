@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.value.Value;
-import epmc.value.operator.OperatorLt;
 
 public interface ValueAlgebra extends Value {
     @Override
@@ -48,12 +47,4 @@ public interface ValueAlgebra extends Value {
     boolean isZero();
 
     boolean isOne();
-
-    // TODO move?
-    default boolean isGt(Value other) {
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, other.getType(), getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        lt.apply(cmp, other, this);
-        return cmp.getBoolean();
-    }    
 }

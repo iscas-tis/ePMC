@@ -24,7 +24,6 @@ import static epmc.error.UtilError.fail;
 
 import epmc.util.BitStream;
 import epmc.value.Value;
-import epmc.value.operator.OperatorLt;
 
 public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable, ValueSetString {
     public static boolean isInteger(Value value) {
@@ -134,26 +133,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     @Override
     public boolean isOne() {
         return getInt() == 1;
-    }
-
-    @Override
-    public boolean isGt(Value operand) {
-        assert operand != null;
-        if (!ValueInteger.isInteger(operand) && !ValueDouble.isDouble(operand)) {
-            OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, operand.getType(), getType());
-            ValueBoolean cmp = TypeBoolean.get().newValue();
-            lt.apply(cmp, operand, this);
-            return cmp.getBoolean();
-        }
-        assert ValueInteger.isInteger(operand) || ValueDouble.isDouble(operand) : operand;
-        if (ValueInteger.isInteger(operand)) {
-            return getInt() > ValueInteger.asInteger(operand).getInt();
-        } else if (ValueDouble.isDouble(operand)) {
-            return getInt() > ValueNumber.asNumber(operand).getDouble();
-        } else {
-            assert false;
-            return false;
-        }
     }
 
     @Override

@@ -65,13 +65,16 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSubtract;
 
@@ -181,8 +184,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return result;
     }
 
-    private DD checkUntilQuantitative(DD targetDD, DD failDD)
-    {
+    private DD checkUntilQuantitative(DD targetDD, DD failDD) {
         DD nodeSpace = modelGraph.getNodeSpace();
         ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
         TimeBound timeBound = innerTemporal.getTimeBound();
@@ -274,9 +276,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         DD leftNotDD = leftDD.not();
         DD rightDD = expressionToDD.translate(rightExpr);
         DD rightNotDD = rightDD.not();
-
-        if (leftValue.isGt(leftValue.getType().getZero())
-                || timeBound.isLeftOpen()) {
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, leftValue.getType(), leftValue.getType());
+        gt.apply(cmp, leftValue, leftValue.getType().getZero());
+        if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             failDD = isUntil(inner) ? leftNotDD : rightNotDD;
             DD failNotDD = failDD.not();
             DD failNotIntDD = failNotDD.toMT();

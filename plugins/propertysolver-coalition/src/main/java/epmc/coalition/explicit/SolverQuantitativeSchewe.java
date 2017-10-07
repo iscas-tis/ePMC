@@ -61,6 +61,7 @@ import epmc.value.ValueSetString;
 import epmc.value.TypeObject.StorageType;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
@@ -321,7 +322,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get());
         Value distanceVal = TypeReal.get().newValue();
-        ValueBoolean cmp = TypeBoolean.get().newValue();
+        ValueBoolean cmpLt = TypeBoolean.get().newValue();
+        ValueBoolean cmpGt = TypeBoolean.get().newValue();
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         while (changed) {
             mdpEvaluateTime.start();
             evaluatedResult = evaluateMDP(strategies);
@@ -341,8 +344,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                     values.get(succValue, succNode);
                     
                     distance.apply(distanceVal, succValue, value);
-                    lt.apply(cmp, distanceVal, compareTolerance);
-                    if (succValue.isGt(value) && !(cmp.getBoolean())) {
+                    lt.apply(cmpLt, distanceVal, compareTolerance);
+                    gt.apply(cmpGt, succValue, value);
+                    if (cmpGt.getBoolean() && !(cmpLt.getBoolean())) {
                         doChange = true;
                     }
                 }
@@ -352,7 +356,8 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                 for (int succ = 0; succ < numSuccessors; succ++) {
                     int succNode = game.getSuccessorNode(node, succ);
                     values.get(succValue, succNode);
-                    if (succValue.isGt(value)) {
+                    gt.apply(cmpGt, succValue, value);
+                    if (cmpGt.getBoolean()) {
                         strategies.set(node, succ);
                         value.set(succValue);
                         changed = true;

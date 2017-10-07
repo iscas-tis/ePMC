@@ -61,6 +61,7 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -68,7 +69,9 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSubtract;
 
@@ -257,8 +260,10 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             configuration.solve();
             values = objective.getResult();
         }
-        if (timeBound.getLeftValue().isGt(timeBound.getLeftValue().getType().getZero())
-                || timeBound.isLeftOpen()) {
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, timeBound.getLeftValue().getType(), timeBound.getLeftValue().getType());
+        gt.apply(cmp, timeBound.getLeftValue(), timeBound.getLeftValue().getType().getZero());
+        if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
             sinkSet.clear();
             for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
