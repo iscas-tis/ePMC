@@ -72,6 +72,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     private final ValueReal thisDistance;
     private final ValueReal zeroDistance;
     private final ValueBoolean cmp;
+    OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
 
     public GraphSolverIterativeMultiObjectiveWeightedJava() {
         distanceEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
@@ -255,16 +256,20 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                         weighted.multiply(weight, succStateProb);
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
-                    if (choiceNextStateProb.isGt(nextStateProb)) {
+                    gt.apply(cmp, choiceNextStateProb, nextStateProb);
+                    if (cmp.getBoolean()) {
                         nextStateProb.set(choiceNextStateProb);
-                        if (nextStateProb.isGt(presStateProb)) {
+                        gt.apply(cmp, nextStateProb, presStateProb);
+                        if (cmp.getBoolean()) {
                             schedulerJava[state] = nondetNr;
                         }
                     }
                 }
-                if (stopReward.isGt(nextStateProb)) {
+                gt.apply(cmp, stopReward, nextStateProb);
+                if (cmp.getBoolean()) {
                     nextStateProb.set(stopReward);
-                    if (nextStateProb.isGt(presStateProb)) {
+                    gt.apply(cmp, nextStateProb, presStateProb);
+                    if (cmp.getBoolean()) {
                         schedulerJava[state] = -1;
                     }
                 }
@@ -314,6 +319,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -334,16 +341,20 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                         weighted.multiply(weight, succStateProb);
                         choiceNextStateProb.add(choiceNextStateProb, weighted);
                     }
-                    if (choiceNextStateProb.isGt(nextStateProb)) {
+                    gt.apply(cmp, choiceNextStateProb, nextStateProb);
+                    if (cmp.getBoolean()) {
                         nextStateProb.set(choiceNextStateProb);
-                        if (nextStateProb.isGt(presStateProb)) {
+                        gt.apply(cmp, nextStateProb, presStateProb);
+                        if (cmp.getBoolean()) {
                             schedulerJava[state] = nondetNr;
                         }
                     }
                 }
-                if (objWeight.isGt(nextStateProb)) {
+                gt.apply(cmp, objWeight, nextStateProb);
+                if (cmp.getBoolean()) {
                     nextStateProb.set(objWeight);
-                    if (nextStateProb.isGt(presStateProb)) {
+                    gt.apply(cmp, nextStateProb, presStateProb);
+                    if (cmp.getBoolean()) {
                         schedulerJava[state] = -1;
                     }
                 }

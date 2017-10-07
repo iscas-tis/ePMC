@@ -266,6 +266,8 @@ final class MultiObjectiveUtils {
         ValueAlgebra max = newValueWeight();
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
+        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int state = 0; state < numStates; state++) {
             max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
@@ -283,7 +285,8 @@ final class MultiObjectiveUtils {
                         }
                     }
                 }
-                if (entryValue.isGt(max)) {
+                gt.apply(cmp, entryValue, max);
+                if (cmp.getBoolean()) {
                     max.set(entryValue);
                     choice[state] = entry;
                 }

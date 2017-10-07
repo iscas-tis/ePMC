@@ -50,7 +50,6 @@ import epmc.value.operatorevaluator.OperatorEvaluatorExpDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorFloor;
 import epmc.value.operatorevaluator.OperatorEvaluatorGeDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorGeInt;
-import epmc.value.operatorevaluator.OperatorEvaluatorGt;
 import epmc.value.operatorevaluator.OperatorEvaluatorGtDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorGtInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorId;
@@ -120,7 +119,6 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorExpDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGeDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGeInt.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGtDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorGtInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorId.INSTANCE);

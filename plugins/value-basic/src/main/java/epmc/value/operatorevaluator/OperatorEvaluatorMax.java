@@ -20,7 +20,7 @@
 
 package epmc.value.operatorevaluator;
 
-import static epmc.error.UtilError.ensure;
+import static epmc.error.UtilError.fail;
 
 import epmc.value.ContextValue;
 import epmc.value.Operator;
@@ -31,9 +31,9 @@ import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorMax;
 
 public enum OperatorEvaluatorMax implements OperatorEvaluator {
@@ -82,14 +82,23 @@ public enum OperatorEvaluatorMax implements OperatorEvaluator {
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operand2.getType(), operand1.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, operand2, operand1);
-        if (ValueAlgebra.asAlgebra(operand1).isGt(operand2)) {
+        OperatorEvaluator gtO1O2 = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, operand1.getType(), operand2.getType());
+        OperatorEvaluator gtO2O1 = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, operand2.getType(), operand1.getType());
+        gtO1O2.apply(cmp, operand1, operand2);
+        if (cmp.getBoolean()) {
             result.set(operand1);
-        } else if (ValueAlgebra.asAlgebra(operand2).isGt(operand1)) {
-            result.set(operand2);
-        } else if (cmp.getBoolean()) {
-            result.set(operand1);
-        } else {
-            ensure(false, ProblemsValueBasic.VALUES_INCOMPARABLE);
+            return;
         }
+        gtO2O1.apply(cmp, operand2, operand1);
+        if (cmp.getBoolean()) {
+            result.set(operand2);
+            return;
+        }
+        eq.apply(cmp, operand2, operand1);
+        if (cmp.getBoolean()) {
+            result.set(operand1);
+            return;
+        }
+        fail(ProblemsValueBasic.VALUES_INCOMPARABLE);
     }
 }
