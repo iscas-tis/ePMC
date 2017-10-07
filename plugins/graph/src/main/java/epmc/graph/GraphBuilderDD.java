@@ -58,6 +58,7 @@ import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
 import gnu.trove.iterator.TIntIterator;
@@ -102,6 +103,8 @@ public final class GraphBuilderDD implements Closeable {
     private final DD[] representants;
     private final boolean nondet;
     private final boolean stateEncoding;
+    private final OperatorEvaluator isOne;
+    private final ValueBoolean cmp;
 
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet, boolean stateEncoding) {
         assert graphDD != null;
@@ -202,6 +205,8 @@ public final class GraphBuilderDD implements Closeable {
             numNodesComputed += offset;
         }
         numNodesInclNondet = numNodesComputed;
+        isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, presNodes.getType());
+        cmp = TypeBoolean.get().newValue();
     }
 
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet) {
@@ -292,13 +297,14 @@ public final class GraphBuilderDD implements Closeable {
         return true;
     }
 
-    private static int buildMaps(SupportWalker dd, SupportWalker support,
+    private int buildMaps(SupportWalker dd, SupportWalker support,
             SupportWalkerNodeMapInt lowMap,
             SupportWalkerNodeMapInt sumMap) {
         int result;
         if (support.isLeaf()) {
             assert dd.isLeaf();
-            if (ValueAlgebra.asAlgebra(dd.value()).isOne()) {
+            isOne.apply(cmp, dd.value());
+            if (cmp.getBoolean()) {
                 result = 1;
             } else {
                 result = 0;
@@ -568,7 +574,8 @@ public final class GraphBuilderDD implements Closeable {
         if (transitions.isLeaf()) {
             int presNode = presNodeNumber();
             int nextNode = nextNodeNumber();
-            if (ValueAlgebra.asAlgebra(presNodes.value()).isOne()) {
+            isOne.apply(cmp, presNodes.value());
+            if (cmp.getBoolean()) {
                 Value value = value();
                 if(nondet && stateEncoding) {
                     int actionNumber = actionNumber();

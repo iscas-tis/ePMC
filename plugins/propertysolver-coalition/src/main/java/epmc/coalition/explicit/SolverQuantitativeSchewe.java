@@ -62,6 +62,7 @@ import epmc.value.TypeObject.StorageType;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
@@ -278,7 +279,6 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
-            assert !target.get(node) || value.isOne();
             Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
                 newValue.set(TypeWeight.asWeight(newValue.getType()).getNegInf());
