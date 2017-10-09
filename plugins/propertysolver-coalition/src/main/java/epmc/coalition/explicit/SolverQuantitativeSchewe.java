@@ -59,6 +59,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 import epmc.value.TypeObject.StorageType;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
@@ -277,6 +278,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         ValueAlgebra weighted = ValueAlgebra.asAlgebra(values.getType().getEntryType().newValue());
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
             Player player = playerProp.getEnum(node);
@@ -297,7 +299,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                     min.apply(newValue, newValue, succValue);
                 } else if (player == Player.STOCHASTIC) {
                     weighted.multiply(succValue, weightProp.get(node, succ));
-                    newValue.add(newValue, weighted);
+                    add.apply(newValue, newValue, weighted);
                 }
             }
         }
