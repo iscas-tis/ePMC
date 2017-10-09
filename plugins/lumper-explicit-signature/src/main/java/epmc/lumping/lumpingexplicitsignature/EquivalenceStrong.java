@@ -35,12 +35,16 @@ import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorAdd;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntIntMap;
@@ -62,6 +66,7 @@ public final class EquivalenceStrong implements Equivalence {
     private GraphExplicit original;
     private final List<int[]> newBlocks = new ArrayList<>();
     private GraphSolverObjectiveExplicit objective;
+    OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
 
     @Override
     public void setSuccessorsFromTo(int[] successorsFromTo) {
@@ -163,7 +168,7 @@ public final class EquivalenceStrong implements Equivalence {
             int blockNumber = blockToNumber.get(block);
             assert blockNumber >= 0;
             successorWeights.get(weight, succNr);
-            cmpSignature.values[blockNumber].add(cmpSignature.values[blockNumber], weight);
+            add.apply(cmpSignature.values[blockNumber], cmpSignature.values[blockNumber], weight);
         }
         TIntList states = signatureToStates.get(cmpSignature);
         if (states == null) {
@@ -278,7 +283,7 @@ public final class EquivalenceStrong implements Equivalence {
                 int blockNr = blockToNumber.get(succRepresentant);
                 ValueAlgebra blockValue = quotWeightsArr[blockNr];
                 successorWeights.get(weight, succNr);
-                blockValue.add(blockValue, weight);
+                add.apply(blockValue, blockValue, weight);
                 quotSuccStatesArr[blockNr] = succRepresentant;
             }
             quotient.prepareNode(quotState, numQuotSucc);

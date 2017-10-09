@@ -68,12 +68,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
         assert !isImmutable();
         this.value = value;
     }
-
-    @Override
-    public ValueInteger clone() {
-        return new ValueInteger(getType(), value);
-    }
-
+    
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -103,16 +98,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
         assert op != null;
         assert ValueInteger.isInteger(op) : op + SPACE + op.getType();
         set(ValueInteger.asInteger(op).getInt());
-    }
-
-    @Override
-    public void add(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueInteger.isInteger(op1) : op1 + SPACE + op1.getType();
-        assert ValueInteger.isInteger(op2) : op2 + SPACE + op2.getType();
-        set(ValueInteger.asInteger(op1).getInt() + ValueInteger.asInteger(op2).getInt());
     }
 
     @Override

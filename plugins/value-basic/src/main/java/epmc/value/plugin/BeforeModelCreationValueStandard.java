@@ -31,7 +31,7 @@ import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInt;
-import epmc.value.operatorevaluator.OperatorEvaluatorAdd;
+import epmc.value.operatorevaluator.OperatorEvaluatorAddInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorAddInverseInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorAnd;
@@ -106,8 +106,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         addTypes();
     }
 
-    private static void addOperators() {        
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAdd.INSTANCE);
+    private static void addOperators() {
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInverseDouble.INSTANCE);
@@ -156,6 +155,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSqrtDouble.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAddInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSubtractInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorDistanceInterval.INSTANCE);
