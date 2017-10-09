@@ -53,6 +53,7 @@ import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
@@ -69,6 +70,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
     private final OperatorEvaluator maxEvaluator;
     private final OperatorEvaluator divideEvaluator;
     private final OperatorEvaluator gtEvaluator;
+    private final OperatorEvaluator isZeroEvaluator;
     private final ValueReal thisDistance;
     private final ValueReal zeroDistance;
     private final ValueBoolean cmp;
@@ -81,6 +83,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         gtEvaluator = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
         thisDistance = TypeReal.get().newValue();
         zeroDistance = TypeReal.get().newValue();
+        isZeroEvaluator = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -171,7 +174,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueAlgebra zero = previous.getType().getZero();
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
             distanceEvaluator.apply(zeroDistance, previous, zero);
-            if (!zeroDistance.isZero()) {
+            isZeroEvaluator.apply(cmp, zeroDistance);
+            if (!cmp.getBoolean()) {
                 divideEvaluator.apply(thisDistance, thisDistance, zeroDistance);
             }
         }

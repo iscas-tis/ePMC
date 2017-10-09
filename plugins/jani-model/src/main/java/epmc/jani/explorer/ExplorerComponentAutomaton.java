@@ -48,13 +48,17 @@ import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.value.TypeLocation;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorIsZero;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -164,6 +168,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private String name;
     private int number;
     private int[] actionFromTo;
+    private OperatorEvaluator isZero;
+    private ValueBoolean cmp;
 
     @Override
     public void setExplorer(ExplorerJANI explorer) {
@@ -203,6 +209,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         name = componentAutomaton.getAutomaton().getName().intern();
         number = componentAutomaton.getAutomaton().getNumber();
         actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
+        cmp = TypeBoolean.get().newValue();
+        isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
     }
 
     @Override
@@ -477,7 +485,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     successor.unmark();
                     //					successor.set(node);
                     ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
-                    if (probability.isZero()) {
+                    isZero.apply(cmp, probability);
+                    if (cmp.getBoolean()) {
                         continue;
                     }
                     if (rate != null) {
@@ -562,7 +571,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                 //				successor.set(nodeAutomaton);
                 successor.setVariable(edgeVarNr, -1);
                 ValueAlgebra probability = destinationEval.evaluateProbability(node);
-                if (probability.isZero()) {
+                isZero.apply(cmp, probability);
+                if (cmp.getBoolean()) {
                     continue;
                 }
                 if (rate != null) {

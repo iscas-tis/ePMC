@@ -20,8 +20,12 @@
 
 package epmc.expression.standard.simplify;
 
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInterval;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorSubtract;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
@@ -65,7 +69,11 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
 
     private boolean isZero(Expression expression) {
         assert expression != null;
-        return expression instanceof ExpressionLiteral
-                && ValueAlgebra.asAlgebra(((ExpressionLiteral) expression).getValue()).isZero();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        if (ExpressionLiteral.isLiteral(expression)) {
+            OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(expression).getValue().getType());
+            isZero.apply(cmp, ExpressionLiteral.asLiteral(expression).getValue());
+        }
+        return ExpressionLiteral.isLiteral(expression) && cmp.getBoolean();
     }
 }

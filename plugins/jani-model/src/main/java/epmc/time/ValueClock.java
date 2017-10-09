@@ -47,12 +47,6 @@ public final class ValueClock implements ValueAlgebra {
     }
 
     @Override
-    public boolean isZero() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public void set(Value value) {
         // TODO Auto-generated method stub
 

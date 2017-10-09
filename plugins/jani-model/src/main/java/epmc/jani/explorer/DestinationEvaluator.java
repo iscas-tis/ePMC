@@ -139,6 +139,7 @@ public final class DestinationEvaluator {
     private final int locationVariable;
     private final OperatorEvaluator ge;
     private final ValueBoolean cmp = TypeBoolean.get().newValue();
+    private final ValueAlgebra probabilityV = TypeWeightTransition.get().newValue();
 
     private DestinationEvaluator(Builder builder) {
         assert builder != null;
@@ -174,7 +175,10 @@ public final class DestinationEvaluator {
         ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
         ge.apply(cmp, result, zeroWeight);
         ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
-        return result;
+        probabilityV.set(result);
+        /* make sure that we return values of correct type to avoid problems 
+         * with operator evaluators. */
+        return probabilityV;
     }
 
     /**

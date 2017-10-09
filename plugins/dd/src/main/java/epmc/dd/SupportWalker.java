@@ -35,6 +35,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIsZero;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
@@ -231,18 +232,21 @@ public final class SupportWalker {
         }
         BitSet seen = UtilBitSet.newBitSetUnbounded();
         buildDiagram(nodeWalker, supportWalker, nodeEnumerator, valueEnumerator, seen);
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, leafValues[0].getType());
         for (int i = 0; i < diagram.length / 2; i++) {
             if (diagram[i * NUM_OUT] >= 0) {
                 continue;
             }
             Value value = leafValues[-diagram[i * NUM_OUT] - 1];
+            isZero.apply(cmp, value);
             if (ValueBoolean.isTrue(value)) {
                 assert trueIndex == Integer.MIN_VALUE;
                 trueIndex = i;
             } else if (ValueBoolean.isFalse(value)) {
                 assert falseIndex == Integer.MIN_VALUE;
                 falseIndex = i;
-            } else if (ValueAlgebra.asAlgebra(value).isZero()) {
+            } else if (cmp.getBoolean()) {
                 assert zeroIndex == Integer.MIN_VALUE;
                 zeroIndex = i;
             }
@@ -421,7 +425,6 @@ public final class SupportWalker {
     }
 
     public boolean isZero() {
-        assert(index == zeroIndex) == (isLeaf() && ValueAlgebra.asAlgebra(value()).isZero());
         return index == zeroIndex;
     }
 
