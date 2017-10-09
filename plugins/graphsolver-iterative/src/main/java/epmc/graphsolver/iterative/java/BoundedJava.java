@@ -241,7 +241,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     private void ctmcBoundedJava(GraphExplicitSparse graph,
             ValueArray values, FoxGlynn foxGlynn) {
         ValueArrayAlgebra fg = foxGlynn.getArray();
-        Value fgWeight = foxGlynn.getTypeReal().newValue();
+        Value fgWeight = TypeReal.get().newValue();
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = UtilValue.newArray(values.getType(), numStates);
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -253,7 +253,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
-        Value zero = foxGlynn.getTypeReal().getZero();
+        Value zero = TypeReal.get().getZero();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int i = foxGlynn.getRight() - foxGlynn.getLeft(); i >= 0; i--) {
             fg.get(fgWeight, i);
