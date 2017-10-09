@@ -31,6 +31,7 @@ public final class UtilValue {
     private final static String COMMA = ",";
     private final static String UNCHECKED = "unchecked";
     
+    // TODO get rid of this method
     public static Type algebraicResultType(Type[] types) {
         Type upper = upper(types);
         Type result;
@@ -45,6 +46,7 @@ public final class UtilValue {
         return result;
     }
 
+    // TODO get rid of this method
     public static Type upper(Type... types) {
         Type upper = types[0];
         for (Type type : types) {
@@ -85,6 +87,7 @@ public final class UtilValue {
         return value;
     }
 
+    // TODO get rid of this method
     @SuppressWarnings(UNCHECKED)
     public static <T extends Type> T upper(T a, T b) {
         assert a != null;
