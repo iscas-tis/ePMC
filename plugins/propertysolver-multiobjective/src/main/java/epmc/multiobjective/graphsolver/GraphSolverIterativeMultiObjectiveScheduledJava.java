@@ -48,6 +48,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorGt;
@@ -235,6 +236,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -254,7 +256,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        nextStateProb.add(nextStateProb, weighted);
+                        add.apply(nextStateProb, nextStateProb, weighted);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -299,6 +301,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -318,7 +321,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        nextStateProb.add(nextStateProb, weighted);
+                        add.apply(nextStateProb, nextStateProb, weighted);
                     }
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);

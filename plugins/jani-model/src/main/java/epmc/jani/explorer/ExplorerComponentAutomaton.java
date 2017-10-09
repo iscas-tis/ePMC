@@ -58,6 +58,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorIsZero;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
@@ -170,6 +171,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private int[] actionFromTo;
     private OperatorEvaluator isZero;
     private ValueBoolean cmp;
+    private OperatorEvaluator add;
 
     @Override
     public void setExplorer(ExplorerJANI explorer) {
@@ -211,6 +213,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
         cmp = TypeBoolean.get().newValue();
         isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
+        add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override
@@ -495,7 +498,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     } else {
                         this.weight.set(numSuccessors, probability);
                     }
-                    probabilitySum.add(probabilitySum, probability);
+                    add.apply(probabilitySum, probabilitySum, probability);
                     int action = evaluator.getAction();
                     label.set(numSuccessors, action);
                     destinationEval.assignTo(node, successor);
@@ -581,7 +584,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                 } else {
                     this.weight.set(numSuccessors, probability);
                 }
-                probabilitySum.add(probabilitySum, probability);
+                add.apply(probabilitySum, probabilitySum, probability);
                 label.set(numSuccessors, 0);
                 destinationEval.assignTo(node, successor);
                 successor.setNotSet(node);

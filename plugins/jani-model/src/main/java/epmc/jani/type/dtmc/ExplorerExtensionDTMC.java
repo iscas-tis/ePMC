@@ -39,6 +39,7 @@ import epmc.value.TypeEnum;
 import epmc.value.TypeWeightTransition;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 
@@ -55,6 +56,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
     private ValueAlgebra one;
     private OperatorEvaluator divide;
     private OperatorEvaluator eq;
+    private OperatorEvaluator add;
     private ValueBoolean cmp;
     
     @Override
@@ -79,6 +81,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         one = TypeWeightTransition.get().getOne();
         divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
         eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
+        add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -118,7 +121,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         int numSuccessors = explorer.getNumSuccessors();
         dtmcSum.set(zero);
         for (int succ = 0; succ < numSuccessors; succ++) {
-            dtmcSum.add(dtmcSum, systemWeight.get(succ));
+            add.apply(dtmcSum, dtmcSum, systemWeight.get(succ));
         }
         eq.apply(cmp, dtmcSum, one);
         if (!cmp.getBoolean()) {

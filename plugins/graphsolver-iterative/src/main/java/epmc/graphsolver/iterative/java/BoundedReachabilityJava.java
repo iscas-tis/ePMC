@@ -336,6 +336,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra zero = values.getType().getEntryType().getZero();
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -346,7 +347,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
                     weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
+                    add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 nextValues.set(nextStateProb, state);
             }
@@ -378,6 +379,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
@@ -393,7 +395,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
+                        add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);

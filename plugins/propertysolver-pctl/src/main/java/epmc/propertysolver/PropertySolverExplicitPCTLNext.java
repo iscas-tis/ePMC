@@ -69,6 +69,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorExp;
 import epmc.value.operator.OperatorNot;
@@ -237,11 +238,12 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
             ValueAlgebra sum = TypeWeight.get().newValue();
             ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
+            OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
             for (int state = 0; state < iterNumStates; state++) {
                 sum.set(TypeWeight.get().getZero());
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
-                    sum.add(sum, succWeight);
+                    add.apply(sum, sum, succWeight);
                 }
                 jump.multiply(leftValue, sum);
                 OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, jump.getType());

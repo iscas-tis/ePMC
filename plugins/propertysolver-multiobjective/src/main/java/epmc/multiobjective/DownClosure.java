@@ -42,6 +42,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
@@ -98,14 +99,15 @@ final class DownClosure {
         ValueAlgebra sum = TypeWeight.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int i = 0; i < unrestrictedResult.size(); i++) {
             unrestrictedResult.get(entry, i);
             isZero.apply(cmp, entry);
             if (cmp.getBoolean()) {
                 unrestrictedResult.set(lowerBound, i);
-                sum.add(sum, lowerBound);
+                add.apply(sum, sum, lowerBound);
             } else {
-                sum.add(sum, entry);
+                add.apply(sum, sum, entry);
             }
         }
         for (int i = 0; i < unrestrictedResult.size(); i++) {
@@ -261,10 +263,11 @@ final class DownClosure {
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra sum = newValueWeight();
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         entry.set(0);
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);
-            sum.add(sum, entry);
+            add.apply(sum, sum, entry);
         }
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);

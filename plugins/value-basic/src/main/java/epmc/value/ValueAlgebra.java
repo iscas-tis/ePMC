@@ -40,7 +40,5 @@ public interface ValueAlgebra extends Value {
 
     void set(int value);
 
-    void add(Value operand1, Value operand2);
-
     void multiply(Value operand1, Value operand2);
 }

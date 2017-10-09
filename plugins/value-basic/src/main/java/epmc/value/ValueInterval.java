@@ -181,12 +181,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public void add(Value operand1, Value operand2) {
-        lower.add(getLower(operand1), getLower(operand2));
-        upper.add(getUpper(operand1), getUpper(operand2));
-    }
-
-    @Override
     public void multiply(Value operand1, Value operand2) {
         lower.multiply(getLower(operand1), getLower(operand2));
         upper.multiply(getUpper(operand1), getUpper(operand2));

@@ -60,9 +60,12 @@ import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import gnu.trove.map.hash.THashMap;
 
@@ -236,6 +239,7 @@ final class ProductBuilder {
             }
             ValueAlgebra stateReward = newValueWeight();
             ValueAlgebra transReward = newValueWeight();
+            OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
             int numSucc = iterGraph.getNumSuccessors(iterState);
             for (int obj = 0; obj < numAutomata; obj++) {
                 stateReward.set(zero);
@@ -245,9 +249,9 @@ final class ProductBuilder {
                 for (int succNr = 0; succNr < numSucc; succNr++) {
                     // TODO HACK
                     transReward.set(stateReward);
-                    transReward.add(transReward, edgeRewardProp.get(state, succNr));
+                    add.apply(transReward, transReward, edgeRewardProp.get(state, succNr));
                     int succ = prodWrapper.getSuccessorNode(state, succNr);
-                    transReward.add(transReward, edgeRewardProp.get(succ, 0));
+                    add.apply(transReward, transReward, edgeRewardProp.get(succ, 0));
                     result.setReward(transReward, succNr, obj);
                 }
             }

@@ -51,6 +51,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGt;
@@ -80,15 +81,16 @@ final class MultiObjectiveUtils {
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
             q.get(qEntry, dim);
             bounds.get(boundsEntry, dim);
             weightsXqEntry.multiply(weightsEntry, qEntry);
-            weightsXqSum.add(weightsXqSum, weightsXqEntry);
+            add.apply(weightsXqSum, weightsXqSum, weightsXqEntry);
             weightsXboundsEntry.multiply(weightsEntry, boundsEntry);
-            weightsXboundsSum.add(weightsXboundsSum, weightsXboundsEntry);
+            add.apply(weightsXboundsSum, weightsXboundsSum, weightsXboundsEntry);
         }
         eq.apply(cmp, weightsXqSum, weightsXboundsSum);
         if (cmp.getBoolean()) {
@@ -240,13 +242,14 @@ final class MultiObjectiveUtils {
         ValueAlgebra objWeight = newValueWeight();
         ValueAlgebra objRew = newValueWeight();
         ValueAlgebra prod = newValueWeight();
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int obj = 0; obj < numObjectives; obj++) {
             weights.get(objWeight, obj);
             for (int nondet = 0; nondet < numNondet; nondet++) {
                 rewards.getRewards(obj).get(objRew, nondet);
                 prod.multiply(objWeight, objRew);
                 result.get(entry, nondet);
-                entry.add(entry, prod);
+                add.apply(entry, entry, prod);
                 result.set(entry, nondet);
             }
         }
@@ -268,6 +271,7 @@ final class MultiObjectiveUtils {
         Value weight = newValueWeight();
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
@@ -278,7 +282,7 @@ final class MultiObjectiveUtils {
                     if (combinations.get(state, entry, objective)) {
                         weights.get(weight, objective);
                         if (alreadySet) {
-                            entryValue.add(entryValue, weight);                        	
+                            add.apply(entryValue, entryValue, weight);
                         } else {
                             entryValue.set(weight);
                             alreadySet = true;
@@ -306,13 +310,14 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             int entry = choice[state];
             entryValue.set(0);
             for (int objective = 0; objective < numObjectives; objective++) {
                 if (combinations.get(state, entry, objective)) {
                     weights.get(weight, objective);
-                    entryValue.add(entryValue, weight);
+                    add.apply(entryValue, entryValue, weight);
                 }
             }   
             result.set(entryValue, state);

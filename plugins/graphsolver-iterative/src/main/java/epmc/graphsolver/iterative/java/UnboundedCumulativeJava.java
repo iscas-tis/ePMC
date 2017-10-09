@@ -62,6 +62,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorGt;
@@ -329,6 +330,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -340,7 +342,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
                     weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
+                    add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 presValues.get(presStateProb, state);
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -373,6 +375,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -385,7 +388,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                     int succState = targets[succ];
                     values.get(succStateProb, succState);
                     weighted.multiply(weight, succStateProb);
-                    nextStateProb.add(nextStateProb, weighted);
+                    add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
@@ -421,6 +424,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         int iterations = 0;
         do {
             distance.set(TypeReal.get().getZero());
@@ -438,7 +442,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
+                        add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
@@ -480,6 +484,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
@@ -499,7 +504,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
                         weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
+                        add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
                         minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
