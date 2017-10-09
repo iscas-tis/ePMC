@@ -78,6 +78,7 @@ import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorIte;
 import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLt;
@@ -1567,8 +1568,11 @@ public final class ContextDD implements Closeable {
         assert assertCube(cube);
         totalTime.start();
         TIntSet result = new TIntHashSet();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, dd.value().getType());
+        isZero.apply(cmp, dd.value());
         if (dd.isLeaf()) {
-            if (ValueAlgebra.isAlgebra(dd.value()) && ValueAlgebra.asAlgebra(dd.value()).isZero()) {
+            if (ValueAlgebra.isAlgebra(dd.value()) && cmp.getBoolean()) {
                 totalTime.stop();
                 assert false;
                 return null;

@@ -76,6 +76,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsOne;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSubtract;
 
@@ -387,10 +388,13 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
             op = propertyQuantifier.getCompareType().asExOpType();
             OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compare.getType());
-            ValueBoolean cmp = TypeBoolean.get().newValue();
-            isOne.apply(cmp, compare.getSomeValue());
-            if (compare.isConstant() && (ValueAlgebra.asAlgebra(compare.getSomeValue()).isZero() 
-                    || cmp.getBoolean())) {
+            OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compare.getType());
+            ValueBoolean cmpOne = TypeBoolean.get().newValue();
+            ValueBoolean cmpZero = TypeBoolean.get().newValue();
+            isOne.apply(cmpOne, compare.getSomeValue());
+            isZero.apply(cmpZero, compare.getSomeValue());
+            if (compare.isConstant() && (cmpZero.getBoolean() 
+                    || cmpOne.getBoolean())) {
                 qualitative = true;
             }
         }

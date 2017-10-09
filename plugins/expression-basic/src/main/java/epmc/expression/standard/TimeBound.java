@@ -34,6 +34,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorIsPosInf;
+import epmc.value.operator.OperatorIsZero;
 
 // TODO complete documentation
 
@@ -248,11 +249,14 @@ public final class TimeBound {
         if (isLeftOpen()) {
             return true;
         }
-        if (!(getLeft() instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(getLeft())) {
             return true;
         }
-        ExpressionLiteral leftLit = (ExpressionLiteral) getLeft();
-        return !ValueAlgebra.asAlgebra(getValue(leftLit)).isZero();
+        ExpressionLiteral leftLit = ExpressionLiteral.asLiteral(getLeft());
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, getValue(leftLit).getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        isZero.apply(cmp, getValue(leftLit));
+        return !cmp.getBoolean();
     }
 
     /**

@@ -22,6 +22,14 @@ package epmc.value.operator;
 
 import epmc.value.Operator;
 
+/**
+ * Checks whether a given value is exactly one.
+ * Evaluators for this operator should evaluate to boolen.
+ * They should only return {@code true} in case the value is exactly one,
+ * not just close to one.
+ * 
+ * @author Ernst Moritz Hahn
+ */
 public enum OperatorIsOne implements Operator {
     IS_ONE
 }

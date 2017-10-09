@@ -64,6 +64,7 @@ import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
@@ -116,6 +117,9 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         StateMapExplicit states = (StateMapExplicit) modelChecker.check(propertyFilter.getStates(), allStates);
         Value statesEntry = states.getType().newValue();
         Value propEntry = prop.getType().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
+        
         int statesSize = states.size();
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
@@ -148,7 +152,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
                 accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
-                    if (!ValueAlgebra.asAlgebra(propEntry).isZero()) {
+                    isZero.apply(cmp, propEntry);
+                    if (!cmp.getBoolean()) {
                         getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
                     }
                 } else if (propertyFilter.isPrintAll()) {
@@ -167,7 +172,6 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
 
         ValueArray resultValues = null;
         OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
         if (propertyFilter.isSameResultForAllStates()) {
             resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
             resultValues.set(resultValue, 0);

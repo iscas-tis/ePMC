@@ -47,11 +47,14 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueContentIntArray;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorSubtract;
 
 // TODO make sure that this thing still works and write some JUnit tests
@@ -205,8 +208,9 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
         OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
-        for(int node = undecided.nextSetBit(0); 
-                node >= 0 ; 
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        for (int node = undecided.nextSetBit(0);
+                node >= 0;
                 node = undecided.nextSetBit(node + 1)) {
             int numSuccessors = graph.getNumSuccessors(node);
             Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
@@ -214,13 +218,13 @@ public final class GraphSolverLP implements GraphSolverExplicit {
             row[0] = one;
             varsIndex[0] = node;                /* directly use this node index */
 
-            for(int i = 1 ; i < row.length ; i ++) {
+            for (int i = 1 ; i < row.length ; i ++) {
                 row[i] = zero;
             }
             int jIndex = 1;
             int[] visited = new int[graph.getNumNodes()];  /** will be initialized to 0*/
             visited[node] = 1;
-            for(int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
+            for (int succNr = 0 ; succNr < numSuccessors ; succNr ++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 /** if it is the first time */
                 Value tranProb = weightProp.get(node, succNr);
@@ -238,11 +242,14 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                 }
             }
             boolean canAdd = false;
-            for(int r = 0 ; r < jIndex ; r ++) 
-                if (!ValueAlgebra.asAlgebra(row[r]).isZero()) { 
+            ValueBoolean cmp = TypeBoolean.get().newValue();
+            for (int r = 0 ; r < jIndex ; r ++) {
+                isZero.apply(cmp, row[r]);
+                if (!cmp.getBoolean()) { 
                     canAdd = true;
                     break;
                 }/* non-zero number */
+            }
             /** if input x4 - 0.5x0 - 0.5x5 - 0.5x6- 0.5x0 = 0, then all coefficient will be 0,
              * i.e. 0 = 0, this is quite annoying, so I modify above code to fix this */
             if(canAdd) {
@@ -342,8 +349,10 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
-        for(int node = undecided.nextSetBit(0); 
-                node >= 0 ; 
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        for (int node = undecided.nextSetBit(0); 
+                node >= 0;
                 node = undecided.nextSetBit(node + 1)) {
             int numSuccessors = graph.getNumSuccessors(node);
             if (isState.getBoolean(node)) {
@@ -352,7 +361,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     /** if it is the first time */
                     lpProblem.addConstraint(new Value[]{one, minusOne}, new int[]{node, succ}, ConstraintType.GE, zero);
                 }
-            } else if(numSuccessors > 0){
+            } else if (numSuccessors > 0) {
 
                 Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
                 int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
@@ -371,11 +380,13 @@ public final class GraphSolverLP implements GraphSolverExplicit {
                     jIndex ++;
                 }
                 boolean canAdd = false;
-                for(int r = 0 ; r < row.length ; r ++) 
-                    if (!ValueAlgebra.asAlgebra(row[r]).isZero()) { 
+                for (int r = 0; r < row.length; r++) {
+                    isZero.apply(cmp, row[r]);
+                    if (!cmp.getBoolean()) { 
                         canAdd = true;
                         break;
                     }/* non-zero number */
+                }
                 /** if input x4 - 0.5x0 - 0.5x5 - 0.5x6- 0.5x0 = 0, then all coefficient will be 0,
                  * i.e. 0 = 0, this is quite annoying, so I modify above code to fix this */
                 if(canAdd) {

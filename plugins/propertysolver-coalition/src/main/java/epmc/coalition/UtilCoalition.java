@@ -44,6 +44,7 @@ import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsOne;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorLe;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorNe;
@@ -125,9 +126,12 @@ public final class UtilCoalition {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
+        ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
         isOne.apply(cmpOne, compareTo);
-        return isQuantGe(property) && compareTo.isZero()
+        isZero.apply(cmpZero, compareTo);
+        return isQuantGe(property) && cmpZero.getBoolean()
                 || isQuantLe(property) && cmpOne.getBoolean();
     }
 
@@ -135,9 +139,12 @@ public final class UtilCoalition {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
+        ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
         isOne.apply(cmpOne, compareTo);
-        return isQuantLt(property) && compareTo.isZero()
+        isZero.apply(cmpZero, compareTo);
+        return isQuantLt(property) && cmpZero.getBoolean()
                 || isQuantGt(property) && cmpOne.getBoolean();
     }
 
@@ -149,10 +156,13 @@ public final class UtilCoalition {
     public static boolean isQualitative(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
-        ValueBoolean cmp = TypeBoolean.get().newValue();
+        ValueBoolean cmpOne = TypeBoolean.get().newValue();
+        ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
-        isOne.apply(cmp, compareTo);
-        return compareTo != null && (compareTo.isZero() || cmp.getBoolean());
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
+        isOne.apply(cmpOne, compareTo);
+        isZero.apply(cmpZero, compareTo);
+        return compareTo != null && (cmpZero.getBoolean() || cmpOne.getBoolean());
     }
 
     private static boolean isQuantLe(Expression expression) {

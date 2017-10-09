@@ -32,6 +32,7 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -39,8 +40,10 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 
 final class DownClosure {
@@ -93,9 +96,12 @@ final class DownClosure {
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra entry = TypeWeight.get().newValue();
         ValueAlgebra sum = TypeWeight.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         for (int i = 0; i < unrestrictedResult.size(); i++) {
             unrestrictedResult.get(entry, i);
-            if (entry.isZero()) {
+            isZero.apply(cmp, entry);
+            if (cmp.getBoolean()) {
                 unrestrictedResult.set(lowerBound, i);
                 sum.add(sum, lowerBound);
             } else {
@@ -111,10 +117,11 @@ final class DownClosure {
     }
 
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
-            boolean numerical, Value lowerBound)
-    {
+            boolean numerical, Value lowerBound) {
         Value zero = TypeWeight.get().getZero();
         Value one = TypeWeight.get().getOne();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
         for (int i = 0; i < dimension; i++) {
@@ -191,7 +198,8 @@ final class DownClosure {
         }
         ValueArray solverResult = problem.getResultVariablesValuesSingleType();
         solverResult.get(entry, dLpVar);
-        if (!numerical && entry.isZero()) {
+        isZero.apply(cmp, entry);
+        if (!numerical && cmp.getBoolean()) {
             problem.close();
             return null;
         }
@@ -209,9 +217,12 @@ final class DownClosure {
             boolean numerical) {
         boolean outsideNonZero = false;
         ValueAlgebra entry = newValueWeight();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, entry.getType());
         for (int i = 0; i < outside.size(); i++) {
             outside.get(entry, i);
-            if (!entry.isZero()) {
+            isZero.apply(cmp, entry);
+            if (!cmp.getBoolean()) {
                 outsideNonZero = true;
                 break;
             }
@@ -230,7 +241,8 @@ final class DownClosure {
             String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
             ValueSetString.asValueSetString(smallValue).set(minIncrease);
             separating.get(entry, 0);
-            if (entry.isZero()) {
+            isZero.apply(cmp, entry);
+            if (cmp.getBoolean()) {
                 separating.set(smallValue, 0);
             }
         }

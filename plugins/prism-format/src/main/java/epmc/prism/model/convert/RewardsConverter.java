@@ -61,11 +61,14 @@ import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.RewardStructure;
 import epmc.prism.model.StateReward;
 import epmc.prism.model.TransitionReward;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorIsZero;
 
 /**
  * Converter for rewards from PRISM to JANI.
@@ -280,10 +283,15 @@ final class RewardsConverter {
         Assignments locationRewardAssignments = new Assignments();
         locationRewardAssignments.setModel(modelJANI);
         List<RewardStructure> rewardStructures = modelPRISM.getRewards();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (RewardStructure structure : rewardStructures) {
             Expression stateRewards = convertStateRewards(structure.getStateRewards());
-            if (stateRewards instanceof ExpressionLiteral
-                    && ValueAlgebra.asAlgebra(((ExpressionLiteral) stateRewards).getValue()).isZero()) {
+            if (ExpressionLiteral.isLiteral(stateRewards)) {
+                OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(stateRewards).getValue().getType());
+                isZero.apply(cmp, ExpressionLiteral.asLiteral(stateRewards).getValue());
+            }
+            if (ExpressionLiteral.isLiteral(stateRewards)
+                    && cmp.getBoolean()) {
                 continue;
             }
             String rewardName = structure.getName();

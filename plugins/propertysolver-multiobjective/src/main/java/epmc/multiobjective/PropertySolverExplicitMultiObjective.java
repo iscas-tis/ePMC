@@ -61,6 +61,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorIsPosInf;
+import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
@@ -269,6 +270,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         NodeProperty stateProp = computationGraph.getNodeProperty(CommonProperties.STATE);
         assert stateProp != null;
         int numNodes = computationGraph.getNumNodes();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
 
         ValueArrayAlgebra schedProbs = down.findFeasibleRandomisedScheduler(bounds);
         assert schedProbs != null;
@@ -276,7 +279,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         for (int schedNr = 0; schedNr < down.size(); schedNr++) {
             ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
             schedProbs.get(schedProb, schedNr);
-            if (schedProb.isZero()) {
+            isZero.apply(cmp, schedProb);
+            if (cmp.getBoolean()) {
                 continue;
             }
             numSchedulers++;
@@ -289,7 +293,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         for (int schedNr = 0; schedNr < down.size(); schedNr++) {
             ValueAlgebra schedProb = schedProbs.getType().getEntryType().newValue();
             schedProbs.get(schedProb, schedNr);
-            if (schedProb.isZero()) {
+            isZero.apply(cmp, schedProb);
+            if (cmp.getBoolean()) {
                 continue;
             }
             SchedulerSimple sched = (SchedulerSimple) down.get(schedNr).getScheduler();

@@ -22,6 +22,14 @@ package epmc.value.operator;
 
 import epmc.value.Operator;
 
+/**
+ * Checks whether a given value is exactly zero.
+ * Evaluators for this operator should evaluate to boolen.
+ * They should only return {@code true} in case the value is exactly zero,
+ * not just close to zero.
+ * 
+ * @author Ernst Moritz Hahn
+ */
 public enum OperatorIsZero implements Operator {
     IS_ZERO
 }

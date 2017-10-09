@@ -147,11 +147,6 @@ public final class Walker {
         }
     }
 
-    public boolean isZero() {
-        assert assertAlive();
-        return isLeaf() && ValueAlgebra.asAlgebra(value()).isZero();
-    }
-
     /* helper functions */
 
     private String buildClosedString() {
