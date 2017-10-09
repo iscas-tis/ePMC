@@ -61,6 +61,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
@@ -254,6 +255,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
         switch (type) {
         case ARGMAX: case MAX:
             max.apply(resultValue, resultValue, value);
@@ -262,10 +264,10 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             min.apply(resultValue, resultValue, value);
             break;
         case AVG:
-            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
+            add.apply(resultValue, resultValue, value);
             break;
         case COUNT:
-            ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
+            add.apply(resultValue, resultValue, ValueBoolean.asBoolean(value).getBoolean()
                     ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
                             : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
             break;
@@ -291,7 +293,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case STATE:
             break;
         case SUM:
-            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
+            add.apply(resultValue, resultValue, value);
             break;
         default:
             throw new RuntimeException();

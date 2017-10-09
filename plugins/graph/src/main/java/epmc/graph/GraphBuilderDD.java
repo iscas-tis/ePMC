@@ -56,6 +56,7 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
+import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorIsOne;
@@ -476,13 +477,14 @@ public final class GraphBuilderDD implements Closeable {
                 states.set(states.length());
             }
         }
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, sum.getType());
         if (uniformise) {
             unifRate.set(zero);
             for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
                 List<Value> thisProbs = probs.get(nodeNr);
                 sum.set(zero);
                 for (Value value : thisProbs) {
-                    sum.add(sum, value);
+                    add.apply(sum, sum, value);
                 }
                 max.apply(unifRate, unifRate, sum);
             }
@@ -495,7 +497,7 @@ public final class GraphBuilderDD implements Closeable {
             List<Value> thisProbs = probs.get(nodeNr);
             sum.set(zero);
             for (Value value : thisProbs) {
-                sum.add(sum, value);
+                add.apply(sum, sum, value);
             }
             int numSuccessors = thisTargets.size();
             if (uniformise) {
