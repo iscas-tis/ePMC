@@ -63,7 +63,6 @@ import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorGe;
 import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;

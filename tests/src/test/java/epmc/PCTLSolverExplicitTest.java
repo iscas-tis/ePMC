@@ -34,6 +34,7 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.value.TypeInterval;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
 import static org.junit.Assert.assertTrue;
@@ -168,7 +169,7 @@ public final class PCTLSolverExplicitTest {
         for (int numProcs = ModelNamesPRISM.IJ_MIN_NUM_PROCS; numProcs <= ModelNamesPRISM.IJ_MAX_NUM_PROCS; numProcs++) {
             String ijInstance = String.format(ModelNamesPRISM.IJ_MODEL, numProcs);
             result = computeResult(options, ijInstance, "Pmin=? [ F ( q1+q2+q3=2 ) ]");
-            assertEquals(newValue(result.getType(), "[0,1]"), result, tolerance);
+            assertEquals(newValue(TypeInterval.get(), "[0,1]"), result, tolerance);
         }
 
         for (int numProcs = ModelNamesPRISM.IJ_MIN_NUM_PROCS; numProcs <= ModelNamesPRISM.IJ_MAX_NUM_PROCS; numProcs++) {

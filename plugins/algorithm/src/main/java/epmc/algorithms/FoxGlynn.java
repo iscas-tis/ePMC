@@ -369,10 +369,6 @@ public final class FoxGlynn {
         assert omega != null;
         assert epsilon != null;
         Options options = Options.get();
-        assert TypeReal.isReal(lambda.getType());
-        assert TypeReal.isReal(tau.getType());
-        assert TypeReal.isReal(omega.getType());
-        assert TypeReal.isReal(epsilon.getType());
         this.typeReal = TypeReal.get();
 
         /* store input parameters and derived stuff */
@@ -455,9 +451,5 @@ public final class FoxGlynn {
 
     public ValueArrayAlgebra getArray() {
         return values;
-    }
-
-    public TypeReal getTypeReal() {
-        return vm1922272.getType();
     }
 }
