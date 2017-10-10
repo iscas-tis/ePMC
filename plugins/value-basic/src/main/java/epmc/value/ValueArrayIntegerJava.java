@@ -34,13 +34,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     }
 
     @Override
-    public ValueArrayIntegerJava clone() {
-        ValueArrayIntegerJava clone = (ValueArrayIntegerJava) getType().newValue();
-        clone.set(this);
-        return clone;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
         assert index >= 0;

@@ -31,7 +31,6 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 final class ValueArrayObjectNumerated implements ValueArray {
-    private boolean objectIdentity;
     private static final int LOG2LONGSIZE = 6;
     private final TObjectIntMap<Object> objectToNumber;
     private Object[] numberToObject = new Object[1];
@@ -43,7 +42,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
 
     ValueArrayObjectNumerated(TypeArrayObjectNumerated type, boolean objectIdentity) {
         this.type = type;
-        this.objectIdentity = objectIdentity;
         this.content = new long[0];
         if (objectIdentity) {
             objectToNumber = new TObjectIntCustomHashMap<>(
@@ -52,13 +50,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
             objectToNumber = new TObjectIntHashMap<>();
         }
 
-    }
-
-    @Override
-    public ValueArrayObjectNumerated clone() {
-        ValueArrayObjectNumerated other = new ValueArrayObjectNumerated(getType(), objectIdentity);
-        other.set(this);
-        return other;
     }
 
     @Override

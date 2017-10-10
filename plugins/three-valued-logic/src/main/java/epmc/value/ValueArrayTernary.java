@@ -39,13 +39,6 @@ final class ValueArrayTernary implements ValueArray {
         this.content = new long[numLongs];
     }
 
-    @Override
-    public ValueArray clone() {
-        ValueArrayTernary other = new ValueArrayTernary(getType());
-        other.set(this);
-        return other;
-    }
-
     private int getBitsPerEntry() {
         return getType().getEntryType().getNumBits();
     }

@@ -84,6 +84,11 @@ import epmc.value.operatorevaluator.OperatorEvaluatorNeInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorNot;
 import epmc.value.operatorevaluator.OperatorEvaluatorOr;
 import epmc.value.operatorevaluator.OperatorEvaluatorPowDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetAlgebraInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetBooleanBoolean;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetDoubleDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetIntInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetIntervalInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorSqrtDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInt;
@@ -164,6 +169,11 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsOneInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsZeroInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInterval.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetAlgebraInt.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetDoubleDouble.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntInt.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetBooleanBoolean.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntervalInterval.IDENTIFIER);
     }
 
     private static void addTypes() {

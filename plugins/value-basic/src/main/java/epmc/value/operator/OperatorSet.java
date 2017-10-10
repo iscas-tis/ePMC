@@ -18,28 +18,10 @@
 
  *****************************************************************************/
 
-package epmc.value;
+package epmc.value.operator;
 
-/**
- * Interface to represent values used during analysis.
- * TODO complete documentation
- * 
- * @author Ernst Moritz Hahn
- */
-public interface Value {
-    /**
-     * Get type with which this value was created.
-     * 
-     * @return type with which this value was created
-     */
-    Type getType();
+import epmc.value.Operator;
 
-    /**
-     * Set value to this value.
-     * The value parameter must not be {@code null}.
-     * 
-     * @param value value to set this value to
-     */
-    // TODO get rid of this method, replace by operator evaluator
-    void set(Value value);
+public enum OperatorSet implements Operator {
+    SET
 }

@@ -39,13 +39,6 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     }
 
     @Override
-    public ValueArrayInterval clone() {
-        ValueArrayInterval clone = getType().newValue();
-        clone.set(this);
-        return clone;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
         assert ValueInterval.isInterval(value);

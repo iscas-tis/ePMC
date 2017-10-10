@@ -70,6 +70,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
@@ -220,7 +221,6 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
             GraphExplicit game = buildGame(init, path, qualitative);
             assert game != null;
             StopWatch gameSolverWatch = new StopWatch(true);
-            Options options = Options.get();
             QualitativeResult regions = null;
             SolverQualitative solver = UtilOptions.getInstance(OptionsCoalition.COALITION_SOLVER);
             getLog().send(MessagesCoalition.COALITION_SOLVING_USING, solver.getIdentifier());
@@ -397,11 +397,12 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         ValueArray resultValues = UtilValue.newArray(TypeBoolean.get()
                 .getTypeArray(), forStates.size());
         // TODO check!
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeBoolean.get(), TypeBoolean.get());
         for (int i = 0; i < forStates.size(); i++) {
             int node = forStates.getExplicitIthState(i);
             //            int modelState = nodeAutomaton.getInt();
             boolean value = solverResult.get(node);
-            entry.set(value
+            set.apply(entry, value
                     ? TypeBoolean.get().getTrue()
                             : TypeBoolean.get().getFalse());
             resultValues.set(entry, i);

@@ -67,6 +67,7 @@ import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
@@ -280,13 +281,14 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, succValue.getType(), weightProp.getType());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
             Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
-                newValue.set(TypeWeight.asWeight(newValue.getType()).getNegInf());
+                set.apply(newValue, TypeWeight.asWeight(newValue.getType()).getNegInf());
             } else if (player == Player.TWO) {
-                newValue.set(TypeWeight.asWeight(newValue.getType()).getPosInf());				
+                set.apply(newValue, TypeWeight.asWeight(newValue.getType()).getPosInf());
             } else if (player == Player.STOCHASTIC) {
                 newValue.set(0);				
             }
@@ -314,7 +316,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_IMPROVE_START);
         assert strategies != null;
         int numNodes = game.getNumNodes();
-        Value value = TypeWeight.get().newValue();
+        ValueAlgebra value = TypeWeight.get().newValue();
         ValueAlgebra succValue = TypeWeight.get().newValue();
         NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
         boolean changed = true;
@@ -328,6 +330,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         ValueBoolean cmpLt = TypeBoolean.get().newValue();
         ValueBoolean cmpGt = TypeBoolean.get().newValue();
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         while (changed) {
             mdpEvaluateTime.start();
             evaluatedResult = evaluateMDP(strategies);
@@ -362,7 +365,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                     gt.apply(cmpGt, succValue, value);
                     if (cmpGt.getBoolean()) {
                         strategies.set(node, succ);
-                        value.set(succValue);
+                        set.apply(value, succValue);
                         changed = true;
                     }
                 }

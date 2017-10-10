@@ -60,13 +60,6 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
     }
 
     @Override
-    public ValueArrayIntegerMappedByteBuffer clone() {
-        ValueArrayIntegerMappedByteBuffer result = new ValueArrayIntegerMappedByteBuffer(getType());
-        result.set(this);
-        return result;
-    }
-
-    @Override
     public void set(Value value, int index) {
         buffer.putInt(index * 4, ValueInteger.asInteger(value).getInt());
     }
