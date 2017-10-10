@@ -142,13 +142,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         }
 
         @Override
-        public ValueArrayExplorerNode clone() {
-            ValueArrayExplorerNode clone = (ValueArrayExplorerNode) getType().newValue();
-            clone.set(this);
-            return clone;
-        }
-
-        @Override
         public void set(Value value, int index) {
             assert value != null;
             assert index >= 0;

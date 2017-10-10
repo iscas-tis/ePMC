@@ -87,6 +87,7 @@ import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorNe;
 import epmc.value.operator.OperatorOr;
+import epmc.value.operator.OperatorSet;
 
 // TODO add support for JINC as soon as/if ever notified by mail
 // TODO documentation
@@ -1712,8 +1713,9 @@ public final class ContextDD implements Closeable {
             known.put(triple, null);
             return null;
         } else if (support.isLeaf()) {
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, dd.value().getType(), type);
             Value result = type.newValue();
-            result.set(dd.value());
+            set.apply(result, dd.value());
             known.put(triple, result);
             return result;
         } else {

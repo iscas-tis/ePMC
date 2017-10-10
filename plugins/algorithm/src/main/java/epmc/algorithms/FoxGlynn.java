@@ -44,6 +44,7 @@ import epmc.value.operator.OperatorLog;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorPow;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 
 /**
@@ -159,9 +160,10 @@ public final class FoxGlynn {
         }
 
         ValueReal lambda_max = typeReal.newValue();
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         int m_max;
         if (m < 400) {
-            lambda_max.set(lambda_400);
+            set.apply(lambda_max, lambda_400);
             m_max = 400;
             multiply.apply(epsilon, epsilon, factor1);
         } else {
@@ -171,7 +173,7 @@ public final class FoxGlynn {
             divide.apply(lf, one, lf);
             subtract.apply(lf, one, lf);
             multiply.apply(factor, lf, factor2);
-            lambda_max.set(lambda);
+            set.apply(lambda_max, lambda);
             m_max = m;
             multiply.apply(epsilon, epsilon, factor);
         }
@@ -241,7 +243,7 @@ public final class FoxGlynn {
                     add.apply(result_1, log_c_m_inf, result_1);
                     gt.apply(cmp, result_1, result);
                     if (cmp.getBoolean()) {
-                        result.set(result_1);
+                        set.apply(result, result_1);
                     }
                 }
             }
@@ -374,16 +376,17 @@ public final class FoxGlynn {
         Options options = Options.get();
         this.typeReal = TypeReal.get();
 
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         /* store input parameters and derived stuff */
         this.log = options.get(OptionsMessages.LOG);
         this.lambda = typeReal.newValue();
-        this.lambda.set(lambda);
+        set.apply(this.lambda, lambda);
         this.tau = typeReal.newValue();
-        this.tau.set(tau);
+        set.apply(this.tau, tau);
         this.omega = typeReal.newValue();
-        this.omega.set(omega);
+        set.apply(this.omega, omega);
         this.epsilon = typeReal.newValue();
-        this.epsilon.set(epsilon);
+        set.apply(this.epsilon, epsilon);
 
         this.typeArray = TypeReal.get().getTypeArray();
 

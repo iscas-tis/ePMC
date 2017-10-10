@@ -73,6 +73,7 @@ import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 /**
  * Iterative solver to solve game-related graph problems.
@@ -322,19 +323,20 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
-            distance.set(TypeReal.get().getZero());
+            set.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(negInf);
+                set.apply(nextStateProb, negInf);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weighted, stateSucc);
                         int succState = targets[stateSucc];
@@ -351,11 +353,11 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(posInf);
+                set.apply(nextStateProb, posInf);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
@@ -397,19 +399,20 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
-            distance.set(TypeReal.get().getZero());
+            set.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(negInf);
+                set.apply(nextStateProb, negInf);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
@@ -426,11 +429,11 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(posInf);
+                set.apply(nextStateProb, posInf);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];

@@ -69,13 +69,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     }
 
     @Override
-    public ValueArrayIntegerBounded clone() {
-        ValueArrayIntegerBounded other = new ValueArrayIntegerBounded(getType());
-        other.set(this);
-        return other;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
         assert index >= 0;

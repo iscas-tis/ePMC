@@ -34,13 +34,6 @@ public final class ValueArrayGeneric implements ValueArray {
         this.content = new Value[0];
     }
 
-    @Override
-    public ValueArrayGeneric clone() {
-        ValueArrayGeneric clone = getType().newValue();
-        clone.set(this);
-        return clone;
-    }
-
     void setContent(Type entryType, Value[] content) {
         for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);

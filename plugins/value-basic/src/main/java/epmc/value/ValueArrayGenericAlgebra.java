@@ -34,13 +34,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
         this.content = new ValueAlgebra[0];
     }
 
-    @Override
-    public ValueArrayGenericAlgebra clone() {
-        ValueArrayGenericAlgebra clone = getType().newValue();
-        clone.set(this);
-        return clone;
-    }
-
     void setContent(Type entryType, Value[] content) {
         for (int index = 0; index < size(); index++) {
             this.content[index].set(content[index]);

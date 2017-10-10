@@ -34,13 +34,6 @@ final class ValueArrayObjectDirect implements ValueArray {
     }
 
     @Override
-    public ValueArrayObjectDirect clone() {
-        ValueArrayObjectDirect other = new ValueArrayObjectDirect(getType());
-        other.set(this);
-        return other;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
         assert ValueObject.isObject(value);

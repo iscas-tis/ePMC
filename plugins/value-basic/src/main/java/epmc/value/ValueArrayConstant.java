@@ -35,13 +35,6 @@ public final class ValueArrayConstant implements ValueArray {
     }
 
     @Override
-    public ValueArrayConstant clone() {
-        ValueArrayConstant other = new ValueArrayConstant(getType());
-        other.set(this);
-        return other;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
         assert index >= 0;
