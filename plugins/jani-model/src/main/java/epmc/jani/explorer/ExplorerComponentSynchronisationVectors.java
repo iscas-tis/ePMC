@@ -36,10 +36,13 @@ import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentSynchronisationVectors;
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.SynchronisationVectorSync;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO compute labels in all cases
 
@@ -79,6 +82,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
     private PropertyEdgeGeneral weight;
     private ValueAlgebra prodWeight;
     private boolean[] isState;
+    private OperatorEvaluator multiply;
 
     @Override
     public void setExplorer(ExplorerJANI model) {
@@ -167,6 +171,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         prodWeight = TypeWeightTransition.get().newValue();
         weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get());
         isState = new boolean[automata.length];
+        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override
@@ -269,7 +274,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
                 remaining /= numAutSuccessors;
                 successor.setSet(automaton.getSuccessorNode(autSuccNr));
                 PropertyEdge automatonWeight = this.automataWeights[autNr];
-                prodWeight.multiply(prodWeight, automatonWeight.get(autSuccNr));
+                multiply.apply(prodWeight, prodWeight, automatonWeight.get(autSuccNr));
             }
             weight.set(this.numSuccessors, prodWeight);
             this.numSuccessors++;
@@ -310,7 +315,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
                     remaining /= numAutSucc;
                     successor.setSet(automaton.getSuccessorNode(autSucc));
                     PropertyEdge automatonWeight = this.automataWeights[autNr];
-                    prodWeight.multiply(prodWeight, automatonWeight.get(autSucc));
+                    multiply.apply(prodWeight, prodWeight, automatonWeight.get(autSucc));
                 }
                 weight.set(numSuccessors, prodWeight);
                 numSuccessors++;

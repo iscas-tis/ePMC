@@ -56,6 +56,7 @@ import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorMultiply;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -82,14 +83,15 @@ final class MultiObjectiveUtils {
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
             q.get(qEntry, dim);
             bounds.get(boundsEntry, dim);
-            weightsXqEntry.multiply(weightsEntry, qEntry);
+            multiply.apply(weightsXqEntry, weightsEntry, qEntry);
             add.apply(weightsXqSum, weightsXqSum, weightsXqEntry);
-            weightsXboundsEntry.multiply(weightsEntry, boundsEntry);
+            multiply.apply(weightsXboundsEntry, weightsEntry, boundsEntry);
             add.apply(weightsXboundsSum, weightsXboundsSum, weightsXboundsEntry);
         }
         eq.apply(cmp, weightsXqSum, weightsXboundsSum);
@@ -243,11 +245,12 @@ final class MultiObjectiveUtils {
         ValueAlgebra objRew = newValueWeight();
         ValueAlgebra prod = newValueWeight();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int obj = 0; obj < numObjectives; obj++) {
             weights.get(objWeight, obj);
             for (int nondet = 0; nondet < numNondet; nondet++) {
                 rewards.getRewards(obj).get(objRew, nondet);
-                prod.multiply(objWeight, objRew);
+                multiply.apply(prod, objWeight, objRew);
                 result.get(entry, nondet);
                 add.apply(entry, entry, prod);
                 result.set(entry, nondet);

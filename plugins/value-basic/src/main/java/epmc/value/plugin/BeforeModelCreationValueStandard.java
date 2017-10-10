@@ -76,9 +76,9 @@ import epmc.value.operatorevaluator.OperatorEvaluatorMaxInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorMin;
 import epmc.value.operatorevaluator.OperatorEvaluatorMinDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorMinInt;
-import epmc.value.operatorevaluator.OperatorEvaluatorMultiply;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorMultiplyInverseDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorNe;
 import epmc.value.operatorevaluator.OperatorEvaluatorNeDouble;
@@ -142,7 +142,6 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMinDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMinInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorModInt.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiply.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyDouble.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInverseDouble.INSTANCE);
@@ -168,6 +167,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsOneInt.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsOneInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsZeroInterval.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInterval.INSTANCE);
     }
 
     private static void addTypes() {

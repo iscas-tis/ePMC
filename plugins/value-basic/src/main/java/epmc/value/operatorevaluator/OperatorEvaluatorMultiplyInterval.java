@@ -20,16 +20,19 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeAlgebra;
-import epmc.value.UtilValue;
+import epmc.value.TypeDouble;
+import epmc.value.TypeInteger;
+import epmc.value.TypeInterval;
+import epmc.value.TypeReal;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
+import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorMultiply;
 
-public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
+public enum OperatorEvaluatorMultiplyInterval implements OperatorEvaluator {
     INSTANCE;
 
     @Override
@@ -46,8 +49,13 @@ public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
+        if ((TypeInteger.isInteger(types[0]) || TypeReal.isReal(types[0]))
+                && (TypeInteger.isInteger(types[1]) || TypeReal.isReal(types[1]))) {
+            return false;
+        }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)
+                    && !TypeInterval.isInterval(type)) {
                 return false;
             }
         }
@@ -60,7 +68,7 @@ public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        return UtilValue.upper(types);
+        return TypeInterval.get();
     }
 
     @Override
@@ -70,6 +78,14 @@ public enum OperatorEvaluatorMultiply implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueAlgebra.asAlgebra(result).multiply(operands[0], operands[1]);
+        Value resultLower = ValueInterval.getLower(result);
+        Value resultUpper = ValueInterval.getUpper(result);
+        Value op1Lower = ValueInterval.getLower(operands[0]);
+        Value op1Upper = ValueInterval.getUpper(operands[0]);
+        Value op2Lower = ValueInterval.getLower(operands[1]);
+        Value op2Upper = ValueInterval.getUpper(operands[1]);
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, op1Lower.getType(), op2Lower.getType());
+        add.apply(resultLower, op1Lower, op2Lower);
+        add.apply(resultUpper, op1Upper, op2Upper);
     }
 }

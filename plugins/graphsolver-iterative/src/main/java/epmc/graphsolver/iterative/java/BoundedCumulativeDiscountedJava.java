@@ -51,6 +51,7 @@ import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -246,6 +247,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -255,8 +257,8 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    weighted.multiply(weighted, discount);
+                    multiply.apply(weighted, succStateProb, weight);
+                    multiply.apply(weighted, weighted, discount);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 presValues.get(presStateProb, state);
@@ -290,6 +292,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
@@ -304,8 +307,8 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        weighted.multiply(weighted, discount);
+                        multiply.apply(weighted, weight, succStateProb);
+                        multiply.apply(weighted, weighted, discount);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {

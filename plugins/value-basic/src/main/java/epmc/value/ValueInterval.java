@@ -110,34 +110,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
 
     }
 
-    public boolean isGe(Value operand) {
-        assert operand != null;
-        assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
-        OperatorEvaluator ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeReal.get(), TypeReal.get());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        if (isInterval(operand)) {
-            ValueInterval opIv = ValueInterval.asInterval(operand);
-            ge.apply(cmp, getIntervalLower(), opIv.getIntervalLower());
-            if (!cmp.getBoolean()) {
-                return false;
-            }
-            ge.apply(cmp, getIntervalUpper(), opIv.getIntervalUpper());
-            if (!cmp.getBoolean()) {
-                return false;
-            }
-        } else {
-            ge.apply(cmp, getIntervalLower(), operand);
-            if (!cmp.getBoolean()) {
-                return false;
-            }
-            ge.apply(cmp, getIntervalUpper(), operand);
-            if (!cmp.getBoolean()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public void set(int value) {
         lower.set(value);
@@ -178,12 +150,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
 
     boolean isImmutable() {
         return immutable;
-    }
-
-    @Override
-    public void multiply(Value operand1, Value operand2) {
-        lower.multiply(getLower(operand1), getLower(operand2));
-        upper.multiply(getUpper(operand1), getUpper(operand2));
     }
 
     public static ValueAlgebra getLower(Value operand) {

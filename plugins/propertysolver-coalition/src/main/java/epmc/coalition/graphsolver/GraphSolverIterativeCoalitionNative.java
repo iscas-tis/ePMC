@@ -70,6 +70,7 @@ import epmc.value.ValueSetString;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorMultiply;
 
 /**
  * Iterative solver to solve game-related graph problems.
@@ -216,6 +217,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
             Player player = playerProp.getEnum(origNode);
             int iterState = builder.inputToOutputNode(origNode);
@@ -233,7 +235,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
 
                 for (int succ = 0; succ < numSucc; succ++) {
                     outputValues.get(get, origGraph.getSuccessorNode(origNode, succ));
-                    weighted.multiply(get, weightProp.get(origNode, succ));
+                    multiply.apply(weighted, get, weightProp.get(origNode, succ));
                     add.apply(val, val, weighted);
                 }
                 outputValues.set(val, origNode);

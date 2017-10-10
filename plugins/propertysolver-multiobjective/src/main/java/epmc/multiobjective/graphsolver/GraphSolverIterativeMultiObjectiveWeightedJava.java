@@ -56,6 +56,7 @@ import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorMultiply;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
@@ -242,6 +243,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -259,7 +261,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     gt.apply(cmp, choiceNextStateProb, nextStateProb);
@@ -328,6 +330,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -345,7 +348,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     gt.apply(cmp, choiceNextStateProb, nextStateProb);

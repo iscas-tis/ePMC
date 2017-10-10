@@ -66,6 +66,7 @@ import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorSubtract;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
@@ -278,6 +279,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, succValue.getType(), weightProp.getType());
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
             Player player = playerProp.getEnum(node);
@@ -297,7 +299,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
                 } else if (player == Player.TWO) {
                     min.apply(newValue, newValue, succValue);
                 } else if (player == Player.STOCHASTIC) {
-                    weighted.multiply(succValue, weightProp.get(node, succ));
+                    multiply.apply(weighted, succValue, weightProp.get(node, succ));
                     add.apply(newValue, newValue, weighted);
                 }
             }
