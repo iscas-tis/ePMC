@@ -216,13 +216,4 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
-
-    @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (this == type) {
-            return true;
-        }
-        return false;
-    }
 }

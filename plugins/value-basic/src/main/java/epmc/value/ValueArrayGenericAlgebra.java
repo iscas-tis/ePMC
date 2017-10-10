@@ -50,7 +50,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType()) : getType().getEntryType() + SPACE + value + SPACE + value.getType();
         assert index >= 0;
         assert index < size();
         content[index].set(value);
@@ -66,8 +65,6 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType()) :
-            value.getType() + SPACE + getType().getEntryType();
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         value.set(content[index]);

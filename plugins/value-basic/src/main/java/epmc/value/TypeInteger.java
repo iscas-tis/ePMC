@@ -98,12 +98,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     }    
 
     @Override
-    public boolean canImport(Type a) {
-        assert a != null;
-        return TypeInteger.isInteger(a);
-    }
-
-    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         if (isLeftBounded() || isRightBounded()) {
@@ -175,9 +169,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
             return false;
         }
         TypeInteger other = (TypeInteger) obj;
-        if (!canImport(other) || !other.canImport(this)) {
-            return false;
-        }
         if (!this.lowerBound.equals(other.lowerBound)) {
             return false;
         }

@@ -26,18 +26,6 @@ public final class TypeClock implements TypeAlgebra {
     }
 
     @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (type instanceof TypeClock) {
-            return true;
-        }
-        if (TypeInteger.isInteger(type)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public String toString() {
         return CLOCK;
     }

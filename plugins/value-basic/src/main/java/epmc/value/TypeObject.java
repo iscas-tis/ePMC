@@ -80,16 +80,6 @@ public final class TypeObject implements TypeNumBitsKnown {
         this.storageType = builder.getStorageType();
     }
 
-    @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        TypeObject other = asObject(type);
-        if (other == null) {
-            return false;
-        }
-        return usedClass == other.getUsedClass();
-    }
-
     public Class<?> getUsedClass() {
         return usedClass;
     }
@@ -115,9 +105,6 @@ public final class TypeObject implements TypeNumBitsKnown {
             return false;
         }
         TypeObject other = (TypeObject) obj;
-        if (!canImport(other) || !other.canImport(this)) {
-            return false;
-        }
         if (this.usedClass != other.usedClass) {
             return false;
         }

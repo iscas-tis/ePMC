@@ -324,7 +324,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         assert modelState.length == expressionsUnique.getReplaced().length
                 : Arrays.toString(modelState) + " " + Arrays.toString(expressionsUnique.getReplaced());
         for (int i = 0; i < modelState.length; i++) {
-            assert expressionsUnique.getReplaced()[i].getType().canImport(modelState[i]);
+//            assert expressionsUnique.getReplaced()[i].getType().canImport(modelState[i]);
         }
         return true;
     }

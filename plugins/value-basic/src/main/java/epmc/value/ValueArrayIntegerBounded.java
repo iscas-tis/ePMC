@@ -78,7 +78,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
         assert index < size();
         set(ValueInteger.asInteger(value).getInt(), index);
@@ -87,7 +86,6 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
         assert index < size();
         ValueAlgebra.asAlgebra(value).set(getInt(index));

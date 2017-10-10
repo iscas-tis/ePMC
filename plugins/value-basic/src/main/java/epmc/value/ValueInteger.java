@@ -168,14 +168,9 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
 
     @Override
     public void setValueNumber(int number) {
-        assert getType().canImport(getType()) : value;
         assert number >= 0 : number;
         assert number < type.getUpperInt() + 1 - type.getLowerInt() :
             number + SPACE + type.getLowerInt() + SPACE + type.getUpperInt();
         set(type.getLowerInt() + number);
-    }
-
-    public void pow(ValueInteger a, ValueInteger b) {
-        value = (int) Math.pow(a.value, b.value);
     }
 }

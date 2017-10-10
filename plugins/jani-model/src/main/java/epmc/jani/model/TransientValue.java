@@ -106,7 +106,6 @@ public final class TransientValue implements JANINode {
             Type variableType = ref.toType();
             Type assignedType = this.value.getType(model);
             ensure(assignedType != null, ProblemsJANIParser.JANI_PARSER_ASSIGNMENT_INCONSISTENT);
-            ensure(variableType.canImport(assignedType), ProblemsJANIParser.JANI_PARSER_ASSIGNMENT_TYPE_ERROR);
         }
         comment = UtilJSON.getStringOrNull(object, COMMENT);
         return this;

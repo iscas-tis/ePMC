@@ -4,19 +4,13 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
 public final class ValueClock implements ValueAlgebra {
+    private final static String TO_STRING_TEMPLATE = "valueClock(%d)";
     private TypeClock type;
     private int value;
 
     ValueClock(TypeClock type) {
         assert false;
         this.type = type;
-    }
-
-    @Override
-    public ValueClock clone() {
-        ValueClock clone = type.newValue();
-        clone.set(value);
-        return clone;
     }
 
     @Override
@@ -31,7 +25,7 @@ public final class ValueClock implements ValueAlgebra {
 
     @Override
     public String toString() {
-        return "valueClock(" + value + ")";
+        return String.format(TO_STRING_TEMPLATE, value);
     }
 
     @Override

@@ -91,7 +91,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         @Override
         public void set(int currentNode, Value value) {
             assert value != null;
-            assert typeEntry.canImport(value.getType()) : typeEntry + " " + value;
             content = UtilValue.ensureSize(content, currentNode + 1);
             content.set(value, currentNode);
         }
@@ -140,7 +139,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         @Override
         public void set(int currentNode, int successor, Value value) {
             assert value != null;
-            assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             content = UtilValue.ensureSize(content, entryNr + 1);
@@ -199,7 +197,6 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         @Override
         public void set(int currentNode, int successor, Value value) {
             assert value != null;
-            assert typeEntry.canImport(value.getType()) : typeEntry + "  " + value;
             assert successor >= 0;
             int entryNr = getCachedSuccessorEntry(currentNode, successor);
             content = UtilValue.ensureSize(content, entryNr + 1);

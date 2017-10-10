@@ -110,7 +110,6 @@ public final class AssignmentSimple implements Assignment {
             Type variableType = ref.toType();
             Type assignedType = this.value.getType(model);
             ensure(assignedType != null, ProblemsJANIParser.JANI_PARSER_ASSIGNMENT_INCONSISTENT);
-            ensure(variableType.canImport(assignedType), ProblemsJANIParser.JANI_PARSER_ASSIGNMENT_TYPE_ERROR);
         }
         index = UtilJSON.getIntegerOrNull(object, INDEX);
         comment = UtilJSON.getStringOrNull(object, COMMENT);

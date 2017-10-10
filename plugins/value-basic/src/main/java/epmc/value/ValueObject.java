@@ -46,13 +46,6 @@ public final class ValueObject implements Value {
         this.type = type;
     }
 
-    ValueObject(TypeObject type, Object content) {
-        assert type != null;
-        assert content == null || type.getUsedClass().isInstance(content);
-        this.type = type;
-        this.content = content;
-    }
-
     @Override
     public TypeObject getType() {
         return type;
@@ -70,11 +63,6 @@ public final class ValueObject implements Value {
                     content + SPACE + content.getClass()
                     + SPACE + getType().getUsedClass();
                 this.content = content;
-    }
-
-    @Override
-    public Value clone() {
-        return new ValueObject(getType(), content);
     }
 
     @Override

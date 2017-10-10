@@ -53,7 +53,6 @@ public final class SupportWalkerNodeMap {
 
     public void set(Value value) {
         assert value != null;
-        assert entryType.canImport(value.getType());
         int index = walker.getIndex();
         values.set(value, index);
         valueSet.set(index);
@@ -61,7 +60,6 @@ public final class SupportWalkerNodeMap {
 
     public void get(Value value) {
         assert value != null;
-        assert entryType.canImport(value.getType());
         assert valueSet.get(walker.getIndex());
         values.get(value, walker.getIndex());
     }

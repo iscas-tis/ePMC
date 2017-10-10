@@ -61,21 +61,6 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     }
 
     @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (type instanceof TypeInterval) {
-            return true;
-        }
-        if (type instanceof TypeInteger) {
-            return true;
-        }
-        if (TypeReal.isReal(type)) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public ValueInterval newValue() {
         return new ValueInterval(this);
     }
@@ -102,10 +87,6 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
         return true;

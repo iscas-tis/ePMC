@@ -32,21 +32,6 @@ public final class UtilValue {
     private final static String UNCHECKED = "unchecked";
     
     // TODO get rid of this method
-    public static Type algebraicResultType(Type[] types) {
-        Type upper = upper(types);
-        Type result;
-        if (TypeAlgebra.isAlgebra(upper)) {
-            result = upper;
-        } else if (TypeArray.isArray(upper)) {
-            // TODO dimensions check
-            result = upper;
-        } else {
-            return null;
-        }
-        return result;
-    }
-
-    // TODO get rid of this method
     public static Type upper(Type... types) {
         Type upper = types[0];
         for (Type type : types) {
@@ -100,9 +85,24 @@ public final class UtilValue {
                     TypeInteger.asInteger(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
-            if (a.canImport(b)) {
+            boolean aCanB = true;
+            boolean bCanA = true;
+            Value av = a.newValue();
+            Value bv = b.newValue();
+            // TODO HACK
+            try {
+                av.set(bv);
+            } catch (Exception e) {
+                aCanB = false;
+            }
+            try {
+                bv.set(av);                    
+            } catch (Exception e) {
+                bCanA = false;
+            }
+            if (aCanB) {
                 upper = a;
-            } else if (b.canImport(a)) {
+            } else if (bCanA) {
                 upper = b;
             } else {
                 upper = null;

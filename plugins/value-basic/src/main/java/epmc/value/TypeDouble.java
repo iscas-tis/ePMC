@@ -71,12 +71,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     }
 
     @Override
-    public boolean canImport(Type a) {
-        assert a != null;
-        return a instanceof TypeDouble || a instanceof TypeInteger;
-    }
-
-    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(DOUBLE);
@@ -127,10 +121,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
         return true;

@@ -68,12 +68,6 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
         return ContextValue.get().getType(TypeTernary.class);
     }    
 
-    @Override
-    public boolean canImport(Type a) {
-        assert a != null;
-        return TypeBoolean.isBoolean(a);
-    }
-
     public ValueTernary getFalse() {
         return valueFalse;
     }
@@ -112,10 +106,6 @@ public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
         return true;

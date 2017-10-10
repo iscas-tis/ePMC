@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.value.Value;
-import epmc.value.operator.OperatorGe;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
     public static boolean isInterval(Value value) {

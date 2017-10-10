@@ -166,7 +166,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
 
     @Override
     public void setValueNumber(int number) {
-        assert getType().canImport(getType()) : value;
         assert number >= 0 : number;
         assert number < 2 : number;
         set(number == 1);

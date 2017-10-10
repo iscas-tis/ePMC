@@ -58,7 +58,6 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType()) : value;
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         content[index] = ValueNumber.asNumber(value).getDouble();
@@ -73,9 +72,6 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType()) :
-            this + SPACE + this.getType() + SPACE + value
-            + SPACE + value.getType();
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         double entry = content[index];

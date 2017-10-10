@@ -309,7 +309,6 @@ final class VariableDDImpl implements VariableDD {
         assert copy >= 0;
         assert copy < copies;
         assert value != null;
-        assert type.canImport(value.getType());
         value = UtilValue.clone(value);
         if (TypeInteger.isInteger(type)) {
             return newIntValue(copy, ValueInteger.asInteger(value).getInt());

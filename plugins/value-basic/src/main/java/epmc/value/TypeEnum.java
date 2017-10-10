@@ -73,15 +73,6 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     }
 
     @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (!TypeEnum.isEnum(type)) {
-            return false;
-        }
-        return enumClass == asEnum(type).getEnumClass();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         assert obj != null;
         assert obj != null;
@@ -89,10 +80,10 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
             return false;
         }
         TypeEnum other = (TypeEnum) obj;
-        if (!canImport(other) || !other.canImport(this)) {
+        if (this.enumClass != other.enumClass) {
             return false;
         }
-        return this.enumClass == other.enumClass;
+        return true;
     }
 
     @Override

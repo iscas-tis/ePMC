@@ -39,12 +39,6 @@ import epmc.value.ValueContentIntArray;
 final class NodePropertyExplorerNode implements NodeProperty {
     private final class TypeExplorerNode implements Type {
         @Override
-        public Type clone() {
-            TypeExplorerNode clone = new TypeExplorerNode();
-            return clone;
-        }
-
-        @Override
         public ValueExplorerNode newValue() {
             return new ValueExplorerNode();
         }
@@ -53,15 +47,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         public TypeArray getTypeArray() {
             return typeArray;
         }
-
-        @Override
-        public boolean canImport(Type type) {
-            assert type != null;
-            if (this == type) {
-                return true;
-            }
-            return false;
-        }
     }
 
     private final class ValueExplorerNode implements Value {
@@ -69,13 +54,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         private final static String NULL = "null";
         /** Index of node in {@link NodePropertyExplorerNode#nodeStore}. */
         private int node;
-
-        @Override
-        public Value clone() {
-            ValueExplorerNode clone = new ValueExplorerNode();
-            clone.node = node;
-            return clone;
-        }
 
         @Override
         public Type getType() {
@@ -108,11 +86,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         protected TypeArrayExplorerNode(Type entryType) {
             assert entryType != null;
             this.entryType = entryType;
-        }
-
-        @Override
-        public TypeArray clone() {
-            return this;
         }
 
         @Override
@@ -178,7 +151,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         @Override
         public void set(Value value, int index) {
             assert value != null;
-            assert getType().getEntryType().canImport(value.getType());
             assert index >= 0;
             assert index < size();
             ValueExplorerNode other = (ValueExplorerNode) value;
@@ -188,7 +160,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
         @Override
         public void get(Value value, int index) {
             assert value != null;
-            assert value.getType().canImport(getType().getEntryType());
             assert index >= 0;
             assert index < size();
             int entry = content[index];

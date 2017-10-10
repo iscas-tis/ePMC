@@ -43,7 +43,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
         assert index < size() : index + SPACE + size();
         content[index] = ValueInteger.asInteger(value).getInt();
@@ -59,7 +58,6 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
         assert index < size();
         int entry = content[index];

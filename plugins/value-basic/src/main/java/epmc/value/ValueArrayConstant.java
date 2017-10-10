@@ -24,6 +24,7 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class ValueArrayConstant implements ValueArray {
+    private final static String SPACE = " ";
     private final TypeArrayConstant type;
     private final Value content;
     private int size;
@@ -43,9 +44,8 @@ public final class ValueArrayConstant implements ValueArray {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert content.getType().canImport(value.getType());
         assert index >= 0;
-        assert index < size() : index + " " + size();
+        assert index < size() : index + SPACE + size();
         content.set(value);
     }
 
@@ -54,7 +54,6 @@ public final class ValueArrayConstant implements ValueArray {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        assert value.getType().canImport(content.getType());
         value.set(content);
     }
 

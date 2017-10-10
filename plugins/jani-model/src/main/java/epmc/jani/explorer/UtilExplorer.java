@@ -20,20 +20,12 @@
 
 package epmc.jani.explorer;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
-import epmc.value.ContextValue;
-import epmc.value.OperatorEvaluator;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeightTransition;
-import epmc.value.Value;
-import epmc.value.operator.OperatorDistance;
 import epmc.value.ValueAlgebra;
 
 /**
