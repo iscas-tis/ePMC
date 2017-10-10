@@ -92,12 +92,12 @@ public final class UtilValue {
             // TODO HACK
             try {
                 av.set(bv);
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 aCanB = false;
             }
             try {
                 bv.set(av);                    
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 bCanA = false;
             }
             if (aCanB) {

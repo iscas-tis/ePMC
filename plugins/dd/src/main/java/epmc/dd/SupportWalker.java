@@ -32,7 +32,6 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorIsZero;
@@ -148,7 +147,7 @@ public final class SupportWalker {
         }
         this.variables = computeVariables(support);
         goBackStack = new int[variables.length];
-        eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, leafValues[0].getType(), leafValues[0].getType());
+        eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, node.getType(), node.getType());
         cmp = TypeBoolean.get().newValue();
         buildDiagram(node, support);
     }
@@ -239,7 +238,11 @@ public final class SupportWalker {
                 continue;
             }
             Value value = leafValues[-diagram[i * NUM_OUT] - 1];
-            isZero.apply(cmp, value);
+            if (isZero != null) {
+                isZero.apply(cmp, value);
+            } else {
+                cmp.set(false);
+            }
             if (ValueBoolean.isTrue(value)) {
                 assert trueIndex == Integer.MIN_VALUE;
                 trueIndex = i;
