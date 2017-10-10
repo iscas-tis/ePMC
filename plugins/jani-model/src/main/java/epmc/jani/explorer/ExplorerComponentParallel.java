@@ -35,11 +35,15 @@ import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentParallel;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.operator.OperatorMultiply;
 
 /**
  * Explorer for a parallel composition component.
@@ -79,6 +83,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
     /** Silent action of the model. */
     private boolean nonDet;
     private Component component;
+    private OperatorEvaluator multiply;
 
     // TODO check for LTSs as soon as we have some
 
@@ -113,18 +118,19 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
         left = preparator.prepare(explorer, componentParallel.getLeft());
         right = preparator.prepare(explorer, componentParallel.getRight());
         state = new PropertyNodeGeneral(this, TypeBoolean.get());
-        weight = new PropertyEdgeGeneral(this, TypeWeight.get());
+        weight = new PropertyEdgeGeneral(this, TypeWeightTransition.get());
         label = new PropertyEdgeAction(explorer);
         leftWeight = left.getEdgeProperty(CommonProperties.WEIGHT);
         assert leftWeight != null;
         rightWeight = right.getEdgeProperty(CommonProperties.WEIGHT);
         assert rightWeight != null;
-        weightProduct = TypeWeight.get().newValue();
+        weightProduct = TypeWeightTransition.get().newValue();
         leftLabel = (PropertyEdgeAction) left.getEdgeProperty(CommonProperties.TRANSITION_LABEL);
         assert leftLabel != null;
         rightLabel = (PropertyEdgeAction) right.getEdgeProperty(CommonProperties.TRANSITION_LABEL);
         assert rightLabel != null;
         synchronisingActions = buildSynchronisingActions(new HashSet<>(componentParallel.getActions()));
+        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     private boolean[] buildSynchronisingActions(Set<Action> synchronising) {
@@ -233,7 +239,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
                     fail(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE);
                 }
                 label.set(numSuccessors, leftAction);
-                weightProduct.multiply(leftWeight.get(leftSuccNr), rightWeight.get(rightSuccNr));
+                multiply.apply(weightProduct, leftWeight.get(leftSuccNr), rightWeight.get(rightSuccNr));
                 weight.set(numSuccessors, weightProduct);
                 numSuccessors++;
             }
@@ -417,7 +423,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
                     fail(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE);
                 }
 
-                weightProduct.multiply(leftWeight.get(leftSuccNr), rightWeight.get(rightSuccNr));
+                multiply.apply(weightProduct, leftWeight.get(leftSuccNr), rightWeight.get(rightSuccNr));
                 weight.set(numSuccessors, weightProduct);
                 label.set(numSuccessors, 0);
                 numSuccessors++;

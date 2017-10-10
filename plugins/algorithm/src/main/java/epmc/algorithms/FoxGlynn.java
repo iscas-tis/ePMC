@@ -42,6 +42,7 @@ import epmc.value.operator.OperatorFloor;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLog;
 import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorPow;
 import epmc.value.operator.OperatorSubtract;
 
@@ -95,12 +96,13 @@ public final class FoxGlynn {
         OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, typeReal, typeReal);
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, typeReal, typeReal);
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, typeReal, typeReal);
         ValueBoolean cmp = TypeBoolean.get().newValue();
         ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
         logOp.apply(tau, this.tau);
         ValueReal epsilon = typeReal.newValue();
-        epsilon.multiply(this.epsilon, sqrt_2_pi);
+        multiply.apply(epsilon, this.epsilon, sqrt_2_pi);
         ValueReal kReal = typeReal.newValue();
         ValueReal maxError = typeReal.newValue();
         OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
@@ -123,9 +125,9 @@ public final class FoxGlynn {
             ValueReal onePlusOneDivLambda = typeReal.newValue();
             add.apply(onePlusOneDivLambda, one, oneDivLambda);
             ValueReal bl = typeReal.newValue();
-            bl.multiply(oneDivLambda, oneEights);
+            multiply.apply(bl, oneDivLambda, oneEights);
             exp.apply(bl, bl);
-            bl.multiply(onePlusOneDivLambda, bl);
+            multiply.apply(bl, onePlusOneDivLambda, bl);
             ValueReal sqrtLambda = typeReal.newValue();
             pow.apply(sqrtLambda, lambda, oneHalf);
 
@@ -133,7 +135,7 @@ public final class FoxGlynn {
             ValueReal maxErrorT2 = typeReal.newValue();
             for (int k = 4; true; k++) {
                 kReal.set(k);
-                ceiled.multiply(kReal, sqrtLambda);
+                multiply.apply(ceiled, kReal, sqrtLambda);
                 add.apply(ceiled, ceiled, oneHalf);
                 ceil.apply(ceiled, ceiled);
                 left = m - ceiled.getInt();
@@ -141,13 +143,13 @@ public final class FoxGlynn {
                     left = 0;
                     break;
                 }
-                maxError.multiply(kReal, kReal);
-                maxError.multiply(oneHalf, maxError);
+                multiply.apply(maxError, kReal, kReal);
+                multiply.apply(maxError, oneHalf, maxError);
                 addInverse.apply(maxError, maxError);
                 exp.apply(maxError, maxError);
-                maxError.multiply(bl, maxError);
+                multiply.apply(maxError, bl, maxError);
                 divide.apply(maxError, maxError, kReal);
-                maxErrorT2.multiply(two, maxError);
+                multiply.apply(maxErrorT2, two, maxError);
                 lt.apply(cmp, maxErrorT2, epsilon);
                 if (cmp.getBoolean()) {
                     subtract.apply(epsilon, epsilon, maxError);
@@ -161,26 +163,26 @@ public final class FoxGlynn {
         if (m < 400) {
             lambda_max.set(lambda_400);
             m_max = 400;
-            epsilon.multiply(epsilon, factor1);
+            multiply.apply(epsilon, epsilon, factor1);
         } else {
             ValueReal lf = typeReal.newValue();
             ValueReal factor = typeReal.newValue();
             add.apply(lf, lambda, one);
             divide.apply(lf, one, lf);
             subtract.apply(lf, one, lf);
-            factor.multiply(lf, factor2);
+            multiply.apply(factor, lf, factor2);
             lambda_max.set(lambda);
             m_max = m;
-            epsilon.multiply(epsilon, factor);
+            multiply.apply(epsilon, epsilon, factor);
         }
         int k;
         for (k = 4; true; k++) {
             kReal.set(k);
-            maxError.multiply(kReal, kReal);
-            maxError.multiply(oneHalf, maxError);
+            multiply.apply(maxError, kReal, kReal);
+            multiply.apply(maxError, oneHalf, maxError);
             addInverse.apply(maxError, maxError);
             exp.apply(maxError, maxError);
-            kTimesEpsilon.multiply(kReal, epsilon);
+            multiply.apply(kTimesEpsilon, kReal, epsilon);
             gt.apply(cmp, kTimesEpsilon, maxError);
             if (cmp.getBoolean()) {
                 break;
@@ -188,22 +190,22 @@ public final class FoxGlynn {
         }
         kReal.set(k);        
         ValueReal rightAdd = typeReal.newValue();
-        rightAdd.multiply(two, lambda_max);
+        multiply.apply(rightAdd, two, lambda_max);
         pow.apply(rightAdd, rightAdd, oneHalf);
-        rightAdd.multiply(kReal, rightAdd);
+        multiply.apply(rightAdd, kReal, rightAdd);
         add.apply(rightAdd, rightAdd, oneHalf);
         ceil.apply(rightAdd, rightAdd);
         right = m_max + rightAdd.getInt();
         ValueReal checkValueReal = typeReal.newValue();
         add.apply(checkValueReal, lambda_max, one);
-        checkValueReal.multiply(checkValueReal, oneHalf);
+        multiply.apply(checkValueReal, checkValueReal, oneHalf);
         ceil.apply(checkValueReal, checkValueReal);
         if (right > checkValueReal.getInt() + m_max) {
             log.send(MessagesAlgorithm.FOX_GLYNN_UNRELIABLE_CANT_BOUND_RIGHT, right, lambda_max);
         }
 
         startValue = UtilValue.newValue(typeReal, right - left);
-        startValue.multiply(bigNumber, startValue);
+        multiply.apply(startValue, bigNumber, startValue);
         divide.apply(startValue, omega, startValue);
 
         if (m >= 25) {
@@ -213,7 +215,7 @@ public final class FoxGlynn {
             subtract.apply(tau, tau, logStartValue);
             ValueReal log_c_m_inf = UtilValue.newValue(typeReal, m);
             logOp.apply(log_c_m_inf, log_c_m_inf);
-            log_c_m_inf.multiply(log_c_m_inf, oneHalf);
+            multiply.apply(log_c_m_inf, log_c_m_inf, oneHalf);
             subtract.apply(log_c_m_inf, vm1922272, log_c_m_inf);
             int i = m - left;
 
@@ -221,10 +223,10 @@ public final class FoxGlynn {
                 ValueReal ii1 = UtilValue.newValue(typeReal, -i * (i+1));
                 ValueReal v2i = UtilValue.newValue(typeReal, 2*i + 1);
                 result.set(6);
-                result.multiply(result, lambda);
+                multiply.apply(result, result, lambda);
                 divide.apply(result, v2i, result);
                 add.apply(result, oneHalf, result);
-                result.multiply(ii1, result);
+                multiply.apply(result, ii1, result);
                 divide.apply(result, result, lambda);
                 add.apply(result, log_c_m_inf, result);
             } else {
@@ -235,7 +237,7 @@ public final class FoxGlynn {
                     divide.apply(result_1, iReal, result_1);
                     subtract.apply(result_1, one, result_1);
                     logOp.apply(result_1, result_1);
-                    result_1.multiply(iReal, result_1);
+                    multiply.apply(result_1, iReal, result_1);
                     add.apply(result_1, log_c_m_inf, result_1);
                     gt.apply(cmp, result_1, result);
                     if (cmp.getBoolean()) {
@@ -246,7 +248,7 @@ public final class FoxGlynn {
             lt.apply(cmp, result, tau);
             if (cmp.getBoolean()) {
                 ValueReal log10_result = typeReal.newValue();
-                log10_result.multiply(result, log10_e);
+                multiply.apply(log10_result, result, log10_e);
                 floor.apply(log10_result, log10_result);
                 ValueReal exprRL10 = typeReal.newValue();
                 divide.apply(exprRL10, log10_result, log10_e);
@@ -257,13 +259,13 @@ public final class FoxGlynn {
             if (m >= 400) {
                 i = right - m;
                 ValueReal ii = UtilValue.newValue(typeReal, i * (i + 1));
-                result.multiply(two, lambda);
+                multiply.apply(result, two, lambda);
                 divide.apply(result, ii, result);
                 subtract.apply(result, log_c_m_inf, result);
                 lt.apply(cmp, result, tau);
                 if (cmp.getBoolean()) {
                     ValueReal log10_result = typeReal.newValue();
-                    log10_result.multiply(result, log10_e);
+                    multiply.apply(log10_result, result, log10_e);
                     floor.apply(log10_result, log10_result);
                     ValueReal exprRL10 = typeReal.newValue();
                     divide.apply(exprRL10, log10_result, log10_e);
@@ -287,12 +289,13 @@ public final class FoxGlynn {
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int j = m - left; j > 0; j--) {
             leftSide.set(j+left);
             values.get(oldEntry, j);
             divide.apply(entry, leftSide, lambda);
-            entry.multiply(entry, oldEntry);
+            multiply.apply(entry, entry, oldEntry);
             values.set(entry, j - 1);
         }
 
@@ -314,7 +317,7 @@ public final class FoxGlynn {
                 divide.apply(tauDq, tau, q);
                 gt.apply(cmp, entry, tauDq);
                 if (cmp.getBoolean()) {
-                    entry.multiply(q, entry);
+                    multiply.apply(entry, q, entry);
                     values.set(entry,  j + 1);
                 } else {
                     t = j;
@@ -328,7 +331,7 @@ public final class FoxGlynn {
                 values.get(entry, j);
                 buff.set(j + 1 + left);
                 divide.apply(buff, lambda, buff);
-                entry.multiply(buff, entry);
+                multiply.apply(entry, buff, entry);
                 values.set(entry,  j + 1);
             }
         }

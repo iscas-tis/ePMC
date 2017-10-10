@@ -60,6 +60,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorIsZero;
+import epmc.value.operator.OperatorMultiply;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -172,6 +173,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private OperatorEvaluator isZero;
     private ValueBoolean cmp;
     private OperatorEvaluator add;
+    private OperatorEvaluator multiply;
 
     @Override
     public void setExplorer(ExplorerJANI explorer) {
@@ -214,6 +216,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         cmp = TypeBoolean.get().newValue();
         isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
         add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override
@@ -493,7 +496,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                         continue;
                     }
                     if (rate != null) {
-                        weightValue.multiply(rate, probability);
+                        multiply.apply(weightValue, rate, probability);
                         this.weight.set(numSuccessors, weightValue);
                     } else {
                         this.weight.set(numSuccessors, probability);
@@ -579,10 +582,10 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     continue;
                 }
                 if (rate != null) {
-                    weightValue.multiply(rate, probability);
-                    this.weight.set(numSuccessors, weightValue);
+                    multiply.apply(weightValue, rate, probability);
+                    weight.set(numSuccessors, weightValue);
                 } else {
-                    this.weight.set(numSuccessors, probability);
+                    weight.set(numSuccessors, probability);
                 }
                 add.apply(probabilitySum, probabilitySum, probability);
                 label.set(numSuccessors, 0);

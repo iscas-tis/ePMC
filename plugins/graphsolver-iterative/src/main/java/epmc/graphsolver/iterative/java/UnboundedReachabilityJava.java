@@ -69,6 +69,7 @@ import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -316,6 +317,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -326,7 +328,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
+                    multiply.apply(weighted, succStateProb, weight);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 presValues.get(presStateProb, state);
@@ -362,6 +364,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -373,7 +376,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     values.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
+                    multiply.apply(weighted, succStateProb, weight);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -413,6 +416,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -428,7 +432,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
@@ -476,6 +480,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         do {
             distance.set(TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -491,7 +496,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {

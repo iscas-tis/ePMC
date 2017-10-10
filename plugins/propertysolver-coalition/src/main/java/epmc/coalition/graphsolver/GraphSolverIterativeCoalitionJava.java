@@ -72,6 +72,7 @@ import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMultiply;
 
 /**
  * Iterative solver to solve game-related graph problems.
@@ -211,6 +212,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, typeWeight, typeWeight);
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, typeWeight, typeWeight);
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
             Player player = playerProp.getEnum(origNode);
             int iterState = builder.inputToOutputNode(origNode);
@@ -228,7 +230,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
                 for (int succ = 0; succ < numSucc; succ++) {
                     outputValues.get(get, origGraph.getSuccessorNode(origNode, succ));
-                    weighted.multiply(get, weightProp.get(origNode, succ));
+                    multiply.apply(weighted, get, weightProp.get(origNode, succ));
                     add.apply(val, val, weighted);
                 }
                 outputValues.set(val, origNode);
@@ -319,6 +321,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
@@ -336,7 +339,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weights.get(weighted, stateSucc);
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     max.apply(nextStateProb, nextStateProb, choiceNextStateProb);
@@ -357,7 +360,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     min.apply(nextStateProb, nextStateProb, choiceNextStateProb);
@@ -393,6 +396,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
         do {
@@ -410,7 +414,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     max.apply(nextStateProb, nextStateProb, choiceNextStateProb);
@@ -431,7 +435,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     min.apply(nextStateProb, nextStateProb, choiceNextStateProb);

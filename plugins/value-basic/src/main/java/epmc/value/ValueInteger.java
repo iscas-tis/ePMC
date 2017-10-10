@@ -101,16 +101,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public void multiply(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        assert ValueInteger.isInteger(op1) : op1 + SPACE + op1.getType();
-        assert ValueInteger.isInteger(op2) : op2 + SPACE + op2.getType();
-        set(ValueInteger.asInteger(op1).getInt() * ValueInteger.asInteger(op2).getInt());
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert !isImmutable();
         assert reader != null;

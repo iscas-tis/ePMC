@@ -125,6 +125,7 @@ public final class ContextValue {
         operatorEvaluators.add(evaluator);
     }
 
+    // TODO get rid of this method
     public List<OperatorEvaluator> getOperatorEvaluators() {
         return operatorEvaluatorsExternal;
     }

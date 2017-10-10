@@ -58,6 +58,7 @@ import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -154,11 +155,12 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
             this.lambda = TypeReal.get().newValue();
             GraphSolverObjectiveExplicitBoundedReachability objectiveBounded = (GraphSolverObjectiveExplicitBoundedReachability) objective;
             Value time = objectiveBounded.getTime();
-            this.lambda.multiply(time, unifRate);        	
+            multiply.apply(this.lambda, time, unifRate);
         }
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitBoundedReachability) {
@@ -281,18 +283,19 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra nextStateProb = newValueWeight();
         Value zero = TypeReal.get().getZero();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int i = foxGlynn.getRight() - foxGlynn.getLeft(); i >= 0; i--) {
             fg.get(fgWeight, i);
             for (int state = 0; state < numStates; state++) {
                 values.get(value, state);
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
-                nextStateProb.multiply(fgWeight, value);
+                multiply.apply(nextStateProb, fgWeight, value);
                 for (int succ = from; succ < to; succ++) {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(weight, succStateProb);
+                    multiply.apply(weighted, weight, succStateProb);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 nextValues.set(nextStateProb, state);
@@ -310,7 +313,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
+                    multiply.apply(weighted, succStateProb, weight);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 nextValues.set(nextStateProb, state);
@@ -337,6 +340,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra zero = values.getType().getEntryType().getZero();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -346,7 +350,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
+                    multiply.apply(weighted, succStateProb, weight);
                     add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 nextValues.set(nextStateProb, state);
@@ -380,6 +384,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
@@ -394,7 +399,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
+                        multiply.apply(weighted, weight, succStateProb);
                         add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {

@@ -78,6 +78,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorIsPosInf;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO check whether this works for JANI MDPs - probably not
 
@@ -254,6 +255,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         ValueAlgebra weighted = newValueWeightTransition();
         int numNodes = graph.getNumNodes();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
         for (int graphNode = 0; graphNode < numNodes; graphNode++) {
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 continue;
@@ -265,7 +267,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 Value succWeight = weight.get(graphNode, succNr);
                 ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
-                weighted.multiply(succWeight, transRew);
+                multiply.apply(weighted, succWeight, transRew);
                 add.apply(acc, acc, weighted);
             }
             cumulRewards.set(acc, graphNode);

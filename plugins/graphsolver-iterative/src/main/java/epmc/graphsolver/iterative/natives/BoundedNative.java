@@ -39,6 +39,8 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.options.Options;
 import epmc.util.ProblemsUtil;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeReal;
@@ -51,6 +53,7 @@ import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
+import epmc.value.operator.OperatorMultiply;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -127,14 +130,15 @@ public final class BoundedNative implements GraphSolverExplicit {
         this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
         Value unifRate = newValueWeight();
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
-            this.lambda = TypeReal.get().newValue();
+            lambda = TypeReal.get().newValue();
             GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
             Value time = objectiveBounded.getTime();
-            this.lambda.multiply(time, unifRate);
+            multiply.apply(lambda, time, unifRate);
         }
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
             GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;

@@ -77,6 +77,7 @@ import epmc.value.ValueReal;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorIsZero;
+import epmc.value.operator.OperatorMultiply;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSubtract;
 
@@ -219,12 +220,13 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ValueAlgebra rightValue = timeBound.getRightValue();
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (timeBound.isRightBounded()) {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 Value unifRate = converter.getUnifRate();
                 ValueReal rate = TypeReal.get().newValue();
                 subtract.apply(rate, rightValue, leftValue);
-                rate.multiply(rate, unifRate);
+                multiply.apply(rate, rate, unifRate);
                 GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();
                 objective.setGraph(graph);
                 objective.setMin(min);
@@ -307,7 +309,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 ValueReal rate = TypeReal.get().newValue();
                 Value unifRate = converter.getUnifRate();
-                rate.multiply(timeBound.getLeftValue(), unifRate);
+                multiply.apply(rate, timeBound.getLeftValue(), unifRate);
                 GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
                 objective.setGraph(graph);
                 objective.setMin(min);
