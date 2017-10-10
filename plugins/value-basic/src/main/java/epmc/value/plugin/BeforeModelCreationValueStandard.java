@@ -44,6 +44,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorDivideInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqArrayDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqBoolean;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorEqEnum;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorExpDouble;
@@ -174,6 +175,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntInt.IDENTIFIER);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetBooleanBoolean.IDENTIFIER);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntervalInterval.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqEnum.INSTANCE);
     }
 
     private static void addTypes() {

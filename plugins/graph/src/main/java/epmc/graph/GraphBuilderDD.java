@@ -110,6 +110,9 @@ public final class GraphBuilderDD implements Closeable {
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet, boolean stateEncoding) {
         assert graphDD != null;
         assert assertSinks(sinks, graphDD);
+        isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, TypeInteger.get());
+        cmp = TypeBoolean.get().newValue();
+
         this.presVars = UtilBitSet.newBitSetUnbounded();
         this.nextVars = UtilBitSet.newBitSetUnbounded();
         this.nondet = nondet;
@@ -206,8 +209,6 @@ public final class GraphBuilderDD implements Closeable {
             numNodesComputed += offset;
         }
         numNodesInclNondet = numNodesComputed;
-        isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, presNodes.getType());
-        cmp = TypeBoolean.get().newValue();
     }
 
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet) {
@@ -304,6 +305,9 @@ public final class GraphBuilderDD implements Closeable {
         int result;
         if (support.isLeaf()) {
             assert dd.isLeaf();
+            if (isOne == null) {
+                System.out.println(" ===> " + dd.value().getType());
+            }
             isOne.apply(cmp, dd.value());
             if (cmp.getBoolean()) {
                 result = 1;
@@ -477,7 +481,7 @@ public final class GraphBuilderDD implements Closeable {
                 states.set(states.length());
             }
         }
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, sum.getType());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, sum.getType(), sum.getType());
         if (uniformise) {
             unifRate.set(zero);
             for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
