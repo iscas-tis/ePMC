@@ -28,7 +28,6 @@ import java.util.Set;
 import epmc.jani.model.Location;
 import epmc.jani.model.Locations;
 import epmc.value.ContextValue;
-import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeArrayGeneric;
 import epmc.value.TypeEnumerable;
