@@ -56,12 +56,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
         valueTrue.setImmutable();
     }
 
-    @Override
-    public boolean canImport(Type a) {
-        assert a != null;
-        return TypeBoolean.isBoolean(a);
-    }
-
     public ValueBoolean getFalse() {
         return valueFalse;
     }
@@ -109,10 +103,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
             return false;
         }
         return true;

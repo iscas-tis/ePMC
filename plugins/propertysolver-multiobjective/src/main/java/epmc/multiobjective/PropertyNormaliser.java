@@ -80,7 +80,6 @@ final class PropertyNormaliser {
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
         assert subtractNumericalFrom != null;
-        assert subtractNumericalFrom.getType().canImport(TypeWeight.get());
         subtractNumericalFrom.set(TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
         List<Expression> newQuantifiersQualitative = new ArrayList<>();

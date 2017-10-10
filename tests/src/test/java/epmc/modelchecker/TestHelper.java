@@ -346,11 +346,6 @@ public final class TestHelper {
         if (message == null) {
             message = prepareMessage(expected, actual, tolerance);
         }
-        if (!expected.getType().canImport(actual.getType()) && !actual.getType().canImport(expected.getType())) {
-            assertTrue("types of expected value \"" + expected + "\" and "
-                    + " actual value \""+ actual + "\" are incompatible",
-                    false);
-        }
         OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, expected.getType(), actual.getType());
         OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         Value distanceValue = TypeReal.get().newValue();

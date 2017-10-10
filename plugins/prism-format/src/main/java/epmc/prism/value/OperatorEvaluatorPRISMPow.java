@@ -75,7 +75,6 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
     @Override
     public void apply(Value result, Value... operands) {
         if (ValueInteger.isInteger(result)) {
-            ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
             int value1 = ValueInteger.asInteger(operands[0]).getInt();
             int value2 = ValueInteger.asInteger(operands[1]).getInt();
             ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));

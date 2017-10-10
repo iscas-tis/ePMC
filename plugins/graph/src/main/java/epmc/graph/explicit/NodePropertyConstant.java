@@ -67,7 +67,6 @@ public final class NodePropertyConstant implements NodeProperty {
     @Override
     public void set(int node, Value value) {
         assert value != null;
-        assert this.value.getType().canImport(value.getType());
         this.value.set(value);
     }
 

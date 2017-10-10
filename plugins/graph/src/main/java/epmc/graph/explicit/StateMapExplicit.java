@@ -103,7 +103,6 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     public void getExplicitIthValue(Value value, int i) {
         assert !closed();
         assert value != null;
-        assert value.getType().canImport(getType()) : value.getType() + " " + getType();
         assert i >= 0;
         assert i < valuesExplicit.size();
         valuesExplicit.get(value, i);
@@ -245,7 +244,6 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     public void setExplicitIthValue(Value value, int i) {
         assert !closed();
         assert value != null;
-        assert value.getType().canImport(getType());
         assert i >= 0;
         assert i < valuesExplicit.size();
         valuesExplicit.set(value, i);

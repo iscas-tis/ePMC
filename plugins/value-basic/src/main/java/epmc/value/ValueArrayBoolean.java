@@ -26,6 +26,7 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 final class ValueArrayBoolean implements ValueArray {
+    private final static String SPACE = " ";
     private static final int LOG2LONGSIZE = 6;
     private final TypeArrayBoolean type;
     private long[] content;
@@ -72,30 +73,10 @@ final class ValueArrayBoolean implements ValueArray {
         assert value != null;
         assert ValueBoolean.isBoolean(value);
         assert index >= 0;
-        assert index < size() : index + " " + size();
+        assert index < size() : index + SPACE + size();
         int offset = index >> 6;
         ValueBoolean.asBoolean(value).set((content[offset] & (1L << index)) != 0);
     }    
-
-    public int nextSetBit(int index) {
-        assert index >= 0;
-        assert index < size();
-        int offset = index >> LOG2LONGSIZE;
-        long mask = 1L << index;
-        while (offset < content.length) {
-            long currentWord = content[offset];
-            do {
-                if ((currentWord & mask) != 0) {
-                    return index;
-                }
-                mask <<= 1;
-                index++;
-            } while (mask != 0);
-            mask = 1L;
-            offset++;
-        }
-        return -1;
-    }
 
     @Override
     public int hashCode() {

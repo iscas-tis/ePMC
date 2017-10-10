@@ -65,7 +65,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
     public void set(Value value, int index) {
         assert value != null;
         assert ValueObject.isObject(value);
-        assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
         assert index < size();
         int number = objectToNumber(ValueObject.asObject(value).getObject());
@@ -84,7 +83,6 @@ final class ValueArrayObjectNumerated implements ValueArray {
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
         assert index < size();
         int number = 0;

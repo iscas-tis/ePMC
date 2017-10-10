@@ -65,16 +65,6 @@ public interface TypeArray extends Type {
     ValueArray newValue();
 
     @Override
-    default boolean canImport(Type type) {
-        assert type != null;
-        if (TypeArray.isArray(type)) {
-            TypeArray other = asArray(type);
-            return getEntryType().canImport(other.getEntryType());
-        }
-        return false;
-    }
-
-    @Override
     boolean equals(Object obj);
 
     @Override

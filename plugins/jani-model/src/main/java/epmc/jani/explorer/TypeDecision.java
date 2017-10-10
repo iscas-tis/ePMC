@@ -54,19 +54,6 @@ public final class TypeDecision implements Type {
     }
 
     @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (!(type instanceof TypeDecision)) {
-            return false;
-        }
-        TypeDecision other = (TypeDecision) type;
-        if (explorer != other.explorer) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public TypeArray getTypeArray() {
         return new TypeArrayJANIDecisionType(this);
     }

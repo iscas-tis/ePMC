@@ -185,7 +185,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
 
     @Override
     public void setValueNumber(int number) {
-        assert getType().canImport(getType()) : value;
         assert number >= 0 : number;
         assert number < TypeTernary.NUM_VALUES : number;
         switch (number) {

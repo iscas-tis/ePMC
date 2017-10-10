@@ -35,13 +35,6 @@ final class ValueArrayEnum implements ValueArray {
         this.content = new long[0];
     }
 
-    @Override
-    public ValueArrayEnum clone() {
-        ValueArrayEnum other = new ValueArrayEnum(getType());
-        other.set(this);
-        return other;
-    }
-
     private int getBitsPerEntry() {
         return getType().getEntryType().getNumBits();
     }
