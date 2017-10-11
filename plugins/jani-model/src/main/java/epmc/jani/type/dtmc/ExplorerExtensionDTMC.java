@@ -42,6 +42,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorSet;
 
 public final class ExplorerExtensionDTMC implements ExplorerExtension {
     public final static String IDENTIFIER = "dtmc";
@@ -57,6 +58,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
     private OperatorEvaluator divide;
     private OperatorEvaluator eq;
     private OperatorEvaluator add;
+    private OperatorEvaluator set;
     private ValueBoolean cmp;
     
     @Override
@@ -82,6 +84,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
         eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
         add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeightTransition.get(), TypeWeightTransition.get());
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -119,7 +122,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
     @Override
     public void afterQuerySystem(NodeJANI node) {
         int numSuccessors = explorer.getNumSuccessors();
-        dtmcSum.set(zero);
+        set.apply(dtmcSum, zero);
         for (int succ = 0; succ < numSuccessors; succ++) {
             add.apply(dtmcSum, dtmcSum, systemWeight.get(succ));
         }
