@@ -318,8 +318,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands)
-    {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         Pointer op1Ptr = operands.length >= 1 ? new Pointer(operands[0]) : null;
