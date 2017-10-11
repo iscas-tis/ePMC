@@ -79,6 +79,7 @@ import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorIsPosInf;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 // TODO check whether this works for JANI MDPs - probably not
 
@@ -251,11 +252,12 @@ public final class PropertySolverExplicitReward implements PropertySolver {
 
     private ValueArrayAlgebra buildCumulativeRewardsMC(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) {
         ValueArrayAlgebra cumulRewards = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.computeNumStates());
-        ValueAlgebra acc = newValueWeightTransition();
-        ValueAlgebra weighted = newValueWeightTransition();
+        ValueAlgebra acc = TypeWeight.get().newValue();
+        ValueAlgebra weighted = TypeWeight.get().newValue();
         int numNodes = graph.getNumNodes();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
+        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int graphNode = 0; graphNode < numNodes; graphNode++) {
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 continue;
@@ -263,7 +265,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             int numSuccessors = graph.getNumSuccessors(graphNode);
             Value nodeRew = stateReward.get(graphNode);
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-            acc.set(nodeRew);
+            set.apply(acc, nodeRew);
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 Value succWeight = weight.get(graphNode, succNr);
                 ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
@@ -278,12 +280,13 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     private ValueArrayAlgebra buildCumulativeRewardsMDP(List<BitSet> sinks, BitSet reachSink, BitSet reachNotOneSink, NodeProperty stateReward, EdgeProperty transReward) {
         int numNondet = graph.getNumNodes() - graph.computeNumStates();
         ValueArrayAlgebra cumulRewards = UtilValue.newArray(TypeWeight.get().getTypeArray(), numNondet);
-        ValueAlgebra acc = newValueWeightTransition();
+        ValueAlgebra acc = TypeWeight.get().newValue();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         int cumulRewIdx = 0;
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
         RewardType rewardType = quantifiedReward.getRewardType();
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         if (rewardType.isReachability()) {
             cumulRewIdx = sinks.size();
         }
@@ -297,7 +300,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             Player player = playerProp.getEnum(graphNode);
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                acc.set(nodeRew);                        
+                set.apply(acc, nodeRew);
                 Value succWeight = weight.get(graphNode, succNr);
                 ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
                 if (player == Player.STOCHASTIC) {

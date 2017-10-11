@@ -43,6 +43,7 @@ import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorGe;
+import epmc.value.operator.OperatorSet;
 
 /**
  * Evaluator for edge destinations.
@@ -140,6 +141,7 @@ public final class DestinationEvaluator {
     private final OperatorEvaluator ge;
     private final ValueBoolean cmp = TypeBoolean.get().newValue();
     private final ValueAlgebra probabilityV = TypeWeightTransition.get().newValue();
+    private final OperatorEvaluator setProbability;
 
     private DestinationEvaluator(Builder builder) {
         assert builder != null;
@@ -169,13 +171,14 @@ public final class DestinationEvaluator {
                 .build();
         zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
         ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        setProbability = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, probability.getResultValue().getType(), TypeWeightTransition.get());
     }
 
     ValueAlgebra evaluateProbability(NodeJANI node) {
         ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
         ge.apply(cmp, result, zeroWeight);
         ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
-        probabilityV.set(result);
+        setProbability.apply(probabilityV, result);
         /* make sure that we return values of correct type to avoid problems 
          * with operator evaluators. */
         return probabilityV;

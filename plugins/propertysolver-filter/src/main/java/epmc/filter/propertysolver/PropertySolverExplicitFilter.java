@@ -54,6 +54,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.TypeNumber;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -69,6 +70,7 @@ import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorOr;
+import epmc.value.operator.OperatorSet;
 
 // TODO complete documentation
 
@@ -312,8 +314,9 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             return UtilValue.clone(TypeBoolean.get().getTrue());
         case RANGE:
             ValueInterval result = TypeInterval.get().newValue();
-            result.getIntervalLower().set(value);
-            result.getIntervalUpper().set(value);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+            set.apply(result.getIntervalLower(), value);
+            set.apply(result.getIntervalUpper(), value);
             return result;
         case AVG:
             return TypeWeight.get().getZero();

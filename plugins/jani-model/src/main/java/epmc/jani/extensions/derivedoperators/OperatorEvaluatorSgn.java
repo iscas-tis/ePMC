@@ -34,6 +34,7 @@ import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
+import epmc.value.operator.OperatorSet;
 
 public enum OperatorEvaluatorSgn implements OperatorEvaluator {
     INSTANCE;
@@ -80,13 +81,14 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, operands[0].getType(), zero.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, operands[0], zero);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, zero.getType(), result.getType());
         if (cmp.getBoolean()) {
-            result.set(zero);
+            set.apply(result, zero);
             return;
         }
         lt.apply(cmp, operands[0], zero);
         if (cmp.getBoolean()) {
-            result.set(one);
+            set.apply(result, one);
             return;
         }
         gt.apply(cmp, operands[0], zero);

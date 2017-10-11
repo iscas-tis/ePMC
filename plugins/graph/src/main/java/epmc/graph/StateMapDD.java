@@ -28,7 +28,9 @@ import epmc.dd.DD;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
+import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
@@ -43,6 +45,7 @@ import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorId;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
+import epmc.value.operator.OperatorSet;
 
 public final class StateMapDD implements StateMap, Closeable, Cloneable {
     private final StateSetDD states;
@@ -180,8 +183,9 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        ValueInterval.asInterval(range).getIntervalLower().set(min);
-        ValueInterval.asInterval(range).getIntervalUpper().set(max);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        set.apply(ValueInterval.asInterval(range).getIntervalLower(), min);
+        set.apply(ValueInterval.asInterval(range).getIntervalUpper(), max);
     }
 
     private boolean isAllTrue(StateSet of) {
@@ -192,7 +196,8 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     @Override
     public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
-        to.set(result);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, result.getType(), to.getType());
+        set.apply(to, result);
     }
 
     @Override

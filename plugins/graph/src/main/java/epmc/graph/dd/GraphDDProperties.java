@@ -28,9 +28,12 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorSet;
 
 public final class GraphDDProperties implements Closeable {
     private final Map<Object,Value> graphProperties = new LinkedHashMap<>();
@@ -64,12 +67,12 @@ public final class GraphDDProperties implements Closeable {
         graphProperties.put(propertyName, type.newValue());
     }
 
-    public final void setGraphProperty(Object property, Value value)
-    {
+    public final void setGraphProperty(Object property, Value value) {
         assert property != null;
         assert value != null;
-        assert graphProperties.containsKey(property);        
-        graphProperties.get(property).set(value);
+        assert graphProperties.containsKey(property);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(property).getType());
+        set.apply(graphProperties.get(property), value);
     }
 
 

@@ -73,6 +73,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
@@ -191,7 +192,8 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         allNodes.set(0, graph.getNumNodes(), true);
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         ValueAlgebra transValue = typeWeight.newValue();
-        transValue.set(transValue.getType().getZero());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, typeWeight, typeWeight);
+        set.apply(transValue, typeWeight.getZero());
 
         BitSet zeroSet = UtilBitSet.newBitSetUnbounded();
         BitSet oneSet = UtilBitSet.newBitSetUnbounded();

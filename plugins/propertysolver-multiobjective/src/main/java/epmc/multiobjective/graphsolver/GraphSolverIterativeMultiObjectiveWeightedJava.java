@@ -57,6 +57,7 @@ import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
@@ -244,19 +245,22 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, values.getType(), values.getType());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(stopReward, state);
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                setWeight.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     transRewards.get(transReward, nondetNr);
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(transReward);
+                    setWeight.apply(choiceNextStateProb, transReward);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
@@ -266,7 +270,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                     }
                     gt.apply(cmp, choiceNextStateProb, nextStateProb);
                     if (cmp.getBoolean()) {
-                        nextStateProb.set(choiceNextStateProb);
+                        setWeight.apply(nextStateProb, choiceNextStateProb);
                         gt.apply(cmp, nextStateProb, presStateProb);
                         if (cmp.getBoolean()) {
                             schedulerJava[state] = nondetNr;
@@ -275,7 +279,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                 }
                 gt.apply(cmp, stopReward, nextStateProb);
                 if (cmp.getBoolean()) {
-                    nextStateProb.set(stopReward);
+                    setWeight.apply(nextStateProb, stopReward);
                     gt.apply(cmp, nextStateProb, presStateProb);
                     if (cmp.getBoolean()) {
                         schedulerJava[state] = -1;
@@ -290,7 +294,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
-        values.set(presValues);
+        setArray.apply(values, presValues);
         numIterationsResult[0] = iterations;
     }
 
@@ -331,19 +335,21 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(objWeight, state);
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                setWeight.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     transRewards.get(transReward, nondetNr);
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(transReward);
+                    setWeight.apply(choiceNextStateProb, transReward);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
@@ -353,7 +359,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                     }
                     gt.apply(cmp, choiceNextStateProb, nextStateProb);
                     if (cmp.getBoolean()) {
-                        nextStateProb.set(choiceNextStateProb);
+                        setWeight.apply(nextStateProb, choiceNextStateProb);
                         gt.apply(cmp, nextStateProb, presStateProb);
                         if (cmp.getBoolean()) {
                             schedulerJava[state] = nondetNr;
@@ -362,7 +368,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
                 }
                 gt.apply(cmp, objWeight, nextStateProb);
                 if (cmp.getBoolean()) {
-                    nextStateProb.set(objWeight);
+                    setWeight.apply(nextStateProb, objWeight);
                     gt.apply(cmp, nextStateProb, presStateProb);
                     if (cmp.getBoolean()) {
                         schedulerJava[state] = -1;

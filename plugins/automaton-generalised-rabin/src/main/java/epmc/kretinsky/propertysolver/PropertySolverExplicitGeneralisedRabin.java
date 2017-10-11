@@ -35,6 +35,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -267,8 +268,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         return accepting;
     }
 
-    private Value prepareAndIterate(GraphExplicit graph, BitSet acc)
-    {
+    private Value prepareAndIterate(GraphExplicit graph, BitSet acc) {
         log.send(MessagesEPMC.PREPARING_MDP_FOR_ITERATION);
         BitSet test = (BitSet) graph.getInitialNodes().clone();
         test.andNot(acc);
