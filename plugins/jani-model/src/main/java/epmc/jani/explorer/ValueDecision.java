@@ -12,6 +12,18 @@ public final class ValueDecision implements Value, ValueSetString {
     private final int[] variables;
     private final Value[] values;
 
+    public static boolean isDecision(Value value) {
+        return value instanceof ValueDecision;
+    }
+    
+    public static ValueDecision asDecision(Value value) {
+        if (isDecision(value)) {
+            return (ValueDecision) value;
+        } else {
+            return null;
+        }
+    }
+    
     ValueDecision(TypeDecision type) {
         assert type != null;
         this.type = type;

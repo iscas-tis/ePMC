@@ -28,6 +28,7 @@ import java.util.Set;
 import epmc.jani.model.Location;
 import epmc.jani.model.Locations;
 import epmc.value.ContextValue;
+import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeArrayGeneric;
 import epmc.value.TypeEnumerable;
@@ -49,6 +50,18 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
         return ContextValue.get().makeUnique(type);
     }
 
+    public static boolean isLocation(Type type) {
+        return type instanceof TypeLocation;
+    }
+    
+    public static TypeLocation asLocation(Type type) {
+        if (isLocation(type)) {
+            return (TypeLocation) type;
+        } else {
+            return null;
+        }
+    }
+    
     /** String used for the {@link #toString()} method. */
     private final static String LOCATION = "location";
 

@@ -8,15 +8,25 @@ import epmc.value.TypeArray;
 import epmc.value.TypeNumBitsKnown;
 
 public final class TypeDecision implements Type {
-    private final ExplorerJANI explorer;
     private final int[] variables;
     private final int[] numBits;
     private final Type[] types;
     private final int totalNumBits;
 
+    public final static boolean isDecision(Type type) {
+        return type instanceof TypeDecision;
+    }
+    
+    public final static TypeDecision asDecision(Type type) {
+        if (isDecision(type)) {
+            return (TypeDecision) type;
+        } else {
+            return null;
+        }
+    }
+    
     TypeDecision(ExplorerJANI explorer) {
         assert explorer != null;
-        this.explorer = explorer;
         StateVariables stateVariables = explorer.getStateVariables();
         List<Integer> usedVariableNumbers = new ArrayList<>();
         List<Integer> numBitsList = new ArrayList<>();
