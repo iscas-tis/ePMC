@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetObjectObject implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueObject.asObject(result).set(ValueObject.asObject(operands[0]).getObject());
+        ValueObject.asObject(result).set((Object) ValueObject.asObject(operands[0]).getObject());
     }
 }
