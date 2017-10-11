@@ -115,7 +115,6 @@ public interface EdgeProperty  {
      * Set string value for edge of node queried last.
      * The requirements and effects are as for {@link #set(Value, int)}, except
      * that the value parameter is a {@link String} and not a {@link Value}.
-     * The value will be set using the {@link Value#set(String)}.
      * Note that the default implementation of this method is not tuned for
      * efficiency as it creates a new object in each call, and thus should only
      * be used if speed is not crucial.

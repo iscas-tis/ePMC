@@ -30,6 +30,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 
 public final class GraphExplicitModifier {    
@@ -42,15 +43,16 @@ public final class GraphExplicitModifier {
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
-                sum.set(zero);
+                set.apply(sum, zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                     add.apply(sum, sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
-                    weight.set(weightProp.get(node, succNr));
+                    set.apply(weight, weightProp.get(node, succNr));
                     divide.apply(weight, weight, sum);
                     weightProp.set(node, succNr, weight);
                 }
@@ -62,7 +64,8 @@ public final class GraphExplicitModifier {
         assert graph != null;
         Value uniformisationRate = computeUniformisationRate(graph);
         if (uniRate != null) {
-            uniRate.set(uniformisationRate);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
+            set.apply(uniRate, uniformisationRate);
         }
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();

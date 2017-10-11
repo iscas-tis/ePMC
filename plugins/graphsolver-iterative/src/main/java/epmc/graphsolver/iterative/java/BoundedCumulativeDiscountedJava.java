@@ -52,6 +52,7 @@ import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -248,6 +249,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         ValueAlgebra presStateProb = newValueWeight();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, values.getType(), values.getType());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -268,7 +270,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
             presValues = nextValues;
             nextValues = swap;
         }
-        values.set(presValues);
+        setArray.apply(values, presValues);
     }
 
     private void mdpBoundedCumulativeDiscountedJava(int bound,
