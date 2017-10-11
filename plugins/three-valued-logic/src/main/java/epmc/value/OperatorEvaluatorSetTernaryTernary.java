@@ -1,15 +1,13 @@
-package epmc.value.operatorevaluator;
+package epmc.value;
 
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeDouble;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
-    INSTANCE;
+public enum OperatorEvaluatorSetTernaryTernary implements OperatorEvaluator {
+    IDENTIFIER,;
 
     @Override
     public Operator getOperator() {
@@ -20,10 +18,10 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDouble.isDouble(types[0])) {
+        if (!TypeTernary.isTernary(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1])) {
+        if (!TypeTernary.isTernary(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +37,8 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueDouble.asDouble(result).set(ValueDouble.asDouble(operands[0]).getDouble());
+        ValueTernary resultTernary = ValueTernary.asTernary(result);
+        ValueTernary operandBoolean = ValueTernary.asTernary(operands[0]);
+        resultTernary.set(operandBoolean.getTernary());
     }
 }

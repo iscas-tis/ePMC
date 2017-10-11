@@ -9,7 +9,7 @@ import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorSet;
 
 public enum OperatorEvaluatorSetIntInt implements OperatorEvaluator {
-    IDENTIFIER,;
+    INSTANCE,;
 
     @Override
     public Operator getOperator() {

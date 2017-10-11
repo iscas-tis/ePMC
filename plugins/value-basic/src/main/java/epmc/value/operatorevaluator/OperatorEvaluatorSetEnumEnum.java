@@ -3,13 +3,13 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeDouble;
+import epmc.value.TypeEnum;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
+import epmc.value.ValueEnum;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
-    INSTANCE;
+public enum OperatorEvaluatorSetEnumEnum implements OperatorEvaluator {
+    IDENTIFIER;
 
     @Override
     public Operator getOperator() {
@@ -20,10 +20,10 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDouble.isDouble(types[0])) {
+        if (!TypeEnum.isEnum(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1])) {
+        if (!TypeEnum.isEnum(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueDouble.asDouble(result).set(ValueDouble.asDouble(operands[0]).getDouble());
+        ValueEnum.asEnum(result).set((Enum<?>) ValueEnum.asEnum(operands[0]).getEnum());
     }
 }

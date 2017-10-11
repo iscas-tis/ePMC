@@ -3,12 +3,12 @@ package epmc.value.operatorevaluator;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeDouble;
+import epmc.value.TypeObject;
 import epmc.value.Value;
-import epmc.value.ValueDouble;
+import epmc.value.ValueObject;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
+public enum OperatorEvaluatorSetObjectObject implements OperatorEvaluator {
     INSTANCE;
 
     @Override
@@ -20,10 +20,10 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDouble.isDouble(types[0])) {
+        if (!TypeObject.isObject(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1])) {
+        if (!TypeObject.isObject(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueDouble.asDouble(result).set(ValueDouble.asDouble(operands[0]).getDouble());
+        ValueObject.asObject(result).set(ValueObject.asObject(operands[0]).getObject());
     }
 }

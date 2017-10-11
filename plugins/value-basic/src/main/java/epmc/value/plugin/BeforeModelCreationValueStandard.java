@@ -86,10 +86,14 @@ import epmc.value.operatorevaluator.OperatorEvaluatorNot;
 import epmc.value.operatorevaluator.OperatorEvaluatorOr;
 import epmc.value.operatorevaluator.OperatorEvaluatorPowDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetAlgebraInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetArrayArray;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetBooleanBoolean;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetDoubleDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetEnumEnum;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetIntInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetIntervalInterval;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetIntervalReal;
+import epmc.value.operatorevaluator.OperatorEvaluatorSetObjectObject;
 import epmc.value.operatorevaluator.OperatorEvaluatorSqrtDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInt;
@@ -170,11 +174,15 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsOneInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorIsZeroInterval.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorMultiplyInterval.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetAlgebraInt.IDENTIFIER);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetDoubleDouble.IDENTIFIER);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntInt.IDENTIFIER);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetBooleanBoolean.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetAlgebraInt.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetDoubleDouble.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntInt.INSTANCE);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetBooleanBoolean.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntervalInterval.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetIntervalReal.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetArrayArray.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetEnumEnum.IDENTIFIER);
+        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetObjectObject.INSTANCE);
         ContextValue.get().addOperatorEvaluator(OperatorEvaluatorEqEnum.INSTANCE);
     }
 
