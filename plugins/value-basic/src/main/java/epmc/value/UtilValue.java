@@ -24,6 +24,7 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorSet;
 
 public final class UtilValue {
     private final static String LBRACK = "[";
@@ -85,24 +86,11 @@ public final class UtilValue {
                     TypeInteger.asInteger(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
-            boolean aCanB = true;
-            boolean bCanA = true;
-            Value av = a.newValue();
-            Value bv = b.newValue();
-            // TODO HACK
-            try {
-                av.set(bv);
-            } catch (Throwable e) {
-                aCanB = false;
-            }
-            try {
-                bv.set(av);                    
-            } catch (Throwable e) {
-                bCanA = false;
-            }
-            if (aCanB) {
+            OperatorEvaluator setAB = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, b, a);
+            OperatorEvaluator setBA = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, a, b);
+            if (setAB != null) {
                 upper = a;
-            } else if (bCanA) {
+            } else if (setBA != null) {
                 upper = b;
             } else {
                 upper = null;
@@ -118,7 +106,8 @@ public final class UtilValue {
         assert value != null;
         @SuppressWarnings(UNCHECKED)
         T clone = (T) value.getType().newValue();
-        clone.set(value);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        set.apply(clone, value);
         return clone;
     }
 
