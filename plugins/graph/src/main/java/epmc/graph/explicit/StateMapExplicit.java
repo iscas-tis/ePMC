@@ -39,6 +39,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorId;
@@ -289,7 +290,8 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        range.set(TypeInterval.get().newValue(min, max));
+        ValueInterval.asInterval(range).getIntervalLower().set(min);
+        ValueInterval.asInterval(range).getIntervalUpper().set(max);
     }
 
     private boolean isAllTrue(StateSet of) {

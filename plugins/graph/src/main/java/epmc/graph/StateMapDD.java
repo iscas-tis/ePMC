@@ -38,6 +38,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorId;
 import epmc.value.operator.OperatorMax;
@@ -179,7 +180,8 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        range.set(TypeInterval.get().newValue(min, max));
+        ValueInterval.asInterval(range).getIntervalLower().set(min);
+        ValueInterval.asInterval(range).getIntervalUpper().set(max);
     }
 
     private boolean isAllTrue(StateSet of) {
@@ -209,7 +211,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
                         ? TypeBoolean.get().getTrue()
                                 : TypeBoolean.get().getFalse();
             } else if (hasMinAndMaxElements(initialStates)) {
-                Value range = TypeInterval.get().newValue();
+                ValueInterval range = TypeInterval.get().newValue();
                 getRange(range, initialStates);
                 return range;
             } else {

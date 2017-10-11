@@ -48,6 +48,7 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 
@@ -233,7 +234,9 @@ public final class PropertySolverDDFilter implements PropertySolver {
             Value min = property.minOverSat(checkFor);
             Value max = property.maxOverSat(checkFor);
             checkFor.dispose();
-            Value interval = TypeInterval.get().newValue(min, max);
+            ValueInterval interval = TypeInterval.get().newValue();
+            interval.getIntervalLower().set(min);
+            interval.getIntervalUpper().set(max);
             result = getContextDD().newConstant(interval);
             break;
         }

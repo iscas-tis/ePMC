@@ -311,7 +311,10 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case FORALL:
             return UtilValue.clone(TypeBoolean.get().getTrue());
         case RANGE:
-            return TypeInterval.get().newValue(value, value);
+            ValueInterval result = TypeInterval.get().newValue();
+            result.getIntervalLower().set(value);
+            result.getIntervalUpper().set(value);
+            return result;
         case AVG:
             return TypeWeight.get().getZero();
         case SUM:
