@@ -65,17 +65,6 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
         return new ValueInterval(this);
     }
 
-    public ValueInterval newValue(Value lower, Value upper) {
-        assert lower != null;
-        assert upper != null;
-        assert ValueReal.isReal(lower) || ValueInteger.isInteger(lower);
-        assert ValueReal.isReal(upper) || ValueInteger.isInteger(upper);
-        ValueInterval result = newValue();
-        result.getIntervalLower().set(lower);
-        result.getIntervalUpper().set(upper);
-        return result;
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
