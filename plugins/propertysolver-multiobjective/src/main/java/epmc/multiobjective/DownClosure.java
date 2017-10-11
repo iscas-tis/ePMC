@@ -46,6 +46,7 @@ import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorSet;
 
 final class DownClosure {
     private final static String SLACK_VARIABLE = "v";
@@ -84,7 +85,8 @@ final class DownClosure {
         assert outside != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra lowerBound = TypeWeight.get().newValue();
-        lowerBound.set(zero);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        set.apply(lowerBound, zero);
         ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
         if (unrestrictedResult == null) {
             return null;

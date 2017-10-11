@@ -28,9 +28,12 @@ import java.util.Set;
 
 import com.google.common.base.MoreObjects;
 
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
 
 // TODO integrate this class into explorer stuff
 
@@ -83,12 +86,12 @@ public final class ExplorerProperties implements Serializable {
         explorerProperties.put(propertyName, type.newValue());
     }
 
-    public void setExplorerProperty(Object property, Value value)
-    {
+    public void setExplorerProperty(Object property, Value value) {
         assert property != null;
         assert value != null;
         assert explorerProperties.containsKey(property);
-        getExplorerProperty(property).set(value);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), getExplorerProperty(property).getType());
+        set.apply(getExplorerProperty(property), value);
     }
 
 

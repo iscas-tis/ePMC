@@ -38,12 +38,15 @@ import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 
 /**
@@ -80,7 +83,8 @@ final class PropertyNormaliser {
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
         assert subtractNumericalFrom != null;
-        subtractNumericalFrom.set(TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        set.apply(subtractNumericalFrom, TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
         List<Expression> newQuantifiersQualitative = new ArrayList<>();
         Set<Expression> invert = new HashSet<>();
@@ -105,7 +109,7 @@ final class PropertyNormaliser {
                         .setCondition(objectiveQuantifier.getCondition())
                         .build();
                 newQuantifiersQuantitative.add(newQuantifier);
-                subtractNumericalFrom.set(subtractNumericalFrom.getType().getOne());
+                set.apply(subtractNumericalFrom, subtractNumericalFrom.getType().getOne());
             } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
                 newCompare = new ExpressionLiteral.Builder()
@@ -128,7 +132,8 @@ final class PropertyNormaliser {
                         .build();
                 invert.add(newQuantifier);
                 newQuantifiersQuantitative.add(newQuantifier);
-                subtractNumericalFrom.set(subtractNumericalFrom.getType().getZero());
+                set.apply(subtractNumericalFrom, TypeWeight.get().getZero());
+                set.apply(subtractNumericalFrom, TypeWeight.get().getZero());
             } else if (isQuantLe(objectiveQuantifier) && quantified instanceof ExpressionReward) {
                 Expression newCompare = new ExpressionOperator.Builder()
                         .setOperator(OperatorAddInverse.ADD_INVERSE)

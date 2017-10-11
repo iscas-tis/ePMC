@@ -55,6 +55,7 @@ import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java";
@@ -239,20 +240,23 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, values.getType(), values.getType());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(stopReward, state);
                 presValues.get(presStateProb, state);
-                nextStateProb.set(optInitValue);
+                setWeight.apply(nextStateProb, optInitValue);
                 int nondetNr = schedulerJava[state];
                 if (nondetNr == -1) {
-                    nextStateProb.set(stopReward);
+                    setWeight.apply(nextStateProb, stopReward);
                 } else {
                     transRewards.get(transReward, nondetNr);
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    nextStateProb.set(transReward);
+                    setWeight.apply(nextStateProb, transReward);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
@@ -271,7 +275,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
         numIterationsResult[0] = iterations;
-        values.set(presValues);
+        setArray.apply(values, presValues);
     }
 
     private void mdpMultiobjectivescheduledGaussseidelJava(
@@ -305,20 +309,22 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(stopReward, state);
                 values.get(presStateProb, state);
-                nextStateProb.set(optInitValue);
+                setWeight.apply(nextStateProb, optInitValue);
                 int nondetNr = schedulerJava[state];
                 if (nondetNr == -1) {
-                    nextStateProb.set(stopReward);
+                    setWeight.apply(nextStateProb, stopReward);
                 } else {
                     transRewards.get(transReward, nondetNr);
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    nextStateProb.set(transReward);
+                    setWeight.apply(nextStateProb, transReward);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];

@@ -67,6 +67,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
+import epmc.value.operator.OperatorSet;
 import gnu.trove.map.hash.THashMap;
 
 final class ProductBuilder {
@@ -241,14 +242,15 @@ final class ProductBuilder {
             ValueAlgebra transReward = newValueWeight();
             OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
             int numSucc = iterGraph.getNumSuccessors(iterState);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int obj = 0; obj < numAutomata; obj++) {
-                stateReward.set(zero);
+                set.apply(stateReward, zero);
                 NodeProperty stateRewardProp = stateRewards[obj];
-                stateReward.set(stateRewardProp.get(state));
+                set.apply(stateReward, stateRewardProp.get(state));
                 EdgeProperty edgeRewardProp = transRewards[obj];
                 for (int succNr = 0; succNr < numSucc; succNr++) {
                     // TODO HACK
-                    transReward.set(stateReward);
+                    set.apply(transReward, stateReward);
                     add.apply(transReward, transReward, edgeRewardProp.get(state, succNr));
                     int succ = prodWrapper.getSuccessorNode(state, succNr);
                     add.apply(transReward, transReward, edgeRewardProp.get(succ, 0));

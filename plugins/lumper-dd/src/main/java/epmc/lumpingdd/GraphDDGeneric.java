@@ -24,13 +24,17 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorSet;
 
 public final class GraphDDGeneric implements GraphDD {
 
@@ -64,7 +68,8 @@ public final class GraphDDGeneric implements GraphDD {
         }
 
         public Builder setGraphProperty(Object key, Value value) {
-            graphProperties.get(key).set(value);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(key).getType());
+            set.apply(graphProperties.get(key), value);
             return this;
         }
 

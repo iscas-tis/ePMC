@@ -46,6 +46,9 @@ public enum OperatorEvaluatorSetArrayArray implements OperatorEvaluator {
         assert operands != null;
         ValueArray resultArray = ValueArray.asArray(result);
         ValueArray operandArray = ValueArray.asArray(operands[0]);
+        if (resultArray == operandArray) {
+            return;
+        }
         OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operandArray.getType(), resultArray.getType());
         int size = operandArray.size();
         Value entryOperand = operandArray.getType().getEntryType().newValue();

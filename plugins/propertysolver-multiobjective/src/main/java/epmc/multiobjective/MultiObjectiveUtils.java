@@ -57,6 +57,7 @@ import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGt;
 import epmc.value.operator.OperatorLt;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
@@ -271,10 +272,11 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra max = newValueWeight();
         ValueAlgebra entryValue = newValueWeight();
-        Value weight = newValueWeight();
+        ValueAlgebra weight = newValueWeight();
         OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
@@ -287,14 +289,14 @@ final class MultiObjectiveUtils {
                         if (alreadySet) {
                             add.apply(entryValue, entryValue, weight);
                         } else {
-                            entryValue.set(weight);
+                            set.apply(entryValue, weight);
                             alreadySet = true;
                         }
                     }
                 }
                 gt.apply(cmp, entryValue, max);
                 if (cmp.getBoolean()) {
-                    max.set(entryValue);
+                    set.apply(max, entryValue);
                     choice[state] = entry;
                 }
             }

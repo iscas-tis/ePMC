@@ -51,6 +51,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorSet;
 
 /**
  * Solver for filter properties for the DD engine.
@@ -235,8 +236,9 @@ public final class PropertySolverDDFilter implements PropertySolver {
             Value max = property.maxOverSat(checkFor);
             checkFor.dispose();
             ValueInterval interval = TypeInterval.get().newValue();
-            interval.getIntervalLower().set(min);
-            interval.getIntervalUpper().set(max);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+            set.apply(interval.getIntervalLower(), min);
+            set.apply(interval.getIntervalUpper(), max);
             result = getContextDD().newConstant(interval);
             break;
         }

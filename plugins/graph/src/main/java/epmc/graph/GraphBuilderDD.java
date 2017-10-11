@@ -61,6 +61,7 @@ import epmc.value.operator.OperatorDivide;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorIsOne;
 import epmc.value.operator.OperatorMax;
+import epmc.value.operator.OperatorSet;
 import epmc.value.operator.OperatorSubtract;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.list.TIntList;
@@ -482,11 +483,12 @@ public final class GraphBuilderDD implements Closeable {
             }
         }
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, sum.getType(), sum.getType());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         if (uniformise) {
-            unifRate.set(zero);
+            set.apply(unifRate, zero);
             for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
                 List<Value> thisProbs = probs.get(nodeNr);
-                sum.set(zero);
+                set.apply(sum, zero);
                 for (Value value : thisProbs) {
                     add.apply(sum, sum, value);
                 }
@@ -499,7 +501,7 @@ public final class GraphBuilderDD implements Closeable {
         for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
             TIntList thisTargets = targets.get(nodeNr);
             List<Value> thisProbs = probs.get(nodeNr);
-            sum.set(zero);
+            set.apply(sum, zero);
             for (Value value : thisProbs) {
                 add.apply(sum, sum, value);
             }
@@ -512,12 +514,12 @@ public final class GraphBuilderDD implements Closeable {
             graph.prepareNode(nodeNr, numSuccessors);
             for (int succNr = 0; succNr < thisTargets.size(); succNr++) {
                 int succNode = thisTargets.get(succNr);
-                weight.set(zero);
+                set.apply(weight, zero);
                 eq.apply(cmp, sum, zero);
                 if (cmp.getBoolean()) {
-                    weight.set(zero);
+                    set.apply(weight, zero);
                 } else {
-                    weight.set(thisProbs.get(succNr));
+                    set.apply(weight, thisProbs.get(succNr));
                     if (uniformise) {
                         divide.apply(weight, weight, unifRate);
                     }
@@ -646,7 +648,8 @@ public final class GraphBuilderDD implements Closeable {
         assert !closed;
         Value entry = newValueWeight();
         ValueArray result = newValueArrayWeight(numNodes);
-        ddToValueArray(target.supportWalker(presCubeDD), result, entry);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, target.getType(), TypeWeight.get());
+        ddToValueArray(target.supportWalker(presCubeDD), result, entry, set);
         return result;
     }
 
@@ -655,21 +658,21 @@ public final class GraphBuilderDD implements Closeable {
         return UtilValue.newArray(typeArray, size);
     }
 
-    private void ddToValueArray(SupportWalker target, ValueArray array, Value entry)
-    {
+    private void ddToValueArray(SupportWalker target, ValueArray array, Value entry,
+            OperatorEvaluator set) {
         if (!isValidDDtoBitSet()) {
             return;
         }
         if (isLeafDDtoBitSet(target)) {
             int presNode = nodeNumber();
-            entry.set(target.value());
+            set.apply(entry, target.value());
             array.set(entry, presNode);
         } else {
             lowDDToBitSet(target);
-            ddToValueArray(target, array, entry);
+            ddToValueArray(target, array, entry, set);
             backDDToBitSet(target);
             highDDToBitSet(target);
-            ddToValueArray(target, array, entry);
+            ddToValueArray(target, array, entry, set);
             backDDToBitSet(target);
         }
     }
