@@ -295,12 +295,14 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                set.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
@@ -325,7 +327,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
             nextValues = presValues;
             presValues = swap;
         }
-        values.set(presValues);
+        setArray.apply(values, presValues);
     }
 
     private static ValueAlgebra newValueWeight() {

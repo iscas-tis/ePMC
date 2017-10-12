@@ -68,13 +68,8 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         double entry = content[index];
-        if (ValueDouble.isDouble(value)) {
-            assert ValueDouble.asDouble(value) != null : value;
-            ValueDouble.asDouble(value).set(entry);
-        } else {
-            this.entry.set(entry);
-            value.set(this.entry);
-        }
+        assert ValueDouble.isDouble(value);
+        ValueDouble.asDouble(value).set(entry);
     }
 
     @Override

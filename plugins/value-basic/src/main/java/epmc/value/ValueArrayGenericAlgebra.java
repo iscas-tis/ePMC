@@ -20,24 +20,20 @@
 
 package epmc.value;
 
-import epmc.value.Type;
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
 
 public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     private final static String SPACE = " ";
     private final TypeArrayGenericAlgebra type;
+    private final OperatorEvaluator set;
     private ValueAlgebra[] content;
     private int size;
 
     ValueArrayGenericAlgebra(TypeArrayGenericAlgebra type) {
         this.type = type;
         this.content = new ValueAlgebra[0];
-    }
-
-    void setContent(Type entryType, Value[] content) {
-        for (int index = 0; index < size(); index++) {
-            this.content[index].set(content[index]);
-        }
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override
@@ -45,7 +41,7 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        content[index].set(value);
+        set.apply(content[index], value);
     }
 
     @Override
@@ -60,7 +56,7 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
         assert value != null;
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
-        value.set(content[index]);
+        set.apply(value, content[index]);
     }
 
     @Override

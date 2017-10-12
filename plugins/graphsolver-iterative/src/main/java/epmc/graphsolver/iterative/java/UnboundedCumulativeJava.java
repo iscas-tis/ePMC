@@ -70,6 +70,7 @@ import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorSet;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -333,8 +334,10 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
@@ -357,7 +360,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
         numIterationsResult[0] = iterations;
-        values.set(presValues);
+        setArray.apply(values, presValues);
     }
 
     private void dtmcUnboundedCumulativeGaussseidelJava(GraphExplicitSparse graph,
@@ -379,8 +382,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int from = stateBounds[state];
@@ -430,13 +434,16 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         int iterations = 0;
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                set.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
@@ -464,7 +471,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
         numIterationsResult[0] = iterations;
-        values.set(presValues);
+        setArray.apply(values, presValues);
     }
 
     private void mdpUnboundedCumulativeGaussseidelJava(
@@ -493,13 +500,15 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         do {
-            distance.set(TypeReal.get().getZero());
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                set.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];

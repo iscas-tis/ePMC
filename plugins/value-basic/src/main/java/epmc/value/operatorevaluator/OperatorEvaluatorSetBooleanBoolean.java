@@ -9,7 +9,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorSet;
 
 public enum OperatorEvaluatorSetBooleanBoolean implements OperatorEvaluator {
-    INSTANCE,;
+    INSTANCE;
 
     @Override
     public Operator getOperator() {

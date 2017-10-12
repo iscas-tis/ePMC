@@ -23,21 +23,19 @@ package epmc.value;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorSet;
 
 public final class ValueArrayGeneric implements ValueArray {
+    private final static String SPACE = " ";
     private final TypeArrayGeneric type;
+    private final OperatorEvaluator set;
     private Value[] content;
     private int size;
 
     ValueArrayGeneric(TypeArrayGeneric type) {
         this.type = type;
         this.content = new Value[0];
-    }
-
-    void setContent(Type entryType, Value[] content) {
-        for (int index = 0; index < size(); index++) {
-            this.content[index].set(content[index]);
-        }
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override
@@ -45,15 +43,15 @@ public final class ValueArrayGeneric implements ValueArray {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        content[index].set(value);
+        set.apply(content[index], value);
     }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
         assert index >= 0 : index;
-        assert index < size() : index + " " + size();
-        value.set(content[index]);
+        assert index < size() : index + SPACE + size();
+        set.apply(value, content[index]);
     }
 
     @Override
