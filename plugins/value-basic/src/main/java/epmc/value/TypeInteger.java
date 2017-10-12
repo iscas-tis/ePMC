@@ -67,12 +67,15 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
 
     private final ValueInteger lowerBound;
     private final ValueInteger upperBound;
-    private final ValueInteger valueZero = new ValueInteger(this, 0);
-    private final ValueInteger valueOne = new ValueInteger(this, 1);
-    private final ValueInteger valueMax = new ValueInteger(this, Integer.MAX_VALUE);
+    private final ValueInteger valueZero = new ValueInteger(this);
+    private final ValueInteger valueOne = new ValueInteger(this);
+    private final ValueInteger valueMax = new ValueInteger(this);
     private final int numBits;
 
     public TypeInteger(int lowerBound, int upperBound) {
+        valueZero.set(0);
+        valueOne.set(1);
+        valueMax.set(Integer.MAX_VALUE);
         assert lowerBound <= upperBound;
         if (lowerBound != Integer.MIN_VALUE && upperBound != Integer.MAX_VALUE) {
             int numValues = upperBound - lowerBound + 1;
@@ -83,14 +86,12 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         valueZero.setImmutable();
         valueOne.setImmutable();
         valueMax.setImmutable();
-        this.lowerBound = newValue(lowerBound);
+        this.lowerBound = newValue();
+        this.lowerBound.set(lowerBound);
         this.lowerBound.setImmutable();
-        this.upperBound = newValue(upperBound);
+        this.upperBound = newValue();
+        this.upperBound.set(upperBound);
         this.upperBound.setImmutable();
-    }
-
-    private ValueInteger newValue(int value) {
-        return new ValueInteger(this, value);
     }
 
     public TypeInteger() {
@@ -115,7 +116,9 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     @Override
     public ValueInteger newValue() {
         if (isLeftBounded()) {
-            return new ValueInteger(this, lowerBound.getInt());
+            ValueInteger result = new ValueInteger(this);
+            result.set(lowerBound.getInt());
+            return result;
         } else {
             return new ValueInteger(this);
         }
