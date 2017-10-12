@@ -183,7 +183,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, type, TypeReal.get());
         set.apply(ValueInterval.as(range).getIntervalLower(), min);
         set.apply(ValueInterval.as(range).getIntervalUpper(), max);
     }
