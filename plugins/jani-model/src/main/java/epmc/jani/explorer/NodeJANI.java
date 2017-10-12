@@ -29,6 +29,9 @@ import java.util.List;
 import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.util.BitStream;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBitStoreable;
@@ -36,6 +39,7 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueNumBitsKnown;
 import epmc.value.ValueObject;
 import epmc.value.ValueRange;
+import epmc.value.operator.OperatorSet;
 
 public final class NodeJANI implements ExplorerNode {
     private final static String SPACE = " ";
@@ -50,6 +54,7 @@ public final class NodeJANI implements ExplorerNode {
     private final int numBits;
     private final StateVariables stateVariables;
     private final Value[] initialValues;
+    private final OperatorEvaluator set[];
 
     public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) {
         assert explorer != null;
@@ -61,9 +66,12 @@ public final class NodeJANI implements ExplorerNode {
         int numBits = 0;
         storeVariables = new boolean[variables.size()];
         initialValues = new Value[variables.size()];
+        set = new OperatorEvaluator[variables.size()];
         for (int varNr = 0; varNr < variables.size(); varNr++) {
             assert variables.get(varNr) != null : varNr;
-            values[varNr] = stateVariables.get(variables.get(varNr)).getType().newValue();
+            Type varType = stateVariables.get(variables.get(varNr)).getType();
+            values[varNr] = varType.newValue();
+            set[varNr] = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, varType, varType);
             boolean storeVariable = stateVariables.get(varNr).isPermanent();
             storeVariables[varNr] = storeVariable;
             if (storeVariable) {
@@ -89,7 +97,7 @@ public final class NodeJANI implements ExplorerNode {
     public NodeJANI clone() {
         NodeJANI clone = new NodeJANI(explorer, stateVariables);
         for (int varNr = 0; varNr < values.length; varNr++) {
-            clone.values[varNr].set(values[varNr]);
+            set[varNr].apply(clone.values[varNr], values[varNr]);
         }
         return clone;
     }
@@ -121,7 +129,7 @@ public final class NodeJANI implements ExplorerNode {
         assert this.values.length == other.values.length :
             this.values.length + SPACE + other.values.length;
         for (int varNr = 0; varNr < values.length; varNr++) {
-            values[varNr].set(other.values[varNr]);
+            set[varNr].apply(values[varNr], other.values[varNr]);
         }
     }
 
@@ -137,7 +145,7 @@ public final class NodeJANI implements ExplorerNode {
         }
         for (int varNr = 0; varNr < storeVariables.length; varNr++) {
             if (!storeVariables[varNr] && initialValues[varNr] != null) {
-                this.values[varNr].set(initialValues[varNr]);
+                set[varNr].apply(this.values[varNr], initialValues[varNr]);
             }
         }
         numSet = 0;
@@ -151,7 +159,7 @@ public final class NodeJANI implements ExplorerNode {
             if (variablesSetMarks[variable]) {
                 return false;
             }
-            values[variable].set(other.values[variable]);
+            set[variable].apply(values[variable], other.values[variable]);
             variablesSet[numSet] = variable;
             numSet++;
             variablesSetMarks[variable] = true;
@@ -163,7 +171,7 @@ public final class NodeJANI implements ExplorerNode {
         assert other != null;
         assert this.values.length == other.values.length;
         for (int variable = 0; variable < other.values.length; variable++) {
-            values[variable].set(other.values[variable]);
+            set[variable].apply(values[variable], other.values[variable]);
             if (other.variablesSetMarks[variable]) {
                 mark(variable);
             }
@@ -180,7 +188,7 @@ public final class NodeJANI implements ExplorerNode {
     }
 
     public void getValue(Value result, int varNr) {
-        result.set(values[varNr]);
+        set[varNr].apply(result, values[varNr]);
     }
 
     public boolean getBoolean(int variable) {
@@ -194,7 +202,7 @@ public final class NodeJANI implements ExplorerNode {
         if (variablesSetMarks[variable]) {
             return false;
         }
-        values[variable].set(value);
+        set[variable].apply(values[variable], value);
         ensure(ValueRange.checkRange(values[variable]),
                 ProblemsJANIExplorer.JANI_EXPLORER_TRANSITION_INVALID_ASSIGNMENT);
         variablesSet[numSet] = variable;
@@ -303,7 +311,7 @@ public final class NodeJANI implements ExplorerNode {
     public void setNotSet(NodeJANI nodeAutomaton) {
         for (int varNr = 0; varNr < values.length; varNr++) {
             if (!variablesSetMarks[varNr]) {
-                values[varNr].set(nodeAutomaton.values[varNr]);
+                set[varNr].apply(values[varNr], nodeAutomaton.values[varNr]);
             }
         }
     }

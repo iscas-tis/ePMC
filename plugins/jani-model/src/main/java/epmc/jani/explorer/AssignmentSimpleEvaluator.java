@@ -31,7 +31,10 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Assignment;
 import epmc.jani.model.AssignmentSimple;
 import epmc.jani.model.Variable;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
 
 public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
     public final static String IDENTIFIER = "simple";
@@ -116,6 +119,8 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 
     private final int variable;
     private final EvaluatorExplicit expression;
+    private final OperatorEvaluator set;
+    private final Value value;
 
     private AssignmentSimpleEvaluator(Builder builder) {
         assert builder != null;
@@ -127,9 +132,11 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         Expression assignment = entry.getValue();
         assignment = entry.getModel().replaceConstants(assignment);
         assignment = UtilExpressionStandard.replace(assignment, autVarToLocal);
-        assignment.getType(builder.getExpressionToType());
+        value = entry.getRef().getType().toType().newValue();
+//                assignment.getType(builder.getExpressionToType()).newValue();
         assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
         expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
     }
 
     @Override
@@ -138,6 +145,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         assert successor != null;
         Value[] variableValues = node.getValues();
         expression.evaluate(variableValues);
-        successor.setVariable(variable, expression.getResultValue());
+        set.apply(value, expression.getResultValue());
+        successor.setVariable(variable, value);
     }
 }

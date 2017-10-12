@@ -21,6 +21,7 @@
 package epmc.value;
 
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
     public static boolean isInterval(Value value) {
@@ -106,7 +107,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
             getIntervalLower().set(operand);
             getIntervalUpper().set(operand);
         }
-
     }
 
     @Override
@@ -120,17 +120,18 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         assert string != null;
         string = string.trim();
         String[] parts = string.split(COMMA);
+        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         if (parts.length == 1) {
             Value point = UtilValue.newValue(TypeReal.get(), parts[0]);
-            getIntervalLower().set(point);
-            getIntervalUpper().set(point);
+            setReal.apply(getIntervalLower(), point);
+            setReal.apply(getIntervalUpper(), point);
         } else if (parts.length == 2) {
             String lowerString = parts[0].substring(1);
             String upperString = parts[1].substring(0, parts[1].length() - 1);
             Value lower = UtilValue.newValue(TypeReal.get(), lowerString);
             Value upper = UtilValue.newValue(TypeReal.get(), upperString);
-            getIntervalLower().set(lower);
-            getIntervalUpper().set(upper);
+            setReal.apply(getIntervalLower(), lower);
+            setReal.apply(getIntervalUpper(), upper);
         } else {
             assert false;            
         }

@@ -22,16 +22,19 @@ package epmc.value;
 
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.operator.OperatorSet;
 
 public final class ValueArrayConstant implements ValueArray {
     private final static String SPACE = " ";
     private final TypeArrayConstant type;
     private final Value content;
+    private final OperatorEvaluator set;
     private int size;
 
     ValueArrayConstant(TypeArrayConstant type) {
         this.type = type;
         this.content = getType().getEntryType().newValue();
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override
@@ -39,7 +42,7 @@ public final class ValueArrayConstant implements ValueArray {
         assert value != null;
         assert index >= 0;
         assert index < size() : index + SPACE + size();
-        content.set(value);
+        set.apply(content, value);
     }
 
     @Override
@@ -47,7 +50,7 @@ public final class ValueArrayConstant implements ValueArray {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        value.set(content);
+        set.apply(value, content);
     }
 
     @Override
