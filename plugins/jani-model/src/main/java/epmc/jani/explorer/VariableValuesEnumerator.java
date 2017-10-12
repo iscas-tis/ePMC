@@ -62,6 +62,7 @@ import epmc.value.ValueEnumerable;
 import epmc.value.ValueRange;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorEq;
+import epmc.value.operator.OperatorSet;
 
 /**
  * Class to obtain all valid variable assignments for a given expression.
@@ -173,7 +174,9 @@ public final class VariableValuesEnumerator {
             ExpressionIdentifierStandard identifier = getIdentifier(expression);
             Expression literal = getLiteral(expression);
             Value value = variables.get(identifier.getName()).getType().toType().newValue();
-            value.set(evaluateValue(literal));
+            Value literalValue = evaluateValue(literal);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+            set.apply(value, literalValue);
             if (!ValueRange.checkRange(value)) {
                 return Collections.emptyMap();
             } else {
@@ -216,7 +219,9 @@ public final class VariableValuesEnumerator {
         Map<String,Variable> remainingVariables = new HashMap<>(variables);
         remainingVariables.remove(identifier.getName());
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
-        value.set(evaluateValue(literal));
+        Value literalValue = evaluateValue(literal);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
         } else if (remainingVariables.size() == 0) {
@@ -239,7 +244,9 @@ public final class VariableValuesEnumerator {
         ExpressionIdentifierStandard identifier = getIdentifier(restriction);
         Expression literal = getLiteral(restriction);
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
-        value.set(evaluateValue(literal));
+        Value literalValue = evaluateValue(literal);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
         }

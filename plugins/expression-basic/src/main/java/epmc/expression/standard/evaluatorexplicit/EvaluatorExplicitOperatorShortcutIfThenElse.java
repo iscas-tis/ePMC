@@ -32,6 +32,7 @@ import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.Evaluato
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorSet;
 
 public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
@@ -117,6 +118,8 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;
     private final Value result;
+    private final OperatorEvaluator setThen;
+    private final OperatorEvaluator setElse;
 
     private EvaluatorExplicitOperatorShortcutIfThenElse(Builder builder) {
         assert builder != null;
@@ -136,6 +139,8 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         }
         OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(types).newValue();
+        setThen = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, types[1], evaluator.resultType(types));
+        setElse = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, types[2], evaluator.resultType(types));
     }
 
     @Override
@@ -157,11 +162,11 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean(values)) {
             EvaluatorExplicit thenOp = operands[1];
             thenOp.evaluate(values);
-            result.set(thenOp.getResultValue());
+            setThen.apply(result, thenOp.getResultValue());
         } else {
             EvaluatorExplicit elseOp = operands[2];
             elseOp.evaluate(values);
-            result.set(elseOp.getResultValue());
+            setElse.apply(result, elseOp.getResultValue());
         }
         return result;
     }

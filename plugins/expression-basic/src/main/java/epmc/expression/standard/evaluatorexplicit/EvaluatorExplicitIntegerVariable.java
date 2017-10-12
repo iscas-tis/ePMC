@@ -26,6 +26,7 @@ import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 
 public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {
@@ -128,7 +129,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         for (Value value : values) {
             assert value != null;
         }
-        result.set(values[index]);
+        ValueAlgebra.asAlgebra(result).set(ValueInteger.asInteger(values[index]).getInt());
         return result;
     }
 
