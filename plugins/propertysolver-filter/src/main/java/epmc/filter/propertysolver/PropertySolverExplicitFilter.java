@@ -176,7 +176,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         ValueArray resultValues = null;
         OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
         if (propertyFilter.isSameResultForAllStates()) {
-            resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
+            resultValues = UtilValue.newArray(new TypeArrayConstant(resultValue.getType()), forStates.size());
             resultValues.set(resultValue, 0);
         } else if (propertyFilter.isArgMin() || propertyFilter.isArgMax()) {
             resultValues = UtilValue.newArray(typeProperty.getTypeArray(), forStates.size());
@@ -319,11 +319,11 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             set.apply(result.getIntervalUpper(), value);
             return result;
         case AVG:
-            return TypeWeight.get().getZero();
+            return UtilValue.clone(TypeWeight.get().getZero());
         case SUM:
-            return TypeWeight.get().getZero();
+            return UtilValue.clone(TypeWeight.get().getZero());
         default:
-            return UtilValue.clone(value);
+            return UtilValue.clone(UtilValue.clone(value));
         }
     }
     
