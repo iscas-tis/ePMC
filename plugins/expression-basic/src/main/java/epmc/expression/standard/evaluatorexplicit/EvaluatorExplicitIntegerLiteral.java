@@ -63,7 +63,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         public boolean canHandle() {
             assert expression != null;
             assert variables != null;
-            if (!(expression instanceof ExpressionLiteral)) {
+            if (!(ExpressionLiteral.isLiteral(expression))) {
                 return false;
             }
             if (expression.getType(expressionToType) == null) {
