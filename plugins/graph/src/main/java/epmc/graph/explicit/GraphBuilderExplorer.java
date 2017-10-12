@@ -125,7 +125,7 @@ public final class GraphBuilderExplorer {
     }
 
     private void doBuild() {
-        Semantics semantics = ValueObject.asObject(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean nondet = semantics != null && SemanticsNonDet.isNonDet(semantics);
         if (nondet) {
             doBuildAlternate();

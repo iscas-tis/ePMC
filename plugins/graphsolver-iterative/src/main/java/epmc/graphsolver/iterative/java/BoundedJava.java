@@ -97,7 +97,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     @Override
     public boolean canHandle() {
         assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
                 && !SemanticsDTMC.isDTMC(semantics)
                 && !SemanticsMDP.isMDP(semantics)) {
@@ -112,7 +112,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     @Override
     public void solve() {
         prepareIterGraph();
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
             if (SemanticsContinuousTime.isContinuousTime(semantics)) {
                 ctBounded();
@@ -128,7 +128,7 @@ public final class BoundedJava implements GraphSolverExplicit {
     // TODO can directly use original graph under certain circumstances
     private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBounded);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -147,7 +147,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         lambda = TypeReal.get().newValue();
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
         Value time = objectiveBounded.getTime();
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         multiply.apply(lambda, time, unifRate);
         inputValues = objectiveBounded.getValues();
     }
@@ -174,7 +174,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         assert iterGraph != null;
         assert inputValues != null;
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBounded.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBounded.getTime());
         assert time.getInt() >= 0;
         time.getInt();
         boolean min = objectiveBounded.isMin();
@@ -191,7 +191,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         assert iterGraph != null : "iterGraph == null";
         assert inputValues != null : "inputValues == null";
         assert lambda != null : "lambda == null";
-        assert ValueReal.isReal(lambda) : lambda;
+        assert ValueReal.is(lambda) : lambda;
         Options options = Options.get();
 
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
@@ -250,17 +250,17 @@ public final class BoundedJava implements GraphSolverExplicit {
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         ValueAlgebra value = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         Value zero = TypeReal.get().getZero();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int i = foxGlynn.getRight() - foxGlynn.getLeft(); i >= 0; i--) {
             fg.get(fgWeight, i);
             for (int state = 0; state < numStates; state++) {
@@ -310,16 +310,16 @@ public final class BoundedJava implements GraphSolverExplicit {
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra zero = values.getType().getEntryType().getZero();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -349,7 +349,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
@@ -360,12 +360,12 @@ public final class BoundedJava implements GraphSolverExplicit {
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
-        OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);

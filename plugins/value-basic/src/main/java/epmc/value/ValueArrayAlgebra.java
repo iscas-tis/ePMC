@@ -24,12 +24,12 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public interface ValueArrayAlgebra extends ValueArray {
-    public static boolean isArrayAlgebra(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueArrayAlgebra;
     }
 
-    public static ValueArrayAlgebra asArrayAlgebra(Value value) {
-        if (isArrayAlgebra(value)) {
+    public static ValueArrayAlgebra as(Value value) {
+        if (is(value)) {
             return (ValueArrayAlgebra) value;
         } else {
             return null;

@@ -81,10 +81,10 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         dtmcAligned = TypeWeightTransition.get().newValue();
         zero = TypeWeightTransition.get().getZero();
         one = TypeWeightTransition.get().getOne();
-        divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
-        eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
-        add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeightTransition.get(), TypeWeightTransition.get());
+        divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
+        add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeightTransition.get(), TypeWeightTransition.get());
         cmp = TypeBoolean.get().newValue();
     }
 

@@ -93,7 +93,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
     @Override
     public boolean canHandle() {
         assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
                 && !SemanticsDTMC.isDTMC(semantics)
                 && !SemanticsMDP.isMDP(semantics)) {
@@ -108,7 +108,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
     @Override
     public void solve() {
         prepareIterGraph();
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (SemanticsContinuousTime.isContinuousTime(semantics)) {
             ctBoundedReachability();
         } else {
@@ -119,7 +119,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
 
     private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedReachability);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -143,7 +143,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
         this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
         Value unifRate = newValueWeight();
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
@@ -193,7 +193,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
     private void dtBoundedReachability() {
         assert iterGraph != null;
         GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedReachability.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBoundedReachability.getTime());
         assert time.getInt() >= 0;
         boolean min = objectiveBoundedReachability.isMin();
         if (isSparseMarkovNative(iterGraph)) {
@@ -208,7 +208,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
     private void ctBoundedReachability() {
         assert iterGraph != null : "iterGraph == null";
         assert lambda != null : "lambda == null";
-        assert ValueReal.isReal(lambda) : lambda;
+        assert ValueReal.is(lambda) : lambda;
         Options options = Options.get();
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);

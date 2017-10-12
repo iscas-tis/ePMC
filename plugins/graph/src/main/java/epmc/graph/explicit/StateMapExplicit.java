@@ -74,7 +74,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         this.helper = type.newValue();
         this.helper2 = type.newValue();
         this.scheduler = scheduler;
-        this.eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, type, type);
+        this.eq = ContextValue.get().getEvaluator(OperatorEq.EQ, type, type);
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -186,7 +186,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert !closed();
         assert identifier != null;
         assert operand != null;
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, getType(), operand.getType());
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, getType(), operand.getType());
         assert evaluator != null;
         StateMapExplicit operandExplicit = (StateMapExplicit) operand;
         StateMap result = null;
@@ -279,7 +279,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
                     for (int i = 0; i < values.length; i++) {
                         types[i] = values[i].getType();
                     }
-                    OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+                    OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
                     evaluator.apply(result, values);
                 }
             }
@@ -291,20 +291,20 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
-        set.apply(ValueInterval.asInterval(range).getIntervalLower(), min);
-        set.apply(ValueInterval.asInterval(range).getIntervalUpper(), max);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        set.apply(ValueInterval.as(range).getIntervalLower(), min);
+        set.apply(ValueInterval.as(range).getIntervalUpper(), max);
     }
 
     private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
-        return ValueBoolean.asBoolean(result).getBoolean();
+        return ValueBoolean.as(result).getBoolean();
     }    
 
     @Override
     public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, result.getType(), to.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, result.getType(), to.getType());
         set.apply(to, result);
     }
 
@@ -317,7 +317,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
             return entry;
         } else {
             Type type = getType();
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 boolean allTrue = true;
                 allTrue = isAllTrue(initialStates);
                 return allTrue
@@ -335,7 +335,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
 
     private boolean hasMinAndMaxElements(StateSet of) {
-        if (TypeReal.isReal(getType())) {
+        if (TypeReal.is(getType())) {
             return true;
         }
         getRange(TypeInterval.get().newValue(),

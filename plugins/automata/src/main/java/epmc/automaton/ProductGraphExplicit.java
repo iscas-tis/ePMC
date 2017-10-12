@@ -265,7 +265,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         @Override
         public void set(int node, Object object) {
             assert object != null;
-            assert ValueObject.isObject(value);
+            assert ValueObject.is(value);
             assert false;
         }    
 

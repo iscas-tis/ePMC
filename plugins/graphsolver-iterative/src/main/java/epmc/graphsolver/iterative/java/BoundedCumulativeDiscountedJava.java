@@ -94,7 +94,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
     @Override
     public boolean canHandle() {
         assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
                 && !SemanticsDTMC.isDTMC(semantics)
                 && !SemanticsMDP.isMDP(semantics)) {
@@ -115,7 +115,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
 
     private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -183,11 +183,11 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         assert iterGraph != null;
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulativeDiscounted.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBoundedCumulativeDiscounted.getTime());
         assert time.getInt() >= 0;
         ValueReal discount = objectiveBoundedCumulativeDiscounted.getDiscount();
         assert discount != null;
-        assert ValueReal.isReal(discount) || ValueInteger.isInteger(discount);
+        assert ValueReal.is(discount) || ValueInteger.is(discount);
         boolean min = objectiveBoundedCumulativeDiscounted.isMin();
         if (isSparseMarkovJava(iterGraph)) {
             dtmcBoundedCumulativeDiscountedJava(time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
@@ -241,15 +241,15 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, values.getType(), values.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, values.getType(), values.getType());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
@@ -281,7 +281,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
@@ -291,12 +291,12 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         ValueAlgebra optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
-        OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);

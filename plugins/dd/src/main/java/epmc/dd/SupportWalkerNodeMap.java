@@ -65,26 +65,26 @@ public final class SupportWalkerNodeMap {
     }
 
     public int getInt() {
-        assert TypeInteger.isInteger(entryType);
+        assert TypeInteger.is(entryType);
         get(helper);
-        return ValueInteger.asInteger(helper).getInt();
+        return ValueInteger.as(helper).getInt();
     }
 
     public void set(int value) {
-        assert TypeInteger.isInteger(entryType);
-        ValueAlgebra.asAlgebra(helper).set(value);
+        assert TypeInteger.is(entryType);
+        ValueAlgebra.as(helper).set(value);
         set(helper);
     }
 
     public boolean getBoolean() {
-        assert TypeBoolean.isBoolean(entryType);
+        assert TypeBoolean.is(entryType);
         get(helper);
-        return ValueBoolean.asBoolean(helper).getBoolean();
+        return ValueBoolean.as(helper).getBoolean();
     }
 
     public void set(boolean value) {
-        assert TypeBoolean.isBoolean(entryType);
-        ValueBoolean.asBoolean(helper).set(value);
+        assert TypeBoolean.is(entryType);
+        ValueBoolean.as(helper).set(value);
         set(helper);
     }
 

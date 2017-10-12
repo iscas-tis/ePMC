@@ -182,7 +182,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         Pointer result;
         if (operation.equals(OperatorNot.NOT)) {
             result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
@@ -213,9 +213,9 @@ public final class LibraryDDCacBDD implements LibraryDD {
     @Override
     public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
+        assert ValueBoolean.is(value);
         Pointer result;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             result = CacBDD.cacwrapper_new_one(xbddmanager);
         } else {
             result = CacBDD.cacwrapper_new_zero(xbddmanager);            
@@ -482,7 +482,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
 
     @Override
     public boolean canApply(Operator operation, Type resultType, long... operands) {
-        if (!TypeBoolean.isBoolean(resultType)) {
+        if (!TypeBoolean.is(resultType)) {
             return false;
         }
         return operation.equals(OperatorId.ID)

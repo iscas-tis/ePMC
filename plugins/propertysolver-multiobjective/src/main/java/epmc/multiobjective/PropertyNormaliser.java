@@ -83,8 +83,8 @@ final class PropertyNormaliser {
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
         assert subtractNumericalFrom != null;
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        set.apply(subtractNumericalFrom, TypeWeight.asWeight(subtractNumericalFrom.getType()).getPosInf());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        set.apply(subtractNumericalFrom, TypeWeight.as(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
         List<Expression> newQuantifiersQualitative = new ArrayList<>();
         Set<Expression> invert = new HashSet<>();

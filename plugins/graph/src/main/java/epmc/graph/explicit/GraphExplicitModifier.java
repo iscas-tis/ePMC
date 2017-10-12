@@ -41,9 +41,9 @@ public final class GraphExplicitModifier {
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
@@ -64,18 +64,18 @@ public final class GraphExplicitModifier {
         assert graph != null;
         Value uniformisationRate = computeUniformisationRate(graph);
         if (uniRate != null) {
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
             set.apply(uniRate, uniformisationRate);
         }
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
@@ -101,8 +101,8 @@ public final class GraphExplicitModifier {
         ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, result.getType(), sumRate.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, result.getType(), sumRate.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int inputNode = 0; inputNode < graph.getNumNodes(); inputNode++) {
             Player player = playerProp.getEnum(inputNode);
             if (player == Player.STOCHASTIC) {

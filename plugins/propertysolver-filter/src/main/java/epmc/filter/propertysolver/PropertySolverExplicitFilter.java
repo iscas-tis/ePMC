@@ -121,12 +121,12 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         Value statesEntry = states.getType().newValue();
         Value propEntry = prop.getType().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
         
         int statesSize = states.size();
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
                 prop.getExplicitIthValue(propEntry, i);
                 break;
             }
@@ -136,7 +136,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         int numStatesInFilter = 0;
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
                 numStatesInFilter++;
             }
         }
@@ -152,7 +152,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             int state = allStates.getExplicitIthState(i);
             prop.getExplicitIthValue(propEntry, i);
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
                 accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
                     isZero.apply(cmp, propEntry);
@@ -168,19 +168,19 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         ensure(!propertyFilter.isState() || numStatesInFilter <= 1,
                 ProblemsFilter.FILTER_STATE_MORE_THAN_ONE, property);
         if (propertyFilter.isAvg()) {
-            Value num = UtilValue.newValue(TypeNumber.asNumber(resultValue.getType()), numStatesInFilter);
-            OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, resultValue.getType(), num.getType());
-            divide.apply(ValueAlgebra.asAlgebra(resultValue), resultValue, num);
+            Value num = UtilValue.newValue(TypeNumber.as(resultValue.getType()), numStatesInFilter);
+            OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, resultValue.getType(), num.getType());
+            divide.apply(ValueAlgebra.as(resultValue), resultValue, num);
         }
 
         ValueArray resultValues = null;
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
         if (propertyFilter.isSameResultForAllStates()) {
             resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
             resultValues.set(resultValue, 0);
         } else if (propertyFilter.isArgMin() || propertyFilter.isArgMax()) {
             resultValues = UtilValue.newArray(typeProperty.getTypeArray(), forStates.size());
-            ValueBoolean compare = ValueBoolean.asBoolean(typeProperty.newValue());
+            ValueBoolean compare = ValueBoolean.as(typeProperty.newValue());
             int allStatesNr = 0;
             int allState;
             StateSetExplicit forStatesExplicit = (StateSetExplicit) forStates;
@@ -253,11 +253,11 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
 
     private static void accumulate(FilterType type, Value resultValue, Value value) {
-        OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
-        OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
-        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+        OperatorEvaluator and = ContextValue.get().getEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator or = ContextValue.get().getEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
         switch (type) {
         case ARGMAX: case MAX:
             max.apply(resultValue, resultValue, value);
@@ -269,9 +269,9 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             add.apply(resultValue, resultValue, value);
             break;
         case COUNT:
-            add.apply(resultValue, resultValue, ValueBoolean.asBoolean(value).getBoolean()
-                    ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
-                            : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
+            add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
+                    ? TypeAlgebra.as(resultValue.getType()).getOne()
+                            : TypeAlgebra.as(resultValue.getType()).getZero());
             break;
         case EXISTS:
             or.apply(resultValue, resultValue, value);
@@ -286,8 +286,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case PRINTALL:
             break;
         case RANGE: {
-            Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
-            Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
+            Value resLo = ValueInterval.as(resultValue).getIntervalLower();
+            Value resUp = ValueInterval.as(resultValue).getIntervalUpper();
             min.apply(resLo, resLo, value);
             max.apply(resUp, resUp, value);
         }
@@ -314,7 +314,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             return UtilValue.clone(TypeBoolean.get().getTrue());
         case RANGE:
             ValueInterval result = TypeInterval.get().newValue();
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
             set.apply(result.getIntervalLower(), value);
             set.apply(result.getIntervalUpper(), value);
             return result;

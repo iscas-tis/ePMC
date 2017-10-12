@@ -170,12 +170,12 @@ public final class DestinationEvaluator {
                 .setVariables(variables)
                 .build();
         zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
-        ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
-        setProbability = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, probability.getResultValue().getType(), TypeWeightTransition.get());
+        ge = ContextValue.get().getEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        setProbability = ContextValue.get().getEvaluator(OperatorSet.SET, probability.getResultValue().getType(), TypeWeightTransition.get());
     }
 
     ValueAlgebra evaluateProbability(NodeJANI node) {
-        ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
+        ValueAlgebra result = ValueAlgebra.as(probability.evaluate(node.getValues()));
         ge.apply(cmp, result, zeroWeight);
         ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
         setProbability.apply(probabilityV, result);

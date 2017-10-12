@@ -89,7 +89,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     @Override
     public boolean canHandle() {
         assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
                 && !SemanticsDTMC.isDTMC(semantics)
                 && !SemanticsMDP.isMDP(semantics)) {
@@ -104,7 +104,7 @@ public final class BoundedNative implements GraphSolverExplicit {
     @Override
     public void solve() {
         prepareIterGraph();
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (objective instanceof GraphSolverObjectiveExplicitBounded) {
             if (SemanticsContinuousTime.isContinuousTime(semantics)) {
                 ctBounded();
@@ -117,7 +117,7 @@ public final class BoundedNative implements GraphSolverExplicit {
 
     private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBounded);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -130,7 +130,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
         Value unifRate = newValueWeight();
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
@@ -168,7 +168,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         assert iterGraph != null;
         assert inputValues != null;
         GraphSolverObjectiveExplicitBounded objectiveBounded = (GraphSolverObjectiveExplicitBounded) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBounded.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBounded.getTime());
         assert time.getInt() >= 0;
         boolean min = objectiveBounded.isMin();
         if (isSparseMarkovNative(iterGraph)) {
@@ -184,7 +184,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         assert iterGraph != null : "iterGraph == null";
         assert inputValues != null : "inputValues == null";
         assert lambda != null : "lambda == null";
-        assert ValueReal.isReal(lambda) : lambda;
+        assert ValueReal.is(lambda) : lambda;
         Options options = Options.get();
 
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));

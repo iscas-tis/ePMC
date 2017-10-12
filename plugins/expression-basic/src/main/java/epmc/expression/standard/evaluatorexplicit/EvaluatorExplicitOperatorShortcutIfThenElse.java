@@ -137,10 +137,10 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(types).newValue();
-        setThen = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, types[1], evaluator.resultType(types));
-        setElse = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, types[2], evaluator.resultType(types));
+        setThen = ContextValue.get().getEvaluator(OperatorSet.SET, types[1], evaluator.resultType(types));
+        setElse = ContextValue.get().getEvaluator(OperatorSet.SET, types[2], evaluator.resultType(types));
     }
 
     @Override

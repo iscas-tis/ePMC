@@ -144,10 +144,10 @@ public final class TimeBound {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueReal.isReal(expressionLiteral.getValue())) {
+        if (!ValueReal.is(expressionLiteral.getValue())) {
             return false;
         }
-        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isPosInf.apply(cmp, expressionLiteral.getValue());
         return cmp.getBoolean();
@@ -253,7 +253,7 @@ public final class TimeBound {
             return true;
         }
         ExpressionLiteral leftLit = ExpressionLiteral.asLiteral(getLeft());
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, getValue(leftLit).getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, getValue(leftLit).getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isZero.apply(cmp, getValue(leftLit));
         return !cmp.getBoolean();
@@ -309,11 +309,11 @@ public final class TimeBound {
     }
 
     public int getLeftInt() {
-        return ValueInteger.asInteger(evaluateValue(getLeft())).getInt();
+        return ValueInteger.as(evaluateValue(getLeft())).getInt();
     }
 
     public int getRightInt() {
-        return ValueInteger.asInteger(evaluateValue(getRight())).getInt();
+        return ValueInteger.as(evaluateValue(getRight())).getInt();
     }
 
     @Override
@@ -343,7 +343,7 @@ public final class TimeBound {
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression,
                 new ExpressionToTypeEmpty(),
                 new Expression[0]);
-        return ValueAlgebra.asAlgebra(evaluator.evaluate());
+        return ValueAlgebra.as(evaluator.evaluate());
     }
 
     private static Value getValue(Expression expression) {

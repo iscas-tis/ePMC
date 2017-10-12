@@ -58,7 +58,7 @@ public interface GraphDD extends LowLevel {
     GraphDDProperties getProperties();
 
     default <T> T getGraphPropertyObject(Object property) {
-        ValueObject graphProperty = ValueObject.asObject(getGraphProperty(property));
+        ValueObject graphProperty = ValueObject.as(getGraphProperty(property));
         if (graphProperty == null) {
             return null;
         } else {

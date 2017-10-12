@@ -60,7 +60,7 @@ public final class PropertyNodeGeneral implements PropertyNode {
         assert type != null;
         this.type = type;
         this.value = type.newValue();
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type, type);
     }
 
     /**
@@ -82,20 +82,20 @@ public final class PropertyNodeGeneral implements PropertyNode {
      * @param value boolean value to set for this property
      */
     public void set(boolean value) {
-        assert TypeBoolean.isBoolean(type);
-        ValueBoolean.asBoolean(this.value).set(value);
+        assert TypeBoolean.is(type);
+        ValueBoolean.as(this.value).set(value);
     }
 
     public void set(Object object) {
         assert object != null;
-        assert TypeObject.isObject(type) : type;
-        ValueObject.asObject(value).set(object);
+        assert TypeObject.is(type) : type;
+        ValueObject.as(value).set(object);
     }
 
     public void set(Enum<?> value) {
         assert value != null;
-        assert TypeEnum.isEnum(type);
-        ValueEnum.asEnum(this.value).set(value);
+        assert TypeEnum.is(type);
+        ValueEnum.as(this.value).set(value);
     }
 
     @Override

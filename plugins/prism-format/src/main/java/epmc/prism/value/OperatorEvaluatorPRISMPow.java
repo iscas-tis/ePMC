@@ -48,10 +48,10 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[0]) && !TypeDouble.isDouble(types[0])) {
+        if (!TypeInteger.is(types[0]) && !TypeDouble.is(types[0])) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[1]) && !TypeDouble.isDouble(types[1])) {
+        if (!TypeInteger.is(types[1]) && !TypeDouble.is(types[1])) {
             return false;
         }
         return true;
@@ -63,7 +63,7 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
         assert types.length == 2 : types.length;
         boolean allInteger = true;
         for (Type type : types) {
-            allInteger &= TypeInteger.isInteger(type);
+            allInteger &= TypeInteger.is(type);
         }
         if (allInteger) {
             return TypeInteger.get();
@@ -74,16 +74,16 @@ public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
 
     @Override
     public void apply(Value result, Value... operands) {
-        if (ValueInteger.isInteger(result)) {
-            int value1 = ValueInteger.asInteger(operands[0]).getInt();
-            int value2 = ValueInteger.asInteger(operands[1]).getInt();
-            ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));
-        } else if (ValueReal.isReal(result)) {
-            double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-                    : ValueInteger.asInteger(operands[0]).getInt();
-            double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
-                    : ValueInteger.asInteger(operands[1]).getInt();
-            ValueDouble.asDouble(result).set(Math.pow(value1, value2));
+        if (ValueInteger.is(result)) {
+            int value1 = ValueInteger.as(operands[0]).getInt();
+            int value2 = ValueInteger.as(operands[1]).getInt();
+            ValueInteger.as(result).set((int) Math.pow(value1, value2));
+        } else if (ValueReal.is(result)) {
+            double value1 = ValueDouble.is(operands[0]) ? ValueDouble.as(operands[0]).getDouble()
+                    : ValueInteger.as(operands[0]).getInt();
+            double value2 = ValueDouble.is(operands[1]) ? ValueDouble.as(operands[1]).getDouble()
+                    : ValueInteger.as(operands[1]).getInt();
+            ValueDouble.as(result).set(Math.pow(value1, value2));
         } else {
             assert false : result.getType();
         }

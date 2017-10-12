@@ -183,20 +183,20 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     public void getRange(Value range, StateSet of) {
         Value min = applyOver(OperatorMin.MIN, of);
         Value max = applyOver(OperatorMax.MAX, of);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
-        set.apply(ValueInterval.asInterval(range).getIntervalLower(), min);
-        set.apply(ValueInterval.asInterval(range).getIntervalUpper(), max);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        set.apply(ValueInterval.as(range).getIntervalLower(), min);
+        set.apply(ValueInterval.as(range).getIntervalUpper(), max);
     }
 
     private boolean isAllTrue(StateSet of) {
         Value result = applyOver(OperatorAnd.AND, of);
-        return ValueBoolean.asBoolean(result).getBoolean();
+        return ValueBoolean.as(result).getBoolean();
     }    
 
     @Override
     public void getSomeValue(Value to, StateSet of) {
         Value result = applyOver(OperatorId.ID, of);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, result.getType(), to.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, result.getType(), to.getType());
         set.apply(to, result);
     }
 
@@ -209,7 +209,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
             return entry;
         } else {
             Type info = getType();
-            if (TypeBoolean.isBoolean(info)) {
+            if (TypeBoolean.is(info)) {
                 boolean allTrue = true;
                 allTrue = isAllTrue(initialStates);
                 return allTrue
@@ -227,7 +227,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
     }
 
     private boolean hasMinAndMaxElements(StateSet of) {
-        if (TypeReal.isReal(getType())) {
+        if (TypeReal.is(getType())) {
             return true;
         }
         getRange(TypeInterval.get().newValue(),

@@ -66,7 +66,7 @@ public final class EquivalenceWeakCTMC implements Equivalence {
     private int maxOrigFanout;
     private final List<int[]> newBlocks = new ArrayList<>();
     private GraphSolverObjectiveExplicit objective;
-    private final OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+    private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
 
     @Override
     public void setSuccessorsFromTo(int[] successorsFromTo) {

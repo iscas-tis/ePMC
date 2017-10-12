@@ -48,7 +48,7 @@ public enum OperatorEvaluatorIsZeroDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type)) {
+            if (!TypeDouble.is(type)) {
                 return false;
             }
         }
@@ -72,6 +72,6 @@ public enum OperatorEvaluatorIsZeroDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double op1 = UtilValue.getDouble(operands[0]);
-        ValueBoolean.asBoolean(result).set(op1 == 0.0);
+        ValueBoolean.as(result).set(op1 == 0.0);
     }
 }

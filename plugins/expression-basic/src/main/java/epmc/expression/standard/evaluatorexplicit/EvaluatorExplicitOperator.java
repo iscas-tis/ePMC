@@ -137,7 +137,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+        evaluator = ContextValue.get().getEvaluator(operator, types);
         assert evaluator != null : operator + " " + Arrays.toString(types) + " " + operands[0];
         assert evaluator.resultType(types) != null : operator;
         result = evaluator.resultType(types).newValue();
@@ -173,6 +173,6 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
 
     @Override
     public boolean evaluateBoolean(Value... values) {
-        return ValueBoolean.asBoolean(evaluate(values)).getBoolean();
+        return ValueBoolean.as(evaluate(values)).getBoolean();
     }
 }

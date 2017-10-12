@@ -74,7 +74,7 @@ public final class LibraryDDJDD implements LibraryDD {
         assert alive;
         assert operator != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         for (int opNr = 0; opNr < operands.length; opNr++) {
             assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
@@ -111,8 +111,8 @@ public final class LibraryDDJDD implements LibraryDD {
     public long newConstant(Value value) {
         assert alive;
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
-        int result = ValueBoolean.asBoolean(value).getBoolean() ? bdd.getOne() : bdd.getZero();
+        assert ValueBoolean.is(value);
+        int result = ValueBoolean.as(value).getBoolean() ? bdd.getOne() : bdd.getZero();
         bdd.ref(result);
         return result;
     }
@@ -373,7 +373,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public boolean canApply(Operator operation, Type resultType, long... operands) {
-        if (!TypeBoolean.isBoolean(resultType)) {
+        if (!TypeBoolean.is(resultType)) {
             return false;
         }
         return operation.equals(OperatorId.ID)

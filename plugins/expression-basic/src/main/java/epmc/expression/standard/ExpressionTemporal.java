@@ -348,13 +348,13 @@ public final class ExpressionTemporal implements Expression {
         }
         for (Expression op : getOperands()) {
             Type opType = op.getType(expressionToType);
-            ensure(opType == null || TypeBoolean.isBoolean(opType)
+            ensure(opType == null || TypeBoolean.is(opType)
                     || op instanceof ExpressionTemporal,
                     ProblemsExpression.EXPR_INCONSISTENT, "", op);
         }
         for (Expression op : getBounds()) {
             Type opType = op.getType(expressionToType);
-            ensure(opType == null || TypeReal.isReal(opType), ProblemsExpression.EXPR_INCONSISTENT, "", op);
+            ensure(opType == null || TypeReal.is(opType), ProblemsExpression.EXPR_INCONSISTENT, "", op);
         }
         return TypeWeight.get();
     }

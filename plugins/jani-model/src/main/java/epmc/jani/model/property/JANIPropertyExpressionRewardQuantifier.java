@@ -403,7 +403,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isPosInf.apply(cmp, expressionLiteral.getValue());
         return cmp.getBoolean();

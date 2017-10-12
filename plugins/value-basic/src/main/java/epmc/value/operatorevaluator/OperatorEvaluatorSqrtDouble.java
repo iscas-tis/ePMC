@@ -49,7 +49,7 @@ public enum OperatorEvaluatorSqrtDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.is(type) && !TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -73,6 +73,6 @@ public enum OperatorEvaluatorSqrtDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double value1 = UtilValue.getDoubleOrInt(operands[0]);
-        ValueDouble.asDouble(result).set(Math.sqrt(value1));
+        ValueDouble.as(result).set(Math.sqrt(value1));
     }
 }

@@ -197,7 +197,7 @@ final class InputWriter {
             }
             Value lower = variable.getLower();
             Expression varExpr = null;
-            OperatorEvaluator isNegInf = ContextValue.get().getOperatorEvaluator(OperatorIsNegInf.IS_NEG_INF, lower.getType());
+            OperatorEvaluator isNegInf = ContextValue.get().getEvaluator(OperatorIsNegInf.IS_NEG_INF, lower.getType());
             isNegInf.apply(cmp, lower);
             if (lower != null && !cmp.getBoolean()) {
                 varExpr = UtilModelChecker.parseExpression(lower.toString());
@@ -205,7 +205,7 @@ final class InputWriter {
                         LANGLE + GEQ + SPACE + name + SPACE + translateExpression(varExpr) + RANGLE);
             }
             Value upper = variable.getUpper();
-            OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, TypeReal.get());
+            OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, TypeReal.get());
             isPosInf.apply(cmp, lower);
             if (upper != null && !cmp.getBoolean()) {
                 varExpr = UtilModelChecker.parseExpression(upper.toString());
@@ -300,8 +300,8 @@ final class InputWriter {
         boolean hasReal = false;
         boolean hasInt = false;
         for (SMTLibVariable variable : solver.getVariables()) {
-            hasReal = hasReal | !TypeInteger.isInteger(variable.getType()) && TypeReal.isReal(variable.getType());
-            hasInt = hasInt | TypeInteger.isInteger(variable.getType());
+            hasReal = hasReal | !TypeInteger.is(variable.getType()) && TypeReal.is(variable.getType());
+            hasInt = hasInt | TypeInteger.is(variable.getType());
         }
         if (hasReal && !hasInt) {
             return QF_NRA;
@@ -314,11 +314,11 @@ final class InputWriter {
 
     private String typeToString(Type type) {
         assert type != null;
-        if (TypeBoolean.isBoolean(type)) {
+        if (TypeBoolean.is(type)) {
             return TYPE_BOOLEAN;
-        } else if (TypeInteger.isInteger(type)) {
+        } else if (TypeInteger.is(type)) {
             return TYPE_INT;
-        } else if (TypeReal.isReal(type)) {
+        } else if (TypeReal.is(type)) {
             return TYPE_REAL;
         } else {
             assert false : type;

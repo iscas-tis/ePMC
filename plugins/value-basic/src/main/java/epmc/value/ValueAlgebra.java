@@ -26,12 +26,12 @@ public interface ValueAlgebra extends Value {
     @Override
     TypeAlgebra getType();
 
-    static boolean isAlgebra(Value value) {
+    static boolean is(Value value) {
         return value instanceof ValueAlgebra;
     }
 
-    static ValueAlgebra asAlgebra(Value value) {
-        if (isAlgebra(value)) {
+    static ValueAlgebra as(Value value) {
+        if (is(value)) {
             return (ValueAlgebra) value;
         } else {
             return null;

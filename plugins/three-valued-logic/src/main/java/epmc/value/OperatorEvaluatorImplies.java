@@ -20,13 +20,13 @@ public final class OperatorEvaluatorImplies implements OperatorEvaluator {
         }
         /* if both operands are standard boolean, should be handled by
          * standard boolean operator evaluators. */
-        if (TypeBoolean.isBoolean(types[0]) && TypeBoolean.isBoolean(types[1])) {
+        if (TypeBoolean.is(types[0]) && TypeBoolean.is(types[1])) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[0]) && !TypeTernary.isTernary(types[0])) {
+        if (!TypeBoolean.is(types[0]) && !TypeTernary.is(types[0])) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[1]) && !TypeTernary.isTernary(types[1])) {
+        if (!TypeBoolean.is(types[1]) && !TypeTernary.is(types[1])) {
             return false;
         }
         return true;
@@ -51,7 +51,7 @@ public final class OperatorEvaluatorImplies implements OperatorEvaluator {
         assert operands.length == 2;
         Ternary op1 = UtilTernary.getTernary(operands[0]);
         Ternary op2 = UtilTernary.getTernary(operands[1]);
-        ValueTernary.asTernary(result).set(apply(op1, op2));
+        ValueTernary.as(result).set(apply(op1, op2));
     }
 
     private Ternary apply(Ternary op1, Ternary op2) {

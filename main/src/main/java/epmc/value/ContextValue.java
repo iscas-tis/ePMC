@@ -120,17 +120,17 @@ public final class ContextValue {
         return result;
     }
 
-    public void addOperatorEvaluator(OperatorEvaluator evaluator) {
+    public void addEvaluator(OperatorEvaluator evaluator) {
         assert evaluator != null;
         operatorEvaluators.add(evaluator);
     }
 
     // TODO get rid of this method
-    public List<OperatorEvaluator> getOperatorEvaluators() {
+    public List<OperatorEvaluator> getEvaluators() {
         return operatorEvaluatorsExternal;
     }
 
-    public OperatorEvaluator getOperatorEvaluator(Operator operator, Type...types) {
+    public OperatorEvaluator getEvaluator(Operator operator, Type...types) {
         assert operator != null;
         assert types != null;
         for (Type type : types) {

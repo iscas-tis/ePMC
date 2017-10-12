@@ -24,12 +24,12 @@ import epmc.value.Value;
 import epmc.value.operator.OperatorSet;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
-    public static boolean isInterval(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueInterval;
     }
 
-    public static ValueInterval asInterval(Value value) {
-        if (isInterval(value)) {
+    public static ValueInterval as(Value value) {
+        if (is(value)) {
             return (ValueInterval) value;
         } else {
             return null;
@@ -105,7 +105,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         assert string != null;
         string = string.trim();
         String[] parts = string.split(COMMA);
-        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         if (parts.length == 1) {
             Value point = UtilValue.newValue(TypeReal.get(), parts[0]);
             setReal.apply(getIntervalLower(), point);
@@ -138,16 +138,16 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     public static ValueAlgebra getLower(Value operand) {
-        if (isInterval(operand)) {
-            return ValueInterval.asInterval(operand).getIntervalLower();
+        if (is(operand)) {
+            return ValueInterval.as(operand).getIntervalLower();
         } else {
-            return ValueAlgebra.asAlgebra(operand);
+            return ValueAlgebra.as(operand);
         }
     }
 
     public static Value getUpper(Value operand) {
-        if (isInterval(operand)) {
-            return ValueInterval.asInterval(operand).getIntervalUpper();
+        if (is(operand)) {
+            return ValueInterval.as(operand).getIntervalUpper();
         } else {
             return operand;
         }

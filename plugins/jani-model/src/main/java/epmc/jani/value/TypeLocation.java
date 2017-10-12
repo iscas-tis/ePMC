@@ -50,12 +50,12 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
         return ContextValue.get().makeUnique(type);
     }
 
-    public static boolean isLocation(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeLocation;
     }
     
-    public static TypeLocation asLocation(Type type) {
-        if (isLocation(type)) {
+    public static TypeLocation as(Type type) {
+        if (is(type)) {
             return (TypeLocation) type;
         } else {
             return null;

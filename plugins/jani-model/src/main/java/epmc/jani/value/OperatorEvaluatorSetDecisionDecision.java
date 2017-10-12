@@ -22,10 +22,10 @@ public enum OperatorEvaluatorSetDecisionDecision implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDecision.isDecision(types[0])) {
+        if (!TypeDecision.is(types[0])) {
             return false;
         }
-        if (!TypeDecision.isDecision(types[1])) {
+        if (!TypeDecision.is(types[1])) {
             return false;
         }
         return true;
@@ -41,10 +41,10 @@ public enum OperatorEvaluatorSetDecisionDecision implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        Value[] resultValues = ValueDecision.asDecision(result).getValues();
-        Value[] operandValues = ValueDecision.asDecision(operands[0]).getValues();
+        Value[] resultValues = ValueDecision.as(result).getValues();
+        Value[] operandValues = ValueDecision.as(operands[0]).getValues();
         assert resultValues.length == operandValues.length;
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeInteger.get(), TypeInteger.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeInteger.get(), TypeInteger.get());
         for (int valueNr = 0; valueNr < resultValues.length; valueNr++) {
             set.apply(resultValues[valueNr], operandValues[valueNr]);
         }

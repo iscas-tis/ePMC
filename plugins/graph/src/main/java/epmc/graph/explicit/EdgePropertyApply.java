@@ -69,7 +69,7 @@ public final class EdgePropertyApply implements EdgeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         this.evaluator = evaluator;
         this.operands = operands;
         this.callOperands = new Value[operands.length];

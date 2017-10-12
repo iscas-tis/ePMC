@@ -51,13 +51,13 @@ public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInterval.isInterval(type)
-                    && !TypeReal.isReal(type)
-                    && !TypeInteger.isInteger(type)) {
+            if (!TypeInterval.is(type)
+                    && !TypeReal.is(type)
+                    && !TypeInteger.is(type)) {
                 return false;
             }
         }
-        if (!TypeInterval.isInterval(types[0]) && !TypeInterval.isInterval(types[0])) {
+        if (!TypeInterval.is(types[0]) && !TypeInterval.is(types[0])) {
             return false;
         }
         return true;
@@ -84,17 +84,17 @@ public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, op1Lower.getType(), op2Lower.getType());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, op1Lower.getType(), op2Lower.getType());
         eq.apply(cmp, op1Lower, op2Lower);
         if (!cmp.getBoolean()) {
-            ValueBoolean.asBoolean(result).set(false);
+            ValueBoolean.as(result).set(false);
             return;
         }
         eq.apply(cmp, op1Upper, op2Upper);
         if (!cmp.getBoolean()) {
-            ValueBoolean.asBoolean(result).set(false);
+            ValueBoolean.as(result).set(false);
             return;
         }
-        ValueBoolean.asBoolean(result).set(true);
+        ValueBoolean.as(result).set(true);
     }
 }

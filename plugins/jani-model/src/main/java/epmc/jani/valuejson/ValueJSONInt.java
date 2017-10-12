@@ -32,11 +32,11 @@ public class ValueJSONInt implements ValueJSON {
     @Override
     public JsonValue convert(Value value) {
         assert value != null;
-        if (!ValueInteger.isInteger(value)) {
+        if (!ValueInteger.is(value)) {
             return null;
         }
         return Json.createObjectBuilder().add(ARBITRARY,
-                ValueInteger.asInteger(value).getInt())
+                ValueInteger.as(value).getInt())
                 .build().get(ARBITRARY);
     }
 

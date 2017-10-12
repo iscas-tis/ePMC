@@ -100,7 +100,7 @@ public final class ExpressionSteadyState implements Expression {
         if (result != null) {
             return result;
         }
-        ensure(TypeBoolean.isBoolean(operand.getType(expressionToType)),
+        ensure(TypeBoolean.is(operand.getType(expressionToType)),
                 ProblemsExpression.EXPR_INCONSISTENT, "", operand);
         return TypeWeight.get();
     }

@@ -57,7 +57,7 @@ public final class ValueArrayJANIDecision implements ValueArray {
         Value[] values = valueJaniDecision.getValues();
         bitIndex = index * bitsPerEntry;
         for (Value entry : values) {
-            ValueBitStoreable.asBitStoreable(entry).read(stream);
+            ValueBitStoreable.as(entry).read(stream);
         }
     }
 
@@ -67,7 +67,7 @@ public final class ValueArrayJANIDecision implements ValueArray {
         Value[] values = valueJaniDecision.getValues();
         bitIndex = index * bitsPerEntry;
         for (Value entry : values) {
-            ValueBitStoreable.asBitStoreable(entry).write(stream);
+            ValueBitStoreable.as(entry).write(stream);
         }
     }
 

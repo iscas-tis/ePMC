@@ -49,11 +49,11 @@ public enum OperatorEvaluatorDivideInterval implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInterval.isInterval(type) && !TypeReal.isReal(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeInterval.is(type) && !TypeReal.is(type) && !TypeInteger.is(type)) {
                 return false;
             }
         }
-        if (!TypeInterval.isInterval(types[0]) && !TypeInterval.isInterval(types[0])) {
+        if (!TypeInterval.is(types[0]) && !TypeInterval.is(types[0])) {
             return false;
         }
         return true;
@@ -81,7 +81,7 @@ public enum OperatorEvaluatorDivideInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, op1Lower.getType(), op2Lower.getType());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, op1Lower.getType(), op2Lower.getType());
         divide.apply(resultLower, op1Lower, op2Lower);
         divide.apply(resultUpper, op1Upper, op2Upper);
     }

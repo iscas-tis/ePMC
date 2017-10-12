@@ -124,7 +124,7 @@ public final class ExpressionToDD implements Closeable {
                 return singleDD;
             }
 
-            if (type == null || TypeInteger.isInteger(type)) {
+            if (type == null || TypeInteger.is(type)) {
                 int digVal = 1;
                 ValueInteger value = TypeInteger.get()
                         .newValue();
@@ -139,8 +139,8 @@ public final class ExpressionToDD implements Closeable {
                 DD signConstDD = vector.get(vector.size() - 1).toMT().
                         multiplyWith(ContextDD.get().newConstant(-digVal));
                 singleDD = singleDD.addWith(signConstDD);
-            } else if (TypeEnum.isEnum(type)) {
-                TypeEnum typeEnum = TypeEnum.asEnum(type);
+            } else if (TypeEnum.is(type)) {
+                TypeEnum typeEnum = TypeEnum.as(type);
                 Enum<?>[] consts = typeEnum.getEnumClass().getEnumConstants();
                 int numBits = typeEnum.getNumBits() + 1;
                 singleDD = ContextDD.get().newConstant(typeEnum.newValue(consts[0]));
@@ -256,19 +256,19 @@ public final class ExpressionToDD implements Closeable {
     private List<DD> valueToVector(Value value) {
         if (!useVector) {
             return null;
-        } else if (ValueEnum.isEnum(value)) {
+        } else if (ValueEnum.is(value)) {
             int numBits = ValueNumBitsKnown.getNumBits(value);
-            int number = ValueEnum.asEnum(value).getEnum().ordinal();
+            int number = ValueEnum.as(value).getEnum().ordinal();
             return ContextDD.get().twoCplFromInt(number, numBits);
-        } else if (ValueInteger.isInteger(value)) {
-            return ContextDD.get().twoCplFromInt(ValueInteger.asInteger(value).getInt());
+        } else if (ValueInteger.is(value)) {
+            return ContextDD.get().twoCplFromInt(ValueInteger.as(value).getInt());
         } else {
             return null;
         }
     }
 
     private DD valueToSingleDD(Value value) {
-        if (useVector && (ValueInteger.isInteger(value) || ValueEnum.isEnum(value))) {
+        if (useVector && (ValueInteger.is(value) || ValueEnum.is(value))) {
             return null;
         } else {
             return ContextDD.get().newConstant(value);

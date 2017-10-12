@@ -24,12 +24,12 @@ import epmc.util.BitStoreable;
 import epmc.value.Value;
 
 public interface ValueBitStoreable extends Value, BitStoreable {
-    static boolean isBitStoreable(Value value) {
+    static boolean is(Value value) {
         return value instanceof ValueBitStoreable;
     }
 
-    static ValueBitStoreable asBitStoreable(Value value) {
-        if (isBitStoreable(value)) {
+    static ValueBitStoreable as(Value value) {
+        if (is(value)) {
             return (ValueBitStoreable) value;
         } else {
             return null;

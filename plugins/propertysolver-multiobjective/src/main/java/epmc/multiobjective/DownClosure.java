@@ -58,7 +58,7 @@ final class DownClosure {
 
     DownClosure(int dimension) {
         assert dimension >= 0;
-        assert TypeReal.isReal(TypeWeight.get());
+        assert TypeReal.is(TypeWeight.get());
         this.dimension = dimension;
         this.contextSolver = new ConstraintSolverConfiguration();
         contextSolver.requireFeature(Feature.LP);
@@ -85,23 +85,23 @@ final class DownClosure {
         assert outside != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra lowerBound = TypeWeight.get().newValue();
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         set.apply(lowerBound, zero);
         ValueArrayAlgebra unrestrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
         if (unrestrictedResult == null) {
             return null;
         }
-        ValueSetString.asValueSetString(lowerBound).set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
+        ValueSetString.as(lowerBound).set(Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_NONZERO_WEIGHT));
         ValueArrayAlgebra restrictedResult = findSeparatingNonEmptyEntries(outside, numerical, lowerBound);
         if (restrictedResult != null) {
             return restrictedResult;
         }
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra entry = TypeWeight.get().newValue();
         ValueAlgebra sum = TypeWeight.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int i = 0; i < unrestrictedResult.size(); i++) {
             unrestrictedResult.get(entry, i);
             isZero.apply(cmp, entry);
@@ -125,7 +125,7 @@ final class DownClosure {
         Value zero = TypeWeight.get().getZero();
         Value one = TypeWeight.get().getOne();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         ConstraintSolver problem = contextSolver.newProblem();
         int[] wLpVars = new int[dimension];
         for (int i = 0; i < dimension; i++) {
@@ -186,7 +186,7 @@ final class DownClosure {
             problemWeights.set(1, 0);
             problemVariables[0] = wLpVars[0];
             String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
-            ValueSetString.asValueSetString(entry).set(minIncrease);
+            ValueSetString.as(entry).set(minIncrease);
             problem.addConstraint(problemWeights, problemVariables, ConstraintType.GE, entry);
         }
 
@@ -222,7 +222,7 @@ final class DownClosure {
         boolean outsideNonZero = false;
         ValueAlgebra entry = newValueWeight();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, entry.getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, entry.getType());
         for (int i = 0; i < outside.size(); i++) {
             outside.get(entry, i);
             isZero.apply(cmp, entry);
@@ -243,7 +243,7 @@ final class DownClosure {
         if (numerical) {
             ValueAlgebra smallValue = TypeWeight.get().newValue();
             String minIncrease = Options.get().getString(OptionsMultiObjective.MULTI_OBJECTIVE_MIN_INCREASE);
-            ValueSetString.asValueSetString(smallValue).set(minIncrease);
+            ValueSetString.as(smallValue).set(minIncrease);
             separating.get(entry, 0);
             isZero.apply(cmp, entry);
             if (cmp.getBoolean()) {
@@ -264,8 +264,8 @@ final class DownClosure {
     private void normalise(ValueArrayAlgebra array) {
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra sum = newValueWeight();
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         entry.set(0);
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);
@@ -367,7 +367,7 @@ final class DownClosure {
         }
         problem.close();
         current.get(entry, 0);
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, entry.getType(), opt.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, entry.getType(), opt.getType());
         max.apply(entry, entry, opt);
         current.set(entry, 0);
     }

@@ -34,11 +34,11 @@ public final class BeforeModelCreationJANITrigonometricFunctions implements Befo
 
     @Override
     public void process() {
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsin.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcos.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtan.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorSin.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorCos.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorTan.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAsin.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAcos.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAtan.INSTANCE);
     }
 }

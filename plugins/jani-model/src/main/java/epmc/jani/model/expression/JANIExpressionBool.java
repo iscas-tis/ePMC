@@ -102,10 +102,10 @@ public final class JANIExpressionBool implements JANIExpression {
             return null;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueBoolean.isBoolean(expressionLiteral.getValue())) {
+        if (!ValueBoolean.is(expressionLiteral.getValue())) {
             return null;
         }
-        value = ValueBoolean.asBoolean(expressionLiteral.getValue()).getBoolean();
+        value = ValueBoolean.as(expressionLiteral.getValue()).getBoolean();
         initialized = true;
         return this;
     }

@@ -26,12 +26,12 @@ import epmc.options.Options;
 import epmc.value.Value;
 
 public final class ValueDouble implements ValueReal, ValueSetString {
-    public static boolean isDouble(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueDouble;
     }
 
-    public static ValueDouble asDouble(Value value) {
-        if (isDouble(value)) {
+    public static ValueDouble as(Value value) {
+        if (is(value)) {
             return (ValueDouble) value;
         } else {
             return null;

@@ -93,8 +93,8 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         this.expression = builder.getExpression();
         this.variables = builder.getVariables();
         value = getValue(expression);
-        if (ValueBoolean.isBoolean(value)) {
-            booleanValue = ValueBoolean.asBoolean(value).getBoolean();
+        if (ValueBoolean.is(value)) {
+            booleanValue = ValueBoolean.as(value).getBoolean();
         } else {
             booleanValue = false;
         }

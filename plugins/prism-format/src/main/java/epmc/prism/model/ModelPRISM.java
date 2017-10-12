@@ -1188,8 +1188,8 @@ public final class ModelPRISM implements ModelJANIConverter {
         if (expression instanceof ExpressionLiteral) {
             ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
             Value value = expressionLiteral.getValue();
-            assert ValueInteger.isInteger(value);
-            int intValue = ValueInteger.asInteger(value).getInt() - 1;
+            assert ValueInteger.is(value);
+            int intValue = ValueInteger.as(value).getInt() - 1;
             assert intValue >= 0 : intValue;
             assert intValue < playerNameToNumber.size();
             return intValue;
@@ -1275,8 +1275,8 @@ public final class ModelPRISM implements ModelJANIConverter {
             return rewards.get(0);
         } else {
             Value rewardValue = evaluateValue(expression);
-            if (ValueInteger.isInteger(rewardValue)) {
-                int rewardIndex = ValueInteger.asInteger(rewardValue).getInt() - 1;
+            if (ValueInteger.is(rewardValue)) {
+                int rewardIndex = ValueInteger.as(rewardValue).getInt() - 1;
                 return rewards.get(rewardIndex);
             } else {
                 return null;

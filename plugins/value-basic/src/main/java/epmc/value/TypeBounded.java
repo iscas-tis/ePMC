@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Type;
 
 public interface TypeBounded extends TypeAlgebra {
-    static boolean isBounded(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeBounded;
     }
 
-    static  TypeBounded asBounded(Type type) {
-        if (isBounded(type)) {
+    static  TypeBounded as(Type type) {
+        if (is(type)) {
             return (TypeBounded) type;
         } else {
             return null;
@@ -36,7 +36,7 @@ public interface TypeBounded extends TypeAlgebra {
     }
 
     static ValueAlgebra getLower(Type type) {
-        TypeBounded typeBounded = asBounded(type);
+        TypeBounded typeBounded = as(type);
         if (typeBounded != null) {
             return typeBounded.getLower();
         } else {
@@ -45,7 +45,7 @@ public interface TypeBounded extends TypeAlgebra {
     }
 
     static ValueAlgebra getUpper(Type type) {
-        TypeBounded typeBounded = asBounded(type);
+        TypeBounded typeBounded = as(type);
         if (typeBounded != null) {
             return typeBounded.getUpper();
         } else {

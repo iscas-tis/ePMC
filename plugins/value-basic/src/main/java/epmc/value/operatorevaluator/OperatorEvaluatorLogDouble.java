@@ -48,7 +48,7 @@ public enum OperatorEvaluatorLogDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.is(type) && !TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -72,6 +72,6 @@ public enum OperatorEvaluatorLogDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double value1 = UtilValue.getDoubleOrInt(operands[0]);
-        ValueDouble.asDouble(result).set(Math.log(value1));
+        ValueDouble.as(result).set(Math.log(value1));
     }
 }

@@ -70,7 +70,7 @@ public interface ExplorerNodeProperty {
      */
     default boolean getBoolean() {
         Value value = get();
-        assert ValueBoolean.isBoolean(value);
-        return ValueBoolean.asBoolean(value).getBoolean();
+        assert ValueBoolean.is(value);
+        return ValueBoolean.as(value).getBoolean();
     }
 }

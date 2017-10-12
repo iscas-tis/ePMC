@@ -71,7 +71,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         assert expression != null;
         ValueBoolean cmp = TypeBoolean.get().newValue();
         if (ExpressionLiteral.isLiteral(expression)) {
-            OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(expression).getValue().getType());
+            OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(expression).getValue().getType());
             isZero.apply(cmp, ExpressionLiteral.asLiteral(expression).getValue());
         }
         return ExpressionLiteral.isLiteral(expression) && cmp.getBoolean();

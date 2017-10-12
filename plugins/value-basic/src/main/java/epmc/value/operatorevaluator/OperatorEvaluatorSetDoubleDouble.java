@@ -20,10 +20,10 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDouble.isDouble(types[0])) {
+        if (!TypeDouble.is(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1])) {
+        if (!TypeDouble.is(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueDouble.asDouble(result).set(ValueDouble.asDouble(operands[0]).getDouble());
+        ValueDouble.as(result).set(ValueDouble.as(operands[0]).getDouble());
     }
 }

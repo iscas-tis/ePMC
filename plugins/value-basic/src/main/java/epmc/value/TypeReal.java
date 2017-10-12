@@ -33,12 +33,12 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
         ContextValue.get().setType(TypeReal.class, type);
     }
 
-    static boolean isReal(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeReal;
     }
 
-    static TypeReal asReal(Type type) {
-        if (isReal(type)) {
+    static TypeReal as(Type type) {
+        if (is(type)) {
             return (TypeReal) type;
         } else {
             return null;

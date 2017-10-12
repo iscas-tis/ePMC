@@ -111,7 +111,7 @@ public final class GraphBuilderDD implements Closeable {
     public GraphBuilderDD(GraphDD graphDD, List<DD> sinks, boolean nondet, boolean stateEncoding) {
         assert graphDD != null;
         assert assertSinks(sinks, graphDD);
-        isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, TypeInteger.get());
+        isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, TypeInteger.get());
         cmp = TypeBoolean.get().newValue();
 
         this.presVars = UtilBitSet.newBitSetUnbounded();
@@ -346,7 +346,7 @@ public final class GraphBuilderDD implements Closeable {
 
     private int nodeNumber() {
         assert presNodes.isLeaf();
-        int leafValue = ValueInteger.asInteger(presNodes.value()).getInt();
+        int leafValue = ValueInteger.as(presNodes.value()).getInt();
         if (leafValue == 1) {
             int number = presNumbers.peek();
             assert number < nodeOrderMap.length : number + " " + nodeOrderMap.length;
@@ -369,7 +369,7 @@ public final class GraphBuilderDD implements Closeable {
 
     private int nextNodeNumber() {
         assert transitions.isLeaf();
-        int leafValue = ValueInteger.asInteger(nextNodes.value()).getInt();
+        int leafValue = ValueInteger.as(nextNodes.value()).getInt();
         if (leafValue == 1) {
             int number = nextNumbers.peek();
             assert number < nodeOrderMap.length : number + " " + nodeOrderMap.length;
@@ -453,7 +453,7 @@ public final class GraphBuilderDD implements Closeable {
         graph.addSettableNodeProperty(CommonProperties.STATE, TypeBoolean.get());
         graph.addSettableNodeProperty(CommonProperties.PLAYER, TypeEnum.get(Player.class));
         graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         TypeWeight typeWeight = TypeWeight.get();
         TypeBoolean typeBoolean = TypeBoolean.get();
         TypeEnum typePlayer = TypeEnum.get(Player.class);
@@ -461,16 +461,16 @@ public final class GraphBuilderDD implements Closeable {
         ValueAlgebra zero = typeWeight.getZero();
         ValueAlgebra one = typeWeight.getOne();
         ValueAlgebra sum = typeWeight.newValue();
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, typeWeight, typeWeight);
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, typeWeight, typeWeight);
         ValueBoolean cmp = TypeBoolean.get().newValue();
         unifRate = typeWeight.newValue();
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueBoolean state = typeBoolean.newValue();
         ValueEnum player = typePlayer.newValue();
         ArrayList<TIntList> targets = new ArrayList<>(numNodesInclNondet);
         List<List<Value>> probs = new ArrayList<>(numNodesInclNondet);
         BitSet states = UtilBitSet.newBitSetUnbounded();
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, unifRate.getType(), sum.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, unifRate.getType(), sum.getType());
         for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
             targets.add(new TIntArrayList());
             probs.add(new ArrayList<Value>());
@@ -482,8 +482,8 @@ public final class GraphBuilderDD implements Closeable {
                 states.set(states.length());
             }
         }
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, sum.getType(), sum.getType());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, sum.getType(), sum.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         if (uniformise) {
             set.apply(unifRate, zero);
             for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
@@ -599,7 +599,7 @@ public final class GraphBuilderDD implements Closeable {
                     if (addNondetState) {
                         targets.get(presNode).add(nondetNodeNum);
                         Value minusOne = value.getType().newValue();
-                        ValueAlgebra.asAlgebra(minusOne).set(-1);
+                        ValueAlgebra.as(minusOne).set(-1);
                         probs.get(presNode).add(minusOne);
                     }
                     targets.get(nondetNodeNum).add(nextNode);
@@ -648,7 +648,7 @@ public final class GraphBuilderDD implements Closeable {
         assert !closed;
         Value entry = newValueWeight();
         ValueArray result = newValueArrayWeight(numNodes);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, target.getType(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, target.getType(), TypeWeight.get());
         ddToValueArray(target.supportWalker(presCubeDD), result, entry, set);
         return result;
     }
@@ -713,7 +713,7 @@ public final class GraphBuilderDD implements Closeable {
         assert explResult != null;
         DD result = valuesToDDRec(explResult);
         Value sinkValue = explResult.getType().getEntryType().newValue();
-        Value zero = UtilValue.newValue(ValueArrayAlgebra.asArrayAlgebra(explResult).getType().getEntryType(), 0);
+        Value zero = UtilValue.newValue(ValueArrayAlgebra.as(explResult).getType().getEntryType(), 0);
         for (int sinkNumber = 0; sinkNumber < sinks.length; sinkNumber++) {
             DD sink = sinks[sinkNumber];
             explResult.get(sinkValue, numNonsinkNodes + sinkNumber);

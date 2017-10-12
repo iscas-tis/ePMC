@@ -64,7 +64,7 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
         set.apply(result, operands[0]);
     }
 }

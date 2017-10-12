@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.value.Value;
 
 public interface ValueNumBitsKnown extends Value {
-    static boolean isNumBitsKnown(Value value) {
+    static boolean is(Value value) {
         if (!(value instanceof ValueNumBitsKnown)) {
             return false;
         }
@@ -34,8 +34,8 @@ public interface ValueNumBitsKnown extends Value {
         return true;
     }
 
-    static ValueNumBitsKnown asNumBitsKnown(Value value) {
-        if (isNumBitsKnown(value)) {
+    static ValueNumBitsKnown as(Value value) {
+        if (is(value)) {
             return (ValueNumBitsKnown) value;
         } else {
             return null;
@@ -43,7 +43,7 @@ public interface ValueNumBitsKnown extends Value {
     }
 
     static int getNumBits(Value value) {
-        ValueNumBitsKnown valueNumBitsKnown = ValueNumBitsKnown.asNumBitsKnown(value);
+        ValueNumBitsKnown valueNumBitsKnown = ValueNumBitsKnown.as(value);
         if (valueNumBitsKnown != null) {
             return valueNumBitsKnown.getNumBits();
         } else {

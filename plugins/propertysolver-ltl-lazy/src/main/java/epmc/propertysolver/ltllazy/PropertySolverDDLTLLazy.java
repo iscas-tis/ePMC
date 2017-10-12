@@ -975,7 +975,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         if (propertyQuantifier.getQuantified() instanceof ExpressionReward) {
             return false;
         }
-        if (!TypeReal.isReal(TypeWeight.get())) {
+        if (!TypeReal.is(TypeWeight.get())) {
             return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());

@@ -34,7 +34,7 @@ public interface TypeArray extends Type {
      * @param type type for which to check whether it is an array type
      * @return whether given type is an array type
      */
-    static boolean isArray(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeArray;
     }
 
@@ -45,8 +45,8 @@ public interface TypeArray extends Type {
      * @param type type to cast to array type
      * @return type casted to array type, or {@null} if not possible to cast
      */
-    static TypeArray asArray(Type type) {
-        if (isArray(type)) {
+    static TypeArray as(Type type) {
+        if (is(type)) {
             return (TypeArray) type;
         } else {
             return null;

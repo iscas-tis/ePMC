@@ -113,7 +113,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 assert operator != null;
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
                 evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -134,7 +134,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 Type[] types = new Type[2];
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -157,7 +157,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
                 types[2] = op3Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value, op3Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -429,7 +429,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
 
     private Operator[] collectOperators() {
         Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
+        Collection<OperatorEvaluator> identifiers = ContextValue.get().getEvaluators();
         for (OperatorEvaluator evaluator : identifiers) {
             operators.add(evaluator.getOperator());
         }
@@ -508,7 +508,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             boolean doFree = false;
             Pointer iPtr2;
             Pointer iPtr3;
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 iPtr2 = op2Ptr;
                 iPtr3 = op3Ptr;
             } else {

@@ -46,7 +46,7 @@ public enum OperatorEvaluatorMultiplyInverseDouble implements OperatorEvaluator 
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type)) {
+            if (!TypeDouble.is(type)) {
                 return false;
             }
         }
@@ -69,6 +69,6 @@ public enum OperatorEvaluatorMultiplyInverseDouble implements OperatorEvaluator 
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueDouble.asDouble(result).set(1.0 / ValueDouble.asDouble(operands[0]).getDouble());
+        ValueDouble.as(result).set(1.0 / ValueDouble.as(operands[0]).getDouble());
     }
 }

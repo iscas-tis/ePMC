@@ -32,10 +32,10 @@ public class ValueJSONBoolean implements ValueJSON {
     @Override
     public JsonValue convert(Value value) {
         assert value != null;
-        if (!(ValueBoolean.isBoolean(value))) {
+        if (!(ValueBoolean.is(value))) {
             return null;
         }
-        return Json.createObjectBuilder().add(ARBITRARY, ValueBoolean.asBoolean(value).getBoolean())
+        return Json.createObjectBuilder().add(ARBITRARY, ValueBoolean.as(value).getBoolean())
                 .build().get(ARBITRARY);
     }
 

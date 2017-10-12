@@ -346,13 +346,13 @@ public final class TestHelper {
         if (message == null) {
             message = prepareMessage(expected, actual, tolerance);
         }
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, expected.getType(), actual.getType());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, expected.getType(), actual.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         Value distanceValue = TypeReal.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         distance.apply(distanceValue, expected, actual);
         Value toleranceV = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(toleranceV).set(Double.toString(tolerance));
+        ValueSetString.as(toleranceV).set(Double.toString(tolerance));
         lt.apply(cmp, distanceValue, toleranceV);
         assertTrue(message, cmp.getBoolean());
     }
@@ -370,7 +370,7 @@ public final class TestHelper {
         assert expected != null;
         assert tolerance >= 0.0;
         Value actualValue = expected.getType().newValue();
-        ValueSetString.asValueSetString(actualValue).set("" + actual);
+        ValueSetString.as(actualValue).set("" + actual);
         assertEquals(null, expected, actualValue, tolerance);
     }
 
@@ -379,7 +379,7 @@ public final class TestHelper {
         assert actual != null;
         assert tolerance >= 0.0;
         Value expectedValue = actual.getType().newValue();
-        ValueSetString.asValueSetString(expectedValue).set("" + expected);
+        ValueSetString.as(expectedValue).set("" + expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
 
@@ -422,8 +422,8 @@ public final class TestHelper {
     public static void assertEquals(boolean expected, Value actual) {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
-        ValueSetString.asValueSetString(expectedValue).set(Boolean.toString(expected));
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, expectedValue.getType(), actual.getType());
+        ValueSetString.as(expectedValue).set(Boolean.toString(expected));
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, expectedValue.getType(), actual.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, expectedValue, actual);
         assertTrue(cmp.getBoolean());
@@ -561,7 +561,7 @@ public final class TestHelper {
 
     public static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
-        ValueSetString.asValueSetString(value).set(valueString);
+        ValueSetString.as(value).set(valueString);
         return value;
     }
 

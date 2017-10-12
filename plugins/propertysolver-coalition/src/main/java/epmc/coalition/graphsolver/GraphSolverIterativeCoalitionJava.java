@@ -105,11 +105,11 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
     private final ValueBoolean cmp;
 
     public GraphSolverIterativeCoalitionJava() {
-        distanceEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
-        maxEvaluator = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
-        divideEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
-        gtEvaluator = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
-        isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
+        distanceEvaluator = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        maxEvaluator = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        divideEvaluator = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        gtEvaluator = ContextValue.get().getEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
         thisDistance = TypeReal.get().newValue();
         zeroDistance = TypeReal.get().newValue();
         cmp = TypeBoolean.get().newValue();
@@ -128,7 +128,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
 
     @Override
     public boolean canHandle() {
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsSMG.isSMG(semantics)) {
             return false;
         }
@@ -212,8 +212,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         GraphSolverObjectiveExplicitUnboundedReachabilityGame objective = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) this.objective;
         NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, typeWeight, typeWeight);
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, typeWeight, typeWeight);
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, typeWeight, typeWeight);
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, typeWeight, typeWeight);
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
             Player player = playerProp.getEnum(origNode);
             int iterState = builder.inputToOutputNode(origNode);
@@ -308,7 +308,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArray weights = ValueArray.asArray(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArray weights = ValueArray.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
@@ -317,15 +317,15 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
-        Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
+        Value posInf = TypeWeight.as(values.getType().getEntryType()).getPosInf();
+        OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
+        ValueSetString.as(precisionValue).set(Double.toString(precision / 2));
         do {
             set.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
@@ -382,7 +382,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
@@ -393,15 +393,15 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         Value zero = values.getType().getEntryType().getZero();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
-        Value negInf = TypeWeight.asWeight(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.asWeight(values.getType().getEntryType()).getPosInf();
-        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
+        Value posInf = TypeWeight.as(values.getType().getEntryType()).getPosInf();
+        OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(precisionValue).set(Double.toString(precision / 2));
+        ValueSetString.as(precisionValue).set(Double.toString(precision / 2));
         do {
             set.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < maxEnd; state++) {
@@ -472,9 +472,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra nodeValue = newValueWeight();
         ValueAlgebra predValue = newValueWeight();
         ValueReal tolerance = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(tolerance).set(Double.toString(Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4));
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        ValueSetString.as(tolerance).set(Double.toString(Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4));
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra distanceValue = TypeWeight.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         do {

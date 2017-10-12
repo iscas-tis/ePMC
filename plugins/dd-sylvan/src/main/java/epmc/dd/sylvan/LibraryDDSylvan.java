@@ -169,7 +169,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         long result;
         if (operation.equals(OperatorId.ID)) {
             result = operands[0];        	
@@ -199,9 +199,9 @@ public final class LibraryDDSylvan implements LibraryDD {
     @Override
     public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
+        assert ValueBoolean.is(value) : value.getType() + " " + value;
         long result;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             result = trueNode;
         } else {
             result = falseNode;
@@ -397,7 +397,7 @@ public final class LibraryDDSylvan implements LibraryDD {
 
     @Override
     public boolean canApply(Operator operation, Type resultType, long... operands) {
-        if (!TypeBoolean.isBoolean(resultType)) {
+        if (!TypeBoolean.is(resultType)) {
             return false;
         }
         return operation.equals(OperatorId.ID)

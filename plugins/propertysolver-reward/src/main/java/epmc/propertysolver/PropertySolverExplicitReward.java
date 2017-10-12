@@ -182,7 +182,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         BitSet reachSink = computeReachSink(property);
         BitSet reachNotOneSink = computeReachNotOneSink(property, reachSink, min);
         ExpressionReward propertyReward = (ExpressionReward) property;
-        ValueAlgebra time = ValueAlgebra.asAlgebra(evaluateValue(propertyReward.getTime()));
+        ValueAlgebra time = ValueAlgebra.as(evaluateValue(propertyReward.getTime()));
         NodeProperty statesProp = graph.getNodeProperty(CommonProperties.STATE);
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
 
@@ -220,7 +220,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             objective.setStateRewards(cumulRewards);
             objective.setGraph(graph);
             objective.setMin(min);
-            objective.setDiscount(ValueReal.asReal(evaluateValue(propertyReward.getDiscount())));
+            objective.setDiscount(ValueReal.as(evaluateValue(propertyReward.getDiscount())));
             objective.setTime(time);
             configuration.setObjective(objective);
             configuration.solve();
@@ -255,9 +255,9 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         ValueAlgebra acc = TypeWeight.get().newValue();
         ValueAlgebra weighted = TypeWeight.get().newValue();
         int numNodes = graph.getNumNodes();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int graphNode = 0; graphNode < numNodes; graphNode++) {
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 continue;
@@ -268,7 +268,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             set.apply(acc, nodeRew);
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 Value succWeight = weight.get(graphNode, succNr);
-                ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
+                ValueAlgebra transRew = ValueAlgebra.as(transReward.get(graphNode, succNr));
                 multiply.apply(weighted, succWeight, transRew);
                 add.apply(acc, acc, weighted);
             }
@@ -286,11 +286,11 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
         RewardType rewardType = quantifiedReward.getRewardType();
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         if (rewardType.isReachability()) {
             cumulRewIdx = sinks.size();
         }
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
         for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 continue;
@@ -302,12 +302,12 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 set.apply(acc, nodeRew);
                 Value succWeight = weight.get(graphNode, succNr);
-                ValueAlgebra transRew = ValueAlgebra.asAlgebra(transReward.get(graphNode, succNr));
+                ValueAlgebra transRew = ValueAlgebra.as(transReward.get(graphNode, succNr));
                 if (player == Player.STOCHASTIC) {
                 } else {
                     add.apply(acc, acc, transRew);
                     int succ = graph.getSuccessorNode(graphNode, succNr);
-                    ValueAlgebra r = ValueAlgebra.asAlgebra(transReward.get(succ, 0));
+                    ValueAlgebra r = ValueAlgebra.as(transReward.get(succ, 0));
                     add.apply(acc, acc, r);
                 }
                 if (player == Player.ONE) {
@@ -410,10 +410,10 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     }
     
     private boolean isPosInf(Value value) {
-        if (!ValueReal.isReal(value)) {
+        if (!ValueReal.is(value)) {
             return false;
         }
-        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, value.getType());
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, value.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isPosInf.apply(cmp, value);
         return cmp.getBoolean();

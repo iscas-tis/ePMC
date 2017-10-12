@@ -144,7 +144,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
         assert stateReward != null;
         assert transReward != null;
         ExpressionReward propertyReward = (ExpressionReward) property;
-        ValueAlgebra time = ValueAlgebra.asAlgebra(evaluateValue(propertyReward.getTime()));
+        ValueAlgebra time = ValueAlgebra.as(evaluateValue(propertyReward.getTime()));
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
         for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
             Value reward = stateReward.get(graphNode);

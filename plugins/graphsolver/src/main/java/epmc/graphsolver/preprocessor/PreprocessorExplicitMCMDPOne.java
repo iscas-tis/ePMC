@@ -86,7 +86,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
         GraphExplicit graphExplicit = null;
         GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         graphExplicit = objectiveUnboundedReachability.getGraph();
-        Semantics semantics = ValueObject.asObject(graphExplicit.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(graphExplicit.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
 
         boolean min = objectiveUnboundedReachability.isMin();
         BitSet target = objectiveUnboundedReachability.getTarget();

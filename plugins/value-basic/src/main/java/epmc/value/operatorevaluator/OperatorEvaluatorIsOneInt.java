@@ -48,7 +48,7 @@ public enum OperatorEvaluatorIsOneInt implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInteger.isInteger(type)) {
+            if (!TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -72,6 +72,6 @@ public enum OperatorEvaluatorIsOneInt implements OperatorEvaluator {
             assert operand != null;
         }
         int op1 = UtilValue.getInt(operands[0]);
-        ValueBoolean.asBoolean(result).set(op1 == 1);
+        ValueBoolean.as(result).set(op1 == 1);
     }
 }

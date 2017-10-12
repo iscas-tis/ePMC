@@ -53,7 +53,7 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeAlgebra.isAlgebra(types[0])) {
+        if (!TypeAlgebra.is(types[0])) {
             return false;
         }
         return true;
@@ -75,13 +75,13 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         assert operands[0] != null;
         Value zero = TypeInteger.get().getZero();
         Value one = TypeInteger.get().getOne();
-        OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, operands[0].getType(), zero.getType());
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, operands[0].getType(), zero.getType());
+        OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, operands[0].getType(), zero.getType());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, operands[0].getType(), zero.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         eq.apply(cmp, operands[0], zero);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, zero.getType(), result.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, zero.getType(), result.getType());
         if (cmp.getBoolean()) {
             set.apply(result, zero);
             return;
@@ -93,7 +93,7 @@ public enum OperatorEvaluatorSgn implements OperatorEvaluator {
         }
         gt.apply(cmp, operands[0], zero);
         if (cmp.getBoolean()) {
-            addInverse.apply(ValueAlgebra.asAlgebra(result), one);
+            addInverse.apply(ValueAlgebra.as(result), one);
             return;
         }
         assert false;

@@ -219,8 +219,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         ValueAlgebra leftValue = timeBound.getLeftValue();
         ValueAlgebra rightValue = timeBound.getRightValue();
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (timeBound.isRightBounded()) {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 Value unifRate = converter.getUnifRate();
@@ -280,7 +280,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         DD rightDD = expressionToDD.translate(rightExpr);
         DD rightNotDD = rightDD.not();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, leftValue.getType(), leftValue.getType());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, leftValue.getType(), leftValue.getType());
         gt.apply(cmp, leftValue, leftValue.getType().getZero());
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             failDD = isUntil(inner) ? leftNotDD : rightNotDD;
@@ -305,7 +305,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 converter.setUniformise(true);
             }
             graph = converter.buildGraph();
-            values = ValueArrayAlgebra.asArrayAlgebra(converter.ddToValueArray(result));
+            values = ValueArrayAlgebra.as(converter.ddToValueArray(result));
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 ValueReal rate = TypeReal.get().newValue();
                 Value unifRate = converter.getUnifRate();
@@ -389,8 +389,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         if (propertyQuantifier.getCompareType() != CmpType.IS) {
             compare = modelChecker.check(propertyQuantifier.getCompare(), forStates);
             op = propertyQuantifier.getCompareType().asExOpType();
-            OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compare.getType());
-            OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compare.getType());
+            OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compare.getType());
+            OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, compare.getType());
             ValueBoolean cmpOne = TypeBoolean.get().newValue();
             ValueBoolean cmpZero = TypeBoolean.get().newValue();
             isOne.apply(cmpOne, compare.getSomeValue());

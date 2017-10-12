@@ -37,11 +37,11 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         ContextValue.get().setType(TypeInteger.class, ContextValue.get().makeUnique(type));
     }
 
-    public static boolean isInteger(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeInteger;
     }
 
-    public static TypeInteger asInteger(Type type) {
+    public static TypeInteger as(Type type) {
         if (type instanceof TypeInteger) {
             return (TypeInteger) type;
         } else {
@@ -50,18 +50,18 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     }
 
     public static boolean isIntegerBothBounded(Type type) {
-        if (!isInteger(type)) {
+        if (!is(type)) {
             return false;
         }
-        TypeInteger typeInteger = asInteger(type);
+        TypeInteger typeInteger = as(type);
         return typeInteger.isLeftBounded() && typeInteger.isRightBounded();
     }
 
     public static boolean isIntegerWithBounds(Type type) {
-        if (!isInteger(type)) {
+        if (!is(type)) {
             return false;
         }
-        TypeInteger typeInteger = asInteger(type);
+        TypeInteger typeInteger = as(type);
         return typeInteger.isLeftBounded() || typeInteger.isRightBounded();
     }
 
@@ -153,11 +153,11 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     }
 
     public boolean isLeftBounded() {
-        return lowerBound.getInt() != Integer.MIN_VALUE;
+        return lowerBound != null && lowerBound.getInt() != Integer.MIN_VALUE;
     }
 
     public boolean isRightBounded() {
-        return upperBound.getInt() != Integer.MAX_VALUE;
+        return upperBound != null && upperBound.getInt() != Integer.MAX_VALUE;
     }
 
     @Override

@@ -48,7 +48,7 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeAlgebra.is(type)) {
                 return false;
             }
         }
@@ -71,9 +71,9 @@ public enum OperatorEvaluatorFloor implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
+        double value = ValueNumber.as(operands[0]).getDouble();
         int floor = (int) Math.floor(value);
         // TODO change to integer once Fox-Glynn implementation adapted
-        ValueAlgebra.asAlgebra(result).set(floor);
+        ValueAlgebra.as(result).set(floor);
     }
 }

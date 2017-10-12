@@ -130,7 +130,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
         rightLabel = (PropertyEdgeAction) right.getEdgeProperty(CommonProperties.TRANSITION_LABEL);
         assert rightLabel != null;
         synchronisingActions = buildSynchronisingActions(new HashSet<>(componentParallel.getActions()));
-        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
+        multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     private boolean[] buildSynchronisingActions(Set<Action> synchronising) {

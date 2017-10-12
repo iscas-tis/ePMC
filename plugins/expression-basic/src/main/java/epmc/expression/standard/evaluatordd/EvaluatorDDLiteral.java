@@ -70,11 +70,11 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
         boolean useVector = false;
         //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
-        if (useVector && ValueInteger.isInteger(value)) {
-            this.vector = contextDD.twoCplFromInt(ValueInteger.asInteger(value).getInt());
-        } else if (useVector && ValueEnum.isEnum(value)) {
+        if (useVector && ValueInteger.is(value)) {
+            this.vector = contextDD.twoCplFromInt(ValueInteger.as(value).getInt());
+        } else if (useVector && ValueEnum.is(value)) {
             int numBits = ValueNumBitsKnown.getNumBits(value);
-            int number = ValueEnum.asEnum(value).getEnum().ordinal();
+            int number = ValueEnum.as(value).getEnum().ordinal();
             this.vector = contextDD.twoCplFromInt(number, numBits);
         } else {
             this.dd = contextDD.newConstant(value);

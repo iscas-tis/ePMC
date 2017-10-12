@@ -19,10 +19,10 @@ public enum OperatorEvaluatorSetLocationLocation implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeDecision.isDecision(types[0])) {
+        if (!TypeDecision.is(types[0])) {
             return false;
         }
-        if (!TypeLocation.isLocation(types[1])) {
+        if (!TypeLocation.is(types[1])) {
             return false;
         }
         return true;
@@ -38,7 +38,7 @@ public enum OperatorEvaluatorSetLocationLocation implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        int number = ValueLocation.asLocation(operands[0]).getValueNumber();
-        ValueLocation.asLocation(result).setValueNumber(number);
+        int number = ValueLocation.as(operands[0]).getValueNumber();
+        ValueLocation.as(result).setValueNumber(number);
     }
 }

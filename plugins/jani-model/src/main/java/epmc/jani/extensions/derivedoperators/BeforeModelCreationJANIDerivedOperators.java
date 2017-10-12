@@ -34,9 +34,9 @@ public final class BeforeModelCreationJANIDerivedOperators implements BeforeMode
 
     @Override
     public void process() {
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSgn.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAbs.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTrunc.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorSgn.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAbs.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorTrunc.INSTANCE);
 
     }
 }

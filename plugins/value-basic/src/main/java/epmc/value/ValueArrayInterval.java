@@ -41,11 +41,11 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert ValueInterval.isInterval(value);
+        assert ValueInterval.is(value);
         assert index >= 0;
         assert index < size() : index + " " + size();
-        content.set(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
-        content.set(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
+        content.set(ValueInterval.as(value).getIntervalLower(), index * 2);
+        content.set(ValueInterval.as(value).getIntervalUpper(), index * 2 + 1);
     }
 
     @Override
@@ -59,11 +59,11 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueInterval.isInterval(value);
+        assert ValueInterval.is(value);
         assert index >= 0;
         assert index < size() : index + " " + size();
-        content.get(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
-        content.get(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
+        content.get(ValueInterval.as(value).getIntervalLower(), index * 2);
+        content.get(ValueInterval.as(value).getIntervalUpper(), index * 2 + 1);
     }
 
     @Override

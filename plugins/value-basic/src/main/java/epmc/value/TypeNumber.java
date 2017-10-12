@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Type;
 
 public interface TypeNumber extends TypeAlgebra {
-    static boolean isNumber(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeNumber;
     }
 
-    static TypeNumber asNumber(Type type) {
-        if (isNumber(type)) {
+    static TypeNumber as(Type type) {
+        if (is(type)) {
             return (TypeNumber) type;
         } else {
             return null;

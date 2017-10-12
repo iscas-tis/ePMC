@@ -83,7 +83,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJavaDouble implemen
             return false;
         }
         Type typeWeight = TypeWeight.get();
-        if (!TypeDouble.isDouble(typeWeight)) {
+        if (!TypeDouble.is(typeWeight)) {
             return false;
         }
         return true;

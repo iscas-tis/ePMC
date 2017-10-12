@@ -48,7 +48,7 @@ public enum OperatorEvaluatorIsPosInfDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type)) {
+            if (!TypeDouble.is(type)) {
                 return false;
             }
         }
@@ -72,6 +72,6 @@ public enum OperatorEvaluatorIsPosInfDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double op1 = UtilValue.getDouble(operands[0]);
-        ValueBoolean.asBoolean(result).set(op1 == Double.POSITIVE_INFINITY);
+        ValueBoolean.as(result).set(op1 == Double.POSITIVE_INFINITY);
     }
 }

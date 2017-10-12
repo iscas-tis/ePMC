@@ -32,10 +32,10 @@ public class ValueJSONDouble implements ValueJSON {
     @Override
     public JsonValue convert(Value value) {
         assert value != null;
-        if (!(ValueDouble.isDouble(value))) {
+        if (!(ValueDouble.is(value))) {
             return null;
         }
-        return Json.createObjectBuilder().add(ARBITRARY, ValueDouble.asDouble(value).getDouble())
+        return Json.createObjectBuilder().add(ARBITRARY, ValueDouble.as(value).getDouble())
                 .build().get(ARBITRARY);
     }
 

@@ -24,12 +24,12 @@ import epmc.value.Value;
 
 public interface ValueNumber extends ValueAlgebra {
 
-    static boolean isNumber(Value value) {
+    static boolean is(Value value) {
         return value instanceof ValueNumber;
     }
 
-    static ValueNumber asNumber(Value value) {
-        if (isNumber(value)) {
+    static ValueNumber as(Value value) {
+        if (is(value)) {
             return (ValueNumber) value;
         } else {
             return null;

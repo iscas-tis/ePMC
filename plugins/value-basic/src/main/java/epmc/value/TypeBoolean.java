@@ -30,12 +30,12 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     private final ValueBoolean valueFalse = new ValueBoolean(this, false);
     private final ValueBoolean valueTrue = new ValueBoolean(this, true);
 
-    public static boolean isBoolean(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeBoolean;
     }
 
-    public static TypeBoolean asBoolean(Type type) {
-        if (isBoolean(type)) {
+    public static TypeBoolean as(Type type) {
+        if (is(type)) {
             return (TypeBoolean) type;
         } else {
             return null;

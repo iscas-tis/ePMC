@@ -38,7 +38,7 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
         assert value != null;
         assert index >= 0;
         assert index < size() : index + SPACE + size();
-        content[index] = ValueInteger.asInteger(value).getInt();
+        content[index] = ValueInteger.as(value).getInt();
     }
 
     @Override
@@ -54,7 +54,7 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
         assert index >= 0;
         assert index < size();
         int entry = content[index];
-        ValueAlgebra.asAlgebra(value).set(entry);
+        ValueAlgebra.as(value).set(entry);
     }
 
     @Override

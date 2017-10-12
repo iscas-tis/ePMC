@@ -22,10 +22,10 @@ public enum OperatorEvaluatorSetAlgebraInt implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeInteger.isInteger(types[0])) {
+        if (!TypeInteger.is(types[0])) {
             return false;
         }
-        if (!TypeAlgebra.isAlgebra(types[1])) {
+        if (!TypeAlgebra.is(types[1])) {
             return false;
         }
         return true;
@@ -41,6 +41,6 @@ public enum OperatorEvaluatorSetAlgebraInt implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueAlgebra.asAlgebra(result).set(ValueInteger.asInteger(operands[0]).getInt());
+        ValueAlgebra.as(result).set(ValueInteger.as(operands[0]).getInt());
     }
 }

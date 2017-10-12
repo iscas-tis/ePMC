@@ -101,7 +101,7 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
         int forStatesSize = forStates.size();
         int innerResultsSize = innerResults.size();
         ExpressionOperator expressionOperator = (ExpressionOperator) property;
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expressionOperator.getOperator(), types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(expressionOperator.getOperator(), types);
         for (int node = 0; node < forStatesSize; node++) {
             for (int operandNr = 0; operandNr < innerResultsSize; operandNr++) {
                 innerResults.get(operandNr).getExplicitIthValue(operands[operandNr], node);

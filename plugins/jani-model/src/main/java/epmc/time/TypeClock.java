@@ -5,12 +5,12 @@ import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 
 public final class TypeClock implements TypeAlgebra {
-    public static boolean isClock(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeClock;
     }
 
-    public static TypeClock asClock(Type type) {
-        if (isClock(type)) {
+    public static TypeClock as(Type type) {
+        if (is(type)) {
             return (TypeClock) type;
         } else {
             return null;

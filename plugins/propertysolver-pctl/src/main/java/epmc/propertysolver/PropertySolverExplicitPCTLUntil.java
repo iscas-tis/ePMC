@@ -168,7 +168,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
     {
         assert pathTemporal != null;
-        Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         TimeBound timeBound = pathTemporal.getTimeBound();
 
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
@@ -192,7 +192,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         allNodes.set(0, graph.getNumNodes(), true);
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         ValueAlgebra transValue = typeWeight.newValue();
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, typeWeight, typeWeight);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, typeWeight, typeWeight);
         set.apply(transValue, typeWeight.getZero());
 
         BitSet zeroSet = UtilBitSet.newBitSetUnbounded();
@@ -263,7 +263,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             values = objective.getResult();
         }
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, timeBound.getLeftValue().getType(), timeBound.getLeftValue().getType());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, timeBound.getLeftValue().getType(), timeBound.getLeftValue().getType());
         gt.apply(cmp, timeBound.getLeftValue(), timeBound.getLeftValue().getType().getZero());
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
@@ -319,7 +319,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             values.get(val, i);
             resultValues.set(val, i);
         }
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, typeWeight, typeWeight);
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, typeWeight, typeWeight);
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
             for (int i = 0; i < resultValues.size(); i++) {

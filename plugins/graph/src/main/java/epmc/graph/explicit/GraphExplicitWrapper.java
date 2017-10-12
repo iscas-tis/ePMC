@@ -149,7 +149,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
         public void set(int currentNode, int successor, String value) {
             assert value != null;
             assert successor >= 0;
-            ValueSetString.asValueSetString(helper).set(value);
+            ValueSetString.as(helper).set(value);
             set(currentNode, successor, helper);
         }
 

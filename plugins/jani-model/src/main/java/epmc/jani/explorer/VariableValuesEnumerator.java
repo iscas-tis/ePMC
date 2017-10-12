@@ -175,7 +175,7 @@ public final class VariableValuesEnumerator {
             Expression literal = getLiteral(expression);
             Value value = variables.get(identifier.getName()).getType().toType().newValue();
             Value literalValue = evaluateValue(literal);
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
             set.apply(value, literalValue);
             if (!ValueRange.checkRange(value)) {
                 return Collections.emptyMap();
@@ -193,7 +193,7 @@ public final class VariableValuesEnumerator {
             common.retainAll(right.keySet());
             if (!common.isEmpty()) {
                 for (Variable entry : common) {
-                    OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, left.get(entry).getType(), right.get(entry).getType());;
+                    OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, left.get(entry).getType(), right.get(entry).getType());;
                     ValueBoolean cmp = TypeBoolean.get().newValue();
                     eq.apply(cmp, left.get(entry), right.get(entry));
                     if (!cmp.getBoolean()) {
@@ -220,7 +220,7 @@ public final class VariableValuesEnumerator {
         remainingVariables.remove(identifier.getName());
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
         Value literalValue = evaluateValue(literal);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
         set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
@@ -245,7 +245,7 @@ public final class VariableValuesEnumerator {
         Expression literal = getLiteral(restriction);
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
         Value literalValue = evaluateValue(literal);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
         set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
@@ -321,7 +321,7 @@ public final class VariableValuesEnumerator {
     private List<Map<Variable,Value>> enumerateCombinations(Map<String,Variable> variables) {
         assert variables != null;
         for (Variable variable : variables.values()) {
-            ensure(TypeEnumerable.isEnumerable(variable.getType().toType()),
+            ensure(TypeEnumerable.is(variable.getType().toType()),
                     ProblemsJANIExplorer.JANI_EXPLORER_INFINITELY_MANY_INITIAL_STATES);
         }
         Expression[] identifiers = new Expression[variables.size()];
@@ -332,18 +332,18 @@ public final class VariableValuesEnumerator {
         }
         int numValues = 1;
         for (Variable variable : variables.values()) {
-            TypeEnumerable type = TypeEnumerable.asEnumerable(variable.getType().toType());
+            TypeEnumerable type = TypeEnumerable.as(variable.getType().toType());
             numValues *= type.getNumValues();
         }
         ValueEnumerable[] variableValues = new ValueEnumerable[variables.size()];
         index = 0;
         for (Variable variable : variables.values()) {
-            variableValues[index] = TypeEnumerable.asEnumerable(variable.getType().toType()).newValue();
+            variableValues[index] = TypeEnumerable.as(variable.getType().toType()).newValue();
             index++;
         }
         List<TypeEnumerable> variableTypes = new ArrayList<>();
         for (Variable variable : variables.values()) {
-            variableTypes.add(TypeEnumerable.asEnumerable(variable.getType().toType()));
+            variableTypes.add(TypeEnumerable.as(variable.getType().toType()));
         }
         List<Map<Variable,Value>> result = new ArrayList<>();
         for (int valueNr = 0; valueNr < numValues; valueNr++) {
@@ -388,7 +388,7 @@ public final class VariableValuesEnumerator {
         assert variables != null;
         assert expression != null;
         for (Variable variable : variables.values()) {
-            ensure(TypeEnumerable.isEnumerable(variable.getType().toType()),
+            ensure(TypeEnumerable.is(variable.getType().toType()),
                     ProblemsJANIExplorer.JANI_EXPLORER_INITIAL_STATES_BRUTE_FORCE_UNBOUNDED);
         }
         Expression[] identifiers = new Expression[variables.size()];
@@ -399,13 +399,13 @@ public final class VariableValuesEnumerator {
         }
         int numValues = 1;
         for (Variable variable : variables.values()) {
-            numValues *= TypeEnumerable.asEnumerable(variable.getType().toType()).getNumValues();
+            numValues *= TypeEnumerable.as(variable.getType().toType()).getNumValues();
         }
         EvaluatorExplicitBoolean evaluator = UtilEvaluatorExplicit.newEvaluatorBoolean(expression, expressionToType, identifiers);
         ValueEnumerable[] variableValues = new ValueEnumerable[variables.size()];
         index = 0;
         for (Variable variable : variables.values()) {
-            variableValues[index] = TypeEnumerable.asEnumerable(variable.getType().toType()).newValue();
+            variableValues[index] = TypeEnumerable.as(variable.getType().toType()).newValue();
             index++;
         }
         List<Map<Variable,Value>> result = new ArrayList<>();
@@ -413,7 +413,7 @@ public final class VariableValuesEnumerator {
             int remaining = valueNr;
             index = 0;
             for (Variable variable : variables.values()) {
-                TypeEnumerable type = TypeEnumerable.asEnumerable(variable.getType().toType());
+                TypeEnumerable type = TypeEnumerable.as(variable.getType().toType());
                 int numTypeValues = type.getNumValues();
                 int varValueNr = remaining % numTypeValues;
                 remaining /= numTypeValues;

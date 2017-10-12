@@ -123,7 +123,7 @@ public final class UtilEvaluatorDD {
         ContextDD contextDD = vector.get(0).getContext();
         Type type = TypeInteger.get();
         //        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
-        if (type == null || TypeInteger.isInteger(type)) {
+        if (type == null || TypeInteger.is(type)) {
             int digVal = 1;
             ValueInteger value = TypeInteger.get()
                     .newValue();
@@ -138,8 +138,8 @@ public final class UtilEvaluatorDD {
             DD signConstDD = vector.get(vector.size() - 1).toMT().
                     multiplyWith(contextDD.newConstant(-digVal));
             singleDD = singleDD.addWith(signConstDD);
-        } else if (TypeEnum.isEnum(type)) {
-            TypeEnum typeEnum = TypeEnum.asEnum(type);
+        } else if (TypeEnum.is(type)) {
+            TypeEnum typeEnum = TypeEnum.as(type);
             Enum<?>[] consts = typeEnum.getEnumClass().getEnumConstants();
             int numBits = typeEnum.getNumBits() + 1;
             singleDD = contextDD.newConstant(typeEnum.newValue(consts[0]));
@@ -188,7 +188,7 @@ public final class UtilEvaluatorDD {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         for (Expression operand : expressionOperator.getOperands()) {
-            if (!TypeInteger.isInteger(operand.getType(new ExpressionToTypeDD(variables)))) {
+            if (!TypeInteger.is(operand.getType(new ExpressionToTypeDD(variables)))) {
                 return false;
             }
             if (!canIntegerVectorOperator(operand, operator, variables)) {
@@ -219,7 +219,7 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")
@@ -250,7 +250,7 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")

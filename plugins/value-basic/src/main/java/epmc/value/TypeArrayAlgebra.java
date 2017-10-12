@@ -24,12 +24,12 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public interface TypeArrayAlgebra extends TypeArray {
-    static boolean isArrayAlgebra(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeArrayAlgebra;
     }
 
-    static TypeArrayAlgebra asArrayAlgebra(Type type) {
-        if (isArrayAlgebra(type)) {
+    static TypeArrayAlgebra as(Type type) {
+        if (is(type)) {
             return (TypeArrayAlgebra) type;
         } else {
             return null;

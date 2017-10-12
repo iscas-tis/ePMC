@@ -98,7 +98,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedNative implements G
             return false;
         }
         Type typeWeight = TypeWeight.get();
-        if (!TypeDouble.isDouble(typeWeight)) {
+        if (!TypeDouble.is(typeWeight)) {
             return false;
         }
 

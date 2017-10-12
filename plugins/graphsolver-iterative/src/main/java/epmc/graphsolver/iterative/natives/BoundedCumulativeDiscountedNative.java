@@ -87,7 +87,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     @Override
     public boolean canHandle() {
         assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
                 && !SemanticsDTMC.isDTMC(semantics)
                 && !SemanticsMDP.isMDP(semantics)) {
@@ -108,7 +108,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
 
     private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -188,11 +188,11 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         assert iterGraph != null;
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulativeDiscounted.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBoundedCumulativeDiscounted.getTime());
         assert time.getInt() >= 0;
         ValueReal discount = objectiveBoundedCumulativeDiscounted.getDiscount();
         assert discount != null;
-        assert ValueReal.isReal(discount) || ValueInteger.isInteger(discount);
+        assert ValueReal.is(discount) || ValueInteger.is(discount);
         boolean min = objectiveBoundedCumulativeDiscounted.isMin();
         if (isSparseMarkovNative(iterGraph)) {
             dtmcBoundedCumulativeDiscountedNative(time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);

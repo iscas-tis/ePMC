@@ -87,7 +87,7 @@ final class OutputReader {
                     assert valueExpr.getChild(0).getAtomic().equals(DIV);
                     Value num = UtilValue.newValue(varType, valueExpr.getChild(1).getAtomic());
                     Value den = UtilValue.newValue(varType, valueExpr.getChild(2).getAtomic());
-                    OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, num.getType(), den.getType());
+                    OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, num.getType(), den.getType());
                     result.values[varNr] = varType.newValue();
                     divide.apply(result.values[varNr], num, den);
                 }

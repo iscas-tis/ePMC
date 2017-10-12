@@ -18,10 +18,10 @@ public enum OperatorEvaluatorSetTernaryTernary implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeTernary.isTernary(types[0])) {
+        if (!TypeTernary.is(types[0])) {
             return false;
         }
-        if (!TypeTernary.isTernary(types[1])) {
+        if (!TypeTernary.is(types[1])) {
             return false;
         }
         return true;
@@ -37,8 +37,8 @@ public enum OperatorEvaluatorSetTernaryTernary implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueTernary resultTernary = ValueTernary.asTernary(result);
-        ValueTernary operandBoolean = ValueTernary.asTernary(operands[0]);
+        ValueTernary resultTernary = ValueTernary.as(result);
+        ValueTernary operandBoolean = ValueTernary.as(operands[0]);
         resultTernary.set(operandBoolean.getTernary());
     }
 }

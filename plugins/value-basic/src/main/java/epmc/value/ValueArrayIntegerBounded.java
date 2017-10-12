@@ -46,8 +46,8 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         assert type != null;
         this.type = type;
         this.content = new long[0];
-        this.lower = TypeInteger.asInteger(type.getEntryType()).getLowerInt();
-        this.upper = TypeInteger.asInteger(type.getEntryType()).getUpperInt();
+        this.lower = TypeInteger.as(type.getEntryType()).getLowerInt();
+        this.upper = TypeInteger.as(type.getEntryType()).getUpperInt();
         this.bitsPerEntry = getType().getEntryType().getNumBits();
     }
 
@@ -73,7 +73,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        set(ValueInteger.asInteger(value).getInt(), index);
+        set(ValueInteger.as(value).getInt(), index);
     }
 
     @Override
@@ -81,7 +81,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         assert value != null;
         assert index >= 0;
         assert index < size();
-        ValueAlgebra.asAlgebra(value).set(getInt(index));
+        ValueAlgebra.as(value).set(getInt(index));
     }
 
     private int getBitsPerEntry() {

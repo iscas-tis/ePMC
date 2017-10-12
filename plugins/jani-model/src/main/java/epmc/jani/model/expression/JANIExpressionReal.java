@@ -92,7 +92,7 @@ public final class JANIExpressionReal implements JANIExpression {
             return null;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueReal.isReal(expressionLiteral.getValue())) {
+        if (!ValueReal.is(expressionLiteral.getValue())) {
             return null;
         }
         number = expressionLiteral.getValue().toString();

@@ -102,7 +102,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         assert alive;
         assert operator != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         assert operands != null;
         for (int opNr = 0; opNr < operands.length; opNr++) {
             assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
@@ -138,8 +138,8 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     public long newConstant(Value value) {
         assert alive;
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
-        BDD result = ValueBoolean.asBoolean(value).getBoolean() ? factory.makeOne() : factory.makeZero();
+        assert ValueBoolean.is(value);
+        BDD result = ValueBoolean.as(value).getBoolean() ? factory.makeOne() : factory.makeZero();
         ref(result);
         return result.hashCodeAux();
     }
@@ -398,7 +398,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
 
     @Override
     public boolean canApply(Operator operator, Type resultType, long... operands) {
-        if (!TypeBoolean.isBoolean(resultType)) {
+        if (!TypeBoolean.is(resultType)) {
             return false;
         }
         return operator.equals(OperatorId.ID)

@@ -53,7 +53,7 @@ public enum OperatorEvaluatorAcos implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
+        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
             return false;
         }
         return true;
@@ -71,8 +71,8 @@ public enum OperatorEvaluatorAcos implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        ValueDouble resultDouble = ValueDouble.asDouble(result);
-        ValueNumber operandNumber = ValueNumber.asNumber(operands[0]);
+        ValueDouble resultDouble = ValueDouble.as(result);
+        ValueNumber operandNumber = ValueNumber.as(operands[0]);
         resultDouble.set(Math.acos(operandNumber.getDouble()));
     }
 }

@@ -49,16 +49,16 @@ public enum OperatorEvaluatorIteDouble implements OperatorEvaluator {
         if (types.length != 3) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.is(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1]) && !TypeInteger.isInteger(types[1])) {
+        if (!TypeDouble.is(types[1]) && !TypeInteger.is(types[1])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[2]) && !TypeInteger.isInteger(types[2])) {
+        if (!TypeDouble.is(types[2]) && !TypeInteger.is(types[2])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1]) && !TypeDouble.isDouble(types[2])) {
+        if (!TypeDouble.is(types[1]) && !TypeDouble.is(types[2])) {
             return false;
         }
         return true;
@@ -80,8 +80,8 @@ public enum OperatorEvaluatorIteDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueDouble resultDouble = ValueDouble.asDouble(result);
-        if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
+        ValueDouble resultDouble = ValueDouble.as(result);
+        if (ValueBoolean.as(operands[0]).getBoolean()) {
             resultDouble.set(UtilValue.getDoubleOrInt(operands[1]));
         } else {
             resultDouble.set(UtilValue.getDoubleOrInt(operands[2]));

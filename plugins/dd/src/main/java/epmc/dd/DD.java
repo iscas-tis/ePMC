@@ -903,7 +903,7 @@ public final class DD implements Cloneable {
     public Value applyOverSat(Operator operator, DD sat) {
         assert operator != null;
         assert assertValidDD(sat);
-        assert TypeBoolean.isBoolean(sat.getType());
+        assert TypeBoolean.is(sat.getType());
         return getContext().applyOverSat(operator, this, sat);
     }
 
@@ -911,7 +911,7 @@ public final class DD implements Cloneable {
     {
         assert operator != null;
         assert assertValidDD(sat);
-        assert TypeBoolean.isBoolean(sat.getType());
+        assert TypeBoolean.is(sat.getType());
         return getContext().applyOverSat(operator, this, support, sat);
     }
 

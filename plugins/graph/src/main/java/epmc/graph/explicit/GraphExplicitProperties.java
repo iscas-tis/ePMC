@@ -105,7 +105,7 @@ public final class GraphExplicitProperties implements Serializable {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property) : property;
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), getGraphProperty(property).getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), getGraphProperty(property).getType());
         set.apply(getGraphProperty(property), value);
     }
 

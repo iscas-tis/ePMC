@@ -26,12 +26,12 @@ import epmc.util.BitStream;
 import epmc.value.Value;
 
 public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, ValueSetString {
-    public static boolean isBoolean(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueBoolean;
     }
 
-    public static ValueBoolean asBoolean(Value value) {
-        if (isBoolean(value)) {
+    public static ValueBoolean as(Value value) {
+        if (is(value)) {
             return (ValueBoolean) value;
         } else {
             return null;
@@ -39,7 +39,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     }
 
     public static boolean isTrue(Value value) {
-        ValueBoolean valueBoolean = asBoolean(value);
+        ValueBoolean valueBoolean = as(value);
         if (valueBoolean == null) {
             return false;
         }
@@ -50,7 +50,7 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     }
 
     public static boolean isFalse(Value value) {
-        ValueBoolean valueBoolean = asBoolean(value);
+        ValueBoolean valueBoolean = as(value);
         if (valueBoolean == null) {
             return false;
         }

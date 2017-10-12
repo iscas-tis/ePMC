@@ -66,7 +66,7 @@ public final class EquivalenceStrong implements Equivalence {
     private GraphExplicit original;
     private final List<int[]> newBlocks = new ArrayList<>();
     private GraphSolverObjectiveExplicit objective;
-    OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+    OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
 
     @Override
     public void setSuccessorsFromTo(int[] successorsFromTo) {

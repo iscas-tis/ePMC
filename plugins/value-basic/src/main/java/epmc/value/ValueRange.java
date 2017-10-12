@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Value;
 
 public interface ValueRange extends Value {
-    static boolean isRange(Value value) {
+    static boolean is(Value value) {
         return value instanceof ValueRange;
     }
 
-    static ValueRange asRange(Value value) {
-        if (isRange(value)) {
+    static ValueRange as(Value value) {
+        if (is(value)) {
             return (ValueRange) value;
         } else {
             return null;
@@ -36,7 +36,7 @@ public interface ValueRange extends Value {
     }
 
     static boolean checkRange(Value value) {
-        ValueRange valueRange = asRange(value);
+        ValueRange valueRange = as(value);
         if (valueRange == null) {
             return true;
         }

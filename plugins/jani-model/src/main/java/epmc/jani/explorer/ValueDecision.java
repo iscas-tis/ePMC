@@ -12,12 +12,12 @@ public final class ValueDecision implements Value, ValueSetString {
     private final int[] variables;
     private final Value[] values;
 
-    public static boolean isDecision(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueDecision;
     }
     
-    public static ValueDecision asDecision(Value value) {
-        if (isDecision(value)) {
+    public static ValueDecision as(Value value) {
+        if (is(value)) {
             return (ValueDecision) value;
         } else {
             return null;
@@ -56,7 +56,7 @@ public final class ValueDecision implements Value, ValueSetString {
         String[] strings = value.split(COMMA);
         for (int index = 0; index < values.length; index++) {
             strings[index] = strings[index].trim();
-            ValueSetString.asValueSetString(values[index]).set(strings[index]);
+            ValueSetString.as(values[index]).set(strings[index]);
         }
     }
 

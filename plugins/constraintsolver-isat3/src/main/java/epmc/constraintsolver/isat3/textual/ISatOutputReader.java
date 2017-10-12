@@ -102,7 +102,7 @@ final class ISatOutputReader {
 
     private static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
-        ValueSetString.asValueSetString(value).set(valueString);
+        ValueSetString.as(value).set(valueString);
         return value;
     }
 }
