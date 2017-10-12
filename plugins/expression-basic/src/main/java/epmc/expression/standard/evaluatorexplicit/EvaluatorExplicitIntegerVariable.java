@@ -63,8 +63,8 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         public boolean canHandle() {
             for (Expression variable : variables) {
                 if (variable.equals(expression)
-                        && variable.getType(expressionToType) != null
-                        && TypeInteger.is(variable.getType(expressionToType))) {
+                        && expressionToType.getType(variable) != null
+                        && TypeInteger.is(expressionToType.getType(variable))) {
                     return true;
                 }
             }
