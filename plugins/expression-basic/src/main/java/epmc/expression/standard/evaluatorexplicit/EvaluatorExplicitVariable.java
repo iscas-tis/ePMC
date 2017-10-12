@@ -21,9 +21,12 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorSet;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Value;
 
 public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorExplicitBoolean {
@@ -90,6 +93,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     private final Expression expression;
     private final int index;
     private final Value result;
+    private final OperatorEvaluator set;
 
     private EvaluatorExplicitVariable(Builder builder) {
         assert builder != null;
@@ -107,6 +111,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
         }
         this.index = index;
         result = variables[index].getType(builder.getExpressionToType()).newValue();
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, variables[index].getType(builder.getExpressionToType()), variables[index].getType(builder.getExpressionToType()));
     }
 
     @Override
@@ -125,7 +130,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
         for (Value value : values) {
             assert value != null;
         }
-        result.set(values[index]);
+        set.apply(result, values[index]);
         return result;
     }
 
