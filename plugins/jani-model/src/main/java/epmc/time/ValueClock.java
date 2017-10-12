@@ -1,6 +1,5 @@
 package epmc.time;
 
-import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
 public final class ValueClock implements ValueAlgebra {
@@ -26,11 +25,5 @@ public final class ValueClock implements ValueAlgebra {
     @Override
     public String toString() {
         return String.format(TO_STRING_TEMPLATE, value);
-    }
-
-    @Override
-    public void set(Value value) {
-        // TODO Auto-generated method stub
-
     }
 }

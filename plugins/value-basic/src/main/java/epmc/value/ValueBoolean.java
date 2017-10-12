@@ -62,7 +62,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
 
     private final static String TRUE = "true";
     private final static String FALSE = "false";
-    private final static String SPACE = " ";
 
     private boolean value;
     private final TypeBoolean type;
@@ -113,15 +112,6 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
     @Override
     public String toString() {
         return Boolean.toString(value);
-    }
-
-    @Override
-    public void set(Value operand) {
-        assert !isImmutable();
-        assert operand != null;
-        assert ValueBoolean.isBoolean(operand)
-        : operand + SPACE + operand.getType();
-        set(ValueBoolean.asBoolean(operand).getBoolean());
     }
 
     @Override

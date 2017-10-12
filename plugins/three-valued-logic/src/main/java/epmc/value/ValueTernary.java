@@ -108,18 +108,6 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     @Override
-    public void set(Value from) {
-        assert ValueBoolean.isBoolean(from) || ValueTernary.isTernary(from);
-        if (ValueBoolean.isBoolean(from)) {
-            set(ValueBoolean.asBoolean(from).getBoolean());
-        } else if (ValueTernary.isTernary(from)) {
-            ValueTernary fromTernary = (ValueTernary) from;
-            set(fromTernary.getTernary());
-        }
-
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert reader != null;
         int ord = 0;

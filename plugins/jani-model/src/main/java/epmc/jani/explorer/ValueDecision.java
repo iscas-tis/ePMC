@@ -40,16 +40,6 @@ public final class ValueDecision implements Value, ValueSetString {
         return type;
     }
 
-    @Override
-    public void set(Value value) {
-        assert value != null;
-        assert value instanceof ValueDecision;
-        ValueDecision other = (ValueDecision) value;
-        for (int i = 0; i < values.length; i++) {
-            values[i].set(other.values[i]);
-        }
-    }
-
     void set(NodeJANI node) {
         assert node != null;
         for (int index = 0; index < variables.length; index++) {

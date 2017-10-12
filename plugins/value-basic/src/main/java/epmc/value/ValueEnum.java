@@ -101,15 +101,6 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
     }
 
     @Override
-    public void set(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        assert ValueEnum.isEnum(op) : op;
-        assert getType().getEnumClass() == TypeEnum.asEnum(op.getType()).getEnumClass();
-        set((Enum<?>) ValueEnum.asEnum(op).getEnum());
-    }
-
-    @Override
     public void write(BitStream writer) {
         assert writer != null;
         int value = this.value.ordinal();

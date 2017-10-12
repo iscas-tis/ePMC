@@ -137,14 +137,6 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
         return result.toString();
     }
 
-    @Override
-    public void set(Value value) {
-        assert value != null;
-        assert value instanceof ValueLocation;
-        ValueLocation valueLocation = (ValueLocation) value;
-        this.locationNumber = valueLocation.locationNumber;
-    }
-
     /**
      * Set the location of this value.
      * The location parameter may not be {@code null}.

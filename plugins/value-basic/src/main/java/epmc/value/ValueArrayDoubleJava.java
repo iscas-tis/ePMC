@@ -38,14 +38,12 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     private final static String SPACE = " ";
     private double[] content;
     private final TypeArrayDouble type;
-    private final ValueDouble entry;
     private int size;
 
     ValueArrayDoubleJava(TypeArrayDouble type) {
         assert type != null;
         this.type = type;
         this.content = new double[0];
-        this.entry = type.getEntryType().newValue();
     }
 
     @Override

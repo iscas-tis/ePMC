@@ -82,10 +82,4 @@ public final class DiscreteMeasureValue implements DiscreteMeasure, Value {
         this.operands[0] = (DiscreteMeasure) operand1; // TODO castorimport
         this.operands[1] = (DiscreteMeasure) operand2;
     }
-
-    @Override
-    public void set(Value value) {
-        // TODO Auto-generated method stub
-
-    }
 }

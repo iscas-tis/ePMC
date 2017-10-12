@@ -73,19 +73,4 @@ public interface ValueArray extends Value {
     void get(Value presStateProb, int index);
 
     void set(Value value, int index);
-
-    @Override
-    default void set(Value op) {
-        if (this == op) {
-            return;
-        }
-        ValueArray opArray = ValueArray.asArray(op);
-        setSize(opArray.size());
-        int totalSize = opArray.size();
-        Value entryAcc = getType().getEntryType().newValue();
-        for (int index = 0; index < totalSize; index++) {
-            opArray.get(entryAcc, index);
-            set(entryAcc, index);
-        }
-    }
 }
