@@ -20,9 +20,13 @@
 
 package epmc.graph.explicit;
 
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
+import javafx.application.ConditionalFeature;
 
 /**
  * Node property in which all nodes are assigned the same value.
@@ -34,6 +38,7 @@ public final class NodePropertyConstant implements NodeProperty {
     private GraphExplicit graph;
     /** Value returned by {@link #get()} . */
     private final Value value;
+    private final OperatorEvaluator set;
 
     /**
      * Create new constant node property.
@@ -47,6 +52,7 @@ public final class NodePropertyConstant implements NodeProperty {
         assert value != null;
         this.graph = graph;
         this.value = UtilValue.clone(value);
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), value.getType());
     }
 
     /**
@@ -67,7 +73,7 @@ public final class NodePropertyConstant implements NodeProperty {
     @Override
     public void set(int node, Value value) {
         assert value != null;
-        this.value.set(value);
+        set.apply(this.value, value);
     }
 
     @Override

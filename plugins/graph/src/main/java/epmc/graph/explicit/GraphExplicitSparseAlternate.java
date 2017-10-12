@@ -25,6 +25,8 @@ import java.util.Arrays;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeInteger;
@@ -34,6 +36,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentIntArray;
+import epmc.value.operator.OperatorSet;
 
 // for MDPs, CTMDPs, EDTMCs, ECTMCs, turn-based two-player games;
 // for value iteration
@@ -76,6 +79,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         private final int[] ranges;
         private final Value[] constants;
         private final Value helper;
+        private final OperatorEvaluator set;
 
         NodePropertySparseNondetRanged(GraphExplicitSparseAlternate graph, int[] ranges, Type type) {
             assert graph != null;
@@ -88,6 +92,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
                 this.constants[i] = type.newValue();
             }
             this.helper = type.newValue();
+            set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
         }
 
         @Override
@@ -110,7 +115,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             } else {
                 index++;
             }
-            constants[index].set(value);
+            set.apply(constants[index], value);
         }
 
         @Override

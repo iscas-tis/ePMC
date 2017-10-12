@@ -31,9 +31,12 @@ import com.google.common.base.MoreObjects;
 
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.operator.OperatorSet;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 
@@ -98,12 +101,12 @@ public final class GraphExplicitProperties implements Serializable {
         graphProperties.put(propertyName, type.newValue());
     }
 
-    public void setGraphProperty(Object property, Value value)
-    {
+    public void setGraphProperty(Object property, Value value) {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property) : property;
-        getGraphProperty(property).set(value);
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), getGraphProperty(property).getType());
+        set.apply(getGraphProperty(property), value);
     }
 
 
