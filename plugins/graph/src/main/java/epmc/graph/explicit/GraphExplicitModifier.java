@@ -75,15 +75,16 @@ public final class GraphExplicitModifier {
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
-                sum.set(zero);
+                set.apply(sum, zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
                     add.apply(sum, sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
-                    weight.set(weightProp.get(node, succNr));
+                    set.apply(weight, weightProp.get(node, succNr));
                     divide.apply(weight, weight, uniformisationRate);
                     weightProp.set(node, succNr, weight);
                 }
