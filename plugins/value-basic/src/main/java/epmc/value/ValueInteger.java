@@ -25,7 +25,7 @@ import static epmc.error.UtilError.fail;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable, ValueSetString {
+public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable, ValueSetString, ValueSetInteger, ValueGetInteger {
     public static boolean isInteger(Value value) {
         return value instanceof ValueInteger;
     }
@@ -43,14 +43,8 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     private final TypeInteger type;
     private boolean immutable;
 
-    ValueInteger(TypeInteger type, int value) {
-        assert type != null;
-        this.type = type;
-        this.value = value;
-    }
-
     ValueInteger(TypeInteger type) {
-        this(type, 0);
+        this.type = type;
     }
 
     @Override
