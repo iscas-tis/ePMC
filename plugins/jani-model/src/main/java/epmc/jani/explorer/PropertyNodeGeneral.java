@@ -21,6 +21,8 @@
 package epmc.jani.explorer;
 
 import epmc.graph.explorer.Explorer;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
@@ -29,6 +31,8 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorSet;
+import javafx.application.ConditionalFeature;
 
 /**
  * Explorer node property for JANI explorers and their components.
@@ -42,6 +46,7 @@ public final class PropertyNodeGeneral implements PropertyNode {
     private final Type type;
     /** Value of this property for the node queried last. */
     private final Value value;
+    private final OperatorEvaluator set;
 
     /**
      * Construct new node property.
@@ -55,6 +60,7 @@ public final class PropertyNodeGeneral implements PropertyNode {
         assert type != null;
         this.type = type;
         this.value = type.newValue();
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
     }
 
     /**
@@ -65,7 +71,7 @@ public final class PropertyNodeGeneral implements PropertyNode {
      */
     public void set(Value value) {
         assert value != null;
-        this.value.set(value);
+        set.apply(this.value, value);
     }
 
     /**

@@ -23,9 +23,13 @@ package epmc.jani.explorer;
 import java.util.Arrays;
 
 import epmc.graph.explorer.Explorer;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
+import epmc.value.operator.OperatorSet;
+import javafx.application.ConditionalFeature;
 
 /**
  * Explorer edge property for JANI explorers and their components.
@@ -43,6 +47,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
     private Value[] values;
     /** Used to return value of successors. */
     private final Value value;
+    private final OperatorEvaluator set;
 
     /**
      * Construct new edge property.
@@ -59,6 +64,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
         this.value = type.newValue();
         this.values = new Value[1];
         this.values[0] = type.newValue();
+        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
     }
 
     /**
@@ -73,7 +79,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
     public void set(int successor, Value value) {
         assert value != null;
         ensureSuccessorsSize(successor);
-        values[successor].set(value);
+        set.apply(values[successor], value);
     }
 
     /**
@@ -96,7 +102,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
         assert successor >= 0;
         assert successor < explorer.getNumSuccessors();
         ensureSuccessorsSize(successor);
-        value.set(values[successor]);
+        set.apply(value, values[successor]);
         return value;
     }
 
