@@ -207,8 +207,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         for (int node = undecided.nextSetBit(0);
                 node >= 0;
                 node = undecided.nextSetBit(node + 1)) {
@@ -344,13 +344,13 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         undecided.andNot(zeroStates);
 
         ValueAlgebra minusOne = typeWeight.newValue();
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         subtract.apply(minusOne, zero, one);
 
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
         /** input all the constraints in transition x_i = p1 * x_j1 + ... + pn * x_jn */
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         for (int node = undecided.nextSetBit(0); 
                 node >= 0;
                 node = undecided.nextSetBit(node + 1)) {

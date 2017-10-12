@@ -129,7 +129,7 @@ public interface VariableDD extends Closeable {
     /* default methods */
 
     default DD newVariableValue(int copy, int valueNr) {
-        ValueEnumerable value = TypeEnumerable.asEnumerable(getType()).newValue();
+        ValueEnumerable value = TypeEnumerable.as(getType()).newValue();
         value.setValueNumber(valueNr);
         return newVariableValue(copy, value);
     }
@@ -147,7 +147,7 @@ public interface VariableDD extends Closeable {
         assert copy >= 0;
         assert copy < getNumCopies();
         DD result = getContext().newConstant(false);
-        for (int valueNr = 0; valueNr < TypeEnumerable.asEnumerable(getType()).getNumValues(); valueNr++) {
+        for (int valueNr = 0; valueNr < TypeEnumerable.as(getType()).getNumValues(); valueNr++) {
             result = result.orWith(newVariableValue(copy, valueNr));
         }
         return result;
@@ -175,7 +175,7 @@ public interface VariableDD extends Closeable {
      */
     default boolean isInteger() {
         assert alive();
-        return TypeInteger.isInteger(getType());
+        return TypeInteger.is(getType());
     }
 
     /**
@@ -186,8 +186,8 @@ public interface VariableDD extends Closeable {
      */
     default int getLower() {
         assert alive();
-        assert TypeInteger.isInteger(getType());
-        return TypeInteger.asInteger(getType()).getLowerInt();
+        assert TypeInteger.is(getType());
+        return TypeInteger.as(getType()).getLowerInt();
     }
 
     /**
@@ -198,8 +198,8 @@ public interface VariableDD extends Closeable {
      */
     default int getUpper() {
         assert alive();
-        assert TypeInteger.isInteger(getType());
-        return TypeInteger.asInteger(getType()).getUpperInt();
+        assert TypeInteger.is(getType());
+        return TypeInteger.as(getType()).getUpperInt();
     } 
 
     default DD newEqCopies(int copy1, int copy2) {

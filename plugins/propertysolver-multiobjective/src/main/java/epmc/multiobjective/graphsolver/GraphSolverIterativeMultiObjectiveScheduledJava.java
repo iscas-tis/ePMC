@@ -78,13 +78,13 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
     private final ValueBoolean cmp;
 
     public GraphSolverIterativeMultiObjectiveScheduledJava() {
-        distanceEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
-        maxEvaluator = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
-        divideEvaluator = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
-        gtEvaluator = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        distanceEvaluator = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        maxEvaluator = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        divideEvaluator = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        gtEvaluator = ContextValue.get().getEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
         thisDistance = TypeReal.get().newValue();
         zeroDistance = TypeReal.get().newValue();
-        isZeroEvaluator = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
+        isZeroEvaluator = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -218,7 +218,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
@@ -237,12 +237,12 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         ValueAlgebra transReward = newValueWeight();
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setArray = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, values.getType(), values.getType());
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, values.getType(), values.getType());
         do {
             setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
@@ -289,7 +289,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
         int[] schedulerJava = scheduler.getDecisions();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra stopReward = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
@@ -306,11 +306,11 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         Value transReward = newValueWeight();
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(precisionValue).set(Double.toString(tolerance / 2));
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator setReal = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator setWeight = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setWeight = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         do {
             setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {

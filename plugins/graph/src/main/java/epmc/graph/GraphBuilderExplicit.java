@@ -283,7 +283,7 @@ public final class GraphBuilderExplicit {
     private static List<BitSet> prepareParts(GraphExplicit inputGraph, boolean reorder)
     {
         List<BitSet> result = new ArrayList<>();
-        Semantics semanticsType = ValueObject.asObject(inputGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(inputGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (reorder && SemanticsNonDet.isNonDet(semanticsType)) {
             BitSet states = collectStates(inputGraph);
             BitSet nonStates = collectNonStates(inputGraph);
@@ -329,7 +329,7 @@ public final class GraphBuilderExplicit {
                 outputGraph.prepareNode(outputState, 1);
                 outputGraph.setSuccessorNode(outputState, 0, nextNondetNode);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(outputState, 0, typeWeight.getOne());
                 outputGraph.prepareNode(nextNondetNode, 1);
                 outputGraph.setSuccessorNode(nextNondetNode, 0, outputState);
@@ -400,7 +400,7 @@ public final class GraphBuilderExplicit {
                 outputGraph.prepareNode(outputNode, 1);
                 outputGraph.setSuccessorNode(outputNode, 0, nextPartBegin + sinkNr);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(outputNode, 0, typeWeight.getOne());
             } else {
                 int numSuccessors = inputGraph.getNumSuccessors(inputNode);
@@ -466,7 +466,7 @@ public final class GraphBuilderExplicit {
                 int nextPart = (partNr + 1) % parts.size();
                 int nextPartBegin = partsBegin.get(nextPart);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(nextPartBegin, numInEdges.getInt(nextPartBegin), typeWeight.getOne());
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {

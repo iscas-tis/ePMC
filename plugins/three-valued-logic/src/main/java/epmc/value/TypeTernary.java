@@ -30,7 +30,7 @@ import epmc.value.TypeArray;
  * @author Ernst Moritz Hahn
  */
 public final class TypeTernary implements TypeEnumerable, TypeNumBitsKnown {
-    static boolean isTernary(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeTernary;
     }
 

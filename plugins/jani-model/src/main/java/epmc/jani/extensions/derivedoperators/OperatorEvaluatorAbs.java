@@ -52,7 +52,7 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeNumber.isNumber(types[0])) {
+        if (!TypeNumber.is(types[0])) {
             return false;
         }
         return true;
@@ -72,12 +72,12 @@ public enum OperatorEvaluatorAbs implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        if (ValueDouble.isDouble(result)) {
-            double value = ValueNumber.asNumber(operands[0]).getDouble();
-            ValueDouble.asDouble(result).set(Math.abs(value));
-        } else if (ValueInteger.isInteger(result)) {
-            int value = ValueNumber.asNumber(operands[0]).getInt();
-            ValueInteger.asInteger(result).set(Math.abs(value));			
+        if (ValueDouble.is(result)) {
+            double value = ValueNumber.as(operands[0]).getDouble();
+            ValueDouble.as(result).set(Math.abs(value));
+        } else if (ValueInteger.is(result)) {
+            int value = ValueNumber.as(operands[0]).getInt();
+            ValueInteger.as(result).set(Math.abs(value));			
         } else {
             assert false;
         }

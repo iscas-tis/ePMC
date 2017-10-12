@@ -105,7 +105,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             }
             for (Expression child : expressionOperator.getOperands()) {
                 if (child.getType(expressionToType) == null
-                        || !TypeInteger.isInteger(child.getType(expressionToType))) {
+                        || !TypeInteger.is(child.getType(expressionToType))) {
                     return false;
                 }
             }
@@ -183,7 +183,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         } else {
             binaryIntegerToBoolean = null;
         }
-        this.evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
+        this.evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(types).newValue();
     }
 

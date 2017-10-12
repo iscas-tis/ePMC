@@ -49,7 +49,7 @@ public enum OperatorEvaluatorIsZeroInterval implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInterval.isInterval(type)) {
+            if (!TypeInterval.is(type)) {
                 return false;
             }
         }
@@ -72,19 +72,19 @@ public enum OperatorEvaluatorIsZeroInterval implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueInterval operand = ValueInterval.asInterval(operands[0]);
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, operand.getType().getEntryType());
+        ValueInterval operand = ValueInterval.as(operands[0]);
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, operand.getType().getEntryType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isZero.apply(cmp, operand.getIntervalLower());
         if (!cmp.getBoolean()) {
-            ValueBoolean.asBoolean(result).set(false);
+            ValueBoolean.as(result).set(false);
             return;
         }
         isZero.apply(cmp, operand.getIntervalUpper());
         if (!cmp.getBoolean()) {
-            ValueBoolean.asBoolean(result).set(false);
+            ValueBoolean.as(result).set(false);
             return;
         }
-        ValueBoolean.asBoolean(result).set(true);
+        ValueBoolean.as(result).set(true);
     }
 }

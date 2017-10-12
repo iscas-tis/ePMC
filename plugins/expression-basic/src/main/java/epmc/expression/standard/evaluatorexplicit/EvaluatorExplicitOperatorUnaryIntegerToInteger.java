@@ -97,7 +97,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             }
             for (Expression child : expressionOperator.getOperands()) {
                 if (child.getType(expressionToType) == null
-                        || !TypeInteger.isInteger(child.getType(expressionToType))) {
+                        || !TypeInteger.is(child.getType(expressionToType))) {
                     return false;
                 }
             }
@@ -168,7 +168,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         } else {
             unaryIntegerToInteger = null;
         }
-        evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
+        evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
         result = evaluator.resultType(types).newValue();
     }
 

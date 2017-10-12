@@ -80,11 +80,11 @@ final class MultiObjectiveUtils {
         ValueAlgebra weightsEntry = newValueWeight();
         ValueAlgebra qEntry = newValueWeight();
         ValueAlgebra boundsEntry = newValueWeight();
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
@@ -245,8 +245,8 @@ final class MultiObjectiveUtils {
         ValueAlgebra objWeight = newValueWeight();
         ValueAlgebra objRew = newValueWeight();
         ValueAlgebra prod = newValueWeight();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int obj = 0; obj < numObjectives; obj++) {
             weights.get(objWeight, obj);
             for (int nondet = 0; nondet < numNondet; nondet++) {
@@ -273,10 +273,10 @@ final class MultiObjectiveUtils {
         ValueAlgebra max = newValueWeight();
         ValueAlgebra entryValue = newValueWeight();
         ValueAlgebra weight = newValueWeight();
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
@@ -315,7 +315,7 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             int entry = choice[state];
             entryValue.set(0);

@@ -13,12 +13,12 @@ public final class TypeDecision implements Type {
     private final Type[] types;
     private final int totalNumBits;
 
-    public final static boolean isDecision(Type type) {
+    public final static boolean is(Type type) {
         return type instanceof TypeDecision;
     }
     
-    public final static TypeDecision asDecision(Type type) {
-        if (isDecision(type)) {
+    public final static TypeDecision as(Type type) {
+        if (is(type)) {
             return (TypeDecision) type;
         } else {
             return null;

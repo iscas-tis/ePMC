@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Value;
 
 public interface ValueReal extends ValueNumber {
-    static boolean isReal(Value value) {
-        return TypeReal.isReal(value.getType());
+    static boolean is(Value value) {
+        return TypeReal.is(value.getType());
     }
 
-    static ValueReal asReal(Value value) {
-        if (isReal(value)) {
+    static ValueReal as(Value value) {
+        if (is(value)) {
             return (ValueReal) value;
         } else {
             return null;

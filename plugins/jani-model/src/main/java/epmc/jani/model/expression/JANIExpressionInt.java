@@ -100,10 +100,10 @@ public final class JANIExpressionInt implements JANIExpression {
             return null;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueInteger.isInteger(expressionLiteral.getValue())) {
+        if (!ValueInteger.is(expressionLiteral.getValue())) {
             return null;
         }
-        number = ValueInteger.asInteger(expressionLiteral.getValue()).getInt();
+        number = ValueInteger.as(expressionLiteral.getValue()).getInt();
         initialized = true;
         return this;
     }

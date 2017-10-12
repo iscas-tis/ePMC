@@ -33,7 +33,7 @@ public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     ValueArrayGenericAlgebra(TypeArrayGenericAlgebra type) {
         this.type = type;
         this.content = new ValueAlgebra[0];
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override

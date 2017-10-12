@@ -57,11 +57,11 @@ final class ValueArrayBoolean implements ValueArray {
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
+        assert ValueBoolean.is(value);
         assert index >= 0;
         assert index < size();
         int offset = index >> LOG2LONGSIZE;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             content[offset] |= 1L << index;
         } else {
             content[offset] &= ~(1L << index);
@@ -71,11 +71,11 @@ final class ValueArrayBoolean implements ValueArray {
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
+        assert ValueBoolean.is(value);
         assert index >= 0;
         assert index < size() : index + SPACE + size();
         int offset = index >> 6;
-        ValueBoolean.asBoolean(value).set((content[offset] & (1L << index)) != 0);
+        ValueBoolean.as(value).set((content[offset] & (1L << index)) != 0);
     }    
 
     @Override

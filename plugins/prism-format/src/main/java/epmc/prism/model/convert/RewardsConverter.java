@@ -287,7 +287,7 @@ final class RewardsConverter {
         for (RewardStructure structure : rewardStructures) {
             Expression stateRewards = convertStateRewards(structure.getStateRewards());
             if (ExpressionLiteral.isLiteral(stateRewards)) {
-                OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(stateRewards).getValue().getType());
+                OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(stateRewards).getValue().getType());
                 isZero.apply(cmp, ExpressionLiteral.asLiteral(stateRewards).getValue());
             }
             if (ExpressionLiteral.isLiteral(stateRewards)

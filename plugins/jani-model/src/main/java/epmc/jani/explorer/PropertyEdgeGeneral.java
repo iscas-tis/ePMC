@@ -64,7 +64,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
         this.value = type.newValue();
         this.values = new Value[1];
         this.values[0] = type.newValue();
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type, type);
     }
 
     /**
@@ -94,7 +94,7 @@ public final class PropertyEdgeGeneral implements PropertyEdge {
     public void set(int successor, Object value) {
         assert value != null;
         ensureSuccessorsSize(successor);
-        ValueObject.asObject(values[successor]).set(value);
+        ValueObject.as(values[successor]).set(value);
     }
 
     @Override

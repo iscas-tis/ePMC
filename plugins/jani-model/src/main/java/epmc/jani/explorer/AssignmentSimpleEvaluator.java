@@ -136,7 +136,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 //                assignment.getType(builder.getExpressionToType()).newValue();
         assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
         expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
     }
 
     @Override

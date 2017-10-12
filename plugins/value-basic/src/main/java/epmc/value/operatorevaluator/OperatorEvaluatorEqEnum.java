@@ -48,7 +48,7 @@ public enum OperatorEvaluatorEqEnum implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeEnum.isEnum(type)) {
+            if (!TypeEnum.is(type)) {
                 return false;
             }
         }
@@ -71,9 +71,9 @@ public enum OperatorEvaluatorEqEnum implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueEnum op1 = ValueEnum.asEnum(operands[0]);
-        ValueEnum op2 = ValueEnum.asEnum(operands[1]);
-        ValueBoolean resultBoolean = ValueBoolean.asBoolean(result);
+        ValueEnum op1 = ValueEnum.as(operands[0]);
+        ValueEnum op2 = ValueEnum.as(operands[1]);
+        ValueBoolean resultBoolean = ValueBoolean.as(result);
         resultBoolean.set(op1.getEnum() == op2.getEnum());
         return;
     }

@@ -173,8 +173,8 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
         if (expression instanceof ExpressionLiteral) {
             ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
             Value value = expressionLiteral.getValue();
-            assert ValueInteger.isInteger(value);
-            int intValue = ValueInteger.asInteger(value).getInt() - 1;
+            assert ValueInteger.is(value);
+            int intValue = ValueInteger.as(value).getInt() - 1;
             assert intValue >= 0 : intValue;
             assert intValue < numberToPlayer.length;
             return numberToPlayer[intValue];

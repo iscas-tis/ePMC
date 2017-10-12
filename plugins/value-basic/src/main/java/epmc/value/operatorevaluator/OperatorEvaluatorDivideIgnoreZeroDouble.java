@@ -48,7 +48,7 @@ public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeAlgebra.is(type)) {
                 return false;
             }
         }
@@ -74,9 +74,9 @@ public enum OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEvaluator
         double op1 = UtilValue.getDoubleOrInt(operands[0]);
         double op2 = UtilValue.getDoubleOrInt(operands[1]);
         if (op2 == 0.0) {
-            ValueDouble.asDouble(result).set(op1);            
+            ValueDouble.as(result).set(op1);            
         } else {
-            ValueDouble.asDouble(result).set(op1 / op2);
+            ValueDouble.as(result).set(op1 / op2);
         }
     }
 }

@@ -76,7 +76,7 @@ final class ValueArrayTernary implements ValueArray {
             number |= (1 << bitNr);
         }
         }
-        ValueTernary.asTernary(value).set(Ternary.values()[number]);
+        ValueTernary.as(value).set(Ternary.values()[number]);
     }
 
     @Override

@@ -101,18 +101,18 @@ public final class NodePropertyGeneral implements NodeProperty {
     @Override
     public void set(int node, Object object) {
         assert object != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         ensureSize(node);
-        ValueObject.asObject(value).set(object);
+        ValueObject.as(value).set(object);
         content.set(value, node);
     }    
 
     @Override
     public void set(int node, Enum<?> object) {
         assert object != null;
-        assert ValueEnum.isEnum(value);
+        assert ValueEnum.is(value);
         ensureSize(node);
-        ValueEnum.asEnum(value).set(object);
+        ValueEnum.as(value).set(object);
         content.set(value, node);
     }
 

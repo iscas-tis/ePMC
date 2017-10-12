@@ -214,9 +214,9 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         number = componentAutomaton.getAutomaton().getNumber();
         actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
         cmp = TypeBoolean.get().newValue();
-        isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
-        add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
-        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
+        isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
+        add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
+        multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override
@@ -474,7 +474,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         if (locationVarNr == -1) {
             location = 0;
         } else {
-            location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+            location = ValueInteger.as(nodeValues[locationVarNr]).getInt();
         }
         locationEvaluators[location].apply(node, node);
         EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
@@ -490,7 +490,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     NodeJANI successor = successors[numSuccessors];
                     successor.unmark();
                     //					successor.set(node);
-                    ValueAlgebra probability = ValueAlgebra.asAlgebra(destinationEval.evaluateProbability(node));
+                    ValueAlgebra probability = ValueAlgebra.as(destinationEval.evaluateProbability(node));
                     isZero.apply(cmp, probability);
                     if (cmp.getBoolean()) {
                         continue;
@@ -525,12 +525,12 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         assert node != null;
         numSuccessors = 0;
         Value[] nodeValues = node.getValues();
-        int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
+        int edge = ValueInteger.as(nodeValues[edgeVarNr]).getInt();
         int location;
         if (locationVarNr == -1) {
             location = 0;
         } else {
-            location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+            location = ValueInteger.as(nodeValues[locationVarNr]).getInt();
         }
         EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
         if (edge == -1) {
@@ -602,7 +602,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private void queryNondetNonStochastic(NodeJANI node) {
         numSuccessors = 0;
         Value[] nodeValues = node.getValues();
-        int location = ValueInteger.asInteger(nodeValues[locationVarNr]).getInt();
+        int location = ValueInteger.as(nodeValues[locationVarNr]).getInt();
         EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
         int lastAction = 0;
         actionFromTo[0] = 0;
@@ -662,7 +662,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     @Override
     public boolean isState(NodeJANI node) {
         Value[] nodeValues = node.getValues();
-        int edge = ValueInteger.asInteger(nodeValues[edgeVarNr]).getInt();
+        int edge = ValueInteger.as(nodeValues[edgeVarNr]).getInt();
         return edge == -1;
     }
 

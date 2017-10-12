@@ -100,7 +100,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 Operator operator = operators[op];
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
                 evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -121,7 +121,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 Type[] types = new Type[2];
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -280,7 +280,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
 
     private Operator[] collectOperators() {
         Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
+        Collection<OperatorEvaluator> identifiers = ContextValue.get().getEvaluators();
         for (OperatorEvaluator evaluator : identifiers) {
             operators.add(evaluator.getOperator());
         }
@@ -343,7 +343,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             this.resultType = type;
             boolean doFree = false;
             long idOp2, idOp3;
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 idOp2 = operands[1];
                 idOp3 = operands[2];
             } else {

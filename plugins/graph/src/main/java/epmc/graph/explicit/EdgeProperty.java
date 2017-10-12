@@ -107,8 +107,8 @@ public interface EdgeProperty  {
     default <T> T getObject(int node, int successor) {
         assert successor >= 0;
         Value value = get(node, successor);
-        assert ValueObject.isObject(value);
-        return ValueObject.asObject(value).getObject();
+        assert ValueObject.is(value);
+        return ValueObject.as(value).getObject();
     }
 
     /**
@@ -124,7 +124,7 @@ public interface EdgeProperty  {
      */
     default void set(int node, int successor, String value) {
         Value tmpValue = getType().newValue();
-        ValueSetString.asValueSetString(tmpValue).set(value);
+        ValueSetString.as(tmpValue).set(value);
         set(node, successor, tmpValue);
     }
 }

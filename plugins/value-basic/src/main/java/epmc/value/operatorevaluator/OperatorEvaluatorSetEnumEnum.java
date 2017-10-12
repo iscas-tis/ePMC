@@ -20,10 +20,10 @@ public enum OperatorEvaluatorSetEnumEnum implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeEnum.isEnum(types[0])) {
+        if (!TypeEnum.is(types[0])) {
             return false;
         }
-        if (!TypeEnum.isEnum(types[1])) {
+        if (!TypeEnum.is(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetEnumEnum implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueEnum.asEnum(result).set((Enum<?>) ValueEnum.asEnum(operands[0]).getEnum());
+        ValueEnum.as(result).set((Enum<?>) ValueEnum.as(operands[0]).getEnum());
     }
 }

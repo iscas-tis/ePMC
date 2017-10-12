@@ -48,8 +48,8 @@ public enum OperatorEvaluatorDistanceDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type)
-                    && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.is(type)
+                    && !TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -75,6 +75,6 @@ public enum OperatorEvaluatorDistanceDouble implements OperatorEvaluator {
         assert operands.length >= 2;
         double op1 = UtilValue.getDoubleOrInt(operands[0]);
         double op2 = UtilValue.getDoubleOrInt(operands[1]);
-        ValueDouble.asDouble(result).set(Math.abs(op1 - op2));
+        ValueDouble.as(result).set(Math.abs(op1 - op2));
     }
 }

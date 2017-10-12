@@ -64,7 +64,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
             for (Expression variable : variables) {
                 if (variable.equals(expression)
                         && variable.getType(expressionToType) != null
-                        && TypeInteger.isInteger(variable.getType(expressionToType))) {
+                        && TypeInteger.is(variable.getType(expressionToType))) {
                     return true;
                 }
             }
@@ -129,7 +129,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         for (Value value : values) {
             assert value != null;
         }
-        ValueAlgebra.asAlgebra(result).set(ValueInteger.asInteger(values[index]).getInt());
+        ValueAlgebra.as(result).set(ValueInteger.as(values[index]).getInt());
         return result;
     }
 
@@ -139,7 +139,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         for (Value value : values) {
             assert value != null;
         }
-        return ValueInteger.asInteger(values[index]).getInt();
+        return ValueInteger.as(values[index]).getInt();
     }
 
     @Override

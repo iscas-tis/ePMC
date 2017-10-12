@@ -45,7 +45,7 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeReal.isReal(type)) {
+            if (!TypeReal.is(type)) {
                 return false;
             }
         }
@@ -57,7 +57,7 @@ public enum OperatorEvaluatorPi implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length == 0;
-        ValueDouble.asDouble(result).set(Math.PI);
+        ValueDouble.as(result).set(Math.PI);
     }
 
     @Override

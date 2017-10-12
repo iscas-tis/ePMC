@@ -46,7 +46,7 @@ public enum OperatorEvaluatorAddInt implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[0]) || !TypeInteger.isInteger(types[1])) {
+        if (!TypeInteger.is(types[0]) || !TypeInteger.is(types[1])) {
             return false;
         }
         return true;
@@ -71,6 +71,6 @@ public enum OperatorEvaluatorAddInt implements OperatorEvaluator {
         assert operands.length >= 2;
         int op1 = UtilValue.getInt(operands[0]);
         int op2 = UtilValue.getInt(operands[1]);
-        ValueInteger.asInteger(result).set(op1 + op2);
+        ValueInteger.as(result).set(op1 + op2);
     }
 }

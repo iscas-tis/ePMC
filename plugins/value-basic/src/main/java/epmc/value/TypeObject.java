@@ -25,11 +25,11 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeObject implements TypeNumBitsKnown {
-    public static boolean isObject(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeObject;
     }
 
-    public TypeObject asObject(Type type) {
+    public TypeObject as(Type type) {
         if (type instanceof TypeObject) {
             return (TypeObject) type;
         } else {

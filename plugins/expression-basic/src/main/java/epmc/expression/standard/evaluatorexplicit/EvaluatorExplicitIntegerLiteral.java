@@ -69,7 +69,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
             if (expression.getType(expressionToType) == null) {
                 return false;
             }
-            if (!TypeInteger.isInteger(expression.getType(expressionToType))) {
+            if (!TypeInteger.is(expression.getType(expressionToType))) {
                 return false;
             }
             return true;
@@ -101,8 +101,8 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         expression = builder.getExpression();
         variables = builder.getVariables();
         value = getValue(expression);
-        if (ValueInteger.isInteger(value)) {
-            valueInteger = ValueInteger.asInteger(value).getInt();
+        if (ValueInteger.is(value)) {
+            valueInteger = ValueInteger.as(value).getInt();
         } else {
             valueInteger = -1;
         }

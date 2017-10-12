@@ -25,7 +25,7 @@ import epmc.value.Type;
 public interface TypeNumBitsKnown extends Type {
     static int UNKNOWN = Integer.MAX_VALUE;
 
-    static boolean isNumBitsKnown(Type type) {
+    static boolean is(Type type) {
         if (!(type instanceof TypeNumBitsKnown)) {
             return false;
         }
@@ -36,8 +36,8 @@ public interface TypeNumBitsKnown extends Type {
         return true;
     }
 
-    static TypeNumBitsKnown asNumBitsKnown(Type type) {
-        if (isNumBitsKnown(type)) {
+    static TypeNumBitsKnown as(Type type) {
+        if (is(type)) {
             return (TypeNumBitsKnown) type;
         } else {
             return null;
@@ -45,7 +45,7 @@ public interface TypeNumBitsKnown extends Type {
     }
 
     static int getNumBits(Type type) {
-        TypeNumBitsKnown typeNumBitsKnown = TypeNumBitsKnown.asNumBitsKnown(type);
+        TypeNumBitsKnown typeNumBitsKnown = TypeNumBitsKnown.as(type);
         if (typeNumBitsKnown != null) {
             return typeNumBitsKnown.getNumBits();
         } else {

@@ -62,7 +62,7 @@ public final class GraphSolverObjectiveExplicitUnboundedReachabilityGame impleme
 
     @Override
     public void setResult(ValueArray result) {
-        this.result = ValueArrayAlgebra.asArrayAlgebra(result);
+        this.result = ValueArrayAlgebra.as(result);
     }
 
     @Override

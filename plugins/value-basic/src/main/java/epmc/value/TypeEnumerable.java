@@ -25,7 +25,7 @@ import epmc.value.Type;
 public interface TypeEnumerable extends Type {
     final static int UNBOUNDED_VALUES = Integer.MAX_VALUE;
 
-    static boolean isEnumerable(Type type) {
+    static boolean is(Type type) {
         if (!(type instanceof TypeEnumerable)) {
             return false;
         }
@@ -36,8 +36,8 @@ public interface TypeEnumerable extends Type {
         return true;
     }
 
-    static TypeEnumerable asEnumerable(Type type) {
-        if (isEnumerable(type)) {
+    static TypeEnumerable as(Type type) {
+        if (is(type)) {
             return (TypeEnumerable) type;
         } else {
             return null;

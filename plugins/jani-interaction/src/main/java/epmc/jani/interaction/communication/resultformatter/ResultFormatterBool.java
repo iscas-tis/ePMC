@@ -49,7 +49,7 @@ public final class ResultFormatterBool implements ResultFormatter {
             return false;
         }
         Value valueResult = (Value) result;
-        if (!ValueBoolean.isBoolean(valueResult)) {
+        if (!ValueBoolean.is(valueResult)) {
             return false;
         }
         return true;
@@ -71,7 +71,7 @@ public final class ResultFormatterBool implements ResultFormatter {
     public JsonValue getValue() {
         assert canHandle();
         Value valueResult = (Value) result;
-        return UtilJSON.toBooleanValue(ValueBoolean.asBoolean(valueResult).getBoolean());
+        return UtilJSON.toBooleanValue(ValueBoolean.as(valueResult).getBoolean());
     }
 
     @Override

@@ -224,10 +224,10 @@ public final class ExpressionParser implements JANINode {
         } else if (ValueBoolean.isFalse(value)) {
             result.add(ARBITRARY, false);
             return result.build().get(ARBITRARY);			
-        } else if (ValueInteger.isInteger(value)) {
-            result.add(ARBITRARY, ValueInteger.asInteger(value).getInt());
+        } else if (ValueInteger.is(value)) {
+            result.add(ARBITRARY, ValueInteger.as(value).getInt());
             return result.build().get(ARBITRARY);
-        } else if (ValueReal.isReal(value)) {
+        } else if (ValueReal.is(value)) {
             result.add(ARBITRARY, new BigDecimal(value.toString()));
             return result.build().get(ARBITRARY);
         } else {

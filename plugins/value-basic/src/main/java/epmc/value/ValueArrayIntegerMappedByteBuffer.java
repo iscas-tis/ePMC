@@ -61,12 +61,12 @@ final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
 
     @Override
     public void set(Value value, int index) {
-        buffer.putInt(index * 4, ValueInteger.asInteger(value).getInt());
+        buffer.putInt(index * 4, ValueInteger.as(value).getInt());
     }
 
     @Override
     public void get(Value value, int index) {
-        ValueAlgebra.asAlgebra(value).set(getInt(index));
+        ValueAlgebra.as(value).set(getInt(index));
     }
 
     @Override

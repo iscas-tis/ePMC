@@ -107,7 +107,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
             }
             for (Expression child : expressionOperator.getOperands()) {
                 if (child.getType(expressionToType) == null
-                        || !TypeInteger.isInteger(child.getType(expressionToType))) {
+                        || !TypeInteger.is(child.getType(expressionToType))) {
                     return false;
                 }
             }
@@ -189,7 +189,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         } else {
             binaryIntegerToInteger = null;
         }
-        evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+        evaluator = ContextValue.get().getEvaluator(operator, types);
         result = evaluator.resultType(types).newValue();
     }
 

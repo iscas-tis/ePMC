@@ -143,34 +143,34 @@ public final class ExpressionFilter implements Expression {
             propType = TypeInteger.get();
         }
         Type statesType = states.getType(expressionToType);
-        ensure(statesType == null || TypeBoolean.isBoolean(statesType),
+        ensure(statesType == null || TypeBoolean.is(statesType),
                 ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
         switch (type) {
         case AVG:
-            ensure(propType == null || TypeWeight.isWeight(propType),
+            ensure(propType == null || TypeWeight.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeWeight.get();
             break;
         case SUM:
-            ensure(propType == null || TypeWeight.isWeight(propType)
-            || TypeInteger.isInteger(propType),
+            ensure(propType == null || TypeWeight.is(propType)
+            || TypeInteger.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeWeight.get();
             break;
         case RANGE:
-            ensure(propType == null || TypeReal.isReal(propType)
-            || TypeInterval.isInterval(propType),
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInterval.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeInterval.get();
             break;
         case MAX: case MIN:
-            ensure(propType == null || TypeReal.isReal(propType)
-            || TypeInteger.isInteger(propType),
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInteger.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeReal.get();
             break;
         case COUNT:
-            ensure(propType == null || TypeBoolean.isBoolean(propType),
+            ensure(propType == null || TypeBoolean.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "");
             result = TypeInteger.get();
             break;
@@ -178,12 +178,12 @@ public final class ExpressionFilter implements Expression {
             result = propType;
             break;
         case FORALL: case EXISTS:
-            ensure(propType == null || TypeBoolean.isBoolean(propType),
+            ensure(propType == null || TypeBoolean.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeBoolean.get();
             break;
         case ARGMAX: case ARGMIN:
-            ensure(propType == null || TypeReal.isReal(propType),
+            ensure(propType == null || TypeReal.is(propType),
             ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
             result = TypeBoolean.get();
             break;

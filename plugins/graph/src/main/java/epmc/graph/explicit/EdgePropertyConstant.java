@@ -52,7 +52,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
         assert value != null;
         this.graph = graph;
         this.value = UtilValue.clone(value);
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), value.getType());
     }
 
     /**

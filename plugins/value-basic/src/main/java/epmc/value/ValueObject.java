@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Value;
 
 public final class ValueObject implements Value {
-    public static boolean isObject(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueObject;
     }
 
-    public static ValueObject asObject(Value value) {
-        if (isObject(value)) {
+    public static ValueObject as(Value value) {
+        if (is(value)) {
             return (ValueObject) value;
         } else {
             return null;

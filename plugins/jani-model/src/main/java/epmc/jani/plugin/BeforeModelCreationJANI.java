@@ -41,7 +41,7 @@ public final class BeforeModelCreationJANI implements BeforeModelCreation {
 
     @Override
     public void process() {
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetDecisionDecision.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSetLocationLocation.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorSetDecisionDecision.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorSetLocationLocation.INSTANCE);
     }
 }

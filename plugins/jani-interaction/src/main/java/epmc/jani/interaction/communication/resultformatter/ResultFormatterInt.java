@@ -49,7 +49,7 @@ public final class ResultFormatterInt implements ResultFormatter {
             return false;
         }
         Value valueResult = (Value) result;
-        if (!ValueInteger.isInteger(valueResult)) {
+        if (!ValueInteger.is(valueResult)) {
             return false;
         }
         return true;
@@ -71,7 +71,7 @@ public final class ResultFormatterInt implements ResultFormatter {
     public JsonValue getValue() {
         assert canHandle();
         Value valueResult = (Value) result;
-        return UtilJSON.toIntegerValue(ValueInteger.asInteger(valueResult).getInt());
+        return UtilJSON.toIntegerValue(ValueInteger.as(valueResult).getInt());
     }
 
     @Override

@@ -119,7 +119,7 @@ public final class AutomatonMaps {
         int indexAdd = 0;
         int bit = 1;
         for (int i = 0; i < modelState.length; i++) {
-            indexAdd |= ValueBoolean.asBoolean(modelState[i]).getBoolean() ? bit : 0;
+            indexAdd |= ValueBoolean.as(modelState[i]).getBoolean() ? bit : 0;
             bit <<= 1;
         }
         index += indexAdd;
@@ -133,7 +133,7 @@ public final class AutomatonMaps {
         int indexAdd = 0;
         int bit = 1;
         for (int i = 0; i < modelState.length; i++) {
-            indexAdd |= ValueBoolean.asBoolean(modelState[i]).getBoolean() ? bit : 0;
+            indexAdd |= ValueBoolean.as(modelState[i]).getBoolean() ? bit : 0;
             bit <<= 1;
         }
         index += indexAdd;

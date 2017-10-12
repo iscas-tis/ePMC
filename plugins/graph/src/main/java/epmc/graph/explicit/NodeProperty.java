@@ -94,8 +94,8 @@ public interface NodeProperty {
      */
     default boolean getBoolean(int node) {
         Value value = get(node);
-        assert ValueBoolean.isBoolean(value);
-        return ValueBoolean.asBoolean(value).getBoolean();
+        assert ValueBoolean.is(value);
+        return ValueBoolean.as(value).getBoolean();
     }
 
     /**
@@ -108,8 +108,8 @@ public interface NodeProperty {
      */
     default int getInt(int node) {
         Value value = get(node);
-        assert ValueInteger.isInteger(value);
-        return ValueInteger.asInteger(value).getInt();
+        assert ValueInteger.is(value);
+        return ValueInteger.as(value).getInt();
     }
 
     /**
@@ -122,8 +122,8 @@ public interface NodeProperty {
      */
     default <T> T getObject(int node) {
         Value value = get(node);
-        assert ValueObject.isObject(value) : value + " " + value.getType();
-        return ValueObject.asObject(value).getObject();
+        assert ValueObject.is(value) : value + " " + value.getType();
+        return ValueObject.as(value).getObject();
     }
 
     /**
@@ -136,8 +136,8 @@ public interface NodeProperty {
      */
     default <T extends Enum<?>> T getEnum(int node) {
         Value value = get(node);
-        assert ValueEnum.isEnum(value);
-        return ValueEnum.asEnum(value).getEnum();
+        assert ValueEnum.is(value);
+        return ValueEnum.as(value).getEnum();
     }
 
     /**

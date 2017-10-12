@@ -215,19 +215,19 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     public int addVariable(String name, Type type, Value lower, Value upper) {
         assert !closed;
         assert type != null;
-        assert TypeReal.isReal(type) || TypeInteger.isInteger(type);
-        assert lower == null || ValueReal.isReal(lower) || ValueInteger.isInteger(lower) || ValueBoolean.isBoolean(lower);
-        assert upper == null || ValueReal.isReal(upper) || ValueInteger.isInteger(upper) || ValueBoolean.isBoolean(upper);
+        assert TypeReal.is(type) || TypeInteger.is(type);
+        assert lower == null || ValueReal.is(lower) || ValueInteger.is(lower) || ValueBoolean.is(lower);
+        assert upper == null || ValueReal.is(upper) || ValueInteger.is(upper) || ValueBoolean.is(upper);
         LpSolve.set_add_rowmode(lp, FALSE);
         LpSolve.add_columnex(lp, 0, new double[0], new int[0]);
         int variable = numVariables;
-        if (TypeInteger.isInteger(type)) {
+        if (TypeInteger.is(type)) {
             LpSolve.set_int(lp, variable, TRUE);
-        } else if (TypeBoolean.isBoolean(type)) {
+        } else if (TypeBoolean.is(type)) {
             LpSolve.set_binary(lp, variable, TRUE);
         }
         if (lower != null && upper != null) {
-            LpSolve.set_bounds(lp, variable + 1, ValueNumber.asNumber(lower).getDouble(), ValueNumber.asNumber(upper).getDouble());
+            LpSolve.set_bounds(lp, variable + 1, ValueNumber.as(lower).getDouble(), ValueNumber.as(upper).getDouble());
         }
         if (name != null) {
             LpSolve.set_col_name(lp, variable + 1, name);
@@ -248,7 +248,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         incIntArrayOne(variables);
         LpSolve.set_add_rowmode(lp, TRUE);
         int lpConstraintType = toLpSolveConstraintType(constraintType);
-        double lpRhs = ValueNumber.asNumber(rightHandSide).getDouble();
+        double lpRhs = ValueNumber.as(rightHandSide).getDouble();
         LpSolve.add_constraintex(lp, row.length, row, variables,
                 lpConstraintType, lpRhs);
         decIntArrayOne(variables);
@@ -275,7 +275,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             assert var < numVariables;
         }
         assert rightHandSide != null;
-        assert TypeReal.isReal(rightHandSide.getType());
+        assert TypeReal.is(rightHandSide.getType());
         double[] rowDouble = arrayToDouble(row);
 
         addConstraint(rowDouble, variables, constraintType, rightHandSide);
@@ -292,7 +292,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             assert var < numVariables;
         }
         assert rightHandSide != null;
-        assert TypeReal.isReal(rightHandSide.getType());
+        assert TypeReal.is(rightHandSide.getType());
         double[] rowDouble = arrayToDouble(row);
 
         addConstraint(rowDouble, variables, constraintType, rightHandSide);
@@ -402,14 +402,14 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert row != null;
         double[] rowDouble = null;
 
-        if (TypeDouble.isDouble(row.getType().getEntryType())) {
+        if (TypeDouble.is(row.getType().getEntryType())) {
             rowDouble = ValueContentDoubleArray.getContent(row);
         } else {
             rowDouble = new double[row.size()];
             Value entry = row.getType().getEntryType().newValue();
             for (int i = 0; i < row.size(); i++) {
                 row.get(entry, i);
-                rowDouble[i] = ValueNumber.asNumber(entry).getDouble();
+                rowDouble[i] = ValueNumber.as(entry).getDouble();
             }
         }
         return rowDouble;
@@ -423,7 +423,7 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         }
         double[] rowDouble = new double[row.length];
         for (int i = 0; i < row.length; i++) {
-            rowDouble[i] =  ValueNumber.asNumber(row[i]).getDouble();
+            rowDouble[i] =  ValueNumber.as(row[i]).getDouble();
         }
         return rowDouble;
     }
@@ -433,10 +433,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert !closed;
         double result = LpSolve.get_var_primalresult(lp, 0);
         ValueReal resultValue = TypeReal.get().newValue();
-        if (ValueDouble.isDouble(resultValue)) {
-            ValueDouble.asDouble(resultValue).set(result);
-        } else if (ValueSetString.isValueSetString(resultValue)) {
-            ValueSetString.asValueSetString(resultValue).set(Double.toString(result));
+        if (ValueDouble.is(resultValue)) {
+            ValueDouble.as(resultValue).set(result);
+        } else if (ValueSetString.is(resultValue)) {
+            ValueSetString.as(resultValue).set(Double.toString(result));
         } else {
             assert false;
         }
@@ -451,10 +451,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
                 numVariables);
         for (int i = 0; i < result.size(); i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            if (ValueDouble.isDouble(entry)) {
-                ValueDouble.asDouble(entry).set(doubleVal);
-            } else if (ValueSetString.isValueSetString(entry)) {
-                ValueSetString.asValueSetString(entry).set(Double.toString(doubleVal));
+            if (ValueDouble.is(entry)) {
+                ValueDouble.as(entry).set(doubleVal);
+            } else if (ValueSetString.is(entry)) {
+                ValueSetString.as(entry).set(Double.toString(doubleVal));
             } else {
                 assert false;
             }
@@ -471,10 +471,10 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         for (int i = 0; i < result.length; i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
             Value entry = typeReal.newValue();
-            if (ValueDouble.isDouble(entry)) {
-                ValueDouble.asDouble(entry).set(doubleVal);
-            } else if (ValueSetString.isValueSetString(entry)) {
-                ValueSetString.asValueSetString(entry).set(Double.toString(doubleVal));
+            if (ValueDouble.is(entry)) {
+                ValueDouble.as(entry).set(doubleVal);
+            } else if (ValueSetString.is(entry)) {
+                ValueSetString.as(entry).set(Double.toString(doubleVal));
             } else {
                 assert false;
             }

@@ -53,7 +53,7 @@ public final class UtilValue {
     public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
         @SuppressWarnings(UNCHECKED)
         T value = (T) type.newValue();
-        ValueSetString.asValueSetString(value).set(valueString);
+        ValueSetString.as(value).set(valueString);
         return value;
     }
 
@@ -79,15 +79,15 @@ public final class UtilValue {
         assert a != null;
         assert b != null;
         T upper = null;
-        if (TypeInteger.isInteger(a) && TypeInteger.isInteger(b)) {
-            int lowerBound = Math.min(TypeInteger.asInteger(a).getLowerInt(),
-                    TypeInteger.asInteger(b).getLowerInt());
-            int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
-                    TypeInteger.asInteger(b).getUpperInt());
+        if (TypeInteger.is(a) && TypeInteger.is(b)) {
+            int lowerBound = Math.min(TypeInteger.as(a).getLowerInt(),
+                    TypeInteger.as(b).getLowerInt());
+            int upperBound = Math.max(TypeInteger.as(a).getUpperInt(),
+                    TypeInteger.as(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
-            OperatorEvaluator setAB = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, b, a);
-            OperatorEvaluator setBA = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, a, b);
+            OperatorEvaluator setAB = ContextValue.get().getEvaluator(OperatorSet.SET, b, a);
+            OperatorEvaluator setBA = ContextValue.get().getEvaluator(OperatorSet.SET, a, b);
             if (setAB != null) {
                 upper = a;
             } else if (setBA != null) {
@@ -106,7 +106,7 @@ public final class UtilValue {
         assert value != null;
         @SuppressWarnings(UNCHECKED)
         T clone = (T) value.getType().newValue();
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), value.getType());
         set.apply(clone, value);
         return clone;
     }
@@ -145,12 +145,12 @@ public final class UtilValue {
 
     public static double getDoubleOrInt(Value value) {
         assert value != null;
-        assert ValueDouble.isDouble(value) || ValueInteger.isInteger(value)
+        assert ValueDouble.is(value) || ValueInteger.is(value)
         : value.getType();
-        if (ValueDouble.isDouble(value)) {
-            return ValueDouble.asDouble(value).getDouble();
-        } else if (ValueInteger.isInteger(value)) {
-            return ValueInteger.asInteger(value).getInt();
+        if (ValueDouble.is(value)) {
+            return ValueDouble.as(value).getDouble();
+        } else if (ValueInteger.is(value)) {
+            return ValueInteger.as(value).getInt();
         } else {
             assert false;
             return Double.NaN;
@@ -159,14 +159,14 @@ public final class UtilValue {
     
     public static double getDouble(Value value) {
         assert value != null;
-        assert ValueDouble.isDouble(value) : value.getType();
-        return ValueDouble.asDouble(value).getDouble();
+        assert ValueDouble.is(value) : value.getType();
+        return ValueDouble.as(value).getDouble();
     }
 
     public static int getInt(Value value) {
         assert value != null;
-        assert ValueInteger.isInteger(value) : value.getType();
-        return ValueInteger.asInteger(value).getInt();
+        assert ValueInteger.is(value) : value.getType();
+        return ValueInteger.as(value).getInt();
     }
 
     /**

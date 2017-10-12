@@ -19,10 +19,10 @@ public enum OperatorEvaluatorSetIntInt implements OperatorEvaluator {
     @Override
     public boolean canApply(Type... types) {
         assert types != null;
-        if (!TypeInteger.isInteger(types[0])) {
+        if (!TypeInteger.is(types[0])) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[1])) {
+        if (!TypeInteger.is(types[1])) {
             return false;
         }
         return true;
@@ -37,6 +37,6 @@ public enum OperatorEvaluatorSetIntInt implements OperatorEvaluator {
     public void apply(Value result, Value... operands) {
         assert result != null;
         assert operands != null;
-        ValueInteger.asInteger(result).set(ValueInteger.asInteger(operands[0]).getInt());
+        ValueInteger.as(result).set(ValueInteger.as(operands[0]).getInt());
     }
 }

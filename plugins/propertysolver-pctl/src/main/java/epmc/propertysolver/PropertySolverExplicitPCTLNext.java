@@ -185,7 +185,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         //        ValueArray result = typeArray.newValue(computeForStates.length());
 
         solveNext(pathTemporal, expressions, evalValues, evaluators, min);
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
             for (int i = 0; i < resultValues.size(); i++) {
@@ -201,7 +201,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
-        Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         BitSet allNodes = UtilBitSet.newBitSetUnbounded();
         allNodes.set(0, graph.getNumNodes());
         List<Object> nodeProperties = new ArrayList<>();
@@ -230,21 +230,21 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         values = objective.getResult();
         TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
-            OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, TypeReal.get());
+            OperatorEvaluator exp = ContextValue.get().getEvaluator(OperatorExp.EXP, TypeReal.get());
             Value rightValue = timeBound.getRightValue();
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
             iterStates.set(0, graph.getNumNodes());
             ValueAlgebra leftValue = TypeWeight.get().newValue();
-            OperatorEvaluator setLV = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, leftValue.getType(), timeBound.getLeftValue().getType());
+            OperatorEvaluator setLV = ContextValue.get().getEvaluator(OperatorSet.SET, leftValue.getType(), timeBound.getLeftValue().getType());
             setLV.apply(leftValue, timeBound.getLeftValue());
             ValueAlgebra sum = TypeWeight.get().newValue();
             ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-            OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-            OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, jump.getType());
-            OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, entry.getType(), jump.getType());
-            OperatorEvaluator setW = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+            OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, jump.getType());
+            OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, entry.getType(), jump.getType());
+            OperatorEvaluator setW = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int state = 0; state < iterNumStates; state++) {
                 setW.apply(sum, TypeWeight.get().getZero());
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {

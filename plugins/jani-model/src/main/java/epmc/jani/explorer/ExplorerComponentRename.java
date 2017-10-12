@@ -103,7 +103,7 @@ public final class ExplorerComponentRename implements ExplorerComponent {
         assert nodeRename != null;
         inner.queryNode(nodeRename);
         for (int succNr = 0; succNr < getNumSuccessors(); succNr++) {
-            Action action = ValueObject.asObject(labelInner.get(succNr)).getObject();
+            Action action = ValueObject.as(labelInner.get(succNr)).getObject();
             Action renamed = renaming.get(action);
             if (renamed == null) {
                 renamed = action;

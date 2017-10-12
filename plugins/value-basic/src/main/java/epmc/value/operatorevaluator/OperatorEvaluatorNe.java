@@ -66,8 +66,8 @@ public enum OperatorEvaluatorNe implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, operands[0].getType(), operands[1].getType());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, operands[0].getType(), operands[1].getType());
         eq.apply(result, operands);
-        ValueBoolean.asBoolean(result).set(!ValueBoolean.asBoolean(result).getBoolean());
+        ValueBoolean.as(result).set(!ValueBoolean.as(result).getBoolean());
     }
 }

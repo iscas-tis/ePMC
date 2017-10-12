@@ -34,7 +34,7 @@ public final class ValueArrayConstant implements ValueArray {
     ValueArrayConstant(TypeArrayConstant type) {
         this.type = type;
         this.content = getType().getEntryType().newValue();
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override

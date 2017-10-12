@@ -89,15 +89,15 @@ public final class FoxGlynn {
     private ValueReal totalWeight;
 
     private void finder(int m) {
-        OperatorEvaluator logOp = ContextValue.get().getOperatorEvaluator(OperatorLog.LOG, TypeReal.get());
-        OperatorEvaluator ceil = ContextValue.get().getOperatorEvaluator(OperatorCeil.CEIL, typeReal);
-        OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
-        OperatorEvaluator pow = ContextValue.get().getOperatorEvaluator(OperatorPow.POW, typeReal, typeReal);
-        OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, typeReal);
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, typeReal, typeReal);
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, typeReal, typeReal);
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, typeReal, typeReal);
+        OperatorEvaluator logOp = ContextValue.get().getEvaluator(OperatorLog.LOG, TypeReal.get());
+        OperatorEvaluator ceil = ContextValue.get().getEvaluator(OperatorCeil.CEIL, typeReal);
+        OperatorEvaluator floor = ContextValue.get().getEvaluator(OperatorFloor.FLOOR, typeReal);
+        OperatorEvaluator pow = ContextValue.get().getEvaluator(OperatorPow.POW, typeReal, typeReal);
+        OperatorEvaluator exp = ContextValue.get().getEvaluator(OperatorExp.EXP, typeReal);
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, typeReal, typeReal);
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, typeReal, typeReal);
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, typeReal, typeReal);
         ValueBoolean cmp = TypeBoolean.get().newValue();
         ValueReal kTimesEpsilon = typeReal.newValue();
         ValueReal tau = typeReal.newValue();
@@ -106,9 +106,9 @@ public final class FoxGlynn {
         multiply.apply(epsilon, this.epsilon, sqrt_2_pi);
         ValueReal kReal = typeReal.newValue();
         ValueReal maxError = typeReal.newValue();
-        OperatorEvaluator addInverse = ContextValue.get().getOperatorEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeReal.get(), TypeReal.get());
         if (m < 25) {
             ValueReal minusLambda = typeReal.newValue();
             addInverse.apply(minusLambda, lambda);
@@ -160,7 +160,7 @@ public final class FoxGlynn {
         }
 
         ValueReal lambda_max = typeReal.newValue();
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         int m_max;
         if (m < 400) {
             set.apply(lambda_max, lambda_400);
@@ -288,10 +288,10 @@ public final class FoxGlynn {
         ValueReal entry = typeReal.newValue();
         ValueReal leftSide = typeReal.newValue();
         ValueReal oldEntry = typeReal.newValue();
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int j = m - left; j > 0; j--) {
             leftSide.set(j+left);
@@ -344,7 +344,7 @@ public final class FoxGlynn {
 
         ValueReal entryJ = typeReal.newValue();
         ValueReal entryT = typeReal.newValue();
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, typeReal, typeReal);
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, typeReal, typeReal);
         while (j < t) {
             values.get(entryJ, j);
             values.get(entryT, t);
@@ -376,7 +376,7 @@ public final class FoxGlynn {
         Options options = Options.get();
         this.typeReal = TypeReal.get();
 
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         /* store input parameters and derived stuff */
         this.log = options.get(OptionsMessages.LOG);
         this.lambda = typeReal.newValue();
@@ -394,7 +394,7 @@ public final class FoxGlynn {
         this.zero = UtilValue.newValue(typeReal, 0);
         this.one = UtilValue.newValue(typeReal, 1);
         this.two = UtilValue.newValue(typeReal, 2);
-        OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
         this.oneHalf = typeReal.newValue();
         divide.apply(this.oneHalf, one, two);
         this.oneEights = UtilValue.newValue(typeReal, 8);
@@ -405,9 +405,9 @@ public final class FoxGlynn {
         this.factor1 = UtilValue.newValue(typeReal, "0.662608824988162441697980");
         this.factor2 = UtilValue.newValue(typeReal, "0.664265347050632847802225");
         this.bigNumber = UtilValue.newValue(typeReal, "1.0e+10");
-        this.vm1922272 = ValueReal.asReal(UtilValue.newValue(typeReal, "-1.922272"));
+        this.vm1922272 = ValueReal.as(UtilValue.newValue(typeReal, "-1.922272"));
 
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeReal.get(), TypeReal.get());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         
         eq.apply(cmp, this.lambda, zero);
@@ -419,7 +419,7 @@ public final class FoxGlynn {
             totalWeight = UtilValue.clone(one);
             startValue = typeReal.newValue();
         } else {
-            OperatorEvaluator floor = ContextValue.get().getOperatorEvaluator(OperatorFloor.FLOOR, typeReal);
+            OperatorEvaluator floor = ContextValue.get().getEvaluator(OperatorFloor.FLOOR, typeReal);
             ValueReal floorReal = typeReal.newValue();
             floor.apply(floorReal, this.lambda);
             int m = floorReal.getInt();

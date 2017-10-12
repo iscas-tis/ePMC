@@ -36,20 +36,20 @@ final class ValueArrayObjectDirect implements ValueArray {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         assert index >= 0;
         assert index < size();
-        content[index] = ValueObject.asObject(value).getObject();
+        content[index] = ValueObject.as(value).getObject();
     }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         assert index >= 0;
         assert index < size();
         Object entry = content[index];
-        ValueObject.asObject(value).set(entry);
+        ValueObject.as(value).set(entry);
     }
 
     @Override

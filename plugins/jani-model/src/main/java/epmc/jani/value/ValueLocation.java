@@ -47,12 +47,12 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
     /** Number of the location represented by this value. */
     private int locationNumber;
 
-    public static boolean isLocation(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueLocation;
     }
     
-    public static ValueLocation asLocation(Value value) {
-        if (isLocation(value)) {
+    public static ValueLocation as(Value value) {
+        if (is(value)) {
             return (ValueLocation) value;
         } else {
             return null;

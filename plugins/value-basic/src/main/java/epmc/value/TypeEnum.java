@@ -32,16 +32,15 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
         return ContextValue.get().makeUnique(new TypeEnum(enumClass));
     }
 
-    public static TypeEnum asEnum(Type type) {
-        if (type instanceof TypeEnum) {
+    public static boolean is(Type type) {
+        return type instanceof TypeEnum;
+    }
+    public static TypeEnum as(Type type) {
+        if (is(type)) {
             return (TypeEnum) type;
         } else {
             return null;
         }
-    }
-
-    public static boolean isEnum(Type type) {
-        return type instanceof TypeEnum;
     }
 
     private final Class<? extends Enum<?>> enumClass;
@@ -68,7 +67,7 @@ public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     public Value newValue(Enum<?> enumConst) {
         assert enumConst != null;
         Value value = newValue();
-        ValueEnum.asEnum(value).set(enumConst);
+        ValueEnum.as(value).set(enumConst);
         return value;
     }
 

@@ -46,7 +46,7 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeNumber.isNumber(types[0])) {
+        if (!TypeNumber.is(types[0])) {
             return false;
         }
         return true;
@@ -66,7 +66,7 @@ public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        double opValue = ValueNumber.asNumber(operands[0]).getDouble();
-        ValueAlgebra.asAlgebra(result).set((int) opValue);
+        double opValue = ValueNumber.as(operands[0]).getDouble();
+        ValueAlgebra.as(result).set((int) opValue);
     }
 }

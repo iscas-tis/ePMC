@@ -46,7 +46,7 @@ public enum OperatorEvaluatorImplies implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeBoolean.isBoolean(type)) {
+            if (!TypeBoolean.is(type)) {
                 return false;
             }
         }
@@ -69,8 +69,8 @@ public enum OperatorEvaluatorImplies implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueBoolean.asBoolean(result).set(
-                !ValueBoolean.asBoolean(operands[0]).getBoolean()
-                || ValueBoolean.asBoolean(operands[1]).getBoolean());
+        ValueBoolean.as(result).set(
+                !ValueBoolean.as(operands[0]).getBoolean()
+                || ValueBoolean.as(operands[1]).getBoolean());
     }
 }

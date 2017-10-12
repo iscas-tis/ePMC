@@ -18,7 +18,7 @@ public final class OperatorEvaluatorNot implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeTernary.isTernary(types[0])) {
+        if (!TypeTernary.is(types[0])) {
             return false;
         }
         return true;
@@ -42,7 +42,7 @@ public final class OperatorEvaluatorNot implements OperatorEvaluator {
         }
         assert operands.length == 1;
         Ternary operand = UtilTernary.getTernary(operands[0]);
-        ValueTernary.asTernary(result).set(apply(operand));
+        ValueTernary.as(result).set(apply(operand));
     }
 
     private Ternary apply(Ternary operand) {

@@ -35,7 +35,7 @@ public final class ValueArrayGeneric implements ValueArray {
     ValueArrayGeneric(TypeArrayGeneric type) {
         this.type = type;
         this.content = new Value[0];
-        set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override

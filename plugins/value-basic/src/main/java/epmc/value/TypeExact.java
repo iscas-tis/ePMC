@@ -37,7 +37,7 @@ public interface TypeExact extends Type {
      * @param type type to be checked
      * @return {@code true} iff type is exact
      */
-    static boolean isExact(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeExact;
     }
 }

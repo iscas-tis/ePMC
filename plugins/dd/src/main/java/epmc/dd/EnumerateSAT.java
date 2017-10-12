@@ -47,7 +47,7 @@ public final class EnumerateSAT {
 
     public void setBDD(DD dd) {
         assert dd != null;
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         this.dd = dd;
     }
 
@@ -71,7 +71,7 @@ public final class EnumerateSAT {
         values = new ValueEnumerable[variables.length];   
         types = new Type[variables.length];
         for (int varNr = 0; varNr < variables.length; varNr++) {
-            TypeEnumerable type = TypeEnumerable.asEnumerable(variables[varNr].getType());
+            TypeEnumerable type = TypeEnumerable.as(variables[varNr].getType());
             types[varNr] = type;
             values[varNr] = type.newValue();
         }
@@ -131,7 +131,7 @@ public final class EnumerateSAT {
             return;
         } else if (cubeWalker.isLeaf()) {
             assert ddWalker.isLeaf();
-            if (ValueBoolean.asBoolean(ddWalker.value()).getBoolean()) {
+            if (ValueBoolean.as(ddWalker.value()).getBoolean()) {
                 terminalCase();
             }
         } else {
@@ -170,7 +170,7 @@ public final class EnumerateSAT {
                 }
                 digit <<= 1;
             }
-            if (varValue >= TypeEnumerable.asEnumerable(types[highNr]).getNumValues()) {
+            if (varValue >= TypeEnumerable.as(types[highNr]).getNumValues()) {
                 return;
             }
             values[highNr].setValueNumber(varValue);

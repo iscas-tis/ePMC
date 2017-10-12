@@ -47,7 +47,7 @@ public enum OperatorEvaluatorSubtractInt implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInteger.isInteger(type)) {
+            if (!TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -72,6 +72,6 @@ public enum OperatorEvaluatorSubtractInt implements OperatorEvaluator {
         }
         int op1 = UtilValue.getInt(operands[0]);
         int op2 = UtilValue.getInt(operands[1]);
-        ValueInteger.asInteger(result).set(op1 - op2);
+        ValueInteger.as(result).set(op1 - op2);
     }
 }

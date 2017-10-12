@@ -171,7 +171,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         prodWeight = TypeWeightTransition.get().newValue();
         weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get());
         isState = new boolean[automata.length];
-        multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
+        multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
     }
 
     @Override

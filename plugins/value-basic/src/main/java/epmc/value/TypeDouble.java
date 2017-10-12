@@ -22,7 +22,6 @@ package epmc.value;
 
 import epmc.value.ContextValue;
 import epmc.value.Type;
-import epmc.value.Value;
 
 public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
     public static TypeDouble get() {
@@ -34,12 +33,8 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
         ContextValue.get().setType(TypeDouble.class, ContextValue.get().makeUnique(type));
     }
 
-    public static boolean isDouble(Type type) {
+    public static boolean is(Type type) {
         return type instanceof TypeDouble;
-    }
-
-    public static boolean isDouble(Value value) {
-        return isDouble(value.getType());
     }
 
     private final static String DOUBLE = "double";

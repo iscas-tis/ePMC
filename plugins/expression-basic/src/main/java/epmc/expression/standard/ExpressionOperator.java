@@ -160,7 +160,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             assert childType != null : this + "    in    " + child + " " + child.getClass() + " " + expressionToType;
             opTypes[opNr] = childType;
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, opTypes);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, opTypes);
         ensure(evaluator != null, ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, positional, Arrays.toString(opTypes));
         result = evaluator.resultType(opTypes);
         assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);

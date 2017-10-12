@@ -49,13 +49,13 @@ public enum OperatorEvaluatorSubtractInterval implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if ((TypeInteger.isInteger(types[0]) || TypeReal.isReal(types[0]))
-                && (TypeInteger.isInteger(types[1]) || TypeReal.isReal(types[1]))) {
+        if ((TypeInteger.is(types[0]) || TypeReal.is(types[0]))
+                && (TypeInteger.is(types[1]) || TypeReal.is(types[1]))) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)
-                    && !TypeInterval.isInterval(type)) {
+            if (!TypeDouble.is(type) && !TypeInteger.is(type)
+                    && !TypeInterval.is(type)) {
                 return false;
             }
         }
@@ -84,7 +84,7 @@ public enum OperatorEvaluatorSubtractInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, op1Lower.getType(), op2Lower.getType());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, op1Lower.getType(), op2Lower.getType());
         subtract.apply(resultLower, op1Lower, op2Lower);
         subtract.apply(resultUpper, op1Upper, op2Upper);
     }

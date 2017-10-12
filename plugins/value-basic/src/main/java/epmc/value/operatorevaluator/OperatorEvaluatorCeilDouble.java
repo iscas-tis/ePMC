@@ -49,7 +49,7 @@ public enum OperatorEvaluatorCeilDouble implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeAlgebra.isAlgebra(type)) {
+            if (!TypeAlgebra.is(type)) {
                 return false;
             }
         }
@@ -63,7 +63,7 @@ public enum OperatorEvaluatorCeilDouble implements OperatorEvaluator {
             assert type != null;
         }
         Type result;
-        if (!(TypeReal.isReal(types[0]) || TypeInteger.isInteger(types[0]))) {
+        if (!(TypeReal.is(types[0]) || TypeInteger.is(types[0]))) {
             return null;
         }
         result = TypeInteger.get();
@@ -77,8 +77,8 @@ public enum OperatorEvaluatorCeilDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double value = ValueNumber.asNumber(operands[0]).getDouble();
+        double value = ValueNumber.as(operands[0]).getDouble();
         int ceil = (int) Math.ceil(value);
-        ValueAlgebra.asAlgebra(result).set(ceil);
+        ValueAlgebra.as(result).set(ceil);
     }
 }

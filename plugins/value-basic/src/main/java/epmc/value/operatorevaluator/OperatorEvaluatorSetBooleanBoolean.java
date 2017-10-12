@@ -20,10 +20,10 @@ public enum OperatorEvaluatorSetBooleanBoolean implements OperatorEvaluator {
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;
-        if (!TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.is(types[0])) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[1])) {
+        if (!TypeBoolean.is(types[1])) {
             return false;
         }
         return true;
@@ -39,6 +39,6 @@ public enum OperatorEvaluatorSetBooleanBoolean implements OperatorEvaluator {
         assert result != null;
         assert operands != null;
         assert operands.length >= 1;
-        ValueBoolean.asBoolean(result).set(ValueBoolean.asBoolean(operands[0]).getBoolean());
+        ValueBoolean.as(result).set(ValueBoolean.as(operands[0]).getBoolean());
     }
 }

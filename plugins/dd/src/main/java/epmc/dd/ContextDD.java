@@ -337,7 +337,7 @@ public final class ContextDD implements Closeable {
         for (int i = 0; i < ops.length; i++) {
             types[i] = ops[i].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         if (ops.length == 0) {
             Type resultType = evaluator.resultType(types);
             Value resultValue = resultType.newValue();
@@ -395,7 +395,7 @@ public final class ContextDD implements Closeable {
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         Type type = evaluator.resultType(types);
         return type;
     }
@@ -445,7 +445,7 @@ public final class ContextDD implements Closeable {
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         assert evaluator != null : identifier + " " + Arrays.toString(types);
         Type resultType = evaluator.resultType(types);
         assert resultType != null : identifier + SPACE + Arrays.toString(types);
@@ -493,7 +493,7 @@ public final class ContextDD implements Closeable {
         assert value != null;
         totalTime.start();
         DD result;
-        if (ValueBoolean.isBoolean(value)) {
+        if (ValueBoolean.is(value)) {
             result = newConstant(value, lowLevelBinary);
         } else {
             result = newConstant(value, lowLevelMulti);
@@ -997,7 +997,7 @@ public final class ContextDD implements Closeable {
         BigInteger result;
         if (cube.isLeaf()) {
             assert dd.isLeaf();
-            if (ValueBoolean.asBoolean(dd.value()).getBoolean()) {
+            if (ValueBoolean.as(dd.value()).getBoolean()) {
                 result = BigInteger.ONE;
             } else {
                 result = BigInteger.ZERO;
@@ -1120,7 +1120,7 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert cube.assertCube();
         totalTime.start();
         DD result;
@@ -1218,7 +1218,7 @@ public final class ContextDD implements Closeable {
         assert invalidateWalkersIfReorder();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert cube.assertCube();
         totalTime.start();
         DD convertCube;
@@ -1341,7 +1341,7 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         assert alive();
         assert assertValidDD(dd);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert forTrue != null;
         assert forFalse != null;
         totalTime.start();
@@ -1565,15 +1565,15 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert assertCube(cube);
         totalTime.start();
         TIntSet result = new TIntHashSet();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, dd.value().getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, dd.value().getType());
         isZero.apply(cmp, dd.value());
         if (dd.isLeaf()) {
-            if (ValueAlgebra.isAlgebra(dd.value()) && cmp.getBoolean()) {
+            if (ValueAlgebra.is(dd.value()) && cmp.getBoolean()) {
                 totalTime.stop();
                 assert false;
                 return null;
@@ -1664,7 +1664,7 @@ public final class ContextDD implements Closeable {
         assert applyOverSatSupportOK(dd, support, sat);
         totalTime.start();
         Type ddType = dd.getType();
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, ddType, ddType);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, ddType, ddType);
         Type type = evaluator.resultType(ddType, ddType);
         Map<LongTriple,Value> known = new THashMap<>();
         Value value = applyOverSat(identifier, dd.walker(), support.walker(), known, type, sat.walker());
@@ -1704,7 +1704,7 @@ public final class ContextDD implements Closeable {
     private Value applyOverSat(Operator identifier, Walker dd, Walker support,
             Map<LongTriple,Value> known,
             Type type, Walker sat) {
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, type, type);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, type, type);
         LongTriple triple = new LongTriple(dd.uniqueId(), sat.uniqueId(), support.uniqueId());
         if (known.containsKey(triple)) {
             return known.get(triple);
@@ -1713,7 +1713,7 @@ public final class ContextDD implements Closeable {
             known.put(triple, null);
             return null;
         } else if (support.isLeaf()) {
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, dd.value().getType(), type);
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, dd.value().getType(), type);
             Value result = type.newValue();
             set.apply(result, dd.value());
             known.put(triple, result);
@@ -2428,7 +2428,7 @@ public final class ContextDD implements Closeable {
     public boolean isBoolean(DD dd) {
         assert assertValidDD(dd);
         totalTime.start();
-        boolean result = TypeBoolean.isBoolean(getType(dd));
+        boolean result = TypeBoolean.is(getType(dd));
         totalTime.stop();
         return result;
     }

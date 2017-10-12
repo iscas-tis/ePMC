@@ -44,7 +44,7 @@ public interface ValueArray extends Value {
      * @param value value for which to check whether it is an array value
      * @return whether given value is an array value
      */
-    public static boolean isArray(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueArray;
     }
 
@@ -55,8 +55,8 @@ public interface ValueArray extends Value {
      * @param value value to cast to array type
      * @return value casted to array value, or {@null} if not possible to cast
      */
-    public static ValueArray asArray(Value value) {
-        if (isArray(value)) {
+    public static ValueArray as(Value value) {
+        if (is(value)) {
             return (ValueArray) value;
         } else { 
             return null;

@@ -321,7 +321,7 @@ public class LumperDDSignature implements LumperDD {
      */
     public static DD pickOne(DD dd, DD cube) {
         assert cube.assertCube();
-        assert TypeBoolean.isBoolean(dd.getType()) || TypeReal.isReal(dd.getType()) || TypeInteger.isInteger(dd.getType());
+        assert TypeBoolean.is(dd.getType()) || TypeReal.is(dd.getType()) || TypeInteger.is(dd.getType());
         TLongObjectMap<DD> cache = new TLongObjectHashMap<>();
         DD falseTerminal = dd.getContext().newConstant(falseValueForType(dd.getType()));
         DD result = pickOne(dd.walker(), cube.walker(), falseTerminal, dd.getContext(), cache).clone();
@@ -390,13 +390,13 @@ public class LumperDDSignature implements LumperDD {
     }
 
     private static Value falseValueForType(Type t) {
-        assert TypeBoolean.isBoolean(t) || TypeReal.isReal(t) || TypeInteger.isInteger(t);
+        assert TypeBoolean.is(t) || TypeReal.is(t) || TypeInteger.is(t);
         Value falseValue;
-        if (TypeBoolean.isBoolean(t)) {
-            TypeBoolean tBoolean = TypeBoolean.asBoolean(t);
+        if (TypeBoolean.is(t)) {
+            TypeBoolean tBoolean = TypeBoolean.as(t);
             falseValue = tBoolean.getFalse();
-        } else if (TypeReal.isReal(t) || TypeInteger.isInteger(t)) {
-            TypeReal tReal = TypeReal.asReal(t);
+        } else if (TypeReal.is(t) || TypeInteger.is(t)) {
+            TypeReal tReal = TypeReal.as(t);
             falseValue = tReal.getZero();
         } else {
             falseValue = null;
@@ -584,7 +584,7 @@ public class LumperDDSignature implements LumperDD {
                     0, newUpper);
             List<DD> oldVars = oldBlockIndexVar.getDDVariables(0);
             List<DD> newVars = blockIndexVar.getDDVariables(0);
-            if (TypeBoolean.isBoolean(result.getType())) {
+            if (TypeBoolean.is(result.getType())) {
                 result = result.abstractExistWith(contextDD.listToCube(oldVars.subList(newVars.size(), oldVars.size())));
             } else {
                 result = result.abstractSumWith(contextDD.listToCube(oldVars.subList(newVars.size(), oldVars.size())));

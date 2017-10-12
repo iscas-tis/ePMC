@@ -397,7 +397,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         ValueArray resultValues = UtilValue.newArray(TypeBoolean.get()
                 .getTypeArray(), forStates.size());
         // TODO check!
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeBoolean.get(), TypeBoolean.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeBoolean.get(), TypeBoolean.get());
         for (int i = 0; i < forStates.size(); i++) {
             int node = forStates.getExplicitIthState(i);
             //            int modelState = nodeAutomaton.getInt();
@@ -429,7 +429,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         // TODO check!
         ValueAlgebra entry = solverResult.getType().getEntryType().newValue();
         ValueAlgebra one = TypeWeight.get().getOne();
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         for (int i = 0; i < forStates.size(); i++) {
             int node = forStates.getExplicitIthState(i);
             //int modelState = nodeAutomaton.getInt();

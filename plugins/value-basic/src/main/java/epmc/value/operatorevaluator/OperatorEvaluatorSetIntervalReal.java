@@ -23,10 +23,10 @@ public enum OperatorEvaluatorSetIntervalReal implements OperatorEvaluator {
     @Override
     public boolean canApply(Type... types) {
         assert types != null;
-        if (!TypeReal.isReal(types[0])) {
+        if (!TypeReal.is(types[0])) {
             return false;
         }
-        if (!TypeInterval.isInterval(types[1])) {
+        if (!TypeInterval.is(types[1])) {
             return false;
         }
         return true;
@@ -41,9 +41,9 @@ public enum OperatorEvaluatorSetIntervalReal implements OperatorEvaluator {
     public void apply(Value result, Value... operands) {
         assert result != null;
         assert operands != null;
-        ValueInterval resultInterval = ValueInterval.asInterval(result);
-        ValueReal operandReal = ValueReal.asReal(operands[0]);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        ValueInterval resultInterval = ValueInterval.as(result);
+        ValueReal operandReal = ValueReal.as(operands[0]);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         set.apply(resultInterval.getIntervalLower(), operandReal);
         set.apply(resultInterval.getIntervalUpper(), operandReal);
     }

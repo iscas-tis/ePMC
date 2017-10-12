@@ -26,12 +26,12 @@ import epmc.util.BitStream;
 import epmc.value.Value;
 
 public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNumBitsKnown, ValueRange, ValueBitStoreable, ValueSetString, ValueSetInteger, ValueGetInteger {
-    public static boolean isInteger(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueInteger;
     }
 
-    public static ValueInteger asInteger(Value value) {
-        if (isInteger(value)) {
+    public static ValueInteger as(Value value) {
+        if (is(value)) {
             return (ValueInteger) value;
         } else {
             return null;

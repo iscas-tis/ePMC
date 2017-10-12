@@ -53,7 +53,7 @@ final class QuantitativeResult {
      */
     QuantitativeResult(ValueArrayAlgebra probabilities, SchedulerSimple strategies) {
         assert probabilities != null;
-        assert ValueArray.isArray(probabilities);
+        assert ValueArray.is(probabilities);
         this.probabilities = probabilities;
         this.strategies = strategies;
     }

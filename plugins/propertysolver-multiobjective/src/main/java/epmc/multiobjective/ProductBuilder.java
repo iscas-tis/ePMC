@@ -240,9 +240,9 @@ final class ProductBuilder {
             }
             ValueAlgebra stateReward = newValueWeight();
             ValueAlgebra transReward = newValueWeight();
-            OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
             int numSucc = iterGraph.getNumSuccessors(iterState);
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int obj = 0; obj < numAutomata; obj++) {
                 set.apply(stateReward, zero);
                 NodeProperty stateRewardProp = stateRewards[obj];

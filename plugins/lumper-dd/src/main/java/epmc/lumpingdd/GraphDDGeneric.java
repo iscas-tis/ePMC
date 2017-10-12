@@ -68,13 +68,13 @@ public final class GraphDDGeneric implements GraphDD {
         }
 
         public Builder setGraphProperty(Object key, Value value) {
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(key).getType());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(key).getType());
             set.apply(graphProperties.get(key), value);
             return this;
         }
 
         public Builder setGraphPropertyObject(Object key, Object value) {
-            ValueObject.asObject(graphProperties.get(key)).set(value);
+            ValueObject.as(graphProperties.get(key)).set(value);
             return this;
         }
 

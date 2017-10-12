@@ -46,11 +46,11 @@ final class ValueArrayEnum implements ValueArray {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert ValueEnum.isEnum(value);
-        assert getType().getEntryType().getEnumClass() == ValueEnum.asEnum(value).getEnumClass();
+        assert ValueEnum.is(value);
+        assert getType().getEntryType().getEnumClass() == ValueEnum.as(value).getEnumClass();
         assert index >= 0;
         assert index < size();
-        int number = ValueEnum.asEnum(value).getEnum().ordinal();
+        int number = ValueEnum.as(value).getEnum().ordinal();
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             boolean bitValue = (number & (1 << bitNr)) != 0;
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -66,8 +66,8 @@ final class ValueArrayEnum implements ValueArray {
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueEnum.isEnum(value);
-        assert getType().getEntryType().getEnumClass() == ValueEnum.asEnum(value).getEnumClass();
+        assert ValueEnum.is(value);
+        assert getType().getEntryType().getEnumClass() == ValueEnum.as(value).getEnumClass();
         assert index >= 0;
         assert index < size();
         int number = 0;
@@ -79,7 +79,7 @@ final class ValueArrayEnum implements ValueArray {
             number |= (1 << bitNr);
         }
         }
-        ValueEnum.asEnum(value).set(getConstants()[number]);
+        ValueEnum.as(value).set(getConstants()[number]);
     }
 
     @Override

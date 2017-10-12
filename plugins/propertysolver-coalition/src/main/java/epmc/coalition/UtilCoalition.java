@@ -127,8 +127,8 @@ public final class UtilCoalition {
         ValueAlgebra compareTo = getValue(property);
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
-        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
+        OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
         isOne.apply(cmpOne, compareTo);
         isZero.apply(cmpZero, compareTo);
         return isQuantGe(property) && cmpZero.getBoolean()
@@ -140,8 +140,8 @@ public final class UtilCoalition {
         ValueAlgebra compareTo = getValue(property);
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
-        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
+        OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
         isOne.apply(cmpOne, compareTo);
         isZero.apply(cmpZero, compareTo);
         return isQuantLt(property) && cmpZero.getBoolean()
@@ -158,8 +158,8 @@ public final class UtilCoalition {
         ValueAlgebra compareTo = getValue(property);
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
-        OperatorEvaluator isOne = ContextValue.get().getOperatorEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
+        OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, compareTo.getType());
         isOne.apply(cmpOne, compareTo);
         isZero.apply(cmpZero, compareTo);
         return compareTo != null && (cmpZero.getBoolean() || cmpOne.getBoolean());
@@ -191,7 +191,7 @@ public final class UtilCoalition {
     private static ValueAlgebra getValue(Expression expression) {
         assert expression != null;
         ExpressionLiteral expressionLiteral = getLiteral(expression);
-        return ValueAlgebra.asAlgebra(expressionLiteral.getValue());
+        return ValueAlgebra.as(expressionLiteral.getValue());
     }
 
     public static ExpressionQuantifier getQuantifier(Expression expression) {

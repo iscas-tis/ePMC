@@ -92,7 +92,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
                 this.constants[i] = type.newValue();
             }
             this.helper = type.newValue();
-            set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, type, type);
+            set = ContextValue.get().getEvaluator(OperatorSet.SET, type, type);
         }
 
         @Override
@@ -244,7 +244,7 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         @Override
         public Value get(int currentNode, int successor) {
             if (currentNode < numStates) {
-                ValueAlgebra.asAlgebra(value).set(-1);
+                ValueAlgebra.as(value).set(-1);
             } else {
                 int entryNr = getEntryNumber(currentNode, successor);
                 content = ensureSize(content, entryNr + 1);

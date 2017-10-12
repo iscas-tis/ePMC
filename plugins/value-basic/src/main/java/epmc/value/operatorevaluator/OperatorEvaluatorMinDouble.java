@@ -47,11 +47,11 @@ public enum OperatorEvaluatorMinDouble implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
+        if (TypeInteger.is(types[0]) && TypeInteger.is(types[1])) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)) {
+            if (!TypeDouble.is(type) && !TypeInteger.is(type)) {
                 return false;
             }            
         }
@@ -76,6 +76,6 @@ public enum OperatorEvaluatorMinDouble implements OperatorEvaluator {
         }
         double op1 = UtilValue.getDoubleOrInt(operands[0]);
         double op2 = UtilValue.getDoubleOrInt(operands[1]);
-        ValueDouble.asDouble(result).set(Math.min(op1, op2));
+        ValueDouble.as(result).set(Math.min(op1, op2));
     }
 }

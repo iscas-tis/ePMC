@@ -24,12 +24,12 @@ import epmc.util.BitStream;
 import epmc.value.Value;
 
 public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, ValueSetString {
-    public static boolean isTernary(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueTernary;
     }
 
-    public static ValueTernary asTernary(Value value) {
-        if (isTernary(value)) {
+    public static ValueTernary as(Value value) {
+        if (is(value)) {
             return (ValueTernary) value;
         } else {
             return null;
@@ -37,7 +37,7 @@ public final class ValueTernary implements ValueEnumerable, ValueBitStoreable, V
     }
 
     public static boolean isUnknown(Value value) {
-        ValueTernary valueTernary = asTernary(value);
+        ValueTernary valueTernary = as(value);
         if (valueTernary == null) {
             return false;
         }

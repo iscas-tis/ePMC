@@ -55,10 +55,10 @@ final class ValueArrayObjectNumerated implements ValueArray {
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         assert index >= 0;
         assert index < size();
-        int number = objectToNumber(ValueObject.asObject(value).getObject());
+        int number = objectToNumber(ValueObject.as(value).getObject());
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             boolean bitValue = (number & (1 << bitNr)) != 0;
             int bitIndex = index * getBitsPerEntry() + bitNr;
@@ -85,7 +85,7 @@ final class ValueArrayObjectNumerated implements ValueArray {
             number |= (1 << bitNr);
         }
         }
-        ValueObject.asObject(value).set(numberToObject(number));
+        ValueObject.as(value).set(numberToObject(number));
     }
 
     private int getBitsPerEntry() {

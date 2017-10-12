@@ -34,12 +34,12 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 
     @Override
     public void process() {
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSinh.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCosh.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTanh.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsinh.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcosh.INSTANCE);
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtanh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorSinh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorCosh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorTanh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAsinh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAcosh.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorAtanh.INSTANCE);
 
     }
 }

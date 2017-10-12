@@ -90,7 +90,7 @@ public final class ExplorerProperties implements Serializable {
         assert property != null;
         assert value != null;
         assert explorerProperties.containsKey(property);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), getExplorerProperty(property).getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), getExplorerProperty(property).getType());
         set.apply(getExplorerProperty(property), value);
     }
 

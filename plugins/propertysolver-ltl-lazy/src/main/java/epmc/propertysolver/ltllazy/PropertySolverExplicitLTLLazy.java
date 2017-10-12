@@ -567,7 +567,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     private ComponentDecision decideComponentBreakpoint(GraphExplicit subsetGraph,
             BitSet ecc, boolean bscc)
     {
-        AutomatonSubset automaton = ValueObject.asObject(subsetGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
+        AutomatonSubset automaton = ValueObject.as(subsetGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         Buechi buechi = automaton.getBuechi();
 
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT);
@@ -682,7 +682,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
     private ComponentDecision decideComponentRabin(GraphExplicit subsetProd,
             BitSet scc, boolean bscc) {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_RABIN);
-        AutomatonSubset subOb = ValueObject.asObject(subsetProd.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
+        AutomatonSubset subOb = ValueObject.as(subsetProd.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         Buechi buechi = subOb.getBuechi();
         int pNode = scc.nextSetBit(0);
         NodeProperty nodeModel = subsetProd.getNodeProperty(CommonProperties.NODE_MODEL);
@@ -737,7 +737,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentRabinMCLeaf(GraphExplicit graph,
             BitSet leafSCC) {
-        AutomatonRabin rabin = ValueObject.asObject(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
+        AutomatonRabin rabin = ValueObject.as(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         BitSet accepting = UtilBitSet.newBitSetUnbounded(rabin.getNumPairs());
         BitSet stable = UtilBitSet.newBitSetUnbounded(rabin.getNumPairs());
@@ -757,7 +757,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentRabinMDPLeaf(GraphExplicit graph,
             BitSet leafSCC) {
-        AutomatonRabin rabin = ValueObject.asObject(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
+        AutomatonRabin rabin = ValueObject.as(graph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         boolean accepting = false;
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int label = 0; label < rabin.getNumPairs(); label++) {
@@ -849,12 +849,12 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             innerResult = checkTemporalLTLNonIncremental(buechi);
         }
 
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, innerResult.getType(), innerResult.getType());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, innerResult.getType(), innerResult.getType());
         if (negate.getBoolean()) {
-            ValueAlgebra entry = TypeAlgebra.asAlgebra(innerResult.getType()).newValue();
+            ValueAlgebra entry = TypeAlgebra.as(innerResult.getType()).newValue();
             for (int i = 0; i < innerResult.size(); i++) {
                 innerResult.getExplicitIthValue(entry, i);
-                subtract.apply(entry, TypeAlgebra.asAlgebra(innerResult.getType()).getOne(), entry);
+                subtract.apply(entry, TypeAlgebra.as(innerResult.getType()).getOne(), entry);
                 innerResult.setExplicitIthValue(entry, i);
             }
         }
@@ -884,7 +884,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
             BitSet subsetECC, GraphExplicit leafGraph, BitSet leafSCC)
     {
         ProductGraphExplicit prodGraph = prodWrapperGraph.getGraphPropertyObject(CommonProperties.INNER_GRAPH);
-        AutomatonSubset subset = ValueObject.asObject(prodGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
+        AutomatonSubset subset = ValueObject.as(prodGraph.getGraphProperty(CommonProperties.AUTOMATON)).getObject();
         ComponentsExplicit components = UtilAlgorithms.newComponentsExplicit();
         BitSet reachOne = components.reachMaxOne(leafGraph, leafSCC);
         NodeProperty nodeModel = leafGraph.getNodeProperty(CommonProperties.NODE_MODEL);
@@ -921,7 +921,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         if (propertyQuantifier.getQuantified() instanceof ExpressionSteadyState) {
             return false;
         }
-        if (!TypeReal.isReal(TypeWeight.get())) {
+        if (!TypeReal.is(TypeWeight.get())) {
             return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());

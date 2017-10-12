@@ -24,12 +24,12 @@ import epmc.util.BitStream;
 import epmc.value.Value;
 
 public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, ValueBitStoreable {
-    public static boolean isEnum(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueEnum;
     }
 
-    public static ValueEnum asEnum(Value value) {
-        if (isEnum(value)) {
+    public static ValueEnum as(Value value) {
+        if (is(value)) {
             return (ValueEnum) value;
         } else {
             return null;
@@ -42,7 +42,7 @@ public final class ValueEnum implements ValueEnumerable, ValueNumBitsKnown, Valu
 
     ValueEnum(TypeEnum type) {
         assert type != null;
-        assert TypeEnum.isEnum(type);
+        assert TypeEnum.is(type);
         this.type = type;
         value = type.getEnumClass().getEnumConstants()[0];
     }

@@ -48,7 +48,7 @@ public enum OperatorEvaluatorEqInt implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInteger.isInteger(type)) {
+            if (!TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -73,6 +73,6 @@ public enum OperatorEvaluatorEqInt implements OperatorEvaluator {
         }
         int op1 = UtilValue.getInt(operands[0]);
         int op2 = UtilValue.getInt(operands[1]);
-        ValueBoolean.asBoolean(result).set(op1 == op2);
+        ValueBoolean.as(result).set(op1 == op2);
     }
 }

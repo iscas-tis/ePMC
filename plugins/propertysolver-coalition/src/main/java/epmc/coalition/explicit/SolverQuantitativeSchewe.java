@@ -114,9 +114,9 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
     @Override
     public QuantitativeResult solve() {
         compareTolerance = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(compareTolerance).set(Options.get().getString(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE));
+        ValueSetString.as(compareTolerance).set(Options.get().getString(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_COMPARE_TOLERANCE));
         smallNumber = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(smallNumber).set("1E-24");
+        ValueSetString.as(smallNumber).set("1E-24");
         StopWatch totalTime = new StopWatch(true);
         getLog().send(MessagesCoalition.COALITION_QUANTITATIVE_SCHEWE_START);
         reduceOutput = Options.get().get(OptionsCoalition.COALITION_QUANTITATIVE_SCHEWE_SILENCE_INTERNAL);
@@ -207,8 +207,8 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         BitSet zeroNodes = UtilBitSet.newBitSetUnbounded();
         Value zero = TypeWeight.get().getZero();
         Value entry = newValueWeight();
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         ValueAlgebra distanceVal = TypeReal.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int subNode = 0; subNode < numSubGraphNodes; subNode++) {
@@ -276,19 +276,19 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         ValueAlgebra value = objective.getResult().getType().getEntryType().newValue();
         ValueAlgebra newValue = objective.getResult().getType().getEntryType().newValue();
         Value succValue = values.getType().getEntryType().newValue();
-        ValueAlgebra weighted = ValueAlgebra.asAlgebra(values.getType().getEntryType().newValue());
-        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, succValue.getType(), weightProp.getType());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        ValueAlgebra weighted = ValueAlgebra.as(values.getType().getEntryType().newValue());
+        OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, newValue.getType(), succValue.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, newValue.getType(), succValue.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, succValue.getType(), weightProp.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
             Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
-                set.apply(newValue, TypeWeight.asWeight(newValue.getType()).getNegInf());
+                set.apply(newValue, TypeWeight.as(newValue.getType()).getNegInf());
             } else if (player == Player.TWO) {
-                set.apply(newValue, TypeWeight.asWeight(newValue.getType()).getPosInf());
+                set.apply(newValue, TypeWeight.as(newValue.getType()).getPosInf());
             } else if (player == Player.STOCHASTIC) {
                 newValue.set(0);				
             }
@@ -324,13 +324,13 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         QuantitativeResult evaluatedResult = null;
         int numDirectImprovements = 0;
         int numIndirectImprovements = 0;
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get());
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get());
         Value distanceVal = TypeReal.get().newValue();
         ValueBoolean cmpLt = TypeBoolean.get().newValue();
         ValueBoolean cmpGt = TypeBoolean.get().newValue();
-        OperatorEvaluator gt = ContextValue.get().getOperatorEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         while (changed) {
             mdpEvaluateTime.start();
             evaluatedResult = evaluateMDP(strategies);
@@ -437,12 +437,12 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         Value value = newValueWeight();
         ValueAlgebra succValue = newValueWeight();
         NodeProperty playerProperty = game.getNodeProperty(CommonProperties.PLAYER);
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         Value distanceVal = TypeReal.get().newValue();
         ValueBoolean distanceCmp = TypeBoolean.get().newValue();
-        OperatorEvaluator ge = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator le = ContextValue.get().getOperatorEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator ge = ContextValue.get().getEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator le = ContextValue.get().getEvaluator(OperatorGe.GE, TypeWeight.get(), TypeWeight.get());
         ValueBoolean cmpGe = TypeBoolean.get().newValue();
         ValueBoolean cmpLe = TypeBoolean.get().newValue();
         for (int node = 0; node < numNodes; node++) {
@@ -535,7 +535,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         ValueArrayAlgebra probabilities = result.getProbabilities();
         ValueAlgebra value = probabilities.getType().getEntryType().newValue();
         ValueAlgebra one = value.getType().getOne();
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, one.getType(), value.getType());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, one.getType(), value.getType());
         for (int i = 0; i < probabilities.size(); i++) {
             probabilities.get(value, i);
             subtract.apply(value, one, value);

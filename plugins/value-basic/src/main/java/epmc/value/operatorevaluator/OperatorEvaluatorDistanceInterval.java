@@ -51,14 +51,14 @@ public enum OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if (!TypeInterval.isInterval(types[0])
-                && !TypeInterval.isInterval(types[1])) {
+        if (!TypeInterval.is(types[0])
+                && !TypeInterval.is(types[1])) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeReal.isReal(type)
-                    && !TypeInteger.isInteger(type)
-                    && !TypeInterval.isInterval(type)) {
+            if (!TypeReal.is(type)
+                    && !TypeInteger.is(type)
+                    && !TypeInterval.is(type)) {
                 return false;
             }
         }
@@ -86,15 +86,15 @@ public enum OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator abs = ContextValue.get().getOperatorEvaluator(OperatorAbs.ABS, TypeReal.get());
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator abs = ContextValue.get().getEvaluator(OperatorAbs.ABS, TypeReal.get());
         Value resLower = TypeReal.get().newValue();
         Value resUpper = TypeReal.get().newValue();
         subtract.apply(resLower, op1Lower, op2Lower);
         abs.apply(resLower, resLower);
         subtract.apply(resUpper, op1Upper, op2Upper);
         abs.apply(resUpper, resUpper);
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
         max.apply(result, resLower, resUpper);
     }
 }

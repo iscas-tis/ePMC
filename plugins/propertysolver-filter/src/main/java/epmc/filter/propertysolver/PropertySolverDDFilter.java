@@ -183,7 +183,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
             Value avg = property.applyOverSat(OperatorAdd.ADD, getModel().getPresCube(), checkFor);
             int numStates = checkFor.countSat(getModel().getPresCube()).intValue();
             Value numStatesValue = UtilValue.newValue(TypeInteger.get(), numStates);
-            OperatorEvaluator divide = ContextValue.get().getOperatorEvaluator(OperatorDivide.DIVIDE, avg.getType(), numStatesValue.getType());
+            OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, avg.getType(), numStatesValue.getType());
             divide.apply(avg, avg, numStatesValue);
             checkFor.dispose();
             result = getContextDD().newConstant(avg);
@@ -236,7 +236,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
             Value max = property.maxOverSat(checkFor);
             checkFor.dispose();
             ValueInterval interval = TypeInterval.get().newValue();
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
             set.apply(interval.getIntervalLower(), min);
             set.apply(interval.getIntervalUpper(), max);
             result = getContextDD().newConstant(interval);

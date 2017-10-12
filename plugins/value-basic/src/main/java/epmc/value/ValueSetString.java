@@ -1,12 +1,12 @@
 package epmc.value;
 
 public interface ValueSetString extends Value {
-    static boolean isValueSetString(Value value) {
+    static boolean is(Value value) {
         return value instanceof ValueSetString;
     }
     
-    static ValueSetString asValueSetString(Value value) {
-        if (isValueSetString(value)) {
+    static ValueSetString as(Value value) {
+        if (is(value)) {
             return (ValueSetString) value;
         } else {
             return null;

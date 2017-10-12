@@ -80,7 +80,7 @@ public final class GraphSolverObjectiveExplicitBoundedReachability implements Gr
 
     @Override
     public void setResult(ValueArray result) {
-        this.result = ValueArrayAlgebra.asArrayAlgebra(result);
+        this.result = ValueArrayAlgebra.as(result);
     }
 
     @Override

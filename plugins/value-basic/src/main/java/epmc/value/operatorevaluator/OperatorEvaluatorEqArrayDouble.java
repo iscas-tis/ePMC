@@ -71,9 +71,9 @@ public enum OperatorEvaluatorEqArrayDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueArrayDoubleJava op1 = ValueArrayDoubleJava.asValueArrayDoubleJava(operands[0]);
-        ValueArrayDoubleJava op2 = ValueArrayDoubleJava.asValueArrayDoubleJava(operands[1]);
-        ValueBoolean resultBoolean = ValueBoolean.asBoolean(result);
+        ValueArrayDoubleJava op1 = ValueArrayDoubleJava.as(operands[0]);
+        ValueArrayDoubleJava op2 = ValueArrayDoubleJava.as(operands[1]);
+        ValueBoolean resultBoolean = ValueBoolean.as(result);
         if (op1.size() != op2.size()) {
             resultBoolean.set(false);
             return;

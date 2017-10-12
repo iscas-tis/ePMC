@@ -137,7 +137,7 @@ public class BuechiImpl implements Buechi {
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
-                ((BuechiTransitionImpl) trans).setResult(ValueBoolean.asBoolean(evaluators[totalSize].getResultValue()));
+                ((BuechiTransitionImpl) trans).setResult(ValueBoolean.as(evaluators[totalSize].getResultValue()));
                 totalSize++;
             }
         }
@@ -204,7 +204,7 @@ public class BuechiImpl implements Buechi {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            this.numLabels = ValueInteger.asInteger(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
+            this.numLabels = ValueInteger.as(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
             final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn, "--stats", "%d",
             "--low"};
             final Process detProcess = Runtime.getRuntime().exec(detExecArr);

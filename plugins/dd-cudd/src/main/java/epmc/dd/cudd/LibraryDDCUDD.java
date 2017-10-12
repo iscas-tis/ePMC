@@ -403,15 +403,15 @@ public final class LibraryDDCUDD implements LibraryDD {
     @Override
     public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
+        assert ValueBoolean.is(value) : value.getType() + " " + value;
         if (mtbdd) {
-            Pointer result = ValueBoolean.asBoolean(value).getBoolean() ? addOne : addZero;
+            Pointer result = ValueBoolean.as(value).getBoolean() ? addOne : addZero;
             CUDD.Cudd_Ref(result);
             return Pointer.nativeValue(result);
         } else {
             long one = Pointer.nativeValue(bddOne);
             long zero = Pointer.nativeValue(bddZero);
-            long result = ValueBoolean.asBoolean(value).getBoolean() ? one : zero;
+            long result = ValueBoolean.as(value).getBoolean() ? one : zero;
             CUDD.Cudd_Ref(new Pointer(result));
             return result;
         }
@@ -823,7 +823,7 @@ public final class LibraryDDCUDD implements LibraryDD {
 
     @Override
     public boolean canApply(Operator operation, Type resultType, long... operands) {
-        if (!TypeBoolean.isBoolean(resultType)) {
+        if (!TypeBoolean.is(resultType)) {
             return false;
         }
         return operation.equals(OperatorId.ID)

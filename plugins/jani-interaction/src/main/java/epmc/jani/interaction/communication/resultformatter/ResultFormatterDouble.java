@@ -50,7 +50,7 @@ public final class ResultFormatterDouble implements ResultFormatter {
             return false;
         }
         Value valueResult = (Value) result;
-        if (!ValueDouble.isDouble(valueResult)) {
+        if (!ValueDouble.is(valueResult)) {
             return false;
         }
         return true;
@@ -71,7 +71,7 @@ public final class ResultFormatterDouble implements ResultFormatter {
     @Override
     public JsonValue getValue() {
         assert canHandle();
-        ValueDouble valueResult = ValueDouble.asDouble((Value) result);
+        ValueDouble valueResult = ValueDouble.as((Value) result);
         return UtilJSON.toNumberValue(valueResult.getDouble());
     }
 

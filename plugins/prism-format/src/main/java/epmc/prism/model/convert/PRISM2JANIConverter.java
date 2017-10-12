@@ -420,11 +420,11 @@ public final class PRISM2JANIConverter {
             JANIType type = formulas.getConstantType(name);
             if (type == null) {
                 Type typeNative = properties.getConstantType(name);
-                if (TypeInteger.isInteger(typeNative)) {
+                if (TypeInteger.is(typeNative)) {
                     type = new JANITypeInt();
-                } else if (TypeBoolean.isBoolean(typeNative)) {
+                } else if (TypeBoolean.is(typeNative)) {
                     type = new JANITypeBool();
-                } else if (TypeReal.isReal(typeNative)) {
+                } else if (TypeReal.is(typeNative)) {
                     type = new JANITypeReal();
                 } else {
                     assert false;
@@ -886,7 +886,7 @@ public final class PRISM2JANIConverter {
         } else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
             boolean allInteger = true;
             for (Expression operand : expression.getOperands()) {
-                allInteger &= TypeInteger.isInteger(operand.getType(expressionToType));
+                allInteger &= TypeInteger.is(operand.getType(expressionToType));
             }
             List<Expression> newChildren = new ArrayList<>();
             for (Expression child : expression.getChildren()) {

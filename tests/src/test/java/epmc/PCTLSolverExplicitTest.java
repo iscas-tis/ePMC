@@ -304,8 +304,8 @@ public final class PCTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
 
         result = computeResult(options, ER12_1, "P=?[G<=10 num_affected<=4]");
-        assertTrue(ValueInterval.isInterval(result));
-        ValueInterval resultInterval = ValueInterval.asInterval(result);
+        assertTrue(ValueInterval.is(result));
+        ValueInterval resultInterval = ValueInterval.as(result);
         assertEquals("0.8533520129860975", resultInterval.getIntervalLower(), 1E-8);
         assertEquals("0.8940213623509145", resultInterval.getIntervalUpper(), 1E-8);
         close(options);

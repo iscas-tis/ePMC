@@ -71,7 +71,7 @@ public final class NodeJANI implements ExplorerNode {
             assert variables.get(varNr) != null : varNr;
             Type varType = stateVariables.get(variables.get(varNr)).getType();
             values[varNr] = varType.newValue();
-            set[varNr] = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, varType, varType);
+            set[varNr] = ContextValue.get().getEvaluator(OperatorSet.SET, varType, varType);
             boolean storeVariable = stateVariables.get(varNr).isPermanent();
             storeVariables[varNr] = storeVariable;
             if (storeVariable) {
@@ -107,7 +107,7 @@ public final class NodeJANI implements ExplorerNode {
         assert reader != null;
         for (int varNr = 0; varNr < values.length; varNr++) {
             if (storeVariables[varNr]) {
-                ValueBitStoreable.asBitStoreable(values[varNr]).read(reader);
+                ValueBitStoreable.as(values[varNr]).read(reader);
             }
         }
     }
@@ -116,7 +116,7 @@ public final class NodeJANI implements ExplorerNode {
     public void write(BitStream writer) {
         for (int varNr = 0; varNr < values.length; varNr++) {
             if (storeVariables[varNr]) {
-                ValueBitStoreable.asBitStoreable(values[varNr]).write(writer);
+                ValueBitStoreable.as(values[varNr]).write(writer);
             }
         }
     }
@@ -192,7 +192,7 @@ public final class NodeJANI implements ExplorerNode {
     }
 
     public boolean getBoolean(int variable) {
-        return ValueBoolean.asBoolean(values[variable]).getBoolean();
+        return ValueBoolean.as(values[variable]).getBoolean();
     }
 
     public boolean setVariable(int variable, Value value) {
@@ -217,7 +217,7 @@ public final class NodeJANI implements ExplorerNode {
         if (variablesSetMarks[variable]) {
             return false;
         }
-        ValueAlgebra.asAlgebra(values[variable]).set(value);
+        ValueAlgebra.as(values[variable]).set(value);
         variablesSet[numSet] = variable;
         variablesSetMarks[variable] = true;
         numSet++;
@@ -231,7 +231,7 @@ public final class NodeJANI implements ExplorerNode {
         if (variablesSetMarks[variable]) {
             return false;
         }
-        ValueObject.asObject(values[variable]).set(value);
+        ValueObject.as(values[variable]).set(value);
         variablesSet[numSet] = variable;
         variablesSetMarks[variable] = true;
         numSet++;
@@ -244,7 +244,7 @@ public final class NodeJANI implements ExplorerNode {
         if (variablesSetMarks[variable]) {
             return false;
         }
-        ValueBoolean.asBoolean(values[variable]).set(value);
+        ValueBoolean.as(values[variable]).set(value);
         variablesSet[numSet] = variable;
         variablesSetMarks[variable] = true;
         numSet++;

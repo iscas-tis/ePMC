@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.value.Value;
 
 public interface ValueEnumerable extends Value {
-    static boolean isEnumerable(Value value) {
+    static boolean is(Value value) {
         if (!(value instanceof ValueEnumerable)) {
             return false;
         }
@@ -34,8 +34,8 @@ public interface ValueEnumerable extends Value {
         return true;
     }
 
-    static ValueEnumerable asEnumerable(Value value) {
-        if (isEnumerable(value)) {
+    static ValueEnumerable as(Value value) {
+        if (is(value)) {
             return (ValueEnumerable) value;
         } else {
             return null;

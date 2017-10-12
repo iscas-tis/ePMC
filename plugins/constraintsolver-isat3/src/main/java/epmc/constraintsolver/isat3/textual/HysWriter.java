@@ -159,16 +159,16 @@ final class HysWriter {
             String name = variable.getName();
             Type type = variable.getType();
             out.print(SPACE + SPACE);
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 out.print(TYPE_BOOLE + SPACE);
-            } else if (TypeInteger.isInteger(type)) {
+            } else if (TypeInteger.is(type)) {
                 out.print(TYPE_INT + SPACE);
                 out.print(LBRACK);
                 out.print(variable.getLower());
                 out.print(COMMA);
                 out.print(variable.getUpper());
                 out.print(RBRACK + SPACE);
-            } else if (TypeReal.isReal(type)) {
+            } else if (TypeReal.is(type)) {
                 out.print(TYPE_FLOAT + SPACE);
                 out.print(LBRACK);
                 out.print(variable.getLower());

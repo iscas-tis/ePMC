@@ -23,12 +23,12 @@ package epmc.value;
 import epmc.value.Value;
 
 public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray {
-    public static boolean isValueArrayDoubleJava(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueArrayDoubleJava;
     }
 
-    public static ValueArrayDoubleJava asValueArrayDoubleJava(Value value) {
-        if (isValueArrayDoubleJava(value)) {
+    public static ValueArrayDoubleJava as(Value value) {
+        if (is(value)) {
             return (ValueArrayDoubleJava) value;
         } else {
             return null;
@@ -51,7 +51,7 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
         assert value != null;
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
-        content[index] = ValueNumber.asNumber(value).getDouble();
+        content[index] = ValueNumber.as(value).getDouble();
     }
 
     @Override
@@ -66,8 +66,8 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         double entry = content[index];
-        assert ValueDouble.isDouble(value);
-        ValueDouble.asDouble(value).set(entry);
+        assert ValueDouble.is(value);
+        ValueDouble.as(value).set(entry);
     }
 
     @Override

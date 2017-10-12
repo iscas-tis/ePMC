@@ -34,12 +34,12 @@ public interface TypeWeight extends TypeAlgebra {
                 ContextValue.get().makeUnique(type));
     }
 
-    static boolean isWeight(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeWeight;
     }
 
-    static TypeWeight asWeight(Type type) {
-        if (isWeight(type)) {
+    static TypeWeight as(Type type) {
+        if (is(type)) {
             return (TypeWeight) type;
         } else {
             return null;

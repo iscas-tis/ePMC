@@ -202,12 +202,12 @@ public final class ExpressionReward implements Expression {
         case INSTANTANEOUS:
         case DISCOUNTED:
             Type timeType = getTime().getType(expressionToType);
-            ensure(TypeReal.isReal(timeType) || TypeInteger.isInteger(timeType),
+            ensure(TypeReal.is(timeType) || TypeInteger.is(timeType),
                     ProblemsExpression.EXPR_INCONSISTENT, "", getTime());
             break;
         case REACHABILITY: 
             Type reachType = getRewardReachSet().getType(expressionToType);
-            ensure(TypeBoolean.isBoolean(reachType), ProblemsExpression.EXPR_INCONSISTENT, "", getRewardReachSet());
+            ensure(TypeBoolean.is(reachType), ProblemsExpression.EXPR_INCONSISTENT, "", getRewardReachSet());
             break;
         case STEADYSTATE:
             break;

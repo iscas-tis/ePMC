@@ -71,7 +71,7 @@ public final class GraphDDProperties implements Closeable {
         assert property != null;
         assert value != null;
         assert graphProperties.containsKey(property);
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(property).getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(property).getType());
         set.apply(graphProperties.get(property), value);
     }
 
@@ -137,7 +137,7 @@ public final class GraphDDProperties implements Closeable {
     }
 
     public void setGraphProperty(Object property, Object value) {
-        ValueObject.asObject(getGraphProperty(property)).set(value);
+        ValueObject.as(getGraphProperty(property)).set(value);
     }
 
     public void removeGraphProperty(Object property) {
@@ -155,6 +155,6 @@ public final class GraphDDProperties implements Closeable {
     }
 
     public void setGraphPropertyObject(Object property, Object value) {
-        ValueObject.asObject(graphProperties.get(property)).set(value);
+        ValueObject.as(graphProperties.get(property)).set(value);
     }    
 }

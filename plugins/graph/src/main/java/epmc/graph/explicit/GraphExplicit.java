@@ -207,7 +207,7 @@ public interface GraphExplicit extends LowLevel {
 
     default <T> T getGraphPropertyObject(Object property) {
         assert property != null;
-        ValueObject graphProperty = ValueObject.asObject(getGraphProperty(property));
+        ValueObject graphProperty = ValueObject.as(getGraphProperty(property));
         if (graphProperty == null) {
             return null;
         }
@@ -216,19 +216,19 @@ public interface GraphExplicit extends LowLevel {
 
     default <T extends Enum<?>> T getGraphPropertyEnum(Object property) {
         assert property != null;
-        return ValueEnum.asEnum(getGraphProperty(property)).getEnum();
+        return ValueEnum.as(getGraphProperty(property)).getEnum();
     }
 
     default boolean getGraphPropertyBoolean(Object property)
     {
         assert property != null;
-        return ValueBoolean.asBoolean(getGraphProperty(property)).getBoolean();
+        return ValueBoolean.as(getGraphProperty(property)).getBoolean();
     }
 
     default void setGraphProperty(Object property, Object object) {
         assert property != null;
         assert object != null;
-        ValueObject.asObject(getGraphProperty(property)).set(object);
+        ValueObject.as(getGraphProperty(property)).set(object);
     }
 
     default Type getNodePropertyType(Object property) {

@@ -149,8 +149,8 @@ public final class JANITypeBounded implements JANIType {
             // TODO HACK
             if (model == null || !model.containsUndefinedConstants()) {
                 Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty());
-                if (ValueInteger.isInteger(lowerValue)) {
-                    lowerInt = ValueInteger.asInteger(lowerValue).getInt();
+                if (ValueInteger.is(lowerValue)) {
+                    lowerInt = ValueInteger.as(lowerValue).getInt();
                 }
             }
         }
@@ -160,8 +160,8 @@ public final class JANITypeBounded implements JANIType {
             }
             if (model == null || !model.containsUndefinedConstants()) {
                 Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty());
-                if (ValueInteger.isInteger(upperValue)) {
-                    upperInt = ValueInteger.asInteger(upperValue).getInt();
+                if (ValueInteger.is(upperValue)) {
+                    upperInt = ValueInteger.as(upperValue).getInt();
                 }
             }
         }
@@ -205,11 +205,11 @@ public final class JANITypeBounded implements JANIType {
     @Override
     public Value getDefaultValue() {
         TypeInteger type = toType();
-        if (TypeInteger.asInteger(type).getLowerInt() <= 0
-                && 0 <= TypeInteger.asInteger(type).getUpperInt()) {
+        if (TypeInteger.as(type).getLowerInt() <= 0
+                && 0 <= TypeInteger.as(type).getUpperInt()) {
             return UtilValue.newValue(type, 0);
         } else {
-            return UtilValue.newValue(type, TypeInteger.asInteger(type).getLowerInt());
+            return UtilValue.newValue(type, TypeInteger.as(type).getLowerInt());
         }
     }
 

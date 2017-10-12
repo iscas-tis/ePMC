@@ -215,7 +215,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         assert product != null;
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
-        OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
         isPosInf.apply(cmp, subtractNumericalFrom);
         ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !cmp.getBoolean());
@@ -224,7 +224,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         ValueArrayAlgebra weights;
         boolean feasible = false;
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
-        OperatorEvaluator eq = ContextValue.get().getOperatorEvaluator(OperatorEq.EQ, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         do {
             weights = down.findSeparating(bounds, numerical);
             if (weights == null) {
@@ -271,7 +271,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         assert stateProp != null;
         int numNodes = computationGraph.getNumNodes();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getOperatorEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
 
         ValueArrayAlgebra schedProbs = down.findFeasibleRandomisedScheduler(bounds);
         assert schedProbs != null;
@@ -333,8 +333,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             resultValues = newValueArrayWeight(forStates.size());
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);
-            OperatorEvaluator subtract = ContextValue.get().getOperatorEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(),  TypeWeight.get());
-            OperatorEvaluator isPosInf = ContextValue.get().getOperatorEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
+            OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(),  TypeWeight.get());
+            OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
             ValueBoolean cmp = TypeBoolean.get().newValue();
             isPosInf.apply(cmp, subtractNumericalFrom);
             if (!cmp.getBoolean()) {

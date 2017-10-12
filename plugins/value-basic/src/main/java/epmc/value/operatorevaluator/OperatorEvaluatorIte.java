@@ -48,7 +48,7 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
         if (types.length != 3) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.is(types[0])) {
             return false;
         }
         return true;
@@ -60,7 +60,7 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (!TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.is(types[0])) {
             return null;
         }
         Type itUpper = UtilValue.upper(types[1], types[2]);
@@ -78,11 +78,11 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[1].getType(), result.getType());
+        if (ValueBoolean.as(operands[0]).getBoolean()) {
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[1].getType(), result.getType());
             set.apply(result, operands[1]);
         } else {
-            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[2].getType(), result.getType());
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[2].getType(), result.getType());
             set.apply(result, operands[2]);
         }
     }

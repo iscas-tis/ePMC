@@ -58,14 +58,14 @@ final class VariableDDImpl implements VariableDD {
         assert contextDD != null;
         assert copies > 0;
         assert type != null;
-        assert TypeBoolean.isBoolean(type) || TypeInteger.isInteger(type) || TypeEnumerable.asEnumerable(type).getNumValues() != -1 : type;
-        assert !TypeInteger.isInteger(type) || TypeInteger.isIntegerBothBounded(type) :
-            name + SPACE + TypeInteger.asInteger(type).getLowerInt() + SPACE + TypeInteger.asInteger(type).getUpperInt();
+        assert TypeBoolean.is(type) || TypeInteger.is(type) || TypeEnumerable.as(type).getNumValues() != -1 : type;
+        assert !TypeInteger.is(type) || TypeInteger.isIntegerBothBounded(type) :
+            name + SPACE + TypeInteger.as(type).getLowerInt() + SPACE + TypeInteger.as(type).getUpperInt();
         assert name != null;
 
         this.contextDD = contextDD;
         this.copies = copies;
-        this.type = TypeEnumerable.asEnumerable(type);
+        this.type = TypeEnumerable.as(type);
         this.ddVariables = new ArrayList<>(copies);
         this.valueEncodings = new ArrayList<>(copies);
         for (int copy = 0; copy < copies; copy++) {
@@ -73,9 +73,9 @@ final class VariableDDImpl implements VariableDD {
         }
         this.name = name;
 
-        if (TypeInteger.isInteger(type)) {
+        if (TypeInteger.is(type)) {
             prepareIntegerDDVariables(ddVariables);
-        } else if (TypeBoolean.isBoolean(type)) {
+        } else if (TypeBoolean.is(type)) {
             prepareBooleanDDVariables(ddVariables);
         } else {
             prepareGeneralDDVariables(ddVariables);
@@ -148,9 +148,9 @@ final class VariableDDImpl implements VariableDD {
     }
 
     private DD computeValueEncoding(int copy) {
-        if (TypeInteger.isInteger(type)) {
+        if (TypeInteger.is(type)) {
             return computeValueEncodingInteger(copy);
-        } else if (TypeBoolean.isBoolean(type)) {
+        } else if (TypeBoolean.is(type)) {
             return computeValueEncodingBoolean(copy);
         } else {
             return computeValueEncodingGeneral(copy);
@@ -234,9 +234,9 @@ final class VariableDDImpl implements VariableDD {
         ToStringHelper helper = MoreObjects.toStringHelper(this);
         helper.add(NAME, name);
         helper.add(TYPE, type);
-        if (TypeInteger.isInteger(type)) {
-            helper.add(LOWER, TypeInteger.asInteger(type).getLowerInt());
-            helper.add(UPPER, TypeInteger.asInteger(type).getUpperInt());
+        if (TypeInteger.is(type)) {
+            helper.add(LOWER, TypeInteger.as(type).getLowerInt());
+            helper.add(UPPER, TypeInteger.as(type).getUpperInt());
         }
         helper.add(COPIES, copies);
         return helper.toString();
@@ -287,8 +287,8 @@ final class VariableDDImpl implements VariableDD {
         assert copy >= 0;
         assert copy < getNumCopies();
         assert isInteger();
-        assert value >= TypeInteger.asInteger(getType()).getLowerInt();
-        assert value <= TypeInteger.asInteger(getType()).getUpperInt();
+        assert value >= TypeInteger.as(getType()).getLowerInt();
+        assert value <= TypeInteger.as(getType()).getUpperInt();
 
         value -= getLower();
         DD dd = getContext().newConstant(true);
@@ -310,11 +310,11 @@ final class VariableDDImpl implements VariableDD {
         assert copy < copies;
         assert value != null;
         value = UtilValue.clone(value);
-        if (TypeInteger.isInteger(type)) {
-            return newIntValue(copy, ValueInteger.asInteger(value).getInt());
+        if (TypeInteger.is(type)) {
+            return newIntValue(copy, ValueInteger.as(value).getInt());
         }
 
-        int valueNr = ValueEnumerable.asEnumerable(value).getValueNumber();
+        int valueNr = ValueEnumerable.as(value).getValueNumber();
         assert valueNr >= 0;
         DD dd = getContext().newConstant(true);
         int bit = 1;

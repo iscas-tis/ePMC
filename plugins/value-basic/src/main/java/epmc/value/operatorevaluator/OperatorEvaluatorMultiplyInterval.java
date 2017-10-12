@@ -49,13 +49,13 @@ public enum OperatorEvaluatorMultiplyInterval implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if ((TypeInteger.isInteger(types[0]) || TypeReal.isReal(types[0]))
-                && (TypeInteger.isInteger(types[1]) || TypeReal.isReal(types[1]))) {
+        if ((TypeInteger.is(types[0]) || TypeReal.is(types[0]))
+                && (TypeInteger.is(types[1]) || TypeReal.is(types[1]))) {
             return false;
         }
         for (Type type : types) {
-            if (!TypeDouble.isDouble(type) && !TypeInteger.isInteger(type)
-                    && !TypeInterval.isInterval(type)) {
+            if (!TypeDouble.is(type) && !TypeInteger.is(type)
+                    && !TypeInterval.is(type)) {
                 return false;
             }
         }
@@ -84,7 +84,7 @@ public enum OperatorEvaluatorMultiplyInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, op1Lower.getType(), op2Lower.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, op1Lower.getType(), op2Lower.getType());
         add.apply(resultLower, op1Lower, op2Lower);
         add.apply(resultUpper, op1Upper, op2Upper);
     }

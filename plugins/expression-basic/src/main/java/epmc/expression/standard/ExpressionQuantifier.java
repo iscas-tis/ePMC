@@ -188,7 +188,7 @@ public final class ExpressionQuantifier implements Expression {
         Type booleanType = TypeBoolean.get();
         Expression condition = getCondition();
         Type conditionType = condition.getType(expressionToType);
-        ensure(conditionType == null || TypeBoolean.isBoolean(conditionType),
+        ensure(conditionType == null || TypeBoolean.is(conditionType),
                 ProblemsExpression.EXPR_INCONSISTENT, "", condition);
         if (cmpType == CmpType.IS) {
             return TypeWeight.get();

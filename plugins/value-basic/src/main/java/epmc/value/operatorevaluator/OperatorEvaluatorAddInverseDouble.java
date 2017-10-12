@@ -46,7 +46,7 @@ public enum OperatorEvaluatorAddInverseDouble implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0])) {
+        if (!TypeDouble.is(types[0])) {
             return false;
         }
         return true;
@@ -69,6 +69,6 @@ public enum OperatorEvaluatorAddInverseDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double operand = UtilValue.getDouble(operands[0]);
-        ValueDouble.asDouble(result).set(-operand);
+        ValueDouble.as(result).set(-operand);
     }
 }

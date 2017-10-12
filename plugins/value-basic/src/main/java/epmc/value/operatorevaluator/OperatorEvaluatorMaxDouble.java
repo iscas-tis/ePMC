@@ -47,15 +47,15 @@ public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
         if (types.length != 2) {
             return false;
         }
-        if (TypeInteger.isInteger(types[0]) && TypeInteger.isInteger(types[1])) {
+        if (TypeInteger.is(types[0]) && TypeInteger.is(types[1])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0])
-                && !TypeInteger.isInteger(types[0])) {
+        if (!TypeDouble.is(types[0])
+                && !TypeInteger.is(types[0])) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[1])
-                && !TypeInteger.isInteger(types[1])) {
+        if (!TypeDouble.is(types[1])
+                && !TypeInteger.is(types[1])) {
             return false;
         }
         return true;
@@ -79,6 +79,6 @@ public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
         }
         double op1 = UtilValue.getDoubleOrInt(operands[0]);
         double op2 = UtilValue.getDoubleOrInt(operands[1]);
-        ValueDouble.asDouble(result).set(Math.max(op1, op2));
+        ValueDouble.as(result).set(Math.max(op1, op2));
     }
 }

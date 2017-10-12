@@ -46,7 +46,7 @@ public enum OperatorEvaluatorAddInverseInt implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[0])) {
+        if (!TypeInteger.is(types[0])) {
             return false;
         }
         return true;
@@ -69,6 +69,6 @@ public enum OperatorEvaluatorAddInverseInt implements OperatorEvaluator {
             assert operand != null;
         }
         int operand = UtilValue.getInt(operands[0]);
-        ValueInteger.asInteger(result).set(-operand);
+        ValueInteger.as(result).set(-operand);
     }
 }

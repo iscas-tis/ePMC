@@ -53,7 +53,7 @@ public enum OperatorEvaluatorExpDouble implements OperatorEvaluator {
         if (types.length != 1) {
             return false;
         }
-        if (!TypeDouble.isDouble(types[0]) && !TypeInteger.isInteger(types[0])) {
+        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
             return false;
         }
         return true;
@@ -74,6 +74,6 @@ public enum OperatorEvaluatorExpDouble implements OperatorEvaluator {
         assert operands.length >= 1;
         assert operands[0] != null;
         double operand = UtilValue.getDoubleOrInt(operands[0]);
-        ValueDouble.asDouble(result).set(Math.exp(operand));
+        ValueDouble.as(result).set(Math.exp(operand));
     }
 }

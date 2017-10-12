@@ -132,7 +132,7 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
 
     @Override
     public boolean canHandle() {
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsSMG.isSMG(semantics)) {
             return false;
         }
@@ -216,8 +216,8 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         GraphSolverObjectiveExplicitUnboundedReachabilityGame objective = (GraphSolverObjectiveExplicitUnboundedReachabilityGame) this.objective;
         NodeProperty playerProp = origGraph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = origGraph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator add = ContextValue.get().getOperatorEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getOperatorEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int origNode = 0; origNode < origNumNodes; origNode++) {
             Player player = playerProp.getEnum(origNode);
             int iterState = builder.inputToOutputNode(origNode);
@@ -341,9 +341,9 @@ public final class GraphSolverIterativeCoalitionNative implements GraphSolverExp
         ValueAlgebra nodeValue = newValueWeight();
         ValueAlgebra predValue = newValueWeight();
         ValueReal tolerance = TypeReal.get().newValue();
-        ValueSetString.asValueSetString(tolerance).set(Double.toString(Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4));
-        OperatorEvaluator distance = ContextValue.get().getOperatorEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator lt = ContextValue.get().getOperatorEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        ValueSetString.as(tolerance).set(Double.toString(Options.get().getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE) * 4));
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         ValueReal distanceValue = TypeReal.get().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         do {

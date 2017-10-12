@@ -47,13 +47,13 @@ public enum OperatorEvaluatorIteInt implements OperatorEvaluator {
         if (types.length != 3) {
             return false;
         }
-        if (!TypeBoolean.isBoolean(types[0])) {
+        if (!TypeBoolean.is(types[0])) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[1])) {
+        if (!TypeInteger.is(types[1])) {
             return false;
         }
-        if (!TypeInteger.isInteger(types[2])) {
+        if (!TypeInteger.is(types[2])) {
             return false;
         }
         return true;
@@ -75,11 +75,11 @@ public enum OperatorEvaluatorIteInt implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueInteger resultInteger = ValueInteger.asInteger(result);
-        if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
-            resultInteger.set(ValueInteger.asInteger(operands[1]).getInt());
+        ValueInteger resultInteger = ValueInteger.as(result);
+        if (ValueBoolean.as(operands[0]).getBoolean()) {
+            resultInteger.set(ValueInteger.as(operands[1]).getInt());
         } else {
-            resultInteger.set(ValueInteger.asInteger(operands[2]).getInt());
+            resultInteger.set(ValueInteger.as(operands[2]).getInt());
         }
     }
 }

@@ -46,7 +46,7 @@ public enum OperatorEvaluatorModInt implements OperatorEvaluator {
             return false;
         }
         for (Type type : types) {
-            if (!TypeInteger.isInteger(type)) {
+            if (!TypeInteger.is(type)) {
                 return false;
             }
         }
@@ -60,7 +60,7 @@ public enum OperatorEvaluatorModInt implements OperatorEvaluator {
             assert type != null;
         }
         Type result;
-        if (!TypeInteger.isInteger(types[0]) || !TypeInteger.isInteger(types[1])) {
+        if (!TypeInteger.is(types[0]) || !TypeInteger.is(types[1])) {
             return null;
         } else {
             result = TypeInteger.get();
@@ -75,9 +75,9 @@ public enum OperatorEvaluatorModInt implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        int intOp1 = ValueInteger.asInteger(operands[0]).getInt();
-        int intOp2 = ValueInteger.asInteger(operands[1]).getInt();
+        int intOp1 = ValueInteger.as(operands[0]).getInt();
+        int intOp2 = ValueInteger.as(operands[1]).getInt();
         int resultInt = (((intOp1 % intOp2)) + intOp2) % intOp2;
-        ValueInteger.asInteger(result).set(resultInt);
+        ValueInteger.as(result).set(resultInt);
     }
 }

@@ -14,7 +14,7 @@ public final class BeforeModelCreationPRISM implements BeforeModelCreation {
 
     @Override
     public void process() {
-        ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
+        ContextValue.get().addEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
     }
 
 }
