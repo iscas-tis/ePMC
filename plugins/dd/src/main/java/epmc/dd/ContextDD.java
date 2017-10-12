@@ -1570,9 +1570,11 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         TIntSet result = new TIntHashSet();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, dd.value().getType());
-        isZero.apply(cmp, dd.value());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {
+            if (isZero != null) {
+                isZero.apply(cmp, dd.value());
+            }
             if (ValueAlgebra.is(dd.value()) && cmp.getBoolean()) {
                 totalTime.stop();
                 assert false;
