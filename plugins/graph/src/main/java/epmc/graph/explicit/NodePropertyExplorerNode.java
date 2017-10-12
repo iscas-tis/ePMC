@@ -69,14 +69,6 @@ final class NodePropertyExplorerNode implements NodeProperty {
                     NodePropertyExplorerNode.this.node, this.node);
             return NodePropertyExplorerNode.this.node.toString();
         }
-
-        @Override
-        public void set(Value value) {
-            assert value != null;
-            assert value instanceof ValueExplorerNode;
-            ValueExplorerNode other = (ValueExplorerNode) value;
-            this.node = other.node;
-        }
     }
 
     private final class TypeArrayExplorerNode implements TypeArray {

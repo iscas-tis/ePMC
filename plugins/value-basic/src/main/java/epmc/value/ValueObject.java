@@ -85,14 +85,6 @@ public final class ValueObject implements Value {
         return "value(" + content + ")";
     }
 
-    @Override
-    public void set(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        assert ValueObject.isObject(op);
-        content = ValueObject.asObject(op).getObject();
-    }
-
     void setImmutable() {
         this.immutable = true;
     }

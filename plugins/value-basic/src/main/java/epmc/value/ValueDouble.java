@@ -39,7 +39,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     private final static String NAN = "NaN";
-    private final static String SPACE = " ";
     private final static String DIVIDED = "/";
 
     private final TypeDouble type;
@@ -126,15 +125,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     }
 
     @Override
-    public void set(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double opDouble = castOrImport(op);
-        this.value = opDouble;
-
-    }
-
-    @Override
     public int getInt() {
         return (int) getDouble();
     }
@@ -143,18 +133,6 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     public void set(int operand) {
         assert !isImmutable();
         set((double) operand);
-    }
-
-    private double castOrImport(Value operand) {
-        assert operand != null;
-        if (ValueReal.isReal(operand)) {
-            return ValueNumber.asNumber(operand).getDouble();
-        } else if (ValueInteger.isInteger(operand)) {
-            return ValueInteger.asInteger(operand).getInt();
-        } else {
-            assert false : operand + SPACE + operand.getType();
-        return Double.NaN;
-        }
     }
 
     @Override

@@ -95,21 +95,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     @Override
-    public void set(Value operand) {
-        assert !isImmutable();
-        assert operand != null;
-        assert isInterval(operand) || ValueInteger.isInteger(operand) || ValueReal.isReal(operand);
-        if (isInterval(operand)) {
-            ValueInterval opIv = ValueInterval.asInterval(operand);
-            getIntervalLower().set(opIv.getIntervalLower());
-            getIntervalUpper().set(opIv.getIntervalUpper());
-        } else {
-            getIntervalLower().set(operand);
-            getIntervalUpper().set(operand);
-        }
-    }
-
-    @Override
     public void set(int value) {
         lower.set(value);
         upper.set(value);

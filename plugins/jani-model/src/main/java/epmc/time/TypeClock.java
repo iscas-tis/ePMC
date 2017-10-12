@@ -3,7 +3,6 @@ package epmc.time;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
-import epmc.value.TypeInteger;
 
 public final class TypeClock implements TypeAlgebra {
     public static boolean isClock(Type type) {

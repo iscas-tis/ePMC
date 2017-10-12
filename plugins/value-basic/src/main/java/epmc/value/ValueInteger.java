@@ -93,14 +93,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     }
 
     @Override
-    public void set(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        assert ValueInteger.isInteger(op) : op + SPACE + op.getType();
-        set(ValueInteger.asInteger(op).getInt());
-    }
-
-    @Override
     public void read(BitStream reader) {
         assert !isImmutable();
         assert reader != null;
