@@ -20,6 +20,7 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -28,6 +29,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIte;
+import epmc.value.operator.OperatorSet;
 
 public enum OperatorEvaluatorIte implements OperatorEvaluator {
     INSTANCE;
@@ -77,9 +79,11 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
             assert operand != null;
         }
         if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
-            result.set(operands[1]);
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[1].getType(), result.getType());
+            set.apply(result, operands[1]);
         } else {
-            result.set(operands[2]);    		
+            OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[2].getType(), result.getType());
+            set.apply(result, operands[2]);
         }
     }
 }

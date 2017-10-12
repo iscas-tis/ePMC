@@ -20,20 +20,20 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
 import epmc.value.Value;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorSet;
+import epmc.value.ValueBoolean;
+import epmc.value.operator.OperatorIte;
 
-public enum OperatorEvaluatorId implements OperatorEvaluator {
+public enum OperatorEvaluatorIteBoolean implements OperatorEvaluator {
     INSTANCE;
 
     @Override
     public Operator getOperator() {
-        return OperatorId.ID;
+        return OperatorIte.ITE;
     }
 
     @Override
@@ -42,7 +42,16 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        if (types.length < 1) {
+        if (types.length != 3) {
+            return false;
+        }
+        if (!TypeBoolean.isBoolean(types[0])) {
+            return false;
+        }
+        if (!TypeBoolean.isBoolean(types[1])) {
+            return false;
+        }
+        if (!TypeBoolean.isBoolean(types[2])) {
             return false;
         }
         return true;
@@ -54,7 +63,7 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
         for (Type type : types) {
             assert type != null;
         }
-        return types[0];
+        return TypeBoolean.get();
     }
 
     @Override
@@ -64,7 +73,11 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        OperatorEvaluator set = ContextValue.get().getOperatorEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
-        set.apply(result, operands[0]);
+        ValueBoolean resultBoolean = ValueBoolean.asBoolean(result);
+        if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
+            resultBoolean.set(ValueBoolean.asBoolean(operands[1]).getBoolean());
+        } else {
+            resultBoolean.set(ValueBoolean.asBoolean(operands[2]).getBoolean());
+        }
     }
 }
