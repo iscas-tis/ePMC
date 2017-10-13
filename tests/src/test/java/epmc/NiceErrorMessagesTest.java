@@ -11,6 +11,8 @@ import org.junit.Test;
 import epmc.error.EPMCException;
 import epmc.expression.standard.ProblemsExpression;
 import epmc.options.Options;
+import epmc.value.operator.OperatorAdd;
+
 import static org.junit.Assert.*;
 
 public class NiceErrorMessagesTest {
@@ -45,10 +47,10 @@ public class NiceErrorMessagesTest {
             computeResult(options, ModelNamesOwn.INCONSISTENT_OPERATOR, "true");
         } catch (EPMCException e) {
             thrown = true;
-            System.out.println(e);
             assertEquals(ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, e.getProblem());
-            assertEquals(1, e.getArguments().length);
-            assertEquals("[bool, int]", e.getArguments()[0]);
+            assertEquals(2, e.getArguments().length);
+            assertEquals(OperatorAdd.ADD.toString(), e.getArguments()[0].toString());
+            assertEquals("[bool, int]", e.getArguments()[1]);
         }
         assertTrue(thrown);
         
@@ -57,10 +59,10 @@ public class NiceErrorMessagesTest {
             computeResult(options, ModelNamesOwn.INCONSISTENT_OPERATOR_INIT, "true");
         } catch (EPMCException e) {
             thrown = true;
-            System.out.println(e);
             assertEquals(ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, e.getProblem());
-            assertEquals(1, e.getArguments().length);
-            assertEquals("[bool, int]", e.getArguments()[0]);
+            assertEquals(2, e.getArguments().length);
+            assertEquals(OperatorAdd.ADD.toString(), e.getArguments()[0].toString());
+            assertEquals("[bool, int]", e.getArguments()[1]);
         }
         assertTrue(thrown);
 
