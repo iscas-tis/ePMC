@@ -20,6 +20,8 @@
 
 package epmc.value.operatorevaluator;
 
+import java.util.Arrays;
+
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
@@ -65,6 +67,7 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
             assert operand != null;
         }
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
+        assert set != null : Arrays.toString(operands);
         set.apply(result, operands[0]);
     }
 }

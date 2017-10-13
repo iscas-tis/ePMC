@@ -23,15 +23,13 @@ package epmc.dd.cuddmtbdd;
 import static epmc.error.UtilError.ensure;
 import static epmc.error.UtilError.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Memory;
@@ -153,7 +151,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
+                Operator operator = numberToOperator(op);
                 assert operator != null;
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
@@ -172,7 +170,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
@@ -191,7 +189,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private class DD_VOP3Impl implements DD_VOP3 {
         @Override
         public long invoke(int op, long f, long g, long h) {
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
             Value op3Value = numberToValue(h);
@@ -239,7 +237,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             assert cuddName != null;
             assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
             Operator name = OPERATOR_TO_MTBDD.get(cuddName);
-            int number = operatorToNumber.get(name);
+            int number = operatorToNumber(name);
             //            assert operators[number].getIdentifier().equals(name) : 
             //                operators[number].getIdentifier() + " " + name;
             return number;
@@ -451,33 +449,36 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private AssertFailImpl assertFail;
     private GetOperatorNumberImpl getOperatorNumber;
     private Type resultType;
-    private Operator[] operators;
-    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
+    private List<Operator> operators = new ArrayList<>();
+    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>(), 1000, 0.5f, -1);
     private Operator opId;
     private int opIdNr;
 
-    private Operator[] collectOperators() {
-        Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getEvaluators();
-        for (OperatorEvaluator evaluator : identifiers) {
-            operators.add(evaluator.getOperator());
+    private int operatorToNumber(Operator operator) {
+        assert operator != null;
+        int result = operatorToNumber.get(operator);
+        if (result > -1) {
+            return result;
         }
-        return operators.toArray(new Operator[0]);
+        result = operatorToNumber.size();
+        operators.add(operator);
+        operatorToNumber.put(operator, result);
+        return result;
     }
-
+    
+    private Operator numberToOperator(int number) {
+        assert number >= 0 : number;
+        assert number < operators.size() : number;
+        return operators.get(number);
+    }
+    
     @Override
     public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.operators = collectOperators();
-        int index = 0;
-        for (Operator operator : operators) {
-            this.operatorToNumber.put(operator, index);
-            index++;
-        }
         opId = OperatorId.ID;
-        opIdNr = operatorToNumber.get(opId);
+        opIdNr = operatorToNumber(opId);
 
         this.numberToValue = new TLongObjectHashMap<>();
         this.valueToNumber = new TObjectLongHashMap<>();
@@ -518,12 +519,11 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands)
-    {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         this.resultType = type;
-        int opNr = operatorToNumber.get(operation);
+        int opNr = operatorToNumber(operation);
         Pointer op1Ptr = operands.length >= 1 ? new Pointer(operands[0]) : null;
         Pointer op2Ptr = operands.length >= 2 ? new Pointer(operands[1]) : null;
         Pointer op3Ptr = operands.length >= 3 ? new Pointer(operands[2]) : null;
