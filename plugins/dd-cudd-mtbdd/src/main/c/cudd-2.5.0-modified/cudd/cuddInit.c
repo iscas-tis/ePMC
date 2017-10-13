@@ -224,32 +224,6 @@ Cudd_MTBDD_Init(
     unique->bddOperators[getOperatorNumber("implies")] = Cudd_bddImplies;
     unique->bddOperators[getOperatorNumber("eq")] = Cudd_bddXnor;
     unique->bddOperators[getOperatorNumber("ne")] = Cudd_bddXor;
-    unique->epmcFunctions1 = ALLOC(DD_CTFP1, unique->numberOfOperators);
-    if (unique->epmcFunctions1 == NULL) return(NULL);
-    unique->epmcFunctions2 = ALLOC(DD_CTFP,  unique->numberOfOperators);
-    for (i = 0; i < unique->numberOfOperators; i++) {
-	  unique->epmcFunctions1[i] = (DD_CTFP1) ALLOC(int, 1);
-	  if (unique->epmcFunctions1[i] == NULL) {
-	  i--;
-	    while (i > 0) {
-	      FREE(unique->epmcFunctions1[i]);
-	      i--;
-	    }
-        return(NULL);
-	  }
-    }
-    if (unique->epmcFunctions2 == NULL) return(NULL);
-    for (i = 0; i < unique->numberOfOperators; i++) {
-	  unique->epmcFunctions2[i] = (DD_CTFP) ALLOC(int, 1);
-	  if (unique->epmcFunctions2[i] == NULL) {
-	  i--;
-	    while (i > 0) {
-	      FREE(unique->epmcFunctions2[i]);
-	      i--;
-	    }
-        return(NULL);
-	  }
-    }
     
     if (valueTable) {
       unique->two_value = valueTable->two;
