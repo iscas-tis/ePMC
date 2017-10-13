@@ -246,18 +246,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         }
     }
 
-    private interface GetNumberOfOperators extends Callback  {
-        int invoke();
-    }
-
-    private class GetNumberOfOperatorsImpl implements GetNumberOfOperators {
-
-        @Override
-        public int invoke() {
-            return operators.length;
-        }
-    }
-
     /**
      * Stores special values needed to initialise the CUDD manager correctly.
      * 
@@ -303,8 +291,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 DdValueTable valueTable,
                 DD_VOP1 vop1, DD_VOP2 vop2, DD_VOP3 vop3,
                 AssertFail assertFail,
-                GetOperatorNumber getOperatorNumber,
-                GetNumberOfOperators getNumberOfOperators);
+                GetOperatorNumber getOperatorNumber);
         /** free CUDD manager */
         static native void Cudd_MTBDD_Quit(Pointer unique);
 
@@ -463,7 +450,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private boolean alive = true;
     private AssertFailImpl assertFail;
     private GetOperatorNumberImpl getOperatorNumber;
-    private GetNumberOfOperators getNumberOfOperators;
     private Type resultType;
     private Operator[] operators;
     private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
@@ -501,7 +487,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         this.vop3 = new DD_VOP3Impl();
         this.assertFail = new AssertFailImpl();
         this.getOperatorNumber = new GetOperatorNumberImpl();
-        this.getNumberOfOperators = new GetNumberOfOperatorsImpl();
         Options options = Options.get();
         int initCache = options.getInteger(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_INIT_CACHE_SIZE);
         long maxMemory = options.getLong(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_MAX_MEMORY);
@@ -510,7 +495,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         cuddManager = CUDD.Cudd_MTBDD_Init(0, 0, uniqueSlots,
                 initCache, new NativeLong(maxMemory),
                 valueTable, vop1, vop2, vop3,
-                assertFail, getOperatorNumber, getNumberOfOperators);
+                assertFail, getOperatorNumber);
         if (cuddManager == null) {
             if (badProblem != null) {
                 throw badProblem;

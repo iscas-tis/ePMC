@@ -43,7 +43,7 @@ Cudd_MTBDD_addApplyOpNumber(
   DdNode *g)
 {
     dd->epmcOp = op;
-    return Cudd_addApply(dd, dd->operators[op], f, g);
+    return Cudd_addApply(dd, Cudd_addEPMCBinaryOp, f, g);
 }
 
 __attribute__ ((visibility("default")))
