@@ -213,17 +213,6 @@ Cudd_MTBDD_Init(
   //  unique->operators[unique->opnr_eq] = Cudd_addEq;
   //  unique->opnr_ne = getOperatorNumber("ne");
    // unique->operators[unique->opnr_ne] = Cudd_addNe;
-    unique->bddOperators = ALLOC(void*, unique->numberOfOperators);
-    if (unique->bddOperators == NULL) return(NULL);
-    for (int i = 0; i < unique->numberOfOperators; i++) {
-    	unique->bddOperators[i] = NULL;
-    }
-    unique->bddOperators[getOperatorNumber("and")] = Cudd_bddAnd;
-    unique->bddOperators[getOperatorNumber("or")] = Cudd_bddOr;
-    unique->bddOperators[getOperatorNumber("iff")] = Cudd_bddXnor;
-    unique->bddOperators[getOperatorNumber("implies")] = Cudd_bddImplies;
-    unique->bddOperators[getOperatorNumber("eq")] = Cudd_bddXnor;
-    unique->bddOperators[getOperatorNumber("ne")] = Cudd_bddXor;
     
     if (valueTable) {
       unique->two_value = valueTable->two;

@@ -62,17 +62,6 @@ Cudd_MTBDD_addApplyTernaryOpNumber(
 typedef DdNode * (*DD_BIN_FN)(DdManager *, DdNode *, DdNode *);
 
 DdNode *
-Cudd_bddApplyOpNumber(
-  DdManager * dd,
-  int op,
-  DdNode *f,
-  DdNode *g)
-{
-    dd->epmcOp = op;
-    return ((DD_BIN_FN) dd->bddOperators[op])(dd, f, g);
-}
-
-DdNode *
 Cudd_bddApplyTernaryOpNumber(
   DdManager *dd,
   int op,
