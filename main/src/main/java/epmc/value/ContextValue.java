@@ -40,6 +40,9 @@ public final class ContextValue {
     /** Unmodifiable map from operator identifier to according operator. */
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
     private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
+    
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactories = new LinkedList<>();
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactoriesReversed = Lists.reverse(operatorEvaluatorFactories);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -118,6 +121,13 @@ public final class ContextValue {
         return result;
     }
 
+    // TODO use factories instead of using evaluators directly
+    // to improve performance and for RDDL preparation
+    public void addEvaluatorFactory(OperatorEvaluatorFactory factory) {
+        assert factory != null;
+        operatorEvaluatorFactories.add(factory);
+    }
+    
     public void addEvaluator(OperatorEvaluator evaluator) {
         assert evaluator != null;
         operatorEvaluators.add(evaluator);
@@ -135,6 +145,27 @@ public final class ContextValue {
                 return evaluator;
             }
         }
+        for (OperatorEvaluatorFactory factory : operatorEvaluatorFactoriesReversed) {
+            OperatorEvaluator evaluator = factory.getEvaluator(operator, types);
+            if (evaluator != null) {
+                return evaluator;
+            }
+        }
+        /*
+        for (Class<? extends OperatorEvaluatorSimpleBuilder> builderClass : builders) {
+            try {
+                OperatorEvaluatorSimpleBuilder builder = builderClass.newInstance();
+                builder.setOperator(operator);
+                builder.setTypes(types);
+                OperatorEvaluator result = builder.build();
+                if (result != null) {
+                    return result;
+                }
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        */
         return null;
     }
 }
