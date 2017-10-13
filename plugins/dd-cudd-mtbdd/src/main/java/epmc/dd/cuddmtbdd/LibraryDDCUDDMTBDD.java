@@ -26,6 +26,7 @@ import static epmc.error.UtilError.fail;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -76,6 +77,49 @@ import gnu.trove.strategy.IdentityHashingStrategy;
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public final static String IDENTIFIER = "cudd-mtbdd";
 
+    private final static class OperatorKey {
+        private Operator operator;
+        private Type[] types;
+        
+        @Override
+        public boolean equals(Object obj) {
+            OperatorKey other = (OperatorKey) obj;
+            if (operator != other.operator) {
+                return false;
+            }
+            if (!Arrays.equals(types, other.types)) {
+                return false;
+            }
+            return true;
+        }
+        
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            hash = operator.hashCode() + (hash << 6) + (hash << 16) - hash;            
+            hash = Arrays.hashCode(types) + (hash << 6) + (hash << 16) - hash;
+            return hash;
+        }
+    }
+    
+    private final OperatorKey testKey = new OperatorKey();
+    private final Map<OperatorKey,OperatorEvaluator> evaluators = new HashMap<>(); 
+    
+    private OperatorEvaluator getEvaluator(Operator operator, Type[] types) {
+        testKey.operator = operator;
+        testKey.types = types;
+        OperatorEvaluator result = evaluators.get(testKey);
+        if (result != null) {
+            return result;
+        }
+        result = ContextValue.get().getEvaluator(operator, types);
+        OperatorKey newKey = new OperatorKey();
+        newKey.operator = operator;
+        newKey.types = types.clone();
+        evaluators.put(newKey, result);
+        return result;
+    }
+    
     private final static class LowLevelPermutationCUDD
     implements PermutationLibraryDD {
         private Memory memory;
@@ -113,7 +157,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 assert operator != null;
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -134,7 +178,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 Type[] types = new Type[2];
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -157,7 +201,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
                 types[2] = op3Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value, op3Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -176,7 +220,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     private class AssertFailImpl implements AssertFail {
-
         @Override
         public void invoke(String file, int line) {
             try {
