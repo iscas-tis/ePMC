@@ -20,12 +20,15 @@
 
 package epmc.value;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+
+import static epmc.error.UtilError.fail;
 
 /**
  * Value context.
@@ -151,21 +154,7 @@ public final class ContextValue {
                 return evaluator;
             }
         }
-        /*
-        for (Class<? extends OperatorEvaluatorSimpleBuilder> builderClass : builders) {
-            try {
-                OperatorEvaluatorSimpleBuilder builder = builderClass.newInstance();
-                builder.setOperator(operator);
-                builder.setTypes(types);
-                OperatorEvaluator result = builder.build();
-                if (result != null) {
-                    return result;
-                }
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        */
-        return null;
+        fail(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
+        throw new RuntimeException();
     }
 }

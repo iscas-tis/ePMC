@@ -20,18 +20,23 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
+import static epmc.error.UtilError.fail;
+
 import java.util.Arrays;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
+import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ProblemsExpression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
+import epmc.value.ProblemsValue;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -137,7 +142,15 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        evaluator = ContextValue.get().getEvaluator(operator, types);
+        try {
+            evaluator = ContextValue.get().getEvaluator(operator, types);
+        } catch (EPMCException e) {
+            if (e.getProblem().equals(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE)) {
+                fail(ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, expression.getPositional(), operator, Arrays.toString(types));
+            }
+            throw e;
+        }
+
         assert evaluator != null : operator + " " + Arrays.toString(types) + " " + operands[0];
         assert evaluator.resultType(types) != null : operator;
         result = evaluator.resultType(types).newValue();
