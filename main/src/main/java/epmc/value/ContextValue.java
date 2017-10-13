@@ -20,7 +20,6 @@
 
 package epmc.value;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +40,6 @@ public final class ContextValue {
     /** Unmodifiable map from operator identifier to according operator. */
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
     private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
-    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -123,11 +121,6 @@ public final class ContextValue {
     public void addEvaluator(OperatorEvaluator evaluator) {
         assert evaluator != null;
         operatorEvaluators.add(evaluator);
-    }
-
-    // TODO get rid of this method
-    public List<OperatorEvaluator> getEvaluators() {
-        return operatorEvaluatorsExternal;
     }
 
     public OperatorEvaluator getEvaluator(Operator operator, Type...types) {

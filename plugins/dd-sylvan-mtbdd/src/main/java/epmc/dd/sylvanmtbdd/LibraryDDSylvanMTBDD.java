@@ -22,12 +22,13 @@ package epmc.dd.sylvanmtbdd;
 
 import static epmc.error.UtilError.ensure;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -52,13 +53,41 @@ import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.operator.OperatorAdd;
+import epmc.value.operator.OperatorAnd;
+import epmc.value.operator.OperatorDivide;
+import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorId;
+import epmc.value.operator.OperatorIff;
+import epmc.value.operator.OperatorImplies;
 import epmc.value.operator.OperatorIte;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorMin;
 import epmc.value.operator.OperatorMultiply;
+import epmc.value.operator.OperatorNe;
+import epmc.value.operator.OperatorNot;
+import epmc.value.operator.OperatorOr;
+import epmc.value.operator.OperatorSubtract;
 
 public class LibraryDDSylvanMTBDD implements LibraryDD {
+    private static final Map<String,Operator> OPERATOR_TO_MTBDD;
+    static {
+        Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
+        mtbddToOperatorName.put("add", OperatorAdd.ADD);
+        mtbddToOperatorName.put("subtract", OperatorSubtract.SUBTRACT);
+        mtbddToOperatorName.put("multiply", OperatorMultiply.MULTIPLY);
+        mtbddToOperatorName.put("divide", OperatorDivide.DIVIDE);
+        mtbddToOperatorName.put("max", OperatorMax.MAX);
+        mtbddToOperatorName.put("min", OperatorMin.MIN);
+        mtbddToOperatorName.put("and", OperatorAnd.AND);
+        mtbddToOperatorName.put("or", OperatorOr.OR);
+        mtbddToOperatorName.put("not", OperatorNot.NOT);
+        mtbddToOperatorName.put("iff", OperatorIff.IFF);
+        mtbddToOperatorName.put("implies", OperatorImplies.IMPLIES);
+        mtbddToOperatorName.put("eq", OperatorEq.EQ);
+        mtbddToOperatorName.put("ne", OperatorNe.NE);
+        OPERATOR_TO_MTBDD = Collections.unmodifiableMap(mtbddToOperatorName);
+    }
+
     private final static class OperatorKey {
         private Operator operator;
         private Type[] types;
@@ -143,7 +172,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
+                Operator operator = numberToOperator(op);
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
                 OperatorEvaluator evaluator = getEvaluator(operator, types);
@@ -161,7 +190,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
@@ -192,11 +221,13 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private class GetOperatorNumberImpl implements GetOperatorNumber {
 
         @Override
-        public int invoke(String name) {
-            assert name != null;
-            int number = operatorToNumber.get(name);
+        public int invoke(String cuddName) {
+            assert cuddName != null;
+            assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
+            Operator name = OPERATOR_TO_MTBDD.get(cuddName);
+            int number = operatorToNumber(name);
             //            assert operators[number].getIdentifier().equals(name) : 
-            //              operators[number].getIdentifier() + " " + name;
+            //                operators[number].getIdentifier() + " " + name;
             return number;
         }
     }
@@ -310,7 +341,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private TLongObjectHashMap<Value> numberToValue;
     /** maps Value object to its number */
     private TObjectLongHashMap<Value> valueToNumber;
-    private Operator[] operators;
+    private final List<Operator> operators = new ArrayList<>();
     private TObjectIntHashMap<Operator> operatorToNumber = new TObjectIntHashMap<>();
 
     private long valueToNumberTime;
@@ -324,15 +355,23 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private DD_VOP2 vop2;
     private boolean alive = true;
 
-    private Operator[] collectOperators() {
-        Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getEvaluators();
-        for (OperatorEvaluator evaluator : identifiers) {
-            operators.add(evaluator.getOperator());
+    private int operatorToNumber(Operator operator) {
+        assert operator != null;
+        int result = operatorToNumber.get(operator);
+        if (result > -1) {
+            return result;
         }
-        return operators.toArray(new Operator[0]);
+        result = operatorToNumber.size();
+        operators.add(operator);
+        operatorToNumber.put(operator, result);
+        return result;
     }
-
+    
+    private Operator numberToOperator(int number) {
+        assert number >= 0 : number;
+        assert number < operators.size() : number;
+        return operators.get(number);
+    }
 
     // TODO make sure mapping of operators still works
     @Override
@@ -341,12 +380,6 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
 
         this.contextDD = contextDD;
-        this.operators = collectOperators();
-        int opNr = 0;
-        for (Operator operator : operators) {
-            this.operatorToNumber.put(operator, opNr);
-            opNr++;
-        }
         this.numberToValue = new TLongObjectHashMap<>();
         this.valueToNumber = new TObjectLongHashMap<>();
 
@@ -382,9 +415,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         this.resultType = type;
         long result;
         if (operands.length == 1) {
-            result = Sylvan.MTBDD_uapply(operands[0], operatorToNumber.get(operation));
+            result = Sylvan.MTBDD_uapply(operands[0], operatorToNumber(operation));
         } else if (operands.length == 2) {
-            result = Sylvan.MTBDD_apply(operands[0], operands[1], operatorToNumber.get(operation));
+            result = Sylvan.MTBDD_apply(operands[0], operands[1], operatorToNumber(operation));
         } else if (operands.length == 3) {
             this.resultType = type;
             boolean doFree = false;
