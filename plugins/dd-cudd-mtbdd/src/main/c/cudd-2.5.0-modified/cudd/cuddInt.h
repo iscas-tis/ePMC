@@ -393,7 +393,6 @@ struct DdManager {	/* specialized DD symbol table */
     GET_OPERATOR_NUMBER getOperatorNumber;
     int numberOfOperators;
     void **operators;
-    void **bddOperators;
     /* Constants */
     DdNode sentinel;		/* for collision lists */
     CUDD_VALUE_TYPE two_value; /* value for 'two' */
