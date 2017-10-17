@@ -176,8 +176,10 @@ public final class DestinationEvaluator {
 
     ValueAlgebra evaluateProbability(NodeJANI node) {
         ValueAlgebra result = ValueAlgebra.as(probability.evaluate(node.getValues()));
-        ge.apply(cmp, result, zeroWeight);
-        ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
+        if (ge != null) {
+            ge.apply(cmp, result, zeroWeight);
+            ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
+        }
         setProbability.apply(probabilityV, result);
         /* make sure that we return values of correct type to avoid problems 
          * with operator evaluators. */

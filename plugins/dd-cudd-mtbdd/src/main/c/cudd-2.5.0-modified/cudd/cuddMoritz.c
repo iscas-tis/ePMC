@@ -43,7 +43,7 @@ Cudd_MTBDD_addApplyOpNumber(
   DdNode *g)
 {
     dd->epmcOp = op;
-    return Cudd_addApply(dd, dd->operators[op], f, g);
+    return Cudd_addApply(dd, Cudd_addEPMCBinaryOp, f, g);
 }
 
 __attribute__ ((visibility("default")))
@@ -60,17 +60,6 @@ Cudd_MTBDD_addApplyTernaryOpNumber(
 }
 
 typedef DdNode * (*DD_BIN_FN)(DdManager *, DdNode *, DdNode *);
-
-DdNode *
-Cudd_bddApplyOpNumber(
-  DdManager * dd,
-  int op,
-  DdNode *f,
-  DdNode *g)
-{
-    dd->epmcOp = op;
-    return ((DD_BIN_FN) dd->bddOperators[op])(dd, f, g);
-}
 
 DdNode *
 Cudd_bddApplyTernaryOpNumber(

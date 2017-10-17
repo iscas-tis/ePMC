@@ -391,11 +391,6 @@ struct DdManager {	/* specialized DD symbol table */
     DD_VOP3 epmcCallback3;
     ASSERT_FAIL assertFail;
     GET_OPERATOR_NUMBER getOperatorNumber;
-    int numberOfOperators;
-    void **operators;
-    void **bddOperators;
-    DD_CTFP1 *epmcFunctions1;
-    DD_CTFP  *epmcFunctions2;
     /* Constants */
     DdNode sentinel;		/* for collision lists */
     CUDD_VALUE_TYPE two_value; /* value for 'two' */
