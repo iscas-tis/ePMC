@@ -73,6 +73,9 @@
 #ifndef lint
 static char rcsid[] DD_UNUSED = "$Id: cuddAddApply.c,v 1.19 2012/02/05 01:07:18 fabio Exp $";
 #endif
+// https://stackoverflow.com/questions/22751762/how-to-make-compiler-not-show-int-to-void-pointer-cast-warnings
+#define INT2VOIDP(i) (void*)(uintptr_t)(i)
+
 
 
 /*---------------------------------------------------------------------------*/
@@ -637,7 +640,7 @@ cuddAddApplyRecur(
 
     /* Check cache. */
     if (op == Cudd_addEPMCBinaryOp) {
-      cacheOp = (DD_CTFP) dd->epmcFunctions2[dd->epmcOp];
+      cacheOp = (DD_CTFP) INT2VOIDP(dd->epmcOp);
     } else {
       cacheOp = (DD_CTFP) op;
     }
@@ -720,7 +723,7 @@ cuddAddMonadicApplyRecur(
 
     /* Check cache. */
      if (op == Cudd_addEPMCMonadicOp) {
-      cacheOp = (DD_CTFP1) dd->epmcFunctions1[dd->epmcOp];
+      cacheOp = (DD_CTFP1) INT2VOIDP(dd->epmcOp);
     } else {
       cacheOp = (DD_CTFP1) op;
     }

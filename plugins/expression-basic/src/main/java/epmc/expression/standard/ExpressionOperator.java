@@ -20,18 +20,20 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
+import static epmc.error.UtilError.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
+import epmc.value.ProblemsValue;
 import epmc.value.Type;
 
 /**
@@ -160,8 +162,15 @@ public final class ExpressionOperator implements ExpressionPropositional {
             assert childType != null : this + "    in    " + child + " " + child.getClass() + " " + expressionToType;
             opTypes[opNr] = childType;
         }
-        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, opTypes);
-        ensure(evaluator != null, ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, positional, Arrays.toString(opTypes));
+        OperatorEvaluator evaluator = null;
+        try {
+            evaluator = ContextValue.get().getEvaluator(operator, opTypes);
+        } catch (EPMCException e) {
+            if (e.getProblem().equals(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE)) {
+                fail(ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, positional, operator, Arrays.toString(opTypes));
+            }
+            throw e;
+        }
         result = evaluator.resultType(opTypes);
         assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         return result;

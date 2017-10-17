@@ -717,19 +717,6 @@ cuddFreeTable(
     DdNodePtr *memlist = unique->memoryList;
     int i;
 
-    if (unique->epmcFunctions1 != NULL) {
-      for (i = 0; i < unique->numberOfOperators; i++) {
-        FREE(unique->epmcFunctions1[i]);
-      }
-      FREE(unique->epmcFunctions1);
-    }
-    if (unique->epmcFunctions2 != NULL) {
-      for (i = 0; i < unique->numberOfOperators; i++) {
-        FREE(unique->epmcFunctions2[i]);
-      }
-      FREE(unique->epmcFunctions2);
-    }
-
     if (unique->univ != NULL) cuddZddFreeUniv(unique);
     while (memlist != NULL) {
 	next = (DdNodePtr *) memlist[0];	/* link to next block */

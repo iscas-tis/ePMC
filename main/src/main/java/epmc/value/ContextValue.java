@@ -20,13 +20,15 @@
 
 package epmc.value;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+
+import static epmc.error.UtilError.fail;
 
 /**
  * Value context.
@@ -41,7 +43,9 @@ public final class ContextValue {
     /** Unmodifiable map from operator identifier to according operator. */
     private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
     private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
-    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
+    
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactories = new LinkedList<>();
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactoriesReversed = Lists.reverse(operatorEvaluatorFactories);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
@@ -120,14 +124,16 @@ public final class ContextValue {
         return result;
     }
 
+    // TODO use factories instead of using evaluators directly
+    // to improve performance and for RDDL preparation
+    public void addEvaluatorFactory(OperatorEvaluatorFactory factory) {
+        assert factory != null;
+        operatorEvaluatorFactories.add(factory);
+    }
+    
     public void addEvaluator(OperatorEvaluator evaluator) {
         assert evaluator != null;
         operatorEvaluators.add(evaluator);
-    }
-
-    // TODO get rid of this method
-    public List<OperatorEvaluator> getEvaluators() {
-        return operatorEvaluatorsExternal;
     }
 
     public OperatorEvaluator getEvaluator(Operator operator, Type...types) {
@@ -142,6 +148,13 @@ public final class ContextValue {
                 return evaluator;
             }
         }
-        return null;
+        for (OperatorEvaluatorFactory factory : operatorEvaluatorFactoriesReversed) {
+            OperatorEvaluator evaluator = factory.getEvaluator(operator, types);
+            if (evaluator != null) {
+                return evaluator;
+            }
+        }
+        fail(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
+        throw new RuntimeException();
     }
 }
