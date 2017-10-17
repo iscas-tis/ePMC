@@ -26,7 +26,6 @@ import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.operator.OperatorSet;
-import javafx.application.ConditionalFeature;
 
 /**
  * Node property in which all edges are assigned the same value.

@@ -20,7 +20,7 @@
 
 package epmc.jani.explorer;
 
-import static epmc.error.UtilError.*;
+import static epmc.error.UtilError.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +39,6 @@ import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;

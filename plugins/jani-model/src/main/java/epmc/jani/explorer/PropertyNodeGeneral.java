@@ -32,7 +32,6 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueObject;
 import epmc.value.operator.OperatorSet;
-import javafx.application.ConditionalFeature;
 
 /**
  * Explorer node property for JANI explorers and their components.

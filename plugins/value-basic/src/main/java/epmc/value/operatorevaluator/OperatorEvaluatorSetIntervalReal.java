@@ -4,7 +4,6 @@ import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
 import epmc.value.Value;

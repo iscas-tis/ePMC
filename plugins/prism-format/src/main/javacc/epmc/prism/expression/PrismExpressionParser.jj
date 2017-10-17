@@ -1210,10 +1210,11 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 		)?
 		{
 			if (discount == null) {
-				return newRewardCumulative(rewardStructure, timebound);			} else {
-				return newRewardDiscounted(rewardStructure, timebound, discount);			}
+				return newRewardCumulative(rewardStructure, timebound);
+			} else {
+				return newRewardDiscounted(rewardStructure, timebound, discount);
+			}
 		}
-			
 	| 
 		<I> 
 		<EQ>

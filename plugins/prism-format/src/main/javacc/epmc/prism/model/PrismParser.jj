@@ -431,7 +431,8 @@ private Semantics parseModelType()  :
 		{ type = SemanticsSMG.SMG; }
 	|
 		t = <PTA> 
-		{ type = SemanticsPTA.PTA; }	)
+		{ type = SemanticsPTA.PTA; }
+	)
 	{ 
 		if (type != null) {
 			modelcount++;
@@ -806,7 +807,7 @@ private void parseRewards(List<RewardStructure> rewards)  :
 		{ label = null; }
 		(
 			<LBRACKET>
-			{ label = label = new ExpressionIdentifierStandard.Builder()
+			{ label = new ExpressionIdentifierStandard.Builder()
 					.setName("")
 					.build(); }
 			( 
@@ -1319,7 +1320,8 @@ private Expression parseExpInvariant()  :
 }
 {
 	{ expressionToken = getToken(1); }
-	(	    t = <INVARIANT_IDENTIFIER>
+	(
+	    t = <INVARIANT_IDENTIFIER>
 	    { content.append(t.toString()); }
 	|
 	    t = <INVARIANT_OTHER>
