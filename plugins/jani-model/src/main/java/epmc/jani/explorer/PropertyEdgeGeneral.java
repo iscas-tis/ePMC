@@ -29,7 +29,6 @@ import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
 import epmc.value.operator.OperatorSet;
-import javafx.application.ConditionalFeature;
 
 /**
  * Explorer edge property for JANI explorers and their components.

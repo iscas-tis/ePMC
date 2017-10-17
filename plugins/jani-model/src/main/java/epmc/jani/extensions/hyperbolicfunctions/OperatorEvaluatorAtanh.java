@@ -26,7 +26,6 @@ import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
 import epmc.value.ValueNumber;
