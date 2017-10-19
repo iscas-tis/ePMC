@@ -21,7 +21,7 @@
 package epmc.jani.extensions.derivedoperators;
 
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationJANIDerivedOperators implements BeforeModelCreation {
     /** Identifier of this class. */
@@ -34,9 +34,9 @@ public final class BeforeModelCreationJANIDerivedOperators implements BeforeMode
 
     @Override
     public void process() {
-        ContextValue.get().addEvaluator(OperatorEvaluatorSgn.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAbs.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorTrunc.INSTANCE);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSgn.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAbs.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorTrunc.Builder.class);
 
     }
 }

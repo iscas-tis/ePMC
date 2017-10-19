@@ -86,8 +86,8 @@ public final class UtilValue {
                     TypeInteger.as(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
-            OperatorEvaluator setAB = ContextValue.get().getEvaluator(OperatorSet.SET, b, a);
-            OperatorEvaluator setBA = ContextValue.get().getEvaluator(OperatorSet.SET, a, b);
+            OperatorEvaluator setAB = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, b, a);
+            OperatorEvaluator setBA = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, a, b);
             if (setAB != null) {
                 upper = a;
             } else if (setBA != null) {

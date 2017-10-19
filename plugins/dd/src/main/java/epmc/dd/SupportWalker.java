@@ -232,7 +232,7 @@ public final class SupportWalker {
         BitSet seen = UtilBitSet.newBitSetUnbounded();
         buildDiagram(nodeWalker, supportWalker, nodeEnumerator, valueEnumerator, seen);
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, leafValues[0].getType());
+        OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, leafValues[0].getType());
         for (int i = 0; i < diagram.length / 2; i++) {
             if (diagram[i * NUM_OUT] >= 0) {
                 continue;

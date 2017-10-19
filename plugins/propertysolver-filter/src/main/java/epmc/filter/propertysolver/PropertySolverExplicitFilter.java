@@ -121,8 +121,10 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         Value statesEntry = states.getType().newValue();
         Value propEntry = prop.getType().newValue();
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
-        
+        OperatorEvaluator isZero = null;
+        if (propertyFilter.isPrint()) {
+            isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
+        }
         int statesSize = states.size();
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
@@ -253,39 +255,48 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     }
 
     private static void accumulate(FilterType type, Value resultValue, Value value) {
-        OperatorEvaluator and = ContextValue.get().getEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
-        OperatorEvaluator or = ContextValue.get().getEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
-        OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
-        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
-        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
         switch (type) {
-        case ARGMAX: case MAX:
+        case ARGMAX: case MAX: {
+            OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
             max.apply(resultValue, resultValue, value);
             break;
-        case ARGMIN: case MIN:
+        }
+        case ARGMIN: case MIN: {
+            OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
             min.apply(resultValue, resultValue, value);
             break;
-        case AVG:
+        }
+        case AVG: {
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
             add.apply(resultValue, resultValue, value);
             break;
-        case COUNT:
+        }
+        case COUNT: {
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
             add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
                     ? TypeAlgebra.as(resultValue.getType()).getOne()
                             : TypeAlgebra.as(resultValue.getType()).getZero());
             break;
-        case EXISTS:
+        }
+        case EXISTS: {
+            OperatorEvaluator or = ContextValue.get().getEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
             or.apply(resultValue, resultValue, value);
             break;
+        }
         case FIRST:
             break;
-        case FORALL:
+        case FORALL: {
+            OperatorEvaluator and = ContextValue.get().getEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
             and.apply(resultValue, resultValue, value);
             break;
+        }
         case PRINT:
             break;
         case PRINTALL:
             break;
         case RANGE: {
+            OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+            OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
             Value resLo = ValueInterval.as(resultValue).getIntervalLower();
             Value resUp = ValueInterval.as(resultValue).getIntervalUpper();
             min.apply(resLo, resLo, value);
@@ -294,9 +305,11 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         break;
         case STATE:
             break;
-        case SUM:
+        case SUM: {
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
             add.apply(resultValue, resultValue, value);
             break;
+        }
         default:
             throw new RuntimeException();
         }

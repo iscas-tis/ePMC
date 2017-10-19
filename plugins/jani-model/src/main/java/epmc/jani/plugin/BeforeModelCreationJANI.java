@@ -23,7 +23,7 @@ package epmc.jani.plugin;
 import epmc.jani.value.OperatorEvaluatorSetDecisionDecision;
 import epmc.jani.value.OperatorEvaluatorSetLocationLocation;
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 /**
  * JANI plugin class containing method to execute just before model creation.
@@ -41,7 +41,7 @@ public final class BeforeModelCreationJANI implements BeforeModelCreation {
 
     @Override
     public void process() {
-        ContextValue.get().addEvaluator(OperatorEvaluatorSetDecisionDecision.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorSetLocationLocation.INSTANCE);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetDecisionDecision.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetLocationLocation.Builder.class);
     }
 }

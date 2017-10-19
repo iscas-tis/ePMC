@@ -21,7 +21,7 @@
 package epmc.jani.extensions.hyperbolicfunctions;
 
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeModelCreation {
     /** Identifier of this class. */
@@ -34,12 +34,12 @@ public final class BeforeModelCreationJANIHyperbolicFunctions implements BeforeM
 
     @Override
     public void process() {
-        ContextValue.get().addEvaluator(OperatorEvaluatorSinh.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorCosh.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorTanh.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAsinh.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAcosh.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAtanh.INSTANCE);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSinh.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorCosh.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorTanh.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAsinh.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAcosh.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAtanh.Builder.class);
 
     }
 }
