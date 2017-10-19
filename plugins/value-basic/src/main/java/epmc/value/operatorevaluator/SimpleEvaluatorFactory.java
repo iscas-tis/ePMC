@@ -11,22 +11,22 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorEvaluatorFactory;
 import epmc.value.Type;
 
-public final class OperatorEvaluatorFactorySimple implements OperatorEvaluatorFactory {
-    private final static Map<ContextValue,OperatorEvaluatorFactorySimple> MAP = new HashMap<>();
+public final class SimpleEvaluatorFactory implements OperatorEvaluatorFactory {
+    private final static Map<ContextValue,SimpleEvaluatorFactory> MAP = new HashMap<>();
     
-    public final static OperatorEvaluatorFactorySimple get() {
-        OperatorEvaluatorFactorySimple result = MAP.get(ContextValue.get());
+    public final static SimpleEvaluatorFactory get() {
+        SimpleEvaluatorFactory result = MAP.get(ContextValue.get());
         if (result != null) {
             return result;
         }
-        result = new OperatorEvaluatorFactorySimple();
+        result = new SimpleEvaluatorFactory();
         MAP.put(ContextValue.get(), result);
         return result;
     }
     
     private final List<Class<? extends OperatorEvaluatorSimpleBuilder>> evaluators = new ArrayList<>();
 
-    public void addEvaluator(Class<? extends OperatorEvaluatorSimpleBuilder> clazz) {
+    public void add(Class<? extends OperatorEvaluatorSimpleBuilder> clazz) {
         assert clazz != null;
         evaluators.add(clazz);
     }

@@ -48,7 +48,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorEqEnum;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorEqInterval;
 import epmc.value.operatorevaluator.OperatorEvaluatorExpDouble;
-import epmc.value.operatorevaluator.OperatorEvaluatorFactorySimple;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 import epmc.value.operatorevaluator.OperatorEvaluatorFloor;
 import epmc.value.operatorevaluator.OperatorEvaluatorGeDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorGeInt;
@@ -119,7 +119,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
     }
 
     private static void addOperators() {
-        ContextValue.get().addEvaluatorFactory(OperatorEvaluatorFactorySimple.get());
+        ContextValue.get().addEvaluatorFactory(SimpleEvaluatorFactory.get());
 //        OperatorEvaluatorFactorySimple.get().addEvaluator(OperatorEvaluatorAddDouble.Builder.class);
         ContextValue.get().addEvaluator(OperatorEvaluatorAddDouble.INSTANCE);
         ContextValue.get().addEvaluator(OperatorEvaluatorAddInt.INSTANCE);
