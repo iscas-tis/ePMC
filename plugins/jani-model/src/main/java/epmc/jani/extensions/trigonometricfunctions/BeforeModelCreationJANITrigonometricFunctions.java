@@ -21,7 +21,7 @@
 package epmc.jani.extensions.trigonometricfunctions;
 
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationJANITrigonometricFunctions implements BeforeModelCreation {
     /** Identifier of this class. */
@@ -34,11 +34,11 @@ public final class BeforeModelCreationJANITrigonometricFunctions implements Befo
 
     @Override
     public void process() {
-        ContextValue.get().addEvaluator(OperatorEvaluatorSin.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorCos.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorTan.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAsin.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAcos.INSTANCE);
-        ContextValue.get().addEvaluator(OperatorEvaluatorAtan.INSTANCE);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSin.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorCos.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorTan.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAsin.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAcos.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAtan.Builder.class);
     }
 }

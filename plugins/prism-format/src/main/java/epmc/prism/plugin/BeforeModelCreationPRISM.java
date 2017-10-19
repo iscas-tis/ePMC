@@ -2,7 +2,7 @@ package epmc.prism.plugin;
 
 import epmc.plugin.BeforeModelCreation;
 import epmc.prism.value.OperatorEvaluatorPRISMPow;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationPRISM implements BeforeModelCreation {
     public final static String IDENTIFIER = "before-model-creation-prism";
@@ -14,7 +14,7 @@ public final class BeforeModelCreationPRISM implements BeforeModelCreation {
 
     @Override
     public void process() {
-        ContextValue.get().addEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorPRISMPow.Builder.class);
     }
 
 }

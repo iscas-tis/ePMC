@@ -28,7 +28,7 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
-import static epmc.error.UtilError.fail;
+import static epmc.error.UtilError.ensure;
 
 /**
  * Value context.
@@ -137,6 +137,12 @@ public final class ContextValue {
     }
 
     public OperatorEvaluator getEvaluator(Operator operator, Type...types) {
+        OperatorEvaluator result = getEvaluatorOrNull(operator, types);
+        ensure(result != null, ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
+        return result;
+    }
+
+    public OperatorEvaluator getEvaluatorOrNull(Operator operator, Type...types) {
         assert operator != null;
         assert types != null;
         for (Type type : types) {
@@ -154,7 +160,6 @@ public final class ContextValue {
                 return evaluator;
             }
         }
-        fail(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
-        throw new RuntimeException();
+        return null;
     }
 }

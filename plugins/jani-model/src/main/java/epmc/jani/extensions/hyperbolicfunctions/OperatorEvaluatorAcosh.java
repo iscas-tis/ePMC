@@ -25,18 +25,57 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.ValueNumber;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 /**
  * Operator to compute sinus of a value.
  * 
  * @author Ernst Moritz Hahn
  */
-public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorAcosh implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (operator != OperatorAcosh.ACOSH) {
+                return null;
+            }
+            if (types.length != 1) {
+                return null;
+            }
+            if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorAcosh(this);
+        }
+    }
+
+    private OperatorEvaluatorAcosh(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {
@@ -61,7 +100,7 @@ public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
     @Override
     public Type resultType(Type... types) {
         assert types != null;
-        return TypeReal.get();
+        return TypeDouble.get();
     }
 
     @Override
@@ -71,7 +110,7 @@ public enum OperatorEvaluatorAcosh implements OperatorEvaluator {
         assert operands.length >= 1;
         assert operands[0] != null;
         ValueDouble resultDouble = ValueDouble.as(result);
-        ValueNumber operandNumber = ValueNumber.as(operands[0]);
+        ValueDouble operandNumber = ValueDouble.as(operands[0]);
         // TODO
         assert false;
     }
