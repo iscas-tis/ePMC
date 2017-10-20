@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
@@ -25,6 +27,7 @@ public final class SimpleEvaluatorFactory implements OperatorEvaluatorFactory {
     }
     
     private final List<Class<? extends OperatorEvaluatorSimpleBuilder>> evaluators = new ArrayList<>();
+    private final List<Class<? extends OperatorEvaluatorSimpleBuilder>> evaluatorsReversed = Lists.reverse(evaluators);
 
     public void add(Class<? extends OperatorEvaluatorSimpleBuilder> clazz) {
         assert clazz != null;
@@ -33,7 +36,7 @@ public final class SimpleEvaluatorFactory implements OperatorEvaluatorFactory {
     
     @Override
     public OperatorEvaluator getEvaluator(Operator operator, Type... types) {
-        for (Class<? extends OperatorEvaluatorSimpleBuilder> clazz : evaluators) {
+        for (Class<? extends OperatorEvaluatorSimpleBuilder> clazz : evaluatorsReversed) {
             try {
                 OperatorEvaluatorSimpleBuilder builder = clazz.newInstance();
                 builder.setOperator(operator);

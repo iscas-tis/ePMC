@@ -30,8 +30,54 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorIte;
 
-public enum OperatorEvaluatorIteInt implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorIteInt implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorIte.ITE) {
+                return null;
+            }
+            if (types.length != 3) {
+                return null;
+            }
+            if (!TypeBoolean.is(types[0])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[1])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[2])) {
+                return null;
+            }
+            return new OperatorEvaluatorIteInt(this);
+        }
+    }
+
+    private OperatorEvaluatorIteInt(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

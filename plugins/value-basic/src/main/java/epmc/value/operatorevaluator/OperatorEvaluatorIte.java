@@ -31,8 +31,54 @@ import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIte;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorIte implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorIte implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorIte.ITE) {
+                return null;
+            }
+            if (types.length != 3) {
+                return null;
+            }
+            if (!TypeBoolean.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorIte(this);
+        }
+    }
+
+    private final OperatorEvaluator setIf;
+    private final OperatorEvaluator setElse;
+
+    private OperatorEvaluatorIte(Builder builder) {
+        Type resultType = UtilValue.upper(builder.types[1], builder.types[2]);
+        setIf = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[1], resultType);
+        setElse = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[2], resultType);
+    }
 
     @Override
     public Operator getOperator() {
@@ -79,11 +125,9 @@ public enum OperatorEvaluatorIte implements OperatorEvaluator {
             assert operand != null;
         }
         if (ValueBoolean.as(operands[0]).getBoolean()) {
-            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[1].getType(), result.getType());
-            set.apply(result, operands[1]);
+            setIf.apply(result, operands[1]);
         } else {
-            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[2].getType(), result.getType());
-            set.apply(result, operands[2]);
+            setElse.apply(result, operands[2]);
         }
     }
 }

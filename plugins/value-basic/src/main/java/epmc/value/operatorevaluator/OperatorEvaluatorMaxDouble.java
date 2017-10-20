@@ -30,8 +30,56 @@ import epmc.value.Value;
 import epmc.value.ValueDouble;
 import epmc.value.operator.OperatorMax;
 
-public enum OperatorEvaluatorMaxDouble implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorMaxDouble implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorMax.MAX) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            if (TypeInteger.is(types[0]) && TypeInteger.is(types[1])) {
+                return null;
+            }
+            if (!TypeDouble.is(types[0])
+                    && !TypeInteger.is(types[0])) {
+                return null;
+            }
+            if (!TypeDouble.is(types[1])
+                    && !TypeInteger.is(types[1])) {
+                return null;
+            }
+            return new OperatorEvaluatorMaxDouble(this);
+        }
+    }
+
+    private OperatorEvaluatorMaxDouble(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

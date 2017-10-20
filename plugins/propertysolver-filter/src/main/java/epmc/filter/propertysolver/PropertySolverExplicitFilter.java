@@ -46,6 +46,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.value.ContextValue;
+import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -150,12 +151,13 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         }
         int stateNr = 0;
         Type typeProperty = propertyFilter.getType(modelChecker.getLowLevel());
+        OperatorEvaluator accumulator = getAccumulator(propertyFilter.getFilterType(), resultValue, propEntry);
         for (int i = 0; i < allStates.size(); i++) {
             int state = allStates.getExplicitIthState(i);
             prop.getExplicitIthValue(propEntry, i);
             states.getExplicitIthValue(statesEntry, i);
             if (ValueBoolean.as(statesEntry).getBoolean()) {
-                accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
+                accumulator.apply(resultValue, resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
                     isZero.apply(cmp, propEntry);
                     if (!cmp.getBoolean()) {
@@ -254,61 +256,112 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         return Collections.unmodifiableSet(required);
     }
 
-    private static void accumulate(FilterType type, Value resultValue, Value value) {
+    private static OperatorEvaluator getAccumulator(FilterType type, Value resultValue, Value value) {
         switch (type) {
         case ARGMAX: case MAX: {
             OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
-            max.apply(resultValue, resultValue, value);
-            break;
+            return max;
         }
         case ARGMIN: case MIN: {
             OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
-            min.apply(resultValue, resultValue, value);
-            break;
+            return min;
         }
         case AVG: {
             OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
-            add.apply(resultValue, resultValue, value);
-            break;
+            return add;
         }
         case COUNT: {
-            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
-            add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
-                    ? TypeAlgebra.as(resultValue.getType()).getOne()
-                            : TypeAlgebra.as(resultValue.getType()).getZero());
-            break;
+            return new OperatorEvaluator() {
+                private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+                
+                @Override
+                public Type resultType(Type... types) {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public Operator getOperator() {
+                    return null;
+                }
+                
+                @Override
+                public boolean canApply(Type... types) {
+                    return true;
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                    add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
+                            ? TypeAlgebra.as(resultValue.getType()).getOne()
+                                    : TypeAlgebra.as(resultValue.getType()).getZero());
+                }
+            };
         }
         case EXISTS: {
             OperatorEvaluator or = ContextValue.get().getEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
-            or.apply(resultValue, resultValue, value);
-            break;
+            return or;
         }
         case FIRST:
-            break;
+        case PRINT:
+        case PRINTALL:
+        case STATE:
+            return new OperatorEvaluator() {
+                
+                @Override
+                public Type resultType(Type... types) {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public Operator getOperator() {
+                    return null;
+                }
+                
+                @Override
+                public boolean canApply(Type... types) {
+                    return true;
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                }
+            };
         case FORALL: {
             OperatorEvaluator and = ContextValue.get().getEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
-            and.apply(resultValue, resultValue, value);
-            break;
+            return and;
         }
-        case PRINT:
-            break;
-        case PRINTALL:
-            break;
         case RANGE: {
-            OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
-            OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
-            Value resLo = ValueInterval.as(resultValue).getIntervalLower();
-            Value resUp = ValueInterval.as(resultValue).getIntervalUpper();
-            min.apply(resLo, resLo, value);
-            max.apply(resUp, resUp, value);
+            return new OperatorEvaluator() {
+                private final OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+                private final OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+                
+                @Override
+                public Type resultType(Type... types) {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public Operator getOperator() {
+                    return null;
+                }
+                
+                @Override
+                public boolean canApply(Type... types) {
+                    return true;
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                    Value resLo = ValueInterval.as(resultValue).getIntervalLower();
+                    Value resUp = ValueInterval.as(resultValue).getIntervalUpper();
+                    min.apply(resLo, resLo, value);
+                    max.apply(resUp, resUp, value);
+                }
+            };
         }
-        break;
-        case STATE:
-            break;
         case SUM: {
             OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
-            add.apply(resultValue, resultValue, value);
-            break;
+            return add;
         }
         default:
             throw new RuntimeException();

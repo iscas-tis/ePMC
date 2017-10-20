@@ -30,8 +30,48 @@ import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorNe;
 
-public enum OperatorEvaluatorNe implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorNe implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorNe.NE) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            return new OperatorEvaluatorNe(this);
+        }
+    }
+
+    private final OperatorEvaluator eq;
+    
+    private OperatorEvaluatorNe(Builder builder) {
+        eq = ContextValue.get().getEvaluator(OperatorEq.EQ, builder.types[0], builder.types[1]);
+    }
 
     @Override
     public Operator getOperator() {
@@ -66,7 +106,6 @@ public enum OperatorEvaluatorNe implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, operands[0].getType(), operands[1].getType());
         eq.apply(result, operands);
         ValueBoolean.as(result).set(!ValueBoolean.as(result).getBoolean());
     }
