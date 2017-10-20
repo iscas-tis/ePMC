@@ -51,7 +51,7 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
 import epmc.options.Options;
-import epmc.value.ContextValue;
+import epmc.value.EvaluatorCache;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
@@ -70,6 +70,7 @@ import epmc.value.operator.OperatorSet;
  * @author Ernst Moritz Hahn
  */
 public final class VariableValuesEnumerator {
+    EvaluatorCache evaluatorCache = new EvaluatorCache();
     public final static String SPACE = " ";
     /**
      * Enum to specify how to obtain the different values.
@@ -175,7 +176,7 @@ public final class VariableValuesEnumerator {
             Expression literal = getLiteral(expression);
             Value value = variables.get(identifier.getName()).getType().toType().newValue();
             Value literalValue = evaluateValue(literal);
-            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+            OperatorEvaluator set = evaluatorCache.getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
             set.apply(value, literalValue);
             if (!ValueRange.checkRange(value)) {
                 return Collections.emptyMap();
@@ -193,7 +194,7 @@ public final class VariableValuesEnumerator {
             common.retainAll(right.keySet());
             if (!common.isEmpty()) {
                 for (Variable entry : common) {
-                    OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, left.get(entry).getType(), right.get(entry).getType());;
+                    OperatorEvaluator eq = evaluatorCache.getEvaluator(OperatorEq.EQ, left.get(entry).getType(), right.get(entry).getType());;
                     ValueBoolean cmp = TypeBoolean.get().newValue();
                     eq.apply(cmp, left.get(entry), right.get(entry));
                     if (!cmp.getBoolean()) {
@@ -220,7 +221,7 @@ public final class VariableValuesEnumerator {
         remainingVariables.remove(identifier.getName());
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
         Value literalValue = evaluateValue(literal);
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        OperatorEvaluator set = evaluatorCache.getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
         set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
@@ -245,7 +246,7 @@ public final class VariableValuesEnumerator {
         Expression literal = getLiteral(restriction);
         Value value = variables.get(identifier.getName()).getType().toType().newValue();
         Value literalValue = evaluateValue(literal);
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
+        OperatorEvaluator set = evaluatorCache.getEvaluator(OperatorSet.SET, literalValue.getType(), value.getType());
         set.apply(value, literalValue);
         if (!ValueRange.checkRange(value)) {
             return Collections.emptyList();
@@ -360,7 +361,7 @@ public final class VariableValuesEnumerator {
             Map<Variable,Value> entry = new HashMap<>();
             index = 0;
             for (Variable variable : variables.values()) {
-                entry.put(variable, UtilValue.clone(variableValues[index]));
+                entry.put(variable, UtilValue.clone(evaluatorCache, variableValues[index]));
                 index++;
             }
             result.add(entry);
@@ -424,7 +425,7 @@ public final class VariableValuesEnumerator {
                 Map<Variable,Value> entry = new HashMap<>();
                 index = 0;
                 for (Variable variable : variables.values()) {
-                    entry.put(variable, UtilValue.clone(variableValues[index]));
+                    entry.put(variable, UtilValue.clone(evaluatorCache, variableValues[index]));
                     index++;
                 }
                 result.add(entry);
@@ -458,7 +459,7 @@ public final class VariableValuesEnumerator {
         sat.setCallback((Value[] value) -> {
             Map<Variable, Value> map = new LinkedHashMap<>();
             for (int i = 0; i < value.length; i++) {
-                map.put(variablesArray[i], UtilValue.clone(value[i]));
+                map.put(variablesArray[i], UtilValue.clone(evaluatorCache, value[i]));
             }
             result.add(map);
         });

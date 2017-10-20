@@ -20,9 +20,7 @@
 
 package epmc.value.operatorevaluator;
 
-import java.util.Arrays;
-
-import epmc.value.ContextValue;
+import epmc.value.EvaluatorCache;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -30,8 +28,47 @@ import epmc.value.Value;
 import epmc.value.operator.OperatorId;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorId implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorId implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorId.ID) {
+                return null;
+            }
+            if (types.length < 1) {
+                return null;
+            }
+            return new OperatorEvaluatorId(this);
+        }
+    }
+
+    private final EvaluatorCache evaluatorCache = new EvaluatorCache();
+    
+    private OperatorEvaluatorId(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {
@@ -66,8 +103,7 @@ public enum OperatorEvaluatorId implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
-        assert set != null : Arrays.toString(operands);
+        OperatorEvaluator set = evaluatorCache.getEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
         set.apply(result, operands[0]);
     }
 }

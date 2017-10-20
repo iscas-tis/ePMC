@@ -40,9 +40,6 @@ import static epmc.error.UtilError.ensure;
 public final class ContextValue {
     /** String to indicate unchecked method. */
     private final static String UNCHECKED = "unchecked";
-    /** Unmodifiable map from operator identifier to according operator. */
-    private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
-    private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
     
     private final List<OperatorEvaluatorFactory> operatorEvaluatorFactories = new LinkedList<>();
     private final List<OperatorEvaluatorFactory> operatorEvaluatorFactoriesReversed = Lists.reverse(operatorEvaluatorFactories);
@@ -124,18 +121,11 @@ public final class ContextValue {
         return result;
     }
 
-    // TODO use factories instead of using evaluators directly
-    // to improve performance and for RDDL preparation
     public void addEvaluatorFactory(OperatorEvaluatorFactory factory) {
         assert factory != null;
         operatorEvaluatorFactories.add(factory);
     }
     
-    public void addEvaluator(OperatorEvaluator evaluator) {
-        assert evaluator != null;
-        operatorEvaluators.add(evaluator);
-    }
-
     public OperatorEvaluator getEvaluator(Operator operator, Type...types) {
         OperatorEvaluator result = getEvaluatorOrNull(operator, types);
         ensure(result != null, ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
@@ -147,12 +137,6 @@ public final class ContextValue {
         assert types != null;
         for (Type type : types) {
             assert type != null;
-        }
-        for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
-            if (evaluator.getOperator().equals(operator)
-                    && evaluator.canApply(types)) {
-                return evaluator;
-            }
         }
         for (OperatorEvaluatorFactory factory : operatorEvaluatorFactoriesReversed) {
             OperatorEvaluator evaluator = factory.getEvaluator(operator, types);

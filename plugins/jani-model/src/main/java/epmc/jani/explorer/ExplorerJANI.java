@@ -52,6 +52,7 @@ import epmc.jani.model.property.ExpressionDeadlock;
 import epmc.jani.model.property.ExpressionInitial;
 import epmc.options.Options;
 import epmc.util.Util;
+import epmc.value.EvaluatorCache;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
@@ -287,11 +288,12 @@ public final class ExplorerJANI implements Explorer {
         List<Map<Variable, Value>> enumerated = enumerator.enumerate();
         Collection<NodeJANI> innerNodes = system.getInitialNodes();
         Collection<NodeJANI> result = new ArrayList<>();
+        EvaluatorCache evaluatorCache = new EvaluatorCache();
         for (NodeJANI innerNode : innerNodes) {
             NodeJANI node = newNode();
             node.set(innerNode);
             for (Map<Variable, Value> globals : enumerated) {
-                NodeJANI nodeWithGlobals = node.clone();
+                NodeJANI nodeWithGlobals = node.clone(evaluatorCache);
                 for (Variable variable : model.getGlobalVariablesNonTransient()) {
                     Value value = globals.get(variable);
                     int nodeVarNr = stateVariables.getVariableNumber(variable.getIdentifier());

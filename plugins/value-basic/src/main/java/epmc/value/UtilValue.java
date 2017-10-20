@@ -111,6 +111,15 @@ public final class UtilValue {
         return clone;
     }
 
+    public static <T extends Value> T clone(EvaluatorCache cache, T value) {
+        assert value != null;
+        @SuppressWarnings(UNCHECKED)
+        T clone = (T) value.getType().newValue();
+        OperatorEvaluator set = cache.getEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        set.apply(clone, value);
+        return clone;
+    }
+
     public static <T extends ValueArray> T ensureSize(T array, int size) {
         if (size <= array.size()) {
             return array;

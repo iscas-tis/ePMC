@@ -30,6 +30,7 @@ import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.util.BitStream;
 import epmc.value.ContextValue;
+import epmc.value.EvaluatorCache;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -55,8 +56,11 @@ public final class NodeJANI implements ExplorerNode {
     private final StateVariables stateVariables;
     private final Value[] initialValues;
     private final OperatorEvaluator set[];
-
     public NodeJANI(ExplorerJANI explorer, StateVariables stateVariables) {
+        this(null, explorer, stateVariables);
+    }
+    
+    public NodeJANI(EvaluatorCache evaluatorCache, ExplorerJANI explorer, StateVariables stateVariables) {
         assert explorer != null;
         assert stateVariables != null;
         this.explorer = explorer;
@@ -71,7 +75,11 @@ public final class NodeJANI implements ExplorerNode {
             assert variables.get(varNr) != null : varNr;
             Type varType = stateVariables.get(variables.get(varNr)).getType();
             values[varNr] = varType.newValue();
-            set[varNr] = ContextValue.get().getEvaluator(OperatorSet.SET, varType, varType);
+            if (evaluatorCache != null) {
+                set[varNr] = evaluatorCache.getEvaluator(OperatorSet.SET, varType, varType);
+            } else {
+                set[varNr] = ContextValue.get().getEvaluator(OperatorSet.SET, varType, varType);                
+            }
             boolean storeVariable = stateVariables.get(varNr).isPermanent();
             storeVariables[varNr] = storeVariable;
             if (storeVariable) {
@@ -102,6 +110,15 @@ public final class NodeJANI implements ExplorerNode {
         return clone;
     }
 
+    public NodeJANI clone(EvaluatorCache cache) {
+        assert cache != null;
+        NodeJANI clone = new NodeJANI(cache, explorer, stateVariables);
+        for (int varNr = 0; varNr < values.length; varNr++) {
+            set[varNr].apply(clone.values[varNr], values[varNr]);
+        }
+        return clone;
+    }
+    
     @Override
     public void read(BitStream reader) {
         assert reader != null;

@@ -28,8 +28,50 @@ import epmc.value.Value;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorMod;
 
-public enum OperatorEvaluatorModInt implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorModInt implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorMod.MOD) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeInteger.is(type)) {
+                    return null;
+                }
+            }
+            return new OperatorEvaluatorModInt(this);
+        }
+    }
+
+    private OperatorEvaluatorModInt(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

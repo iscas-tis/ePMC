@@ -33,8 +33,55 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorEq;
 
-public enum OperatorEvaluatorEqInterval implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorEqInterval implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorEq.EQ) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeInterval.is(type)
+                        && !TypeReal.is(type)
+                        && !TypeInteger.is(type)) {
+                    return null;
+                }
+            }
+            if (!TypeInterval.is(types[0]) && !TypeInterval.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorEqInterval(this);
+        }
+    }
+
+    private OperatorEvaluatorEqInterval(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

@@ -30,8 +30,50 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
 import epmc.value.operator.OperatorFloor;
 
-public enum OperatorEvaluatorFloor implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorFloor implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorFloor.FLOOR) {
+                return null;
+            }
+            if (types.length != 1) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeAlgebra.is(type)) {
+                    return null;
+                }
+            }
+            return new OperatorEvaluatorFloor(this);
+        }
+    }
+
+    private OperatorEvaluatorFloor(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

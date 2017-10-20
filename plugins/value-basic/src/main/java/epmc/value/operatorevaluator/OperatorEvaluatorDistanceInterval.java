@@ -34,8 +34,56 @@ import epmc.value.operator.OperatorDistance;
 import epmc.value.operator.OperatorMax;
 import epmc.value.operator.OperatorSubtract;
 
-public enum OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorDistance.DISTANCE) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            if (!TypeInterval.is(types[0])
+                    && !TypeInterval.is(types[1])) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeReal.is(type)
+                        && !TypeInteger.is(type)
+                        && !TypeInterval.is(type)) {
+                    return null;
+                }
+            }
+            return new OperatorEvaluatorDistanceInterval(this);
+        }
+    }
+
+    private OperatorEvaluatorDistanceInterval(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

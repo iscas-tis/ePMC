@@ -11,8 +11,48 @@ import epmc.value.ValueInterval;
 import epmc.value.ValueReal;
 import epmc.value.operator.OperatorSet;
 
-public enum OperatorEvaluatorSetIntervalReal implements OperatorEvaluator {
-    IDENTIFIER,;
+public final class OperatorEvaluatorSetIntervalReal implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
+
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorSet.SET) {
+                return null;
+            }
+            if (!TypeReal.is(types[0])) {
+                return null;
+            }
+            if (!TypeInterval.is(types[1])) {
+                return null;
+            }
+            return new OperatorEvaluatorSetIntervalReal(this);
+        }
+    }
+
+    private OperatorEvaluatorSetIntervalReal(Builder builder) {
+    }
 
     @Override
     public Operator getOperator() {

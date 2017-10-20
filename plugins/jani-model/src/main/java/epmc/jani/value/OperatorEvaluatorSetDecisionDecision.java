@@ -54,6 +54,8 @@ public final class OperatorEvaluatorSetDecisionDecision implements OperatorEvalu
         }
     }
 
+    private final OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeInteger.get(), TypeInteger.get());
+
     private OperatorEvaluatorSetDecisionDecision(Builder builder) {
     }
 
@@ -88,7 +90,6 @@ public final class OperatorEvaluatorSetDecisionDecision implements OperatorEvalu
         Value[] resultValues = ValueDecision.as(result).getValues();
         Value[] operandValues = ValueDecision.as(operands[0]).getValues();
         assert resultValues.length == operandValues.length;
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeInteger.get(), TypeInteger.get());
         for (int valueNr = 0; valueNr < resultValues.length; valueNr++) {
             set.apply(resultValues[valueNr], operandValues[valueNr]);
         }
