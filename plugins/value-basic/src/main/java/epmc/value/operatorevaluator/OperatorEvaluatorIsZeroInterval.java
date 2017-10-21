@@ -77,28 +77,6 @@ public final class OperatorEvaluatorIsZeroInterval implements OperatorEvaluator 
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorIsZero.IS_ZERO;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeInterval.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

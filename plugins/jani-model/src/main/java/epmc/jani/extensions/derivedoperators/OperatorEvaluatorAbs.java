@@ -80,26 +80,6 @@ public final class OperatorEvaluatorAbs implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorAbs.ABS;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        if (!TypeNumber.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         assert types.length >= 1;

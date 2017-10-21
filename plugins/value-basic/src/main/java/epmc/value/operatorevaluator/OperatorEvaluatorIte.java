@@ -81,26 +81,6 @@ public final class OperatorEvaluatorIte implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorIte.ITE;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 3) {
-            return false;
-        }
-        if (!TypeBoolean.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

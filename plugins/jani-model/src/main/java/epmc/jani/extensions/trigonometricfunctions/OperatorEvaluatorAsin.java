@@ -80,27 +80,6 @@ public final class OperatorEvaluatorAsin implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorAsin.ASIN;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         return TypeReal.get();

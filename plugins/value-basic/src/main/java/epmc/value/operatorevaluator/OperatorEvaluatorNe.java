@@ -74,23 +74,6 @@ public final class OperatorEvaluatorNe implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorNe.NE;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

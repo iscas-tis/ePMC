@@ -77,29 +77,6 @@ public final class OperatorEvaluatorDistanceDouble implements OperatorEvaluator 
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorDistance.DISTANCE;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeDouble.is(type)
-                    && !TypeInteger.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

@@ -25,26 +25,46 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeReal;
 import epmc.value.Value;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
-public enum OperatorEvaluatorEuler implements OperatorEvaluator {
-    INSTANCE;
+public final class OperatorEvaluatorEuler implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-    @Override
-    public Operator getOperator() {
-        return OperatorEuler.EULER;
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (types.length != 0) {
+                return null;
+            }
+            if (operator != OperatorEuler.EULER) {
+                return null;
+            }
+            return new OperatorEvaluatorEuler(this);
+        }
     }
 
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 0) {
-            return false;
-        }
-        // TODO Auto-generated method stub
-        return true;
+    private OperatorEvaluatorEuler(Builder builder) {
     }
 
     @Override

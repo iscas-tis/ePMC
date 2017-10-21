@@ -78,27 +78,7 @@ public final class OperatorEvaluatorExpDouble implements OperatorEvaluator {
 
     private OperatorEvaluatorExpDouble(Builder builder) {
     }
-
-    @Override
-    public Operator getOperator() {
-        return OperatorExp.EXP;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
+    
     @Override
     public TypeReal resultType(Type... types) {
         assert types != null;

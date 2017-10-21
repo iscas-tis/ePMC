@@ -52,24 +52,7 @@ public final class OperatorEvaluatorSetIntervalInterval implements OperatorEvalu
 
     private OperatorEvaluatorSetIntervalInterval(Builder builder) {
     }
-
-    @Override
-    public Operator getOperator() {
-        return OperatorSet.SET;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        if (!TypeInterval.is(types[0])) {
-            return false;
-        }
-        if (!TypeInterval.is(types[1])) {
-            return false;
-        }
-        return true;
-    }
-
+    
     @Override
     public Type resultType(Type... types) {
         return types[1];

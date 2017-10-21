@@ -4,12 +4,10 @@ import epmc.value.operator.OperatorNot;
 
 public final class OperatorEvaluatorNot implements OperatorEvaluator {
 
-    @Override
     public Operator getOperator() {
         return OperatorNot.NOT;
     }
 
-    @Override
     public boolean canApply(Type... types) {
         assert types != null;
         for (Type type : types) {

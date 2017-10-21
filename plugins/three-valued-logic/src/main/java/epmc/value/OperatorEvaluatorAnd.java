@@ -4,12 +4,10 @@ import epmc.value.operator.OperatorAnd;
 
 public final class OperatorEvaluatorAnd implements OperatorEvaluator {
 
-    @Override
     public Operator getOperator() {
         return OperatorAnd.AND;
     }
 
-    @Override
     public boolean canApply(Type... types) {
         assert types != null;
         for (Type type : types) {

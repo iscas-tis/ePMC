@@ -80,26 +80,6 @@ public final class OperatorEvaluatorSin implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorSin.SIN;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) {
         assert result != null;
         assert operands != null;

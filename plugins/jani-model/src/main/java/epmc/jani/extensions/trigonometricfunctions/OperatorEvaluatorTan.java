@@ -75,26 +75,6 @@ public final class OperatorEvaluatorTan implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorTan.TAN;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        if (!TypeDouble.is(types[0]) && !TypeInteger.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public void apply(Value result, Value... operands) {
         assert result != null;
         assert operands != null;

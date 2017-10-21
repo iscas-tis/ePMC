@@ -76,28 +76,6 @@ public final class OperatorEvaluatorEqEnum implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorEq.EQ;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeEnum.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

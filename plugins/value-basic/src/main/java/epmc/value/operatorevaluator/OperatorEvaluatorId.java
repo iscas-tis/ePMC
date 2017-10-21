@@ -71,23 +71,6 @@ public final class OperatorEvaluatorId implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorId.ID;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length < 1) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

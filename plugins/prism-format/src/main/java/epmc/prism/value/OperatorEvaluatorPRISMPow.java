@@ -79,29 +79,6 @@ public final class OperatorEvaluatorPRISMPow implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorPRISMPow.PRISM_POW;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        if (!TypeInteger.is(types[0]) && !TypeDouble.is(types[0])) {
-            return false;
-        }
-        if (!TypeInteger.is(types[1]) && !TypeDouble.is(types[1])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         assert types.length == 2 : types.length;
