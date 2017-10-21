@@ -75,28 +75,6 @@ public final class OperatorEvaluatorMaxInt implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorMax.MAX;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeInteger.is(type)) {
-                return false;
-            }            
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

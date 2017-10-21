@@ -9,12 +9,10 @@ import epmc.value.operator.OperatorSet;
 public enum OperatorEvaluatorSetTernaryTernary implements OperatorEvaluator {
     IDENTIFIER,;
 
-    @Override
     public Operator getOperator() {
         return OperatorSet.SET;
     }
 
-    @Override
     public boolean canApply(Type... types) {
         assert types != null;
         assert types.length == 2;

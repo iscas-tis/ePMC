@@ -59,29 +59,6 @@ public final class OperatorEvaluatorSetArrayArray implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorSet.SET;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        if (!TypeArray.is(types[0])) {
-            return false;
-        }
-        if (!TypeArray.is(types[1])) {
-            return false;
-        }
-        Type fromEntryType = TypeArray.as(types[0]).getEntryType();
-        Type toEntryType = TypeArray.as(types[1]).getEntryType();
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, fromEntryType, toEntryType);
-        if (set == null) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         return types[1];
     }

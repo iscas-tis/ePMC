@@ -47,7 +47,6 @@ import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueInterval;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorDivide;

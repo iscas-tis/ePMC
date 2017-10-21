@@ -52,23 +52,6 @@ public final class OperatorEvaluatorSetIntInt implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorSet.SET;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        if (!TypeInteger.is(types[0])) {
-            return false;
-        }
-        if (!TypeInteger.is(types[1])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         return TypeInteger.get();
     }

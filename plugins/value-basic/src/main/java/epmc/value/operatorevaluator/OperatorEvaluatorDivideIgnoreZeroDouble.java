@@ -76,28 +76,6 @@ public final class OperatorEvaluatorDivideIgnoreZeroDouble implements OperatorEv
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeAlgebra.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

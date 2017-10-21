@@ -86,34 +86,6 @@ public final class OperatorEvaluatorDistanceInterval implements OperatorEvaluato
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorDistance.DISTANCE;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        if (!TypeInterval.is(types[0])
-                && !TypeInterval.is(types[1])) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeReal.is(type)
-                    && !TypeInteger.is(type)
-                    && !TypeInterval.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

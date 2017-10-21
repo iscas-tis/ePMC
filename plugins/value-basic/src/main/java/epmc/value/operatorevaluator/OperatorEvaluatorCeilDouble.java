@@ -77,28 +77,6 @@ public final class OperatorEvaluatorCeilDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorCeil.CEIL;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeAlgebra.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

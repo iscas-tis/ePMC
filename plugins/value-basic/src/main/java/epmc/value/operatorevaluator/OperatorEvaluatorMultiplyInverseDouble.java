@@ -74,28 +74,6 @@ public final class OperatorEvaluatorMultiplyInverseDouble implements OperatorEva
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorMultiplyInverse.MULTIPLY_INVERSE;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 1) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeDouble.is(type)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

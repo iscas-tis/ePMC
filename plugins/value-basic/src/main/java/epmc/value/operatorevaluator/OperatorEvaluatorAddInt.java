@@ -73,26 +73,6 @@ public final class OperatorEvaluatorAddInt implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorAdd.ADD;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        if (!TypeInteger.is(types[0]) || !TypeInteger.is(types[1])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

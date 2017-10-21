@@ -4,12 +4,10 @@ import epmc.value.operator.OperatorIff;
 
 public final class OperatorEvaluatorIff implements OperatorEvaluator {
 
-    @Override
     public Operator getOperator() {
         return OperatorIff.IFF;
     }
 
-    @Override
     public boolean canApply(Type... types) {
         assert types != null;
         for (Type type : types) {

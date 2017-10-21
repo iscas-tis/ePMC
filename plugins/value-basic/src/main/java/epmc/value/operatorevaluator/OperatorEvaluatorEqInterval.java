@@ -84,33 +84,6 @@ public final class OperatorEvaluatorEqInterval implements OperatorEvaluator {
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorEq.EQ;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (types.length != 2) {
-            return false;
-        }
-        for (Type type : types) {
-            if (!TypeInterval.is(type)
-                    && !TypeReal.is(type)
-                    && !TypeInteger.is(type)) {
-                return false;
-            }
-        }
-        if (!TypeInterval.is(types[0]) && !TypeInterval.is(types[0])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         assert types != null;
         for (Type type : types) {

@@ -4,12 +4,10 @@ import epmc.value.operator.OperatorOr;
 
 public final class OperatorEvaluatorOr implements OperatorEvaluator {
 
-    @Override
     public Operator getOperator() {
         return OperatorOr.OR;
     }
 
-    @Override
     public boolean canApply(Type... types) {
         assert types != null;
         for (Type type : types) {

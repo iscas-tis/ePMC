@@ -46,7 +46,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.options.Options;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -280,16 +279,6 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 }
                 
                 @Override
-                public Operator getOperator() {
-                    return null;
-                }
-                
-                @Override
-                public boolean canApply(Type... types) {
-                    return true;
-                }
-                
-                @Override
                 public void apply(Value result, Value... operands) {
                     add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
                             ? TypeAlgebra.as(resultValue.getType()).getOne()
@@ -313,16 +302,6 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 }
                 
                 @Override
-                public Operator getOperator() {
-                    return null;
-                }
-                
-                @Override
-                public boolean canApply(Type... types) {
-                    return true;
-                }
-                
-                @Override
                 public void apply(Value result, Value... operands) {
                 }
             };
@@ -338,16 +317,6 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 @Override
                 public Type resultType(Type... types) {
                     return resultValue.getType();
-                }
-                
-                @Override
-                public Operator getOperator() {
-                    return null;
-                }
-                
-                @Override
-                public boolean canApply(Type... types) {
-                    return true;
                 }
                 
                 @Override

@@ -55,24 +55,6 @@ public final class OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator
     }
 
     @Override
-    public Operator getOperator() {
-        return OperatorSet.SET;
-    }
-
-    @Override
-    public boolean canApply(Type... types) {
-        assert types != null;
-        assert types.length == 2;
-        if (!TypeDouble.is(types[0])) {
-            return false;
-        }
-        if (!TypeDouble.is(types[1])) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public Type resultType(Type... types) {
         return types[1];
     }
