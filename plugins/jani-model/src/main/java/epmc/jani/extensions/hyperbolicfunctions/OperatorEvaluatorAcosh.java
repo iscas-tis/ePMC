@@ -78,8 +78,7 @@ public final class OperatorEvaluatorAcosh implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
+    public Type resultType() {
         return TypeDouble.get();
     }
 

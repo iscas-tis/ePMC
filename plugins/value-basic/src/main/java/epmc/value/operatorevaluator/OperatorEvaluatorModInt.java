@@ -74,18 +74,8 @@ public final class OperatorEvaluatorModInt implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        Type result;
-        if (!TypeInteger.is(types[0]) || !TypeInteger.is(types[1])) {
-            return null;
-        } else {
-            result = TypeInteger.get();
-        }
-        return result;
+    public Type resultType() {
+        return TypeInteger.get();
     }
 
     @Override

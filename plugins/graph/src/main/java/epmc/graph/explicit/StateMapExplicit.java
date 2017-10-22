@@ -190,7 +190,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         assert evaluator != null;
         StateMapExplicit operandExplicit = (StateMapExplicit) operand;
         StateMap result = null;
-        Type resultType = evaluator.resultType(getType(), operand.getType());
+        Type resultType = evaluator.resultType();
         TypeArray resultTypeArray = resultType.getTypeArray();
         assert states.equals(operand.getStateSet());
         ValueArray resultValues = UtilValue.newArray(resultTypeArray, states.size());

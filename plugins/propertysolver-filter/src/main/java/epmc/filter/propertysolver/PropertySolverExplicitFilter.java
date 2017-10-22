@@ -274,7 +274,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
                 
                 @Override
-                public Type resultType(Type... types) {
+                public Type resultType() {
                     return resultValue.getType();
                 }
                 
@@ -297,7 +297,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             return new OperatorEvaluator() {
                 
                 @Override
-                public Type resultType(Type... types) {
+                public Type resultType() {
                     return resultValue.getType();
                 }
                 
@@ -315,7 +315,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 private final OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
                 
                 @Override
-                public Type resultType(Type... types) {
+                public Type resultType() {
                     return resultValue.getType();
                 }
                 

@@ -77,12 +77,7 @@ public final class OperatorEvaluatorPowDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        assert types.length == 2 : types.length;
+    public Type resultType() {
         return TypeReal.get();
     }
 

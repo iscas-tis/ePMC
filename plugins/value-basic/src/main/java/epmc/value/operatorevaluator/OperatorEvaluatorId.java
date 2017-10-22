@@ -66,17 +66,15 @@ public final class OperatorEvaluatorId implements OperatorEvaluator {
     }
 
     private final EvaluatorCache evaluatorCache = new EvaluatorCache();
+    private final Type resultType;
     
     private OperatorEvaluatorId(Builder builder) {
+        resultType = builder.types[0];
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        return types[0];
+    public Type resultType() {
+        return resultType;
     }
 
     @Override

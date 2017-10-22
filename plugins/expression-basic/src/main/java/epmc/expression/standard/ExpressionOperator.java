@@ -171,7 +171,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
             }
             throw e;
         }
-        result = evaluator.resultType(opTypes);
+        result = evaluator.resultType();
         assert result != null : this + " ... " + this.getOperator() + "  " + this.getClass() + " " + Arrays.toString(opTypes);
         return result;
     }

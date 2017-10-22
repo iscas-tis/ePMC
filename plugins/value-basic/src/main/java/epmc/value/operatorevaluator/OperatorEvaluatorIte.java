@@ -73,28 +73,17 @@ public final class OperatorEvaluatorIte implements OperatorEvaluator {
 
     private final OperatorEvaluator setIf;
     private final OperatorEvaluator setElse;
+    private final Type resultType;
 
     private OperatorEvaluatorIte(Builder builder) {
-        Type resultType = UtilValue.upper(builder.types[1], builder.types[2]);
+        resultType = UtilValue.upper(builder.types[1], builder.types[2]);
         setIf = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[1], resultType);
         setElse = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[2], resultType);
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        if (!TypeBoolean.is(types[0])) {
-            return null;
-        }
-        Type itUpper = UtilValue.upper(types[1], types[2]);
-        if (itUpper == null) {
-            return null;
-        }
-        Type result = itUpper;
-        return result;
+    public Type resultType() {
+        return resultType;
     }
 
     @Override

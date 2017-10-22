@@ -184,7 +184,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             binaryIntegerToBoolean = null;
         }
         this.evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(types).newValue();
+        result = evaluator.resultType().newValue();
     }
 
     @Override

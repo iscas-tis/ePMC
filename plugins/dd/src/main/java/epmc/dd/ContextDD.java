@@ -339,7 +339,7 @@ public final class ContextDD implements Closeable {
         }
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         if (ops.length == 0) {
-            Type resultType = evaluator.resultType(types);
+            Type resultType = evaluator.resultType();
             Value resultValue = resultType.newValue();
             evaluator.apply(resultValue, new Value[0]);
             result = lowLevel.newConstant(resultValue);
@@ -396,7 +396,7 @@ public final class ContextDD implements Closeable {
             types[index] = ops[index].getType();
         }
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
-        Type type = evaluator.resultType(types);
+        Type type = evaluator.resultType();
         return type;
     }
 
@@ -447,7 +447,7 @@ public final class ContextDD implements Closeable {
         }
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         assert evaluator != null : identifier + " " + Arrays.toString(types);
-        Type resultType = evaluator.resultType(types);
+        Type resultType = evaluator.resultType();
         assert resultType != null : identifier + SPACE + Arrays.toString(types);
         return true;
     }
@@ -1667,7 +1667,7 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         Type ddType = dd.getType();
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, ddType, ddType);
-        Type type = evaluator.resultType(ddType, ddType);
+        Type type = evaluator.resultType();
         Map<LongTriple,Value> known = new THashMap<>();
         Value value = applyOverSat(identifier, dd.walker(), support.walker(), known, type, sat.walker());
         totalTime.stop();
