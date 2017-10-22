@@ -31,11 +31,7 @@ public final class OperatorEvaluatorImplies implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        for (Type type : types) {
-            assert type != null;
-        }
-        assert types.length == 2;
+    public Type resultType() {
         return TypeTernary.get();
     }
 

@@ -76,11 +76,7 @@ public final class OperatorEvaluatorLeInt implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
+    public Type resultType() {
         return TypeBoolean.get();
     }
 

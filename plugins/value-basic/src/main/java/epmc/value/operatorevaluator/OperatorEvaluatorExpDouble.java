@@ -80,10 +80,7 @@ public final class OperatorEvaluatorExpDouble implements OperatorEvaluator {
     }
     
     @Override
-    public TypeReal resultType(Type... types) {
-        assert types != null;
-        assert types.length >= 1;
-        assert types[0] != null;
+    public TypeReal resultType() {
         return TypeDouble.get();
     }
 

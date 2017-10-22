@@ -152,8 +152,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
 
         assert evaluator != null : operator + " " + Arrays.toString(types) + " " + operands[0];
-        assert evaluator.resultType(types) != null : operator;
-        result = evaluator.resultType(types).newValue();
+        assert evaluator.resultType() != null : operator;
+        result = evaluator.resultType().newValue();
     }
 
     @Override

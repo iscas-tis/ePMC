@@ -77,17 +77,8 @@ public final class OperatorEvaluatorCeilDouble implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        for (Type type : types) {
-            assert type != null;
-        }
-        Type result;
-        if (!(TypeReal.is(types[0]) || TypeInteger.is(types[0]))) {
-            return null;
-        }
-        result = TypeInteger.get();
-        return result;
+    public Type resultType() {
+        return TypeInteger.get();
     }
 
     @Override

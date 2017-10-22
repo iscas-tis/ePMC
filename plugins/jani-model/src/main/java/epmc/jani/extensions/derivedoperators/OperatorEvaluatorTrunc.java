@@ -74,10 +74,7 @@ public final class OperatorEvaluatorTrunc implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length >= 1;
-        assert types[0] != null;
+    public Type resultType() {
         return TypeInteger.get();
     }
 

@@ -75,8 +75,7 @@ public final class OperatorEvaluatorSinh implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
+    public Type resultType() {
         return TypeReal.get();
     }
 

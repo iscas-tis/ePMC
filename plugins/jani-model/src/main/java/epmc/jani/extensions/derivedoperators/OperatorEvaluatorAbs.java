@@ -76,15 +76,15 @@ public final class OperatorEvaluatorAbs implements OperatorEvaluator {
         }
     }
 
+    private final Type resultType;
+
     private OperatorEvaluatorAbs(Builder builder) {
+        this.resultType = builder.types[0];
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length >= 1;
-        assert types[0] != null;
-        return types[0];
+    public Type resultType() {
+        return resultType;
     }
 
     @Override

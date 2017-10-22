@@ -75,22 +75,24 @@ public final class OperatorEvaluatorPRISMPow implements OperatorEvaluator {
         }
     }
 
-    private OperatorEvaluatorPRISMPow(Builder builder) {
-    }
+    private final Type resultType;
 
-    @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length == 2 : types.length;
+    private OperatorEvaluatorPRISMPow(Builder builder) {
         boolean allInteger = true;
-        for (Type type : types) {
+        for (Type type : builder.types) {
             allInteger &= TypeInteger.is(type);
         }
         if (allInteger) {
-            return TypeInteger.get();
+            resultType = TypeInteger.get();
         } else {
-            return TypeReal.get();
+            resultType = TypeReal.get();
         }
+
+    }
+
+    @Override
+    public Type resultType() {
+        return resultType;
     }
 
     @Override

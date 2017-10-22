@@ -73,7 +73,7 @@ public final class NodePropertyApply implements NodeProperty {
             types[operandNr] = operands[operandNr].getType();
         }
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
-        Type type = evaluator.resultType(types);
+        Type type = evaluator.resultType();
         this.evaluator = evaluator;
         this.value = type.newValue();
     }

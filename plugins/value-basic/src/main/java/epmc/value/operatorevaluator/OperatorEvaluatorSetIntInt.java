@@ -52,7 +52,7 @@ public final class OperatorEvaluatorSetIntInt implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
+    public Type resultType() {
         return TypeInteger.get();
     }
 

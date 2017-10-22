@@ -77,9 +77,7 @@ public final class OperatorEvaluatorEuler implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        assert types != null;
-        assert types.length == 0;
+    public Type resultType() {
         return TypeReal.get();
     }
 }

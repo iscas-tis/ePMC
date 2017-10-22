@@ -55,13 +55,15 @@ public final class OperatorEvaluatorSetDecisionDecision implements OperatorEvalu
     }
 
     private final OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeInteger.get(), TypeInteger.get());
+    private final Type resultType;
 
     private OperatorEvaluatorSetDecisionDecision(Builder builder) {
+        resultType = builder.types[1];
     }
 
     @Override
-    public Type resultType(Type... types) {
-        return types[1];
+    public Type resultType() {
+        return resultType;
     }
 
     @Override

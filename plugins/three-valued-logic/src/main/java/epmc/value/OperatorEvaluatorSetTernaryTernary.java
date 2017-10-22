@@ -26,8 +26,9 @@ public enum OperatorEvaluatorSetTernaryTernary implements OperatorEvaluator {
     }
 
     @Override
-    public Type resultType(Type... types) {
-        return types[1];
+    public Type resultType() {
+        return null; // TODO
+//        return types[1];
     }
 
     @Override

@@ -51,12 +51,15 @@ public final class OperatorEvaluatorSetLocationLocation implements OperatorEvalu
         }
     }
 
+    private final Type resultType;
+
     private OperatorEvaluatorSetLocationLocation(Builder builder) {
+        resultType = builder.types[1];
     }
 
     @Override
-    public Type resultType(Type... types) {
-        return types[1];
+    public Type resultType() {
+        return resultType;
     }
 
     @Override
