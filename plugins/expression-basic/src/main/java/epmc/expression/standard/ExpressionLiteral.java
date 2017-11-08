@@ -200,8 +200,9 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         if (value != null && !this.value.equals(other.value)) {
             return false;
         }
+        // TODO HACK
         if (valueProvider != null &&
-                !this.valueProvider.equals(other.valueProvider)) {
+                !this.valueProvider.toString().equals(other.valueProvider.toString())) {
             return false;
         }
         return true;

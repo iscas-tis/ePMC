@@ -79,6 +79,7 @@ public interface Expression {
     Positional getPositional();
 
     // TODO adapt documentation
+    // TODO get rid of this method
     /**
      * Get (or compute) type of the expression.
      * 
