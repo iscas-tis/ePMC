@@ -121,7 +121,7 @@ public class CommandTaskLump implements CommandTask {
         edgeProperties.add(CommonProperties.WEIGHT);
 
 
-        GraphExplicit modelGraph = (GraphExplicit) model.newLowLevel(EngineExplorer.ENGINE_EXPLORER, graphProperties, nodeProperties, edgeProperties);
+        GraphExplicit modelGraph = (GraphExplicit) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
         time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         log.send(MessagesCommandLump.EXPLORING_DONE, time);
 
@@ -211,7 +211,7 @@ public class CommandTaskLump implements CommandTask {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
 
-        GraphDD modelGraph = (GraphDD) model.newLowLevel(EngineDD.ENGINE_DD, graphProperties, nodeProperties, edgeProperties);
+        GraphDD modelGraph = (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
         //        GraphBuilderDD build = new GraphBuilderDD(modelGraph, new ArrayList<>());
         //        GraphExplicit graph = build.buildGraph();
         //        build.close();
