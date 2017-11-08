@@ -81,7 +81,7 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(property, graph, identifiers.toArray(new Expression[0]));
         Value[] values = new Value[identifiers.size()];
 
-        Type type = property.getType(graph);
+        Type type = evaluator.getType();
         assert type != null : property;
         ValueArray resultValues = UtilValue.newArray(type.getTypeArray(), forStates.size());
         StateSetExplicit forStatesExplicit = (StateSetExplicit) forStates;

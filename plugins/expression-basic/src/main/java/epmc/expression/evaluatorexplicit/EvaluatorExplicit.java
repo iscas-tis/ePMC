@@ -25,6 +25,7 @@ import java.util.Map;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public interface EvaluatorExplicit {
@@ -62,4 +63,9 @@ public interface EvaluatorExplicit {
     Value evaluate(Value... values);
 
     Value getResultValue();
+    
+    // TODO make non-default
+    default Type getType() {
+        return getResultValue().getType();
+    }
 }
