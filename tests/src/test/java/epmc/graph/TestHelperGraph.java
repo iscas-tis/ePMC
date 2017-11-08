@@ -56,7 +56,7 @@ public final class TestHelperGraph {
             nodeProperties.add(CommonProperties.STATE);
             Set<Object> edgeProperties = new THashSet<>();
             edgeProperties.add(CommonProperties.WEIGHT);
-            return (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
+            return (GraphDD) model.newLowLevel(EngineDD.ENGINE_DD, graphProperties, nodeProperties, edgeProperties);
         } catch (Exception e) {
             throw new Error(e);
         }
@@ -155,7 +155,7 @@ public final class TestHelperGraph {
             Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
             Set<Object> nodeProperties = prepareNodeProperties(model);
             Set<Object> edgeProperties = prepareEdgeProperties(model);
-            GraphDD modelGraphDD = (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
+            GraphDD modelGraphDD = (GraphDD) model.newLowLevel(EngineDD.ENGINE_DD, graphProperties, nodeProperties, edgeProperties);
             DD space = modelGraphDD.getNodeSpace();
             BigInteger numNodes = space.countSat(modelGraphDD.getPresCube());
             DD states = modelGraphDD.getNodeProperty(CommonProperties.STATE);
@@ -198,7 +198,7 @@ public final class TestHelperGraph {
         graphProperties.add(CommonProperties.SEMANTICS);
         Set<Object> edgeProperties = new LinkedHashSet<>();
         edgeProperties.add(CommonProperties.WEIGHT);
-        GraphExplicit graph = (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(),
+        GraphExplicit graph = (GraphExplicit) model.newLowLevel(EngineExplicit.ENGINE_EXPLICIT,
                 graphProperties, nodeProperties, edgeProperties);
         return graph;
     }
@@ -217,7 +217,7 @@ public final class TestHelperGraph {
             Set<Object> graphProperties,
             Set<Object> nodeProperties,
             Set<Object> edgeProperties) {
-        GraphExplicit result = (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(),
+        GraphExplicit result = (GraphExplicit) model.newLowLevel(EngineExplicit.ENGINE_EXPLICIT,
                 graphProperties, nodeProperties, edgeProperties);
         return result;
     }

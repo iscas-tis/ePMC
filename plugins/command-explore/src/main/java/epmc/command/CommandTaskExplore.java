@@ -130,7 +130,7 @@ public class CommandTaskExplore implements CommandTask {
             Set<Object> nodeProperties,
             Set<Object> edgeProperties) {
         Model model = modelChecker.getModel();
-        return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
+        return (GraphExplicit) model.newLowLevel(EngineExplicit.ENGINE_EXPLICIT, graphProperties, nodeProperties, edgeProperties);
     }
 
     private Set<Object> prepareNodeProperties(Model model)

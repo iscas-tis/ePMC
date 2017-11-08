@@ -530,7 +530,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         if (engine instanceof EngineExplorer) {
             return new ExplorerJANI(this, graphProperties, nodeProperties, edgeProperties);
         } else if (engine instanceof EngineExplicit) {
-            Explorer explorer = (Explorer) newLowLevel(EngineExplorer.getInstance(),
+            Explorer explorer = (Explorer) newLowLevel(EngineExplorer.ENGINE_EXPLORER,
                     graphProperties, nodeProperties, edgeProperties);
             GraphBuilderExplorer builder = new GraphBuilderExplorer();
             builder.setExplorer(explorer);
