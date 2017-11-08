@@ -187,4 +187,25 @@ public class LTLSolverExplicitTest {
         assertEquals("0.9510333", result, 1E-7);
     }
 
+    /**
+     * Test for an issue in DTMC cluster model reported by Salomon Sickert
+     * via Andrea Turrini about a probability being reported as infinity.
+     */
+    @Test
+    public void clusterDTMC3Salomon() {
+        Options options = prepareOptions();
+        Value result;
+        double tolerance = 1E-6;
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        Map<String,Object> constants = new HashMap<>();
+        options.set(OptionsModelChecker.CONST, constants);
+        options.set(TestHelper.PRISM_FLATTEN, true);
+        result = computeResult(options, ModelNamesOwn.CLUSTER_DTMC_3_SALOMON, "P=? [(left_n=N) U ((left_n=N-1) U (left_n=N-2)) ]");
+        assertEquals("0.9621298", result, tolerance);
+        
+        options.set(TestHelper.PRISM_FLATTEN, false);
+        result = computeResult(options, ModelNamesOwn.CLUSTER_DTMC_3_SALOMON, "P=? [(left_n=N) U ((left_n=N-1) U (left_n=N-2)) ]");
+        assertEquals("0.9621298", result, tolerance);
+        close(options);
+    }
 }
