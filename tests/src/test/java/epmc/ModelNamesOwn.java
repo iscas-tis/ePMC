@@ -48,7 +48,7 @@ public final class ModelNamesOwn {
     public static final String INCONSISTENT_OPERATOR_INIT = PREFIX + "inconsistent-operator-init.prism";
     public static final String WRONG_ASSIGNMENT_INIT = PREFIX + "wrong-assignment-init.prism";
     public static final String CLUSTER_DTMC_3_SALOMON = PREFIX + "clusterDTMC3Salomon.prism";
-    
+    public static final String PETERSON = PREFIX + "petersonWP-nostorage-rid.prism";
     
     /**
      * Private constructor to prevent instantiation of this class.
