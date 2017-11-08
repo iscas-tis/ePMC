@@ -125,19 +125,18 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
         // use propertysolver propositional to check the innners
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         Set<Expression> inners = UtilReachability.collectReachabilityInner(property);
-        for (Expression inner : inners) {
+        Expression[] expressions = inners.toArray(new Expression[0]);
+        Value[] evalValues = new Value[expressions.length];
+        for (int varNr = 0; varNr < expressions.length; varNr++) {
+            Expression inner = expressions[varNr];
             StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
             UtilGraph.registerResult(graph, inner, innerResult);
+            evalValues[varNr] = innerResult.getType().newValue();
         }
         allStates.close();
 
         BitSet oneStates = UtilBitSet.newBitSetUnbounded();        
         // collect all states which satisfied the propositional formula property
-        Expression[] expressions = inners.toArray(new Expression[0]);
-        Value[] evalValues = new Value[expressions.length];
-        for (int varNr = 0; varNr < expressions.length; varNr++) {
-            evalValues[varNr] = expressions[varNr].getType(modelChecker.getLowLevel()).newValue();
-        }
 
         ExpressionTemporal propertyTemporal = (ExpressionTemporal)property;
         // evaluator for propositional formula a out of F a
