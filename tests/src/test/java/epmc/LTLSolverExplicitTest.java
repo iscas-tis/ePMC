@@ -41,6 +41,7 @@ import epmc.options.Options;
 import epmc.value.Value;
 
 public class LTLSolverExplicitTest {
+    private final static String LTL_LAZY_INCREMENTAL = "ltl-lazy-incremental";
 
     @BeforeClass
     public static void initialise() {
@@ -206,6 +207,38 @@ public class LTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
         result = computeResult(options, ModelNamesOwn.CLUSTER_DTMC_3_SALOMON, "P=? [(left_n=N) U ((left_n=N-1) U (left_n=N-2)) ]");
         assertEquals("0.9621298", result, tolerance);
+        close(options);
+    }
+    
+    /**
+     * Test for a problem reported by Andrea Turrini 17/03/2017.
+     * In this case, the non-incremental LTL solver returned wrong results.
+     */
+    @Test
+    public void petersonBugAndrea() {
+        Options options = prepareOptions();
+        Value result;
+        double tolerance = 1E-6;
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        Map<String,Object> constants = new HashMap<>();
+        options.set(OptionsModelChecker.CONST, constants);
+
+        options.set(LTL_LAZY_INCREMENTAL, true);
+
+        result = computeResult(options, ModelNamesOwn.PETERSON, "Pmin=?[G(state1 = 1 => (F(state1 = 3)))]");
+        assertEquals("0", result, tolerance);
+        
+        result = computeResult(options, ModelNamesOwn.PETERSON, "Pmax=?[F(state1 = 1 & (G !(state1 = 3)))]");
+        assertEquals("1", result, tolerance);
+
+        options.set(LTL_LAZY_INCREMENTAL, false);
+
+        result = computeResult(options, ModelNamesOwn.PETERSON, "Pmin=?[G(state1 = 1 => (F(state1 = 3)))]");
+        assertEquals("0", result, tolerance);
+        
+        result = computeResult(options, ModelNamesOwn.PETERSON, "Pmax=?[F(state1 = 1 & (G !(state1 = 3)))]");
+        assertEquals("1", result, tolerance);
+
         close(options);
     }
 }
