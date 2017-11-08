@@ -43,4 +43,13 @@ public enum EngineExplorer implements Engine {
     public String getIdentifier() {
         return IDENTIFIER;
     }
+
+    /**
+     * Obtain the singleton object of this engine.
+     * 
+     * @return singleton object of this engine
+     */
+    public static Engine getInstance() {
+        return ENGINE_EXPLORER;
+    }
 }
