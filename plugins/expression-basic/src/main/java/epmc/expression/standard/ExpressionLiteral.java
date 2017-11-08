@@ -219,7 +219,7 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         if (value != null) {
             hash = value.hashCode() + (hash << 6) + (hash << 16) - hash;
         } else if (valueProvider != null) {
-            hash = valueProvider.hashCode() + (hash << 6) + (hash << 16) - hash;        	
+            hash = valueProvider.toString().hashCode() + (hash << 6) + (hash << 16) - hash;        	
         } else {
             throw new RuntimeException();
         }
