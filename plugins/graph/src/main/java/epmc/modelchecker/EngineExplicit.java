@@ -40,13 +40,4 @@ public enum EngineExplicit implements Engine {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-
-    /**
-     * Obtain the singleton object of this engine.
-     * 
-     * @return singleton object of this engine
-     */
-    public static Engine getInstance() {
-        return ENGINE_EXPLICIT;
-    }
 }
