@@ -258,8 +258,7 @@ public final class ModelChecker implements Closeable {
      * @param states set of states to check property for
      * @return result of checking property for states specified
      */
-    public StateMap check(Expression property, StateSet states)
-    {
+    public StateMap check(Expression property, StateSet states) {
         assert property != null;
         assert states != null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
