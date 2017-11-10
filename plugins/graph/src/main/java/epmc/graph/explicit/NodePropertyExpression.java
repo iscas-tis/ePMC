@@ -34,13 +34,11 @@ public final class NodePropertyExpression implements NodeProperty {
     private final NodeProperty[] variableNodeProperties;
     private final EvaluatorExplicit evaluator;
     private final GraphExplicit graph;
-    private final Type type;
     private final Value[] values;
 
     public NodePropertyExpression(GraphExplicit graph, Expression expression) {
         assert expression != null;
         this.graph = graph;
-        type = expression.getType(graph);
         Expression[] variables = computeVariables(graph, expression).toArray(new Expression[0]);
         variableNodeProperties = computeVariableNodeProperties(variables);
         values = new Value[variables.length];
@@ -78,7 +76,7 @@ public final class NodePropertyExpression implements NodeProperty {
 
     @Override
     public Type getType() {
-        return type;
+        return evaluator.getType();
     }
 
     private static Set<Expression> computeVariables(GraphExplicit original, Expression expression) {

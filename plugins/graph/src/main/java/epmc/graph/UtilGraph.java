@@ -120,7 +120,7 @@ public final class UtilGraph {
         assert property != null;
         assert results != null;
         if (!lowLevel.getNodeProperties().contains(property)) {
-            lowLevel.addSettableNodeProperty(property, property.getType(lowLevel));
+            lowLevel.addSettableNodeProperty(property, results.getType());
         }
         NodeProperty nodeProp = lowLevel.getNodeProperty(property);
         Value entry = results.getType().newValue();

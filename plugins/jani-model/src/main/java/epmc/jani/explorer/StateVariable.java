@@ -88,12 +88,6 @@ public final class StateVariable {
             numBits = TypeNumBitsKnown.getNumBits(type);
         }
         if (initialValueExpression != null) {
-            initialValueExpression.getType(new ExpressionToType() { 
-                @Override
-                public Type getType(Expression expression) {
-                    return null;
-                }
-            });
             initialValue = UtilEvaluatorExplicit.evaluate(initialValueExpression, new ExpressionToType() {
                 @Override
                 public Type getType(Expression expression) {
