@@ -72,8 +72,6 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
     @Override
     public StateMap solve() {
         assert forStates != null;
-        Type type = propertyOperator.getType(modelChecker.getLowLevel());
-
         List<StateMapExplicit> innerResults = new ArrayList<>();
         boolean allConstant = true;
         for (Expression innerProperty : propertyOperator.getOperands()) {
@@ -92,16 +90,16 @@ public final class PropertySolverExplicitOperator implements PropertySolver {
         }
         ValueArray resultValues;
 
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(propertyOperator.getOperator(), types);
+        Type type = evaluator.resultType();
         if (allConstant) {
             resultValues = UtilValue.newArray(new TypeArrayConstant(type), forStates.size());
         } else {
             resultValues = UtilValue.newArray(type.getTypeArray(), forStates.size());
         }
-        Value res = propertyOperator.getType(modelChecker.getLowLevel()).newValue();
+        Value res = type.newValue();
         int forStatesSize = forStates.size();
         int innerResultsSize = innerResults.size();
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(property);
-        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(expressionOperator.getOperator(), types);
         for (int node = 0; node < forStatesSize; node++) {
             for (int operandNr = 0; operandNr < innerResultsSize; operandNr++) {
                 innerResults.get(operandNr).getExplicitIthValue(operands[operandNr], node);

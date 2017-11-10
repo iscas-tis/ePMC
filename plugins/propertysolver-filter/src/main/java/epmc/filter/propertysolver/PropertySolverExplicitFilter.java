@@ -26,10 +26,12 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
+import epmc.expression.standard.ProblemsExpression;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.filter.error.ProblemsFilter;
 import epmc.filter.messages.MessagesFilter;
@@ -149,7 +151,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             getLog().send(MessagesFilter.PRINTING_ALL_FILTER_RESULTS);
         }
         int stateNr = 0;
-        Type typeProperty = propertyFilter.getType(modelChecker.getLowLevel());
+        Type typeProperty = getType(propertyFilter.getFilterType(), propertyFilter.getPositional(), prop.getType(), states.getType());
         OperatorEvaluator accumulator = getAccumulator(propertyFilter.getFilterType(), resultValue, propEntry);
         for (int i = 0; i < allStates.size(); i++) {
             int state = allStates.getExplicitIthState(i);
@@ -369,5 +371,60 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
      */
     private Log getLog() {
         return Options.get().get(OptionsMessages.LOG);
+    }
+    
+    private Type getType(FilterType type,
+            Positional positional,
+            Type propType, Type statesType) {
+        Type result = null;
+        if (TypeInteger.isIntegerWithBounds(propType)) {
+            propType = TypeInteger.get();
+        }
+        ensure(statesType == null || TypeBoolean.is(statesType),
+                ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+        switch (type) {
+        case AVG:
+            ensure(propType == null || TypeWeight.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeWeight.get();
+            break;
+        case SUM:
+            ensure(propType == null || TypeWeight.is(propType)
+            || TypeInteger.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeWeight.get();
+            break;
+        case RANGE:
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInterval.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeInterval.get();
+            break;
+        case MAX: case MIN:
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInteger.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeReal.get();
+            break;
+        case COUNT:
+            ensure(propType == null || TypeBoolean.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "");
+            result = TypeInteger.get();
+            break;
+        case FIRST: case STATE: case PRINT: case PRINTALL:
+            result = propType;
+            break;
+        case FORALL: case EXISTS:
+            ensure(propType == null || TypeBoolean.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeBoolean.get();
+            break;
+        case ARGMAX: case ARGMIN:
+            ensure(propType == null || TypeReal.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeBoolean.get();
+            break;
+        }
+        return result;
     }
 }
