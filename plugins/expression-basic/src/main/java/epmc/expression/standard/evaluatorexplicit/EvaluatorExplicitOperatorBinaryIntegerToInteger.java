@@ -105,15 +105,12 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
                     && !opName.equals(OperatorSubtract.SUBTRACT)) {
                 return false;
             }
-            for (Expression child : expressionOperator.getOperands()) {
-                if (child.getType(expressionToType) == null
-                        || !TypeInteger.is(child.getType(expressionToType))) {
-                    return false;
-                }
-            }
             for (Expression operand : expressionOperator.getOperands()) {
                 EvaluatorExplicit op = UtilEvaluatorExplicit.newEvaluator(null, operand, variables, cache, expressionToType);
                 if (!(op instanceof EvaluatorExplicitInteger)) {
+                    return false;
+                }
+                if (!TypeInteger.is(op.getType())) {
                     return false;
                 }
             }

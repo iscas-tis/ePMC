@@ -111,7 +111,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
             }
         }
         this.index = index;
-        result = variables[index].getType(builder.getExpressionToType()).newValue();
+        result = builder.getExpressionToType().getType(variables[index]).newValue();
     }
 
     @Override

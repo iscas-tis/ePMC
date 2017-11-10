@@ -34,7 +34,6 @@ import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorMultiplyInverse;
 
 public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {
@@ -81,23 +80,22 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         @Override
         public boolean canHandle() {
             assert expression != null;
-            if (!(expression instanceof ExpressionOperator)) {
+            if (!ExpressionOperator.isOperator(expression)) {
                 return false;
             }
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
             Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
                 }
             }
-            if (!opName.equals(OperatorAddInverse.ADD_INVERSE)
-                    && !opName.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
+            if (!opName.equals(OperatorAddInverse.ADD_INVERSE)) {
                 return false;
             }
             for (Expression child : expressionOperator.getOperands()) {
-                if (child.getType(expressionToType) == null
-                        || !TypeInteger.is(child.getType(expressionToType))) {
+                EvaluatorExplicit op = UtilEvaluatorExplicit.newEvaluator(null, child, variables, cache, expressionToType);
+                if (!TypeInteger.is(op.getType())) {
                     return false;
                 }
             }
@@ -162,9 +160,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         }
         Operator operator = expression.getOperator();
         if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
-            unaryIntegerToInteger = a -> -a;        	
-        } else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
-            unaryIntegerToInteger = a -> 1/a;
+            unaryIntegerToInteger = a -> -a;
         } else {
             unaryIntegerToInteger = null;
         }
