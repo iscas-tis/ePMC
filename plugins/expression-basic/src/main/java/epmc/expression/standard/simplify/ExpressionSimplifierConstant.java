@@ -24,11 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
 
 public final class ExpressionSimplifierConstant implements ExpressionSimplifier {

@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 

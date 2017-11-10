@@ -25,9 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
 import epmc.value.Value;

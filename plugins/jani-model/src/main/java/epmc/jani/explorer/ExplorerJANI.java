@@ -31,11 +31,11 @@ import java.util.Map;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsNonDet;

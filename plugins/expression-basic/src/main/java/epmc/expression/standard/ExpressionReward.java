@@ -20,19 +20,11 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn
@@ -188,34 +180,6 @@ public final class ExpressionReward implements Expression {
                 .setDiscount(children.get(3))
                 .setPositional(positional)
                 .build();
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        switch (type) {
-        case CUMULATIVE:
-        case INSTANTANEOUS:
-        case DISCOUNTED:
-            Type timeType = getTime().getType(expressionToType);
-            ensure(TypeReal.is(timeType) || TypeInteger.is(timeType),
-                    ProblemsExpression.EXPR_INCONSISTENT, "", getTime());
-            break;
-        case REACHABILITY: 
-            Type reachType = getRewardReachSet().getType(expressionToType);
-            ensure(TypeBoolean.is(reachType), ProblemsExpression.EXPR_INCONSISTENT, "", getRewardReachSet());
-            break;
-        case STEADYSTATE:
-            break;
-        default:
-            assert false;
-            break;        
-        }
-        return TypeWeight.get();
     }
 
     public RewardSpecification getReward() {

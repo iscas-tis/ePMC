@@ -25,7 +25,7 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 
 public final class ExpressionCoalition implements Expression {
@@ -121,15 +121,6 @@ public final class ExpressionCoalition implements Expression {
         //  	System.out.println("B " + children);
         return new Builder().setPositional(positional)
                 .setChildren(children).build();
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        Type type = expressionToType.getType(this);
-        if (type != null) {
-            return type;
-        }
-        return getInner().getType(expressionToType);
     }
 
     @Override

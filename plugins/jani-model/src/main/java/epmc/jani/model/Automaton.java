@@ -34,9 +34,9 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.util.UtilJSON;
 import epmc.value.Type;
 

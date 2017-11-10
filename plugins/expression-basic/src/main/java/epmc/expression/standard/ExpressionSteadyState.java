@@ -20,17 +20,11 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.Collections;
 import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn
@@ -91,18 +85,6 @@ public final class ExpressionSteadyState implements Expression {
                 .setStates(children.get(0))
                 .setPositional(positional)
                 .build();
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        ensure(TypeBoolean.is(operand.getType(expressionToType)),
-                ProblemsExpression.EXPR_INCONSISTENT, "", operand);
-        return TypeWeight.get();
     }
 
     public Expression getOperand1() {

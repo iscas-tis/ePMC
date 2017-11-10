@@ -25,8 +25,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
@@ -130,18 +128,6 @@ public final class ExpressionLiteral implements ExpressionPropositional {
         assert children != null;
         assert children.size() == 0;
         return this;
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        if (value != null) {
-            return value.getType();
-        } else if (valueProvider != null) {
-            return valueProvider.provideValue().getType();
-        } else {
-            throw new RuntimeException();
-        }
     }
 
     @Override

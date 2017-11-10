@@ -20,17 +20,11 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
@@ -176,25 +170,6 @@ public final class ExpressionQuantifier implements Expression {
                 .setCompare(children.get(1))
                 .setCondition(children.get(2))
                 .build();
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Type booleanType = TypeBoolean.get();
-        Expression condition = getCondition();
-        Type conditionType = condition.getType(expressionToType);
-        ensure(conditionType == null || TypeBoolean.is(conditionType),
-                ProblemsExpression.EXPR_INCONSISTENT, "", condition);
-        if (cmpType == CmpType.IS) {
-            return TypeWeight.get();
-        } else {
-            return booleanType;
-        }
     }
 
     public boolean isDirMin() {

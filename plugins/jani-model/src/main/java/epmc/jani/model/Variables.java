@@ -35,8 +35,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Maps.EntryTransformer;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.type.JANIType;
 import epmc.util.UtilJSON;
 import epmc.value.Type;

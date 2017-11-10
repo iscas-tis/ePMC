@@ -24,12 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
 
 public final class ExpressionMultiObjective implements Expression {
     public final static class Builder {
@@ -101,21 +97,6 @@ public final class ExpressionMultiObjective implements Expression {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Expression op1 = getOperand1();
-        if (isQuantEq(op1)) {
-            return TypeWeight.get();
-        } else {
-            return TypeBoolean.get();
-        }
-    }
-
-    @Override
     public List<Expression> getChildren() {
         return children;
     }
@@ -169,15 +150,6 @@ public final class ExpressionMultiObjective implements Expression {
             hash = expression.hashCode() + (hash << 6) + (hash << 16) - hash;
         }
         return hash;
-    }
-
-    private boolean isQuantEq(Expression expression) {
-        assert expression != null;
-        if (!(expression instanceof ExpressionQuantifier)) {
-            return false;
-        }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-        return expressionQuantifier.getCompareType().isEq();
     }
 
     @Override

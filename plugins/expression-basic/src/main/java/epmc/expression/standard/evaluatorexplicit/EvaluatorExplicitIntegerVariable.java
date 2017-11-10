@@ -23,8 +23,8 @@ package epmc.expression.standard.evaluatorexplicit;
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 

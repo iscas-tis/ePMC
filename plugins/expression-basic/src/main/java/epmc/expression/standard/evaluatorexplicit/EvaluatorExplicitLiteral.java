@@ -22,9 +22,9 @@ package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
 
 public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, EvaluatorExplicitBoolean{

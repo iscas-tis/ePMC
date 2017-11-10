@@ -25,10 +25,7 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifier;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
 
 public final class ExpressionDeadlock implements ExpressionIdentifier {
     private final static String DEADLOCK = "\"deadlock\"";
@@ -41,16 +38,6 @@ public final class ExpressionDeadlock implements ExpressionIdentifier {
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionDeadlock(positional);
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        return TypeBoolean.get();
     }
 
     @Override

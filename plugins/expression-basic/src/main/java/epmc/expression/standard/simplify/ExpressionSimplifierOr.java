@@ -21,10 +21,10 @@
 package epmc.expression.standard.simplify;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorOr;

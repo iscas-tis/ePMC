@@ -20,8 +20,6 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,16 +28,13 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
 /**
  * Ernst Moritz Hahn
+ * TODO should be split into specific classes for finally, until, etc.,
+ * to improve extensibility
  */
 public final class ExpressionTemporal implements Expression {
     public final static class Builder {
@@ -301,11 +296,6 @@ public final class ExpressionTemporal implements Expression {
         return Collections.unmodifiableList(getChildren().subList(0, getNumOps()));
     }
 
-    private List<Expression> getBounds() {
-        return Collections.unmodifiableList(getChildren().subList(getNumOps(),
-                getChildren().size()));
-    }
-
     public Expression getOperand1() {
         return getChildren().get(0);
     }
@@ -338,25 +328,6 @@ public final class ExpressionTemporal implements Expression {
                 .setRightOpen(rightOpen)
                 .setPositional(positional)
                 .build();
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        for (Expression op : getOperands()) {
-            Type opType = op.getType(expressionToType);
-            ensure(opType == null || TypeBoolean.is(opType)
-                    || op instanceof ExpressionTemporal,
-                    ProblemsExpression.EXPR_INCONSISTENT, "", op);
-        }
-        for (Expression op : getBounds()) {
-            Type opType = op.getType(expressionToType);
-            ensure(opType == null || TypeReal.is(opType), ProblemsExpression.EXPR_INCONSISTENT, "", op);
-        }
-        return TypeWeight.get();
     }
 
     @Override

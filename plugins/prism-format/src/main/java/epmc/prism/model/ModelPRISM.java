@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionCoalition;
@@ -51,6 +50,7 @@ import epmc.expression.standard.RewardSpecificationImpl;
 import epmc.expression.standard.SMGPlayer;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMC;

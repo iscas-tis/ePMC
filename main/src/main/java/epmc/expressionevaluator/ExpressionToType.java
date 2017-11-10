@@ -18,8 +18,9 @@
 
  *****************************************************************************/
 
-package epmc.expression;
+package epmc.expressionevaluator;
 
+import epmc.expression.Expression;
 import epmc.value.Type;
 
 /**
