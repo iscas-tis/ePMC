@@ -25,8 +25,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expressionevaluator.ExpressionToType;
-import epmc.value.Type;
 
 public final class ExpressionCoalition implements Expression {
     public final static class Builder {
