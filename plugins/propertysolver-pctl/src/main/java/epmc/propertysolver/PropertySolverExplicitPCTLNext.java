@@ -28,14 +28,12 @@ import java.util.Set;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsContinuousTime;
@@ -60,6 +58,7 @@ import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -68,6 +67,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
@@ -127,62 +127,31 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
 
     public StateMap doSolve(Expression property, StateSet states, boolean min) {
         if (isNot(property)) {
-            ExpressionOperator propertyOperator = (ExpressionOperator) property;
+            ExpressionOperator propertyOperator = ExpressionOperator.asOperator(property);
             property = propertyOperator.getOperand1();
             negate = true;
             min = !min;
-        } else if (isRelease(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = pathTemporal.getOperand1();
-            Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(), property.getPositional());
-            min = !min;
-            negate = true;
-        } else if (isFinally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue();
-            Expression right = pathTemporal.getOperand1();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
-            negate = false;
-        } else if (isGlobally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue();
-            Expression right = not(pathTemporal.getOperand1());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
-            min = !min;
-            negate = true;
         } else {
             negate = false;
         }
-        Set<Expression> inners = UtilPCTL.collectPCTLInner(property);
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
-        for (Expression inner : inners) {
-            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
-            UtilGraph.registerResult(graph, inner, innerResult);
-        }
+        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
+        Expression inner = propertyTemporal.getOperand1();
+        StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
+        UtilGraph.registerResult(graph, inner, innerResult);
         allStates.close();
         this.computeForStates = (StateSetExplicit) states;
-        return solve((ExpressionTemporal) property, min);
+        return solve(propertyTemporal, min, innerResult);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min) {
+    private StateMap solve(ExpressionTemporal pathTemporal, boolean min, StateMapExplicit inner) {
         assert pathTemporal != null;
-        Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
-        Value[] evalValues = new Value[expressions.length];
-        for (int varNr = 0; varNr < expressions.length; varNr++) {
-            evalValues[varNr] = expressions[varNr].getType(graph).newValue();
-        }
-        EvaluatorExplicitBoolean[] evaluators = new EvaluatorExplicitBoolean[pathTemporal.getOperands().size()];
-        for (int i = 0; i < pathTemporal.getOperands().size(); i++) {
-            evaluators[i] = UtilEvaluatorExplicit.newEvaluatorBoolean(pathTemporal.getOperands().get(i), graph, expressions);
-        }
-
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = UtilValue.newValue(typeWeight, 1);
         ValueArray resultValues = newValueArrayWeight(computeForStates.size());
         //        ValueArray result = typeArray.newValue(computeForStates.length());
 
-        solveNext(pathTemporal, expressions, evalValues, evaluators, min);
+        solveNext(pathTemporal, inner, min);
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
@@ -195,7 +164,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
-    private void solveNext(ExpressionTemporal pathTemporal, Expression[] expressions, Value[] evalValues, EvaluatorExplicitBoolean[] evaluators, boolean min) {
+    private void solveNext(ExpressionTemporal pathTemporal, StateMapExplicit inner, boolean min) {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
@@ -210,11 +179,11 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         int iterNumStates = graph.computeNumStates();
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterNumStates);
-        for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
-            for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
-            }
-            boolean innerBoolean = evaluators[0].evaluateBoolean(evalValues);
+        ValueBoolean valueInner = TypeBoolean.get().newValue();
+        for (int i = 0; i < inner.size(); i++) {
+            int state = inner.getExplicitIthState(i);
+            inner.getExplicitIthValue(valueInner, i);
+            boolean innerBoolean = valueInner.getBoolean();
             values.set(innerBoolean ? one : zero, state);
         }
         GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
