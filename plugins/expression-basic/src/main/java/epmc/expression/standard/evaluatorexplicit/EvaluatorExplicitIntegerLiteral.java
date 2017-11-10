@@ -20,6 +20,7 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
+import epmc.value.Type;
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
 import epmc.expression.Expression;
@@ -32,7 +33,6 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -66,10 +66,12 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
             if (!(ExpressionLiteral.isLiteral(expression))) {
                 return false;
             }
-            if (expression.getType(expressionToType) == null) {
+            ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+            Type type = expressionLiteral.getValue().getType();
+            if (type == null) {
                 return false;
             }
-            if (!TypeInteger.is(expression.getType(expressionToType))) {
+            if (!TypeInteger.is(type)) {
                 return false;
             }
             return true;
@@ -83,7 +85,6 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         @Override
         public EvaluatorExplicit.Builder setExpressionToType(
                 ExpressionToType expressionToType) {
-            this.expressionToType = expressionToType;
             return this;
         }
     }
