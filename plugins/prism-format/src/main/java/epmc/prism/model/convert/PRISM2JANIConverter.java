@@ -39,6 +39,7 @@ import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.ExpressionToType;
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionFilter;
@@ -49,6 +50,7 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.SemanticsCTMC;
 import epmc.graph.SemanticsDTMC;
 import epmc.graph.SemanticsNonDet;
@@ -173,7 +175,8 @@ public final class PRISM2JANIConverter {
 
     private boolean forExporting;
     private ExpressionToTypeJANIConverter expressionToType;
-
+    private Expression[] globalVariablesArray;
+    
     /**
      * Construct new converter for given PRISM model.
      * The model must not be {@code null}.
@@ -207,6 +210,12 @@ public final class PRISM2JANIConverter {
         convertExtensions();
 
         Variables globalVariables = buildGlobalVariables();
+        globalVariablesArray = new Expression[globalVariables.size()];
+        int varNr = 0;
+        for (Variable var : globalVariables) {
+            globalVariablesArray[varNr] = var.getIdentifier();
+            varNr++;
+        }
         modelJANI.setModelConstants(buildConstants());
         modelJANI.getConstants().putAll(modelJANI.computeConstants());
         this.expressionToType = new ExpressionToTypeJANIConverter(globalVariables);
@@ -886,7 +895,8 @@ public final class PRISM2JANIConverter {
         } else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
             boolean allInteger = true;
             for (Expression operand : expression.getOperands()) {
-                allInteger &= TypeInteger.is(operand.getType(expressionToType));
+                EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(operand, expressionToType, globalVariablesArray);
+                allInteger &= TypeInteger.is(evaluator.getType());
             }
             List<Expression> newChildren = new ArrayList<>();
             for (Expression child : expression.getChildren()) {
