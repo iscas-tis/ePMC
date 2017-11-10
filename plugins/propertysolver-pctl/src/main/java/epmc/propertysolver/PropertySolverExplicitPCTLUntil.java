@@ -25,7 +25,6 @@ import java.util.Set;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
@@ -33,8 +32,6 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsContinuousTime;
@@ -81,7 +78,6 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     private ModelChecker modelChecker;
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
-    private boolean negate;
     private Expression property;
     private StateSet forStates;
 
@@ -124,8 +120,8 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         return result;
     }
 
-    public StateMap doSolve(Expression property, StateSet states, boolean min)
-    {
+    private StateMap doSolve(Expression property, StateSet states, boolean min) {
+        boolean negate;
         if (isNot(property)) {
             ExpressionOperator propertyOperator = (ExpressionOperator) property;
             property = propertyOperator.getOperand1();
@@ -154,31 +150,23 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         } else {
             negate = false;
         }
-        Set<Expression> inners = UtilPCTL.collectPCTLInner(property);
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
-        for (Expression inner : inners) {
-            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
-            UtilGraph.registerResult(graph, inner, innerResult);
-        }
+        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
+        Expression op1 = propertyTemporal.getOperand1();
+        StateMapExplicit innerResult1 = (StateMapExplicit) modelChecker.check(op1, allStates);
+        UtilGraph.registerResult(graph, op1, innerResult1);
+        Expression op2 = propertyTemporal.getOperand2();
+        StateMapExplicit innerResult2 = (StateMapExplicit) modelChecker.check(op2, allStates);
+        UtilGraph.registerResult(graph, op1, innerResult2);
         allStates.close();
         this.computeForStates = (StateSetExplicit) states;
-        return solve((ExpressionTemporal) property, min);
+        return solve(propertyTemporal, min, negate, innerResult1, innerResult2);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min) {
+    private StateMap solve(ExpressionTemporal pathTemporal, boolean min, boolean negate, StateMapExplicit innerLeft, StateMapExplicit innerRight) {
         assert pathTemporal != null;
         Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         TimeBound timeBound = pathTemporal.getTimeBound();
-
-        Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
-        Value[] evalValues = new Value[expressions.length];
-        for (int varNr = 0; varNr < expressions.length; varNr++) {
-            evalValues[varNr] = expressions[varNr].getType(graph).newValue();
-        }
-        EvaluatorExplicitBoolean[] evaluators = new EvaluatorExplicitBoolean[pathTemporal.getOperands().size()];
-        for (int i = 0; i < pathTemporal.getOperands().size(); i++) {
-            evaluators[i] = UtilEvaluatorExplicit.newEvaluatorBoolean(pathTemporal.getOperands().get(i), graph, expressions);
-        }
 
         BitSet sinkSet = UtilBitSet.newBitSetUnbounded();
         TypeAlgebra typeWeight = TypeWeight.get();
@@ -197,22 +185,21 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         BitSet zeroSet = UtilBitSet.newBitSetUnbounded();
         BitSet oneSet = UtilBitSet.newBitSetUnbounded();
         NodeProperty stateProp = graph.getNodeProperty(CommonProperties.STATE);
-        for (int node = allNodes.nextSetBit(0); node >= 0; node = allNodes.nextSetBit(node+1)) {
-            if (!stateProp.getBoolean(node)) {
+        ValueBoolean valueLeft = TypeBoolean.get().newValue();
+        ValueBoolean valueRight = TypeBoolean.get().newValue();
+        for (int i = 0; i < innerLeft.size(); i++) {
+            int state = innerLeft.getExplicitIthState(i);
+            if (!stateProp.getBoolean(state)) {
                 continue;
             }
-            for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(node);
-            }
-            for (EvaluatorExplicit evaluator : evaluators) {
-                evaluator.evaluate(evalValues);
-            }
-            boolean left = evaluators[0].evaluateBoolean(evalValues);
-            boolean right = evaluators[1].evaluateBoolean(evalValues);
+            innerLeft.getExplicitIthValue(valueLeft, i);
+            innerRight.getExplicitIthValue(valueRight, i);
+            boolean left = valueLeft.getBoolean();
+            boolean right = valueRight.getBoolean();
             if (!left && !right) {
-                zeroSet.set(node);
+                zeroSet.set(state);
             } else if (right) {
-                oneSet.set(node);
+                oneSet.set(state);
             }
         }
 
@@ -267,12 +254,11 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
             sinkSet.clear();
-            for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
+            for (int i = 0; i < innerLeft.size(); i++) {
+                int state = innerLeft.getExplicitIthState(i);
                 if (isState.getBoolean(state)) {
-                    for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                        evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
-                    }
-                    boolean left = evaluators[0].evaluateBoolean(evalValues);
+                    innerLeft.getExplicitIthValue(valueLeft, i);
+                    boolean left = valueLeft.getBoolean();
                     if (!left) {
                         sinkSet.set(state);
                         values.set(zero, state);
