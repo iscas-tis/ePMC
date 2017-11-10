@@ -20,22 +20,11 @@
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeInterval;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
-import epmc.value.ValueBoolean;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.Value;
 
 /**
  * Expression representing a state filter.
@@ -132,65 +121,6 @@ public final class ExpressionFilter implements Expression {
                 .build();
     }
 
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Type propType = prop.getType(expressionToType);
-        if (TypeInteger.isIntegerWithBounds(propType)) {
-            propType = TypeInteger.get();
-        }
-        Type statesType = states.getType(expressionToType);
-        ensure(statesType == null || TypeBoolean.is(statesType),
-                ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-        switch (type) {
-        case AVG:
-            ensure(propType == null || TypeWeight.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeWeight.get();
-            break;
-        case SUM:
-            ensure(propType == null || TypeWeight.is(propType)
-            || TypeInteger.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeWeight.get();
-            break;
-        case RANGE:
-            ensure(propType == null || TypeReal.is(propType)
-            || TypeInterval.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeInterval.get();
-            break;
-        case MAX: case MIN:
-            ensure(propType == null || TypeReal.is(propType)
-            || TypeInteger.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeReal.get();
-            break;
-        case COUNT:
-            ensure(propType == null || TypeBoolean.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "");
-            result = TypeInteger.get();
-            break;
-        case FIRST: case STATE: case PRINT: case PRINTALL:
-            result = propType;
-            break;
-        case FORALL: case EXISTS:
-            ensure(propType == null || TypeBoolean.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeBoolean.get();
-            break;
-        case ARGMAX: case ARGMIN:
-            ensure(propType == null || TypeReal.is(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
-            result = TypeBoolean.get();
-            break;
-        }
-        return result;
-    }
-
     public FilterType getFilterType() {
         return type;
     }
@@ -274,10 +204,8 @@ public final class ExpressionFilter implements Expression {
         StringBuilder builder = new StringBuilder();
         builder.append("filter(" + type + ",");
         builder.append(prop);
-        if (!isTrue(states)) {
-            builder.append(",");
-            builder.append(states);
-        }
+        builder.append(",");
+        builder.append(states);
         builder.append(")");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -315,22 +243,6 @@ public final class ExpressionFilter implements Expression {
         }
         hash = type.hashCode() + (hash << 6) + (hash << 16) - hash;            
         return hash;
-    }
-
-    private static boolean isTrue(Expression expression) {
-        assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
-            return false;
-        }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
-    }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return expressionLiteral.getValue();
     }
 
     @Override

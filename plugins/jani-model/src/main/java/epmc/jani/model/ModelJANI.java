@@ -41,10 +41,10 @@ import javax.json.JsonValue;
 
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 import epmc.graph.explicit.GraphBuilderExplorer;

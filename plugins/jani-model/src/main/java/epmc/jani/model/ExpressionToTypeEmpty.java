@@ -21,7 +21,7 @@
 package epmc.jani.model;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 
 public final class ExpressionToTypeEmpty implements ExpressionToType {

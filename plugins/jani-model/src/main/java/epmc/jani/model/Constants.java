@@ -30,8 +30,8 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.type.JANIType;
 import epmc.util.UtilJSON;
 import epmc.value.Type;

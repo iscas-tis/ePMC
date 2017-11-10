@@ -24,12 +24,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Action;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Destinations;

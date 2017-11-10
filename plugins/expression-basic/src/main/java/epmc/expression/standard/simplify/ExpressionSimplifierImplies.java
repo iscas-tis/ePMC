@@ -21,9 +21,9 @@
 package epmc.expression.standard.simplify;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.operator.OperatorImplies;
 
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {

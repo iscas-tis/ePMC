@@ -25,10 +25,7 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifier;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
 
 // TODO check whether it's really a good idea to mark this as identifier
 public final class ExpressionInitial implements ExpressionIdentifier {
@@ -46,16 +43,6 @@ public final class ExpressionInitial implements ExpressionIdentifier {
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionInitial(positional);
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        return TypeBoolean.get();
     }
 
     @Override

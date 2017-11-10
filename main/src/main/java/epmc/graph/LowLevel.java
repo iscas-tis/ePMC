@@ -22,7 +22,7 @@ package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 
 /**
  * Low-level representation of a model.

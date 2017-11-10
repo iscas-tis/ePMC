@@ -23,7 +23,6 @@ package epmc.expression;
 import java.util.List;
 
 import epmc.error.Positional;
-import epmc.value.Type;
 
 /**
  * Base interface for expressions.
@@ -32,6 +31,13 @@ import epmc.value.Type;
  * to be analysed.
  * On the other hand, they are intended to be used as parts of models, such as
  * for specifying guards, the set of initial states, etc.
+ * <br/>
+ * Note: Do not introduce dependencies of specific expression types to
+ * values (or types, etc.). Evaluating expressions should be performed by
+ * evaluators.
+ * <br/>
+ * I'm aware that such dependencies currently exist, trying to get rid of
+ * them.
  * 
  * @author Ernst Moritz Hahn
  */
@@ -77,13 +83,4 @@ public interface Expression {
      * @return positional information if available
      */
     Positional getPositional();
-
-    // TODO adapt documentation
-    // TODO get rid of this method
-    /**
-     * Get (or compute) type of the expression.
-     * 
-     * @return type of expression
-     */
-    Type getType(ExpressionToType expressionToType);
 }

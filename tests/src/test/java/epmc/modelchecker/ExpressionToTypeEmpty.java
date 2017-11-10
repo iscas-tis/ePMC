@@ -21,7 +21,7 @@
 package epmc.modelchecker;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 
 final class ExpressionToTypeEmpty implements ExpressionToType {

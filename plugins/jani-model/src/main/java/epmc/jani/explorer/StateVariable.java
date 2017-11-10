@@ -1,8 +1,8 @@
 package epmc.jani.explorer;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.TypeNumBitsKnown;
 import epmc.value.Value;

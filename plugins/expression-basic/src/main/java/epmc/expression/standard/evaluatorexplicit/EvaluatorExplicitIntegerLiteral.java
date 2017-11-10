@@ -24,9 +24,9 @@ import epmc.value.Type;
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
 
 public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitInteger {

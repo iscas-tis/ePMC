@@ -28,11 +28,11 @@ import java.util.Set;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.ProblemsExpression;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.filter.error.ProblemsFilter;
 import epmc.filter.messages.MessagesFilter;
 import epmc.graph.CommonProperties;

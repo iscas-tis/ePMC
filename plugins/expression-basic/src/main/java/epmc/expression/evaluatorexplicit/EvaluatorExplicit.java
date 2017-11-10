@@ -23,8 +23,8 @@ package epmc.expression.evaluatorexplicit;
 import java.util.Map;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.Value;
 

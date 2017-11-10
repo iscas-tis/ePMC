@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsStochastic;

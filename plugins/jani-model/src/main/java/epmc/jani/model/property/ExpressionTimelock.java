@@ -25,9 +25,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
 
 public final class ExpressionTimelock implements Expression {
     private final static String TIMELOCK = "\"timelock\"";
@@ -40,16 +37,6 @@ public final class ExpressionTimelock implements Expression {
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new ExpressionTimelock(positional);
-    }
-
-    @Override
-    public Type getType(ExpressionToType expressionToType) {
-        assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        return TypeBoolean.get();
     }
 
     @Override

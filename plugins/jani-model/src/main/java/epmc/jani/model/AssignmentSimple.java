@@ -20,8 +20,6 @@
 
 package epmc.jani.model;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,7 +32,6 @@ import javax.json.JsonValue;
 import epmc.expression.Expression;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.util.UtilJSON;
-import epmc.value.Type;
 
 /**
  * Stores a single variable assignment.
