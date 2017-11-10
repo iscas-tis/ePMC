@@ -892,20 +892,18 @@ public final class PRISM2JANIConverter {
             for (Expression child : expression.getChildren()) {
                 newChildren.add(prism2jani(child));
             }
-            Expression result;
+            Expression result = new ExpressionOperator.Builder()
+                    .setOperands(newChildren)
+                    .setOperator(OperatorPow.POW)
+                    .setPositional(positional)
+                    .build();
+
             if (allInteger) {
-                result = new ExpressionOperator.Builder()
-                        .setOperands(newChildren)
-                        .setOperator(OperatorPow.POW)
-                        .setPositional(positional)
-                        .build();
                 result = new ExpressionOperator.Builder()
                         .setOperands(result)
                         .setOperator(OperatorCeil.CEIL)
                         .setPositional(positional)
                         .build();
-            } else {
-                result = expression.replaceChildren(newChildren);
             }
             return result;
         } else {

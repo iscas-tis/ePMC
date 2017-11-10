@@ -125,8 +125,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return result;
     }
 
-    public StateMap doSolve(Expression property, StateSet states, boolean min)
-    {
+    public StateMap doSolve(Expression property, StateSet states, boolean min) {
         if (isNot(property)) {
             ExpressionOperator propertyOperator = (ExpressionOperator) property;
             property = propertyOperator.getOperand1();
@@ -166,8 +165,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return solve((ExpressionTemporal) property, min);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-    {
+    private StateMap solve(ExpressionTemporal pathTemporal, boolean min) {
         assert pathTemporal != null;
         Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];

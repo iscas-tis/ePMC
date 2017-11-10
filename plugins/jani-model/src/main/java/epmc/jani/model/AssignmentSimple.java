@@ -106,11 +106,6 @@ public final class AssignmentSimple implements Assignment {
         }
         ref = UtilJSON.toOneOf(object, REF, validVariables);
         this.value = ExpressionParser.getExpression(model, object, VALUE, validIdentifiers);
-        if (!model.containsUndefinedConstants()) {
-            Type variableType = ref.toType();
-            Type assignedType = this.value.getType(model);
-            ensure(assignedType != null, ProblemsJANIParser.JANI_PARSER_ASSIGNMENT_INCONSISTENT);
-        }
         index = UtilJSON.getIntegerOrNull(object, INDEX);
         comment = UtilJSON.getStringOrNull(object, COMMENT);
         return this;
