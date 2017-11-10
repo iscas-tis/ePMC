@@ -188,7 +188,8 @@ public final class UtilEvaluatorDD {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         for (Expression operand : expressionOperator.getOperands()) {
-            if (!TypeInteger.is(operand.getType(new ExpressionToTypeDD(variables)))) {
+//            if (!TypeInteger.is(operand.getType(new ExpressionToTypeDD(variables)))) {
+            if (true) {
                 return false;
             }
             if (!canIntegerVectorOperator(operand, operator, variables)) {
@@ -219,7 +220,8 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+//            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger = false;
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")
@@ -250,7 +252,8 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+//            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger = false;
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")

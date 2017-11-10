@@ -165,8 +165,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         return solve((ExpressionTemporal) property, min);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-    {
+    private StateMap solve(ExpressionTemporal pathTemporal, boolean min) {
         assert pathTemporal != null;
         Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         TimeBound timeBound = pathTemporal.getTimeBound();
