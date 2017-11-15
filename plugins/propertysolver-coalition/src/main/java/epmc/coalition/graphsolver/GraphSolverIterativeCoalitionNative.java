@@ -45,6 +45,10 @@ import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMultiply;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.JNATools;
@@ -67,10 +71,6 @@ import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDistance;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMultiply;
 
 /**
  * Iterative solver to solve game-related graph problems.

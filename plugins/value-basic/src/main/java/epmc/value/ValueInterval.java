@@ -20,8 +20,8 @@
 
 package epmc.value;
 
+import epmc.operator.OperatorSet;
 import epmc.value.Value;
-import epmc.value.operator.OperatorSet;
 
 public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetString {
     public static boolean is(Value value) {

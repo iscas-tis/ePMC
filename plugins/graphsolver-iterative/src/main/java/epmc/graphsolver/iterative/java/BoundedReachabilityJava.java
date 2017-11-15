@@ -39,6 +39,11 @@ import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedReachability;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.value.ContextValue;
@@ -55,11 +60,6 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorSet;
 
 // TODO reward-based stuff should be moved to rewards plugin
 

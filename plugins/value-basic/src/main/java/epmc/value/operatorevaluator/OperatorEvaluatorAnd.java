@@ -20,13 +20,13 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
 
 public final class OperatorEvaluatorAnd implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

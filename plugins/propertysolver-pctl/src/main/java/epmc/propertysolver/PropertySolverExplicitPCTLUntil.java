@@ -51,10 +51,14 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachabil
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
@@ -68,10 +72,6 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorSet;
-import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit";

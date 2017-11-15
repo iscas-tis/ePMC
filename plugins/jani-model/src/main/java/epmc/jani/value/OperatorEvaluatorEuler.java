@@ -20,7 +20,8 @@
 
 package epmc.jani.value;
 
-import epmc.value.Operator;
+import epmc.jani.operator.OperatorEuler;
+import epmc.operator.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeReal;

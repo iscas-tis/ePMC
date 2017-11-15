@@ -20,7 +20,8 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorSqrt;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
@@ -29,7 +30,6 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.operator.OperatorSqrt;
 
 public final class OperatorEvaluatorSqrtDouble implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

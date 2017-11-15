@@ -50,6 +50,9 @@ import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.value.EvaluatorCache;
 import epmc.value.OperatorEvaluator;
@@ -60,9 +63,6 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnumerable;
 import epmc.value.ValueRange;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Class to obtain all valid variable assignments for a given expression.

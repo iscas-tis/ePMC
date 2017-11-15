@@ -50,13 +50,13 @@ import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.expression.JANIExpression;
+import epmc.operator.OperatorIsPosInf;
 import epmc.util.UtilJSON;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIsPosInf;
 
 /**
  * JANI expected quantifier expression.

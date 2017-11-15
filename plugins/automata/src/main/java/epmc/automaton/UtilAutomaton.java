@@ -41,18 +41,18 @@ import epmc.expression.standard.TimeBound;
 import epmc.messages.Message;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.Util;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,

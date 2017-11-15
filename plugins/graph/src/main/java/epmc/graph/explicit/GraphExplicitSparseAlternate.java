@@ -23,6 +23,7 @@ package epmc.graph.explicit;
 import java.util.Arrays;
 
 import epmc.graph.CommonProperties;
+import epmc.operator.OperatorSet;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
@@ -36,7 +37,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueContentIntArray;
-import epmc.value.operator.OperatorSet;
 
 // for MDPs, CTMDPs, EDTMCs, ECTMCs, turn-based two-player games;
 // for value iteration

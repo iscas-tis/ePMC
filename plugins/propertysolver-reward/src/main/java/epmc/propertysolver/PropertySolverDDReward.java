@@ -39,7 +39,7 @@ import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 // TODO check whether this works for JANI MDPs - probably not
 // TODO transform to DD checker

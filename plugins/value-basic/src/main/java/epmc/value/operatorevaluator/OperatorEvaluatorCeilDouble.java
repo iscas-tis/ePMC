@@ -20,7 +20,8 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorCeil;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -29,7 +30,6 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorCeil;
 
 public final class OperatorEvaluatorCeilDouble implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

@@ -20,7 +20,7 @@
 
 package epmc.jani.extensions.hyperbolicfunctions;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * Operator to compute sinus of a value.

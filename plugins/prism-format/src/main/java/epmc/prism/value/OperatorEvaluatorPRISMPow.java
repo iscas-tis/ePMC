@@ -20,7 +20,8 @@
 
 package epmc.prism.value;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.prism.operator.OperatorPRISMPow;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;

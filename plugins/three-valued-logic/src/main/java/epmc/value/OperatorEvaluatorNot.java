@@ -1,6 +1,7 @@
 package epmc.value;
 
-import epmc.value.operator.OperatorNot;
+import epmc.operator.Operator;
+import epmc.operator.OperatorNot;
 
 public final class OperatorEvaluatorNot implements OperatorEvaluator {
 

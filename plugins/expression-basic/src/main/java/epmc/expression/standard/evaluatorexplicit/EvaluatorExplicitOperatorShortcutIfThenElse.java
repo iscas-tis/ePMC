@@ -29,10 +29,10 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorSet;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorSet;
 
 public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {

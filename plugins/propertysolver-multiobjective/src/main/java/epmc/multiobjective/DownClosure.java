@@ -28,6 +28,11 @@ import epmc.constraintsolver.ConstraintSolverConfiguration;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -42,11 +47,6 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorSet;
 
 final class DownClosure {
     private final static String SLACK_VARIABLE = "v";

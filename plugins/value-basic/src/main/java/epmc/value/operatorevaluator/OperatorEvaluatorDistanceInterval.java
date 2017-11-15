@@ -20,8 +20,12 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorAbs;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -29,10 +33,6 @@ import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
-import epmc.value.operator.OperatorAbs;
-import epmc.value.operator.OperatorDistance;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorSubtract;
 
 public final class OperatorEvaluatorDistanceInterval implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

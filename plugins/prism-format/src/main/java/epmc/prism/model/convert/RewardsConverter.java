@@ -58,6 +58,7 @@ import epmc.jani.model.component.ComponentSynchronisationVectors;
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.SynchronisationVectorSync;
 import epmc.jani.model.type.JANITypeReal;
+import epmc.operator.OperatorIsZero;
 import epmc.options.Options;
 import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.RewardStructure;
@@ -68,7 +69,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIsZero;
 
 /**
  * Converter for rewards from PRISM to JANI.

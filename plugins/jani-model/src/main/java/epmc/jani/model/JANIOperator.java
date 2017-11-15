@@ -20,7 +20,7 @@
 
 package epmc.jani.model;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * JANI operator.

@@ -20,8 +20,8 @@
 
 package epmc.graph.explicit;
 
+import epmc.operator.Operator;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;

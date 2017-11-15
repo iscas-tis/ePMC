@@ -1,6 +1,7 @@
 package epmc.value;
 
-import epmc.value.operator.OperatorImplies;
+import epmc.operator.Operator;
+import epmc.operator.OperatorImplies;
 
 public final class OperatorEvaluatorImplies implements OperatorEvaluator {
 

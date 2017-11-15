@@ -88,6 +88,11 @@ import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.prism.error.ProblemsPRISM;
 import epmc.prism.model.Alternative;
@@ -98,17 +103,12 @@ import epmc.prism.model.Module;
 import epmc.prism.model.ModuleCommands;
 import epmc.prism.model.PropertiesImpl;
 import epmc.prism.model.RewardStructure;
-import epmc.prism.value.OperatorPRISMPow;
+import epmc.prism.operator.OperatorPRISMPow;
 import epmc.util.Util;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorCeil;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSubtract;
 
 // TODO optionally use "F" and "G" operators directly using extension
 // TODO maybe make usage of derived operators optional

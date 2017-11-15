@@ -20,13 +20,13 @@
 
 package epmc.value.operatorevaluator;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorSet;
 import epmc.value.EvaluatorCache;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorSet;
 
 public final class OperatorEvaluatorId implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

@@ -29,17 +29,17 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMod;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMod;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSubtract;
 
 public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {

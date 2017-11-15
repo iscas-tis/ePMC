@@ -63,6 +63,8 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.propertysolver.ltllazy.automata.AutomatonBreakpoint;
 import epmc.propertysolver.ltllazy.automata.AutomatonBreakpointLabel;
@@ -73,7 +75,6 @@ import epmc.util.BitSet;
 import epmc.util.StopWatch;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -87,7 +88,6 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorSubtract;
 
 public class PropertySolverExplicitLTLLazy implements PropertySolver {
     public final static String IDENTIFIER = "ltl-explicit";

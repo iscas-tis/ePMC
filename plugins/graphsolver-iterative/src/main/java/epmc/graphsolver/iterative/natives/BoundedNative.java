@@ -37,6 +37,7 @@ import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
+import epmc.operator.OperatorMultiply;
 import epmc.options.Options;
 import epmc.util.ProblemsUtil;
 import epmc.value.ContextValue;
@@ -53,7 +54,6 @@ import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorMultiply;
 
 // TODO reward-based stuff should be moved to rewards plugin
 

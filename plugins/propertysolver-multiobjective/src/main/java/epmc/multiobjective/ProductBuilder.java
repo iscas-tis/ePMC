@@ -58,6 +58,9 @@ import epmc.graph.explicit.NodePropertyApply;
 import epmc.graph.explicit.NodePropertyConstant;
 import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.ModelChecker;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorSet;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
@@ -65,9 +68,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorSet;
 import gnu.trove.map.hash.THashMap;
 
 final class ProductBuilder {

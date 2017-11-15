@@ -60,20 +60,20 @@ import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
 import epmc.value.ValueArray;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 /**
  * input property should be Limit Linear Time properties

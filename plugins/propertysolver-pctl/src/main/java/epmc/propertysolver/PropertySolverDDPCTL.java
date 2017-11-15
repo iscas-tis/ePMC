@@ -60,10 +60,16 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachabil
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorIsOne;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorSubtract;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
@@ -74,12 +80,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorIsOne;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverDDPCTL implements PropertySolver {
     public final static String IDENTIFIER = "pctl-dd";

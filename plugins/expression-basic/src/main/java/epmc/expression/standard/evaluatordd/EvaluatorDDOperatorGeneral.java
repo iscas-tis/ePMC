@@ -28,7 +28,7 @@ import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-general";

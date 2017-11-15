@@ -15,9 +15,9 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionLiteral;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
 
 public class SpotParser {

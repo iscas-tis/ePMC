@@ -29,6 +29,7 @@ import java.util.Set;
 
 import com.google.common.base.MoreObjects;
 
+import epmc.operator.OperatorSet;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
@@ -36,7 +37,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.operator.OperatorSet;
 import gnu.trove.stack.TIntStack;
 import gnu.trove.stack.array.TIntArrayStack;
 

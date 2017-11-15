@@ -25,8 +25,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorSubtract;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
@@ -34,6 +32,8 @@ import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorSubtract;
 
 public final class ExpressionSimplifierSubtract implements ExpressionSimplifier {
     public final static String IDENTIFIER = "subtract";

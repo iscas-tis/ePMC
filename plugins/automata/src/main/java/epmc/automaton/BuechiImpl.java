@@ -48,20 +48,20 @@ import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public class BuechiImpl implements Buechi {
     private final static String SPOT_PARAM_FORMULA = "-f";

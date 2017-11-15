@@ -35,6 +35,7 @@ import epmc.jani.model.Actions;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentParallel;
+import epmc.operator.OperatorMultiply;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
@@ -42,7 +43,6 @@ import epmc.value.TypeReal;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorMultiply;
 
 /**
  * Explorer for a parallel composition component.

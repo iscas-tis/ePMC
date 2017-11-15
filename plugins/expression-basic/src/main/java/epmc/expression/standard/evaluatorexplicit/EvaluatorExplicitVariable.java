@@ -21,10 +21,10 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorSet;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Value;

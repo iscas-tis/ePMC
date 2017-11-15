@@ -22,6 +22,20 @@ package epmc.algorithms;
 
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorExp;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -32,20 +46,6 @@ import epmc.value.UtilValue;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorCeil;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorExp;
-import epmc.value.operator.OperatorFloor;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLog;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSet;
-import epmc.value.operator.OperatorSubtract;
 
 /**
  * Fox-Glynn algorithm.

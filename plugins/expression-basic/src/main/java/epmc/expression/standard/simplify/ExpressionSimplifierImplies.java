@@ -24,7 +24,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expressionevaluator.ExpressionToType;
-import epmc.value.operator.OperatorImplies;
+import epmc.operator.OperatorImplies;
 
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     public final static String IDENTIFIER = "implies";

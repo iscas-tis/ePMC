@@ -56,19 +56,19 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 /**
  * Input property is fairness in LTL.

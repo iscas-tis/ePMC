@@ -32,13 +32,13 @@ import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.model.type.JANITypeBounded;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorLe;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeBounded;
 import epmc.value.Value;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorLe;
 
 /**
  * Auxiliary methods to parse JANI models and properties.

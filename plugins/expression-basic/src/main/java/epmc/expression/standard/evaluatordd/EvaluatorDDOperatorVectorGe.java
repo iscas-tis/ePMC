@@ -27,7 +27,7 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
-import epmc.value.operator.OperatorGe;
+import epmc.operator.OperatorGe;
 
 public final class EvaluatorDDOperatorVectorGe implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-ge";

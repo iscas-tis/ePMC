@@ -59,10 +59,14 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulativ
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorIsPosInf;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorSet;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
@@ -76,10 +80,6 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorIsPosInf;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorSet;
 
 // TODO check whether this works for JANI MDPs - probably not
 

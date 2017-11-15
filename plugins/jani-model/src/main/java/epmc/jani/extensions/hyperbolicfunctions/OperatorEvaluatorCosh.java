@@ -20,7 +20,7 @@
 
 package epmc.jani.extensions.hyperbolicfunctions;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;

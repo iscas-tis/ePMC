@@ -46,6 +46,15 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -64,15 +73,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorSet;
 
 // TODO complete documentation
 

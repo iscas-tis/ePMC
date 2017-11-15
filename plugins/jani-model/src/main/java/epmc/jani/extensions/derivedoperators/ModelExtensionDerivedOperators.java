@@ -24,12 +24,12 @@ import epmc.jani.model.JANINode;
 import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
-import epmc.value.operator.OperatorAbs;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
+import epmc.operator.OperatorAbs;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
 
 public final class ModelExtensionDerivedOperators implements ModelExtension {
     /** Identifies an IMPLIES operator. */

@@ -22,16 +22,16 @@ package epmc.graph.explicit;
 
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorSet;
-import epmc.value.operator.OperatorSubtract;
 
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) {
