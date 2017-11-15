@@ -21,14 +21,11 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorIsPosInf;
 import epmc.operator.OperatorIsZero;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
-import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -37,6 +34,7 @@ import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 
 // TODO complete documentation
+// TODO get rid of dependencies to value package
 
 /**
  * Time bound used in Until, Weak Until, Release etc. formulas.
@@ -44,18 +42,6 @@ import epmc.value.ValueReal;
  * @author Ernst Moritz Hahn
  */
 public final class TimeBound {
-    // TODO actually, we should get types as well as constants from somewhere
-    private final static class ExpressionToTypeEmpty implements ExpressionToType {
-        private ExpressionToTypeEmpty() {
-        }
-
-        @Override
-        public Type getType(Expression expression) {
-            assert expression != null;
-            return null;
-        }
-    }
-
     public final static class Builder {
         private Expression left;
         private Expression right;
@@ -294,7 +280,7 @@ public final class TimeBound {
      * @return left time bound as {@link Value}
      */
     public ValueAlgebra getLeftValue() {
-        return evaluateValue(getLeft());
+        return ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(getLeft()));
     }
 
     /**
@@ -306,15 +292,15 @@ public final class TimeBound {
      * @return right time bound as {@link Value}
      */
     public ValueAlgebra getRightValue() {
-        return evaluateValue(getRight());
+        return ValueAlgebra.as(UtilEvaluatorExplicit.evaluate((getRight())));
     }
 
     public int getLeftInt() {
-        return ValueInteger.as(evaluateValue(getLeft())).getInt();
+        return ValueInteger.as(UtilEvaluatorExplicit.evaluate(getLeft())).getInt();
     }
 
     public int getRightInt() {
-        return ValueInteger.as(evaluateValue(getRight())).getInt();
+        return ValueInteger.as(UtilEvaluatorExplicit.evaluate(getRight())).getInt();
     }
 
     @Override
@@ -337,13 +323,5 @@ public final class TimeBound {
         hash = (leftOpen ? 1 : 0) + (hash << 6) + (hash << 16) - hash;
         hash = (rightOpen ? 1 : 0) + (hash << 6) + (hash << 16) - hash;
         return hash;
-    }
-
-    private static ValueAlgebra evaluateValue(Expression expression) {
-        assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression,
-                new ExpressionToTypeEmpty(),
-                new Expression[0]);
-        return ValueAlgebra.as(evaluator.evaluate());
     }
 }
