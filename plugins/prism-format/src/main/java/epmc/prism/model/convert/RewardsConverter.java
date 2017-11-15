@@ -29,7 +29,9 @@ import java.util.Set;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.SemanticsCTMC;
 import epmc.graph.SemanticsCTMDP;
 import epmc.jani.model.Action;
@@ -64,9 +66,7 @@ import epmc.prism.model.TransitionReward;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeWeight;
-import epmc.value.UtilValue;
+import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIsZero;
 
@@ -171,7 +171,9 @@ final class RewardsConverter {
             variable.setType(rewardType);
             variable.setTransient(true);
             variable.setInitial(new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> TypeWeight.get().getZero()).build());
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                    .build());
             rewards.addVariable(variable);
         }
         return rewards;
@@ -230,7 +232,8 @@ final class RewardsConverter {
             Rate rate = new Rate();
             rate.setModel(modelJANI);
             rate.setExp(new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 1))
+                    .setValue("1")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build());
             edge.setRate(rate);
         }
@@ -287,8 +290,9 @@ final class RewardsConverter {
         for (RewardStructure structure : rewardStructures) {
             Expression stateRewards = convertStateRewards(structure.getStateRewards());
             if (ExpressionLiteral.isLiteral(stateRewards)) {
-                OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(stateRewards).getValue().getType());
-                isZero.apply(cmp, ExpressionLiteral.asLiteral(stateRewards).getValue());
+                Value value = UtilEvaluatorExplicit.evaluate(stateRewards);
+                OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, value.getType());
+                isZero.apply(cmp, value);
             }
             if (ExpressionLiteral.isLiteral(stateRewards)
                     && cmp.getBoolean()) {
@@ -331,7 +335,8 @@ final class RewardsConverter {
         }
         if (result == null) {
             return new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 0))
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         }
         return result;
@@ -508,6 +513,6 @@ final class RewardsConverter {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 }

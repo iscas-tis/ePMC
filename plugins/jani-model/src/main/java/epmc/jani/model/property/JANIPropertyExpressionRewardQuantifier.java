@@ -41,6 +41,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.RewardType;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.SemanticsContinuousTime;
 import epmc.graph.SemanticsDiscreteTime;
 import epmc.jani.model.JANIIdentifier;
@@ -53,6 +54,7 @@ import epmc.util.UtilJSON;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
+import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIsPosInf;
 
@@ -402,10 +404,10 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        Value expValue = UtilEvaluatorExplicit.evaluate(expression);
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, expValue.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        isPosInf.apply(cmp, expressionLiteral.getValue());
+        isPosInf.apply(cmp, expValue);
         return cmp.getBoolean();
     }
 

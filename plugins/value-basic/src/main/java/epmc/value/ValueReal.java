@@ -22,7 +22,7 @@ package epmc.value;
 
 import epmc.value.Value;
 
-public interface ValueReal extends ValueNumber {
+public interface ValueReal extends ValueNumber, ValueSetString {
     static boolean is(Value value) {
         return TypeReal.is(value.getType());
     }

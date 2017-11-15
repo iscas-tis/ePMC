@@ -36,6 +36,7 @@ import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBounded;
 import epmc.time.JANITypeClock;
 import epmc.prism.expression.UtilPrismExpressionParser;
+import epmc.expression.standard.ExpressionTypeInteger;
 
 import java.io.StringReader;
 import java.util.List;
@@ -508,7 +509,8 @@ private Expression parseInt()  :
 {
 	intg = <NUM_INT>
 	{ return new ExpressionLiteral.Builder()
-		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderInteger(intg.toString()))
+		.setValue(intg.toString())
+		.setType(ExpressionTypeInteger.TYPE_INTEGER)
 		.build();
 	}
 }

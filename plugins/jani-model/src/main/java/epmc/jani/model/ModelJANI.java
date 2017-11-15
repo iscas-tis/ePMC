@@ -43,6 +43,10 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionType;
+import epmc.expression.standard.ExpressionTypeBoolean;
+import epmc.expression.standard.ExpressionTypeInteger;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.LowLevel;
@@ -94,9 +98,7 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
-import epmc.value.Value;
 
 /**
  * Model class for JANI models.
@@ -368,32 +370,30 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
     private Expression parseConstant(String valueString) {
         assert valueString != null;
-        ExpressionLiteral.ValueProvider valueProvider = () -> {
-            Value value = null;
+        ExpressionType type = null;
+        try {
+            UtilValue.newValue(TypeBoolean.get(), valueString);
+            type = ExpressionTypeBoolean.TYPE_BOOLEAN;
+        } catch (EPMCException e) {
+        }
+        if (type == null) {
             try {
-                value = UtilValue.newValue(TypeBoolean.get(), valueString);
+                UtilValue.newValue(TypeInteger.get(), valueString);
+                type = ExpressionTypeInteger.TYPE_INTEGER;
             } catch (EPMCException e) {
             }
-            if (value == null) {
-                try {
-                    value = UtilValue.newValue(TypeInteger.get(), valueString);
-                } catch (EPMCException e) {
-                }
+        }
+        if (type == null) {
+            try {
+                UtilValue.newValue(TypeReal.get(), valueString);
+                type = ExpressionTypeReal.TYPE_REAL;
+            } catch (EPMCException e) {
             }
-            if (value == null) {
-                try {
-                    value = UtilValue.newValue(TypeReal.get(), valueString);
-                } catch (EPMCException e) {
-                }
-            }
-            if (value == null) {
-                value = UtilValue.newValue(TypeWeight.get(), valueString);
-            }
-            assert value != null; // TODO
-            return value;
-        };
+        }
+        assert type != null; // TODO throw exception rather than assertion
         return new ExpressionLiteral.Builder()
-                .setValueProvider(valueProvider)
+                .setValue(valueString)
+                .setType(type)
                 .build();
     }
 

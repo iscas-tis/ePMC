@@ -29,6 +29,7 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.SMGPlayer;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.explorer.ExplorerEdgeProperty;
 import epmc.graph.explorer.ExplorerNodeProperty;
@@ -170,9 +171,9 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
         assert expression != null;
         assert expression instanceof ExpressionIdentifier
         || expression instanceof ExpressionLiteral;
-        if (expression instanceof ExpressionLiteral) {
+        if (ExpressionLiteral.isLiteral(expression)) {
             ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-            Value value = expressionLiteral.getValue();
+            Value value = UtilEvaluatorExplicit.evaluate(expressionLiteral);
             assert ValueInteger.is(value);
             int intValue = ValueInteger.as(value).getInt() - 1;
             assert intValue >= 0 : intValue;

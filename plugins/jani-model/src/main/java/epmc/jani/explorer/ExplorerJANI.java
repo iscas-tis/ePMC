@@ -35,7 +35,6 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsNonDet;
@@ -43,7 +42,6 @@ import epmc.graph.explorer.Explorer;
 import epmc.graph.explorer.ExplorerEdgeProperty;
 import epmc.graph.explorer.ExplorerNode;
 import epmc.graph.explorer.ExplorerNodeProperty;
-import epmc.jani.model.ExpressionToTypeEmpty;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.OptionsJANIModel;
@@ -453,8 +451,7 @@ public final class ExplorerJANI implements Explorer {
             return result;
         }
         Map<Expression,Expression> constants = model.getConstants();
-        ExpressionToType expressionToType = new ExpressionToTypeEmpty();
-        Value value = UtilEvaluatorExplicit.evaluate(constants.get(property), expressionToType);
+        Value value = UtilEvaluatorExplicit.evaluate(constants.get(property));
         result = new PropertyNodeConstant(this, value);
         constantProperies.put(property, result);
         return result;

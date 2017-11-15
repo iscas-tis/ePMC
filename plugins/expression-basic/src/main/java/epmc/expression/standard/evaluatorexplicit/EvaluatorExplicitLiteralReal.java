@@ -20,16 +20,16 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
-import epmc.value.Type;
-import epmc.value.TypeInteger;
-import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.value.TypeReal;
 import epmc.value.Value;
 
-public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitInteger {
+public final class EvaluatorExplicitLiteralReal implements EvaluatorExplicit {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
@@ -67,11 +67,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
                 return false;
             }
             ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-            Type type = expressionLiteral.getValue().getType();
-            if (type == null) {
-                return false;
-            }
-            if (!TypeInteger.is(type)) {
+            if (!expressionLiteral.getType().equals(ExpressionTypeReal.TYPE_REAL)) {
                 return false;
             }
             return true;
@@ -79,7 +75,7 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
 
         @Override
         public EvaluatorExplicit build() {
-            return new EvaluatorExplicitIntegerLiteral(this);
+            return new EvaluatorExplicitLiteralReal(this);
         }
 
         @Override
@@ -89,24 +85,19 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         }
     }
 
-    public final static String IDENTIFIER = "integer-literal";
+    public final static String IDENTIFIER = "real-literal";
     private final Expression[] variables;
     private final Expression expression;
-    private final Value value;
-    private final int valueInteger;
+    private final ValueReal value;
 
-    private EvaluatorExplicitIntegerLiteral(Builder builder) {
+    private EvaluatorExplicitLiteralReal(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
         expression = builder.getExpression();
         variables = builder.getVariables();
-        value = getValue(expression);
-        if (ValueInteger.is(value)) {
-            valueInteger = ValueInteger.as(value).getInt();
-        } else {
-            valueInteger = -1;
-        }
+        value = TypeReal.get().newValue();
+        value.set(ExpressionLiteral.asLiteral(expression).getValue());
     }
 
     @Override
@@ -124,18 +115,6 @@ public final class EvaluatorExplicitIntegerLiteral implements EvaluatorExplicitI
         assert expression != null;
         assert variables != null;
         return value;
-    }
-
-    @Override
-    public int evaluateInteger(Value... values) {
-        return valueInteger;
-    }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
     }
 
     @Override

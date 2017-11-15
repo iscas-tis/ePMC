@@ -24,6 +24,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorNot;
@@ -98,19 +99,17 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return ValueBoolean.isFalse(UtilEvaluatorExplicit.evaluate(expression));
     }
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return ValueBoolean.isTrue(UtilEvaluatorExplicit.evaluate(expression));
     }
 }

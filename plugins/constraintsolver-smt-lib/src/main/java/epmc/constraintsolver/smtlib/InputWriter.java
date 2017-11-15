@@ -227,7 +227,7 @@ final class InputWriter {
             ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             return newSExpression(expressionIdentifier.getName());
         } else if (ExpressionLiteral.isLiteral(expression)) {
-            return newSExpression(getValue(expression).toString());
+            return newSExpression(getValue(expression));
         } else if (expression instanceof ExpressionOperator) {
             return translateExpressionOperator((ExpressionOperator) expression);
         } else {
@@ -326,7 +326,7 @@ final class InputWriter {
         }
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

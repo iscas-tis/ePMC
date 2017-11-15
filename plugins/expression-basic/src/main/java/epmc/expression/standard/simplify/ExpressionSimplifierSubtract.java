@@ -23,16 +23,17 @@ package epmc.expression.standard.simplify;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeInterval;
+import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorIsZero;
 import epmc.value.operator.OperatorSubtract;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
-
 
 public final class ExpressionSimplifierSubtract implements ExpressionSimplifier {
     public final static String IDENTIFIER = "subtract";
@@ -52,7 +53,8 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
             return new ExpressionLiteral.Builder()
-                    .setValue(TypeInterval.get().getZero())
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         }
         return null;
@@ -71,8 +73,9 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         assert expression != null;
         ValueBoolean cmp = TypeBoolean.get().newValue();
         if (ExpressionLiteral.isLiteral(expression)) {
-            OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, ExpressionLiteral.asLiteral(expression).getValue().getType());
-            isZero.apply(cmp, ExpressionLiteral.asLiteral(expression).getValue());
+            Value value = UtilEvaluatorExplicit.evaluate(expression);
+            OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, value.getType());
+            isZero.apply(cmp, value);
         }
         return ExpressionLiteral.isLiteral(expression) && cmp.getBoolean();
     }

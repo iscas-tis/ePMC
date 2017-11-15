@@ -8,15 +8,11 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.RewardType;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.value.Operator;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.UtilValue;
-import epmc.value.Value;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorIff;
@@ -63,63 +59,6 @@ public final class UtilPrismExpressionParser {
                     .setContent(content)
                     .build();
         }
-    }
-
-    private static final class ParseValueProviderReal implements ExpressionLiteral.ValueProvider {
-        private final String string;
-
-        private ParseValueProviderReal(String string) {
-            assert string != null;
-            this.string = string;
-        }
-
-        @Override
-        public Value provideValue() {
-            return UtilValue.newValue(TypeReal.get(), string);
-        }
-    }
-
-    private static final class ParseValueProviderInteger implements ExpressionLiteral.ValueProvider {
-        private final String string;
-
-        private ParseValueProviderInteger(String string) {
-            assert string != null;
-            this.string = string;
-        }
-
-        @Override
-        public Value provideValue() {
-            return UtilValue.newValue(TypeInteger.get(), string);
-        }
-    }
-
-    private static final class ParseValueProviderBoolean implements ExpressionLiteral.ValueProvider {
-        private final String string;
-
-        private ParseValueProviderBoolean(String string) {
-            assert string != null;
-            this.string = string;
-        }
-
-        @Override
-        public Value provideValue() {
-            return UtilValue.newValue(TypeBoolean.get(), string);
-        }
-    }
-
-    public static ExpressionLiteral.ValueProvider newParseValueProviderReal(String string) {
-        assert string != null;
-        return new ParseValueProviderReal(string);
-    }
-
-    public static ExpressionLiteral.ValueProvider newParseValueProviderInteger(String string) {
-        assert string != null;
-        return new ParseValueProviderInteger(string);
-    }
-
-    public static ExpressionLiteral.ValueProvider newParseValueProviderBoolean(String string) {
-        assert string != null;
-        return new ParseValueProviderBoolean(string);
     }
 
     static ExpressionOperator newOperator(Operator operator, Expression... operands) {
@@ -280,7 +219,8 @@ public final class UtilPrismExpressionParser {
                 .setPositional(new Positional.Builder()
                         .setContent("true")
                         .build())
-                .setValueProvider(new ParseValueProviderBoolean("true"))
+                .setValue("true")
+                .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
                 .build();
     }
 

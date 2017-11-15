@@ -47,6 +47,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -104,7 +105,6 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorCeil;
 import epmc.value.operator.OperatorPow;
@@ -885,7 +885,8 @@ public final class PRISM2JANIConverter {
         if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
             Expression operand = prism2jani(expression.getOperand1());
             Expression zero = new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> TypeInteger.get().getZero())
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
             return new ExpressionOperator.Builder()
                     .setOperator(OperatorSubtract.SUBTRACT)
@@ -935,6 +936,6 @@ public final class PRISM2JANIConverter {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 }

@@ -34,7 +34,6 @@ import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.jani.model.Constant;
 import epmc.jani.model.Constants;
-import epmc.jani.model.ExpressionToTypeEmpty;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
@@ -148,7 +147,7 @@ public final class JANITypeBounded implements JANIType {
             }
             // TODO HACK
             if (model == null || !model.containsUndefinedConstants()) {
-                Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound, new ExpressionToTypeEmpty());
+                Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound);
                 if (ValueInteger.is(lowerValue)) {
                     lowerInt = ValueInteger.as(lowerValue).getInt();
                 }
@@ -159,7 +158,7 @@ public final class JANITypeBounded implements JANIType {
                 upperBound = UtilExpressionStandard.replace(upperBound, model.getConstants());
             }
             if (model == null || !model.containsUndefinedConstants()) {
-                Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound, new ExpressionToTypeEmpty());
+                Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound);
                 if (ValueInteger.is(upperValue)) {
                     upperInt = ValueInteger.as(upperValue).getInt();
                 }

@@ -28,8 +28,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.value.Value;
-import epmc.value.ValueBoolean;
 
 /**
  * Ernst Moritz Hahn
@@ -436,7 +434,7 @@ public final class ExpressionTemporal implements Expression {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(getValue(expressionLiteral));
+        return !Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static boolean isTrue(Expression expression) {
@@ -445,10 +443,10 @@ public final class ExpressionTemporal implements Expression {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return Boolean.valueOf(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

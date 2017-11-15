@@ -23,8 +23,6 @@ package epmc.expression.standard;
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.value.Value;
-import epmc.value.ValueBoolean;
 
 public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
     private ExpressionTemporal temporal = null;
@@ -122,10 +120,10 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
     private static boolean isTrue(Expression expression) {
         assert expression != null;
 
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        return ValueBoolean.isTrue(getValue(expression));
+        return Boolean.valueOf(getValue(expression));
     }
 
     private static boolean isFalse(Expression expression) {
@@ -134,13 +132,13 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
-        return ValueBoolean.isFalse(getValue(expression));
+        return !Boolean.valueOf(getValue(expression));
     }  
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
 
-        return ((ExpressionLiteral) expression).getValue();
+        return ExpressionLiteral.asLiteral(expression).getValue();
     }
 }

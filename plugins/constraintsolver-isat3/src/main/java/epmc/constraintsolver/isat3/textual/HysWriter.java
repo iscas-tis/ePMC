@@ -35,7 +35,6 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.Value;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorAnd;
@@ -209,7 +208,7 @@ final class HysWriter {
             ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             return expressionIdentifier.getName();
         } else if (ExpressionLiteral.isLiteral(expression)) {
-            return getValue(expression).toString();
+            return getValue(expression);
         } else if (expression instanceof ExpressionOperator) {
             return translateExpressionOperator((ExpressionOperator) expression);
         } else {
@@ -248,7 +247,7 @@ final class HysWriter {
         return result.toString();
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

@@ -143,13 +143,13 @@ public final class TimeBound {
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueReal.is(expressionLiteral.getValue())) {
+        Value value = UtilEvaluatorExplicit.evaluate(expression);
+        if (!ValueReal.is(value)) {
             return false;
         }
-        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, expressionLiteral.getValue().getType());
+        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, value.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        isPosInf.apply(cmp, expressionLiteral.getValue());
+        isPosInf.apply(cmp, value);
         return cmp.getBoolean();
     }
 
@@ -253,9 +253,10 @@ public final class TimeBound {
             return true;
         }
         ExpressionLiteral leftLit = ExpressionLiteral.asLiteral(getLeft());
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, getValue(leftLit).getType());
+        Value leftValue = UtilEvaluatorExplicit.evaluate(leftLit);
+        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, leftValue.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        isZero.apply(cmp, getValue(leftLit));
+        isZero.apply(cmp, leftValue);
         return !cmp.getBoolean();
     }
 
@@ -344,12 +345,5 @@ public final class TimeBound {
                 new ExpressionToTypeEmpty(),
                 new Expression[0]);
         return ValueAlgebra.as(evaluator.evaluate());
-    }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
     }
 }

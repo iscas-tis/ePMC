@@ -30,6 +30,7 @@ import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public final class UtilEvaluatorExplicit {
@@ -102,6 +103,16 @@ public final class UtilEvaluatorExplicit {
         return evaluator.evaluate();
     }
 
+    public static Value evaluate(Expression expression) {
+        return evaluate(expression, new ExpressionToType() {
+            
+            @Override
+            public Type getType(Expression expression) {
+                return null;
+            }
+        });
+    }
+    
     public static EvaluatorExplicit newEvaluator(
             Class<?> returnType,
             Expression expression,

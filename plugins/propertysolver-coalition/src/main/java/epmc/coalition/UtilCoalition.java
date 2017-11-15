@@ -34,6 +34,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
@@ -191,7 +192,7 @@ public final class UtilCoalition {
     private static ValueAlgebra getValue(Expression expression) {
         assert expression != null;
         ExpressionLiteral expressionLiteral = getLiteral(expression);
-        return ValueAlgebra.as(expressionLiteral.getValue());
+        return ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(expressionLiteral));
     }
 
     public static ExpressionQuantifier getQuantifier(Expression expression) {

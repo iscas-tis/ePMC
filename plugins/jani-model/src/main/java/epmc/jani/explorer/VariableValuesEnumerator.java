@@ -500,7 +500,7 @@ public final class VariableValuesEnumerator {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private static boolean isTrue(Expression expression) {
@@ -509,7 +509,7 @@ public final class VariableValuesEnumerator {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private boolean isEq(Expression expression) {

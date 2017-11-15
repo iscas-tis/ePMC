@@ -30,9 +30,8 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.util.UtilJSON;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
 
 /**
  * Destination of an edge of an automaton.
@@ -166,7 +165,8 @@ public final class Destination implements JANINode {
     public Expression getProbabilityExpressionOrOne() {
         if (probability == null) {
             return new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), 1))
+                    .setValue("1")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         } else {
             return probability.getExp();

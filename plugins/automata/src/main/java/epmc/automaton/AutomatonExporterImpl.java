@@ -39,8 +39,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionLiteral;
-import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.util.BitSet;
@@ -150,10 +148,10 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
                 ValueEnumerable value = type.newValue();
                 value.setValueNumber(valueNr);
                 entry[exprNr] = value;
-                Expression literal = new ExpressionLiteral.Builder()
-                        .setValue(value)
-                        .build();
-                DD eq = checkE2D.translate(eq(expression, literal));
+                DD expressionDD = checkE2D.translate(expression);
+                DD eq = ContextDD.get().applyWith(OperatorEq.EQ,
+                        expressionDD,
+                        ContextDD.get().newConstant(value));
                 check = check.andWith(eq);
                 if (check.isFalse()) {
                     invalid = true;
@@ -194,13 +192,6 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         }
 
         return result;
-    }
-
-    private Expression eq(Expression a, Expression b) {
-        return new ExpressionOperator.Builder()
-                .setOperator(OperatorEq.EQ)
-                .setOperands(a, b)
-                .build();
     }
 
     @Override

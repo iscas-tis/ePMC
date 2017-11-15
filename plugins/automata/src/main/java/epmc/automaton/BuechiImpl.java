@@ -255,10 +255,10 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return Boolean.valueOf(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
@@ -404,7 +404,7 @@ public class BuechiImpl implements Buechi {
             return false;
         }
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isFalse(getValue(expressionLiteral));
+        return !Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static boolean isNot(Expression expression) {

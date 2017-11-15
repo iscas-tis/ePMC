@@ -36,7 +36,6 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import epmc.value.ValueBoolean;
 
 public class LTLHelper {
     public static RawProperties readProperties(Options options, String propFn)
@@ -114,7 +113,7 @@ public class LTLHelper {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private static boolean isTrue(Expression expression) {
@@ -123,7 +122,7 @@ public class LTLHelper {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 
 }

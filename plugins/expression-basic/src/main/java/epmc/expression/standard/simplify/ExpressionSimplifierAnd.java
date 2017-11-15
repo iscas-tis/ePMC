@@ -25,7 +25,6 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expressionevaluator.ExpressionToType;
-import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorNot;
 
@@ -104,7 +103,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private static boolean isTrue(Expression expression) {
@@ -113,6 +112,6 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 }

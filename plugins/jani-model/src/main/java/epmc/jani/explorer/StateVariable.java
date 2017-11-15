@@ -2,7 +2,6 @@ package epmc.jani.explorer;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.TypeNumBitsKnown;
 import epmc.value.Value;
@@ -88,12 +87,7 @@ public final class StateVariable {
             numBits = TypeNumBitsKnown.getNumBits(type);
         }
         if (initialValueExpression != null) {
-            initialValue = UtilEvaluatorExplicit.evaluate(initialValueExpression, new ExpressionToType() {
-                @Override
-                public Type getType(Expression expression) {
-                    return null;
-                }
-            });
+            initialValue = UtilEvaluatorExplicit.evaluate(initialValueExpression);
         } else {
             initialValue = null;
         }
