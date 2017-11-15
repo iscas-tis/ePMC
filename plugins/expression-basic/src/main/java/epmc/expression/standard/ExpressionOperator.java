@@ -26,7 +26,7 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * Expression to store an operator.

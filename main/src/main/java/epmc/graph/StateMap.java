@@ -22,7 +22,7 @@ package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 

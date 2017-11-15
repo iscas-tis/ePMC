@@ -20,8 +20,13 @@
 
 package epmc.jani.extensions.derivedoperators;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -30,11 +35,6 @@ import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorSet;
 import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 public final class OperatorEvaluatorSgn implements OperatorEvaluator {

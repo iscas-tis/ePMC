@@ -12,13 +12,13 @@ import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.RewardType;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
-import epmc.value.Operator;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 
 public final class UtilPrismExpressionParser {
     public final static class InfoExpression {

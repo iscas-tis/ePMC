@@ -1,7 +1,8 @@
 package epmc.value.operatorevaluator;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInterval;
@@ -9,7 +10,6 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorSet;
 
 public final class OperatorEvaluatorSetIntervalReal implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

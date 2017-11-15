@@ -24,6 +24,8 @@ import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorIsPosInf;
+import epmc.operator.OperatorIsZero;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -33,8 +35,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
-import epmc.value.operator.OperatorIsPosInf;
-import epmc.value.operator.OperatorIsZero;
 
 // TODO complete documentation
 

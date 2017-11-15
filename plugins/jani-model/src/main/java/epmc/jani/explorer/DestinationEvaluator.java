@@ -33,6 +33,8 @@ import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -42,8 +44,6 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Evaluator for edge destinations.

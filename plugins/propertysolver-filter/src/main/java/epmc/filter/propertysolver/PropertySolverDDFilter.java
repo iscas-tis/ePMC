@@ -40,6 +40,9 @@ import epmc.graph.dd.StateSetDD;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
@@ -48,9 +51,6 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Solver for filter properties for the DD engine.

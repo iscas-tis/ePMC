@@ -29,12 +29,12 @@ import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorSet;
 
 public final class GraphDDGeneric implements GraphDD {
 

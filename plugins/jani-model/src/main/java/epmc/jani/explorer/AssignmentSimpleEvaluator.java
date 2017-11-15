@@ -31,10 +31,10 @@ import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
 import epmc.jani.model.AssignmentSimple;
 import epmc.jani.model.Variable;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Value;
-import epmc.value.operator.OperatorSet;
 
 public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
     public final static String IDENTIFIER = "simple";

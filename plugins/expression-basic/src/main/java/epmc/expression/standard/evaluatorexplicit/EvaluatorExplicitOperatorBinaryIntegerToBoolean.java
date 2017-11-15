@@ -29,16 +29,16 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorNe;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorNe;
 
 public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {

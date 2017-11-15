@@ -35,20 +35,20 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.operator.Operator;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorIsOne;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorNe;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorIsOne;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorNe;
 
 // TODO documentation
 

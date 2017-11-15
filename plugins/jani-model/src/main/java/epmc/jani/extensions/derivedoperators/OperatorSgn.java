@@ -20,7 +20,7 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * Operator to compute signum of a value.

@@ -39,8 +39,8 @@ import epmc.jani.model.JANIOperator;
 import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
+import epmc.operator.Operator;
 import epmc.util.UtilJSON;
-import epmc.value.Operator;
 
 /**
  * JANI expression for generic operators.

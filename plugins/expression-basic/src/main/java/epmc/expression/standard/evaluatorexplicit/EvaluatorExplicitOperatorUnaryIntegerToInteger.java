@@ -29,11 +29,11 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorAddInverse;
 
 public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {

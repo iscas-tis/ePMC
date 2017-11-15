@@ -28,6 +28,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import epmc.operator.Operator;
+
 import static epmc.error.UtilError.ensure;
 
 /**

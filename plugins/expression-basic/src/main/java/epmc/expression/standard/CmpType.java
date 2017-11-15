@@ -20,13 +20,13 @@
 
 package epmc.expression.standard;
 
-import epmc.value.Operator;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorNe;
+import epmc.operator.Operator;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorNe;
 
 /**
  * Comparison type, e.g. in quantifiers or reward properties.

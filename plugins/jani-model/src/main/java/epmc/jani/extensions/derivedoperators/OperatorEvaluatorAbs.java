@@ -20,7 +20,8 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAbs;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeNumber;
@@ -28,7 +29,6 @@ import epmc.value.Value;
 import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
-import epmc.value.operator.OperatorAbs;
 import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 /**

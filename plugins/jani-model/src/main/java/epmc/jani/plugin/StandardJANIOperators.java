@@ -21,25 +21,25 @@
 package epmc.jani.plugin;
 
 import epmc.jani.model.JANIOperators;
-import epmc.jani.value.OperatorEuler;
-import epmc.jani.value.OperatorPi;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorCeil;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorFloor;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLog;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMod;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSubtract;
+import epmc.jani.operator.OperatorEuler;
+import epmc.jani.operator.OperatorPi;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMod;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSubtract;
 
 /**
  * Class to add JANI standard operators to JANI operator map.

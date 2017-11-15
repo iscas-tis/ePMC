@@ -21,6 +21,7 @@
 package epmc.jani.explorer;
 
 import epmc.graph.explorer.Explorer;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -31,7 +32,6 @@ import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Explorer node property for JANI explorers and their components.

@@ -23,7 +23,7 @@ package epmc.jani.model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 public final class JANIOperators {
     private Map<String,JANIOperator> janiToOperator = new LinkedHashMap<>();

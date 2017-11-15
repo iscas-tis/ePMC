@@ -1,12 +1,12 @@
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorSet;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
-import epmc.value.operator.OperatorSet;
 
 public final class OperatorEvaluatorSetDoubleDouble implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

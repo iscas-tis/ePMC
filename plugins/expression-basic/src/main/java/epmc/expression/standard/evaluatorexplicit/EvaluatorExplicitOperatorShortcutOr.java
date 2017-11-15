@@ -23,12 +23,12 @@ package epmc.expression.standard.evaluatorexplicit;
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorOr;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorOr;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;

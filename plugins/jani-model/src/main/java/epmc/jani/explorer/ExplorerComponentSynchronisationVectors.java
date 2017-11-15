@@ -36,13 +36,13 @@ import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentSynchronisationVectors;
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.SynchronisationVectorSync;
+import epmc.operator.OperatorMultiply;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorMultiply;
 
 // TODO compute labels in all cases
 

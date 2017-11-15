@@ -28,14 +28,14 @@ import gnu.trove.map.hash.THashMap;
 import java.util.List;
 import java.util.Map;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorIte;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorIte;
 
 /**
  * Class to allow to execute operations not supported by a certain DD library.

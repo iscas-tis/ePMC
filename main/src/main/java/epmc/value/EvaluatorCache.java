@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import epmc.operator.Operator;
+
 public final class EvaluatorCache {
     private final static class Key {
         Operator operator;

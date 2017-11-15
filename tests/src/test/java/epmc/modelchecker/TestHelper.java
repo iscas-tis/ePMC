@@ -58,6 +58,9 @@ import epmc.modelchecker.RawProperties;
 import epmc.modelchecker.RawProperty;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorLt;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.plugin.AfterCommandExecution;
@@ -74,9 +77,6 @@ import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueSetString;
-import epmc.value.operator.OperatorDistance;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorLt;
 
 /**
  * Static auxiliary methods and constants for JUnit tests.

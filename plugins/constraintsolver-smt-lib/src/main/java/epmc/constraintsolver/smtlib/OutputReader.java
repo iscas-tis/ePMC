@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import epmc.constraintsolver.ConstraintSolverResult;
+import epmc.operator.OperatorDivide;
 import epmc.sexpression.SExpression;
 import epmc.sexpression.SExpressionParser;
 import epmc.sexpression.UtilSExpression;
@@ -32,7 +33,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.operator.OperatorDivide;
 
 final class OutputReader {
     private final static String SAT = "sat";

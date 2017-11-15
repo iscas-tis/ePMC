@@ -20,14 +20,14 @@
 
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorMultiply;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorMultiply;
 
 public final class OperatorEvaluatorMultiplyInt implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

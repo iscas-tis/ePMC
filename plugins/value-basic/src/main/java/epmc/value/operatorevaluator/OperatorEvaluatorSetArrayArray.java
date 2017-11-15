@@ -1,13 +1,13 @@
 package epmc.value.operatorevaluator;
 
+import epmc.operator.Operator;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import epmc.value.operator.OperatorSet;
 
 public final class OperatorEvaluatorSetArrayArray implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

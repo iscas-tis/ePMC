@@ -1,6 +1,7 @@
 package epmc.value.operatorevaluator;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorSet;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
@@ -8,7 +9,6 @@ import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorSet;
 
 public final class OperatorEvaluatorSetAlgebraInt implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {

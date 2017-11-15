@@ -39,6 +39,16 @@ import epmc.graph.explicit.subgraph.GraphExplicitSubgraph;
 import epmc.graphsolver.UtilGraphSolver;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.util.BitSet;
@@ -59,16 +69,6 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 import epmc.value.TypeObject.StorageType;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDistance;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorSet;
-import epmc.value.operator.OperatorSubtract;
 
 // TODO fix issue with neutral transitions: ">=", "<=" to "==".
 

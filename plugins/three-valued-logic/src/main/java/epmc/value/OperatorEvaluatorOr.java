@@ -1,6 +1,7 @@
 package epmc.value;
 
-import epmc.value.operator.OperatorOr;
+import epmc.operator.Operator;
+import epmc.operator.OperatorOr;
 
 public final class OperatorEvaluatorOr implements OperatorEvaluator {
 

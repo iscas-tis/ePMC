@@ -20,11 +20,11 @@
 
 package epmc.value;
 
+import epmc.operator.OperatorSet;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import epmc.value.operator.OperatorSet;
 
 public final class UtilValue {
     private final static String LBRACK = "[";

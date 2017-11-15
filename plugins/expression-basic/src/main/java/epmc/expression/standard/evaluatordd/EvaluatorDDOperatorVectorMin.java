@@ -27,7 +27,7 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
-import epmc.value.operator.OperatorMin;
+import epmc.operator.OperatorMin;
 
 public final class EvaluatorDDOperatorVectorMin implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-min";

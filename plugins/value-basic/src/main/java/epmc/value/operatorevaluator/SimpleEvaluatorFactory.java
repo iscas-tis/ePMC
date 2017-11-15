@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.google.common.collect.Lists;
 
+import epmc.operator.Operator;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.OperatorEvaluatorFactory;
 import epmc.value.Type;

@@ -48,7 +48,7 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;

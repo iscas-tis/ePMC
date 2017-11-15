@@ -46,6 +46,10 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIsPosInf;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.value.ContextValue;
@@ -59,10 +63,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorIsPosInf;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorSubtract;
 
 public final class PropertySolverExplicitMultiObjective implements PropertySolver {
     public final static String IDENTIFIER = "multiobjective-explicit";

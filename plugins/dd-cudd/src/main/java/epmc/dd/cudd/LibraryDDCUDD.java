@@ -33,22 +33,22 @@ import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
 import epmc.dd.cudd.OptionsTypesCUDD.CUDDSubengine;
 import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 /**
  * CUDD BDD library implementation.

@@ -32,6 +32,10 @@ import epmc.jani.explorer.NodeJANI;
 import epmc.jani.explorer.PropertyEdgeGeneral;
 import epmc.jani.explorer.PropertyNodeGeneral;
 import epmc.jani.explorer.UtilExplorer;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
@@ -39,10 +43,6 @@ import epmc.value.TypeEnum;
 import epmc.value.TypeWeightTransition;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorSet;
 
 public final class ExplorerExtensionDTMC implements ExplorerExtension {
     public final static String IDENTIFIER = "dtmc";

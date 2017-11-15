@@ -1,11 +1,11 @@
 package epmc.jani.value;
 
 import epmc.jani.explorer.TypeDecision;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorSet;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorSet;
 import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 public final class OperatorEvaluatorSetLocationLocation implements OperatorEvaluator {

@@ -23,12 +23,12 @@ package epmc.jani.explorer;
 import java.util.Arrays;
 
 import epmc.graph.explorer.Explorer;
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Explorer edge property for JANI explorers and their components.

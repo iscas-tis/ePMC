@@ -10,8 +10,8 @@ import org.junit.Test;
 
 import epmc.error.EPMCException;
 import epmc.expression.standard.ProblemsExpression;
+import epmc.operator.OperatorAdd;
 import epmc.options.Options;
-import epmc.value.operator.OperatorAdd;
 
 import static org.junit.Assert.*;
 

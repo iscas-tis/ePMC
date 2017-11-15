@@ -56,9 +56,9 @@ import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.OperatorNot;
 import epmc.options.Options;
 import epmc.util.StopWatch;
-import epmc.value.operator.OperatorNot;
 
 public class PropertySolverDDCoalition implements PropertySolver {
     /** Identifier of the solver. */

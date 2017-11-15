@@ -40,6 +40,8 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
@@ -54,8 +56,6 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueContentIntArray;
-import epmc.value.operator.OperatorIsZero;
-import epmc.value.operator.OperatorSubtract;
 
 // TODO make sure that this thing still works and write some JUnit tests
 

@@ -34,6 +34,10 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
@@ -41,10 +45,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorSet;
-import epmc.value.operator.OperatorSubtract;
 
 /**
  * Class to compute normalised form of multi-objective property.

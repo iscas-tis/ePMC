@@ -28,6 +28,7 @@ import java.util.List;
 
 import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerNode;
+import epmc.operator.OperatorSet;
 import epmc.util.BitStream;
 import epmc.value.ContextValue;
 import epmc.value.EvaluatorCache;
@@ -40,7 +41,6 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueNumBitsKnown;
 import epmc.value.ValueObject;
 import epmc.value.ValueRange;
-import epmc.value.operator.OperatorSet;
 
 public final class NodeJANI implements ExplorerNode {
     private final static String SPACE = " ";

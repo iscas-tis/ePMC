@@ -20,7 +20,7 @@
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * Operator to truncate a real to an integer.

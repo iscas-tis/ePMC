@@ -20,12 +20,12 @@
 
 package epmc.graph.explicit;
 
+import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.operator.OperatorSet;
 
 /**
  * Node property in which all nodes are assigned the same value.

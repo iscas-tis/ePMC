@@ -35,9 +35,9 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 

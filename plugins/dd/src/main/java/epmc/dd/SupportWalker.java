@@ -23,6 +23,8 @@ package epmc.dd;
 import java.util.Arrays;
 import java.util.Collection;
 
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIsZero;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
@@ -33,8 +35,6 @@ import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorIsZero;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.TObjectIntMap;
