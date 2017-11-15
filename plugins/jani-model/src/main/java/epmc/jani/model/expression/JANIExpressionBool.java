@@ -27,13 +27,12 @@ import javax.json.JsonValue.ValueType;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.TypeBoolean;
-import epmc.value.ValueBoolean;
 
 /**
  * JANI expression for a boolean literal.
@@ -98,14 +97,14 @@ public final class JANIExpressionBool implements JANIExpression {
     public JANIExpression matchExpression(ModelJANI model, Expression expression) {
         assert expression != null;
         resetFields();
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return null;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueBoolean.is(expressionLiteral.getValue())) {
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        if (!expressionLiteral.getType().equals(ExpressionTypeBoolean.TYPE_BOOLEAN)) {
             return null;
         }
-        value = ValueBoolean.as(expressionLiteral.getValue()).getBoolean();
+        value = Boolean.valueOf(expressionLiteral.getValue());
         initialized = true;
         return this;
     }
@@ -113,7 +112,8 @@ public final class JANIExpressionBool implements JANIExpression {
     @Override
     public Expression getExpression() {
         return new ExpressionLiteral.Builder()
-                .setValueProvider(() -> value ? TypeBoolean.get().getTrue() : TypeBoolean.get().getFalse())
+                .setValue(value ? "true" : "false")
+                .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
                 .build();
     }
 

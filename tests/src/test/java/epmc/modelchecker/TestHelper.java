@@ -555,7 +555,7 @@ public final class TestHelper {
 
     private static Value evaluateValue(Expression expression) {
         assert expression != null;
-        return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty());
+        return UtilEvaluatorExplicit.evaluate(expression);
     }
 
 

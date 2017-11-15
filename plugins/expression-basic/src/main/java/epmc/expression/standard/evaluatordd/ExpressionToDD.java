@@ -53,6 +53,7 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -422,7 +423,8 @@ public final class ExpressionToDD implements Closeable {
                 assert false : expression;
             }
         } else if (expression instanceof ExpressionLiteral) {
-            result = new Translated(getValue(expression));
+            Value value = UtilEvaluatorExplicit.evaluate(expression);
+            result = new Translated(value);
         } else if (expression instanceof ExpressionOperator) {
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
             Operator operator = expressionOperator.getOperator();
@@ -696,13 +698,6 @@ public final class ExpressionToDD implements Closeable {
                 dd.dispose();
             }
         }
-    }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
     }
 
     private boolean alive() {

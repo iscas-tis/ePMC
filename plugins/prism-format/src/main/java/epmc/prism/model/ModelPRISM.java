@@ -45,6 +45,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.RewardSpecificationImpl;
 import epmc.expression.standard.SMGPlayer;
@@ -83,9 +84,7 @@ import epmc.time.JANITypeClock;
 import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
 import epmc.value.Value;
-import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorEq;
@@ -901,18 +900,17 @@ public final class ModelPRISM implements ModelJANIConverter {
             value = ExpressionLiteral.getFalse();
         } else if (type instanceof JANITypeBounded) {
             JANITypeBounded typeBounded = (JANITypeBounded) type;
-            Expression lower = typeBounded.getLowerBound();
-            value = new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> evaluateValue(lower))
-                    .setPositional(lower.getPositional())
-                    .build();
+            value = typeBounded.getLowerBound();
         } else if (type instanceof JANITypeInt) {
             value = new ExpressionLiteral.Builder()
-                    .setValueProvider(() -> TypeInteger.get().getZero())
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         } else if (type instanceof JANITypeClock) {
+            // TODO ??
             value = new ExpressionLiteral.Builder()
-                    .setValue(TypeInteger.get().newValue())
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         } else {
             value = null;
@@ -1187,8 +1185,8 @@ public final class ModelPRISM implements ModelJANIConverter {
         || expression instanceof ExpressionLiteral;
         if (expression instanceof ExpressionLiteral) {
             ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-            Value value = expressionLiteral.getValue();
-            assert ValueInteger.is(value);
+            assert expressionLiteral.getType().equals(ExpressionTypeInteger.TYPE_INTEGER);
+            Value value = UtilEvaluatorExplicit.evaluate(expressionLiteral);
             int intValue = ValueInteger.as(value).getInt() - 1;
             assert intValue >= 0 : intValue;
             assert intValue < playerNameToNumber.size();
@@ -1337,7 +1335,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     public Expression opAndNot(Expression op1, Expression op2) {

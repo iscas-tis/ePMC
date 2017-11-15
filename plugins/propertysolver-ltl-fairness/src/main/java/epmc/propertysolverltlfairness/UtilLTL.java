@@ -31,7 +31,6 @@ import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.value.Operator;
-import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGe;
@@ -340,7 +339,7 @@ public final class UtilLTL {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
 
     public static boolean isTrue(Expression expression) {
@@ -349,7 +348,7 @@ public final class UtilLTL {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     public static Expression newOperator(Operator operator, Expression... operands) {

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionLiteral;
@@ -34,7 +33,6 @@ import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
@@ -43,7 +41,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorNot;
 import epmc.value.operator.OperatorSet;
@@ -112,9 +109,11 @@ final class PropertyNormaliser {
                 set.apply(subtractNumericalFrom, subtractNumericalFrom.getType().getOne());
             } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
                 Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
+                /*
                 newCompare = new ExpressionLiteral.Builder()
                         .setValue(evaluateValue(newCompare))
                         .build();
+                        */
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.NONE)
                         .setCmpType(CmpType.GE)
@@ -138,9 +137,11 @@ final class PropertyNormaliser {
                 Expression newCompare = new ExpressionOperator.Builder()
                         .setOperator(OperatorAddInverse.ADD_INVERSE)
                         .setOperands(objectiveQuantifier.getCompare()).build();
+                /*
                 newCompare = new ExpressionLiteral.Builder()
                         .setValue(evaluateValue(newCompare))
                         .build();
+                        */
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.NONE)
                         .setCmpType(CmpType.GE)
@@ -205,12 +206,6 @@ final class PropertyNormaliser {
         return expressionReward.getRewardType().isCumulative();
     }
 
-    private Value evaluateValue(Expression expression) {
-        assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
-        return evaluator.evaluate();
-    }
-
     private static boolean isDirMax(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionQuantifier)) {
@@ -235,7 +230,7 @@ final class PropertyNormaliser {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private static boolean isQuantLe(Expression expression) {

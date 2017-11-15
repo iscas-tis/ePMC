@@ -46,6 +46,9 @@ import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import static epmc.prism.expression.UtilPrismExpressionParser.*;
+import epmc.expression.standard.ExpressionTypeReal;
+import epmc.expression.standard.ExpressionTypeBoolean;
+import epmc.expression.standard.ExpressionTypeInteger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -724,7 +727,8 @@ private Expression parseSqrt(boolean parseExp)  :
 	{ endExpression(info);
 	  return newOperator(OperatorPRISMPow.PRISM_POW, e,
 		new ExpressionLiteral.Builder()
-			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal("0.5"))
+			.setValue("0.5")
+			.setType(ExpressionTypeReal.TYPE_REAL)
 			.build(), info); }
 }
 
@@ -871,7 +875,8 @@ private Expression parseReal()  :
 	real = <NUM_REAL>
 	{ endExpression(info);
 	return new ExpressionLiteral.Builder()
-		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderReal(real.toString()))
+		.setValue(real.toString())
+		.setType(ExpressionTypeReal.TYPE_REAL)
 		.setPositional(info.toPositional())
 		.build(); }
 }
@@ -886,7 +891,8 @@ private Expression parseInt()  :
 	intg = <NUM_INT>
 	{ endExpression(info);
 	    return new ExpressionLiteral.Builder()
-		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderInteger(intg.toString()))
+	    .setValue(intg.toString())
+	    .setType(ExpressionTypeInteger.TYPE_INTEGER)
 		.setPositional(info.toPositional())
 		.build(); }
 }
@@ -900,14 +906,16 @@ private Expression parseBoolean()  :
 		<TRUE> 
 		{ endExpression(info);
 		  return new ExpressionLiteral.Builder()
-			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderBoolean("true"))
+		  	.setValue("true")
+		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
 			.setPositional(info.toPositional())
 			.build();  } 
 	| { beginExpression(info); }
 		<FALSE> 
 		{ endExpression(info);
 		return new ExpressionLiteral.Builder()
-			.setValueProvider(UtilPrismExpressionParser.newParseValueProviderBoolean("false"))
+		  	.setValue("false")
+		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
 			.setPositional(info.toPositional())
 			.build(); }
 	)

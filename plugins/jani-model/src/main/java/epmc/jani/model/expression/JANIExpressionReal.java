@@ -27,13 +27,11 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.util.UtilJSON;
-import epmc.value.TypeReal;
-import epmc.value.UtilValue;
-import epmc.value.ValueReal;
 
 public final class JANIExpressionReal implements JANIExpression {
     public final static String IDENTIFIER = "real";
@@ -92,10 +90,10 @@ public final class JANIExpressionReal implements JANIExpression {
             return null;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueReal.is(expressionLiteral.getValue())) {
+        if (!expressionLiteral.getType().equals(ExpressionTypeReal.TYPE_REAL)) {
             return null;
         }
-        number = expressionLiteral.getValue().toString();
+        number = expressionLiteral.getValue();
         initialized = true;
         return this;
     }
@@ -105,7 +103,8 @@ public final class JANIExpressionReal implements JANIExpression {
         assert initialized;
         assert model != null;
         return new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(TypeReal.get(), number))
+                .setValue(number)
+                .setType(ExpressionTypeReal.TYPE_REAL)
                 .build();
     }
 

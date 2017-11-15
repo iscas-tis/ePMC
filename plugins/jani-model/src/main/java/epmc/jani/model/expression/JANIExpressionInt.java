@@ -27,14 +27,12 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
-import epmc.value.ValueInteger;
 
 /**
  * JANI expression for an integer literal.
@@ -100,10 +98,10 @@ public final class JANIExpressionInt implements JANIExpression {
             return null;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        if (!ValueInteger.is(expressionLiteral.getValue())) {
+        if (!expressionLiteral.getType().equals(ExpressionTypeInteger.TYPE_INTEGER)) {
             return null;
         }
-        number = ValueInteger.as(expressionLiteral.getValue()).getInt();
+        number = Integer.parseInt(expressionLiteral.getValue());
         initialized = true;
         return this;
     }
@@ -113,7 +111,8 @@ public final class JANIExpressionInt implements JANIExpression {
         assert initialized;
         assert model != null;
         return new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), number))
+                .setValue(Integer.toString(number))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
                 .build();
     }
 

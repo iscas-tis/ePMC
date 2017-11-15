@@ -31,6 +31,9 @@ import epmc.dd.DD;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public class EvaluatorDDLiteral implements EvaluatorDD {
@@ -66,7 +69,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
 
     @Override
     public void build() {
-        Value value = getValue(expression);
+        Value value = UtilEvaluatorExplicit.evaluate(expression);
         boolean useVector = false;
         //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
@@ -91,13 +94,6 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     @Override
     public List<DD> getVector() {
         return vector;
-    }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
     }
 
     @Override

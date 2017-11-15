@@ -25,8 +25,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.value.Value;
-import epmc.value.ValueBoolean;
 
 /**
  * @author Ernst Moritz Hahn
@@ -268,10 +266,10 @@ public final class ExpressionQuantifier implements Expression {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return Boolean.valueOf(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;

@@ -46,7 +46,6 @@ import epmc.util.BitSet;
 import epmc.util.Util;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
-import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.operator.OperatorAnd;
 import epmc.value.operator.OperatorIff;
@@ -380,7 +379,7 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isFalse(getValue(expressionLiteral));
+        return !Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static boolean isTrue(Expression expression) {
@@ -389,10 +388,10 @@ public final class UtilAutomaton {
             return false;
         }
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return Boolean.valueOf(getValue(expressionLiteral));
     }
 
-    private static Value getValue(Expression expression) {
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.isLiteral(expression);
         ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);

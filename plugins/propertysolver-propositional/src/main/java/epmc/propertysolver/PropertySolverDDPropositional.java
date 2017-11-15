@@ -31,6 +31,7 @@ import epmc.dd.DD;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.StateMap;
 import epmc.graph.StateMapDD;
@@ -74,9 +75,8 @@ public final class PropertySolverDDPropositional implements PropertySolver {
             this.expressionToDD = graphDD.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
 
-        if (property instanceof ExpressionLiteral) {
-            ExpressionLiteral propertyLiteral = (ExpressionLiteral) property;
-            value = (ContextDD.get()).newConstant(propertyLiteral.getValue());
+        if (ExpressionLiteral.isLiteral(property)) {
+            value = ContextDD.get().newConstant(UtilEvaluatorExplicit.evaluate(property));
         } else {
             value = expressionToDD.translate(property);
         }

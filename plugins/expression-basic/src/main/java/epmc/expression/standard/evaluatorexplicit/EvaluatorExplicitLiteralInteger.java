@@ -20,16 +20,17 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
-import epmc.value.ValueBoolean;
+import epmc.value.ValueInteger;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.value.TypeInteger;
 import epmc.value.Value;
 
-public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, EvaluatorExplicitBoolean{
+public final class EvaluatorExplicitLiteralInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {
-
         private Expression[] variables;
         private Expression expression;
 
@@ -62,7 +63,11 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         public boolean canHandle() {
             assert expression != null;
             assert variables != null;
-            if (!(expression instanceof ExpressionLiteral)) {
+            if (!(ExpressionLiteral.isLiteral(expression))) {
+                return false;
+            }
+            ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+            if (!expressionLiteral.getType().equals(ExpressionTypeInteger.TYPE_INTEGER)) {
                 return false;
             }
             return true;
@@ -70,7 +75,7 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
 
         @Override
         public EvaluatorExplicit build() {
-            return new EvaluatorExplicitLiteral(this);
+            return new EvaluatorExplicitLiteralInteger(this);
         }
 
         @Override
@@ -80,24 +85,21 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
         }
     }
 
-    public final static String IDENTIFIER = "literal";
+    public final static String IDENTIFIER = "integer-literal";
     private final Expression[] variables;
     private final Expression expression;
-    private final Value value;
-    private final boolean booleanValue;
+    private final ValueInteger value;
+    private final int valueInteger;
 
-    private EvaluatorExplicitLiteral(Builder builder) {
+    private EvaluatorExplicitLiteralInteger(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
-        this.expression = builder.getExpression();
-        this.variables = builder.getVariables();
-        value = getValue(expression);
-        if (ValueBoolean.is(value)) {
-            booleanValue = ValueBoolean.as(value).getBoolean();
-        } else {
-            booleanValue = false;
-        }
+        expression = builder.getExpression();
+        variables = builder.getVariables();
+        value = TypeInteger.get().newValue();
+        value.set(ExpressionLiteral.asLiteral(expression).getValue());
+        valueInteger = value.getInt();
     }
 
     @Override
@@ -118,20 +120,12 @@ public final class EvaluatorExplicitLiteral implements EvaluatorExplicit, Evalua
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) {
-        return booleanValue;
+    public int evaluateInteger(Value... values) {
+        return valueInteger;
     }
 
     @Override
     public Value getResultValue() {
         return value;
     }
-
-    private static Value getValue(Expression expression) {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
-    }
-
 }

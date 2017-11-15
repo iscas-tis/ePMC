@@ -28,8 +28,6 @@ import java.util.Map;
 import java.util.Set;
 
 import epmc.value.Operator;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorAddInverse;
 import epmc.value.operator.OperatorAnd;
@@ -61,10 +59,9 @@ public final class UtilExpressionStandard {
 
     public static Expression opAdd(Expression op1, int op2) {
         assert op1 != null;
-        TypeInteger typeInteger = TypeInteger.get();
-
         Expression op2Expr = new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
+                .setValue(Integer.toString(op2))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
                 .build();
         return newOperator(OperatorAdd.ADD, op1, op2Expr);
     }
@@ -100,9 +97,9 @@ public final class UtilExpressionStandard {
 
     public static Expression opMin(int op1, Expression op2) {
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get();
         Expression op1Expr = new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(typeInteger, op1))
+                .setValue(Integer.toString(op1))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
                 .build();
         return newOperator(OperatorMin.MIN, op1Expr, op2);
     }
@@ -129,9 +126,9 @@ public final class UtilExpressionStandard {
     public static Expression opIte(Expression op1, Expression op2, int op3) {
         assert op1 != null;
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
+                .setValue(Integer.toString(op3))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
                 .build();
         return newOperator(OperatorIte.ITE, op1, op2, op3Expr);
     }

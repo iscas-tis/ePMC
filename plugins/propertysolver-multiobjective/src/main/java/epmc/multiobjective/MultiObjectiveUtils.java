@@ -23,10 +23,10 @@ package epmc.multiobjective;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.Scheduler;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.EdgePropertyApply;
@@ -154,8 +154,7 @@ final class MultiObjectiveUtils {
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             if (!isIs(objective)) {
-                ExpressionLiteral compare = (ExpressionLiteral) objectiveQuantifier.getCompare();
-                bounds.set(compare.getValue(), objNr);
+                bounds.set(UtilEvaluatorExplicit.evaluate(objectiveQuantifier.getCompare()), objNr);
             }
             objNr++;
         }

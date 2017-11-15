@@ -27,6 +27,7 @@ import org.junit.Test;
 import epmc.coalition.options.OptionsCoalition;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.SMGPlayer;
 import epmc.graph.CommonProperties;
 import epmc.jani.ConvertTestConfiguration;
@@ -39,8 +40,6 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 
 import static epmc.modelchecker.TestHelper.*;
@@ -551,7 +550,8 @@ public final class ConvertTest {
             @Override
             public Expression getExpression() {
                 return new ExpressionLiteral.Builder()
-                        .setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), i))
+                        .setValue(Integer.toString(i))
+                        .setType(ExpressionTypeInteger.TYPE_INTEGER)
                         .build();
             }
 

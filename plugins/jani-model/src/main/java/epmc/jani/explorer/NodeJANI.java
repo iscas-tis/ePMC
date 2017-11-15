@@ -91,9 +91,14 @@ public final class NodeJANI implements ExplorerNode {
                 }
             }
             if (!storeVariable) {
-                Value initial = stateVariables.get(variables.get(varNr)).getInitialValue();
-                //				assert initial != null : variables.get(varNr);
-                initialValues[varNr] = initial;
+                Value initialA = stateVariables.get(variables.get(varNr)).getInitialValue();
+                if (initialA != null) {
+                    //				assert initial != null : variables.get(varNr);
+                    Value initial = varType.newValue();
+                    OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, initialA.getType(), initial.getType());
+                    set.apply(initial, initialA);
+                    initialValues[varNr] = initial;
+                }
             }
         }
         this.numBits = numBits;

@@ -24,9 +24,14 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionTypeInteger;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.value.Operator;
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import epmc.value.ValueDouble;
+import epmc.value.ValueInteger;
+import epmc.value.ValueReal;
 import epmc.value.operator.OperatorAdd;
 import epmc.value.operator.OperatorEq;
 import epmc.value.operator.OperatorGe;
@@ -38,9 +43,9 @@ public final class UtilConstraintSolver {
             ValueArray row, int[] variables,
             ConstraintType constraintType, Value rightHandSide) {
         Expression result = linearToExpression(solver, row, variables);
-        Expression rhsExpression = new ExpressionLiteral.Builder()
-                .setValue(rightHandSide)
-                .build();
+        Expression rhsExpression = null;
+        rhsExpression = valueToExpression(rightHandSide);
+        
         Operator operator = constraintTypeToOperator(constraintType);
         result = new ExpressionOperator.Builder()
                 .setOperator(operator)
@@ -49,13 +54,38 @@ public final class UtilConstraintSolver {
         return result;
     }
 
+    private static Expression valueToExpression(Value value) {
+        if (ValueInteger.is(value)) {
+            ValueInteger valueInteger = ValueInteger.as(value);
+            return new ExpressionLiteral.Builder()
+                    .setValue(Integer.toString(valueInteger.getInt()))
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                    .build();
+        }
+        if (ValueDouble.is(value)) {
+            ValueDouble valueDouble = ValueDouble.as(value);
+            return new ExpressionLiteral.Builder()
+                    .setValue(Double.toString(valueDouble.getDouble()))
+                    .setType(ExpressionTypeReal.TYPE_REAL)
+                    .build();
+        }
+        if (ValueReal.is(value)) {
+            // TODO conversion from value to string this way might
+            // loose precision
+            ValueReal valueReal = ValueReal.as(value);
+            return new ExpressionLiteral.Builder()
+                    .setValue(valueReal.toString())
+                    .setType(ExpressionTypeReal.TYPE_REAL)
+                    .build();
+        }
+        throw new RuntimeException();
+    }
+
     public static Expression linearToExpression(ConstraintSolver solver,
             Value[] row, int[] variables,
             ConstraintType constraintType, Value rightHandSide) {
         Expression result = linearToExpression(solver, row, variables);
-        Expression rhsExpression = new ExpressionLiteral.Builder()
-                .setValue(rightHandSide)
-                .build();
+        Expression rhsExpression = valueToExpression(rightHandSide);
         Operator operator = constraintTypeToOperator(constraintType);
         result = new ExpressionOperator.Builder()
                 .setOperator(operator)
@@ -73,9 +103,7 @@ public final class UtilConstraintSolver {
             String name = solver.getVariableName(variables[index]);
             Expression variable = new ExpressionIdentifierStandard.Builder()
                     .setName(name).build();
-            Expression factor = new ExpressionLiteral.Builder()
-                    .setValue(entry)
-                    .build();
+            Expression factor = valueToExpression(entry);
             Expression term = times(factor, variable);
             if (result == null) {
                 result = term;
@@ -94,9 +122,7 @@ public final class UtilConstraintSolver {
             String name = solver.getVariableName(variables[index]);
             Expression variable = new ExpressionIdentifierStandard.Builder()
                     .setName(name).build();
-            Expression factor = new ExpressionLiteral.Builder()
-                    .setValue(entry)
-                    .build();
+            Expression factor = valueToExpression(entry);
             Expression term = times(factor, variable);
             if (result == null) {
                 result = term;

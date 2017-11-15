@@ -28,7 +28,10 @@ import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.jani.model.type.JANIType;
+import epmc.jani.model.type.JANITypeBounded;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
 import epmc.value.TypeBoolean;
@@ -210,26 +213,18 @@ public final class UtilModelParser {
         assert variables != null;
         Expression result = null;
         for (Variable variable : variables) {
-            Value lowerValue = TypeBounded.getLower(variable.toType());
+            JANIType type = variable.getType();
             Expression lower = null;
-            if (lowerValue != null) {
-                Expression lowerValueExpr = new ExpressionLiteral.Builder()
-                        .setValue(lowerValue)
-                        .build();
+            Expression upper = null;
+            if (type instanceof JANITypeBounded) {
+                JANITypeBounded typeBounded = (JANITypeBounded) type;
                 lower = new ExpressionOperator.Builder()
                         .setOperator(OperatorGe.GE)
-                        .setOperands(variable.getIdentifier(), lowerValueExpr)
-                        .build();
-            }
-            Value upperValue = TypeBounded.getUpper(variable.toType());
-            Expression upper = null;
-            if (upperValue != null) {
-                Expression upperValueExpr = new ExpressionLiteral.Builder()
-                        .setValue(upperValue)
+                        .setOperands(variable.getIdentifier(), typeBounded.getLowerBound())
                         .build();
                 upper = new ExpressionOperator.Builder()
                         .setOperator(OperatorLe.LE)
-                        .setOperands(variable.getIdentifier(), upperValueExpr)
+                        .setOperands(variable.getIdentifier(), typeBounded.getUpperBound())
                         .build();
             }
             Expression bound = null;
@@ -244,9 +239,9 @@ public final class UtilModelParser {
                 result = (result == null) ? bound : UtilExpressionStandard.opAnd(result, bound);
             }
         }
-        TypeBoolean typeBoolean = TypeBoolean.get();
         result = (result == null) ? new ExpressionLiteral.Builder()
-                .setValue(typeBoolean.getTrue())
+                .setValue("true")
+                .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
                 .build() : result;
                 return result;
     }
