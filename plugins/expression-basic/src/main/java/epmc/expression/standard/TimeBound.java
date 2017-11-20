@@ -21,20 +21,8 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.operator.OperatorIsPosInf;
-import epmc.operator.OperatorIsZero;
-import epmc.value.ContextValue;
-import epmc.value.OperatorEvaluator;
-import epmc.value.TypeBoolean;
-import epmc.value.Value;
-import epmc.value.ValueAlgebra;
-import epmc.value.ValueBoolean;
-import epmc.value.ValueInteger;
-import epmc.value.ValueReal;
 
 // TODO complete documentation
-// TODO get rid of dependencies to value package
 
 /**
  * Time bound used in Until, Weak Until, Release etc. formulas.
@@ -129,14 +117,14 @@ public final class TimeBound {
         if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        Value value = UtilEvaluatorExplicit.evaluate(expression);
-        if (!ValueReal.is(value)) {
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        if (!expressionLiteral.getType().equals(ExpressionTypeReal.TYPE_REAL)) {
             return false;
         }
-        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, value.getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        isPosInf.apply(cmp, value);
-        return cmp.getBoolean();
+        if (Double.valueOf(expressionLiteral.getValue()) != Double.POSITIVE_INFINITY) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -239,11 +227,10 @@ public final class TimeBound {
             return true;
         }
         ExpressionLiteral leftLit = ExpressionLiteral.asLiteral(getLeft());
-        Value leftValue = UtilEvaluatorExplicit.evaluate(leftLit);
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, leftValue.getType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        isZero.apply(cmp, leftValue);
-        return !cmp.getBoolean();
+        if (Double.valueOf(leftLit.getValue()) != 0.0) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -253,7 +240,7 @@ public final class TimeBound {
      * @return check whether time bound is right bounded
      */
     public boolean isRightBounded() {
-        if (!(getRight() instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(getRight())) {
             return true;
         }
         return !isPosInf(right);
@@ -267,40 +254,6 @@ public final class TimeBound {
      */
     public boolean isUnbounded() {
         return !isLeftBounded() && !isRightBounded();
-    }
-
-    // TODO might provide additional context for constants etc.
-
-    /**
-     * Get left time bound as {@link Value}.
-     * For this, the left time bound expression will be evaluated. If a problem
-     * during this occurs (e.g. because of undefined constants), an exception
-     * will be thrown.
-     * 
-     * @return left time bound as {@link Value}
-     */
-    public ValueAlgebra getLeftValue() {
-        return ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(getLeft()));
-    }
-
-    /**
-     * Get right time bound as {@link Value}.
-     * For this, the right time bound expression will be evaluated. If a problem
-     * during this occurs (e.g. because of undefined constants), an exception
-     * will be thrown.
-     * 
-     * @return right time bound as {@link Value}
-     */
-    public ValueAlgebra getRightValue() {
-        return ValueAlgebra.as(UtilEvaluatorExplicit.evaluate((getRight())));
-    }
-
-    public int getLeftInt() {
-        return ValueInteger.as(UtilEvaluatorExplicit.evaluate(getLeft())).getInt();
-    }
-
-    public int getRightInt() {
-        return ValueInteger.as(UtilEvaluatorExplicit.evaluate(getRight())).getInt();
     }
 
     @Override

@@ -38,6 +38,7 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.messages.Message;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
@@ -53,6 +54,7 @@ import epmc.util.Util;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInteger;
 
 public final class UtilAutomaton {
     public static String expr2string(Expression expression, Map<Expression, String> expr2str,
@@ -165,13 +167,12 @@ public final class UtilAutomaton {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
             Expression leftExpr = expressionTemporal.getOperand1();
             Expression rightExpr = expressionTemporal.getOperand2();
-            int boundLeft = timeBound.getLeftInt();
-            int boundRight = timeBound.getRightInt();
+            int boundLeft = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
             int bound;
             Expression result;
             if (timeBound.isRightBounded()) {
                 result = rightExpr;
-                bound = boundRight;
+                bound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight())).getInt();;
             } else {
                 result = expression;
                 bound = boundLeft;

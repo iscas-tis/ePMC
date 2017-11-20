@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionOperator;
@@ -33,7 +32,7 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsContinuousTime;
@@ -198,13 +197,13 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
             OperatorEvaluator exp = ContextValue.get().getEvaluator(OperatorExp.EXP, TypeReal.get());
-            Value rightValue = timeBound.getRightValue();
+            Value rightValue = ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight()));
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
             iterStates.set(0, graph.getNumNodes());
             ValueAlgebra leftValue = TypeWeight.get().newValue();
-            OperatorEvaluator setLV = ContextValue.get().getEvaluator(OperatorSet.SET, leftValue.getType(), timeBound.getLeftValue().getType());
-            setLV.apply(leftValue, timeBound.getLeftValue());
+            OperatorEvaluator setLV = ContextValue.get().getEvaluator(OperatorSet.SET, leftValue.getType(), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType());
+            setLV.apply(leftValue, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())));
             ValueAlgebra sum = TypeWeight.get().newValue();
             ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
@@ -295,14 +294,6 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return UtilValue.newArray(typeArray, size);
     }
 
-    private Expression not(Expression expression) {
-        return new ExpressionOperator.Builder()
-                .setOperator(OperatorNot.NOT)
-                .setPositional(expression.getPositional())
-                .setOperands(expression)
-                .build();
-    }
-
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -318,38 +309,5 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         }
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.NEXT;
-    }
-
-    private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
-    }
-
-    private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
-    }
-
-    private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound, Positional positional) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, positional);
     }
 }
