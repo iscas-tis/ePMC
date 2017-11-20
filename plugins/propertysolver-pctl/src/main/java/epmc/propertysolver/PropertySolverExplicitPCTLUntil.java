@@ -32,6 +32,7 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsContinuousTime;
@@ -71,6 +72,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 
 public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
@@ -210,15 +212,15 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
                 GraphSolverObjectiveExplicitBoundedReachability objective = new GraphSolverObjectiveExplicitBoundedReachability();
                 objective.setGraph(graph);
                 objective.setMin(min);
-                objective.setTime(timeBound.getRightValue());
+                objective.setTime(ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight())));
                 objective.setZeroSink(zeroSet);
                 objective.setTargets(oneSet);
                 configuration.setObjective(objective);
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt();
-                int rightBound = timeBound.getRightInt();
+                int leftBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
+                int rightBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight())).getInt();
                 if (timeBound.isRightOpen()) {
                     rightBound--;
                 }
@@ -249,8 +251,8 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             values = objective.getResult();
         }
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, timeBound.getLeftValue().getType(), timeBound.getLeftValue().getType());
-        gt.apply(cmp, timeBound.getLeftValue(), timeBound.getLeftValue().getType().getZero());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType(), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType());
+        gt.apply(cmp, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType().getZero());
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
             sinkSet.clear();
@@ -279,11 +281,11 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
                 objective.setGraph(graph);
                 objective.setValues(values);
                 objective.setMin(min);
-                objective.setTime(timeBound.getLeftValue());
+                objective.setTime(ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())));
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt();
+                int leftBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
                 if (timeBound.isLeftOpen()) {
                     leftBound++;
                 }

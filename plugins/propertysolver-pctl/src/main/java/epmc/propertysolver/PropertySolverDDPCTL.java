@@ -40,6 +40,7 @@ import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
 import epmc.graph.Semantics;
@@ -79,6 +80,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
+import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
 
 public final class PropertySolverDDPCTL implements PropertySolver {
@@ -216,8 +218,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 targetS.set(state, trans);
             }
         }
-        ValueAlgebra leftValue = timeBound.getLeftValue();
-        ValueAlgebra rightValue = timeBound.getRightValue();
+        ValueAlgebra leftValue = ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft()));
+        ValueAlgebra rightValue = ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight()));
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
@@ -236,11 +238,11 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt();
+                int leftBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
                 if (timeBound.isLeftOpen()) {
                     leftBound++;
                 }
-                int rightBound = timeBound.getRightInt();
+                int rightBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight())).getInt();
                 if (timeBound.isRightOpen()) {
                     rightBound--;
                 }
@@ -309,7 +311,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             if (SemanticsContinuousTime.isContinuousTime(type)) {
                 ValueReal rate = TypeReal.get().newValue();
                 Value unifRate = converter.getUnifRate();
-                multiply.apply(rate, timeBound.getLeftValue(), unifRate);
+                multiply.apply(rate, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())), unifRate);
                 GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
                 objective.setGraph(graph);
                 objective.setMin(min);
@@ -319,7 +321,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
                 configuration.solve();
                 values = objective.getResult();
             } else {
-                int leftBound = timeBound.getLeftInt();
+                int leftBound = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
                 if (timeBound.isLeftOpen()) {
                     leftBound++;
                 }
