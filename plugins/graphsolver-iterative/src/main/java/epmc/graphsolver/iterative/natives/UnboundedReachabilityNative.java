@@ -50,6 +50,7 @@ import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -97,6 +98,9 @@ public final class UnboundedReachabilityNative implements GraphSolverExplicit {
             return false;
         }
         if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
+            return false;
+        }
+        if (!TypeDouble.is(TypeWeight.get())) {
             return false;
         }
         return true;

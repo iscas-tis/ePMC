@@ -75,7 +75,7 @@ public final class OperatorEvaluatorSetArrayArray implements OperatorEvaluator {
         if (resultArray == operandArray) {
             return;
         }
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operandArray.getType(), resultArray.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, operandArray.getType().getEntryType(), resultArray.getType().getEntryType());
         int size = operandArray.size();
         Value entryOperand = operandArray.getType().getEntryType().newValue();
         Value resultOperand = resultArray.getType().getEntryType().newValue();

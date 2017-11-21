@@ -466,8 +466,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     private void mdpUnboundedGaussseidelJava(
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance,
-            int[] numIterationsResult)
-    {
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();

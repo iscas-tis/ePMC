@@ -26,7 +26,6 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;

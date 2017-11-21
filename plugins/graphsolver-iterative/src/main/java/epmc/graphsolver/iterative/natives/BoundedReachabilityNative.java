@@ -48,6 +48,7 @@ import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeDouble;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
@@ -100,6 +101,9 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
             return false;
         }
         if (!(objective instanceof GraphSolverObjectiveExplicitBoundedReachability)) {
+            return false;
+        }
+        if (!TypeDouble.is(TypeWeight.get())) {
             return false;
         }
         return true;
