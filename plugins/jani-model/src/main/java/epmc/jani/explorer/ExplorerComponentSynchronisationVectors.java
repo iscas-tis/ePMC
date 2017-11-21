@@ -282,6 +282,7 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
     }
 
     private void queryNodeSingleLayer(NodeJANI node) {
+        assert node != null;
         for (int automatonNr = 0; automatonNr < automata.length; automatonNr++) {
             automata[automatonNr].queryNode(node);
         }

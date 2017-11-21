@@ -50,6 +50,7 @@ import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -98,6 +99,9 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
             return false;
         }
         if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative)) {
+            return false;
+        }
+        if (!TypeDouble.is(TypeWeight.get())) {
             return false;
         }
         return true;

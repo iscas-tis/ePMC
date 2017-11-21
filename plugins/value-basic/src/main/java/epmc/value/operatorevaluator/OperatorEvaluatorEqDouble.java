@@ -68,7 +68,8 @@ public final class OperatorEvaluatorEqDouble implements OperatorEvaluator {
                 return null;
             }
             for (Type type : types) {
-                if (!TypeDouble.is(type) && !TypeInteger.is(type)) {
+                if (!TypeDouble.is(type)
+                        && !TypeInteger.is(type)) {
                     return null;
                 }
             }

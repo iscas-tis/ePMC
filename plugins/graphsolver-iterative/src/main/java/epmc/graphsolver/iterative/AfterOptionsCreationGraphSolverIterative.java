@@ -83,7 +83,7 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         graphSolverMap.put(BoundedCumulativeJava.IDENTIFIER, BoundedCumulativeJava.class);
         graphSolverMap.put(BoundedCumulativeDiscountedJava.IDENTIFIER, BoundedCumulativeDiscountedJava.class);
         graphSolverMap.put(UnboundedCumulativeJava.IDENTIFIER, UnboundedCumulativeJava.class);
-        graphSolverMap.put(UnboundedReachabilityJava.IDENTIFIER, UnboundedCumulativeJava.class);
+        graphSolverMap.put(UnboundedReachabilityJava.IDENTIFIER, UnboundedReachabilityJava.class);
         graphSolverMap.put(BoundedReachabilityJava.IDENTIFIER, BoundedReachabilityJava.class);
         graphSolverMap.put(BoundedJava.IDENTIFIER, BoundedJava.class);
         graphSolverMap.put(BoundedCumulativeNative.IDENTIFIER, BoundedCumulativeNative.class);

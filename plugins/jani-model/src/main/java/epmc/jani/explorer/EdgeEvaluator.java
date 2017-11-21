@@ -36,7 +36,12 @@ import epmc.jani.model.Destinations;
 import epmc.jani.model.Edge;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 
 /**
  * Class to evaluate an automaton edge.
@@ -140,6 +145,9 @@ public final class EdgeEvaluator {
     private Value[] variableValues;
     /** Evaluator for the rate of the edge. */
     private EvaluatorExplicit rateEval;
+    private OperatorEvaluator setRate;
+    private ValueAlgebra rate;
+
 
     private EdgeEvaluator(Builder builder) {
         assert builder != null;
@@ -168,6 +176,8 @@ public final class EdgeEvaluator {
             rateExpr = UtilExpressionStandard.replace(rateExpr, autVarToLocal);
             rateExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), rateExpr);
             rateEval = UtilEvaluatorExplicit.newEvaluator(rateExpr, builder.getExpressionToType(), variables);
+            setRate = ContextValue.get().getEvaluator(OperatorSet.SET, rateEval.getResultValue().getType(), TypeWeightTransition.get());
+            rate = TypeWeightTransition.get().newValue();
         }
         int destNr = 0;
         for (Destination destination : destinations) {
@@ -201,7 +211,8 @@ public final class EdgeEvaluator {
 
     Value evaluateRate() {
         rateEval.evaluate(variableValues);
-        return rateEval.getResultValue();
+        setRate.apply(rate, rateEval.getResultValue());
+        return rate;
     }
 
     /**
