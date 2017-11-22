@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitSparse;
@@ -90,7 +89,7 @@ public final class GraphBuilderExplicit {
         this.derivedEdgeProperties.add(property);
         return this;
     }
-    
+
     public GraphBuilderExplicit addSink(BitSet sink) {
         assert !isBuilt();
         assert sink != null;
@@ -109,14 +108,14 @@ public final class GraphBuilderExplicit {
         this.reorder = reorder;
         return this;
     }
-    
+
     public GraphBuilderExplicit setBackward(boolean backward) {
         assert !isBuilt();
         this.backward = backward;
         return this;
     }
 
-    public GraphBuilderExplicit build() throws EPMCException {
+    public GraphBuilderExplicit build() {
         assert !built;
         built = true;
         assert inputGraph != null;
@@ -158,7 +157,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareNodeProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph, List<Object> nodeProperties, ValueArrayInteger outputToInputNodes)
-                    throws EPMCException {
+    {
         int numOutputNodes = outputToInputNodes.size();
         NodeProperty[] inputProperties = new NodeProperty[nodeProperties.size()];
         NodeProperty[] outputProperties = new NodeProperty[nodeProperties.size()];
@@ -178,7 +177,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareGraphProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph, List<Object> graphProperties)
-                    throws EPMCException {
+    {
         for (Object property : graphProperties) {
             Value value = inputGraph.getGraphProperty(property);
             if (inputGraph.getGraphProperties().contains(property)) {
@@ -188,14 +187,14 @@ public final class GraphBuilderExplicit {
     }
 
     private GraphExplicit prepareGraph(GraphExplicit inputGraph, List<BitSet> sinkList, ValueArrayInteger inputToOutputNodes, boolean uniformise)
-            throws EPMCException {
+    {
         GraphExplicit outputGraph = null;
         Semantics semanticsType = inputGraph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsNonDet.isNonDet(semanticsType)) {
             BitSet sinks = computeSinks(sinkList);
             int numStates = 0;
             int numTotalOut = 0;
-          for (int inputNode = 0; inputNode < inputToOutputNodes.size(); inputNode++) {
+            for (int inputNode = 0; inputNode < inputToOutputNodes.size(); inputNode++) {
                 if (!sinks.get(inputNode)) {
                     numStates++;
                     numTotalOut += inputGraph.getNumSuccessors(inputNode);
@@ -256,7 +255,7 @@ public final class GraphBuilderExplicit {
         == graphProperties.size();
         return true;
     }
-    
+
     private static boolean assertNodeProperties(GraphExplicit inputGraph,
             List<Object> nodeProperties) {
         assert inputGraph != null;
@@ -282,9 +281,9 @@ public final class GraphBuilderExplicit {
     }
 
     private static List<BitSet> prepareParts(GraphExplicit inputGraph, boolean reorder)
-            throws EPMCException {
+    {
         List<BitSet> result = new ArrayList<>();
-        Semantics semanticsType = ValueObject.asObject(inputGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(inputGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (reorder && SemanticsNonDet.isNonDet(semanticsType)) {
             BitSet states = collectStates(inputGraph);
             BitSet nonStates = collectNonStates(inputGraph);
@@ -306,7 +305,7 @@ public final class GraphBuilderExplicit {
             List<BitSet> parts,
             TIntList partsBegin,
             List<Object> edgeProperties,
-            boolean uniformise) throws EPMCException {
+            boolean uniformise) {
         EdgeProperty[] inputProperties = new EdgeProperty[edgeProperties.size()];
         EdgeProperty[] outputProperties = new EdgeProperty[edgeProperties.size()];
         int numProperties = 0;
@@ -330,7 +329,7 @@ public final class GraphBuilderExplicit {
                 outputGraph.prepareNode(outputState, 1);
                 outputGraph.setSuccessorNode(outputState, 0, nextNondetNode);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(outputState, 0, typeWeight.getOne());
                 outputGraph.prepareNode(nextNondetNode, 1);
                 outputGraph.setSuccessorNode(nextNondetNode, 0, outputState);
@@ -370,7 +369,7 @@ public final class GraphBuilderExplicit {
             }
         }
     }
-    
+
     private static void prepareTransitions(
             GraphExplicit outputGraph, GraphExplicit inputGraph,
             ValueArrayInteger inputToOutputNodes,
@@ -379,7 +378,7 @@ public final class GraphBuilderExplicit {
             List<BitSet> parts,
             TIntList partsBegin,
             List<Object> edgeProperties,
-            boolean uniformise) throws EPMCException {
+            boolean uniformise) {
         EdgeProperty[] inputProperties = new EdgeProperty[edgeProperties.size()];
         EdgeProperty[] outputProperties = new EdgeProperty[edgeProperties.size()];
         int numProperties = 0;
@@ -401,7 +400,7 @@ public final class GraphBuilderExplicit {
                 outputGraph.prepareNode(outputNode, 1);
                 outputGraph.setSuccessorNode(outputNode, 0, nextPartBegin + sinkNr);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(outputNode, 0, typeWeight.getOne());
             } else {
                 int numSuccessors = inputGraph.getNumSuccessors(inputNode);
@@ -429,7 +428,7 @@ public final class GraphBuilderExplicit {
             ValueArrayInteger inputToOutputNodes, ValueArrayInteger outputToInputNodes,
             List<BitSet> sinksList,
             List<BitSet> parts, TIntList partsBegin,
-            List<Object> edgeProperties) throws EPMCException {
+            List<Object> edgeProperties) {
         BitSet sinks = computeSinks(sinksList);
         int numOutputNodes = outputToInputNodes.size();
         ValueArrayInteger numInEdges = UtilValue.newArray(TypeInteger.get().getTypeArray(), numOutputNodes);
@@ -467,7 +466,7 @@ public final class GraphBuilderExplicit {
                 int nextPart = (partNr + 1) % parts.size();
                 int nextPartBegin = partsBegin.get(nextPart);
                 EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.asWeight(weight.getType());
+                TypeWeight typeWeight = TypeWeight.as(weight.getType());
                 weight.set(nextPartBegin, numInEdges.getInt(nextPartBegin), typeWeight.getOne());
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {
@@ -514,7 +513,7 @@ public final class GraphBuilderExplicit {
     private static void prepareInitialNodes(GraphExplicit outputGraph,
             GraphExplicit inputGraph, ValueArrayInteger inputToOutputNodes) {
         BitSet inputNodesInit = inputGraph.getInitialNodes();
-        
+
         BitSet outputNodesInit = outputGraph.getInitialNodes();
         for (int inputNode = inputNodesInit.nextSetBit(0); inputNode >= 0; inputNode = inputNodesInit.nextSetBit(inputNode+1)) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
@@ -525,7 +524,7 @@ public final class GraphBuilderExplicit {
 
     private static void prepareInputToOutputNodes(GraphExplicit inputGraph, List<BitSet> parts, List<BitSet> sinkList,
             ValueArrayInteger inputToOutputNodes, Value outputToInputNodes, TIntList partsBegin)
-            throws EPMCException {
+    {
         BitSet inputNodes = UtilBitSet.newBitSetUnbounded();
         inputNodes.set(0, inputGraph.getNumNodes(), true);
         inputToOutputNodes.setSize(inputNodes.length());
@@ -546,21 +545,21 @@ public final class GraphBuilderExplicit {
             nextPart = buildInputToOutputPart(inputGraph, nextPart, part, sinkList, inputToOutputNodes);
             partsBegin.add(nextPart);
         }
-        */
+         */
     }
 
     private static void prepareOutputToInputNodes(GraphExplicit inputGraph,
             List<BitSet> parts, List<BitSet> sinkList,
             ValueArrayInteger inputToOutputNodes,
             ValueArrayInteger outputToInputNodes, TIntList partsBegin)
-                    throws EPMCException {
+    {
         int numOutputNodes = 0;
         int numInputNodes = inputGraph.getNumNodes();
         for (int inputNode = 0; inputNode < numInputNodes; inputNode++) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
             numOutputNodes = Math.max(numOutputNodes, outputNode + 1);
         }
-        
+
         outputToInputNodes.setSize(numOutputNodes);
         for (int inputNode = 0; inputNode < numInputNodes; inputNode++) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
@@ -573,7 +572,7 @@ public final class GraphBuilderExplicit {
     private static void prepareProperties(GraphExplicit outputGraph,
             GraphExplicit inputGraph,
             List<Object> graphProperties, List<Object> nodeProperties, List<Object> edgeProperties)
-                    throws EPMCException {
+    {
         for (Object property : graphProperties) {
             Type type = inputGraph.getGraphPropertyType(property);
             outputGraph.addSettableGraphProperty(property, type);
@@ -588,7 +587,7 @@ public final class GraphBuilderExplicit {
         }
     }
 
-    private static int buildInputToOutputPart(GraphExplicit inputGraph, int partStart, BitSet part, List<BitSet> sinks, ValueArrayInteger inputToOutputNodes) throws EPMCException {
+    private static int buildInputToOutputPart(GraphExplicit inputGraph, int partStart, BitSet part, List<BitSet> sinks, ValueArrayInteger inputToOutputNodes) {
         int nextOutputNode = partStart;
         nextOutputNode += sinks.size();
         int numInputNodes = inputGraph.getNumNodes();
@@ -616,7 +615,7 @@ public final class GraphBuilderExplicit {
         return nextOutputNode;
     }
 
-    private static BitSet collectStates(GraphExplicit graph) throws EPMCException {
+    private static BitSet collectStates(GraphExplicit graph) {
         BitSet states = UtilBitSet.newBitSetUnbounded();
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);
         int numInputNodes = graph.getNumNodes();
@@ -629,7 +628,7 @@ public final class GraphBuilderExplicit {
         return states;
     }
 
-    private static BitSet collectNonStates(GraphExplicit graph) throws EPMCException {
+    private static BitSet collectNonStates(GraphExplicit graph) {
         BitSet nonStates = UtilBitSet.newBitSetUnbounded();
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);
         int numNodes = graph.getNumNodes();
@@ -688,7 +687,7 @@ public final class GraphBuilderExplicit {
     public void setParts(List<BitSet> parts) {
         this.parts = parts;
     }
-    
+
     public GraphBuilderExplicit addDerivedGraphProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -696,7 +695,7 @@ public final class GraphBuilderExplicit {
         }
         return this;
     }
-    
+
     public GraphBuilderExplicit addDerivedNodeProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -704,7 +703,7 @@ public final class GraphBuilderExplicit {
         }
         return this;
     }
-    
+
     public GraphBuilderExplicit addDerivedEdgeProperties(Iterable<? extends Object> properties) {
         assert !isBuilt();
         for (Object property : properties) {
@@ -730,7 +729,7 @@ public final class GraphBuilderExplicit {
         setUniformise(true);
         return this;
     }
-    
+
     public GraphBuilderExplicit setReorder() {
         assert !isBuilt();
         setReorder(true);

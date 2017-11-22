@@ -16,14 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
 public interface ActionInstance extends JANINode {
-	public Action getAction();
+    public Action getAction();
 
-	public ActionInstance match(ActionInstance other);	
-	
-	public ActionInstance rename(Action to);
+    public ActionInstance match(ActionInstance other);	
+
+    public ActionInstance rename(Action to);
 }

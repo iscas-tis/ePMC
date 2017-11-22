@@ -16,18 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.Scheduler;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.EdgePropertyApply;
@@ -39,20 +38,30 @@ import epmc.graphsolver.UtilGraphSolver;
 import epmc.modelchecker.ModelChecker;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveWeighted;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorSet;
 import epmc.propertysolver.PropertySolverExplicitReward;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
-import epmc.value.operator.OperatorAddInverse;
+import epmc.value.ValueBoolean;
 
 final class MultiObjectiveUtils {
     static int compareProductDistance(ValueArray weights, ValueArray q,
-            ValueArray bounds) throws EPMCException {
+            ValueArray bounds) {
         assert weights != null;
         assert q != null;
         assert bounds != null;
@@ -71,32 +80,51 @@ final class MultiObjectiveUtils {
         ValueAlgebra weightsEntry = newValueWeight();
         ValueAlgebra qEntry = newValueWeight();
         ValueAlgebra boundsEntry = newValueWeight();
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
         for (int dim = 0; dim < weights.size(); dim++) {
             weights.get(weightsEntry, dim);
             q.get(qEntry, dim);
             bounds.get(boundsEntry, dim);
-            weightsXqEntry.multiply(weightsEntry, qEntry);
-            weightsXqSum.add(weightsXqSum, weightsXqEntry);
-            weightsXboundsEntry.multiply(weightsEntry, boundsEntry);
-            weightsXboundsSum.add(weightsXboundsSum, weightsXboundsEntry);
+            multiply.apply(weightsXqEntry, weightsEntry, qEntry);
+            add.apply(weightsXqSum, weightsXqSum, weightsXqEntry);
+            multiply.apply(weightsXboundsEntry, weightsEntry, boundsEntry);
+            add.apply(weightsXboundsSum, weightsXboundsSum, weightsXboundsEntry);
         }
-        return weightsXqSum.compareTo(weightsXboundsSum);
+        eq.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
+            return 0;
+        }
+        lt.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
+            return -1;
+        }
+        gt.apply(cmp, weightsXqSum, weightsXboundsSum);
+        if (cmp.getBoolean()) {
+            return 1;
+        }
+        assert false;
+        return Integer.MIN_VALUE;
     }
 
     static ValueArrayAlgebra computeQuantifierBoundsArray(ModelChecker modelChecker,
             ExpressionMultiObjective property, boolean invert)
-                    throws EPMCException {
+    {
         assert property != null;
         ValueAlgebra numMinValue = null;
         if (isNumericalQuery(property)) {
-        	ExpressionQuantifier propOp1 = (ExpressionQuantifier) property.getOperand1();
+            ExpressionQuantifier propOp1 = (ExpressionQuantifier) property.getOperand1();
             Expression quantified = propOp1.getQuantified();
             if (!(quantified instanceof ExpressionReward)) {
                 Expression minQ = new ExpressionQuantifier.Builder()
-                		.setDirType(DirType.MIN)
-                		.setCmpType(CmpType.IS)
-                		.setQuantified(quantified)
-                		.build();
+                        .setDirType(DirType.MIN)
+                        .setCmpType(CmpType.IS)
+                        .setQuantified(quantified)
+                        .build();
                 GraphExplicit mcGraph = modelChecker.getLowLevel();
                 numMinValue = (ValueAlgebra) modelChecker.check(minQ, mcGraph.newInitialStateSet()).getSomeValue();
             } else if (modelChecker instanceof ModelChecker) {
@@ -112,10 +140,10 @@ final class MultiObjectiveUtils {
                     edgeProp = new EdgePropertyApply(mcGraph, OperatorAddInverse.ADD_INVERSE, edgeProp);
                 }
                 numMinValue = newValueWeight();
-//                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
-//                System.out.println(numMinValue);
+                //                solver.solve(quantified, (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet(), true, nodeProp, edgeProp).getExplicitIthValue(numMinValue, 0);
+                //                System.out.println(numMinValue);
                 // TODO hack
-//                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
+                //                numMinValue.set(TypeAlgebra.asAlgebra(numMinValue.getType()).getZero());
                 numMinValue.set(-1000);
             } else {
                 assert false;
@@ -124,10 +152,9 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra bounds = newValueArrayWeight(property.getOperands().size());
         int objNr = 0;
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             if (!isIs(objective)) {
-            	ExpressionLiteral compare = (ExpressionLiteral) objectiveQuantifier.getCompare();
-                bounds.set(compare.getValue(), objNr);
+                bounds.set(UtilEvaluatorExplicit.evaluate(objectiveQuantifier.getCompare()), objNr);
             }
             objNr++;
         }
@@ -140,7 +167,7 @@ final class MultiObjectiveUtils {
     static IterationResult iterate(ValueArrayAlgebra weights,
             GraphExplicit graph,
             IterationRewards rewards)
-                    throws EPMCException {
+    {
         assert weights != null;
         assert graph != null;
         assert rewards != null;
@@ -167,10 +194,10 @@ final class MultiObjectiveUtils {
         for (int prop = 0; prop < numAutomata; prop++) {
             int propWeightsTotalSize = propWeights.size();
             for (int index = 0; index < propWeightsTotalSize; index++) {
-            	propWeights.set(0, index);
+                propWeights.set(0, index);
             }
             for (int i = 0; i < iterResult.size(); i++) {
-            	iterResult.set(0, i);
+                iterResult.set(0, i);
             }
             propWeights.set(1, prop);
             weightedCombinations = chosenCombinationsToWeighted(rewards, choice, propWeights);
@@ -178,16 +205,16 @@ final class MultiObjectiveUtils {
             GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveSched = new GraphSolverObjectiveExplicitMultiObjectiveScheduled();
             objectiveSched.setGraph(graph);
             // ??
-//            iterResult = useNative
-  //                  ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
-    //                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
+            //            iterResult = useNative
+            //                  ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
+            //                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
             objectiveSched.setValues(iterResult);
             objectiveSched.setScheduler(scheduler);
             objectiveSched.setStopStateRewards(weightedCombinations);
             objectiveSched.setTransitionRewards(weightedRewards);
             configuration.setObjective(objectiveSched);
             configuration.solve();
-//            iterResult = objective.getResult();
+            //            iterResult = objective.getResult();
             iterResult.get(initValue, iterInit);
             q.set(initValue, prop);
         }
@@ -195,18 +222,18 @@ final class MultiObjectiveUtils {
     }
 
     static boolean isNumericalQuery(ExpressionMultiObjective property) {
-	    assert property != null;
-	    int numQuantitative = 0;
-	    for (Expression operand : property.getOperands()) {
-	        if (isIs(operand)) {
-	            numQuantitative++;
-	        }
-	    }
-	    return numQuantitative == 1;
-	}
+        assert property != null;
+        int numQuantitative = 0;
+        for (Expression operand : property.getOperands()) {
+            if (isIs(operand)) {
+                numQuantitative++;
+            }
+        }
+        return numQuantitative == 1;
+    }
 
-	private static ValueArrayAlgebra rewardsToWeighted(
-            IterationRewards rewards, ValueArrayAlgebra weights) throws EPMCException {
+    private static ValueArrayAlgebra rewardsToWeighted(
+            IterationRewards rewards, ValueArrayAlgebra weights) {
         assert rewards != null;
         assert weights != null;
         assert weights.size() == rewards.getNumObjectives();
@@ -217,32 +244,38 @@ final class MultiObjectiveUtils {
         ValueAlgebra objWeight = newValueWeight();
         ValueAlgebra objRew = newValueWeight();
         ValueAlgebra prod = newValueWeight();
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         for (int obj = 0; obj < numObjectives; obj++) {
             weights.get(objWeight, obj);
             for (int nondet = 0; nondet < numNondet; nondet++) {
                 rewards.getRewards(obj).get(objRew, nondet);
-                prod.multiply(objWeight, objRew);
+                multiply.apply(prod, objWeight, objRew);
                 result.get(entry, nondet);
-                entry.add(entry, prod);
+                add.apply(entry, entry, prod);
                 result.set(entry, nondet);
             }
         }
-        
+
         return result;
     }
 
     private static ValueArrayAlgebra combinationsToWeighted(IterationRewards combinations,
-            int[] choice, ValueArrayAlgebra weights) throws EPMCException {
+            int[] choice, ValueArrayAlgebra weights) {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();
         int numStates = combinations.getNumStates();
         int numObjectives = combinations.getNumObjectives();
-        
+
         ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra max = newValueWeight();
         ValueAlgebra entryValue = newValueWeight();
-        Value weight = newValueWeight();
+        ValueAlgebra weight = newValueWeight();
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, TypeWeight.get(), TypeWeight.get());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             max.set(-10000);
             int numEntries = combinations.getNumEntries(state);
@@ -253,15 +286,16 @@ final class MultiObjectiveUtils {
                     if (combinations.get(state, entry, objective)) {
                         weights.get(weight, objective);
                         if (alreadySet) {
-                            entryValue.add(entryValue, weight);                        	
+                            add.apply(entryValue, entryValue, weight);
                         } else {
-                        	entryValue.set(weight);
-                        	alreadySet = true;
+                            set.apply(entryValue, weight);
+                            alreadySet = true;
                         }
                     }
                 }
-                if (entryValue.isGt(max)) {
-                    max.set(entryValue);
+                gt.apply(cmp, entryValue, max);
+                if (cmp.getBoolean()) {
+                    set.apply(max, entryValue);
                     choice[state] = entry;
                 }
             }
@@ -271,7 +305,7 @@ final class MultiObjectiveUtils {
     }
 
     private static ValueArrayAlgebra chosenCombinationsToWeighted(IterationRewards combinations,
-            int[] choice, ValueArrayAlgebra weights) throws EPMCException {
+            int[] choice, ValueArrayAlgebra weights) {
         assert combinations != null;
         assert weights != null;
         assert weights.size() == combinations.getNumObjectives();
@@ -280,13 +314,14 @@ final class MultiObjectiveUtils {
         ValueArrayAlgebra result = UtilValue.newArray(TypeWeight.get().getTypeArray(), numStates);
         ValueAlgebra entryValue = newValueWeight();
         Value weight = newValueWeight();
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int state = 0; state < numStates; state++) {
             int entry = choice[state];
             entryValue.set(0);
             for (int objective = 0; objective < numObjectives; objective++) {
                 if (combinations.get(state, entry, objective)) {
                     weights.get(weight, objective);
-                    entryValue.add(entryValue, weight);
+                    add.apply(entryValue, entryValue, weight);
                 }
             }   
             result.set(entryValue, state);
@@ -298,9 +333,9 @@ final class MultiObjectiveUtils {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
-    
+
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 
     private static boolean isIs(Expression expression) {
@@ -311,7 +346,7 @@ final class MultiObjectiveUtils {
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
         return expressionQuantifier.getCompareType() == CmpType.IS;
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionType;
 
 /**
@@ -45,7 +44,7 @@ public final class OptionTypePluginList implements OptionType {
     private final static String INFO = "<filename>(,<filename>)*";
     /** Plugin list option type. */
     private final static OptionTypePluginList INSTANCE = new OptionTypePluginList();
-    
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
@@ -54,9 +53,9 @@ public final class OptionTypePluginList implements OptionType {
      */
     private OptionTypePluginList() {
     }
-    
+
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         List<String> result;
         if (prevValue == null) {
@@ -84,12 +83,12 @@ public final class OptionTypePluginList implements OptionType {
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         assert value != null;
@@ -109,7 +108,7 @@ public final class OptionTypePluginList implements OptionType {
         }
         return result.toString();
     }
-    
+
     @Override
     public Object getDefault() {
         return new ArrayList<String>();

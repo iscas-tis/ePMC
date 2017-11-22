@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.dd;
 
@@ -26,12 +26,9 @@ import java.util.Set;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
-import epmc.options.Options;
-import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
@@ -39,29 +36,29 @@ import epmc.value.ValueObject;
 public interface GraphDD extends LowLevel {
     /* methods to be implemented by implementing classes. */
 
-    DD getInitialNodes() throws EPMCException;
+    DD getInitialNodes();
 
-    DD getTransitions() throws EPMCException;
+    DD getTransitions();
 
     DD getPresCube();
 
     DD getNextCube();
 
     DD getActionCube();
-    
+
     /* TODO get rid of following method */
-    
+
     Permutation getSwapPresNext();
-    
-    DD getNodeSpace() throws EPMCException;
+
+    DD getNodeSpace();
 
     @Override
     void close();
-    
+
     GraphDDProperties getProperties();
 
     default <T> T getGraphPropertyObject(Object property) {
-        ValueObject graphProperty = ValueObject.asObject(getGraphProperty(property));
+        ValueObject graphProperty = ValueObject.as(getGraphProperty(property));
         if (graphProperty == null) {
             return null;
         } else {
@@ -72,12 +69,12 @@ public interface GraphDD extends LowLevel {
     default void registerGraphProperty(Object property, Type type) {
         getProperties().registerGraphProperty(property, type);
     }
-    
+
     default Value getGraphProperty(Object property) {
         return getProperties().getGraphProperty(property);
     }
-    
-    default DD getNodeProperty(Object property) throws EPMCException {
+
+    default DD getNodeProperty(Object property) {
         return getProperties().getNodeProperty(property);
     }
 
@@ -85,7 +82,7 @@ public interface GraphDD extends LowLevel {
         return getProperties().getNodeProperties();
     }
 
-    default DD getEdgeProperty(Object property) throws EPMCException {
+    default DD getEdgeProperty(Object property) {
         return getProperties().getEdgeProperty(property);
     }
 
@@ -97,46 +94,46 @@ public interface GraphDD extends LowLevel {
         getProperties().setGraphPropertyObject(property, value);
     }
 
-    default void setGraphProperty(Object property, Value value) throws EPMCException {
+    default void setGraphProperty(Object property, Value value) {
         getProperties().setGraphProperty(property, value);
     }
 
     default void registerNodeProperty(Object property, DD value) {
         getProperties().registerNodeProperty(property, value);
     }
-    
+
     default void registerEdgeProperty(Object property, DD value) {
         getProperties().registerEdgeProperty(property, value);
     }
 
-    default ContextDD getContextDD() throws EPMCException {
+    default ContextDD getContextDD() {
         return ContextDD.get();
     }
 
     @Override
-    default StateSet newInitialStateSet() throws EPMCException {
+    default StateSet newInitialStateSet() {
         return new StateSetDD(this, getInitialNodes().clone());
     }
 
-    default BigInteger getNumNodes() throws EPMCException {
+    default BigInteger getNumNodes() {
         return getNodeSpace().countSat(getPresCube());
     }
-    
+
     @Override
-    default Type getType(Expression expression) throws EPMCException {
-    	assert expression != null;
-    	Value graphProperty = getGraphProperty(expression);
-    	if (graphProperty != null) {
-    		return graphProperty.getType();
-    	}
-    	DD nodeProperty = getNodeProperty(expression);
-    	if (nodeProperty != null) {
-    		return nodeProperty.getType();
-    	}
-    	DD edgeProperty = getEdgeProperty(expression);
-    	if (edgeProperty != null) {
-    		return edgeProperty.getType();
-    	}
-    	return null;
+    default Type getType(Expression expression) {
+        assert expression != null;
+        Value graphProperty = getGraphProperty(expression);
+        if (graphProperty != null) {
+            return graphProperty.getType();
+        }
+        DD nodeProperty = getNodeProperty(expression);
+        if (nodeProperty != null) {
+            return nodeProperty.getType();
+        }
+        DD edgeProperty = getEdgeProperty(expression);
+        if (edgeProperty != null) {
+            return edgeProperty.getType();
+        }
+        return null;
     }
 }

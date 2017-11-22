@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -26,11 +26,11 @@ import epmc.value.ValueArray;
 
 final class TypeArrayObjectDirect implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](object-direct)";
-	private final TypeObject entryType;
-    
+    private final TypeObject entryType;
+
     TypeArrayObjectDirect(TypeObject entryType) {
-    	assert entryType != null;
-    	this.entryType = entryType;
+        assert entryType != null;
+        this.entryType = entryType;
     }
 
     @Override
@@ -38,28 +38,28 @@ final class TypeArrayObjectDirect implements TypeArray {
         return new ValueArrayObjectDirect(this);
     }
 
-	@Override
-	public TypeObject getEntryType() {
-		return entryType;
-	}
+    @Override
+    public TypeObject getEntryType() {
+        return entryType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TypeArrayObjectDirect)) {
-			return false;
-		}
-		TypeArrayObjectDirect other = (TypeArrayObjectDirect) obj;
-		return this.getEntryType().equals(other.getEntryType());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TypeArrayObjectDirect)) {
+            return false;
+        }
+        TypeArrayObjectDirect other = (TypeArrayObjectDirect) obj;
+        return this.getEntryType().equals(other.getEntryType());
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-	}
-	
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -67,8 +67,8 @@ final class TypeArrayObjectDirect implements TypeArray {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-    
-	@Override
+
+    @Override
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }

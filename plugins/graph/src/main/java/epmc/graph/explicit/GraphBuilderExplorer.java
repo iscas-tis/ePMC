@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -82,7 +82,24 @@ public final class GraphBuilderExplorer {
         this.edgeProperties.addAll(edgeProperties);
     }
 
-    public void build() throws EPMCException {
+    public void build() {
+        Thread observerThread = constructObserverThread();
+        try {
+            doBuild();
+        } catch (EPMCException e) {
+            done = true;
+            observerThread.interrupt();
+            throw e;
+        } catch (Throwable e) {
+            done = true;
+            observerThread.interrupt();
+            throw new RuntimeException(e);
+        }
+        done = true;
+        observerThread.interrupt();
+    }
+
+    private Thread constructObserverThread() {
         Thread observerThread = new Thread(() -> {
             int sleepTime = 5;
             try {
@@ -104,23 +121,20 @@ public final class GraphBuilderExplorer {
             }
         });
         observerThread.start();
-
-        try {
-            doBuild();
-        } catch (EPMCException e) {
-            done = true;
-            observerThread.interrupt();
-            throw e;
-        } catch (Throwable e) {
-            done = true;
-            observerThread.interrupt();
-            throw new RuntimeException(e);
-        }
-        done = true;
-        observerThread.interrupt();
+        return observerThread;
     }
 
-    private void doBuild() throws EPMCException {
+    private void doBuild() {
+        Semantics semantics = ValueObject.as(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        boolean nondet = semantics != null && SemanticsNonDet.isNonDet(semantics);
+        if (nondet) {
+            doBuildAlternate();
+        } else {
+            doBuildNonAlernate();
+        }
+    }
+    
+    private void doBuildNonAlernate() {
         assert this.explorer != null;
         assert this.graphProperties != null;
         assert this.nodeProperties != null;
@@ -137,20 +151,11 @@ public final class GraphBuilderExplorer {
         }
         // TODO ensure that there is at least one state
         ExplorerNode currentNode = explorer.newNode();
-        Semantics semantics = ValueObject.asObject(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
-        boolean nondet = semantics != null && SemanticsNonDet.isNonDet(semantics);
         ExplorerNode[] successorNodes = new ExplorerNode[1];
         successorNodes[0] = explorer.newNode();
         this.currentState = 0;
-        
-        int numStates = lastNumber + 1;
-        if (nondet) {
-            graphAlter = new GraphExplicitSparseAlternate();
-            this.graph = graphAlter;
-        } else {
-            graphStoch = new GraphExplicitSparse();
-            this.graph = graphStoch;
-        }
+        graphStoch = new GraphExplicitSparse();
+        this.graph = graphStoch;
         for (Object property : graphProperties) {
             Type type = explorer.getGraphPropertyType(property);
             assert type != null;
@@ -171,81 +176,36 @@ public final class GraphBuilderExplorer {
         }
         NodePropertyExplorerNode explorerNodeProperty = null;
         if (withExplorerNode) {
-        	explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
+            explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
             graph.registerNodeProperty(CommonProperties.NODE_EXPLORER,
                     explorerNodeProperty);
         }
         ExplorerEdgeProperty[] explorerEdgeProperties = new ExplorerEdgeProperty[edgeProperties.size()];
-        EdgePropertySparseNondet[] graphEdgePropertiesAlter = new EdgePropertySparseNondet[edgeProperties.size()];
         EdgeProperty[] graphEdgeProperties = new EdgeProperty[edgeProperties.size()];
         int edgePropNr = 0;
-        if (nondet) {
-            for (Object property : edgeProperties) {
-                Type type = explorer.getEdgePropertyType(property);
-                explorerEdgeProperties[edgePropNr] = explorer.getEdgeProperty(property);
-                graphEdgePropertiesAlter[edgePropNr] = graphAlter.addSettableEdgeProperty(property, type);
-                graphEdgeProperties[edgePropNr] = graphEdgePropertiesAlter[edgePropNr];
-                edgePropNr++;
-            }
-        } else {
-            for (Object property : edgeProperties) {
-                Type type = explorer.getEdgePropertyType(property);
-                explorerEdgeProperties[edgePropNr] = explorer.getEdgeProperty(property);
-                graphEdgeProperties[edgePropNr] = graph.addSettableEdgeProperty(property, type);
-                edgePropNr++;
-            }
+        for (Object property : edgeProperties) {
+            Type type = explorer.getEdgePropertyType(property);
+            explorerEdgeProperties[edgePropNr] = explorer.getEdgeProperty(property);
+            graphEdgeProperties[edgePropNr] = graph.addSettableEdgeProperty(property, type);
+            edgePropNr++;
         }
-        int nondetNr = numStates;
         lastState = 0;
         this.currentState = 0;
         while (currentState <= lastNumber) {
             nodeStore.fromNumber(currentNode, currentState);
             explorer.queryNode(currentNode);
             int numStateSuccessors = explorer.getNumSuccessors();
-            if (nondet) {
-                graphAlter.prepareState(numStateSuccessors);
-            } else {
-                graphStoch.prepareNode(currentState, numStateSuccessors);
-            }
+            graphStoch.prepareNode(currentState, numStateSuccessors);
             for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
                 graphNodeProperties[nodePropNr].set(currentState, explorerNodeProperties[nodePropNr].get());
             }
-            if (nondet) {
-                successorNodes = assignSuccessorNodes(successorNodes);
-                for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
-                    for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
-                        graphEdgePropertiesAlter[nodePropNr].setForState(explorerEdgeProperties[nodePropNr].get(stateSuccNr), stateSuccNr);
-                    }
-                    nondetNr++;
+            for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
+                int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(stateSuccNr));
+                graph.setSuccessorNode(currentState, stateSuccNr, numberSucc);
+                for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
+                    graphEdgeProperties[nodePropNr].set(currentState, stateSuccNr, explorerEdgeProperties[nodePropNr].get(stateSuccNr));
                 }
-                nondetNr -= numStateSuccessors;
-                for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
-                    explorer.queryNode(successorNodes[stateSuccNr]);
-                    for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
-                        graphNodeProperties[nodePropNr].set(nondetNr, explorerNodeProperties[nodePropNr].get());
-                    }
-                    int numISuccessors = explorer.getNumSuccessors();
-                    graphAlter.prepareNondet(numISuccessors);
-                    for (int interSuccNr = 0; interSuccNr < numISuccessors; interSuccNr++ ){
-                        for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
-                            graphEdgePropertiesAlter[nodePropNr].setForNonDet(explorerEdgeProperties[nodePropNr].get(interSuccNr), interSuccNr);
-                        }
-                        int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(interSuccNr));
-                        graphAlter.setNondetSuccessor(interSuccNr, numberSucc);
-//                        graph.setSuccessorNode(interSuccNr, numberSucc);
-                        lastNumber = Math.max(numberSucc, lastNumber);
-                    }
-                    nondetNr++;
-                }
-            } else {
-                for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
-                    int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(stateSuccNr));
-                    graph.setSuccessorNode(currentState, stateSuccNr, numberSucc);
-                    for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
-                        graphEdgeProperties[nodePropNr].set(currentState, stateSuccNr, explorerEdgeProperties[nodePropNr].get(stateSuccNr));
-                    }
-                    lastNumber = Math.max(numberSucc, lastNumber);
-                }
+                lastNumber = Math.max(numberSucc, lastNumber);
             }
             currentState++;
         }
@@ -254,17 +214,130 @@ public final class GraphBuilderExplorer {
         }
         log.send(MessagesGraph.BUILD_MODEL_DONE, currentState, watch.getTimeSeconds());
         if (graph instanceof GraphExplicitSparse) {
-//            graphStoch.setNumStates(numStates);
-//            ((GraphExplicitSparse) graph).setNumStates(numStates);
+            //            graphStoch.setNumStates(numStates);
+            //            ((GraphExplicitSparse) graph).setNumStates(numStates);
         } else if (graph instanceof GraphExplicitSparseAlternate) {
-//            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
+            //            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
         }
         if (explorerNodeProperty != null) {
-        	explorerNodeProperty.setNumStates(graph.computeNumStates());
+            explorerNodeProperty.setNumStates(graph.computeNumStates());
         }
     }
-    
-    private ExplorerNode[] assignSuccessorNodes(ExplorerNode[] successorNodes) throws EPMCException {
+
+    private void doBuildAlternate() {
+        assert this.explorer != null;
+        assert this.graphProperties != null;
+        assert this.nodeProperties != null;
+        assert this.edgeProperties != null;
+        StopWatch watch = new StopWatch(true);
+        log.send(MessagesGraph.BUILD_MODEL_START);
+        BitStoreableToNumber nodeStore = newNodeStore(explorer);
+        int lastNumber = 0;
+        int numInitStates = 0;
+        for (ExplorerNode node : explorer.getInitialNodes()) {            
+            int number = nodeStore.toNumber(node);
+            lastNumber = number;
+            numInitStates++;
+        }
+        // TODO ensure that there is at least one state
+        ExplorerNode currentNode = explorer.newNode();
+        ExplorerNode[] successorNodes = new ExplorerNode[1];
+        successorNodes[0] = explorer.newNode();
+        this.currentState = 0;
+
+        int numStates = lastNumber + 1;
+        graphAlter = new GraphExplicitSparseAlternate();
+        this.graph = graphAlter;
+        for (Object property : graphProperties) {
+            Type type = explorer.getGraphPropertyType(property);
+            assert type != null;
+            this.graph.addSettableGraphProperty(property, type);
+            this.graph.setGraphProperty(property, explorer.getGraphProperty(property));
+        }
+        boolean withExplorerNode = nodeProperties.contains(CommonProperties.NODE_EXPLORER);
+        nodeProperties.remove(CommonProperties.NODE_EXPLORER);
+        ExplorerNodeProperty[] explorerNodeProperties = new ExplorerNodeProperty[nodeProperties.size()];
+        NodeProperty[] graphNodeProperties = new NodeProperty[nodeProperties.size()];
+        int nodePropNr = 0;
+        for (Object property : nodeProperties) {
+            Type type = explorer.getNodePropertyType(property);
+            assert type != null : property + " " + explorer.getNodeProperty(property);
+            explorerNodeProperties[nodePropNr] = explorer.getNodeProperty(property);
+            graphNodeProperties[nodePropNr] = graph.addSettableNodeProperty(property, type);
+            nodePropNr++;
+        }
+        NodePropertyExplorerNode explorerNodeProperty = null;
+        if (withExplorerNode) {
+            explorerNodeProperty = new NodePropertyExplorerNode(graph, explorer, nodeStore);
+            graph.registerNodeProperty(CommonProperties.NODE_EXPLORER,
+                    explorerNodeProperty);
+        }
+        ExplorerEdgeProperty[] explorerEdgeProperties = new ExplorerEdgeProperty[edgeProperties.size()];
+        EdgePropertySparseNondet[] graphEdgePropertiesAlter = new EdgePropertySparseNondet[edgeProperties.size()];
+        EdgeProperty[] graphEdgeProperties = new EdgeProperty[edgeProperties.size()];
+        int edgePropNr = 0;
+        for (Object property : edgeProperties) {
+            Type type = explorer.getEdgePropertyType(property);
+            explorerEdgeProperties[edgePropNr] = explorer.getEdgeProperty(property);
+            graphEdgePropertiesAlter[edgePropNr] = graphAlter.addSettableEdgeProperty(property, type);
+            graphEdgeProperties[edgePropNr] = graphEdgePropertiesAlter[edgePropNr];
+            edgePropNr++;
+        }
+        int nondetNr = numStates;
+        lastState = 0;
+        this.currentState = 0;
+        while (currentState <= lastNumber) {
+            nodeStore.fromNumber(currentNode, currentState);
+            explorer.queryNode(currentNode);
+            int numStateSuccessors = explorer.getNumSuccessors();
+            graphAlter.prepareState(numStateSuccessors);
+            for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
+                graphNodeProperties[nodePropNr].set(currentState, explorerNodeProperties[nodePropNr].get());
+            }
+            successorNodes = assignSuccessorNodes(successorNodes);
+            for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
+                for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
+                    graphEdgePropertiesAlter[nodePropNr].setForState(explorerEdgeProperties[nodePropNr].get(stateSuccNr), stateSuccNr);
+                }
+                nondetNr++;
+            }
+            nondetNr -= numStateSuccessors;
+            for (int stateSuccNr = 0; stateSuccNr < numStateSuccessors; stateSuccNr++) {
+                explorer.queryNode(successorNodes[stateSuccNr]);
+                for (nodePropNr = 0; nodePropNr < graphNodeProperties.length; nodePropNr++) {
+                    graphNodeProperties[nodePropNr].set(nondetNr, explorerNodeProperties[nodePropNr].get());
+                }
+                int numISuccessors = explorer.getNumSuccessors();
+                graphAlter.prepareNondet(numISuccessors);
+                for (int interSuccNr = 0; interSuccNr < numISuccessors; interSuccNr++ ){
+                    for (nodePropNr = 0; nodePropNr < graphEdgeProperties.length; nodePropNr++) {
+                        graphEdgePropertiesAlter[nodePropNr].setForNonDet(explorerEdgeProperties[nodePropNr].get(interSuccNr), interSuccNr);
+                    }
+                    int numberSucc = nodeStore.toNumber(explorer.getSuccessorNode(interSuccNr));
+                    graphAlter.setNondetSuccessor(interSuccNr, numberSucc);
+                    //                        graph.setSuccessorNode(interSuccNr, numberSucc);
+                    lastNumber = Math.max(numberSucc, lastNumber);
+                }
+                nondetNr++;
+            }
+            currentState++;
+        }
+        for (int initState = 0; initState < numInitStates; initState++) {
+            this.graph.getInitialNodes().set(initState);
+        }
+        log.send(MessagesGraph.BUILD_MODEL_DONE, currentState, watch.getTimeSeconds());
+        if (graph instanceof GraphExplicitSparse) {
+            //            graphStoch.setNumStates(numStates);
+            //            ((GraphExplicitSparse) graph).setNumStates(numStates);
+        } else if (graph instanceof GraphExplicitSparseAlternate) {
+            //            ((GraphExplicitSparseAlternate) graph).setNumStates(numStates);
+        }
+        if (explorerNodeProperty != null) {
+            explorerNodeProperty.setNumStates(graph.computeNumStates());
+        }
+    }
+
+    private ExplorerNode[] assignSuccessorNodes(ExplorerNode[] successorNodes) {
         int numSuccessors = explorer.getNumSuccessors();
         if (numSuccessors > successorNodes.length) {
             int oldLength = successorNodes.length;
@@ -283,8 +356,7 @@ public final class GraphBuilderExplorer {
         return successorNodes;
     }
 
-    private static BitStoreableToNumber newNodeStore(Explorer explorer)
-            throws EPMCException {
+    private static BitStoreableToNumber newNodeStore(Explorer explorer) {
         int numBits = explorer.getNumNodeBits();
         return UtilGraph.newNodeStore(numBits);
     }

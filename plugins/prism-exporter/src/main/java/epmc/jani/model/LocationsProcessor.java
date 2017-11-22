@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -31,131 +30,131 @@ import epmc.prism.exporter.processor.Range;
 
 public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 
-	private Locations locations = null;
-	private String prefix = null;
-	private Automaton automaton = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
-		assert automaton != null;
-		
-		this.automaton = automaton;
-		return this;
-	}
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof Locations; 
-		
-		locations = (Locations) obj;
-		return this;
-	}
+    private Locations locations = null;
+    private String prefix = null;
+    private Automaton automaton = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert locations != null;
-		
-		// PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
-		ensure(ProcessorRegistrar.getAllowMultipleLocations() || locations.size() == 1, 
-			   ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_MULTIPLE_LOCATIONS);
-		
-		StringBuilder prism = new StringBuilder();
-		
-		for (Location location : locations) {
-			JANIComponentRegistrar.registerLocation(automaton, location);
-			for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-				JANIComponentRegistrar.registerStateRewardExpression(assignment.getRef(), assignment.getValue());
-			}
-		}
-		
-		if (locations.size() == 1) {
-			for (Location location : locations) {
-				TimeProgress timeProgress = location.getTimeProgress();
-				if (timeProgress != null) {
-					prism.append(ProcessorRegistrar.getProcessor(timeProgress)
-												   .setPrefix(prefix)
-												   .toPRISM())
-						 .append("\n");
-				}
-			}
-		} else {
-			Range range = JANIComponentRegistrar.getLocationRange(automaton);
-			prism.append(prefix)
-			     .append(JANIComponentRegistrar.getLocationName(automaton))
-			     .append(": [")
-			     .append(range.low)
-			     .append("..")
-			     .append(range.high)
-			     .append("]");
-			if (!JANIComponentRegistrar.areInitialConditionsUsed() && automaton.getInitialLocations().size() == 1) {
-				prism.append(" init ");
-				for (Location location : automaton.getInitialLocations()) {
-					prism.append(JANIComponentRegistrar.getLocationIdentifier(automaton, location));
-				}
-			}
-			prism.append(";\n");
-			
-			if (JANIComponentRegistrar.isTimedModel()) {
-				prism.append("\n")
-					 .append(prefix)
-					 .append("invariant\n");
-				boolean remaining = false;
-				for (Location location : locations) {
-					TimeProgress timeProgress = location.getTimeProgress();
-					if (timeProgress != null) {
-						if (remaining) {
-							prism.append(prefix)
-								 .append(ModelJANIProcessor.INDENT)
-								 .append("&\n");
-						} else {
-							remaining = true;
-						}
-						prism.append(prefix)
-							 .append(ModelJANIProcessor.INDENT)
-							 .append("(")
-							 .append(JANIComponentRegistrar.getLocationName(automaton))
-							 .append("=")
-							 .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
-							 .append(" => (")
-							 .append(ProcessorRegistrar.getProcessor(timeProgress.getExp())
-									 				   .toPRISM())
-							 .append("))\n");
-					}
-				}
-				prism.append(prefix)
-					 .append("endinvariant\n");
-			}
-		}
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert locations != null;
-		
-		for (Location location : locations) {
-			ProcessorRegistrar.getProcessor(location)
-							  .validateTransientVariables();
-		}
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+        assert automaton != null;
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert locations != null;
-		
-		boolean usesTransient = false;
-		for (Location location : locations) {
-			usesTransient |= ProcessorRegistrar.getProcessor(location)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        this.automaton = automaton;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Locations; 
+
+        locations = (Locations) obj;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert locations != null;
+
+        // PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
+        ensure(ProcessorRegistrar.getAllowMultipleLocations() || locations.size() == 1, 
+                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_MULTIPLE_LOCATIONS);
+
+        StringBuilder prism = new StringBuilder();
+
+        for (Location location : locations) {
+            JANIComponentRegistrar.registerLocation(automaton, location);
+            for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
+                JANIComponentRegistrar.registerStateRewardExpression(assignment.getRef(), assignment.getValue());
+            }
+        }
+
+        if (locations.size() == 1) {
+            for (Location location : locations) {
+                TimeProgress timeProgress = location.getTimeProgress();
+                if (timeProgress != null) {
+                    prism.append(ProcessorRegistrar.getProcessor(timeProgress)
+                            .setPrefix(prefix)
+                            .toPRISM())
+                    .append("\n");
+                }
+            }
+        } else {
+            Range range = JANIComponentRegistrar.getLocationRange(automaton);
+            prism.append(prefix)
+            .append(JANIComponentRegistrar.getLocationName(automaton))
+            .append(": [")
+            .append(range.low)
+            .append("..")
+            .append(range.high)
+            .append("]");
+            if (!JANIComponentRegistrar.areInitialConditionsUsed() && automaton.getInitialLocations().size() == 1) {
+                prism.append(" init ");
+                for (Location location : automaton.getInitialLocations()) {
+                    prism.append(JANIComponentRegistrar.getLocationIdentifier(automaton, location));
+                }
+            }
+            prism.append(";\n");
+
+            if (JANIComponentRegistrar.isTimedModel()) {
+                prism.append("\n")
+                .append(prefix)
+                .append("invariant\n");
+                boolean remaining = false;
+                for (Location location : locations) {
+                    TimeProgress timeProgress = location.getTimeProgress();
+                    if (timeProgress != null) {
+                        if (remaining) {
+                            prism.append(prefix)
+                            .append(ModelJANIProcessor.INDENT)
+                            .append("&\n");
+                        } else {
+                            remaining = true;
+                        }
+                        prism.append(prefix)
+                        .append(ModelJANIProcessor.INDENT)
+                        .append("(")
+                        .append(JANIComponentRegistrar.getLocationName(automaton))
+                        .append("=")
+                        .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
+                        .append(" => (")
+                        .append(ProcessorRegistrar.getProcessor(timeProgress.getExp())
+                                .toPRISM())
+                        .append("))\n");
+                    }
+                }
+                prism.append(prefix)
+                .append("endinvariant\n");
+            }
+        }
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert locations != null;
+
+        for (Location location : locations) {
+            ProcessorRegistrar.getProcessor(location)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert locations != null;
+
+        boolean usesTransient = false;
+        for (Location location : locations) {
+            usesTransient |= ProcessorRegistrar.getProcessor(location)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

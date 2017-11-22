@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -44,7 +44,7 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
             index += numBits;
             return result;
         }
-        
+
         @Override
         public void write(boolean value) {
             if (value) {
@@ -55,7 +55,7 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
             index++;
             assert index <= Integer.SIZE;
         }
-        
+
         @Override
         public void write(int value, int numBits) {
             value <<= index;
@@ -75,7 +75,7 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
         storeable.write(helper);
         return toNumber();
     }
-    
+
     @Override
     public void fromNumber(BitStoreable storeable, int number) {
         setNumber(number);
@@ -86,7 +86,7 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
         bitSet = 0;
         index = 0;
     }
-        
+
     public void set(int bitSet) {
         this.bitSet = bitSet;
         index = 0;
@@ -95,14 +95,14 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
     private int get() {
         return bitSet;
     }
-    
+
     private final TIntIntMap nodeToNumber = new TIntIntHashMap(10, 0.5f, -1, -1);
     private final TIntArrayList numberToNode = new TIntArrayList();
 
     private void setNumber(int number) {
         set(numberToNode.get(number));
     }
-    
+
     private int toNumber() {        
         int key = get();
         int newNumber = nodeToNumber.size();

@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.value.Value;
@@ -38,20 +37,20 @@ public interface Buechi {
     String getIdentifier();    
 
     boolean isDeterministic();
-    
+
     Expression[] getExpressions();
 
     int getNumLabels();
-    
+
     int getTrueState();
 
     GraphExplicit getGraph();
-    
-    void query(Value[] get) throws EPMCException;
-    
-    
+
+    void query(Value[] get);
+
+
     /* default methods */
-    
+
     default int getNumStates() {
         return getGraph().getNumNodes();
     }

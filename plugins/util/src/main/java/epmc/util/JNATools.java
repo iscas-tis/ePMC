@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -52,7 +52,7 @@ public final class JNATools {
     private final static class Utils {
         /** part of filename of native utility library */
         private final static String UTIL_LIBRARY_NAME = "utils";
-        
+
         /** c function fgetc */
         static native int fgetc(Pointer stream);
 
@@ -64,7 +64,7 @@ public final class JNATools {
 
         /** c function rewind */
         static native void rewind (Pointer stream);
-        
+
         /** c function ftell */
         static native NativeLong ftell(Pointer stream);
 
@@ -73,7 +73,7 @@ public final class JNATools {
 
         /** c function free */
         static native void free(Pointer ptr);
-        
+
         /** utility function to obtain pointer to stdout */
         static native Pointer get_stdout();
 
@@ -97,15 +97,15 @@ public final class JNATools {
 
         /** utility function to read FILE* to char* */
         static native Pointer read_stream_to_string(Pointer stream);
-        
+
         /** indicator whether utility library was loaded successfully */
         private final static boolean loaded =
                 JNATools.registerLibrary(Utils.class, UTIL_LIBRARY_NAME);
     }
-    
+
     /** string by which JNA indicates that a library could not be loaded */
     private final static String CANNOT_LOAD = "Unable to load library";
-    
+
     /**
      * Register a native library to an given class using JNA.
      * In contrast to the JNA methods, this method will return {@code true} if
@@ -147,7 +147,7 @@ public final class JNATools {
         }
         return ok;
     }
-    
+
     /**
      * Obtain stdout FILE* stream.
      * 
@@ -207,7 +207,7 @@ public final class JNATools {
         assert stream != null;
         Utils.rewind(stream);
     }
-    
+
     /**
      * Call c function {@code fgetc}.
      * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/fgetc.html">http://pubs.opengroup.org/onlinepubs/9699919799/functions/fgetc.html</a>
@@ -246,7 +246,7 @@ public final class JNATools {
         assert offset != null;
         return Utils.fseek(stream, offset, whence);
     }
-    
+
     /**
      * Call c function {@code free}.
      * @see <a href="http://pubs.opengroup.org/onlinepubs/009695399/functions/free.html">http://pubs.opengroup.org/onlinepubs/009695399/functions/free.html</a>
@@ -256,7 +256,7 @@ public final class JNATools {
     public static void free(Pointer pointer) {
         Utils.free(pointer);
     }
-    
+
     /**
      * Obtain integer constant EOF.
      * 
@@ -325,7 +325,7 @@ public final class JNATools {
         fseek(stream, lastPosition, get_seek_set());
         return result;
     }
-    
+
     /**
      * Read complete FILE* to {@link String}.
      * The parameter must not be {@code null}.
@@ -340,7 +340,7 @@ public final class JNATools {
         free(cString);
         return result;
     }
-    
+
     /**
      * Private constructor to prevent instantiation.
      */

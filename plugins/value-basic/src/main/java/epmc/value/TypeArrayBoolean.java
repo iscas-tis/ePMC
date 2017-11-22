@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -26,11 +26,11 @@ import epmc.value.ValueArray;
 
 public final class TypeArrayBoolean implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](boolean)";
-	private final TypeBoolean entryType;
-    
+    private final TypeBoolean entryType;
+
     TypeArrayBoolean(TypeBoolean entryType) {
-    	assert entryType != null;
-    	this.entryType = entryType;
+        assert entryType != null;
+        this.entryType = entryType;
     }
 
     @Override
@@ -38,28 +38,28 @@ public final class TypeArrayBoolean implements TypeArray {
         return new ValueArrayBoolean(this);
     }
 
-	@Override
-	public TypeBoolean getEntryType() {
-		return entryType;
-	}
+    @Override
+    public TypeBoolean getEntryType() {
+        return entryType;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TypeArrayBoolean)) {
-			return false;
-		}
-		TypeArrayBoolean other = (TypeArrayBoolean) obj;
-		return this.getEntryType().equals(other.getEntryType());
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TypeArrayBoolean)) {
+            return false;
+        }
+        TypeArrayBoolean other = (TypeArrayBoolean) obj;
+        return this.getEntryType().equals(other.getEntryType());
+    }
 
-	@Override
-	public int hashCode() {
+    @Override
+    public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-	}    
-	
+    }    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -67,8 +67,8 @@ public final class TypeArrayBoolean implements TypeArray {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-    
-	@Override
+
+    @Override
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }

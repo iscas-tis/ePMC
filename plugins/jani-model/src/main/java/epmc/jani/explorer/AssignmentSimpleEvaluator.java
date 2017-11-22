@@ -16,128 +16,136 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
 import epmc.jani.model.AssignmentSimple;
 import epmc.jani.model.Variable;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Value;
 
 public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
-	public final static String IDENTIFIER = "simple";
-	
-	// Note: looks a bit over-engineered now. However, these code structure
-	// serves as a means to later on support more complex classes of assignments
-	public final static class Builder implements AssignmentEvaluator.Builder {
-		private Assignment assignment;
-		private Map<Variable, Integer> variableMap;
-		private Map<Expression, Expression> autVarToLocal;
-		private Expression[] variables;
-		private ExpressionToType expressionToType;
+    public final static String IDENTIFIER = "simple";
 
-		@Override
-		public Builder setAssignment(Assignment assignment) {
-			this.assignment = assignment;
-			return this;
-		}
-		
-		private AssignmentSimple getAssignment() {
-			return (AssignmentSimple) assignment;
-		}
-		
-		@Override
-		public Builder setVariableMap(Map<Variable, Integer> variableMap) {
-			this.variableMap = variableMap;
-			return this;
-		}
-		
-		private Map<Variable, Integer> getVariableMap() {
-			return variableMap;
-		}
-		
-		@Override
-		public Builder setVariables(Expression[] variables) {
-			this.variables = variables;
-			return this;
-		}
+    // Note: looks a bit over-engineered now. However, these code structure
+    // serves as a means to later on support more complex classes of assignments
+    public final static class Builder implements AssignmentEvaluator.Builder {
+        private Assignment assignment;
+        private Map<Variable, Integer> variableMap;
+        private Map<Expression, Expression> autVarToLocal;
+        private Expression[] variables;
+        private ExpressionToType expressionToType;
 
-		private Expression[] getVariables() {
-			return variables;
-		}
-		
-		@Override
-		public Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal) {
-			this.autVarToLocal = autVarToLocal;
-			return this;
-		}
+        @Override
+        public Builder setAssignment(Assignment assignment) {
+            this.assignment = assignment;
+            return this;
+        }
 
-		private Map<Expression, Expression> getAutVarToLocal() {
-			return autVarToLocal;
-		}
-		
-		@Override
-		public boolean canHandle() {
-			if (!(assignment instanceof AssignmentSimple)) {
-				return false;
-			}
-			AssignmentSimple assignmentSimple = (AssignmentSimple) assignment;
-			if (!variableMap.containsKey(assignmentSimple.getRef())) {
-				return false;
-			}
-			return true;
-		}
-		
-		@Override
-		public Builder setExpressionToType(ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        private AssignmentSimple getAssignment() {
+            return (AssignmentSimple) assignment;
+        }
 
-		@Override
-		public AssignmentSimpleEvaluator build() throws EPMCException {
-			assert canHandle();
-			return new AssignmentSimpleEvaluator(this);
-		}
-	}
+        @Override
+        public Builder setVariableMap(Map<Variable, Integer> variableMap) {
+            this.variableMap = variableMap;
+            return this;
+        }
 
-	private final int variable;
-	private final EvaluatorExplicit expression;
-	
-	private AssignmentSimpleEvaluator(Builder builder) throws EPMCException {
-		assert builder != null;
-		Map<Variable, Integer> variableMap = builder.getVariableMap();
-		AssignmentSimple entry = builder.getAssignment();
-		Map<Expression, Expression> autVarToLocal = builder.getAutVarToLocal();
-		Expression[] variables = builder.getVariables();
-		variable = variableMap.get(entry.getRef());
-		Expression assignment = entry.getValue();
-		assignment = entry.getModel().replaceConstants(assignment);
-		assignment = UtilExpressionStandard.replace(assignment, autVarToLocal);
-		assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
-		expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
-	}
-	
-	@Override
-	public void apply(NodeJANI node, NodeJANI successor) throws EPMCException {
-		assert node != null;
-		assert successor != null;
-		Value[] variableValues = node.getValues();
-		expression.evaluate(variableValues);
-		successor.setVariable(variable, expression.getResultValue());
-	}
+        private Map<Variable, Integer> getVariableMap() {
+            return variableMap;
+        }
+
+        @Override
+        public Builder setVariables(Expression[] variables) {
+            this.variables = variables;
+            return this;
+        }
+
+        private Expression[] getVariables() {
+            return variables;
+        }
+
+        @Override
+        public Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal) {
+            this.autVarToLocal = autVarToLocal;
+            return this;
+        }
+
+        private Map<Expression, Expression> getAutVarToLocal() {
+            return autVarToLocal;
+        }
+
+        @Override
+        public boolean canHandle() {
+            if (!(assignment instanceof AssignmentSimple)) {
+                return false;
+            }
+            AssignmentSimple assignmentSimple = (AssignmentSimple) assignment;
+            if (!variableMap.containsKey(assignmentSimple.getRef())) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        public Builder setExpressionToType(ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
+
+        @Override
+        public AssignmentSimpleEvaluator build() {
+            assert canHandle();
+            return new AssignmentSimpleEvaluator(this);
+        }
+    }
+
+    private final int variable;
+    private final EvaluatorExplicit expression;
+    private final OperatorEvaluator set;
+    private final Value value;
+
+    private AssignmentSimpleEvaluator(Builder builder) {
+        assert builder != null;
+        Map<Variable, Integer> variableMap = builder.getVariableMap();
+        AssignmentSimple entry = builder.getAssignment();
+        Map<Expression, Expression> autVarToLocal = builder.getAutVarToLocal();
+        Expression[] variables = builder.getVariables();
+        variable = variableMap.get(entry.getRef());
+        Expression assignment = entry.getValue();
+        assignment = entry.getModel().replaceConstants(assignment);
+        assignment = UtilExpressionStandard.replace(assignment, autVarToLocal);
+        value = entry.getRef().getType().toType().newValue();
+//                assignment.getType(builder.getExpressionToType()).newValue();
+        assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
+        expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
+    }
+
+    @Override
+    public void apply(NodeJANI node, NodeJANI successor) {
+        assert node != null;
+        assert successor != null;
+        Value[] variableValues = node.getValues();
+        expression.evaluate(variableValues);
+        set.apply(value, expression.getResultValue());
+        successor.setVariable(variable, value);
+    }
 }

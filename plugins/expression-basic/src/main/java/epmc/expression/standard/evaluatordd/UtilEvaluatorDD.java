@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -31,42 +31,41 @@ import epmc.value.ValueInteger;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class UtilEvaluatorDD {
     private final static String SPACE = " ";
-    
+
     private final static class ExpressionToTypeDD implements ExpressionToType {
-		private final Map<Expression, VariableDD> variables;
+        private final Map<Expression, VariableDD> variables;
 
-		private ExpressionToTypeDD(Map<Expression, VariableDD> variables) {
-    		this.variables = variables;
-    	}
+        private ExpressionToTypeDD(Map<Expression, VariableDD> variables) {
+            this.variables = variables;
+        }
 
-		@Override
-		public Type getType(Expression expression) throws EPMCException {
-			assert expression != null;
-			if (variables == null) {
-				return null;
-			}
-			VariableDD variable = variables.get(expression);
-			if (variable == null) {
-				return null;
-			}
-			return variable.getType();
-		}
+        @Override
+        public Type getType(Expression expression) {
+            assert expression != null;
+            if (variables == null) {
+                return null;
+            }
+            VariableDD variable = variables.get(expression);
+            if (variable == null) {
+                return null;
+            }
+            return variable.getType();
+        }
     }
-    
-    public static EvaluatorDD newEvaluator(Expression expression, Map<Expression,VariableDD> variables) throws EPMCException {
+
+    public static EvaluatorDD newEvaluator(Expression expression, Map<Expression,VariableDD> variables) {
         assert expression != null;
         assert variables != null;
         for (Entry<Expression, VariableDD> entry : variables.entrySet()) {
@@ -87,16 +86,16 @@ public final class UtilEvaluatorDD {
         assert false : expression + SPACE + expression.getClass();
         return null;
     }
-    
-    public static DD translate(Expression expression, Map<Expression,VariableDD> variables) throws EPMCException {
+
+    public static DD translate(Expression expression, Map<Expression,VariableDD> variables) {
         EvaluatorDD evaluator = newEvaluator(expression, variables);
         DD result = evaluator.getDD();
         evaluator.close();
         return result;
     }
-    
+
     public static DD assign(VariableDD variable, int copy, Expression value, Map<Expression,VariableDD> variables)
-            throws EPMCException {
+    {
         assert variable != null;
         assert copy >= 0;
         assert copy < variable.getNumCopies();
@@ -114,8 +113,8 @@ public final class UtilEvaluatorDD {
         return result;
     }
 
-    
-    public static DD getDD(DD singleDD, List<DD> vector, Expression expression) throws EPMCException {
+
+    public static DD getDD(DD singleDD, List<DD> vector, Expression expression) {
         if (singleDD != null) {
             assert singleDD.alive();
             return singleDD;
@@ -123,8 +122,8 @@ public final class UtilEvaluatorDD {
         assert vector != null;
         ContextDD contextDD = vector.get(0).getContext();
         Type type = TypeInteger.get();
-//        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
-        if (type == null || TypeInteger.isInteger(type)) {
+        //        Type type = expression.getType(new ExpressionToTypeDD(ContextValue.get(), null));
+        if (type == null || TypeInteger.is(type)) {
             int digVal = 1;
             ValueInteger value = TypeInteger.get()
                     .newValue();
@@ -139,8 +138,8 @@ public final class UtilEvaluatorDD {
             DD signConstDD = vector.get(vector.size() - 1).toMT().
                     multiplyWith(contextDD.newConstant(-digVal));
             singleDD = singleDD.addWith(signConstDD);
-        } else if (TypeEnum.isEnum(type)) {
-            TypeEnum typeEnum = TypeEnum.asEnum(type);
+        } else if (TypeEnum.is(type)) {
+            TypeEnum typeEnum = TypeEnum.as(type);
             Enum<?>[] consts = typeEnum.getEnumClass().getEnumConstants();
             int numBits = typeEnum.getNumBits() + 1;
             singleDD = contextDD.newConstant(typeEnum.newValue(consts[0]));
@@ -158,8 +157,8 @@ public final class UtilEvaluatorDD {
         assert singleDD.alive();
         return singleDD;
     }
-    
-    public static boolean canVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) throws EPMCException {
+
+    public static boolean canVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) {
         assert expression != null;
         assert operator != null;
         assert variables != null;
@@ -180,7 +179,7 @@ public final class UtilEvaluatorDD {
         return true;
     }
 
-    public static boolean canIntegerVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) throws EPMCException {
+    public static boolean canIntegerVectorOperator(Expression expression, Operator operator, Map<Expression, VariableDD> variables) {
         assert expression != null;
         assert operator != null;
         assert variables != null;
@@ -189,29 +188,30 @@ public final class UtilEvaluatorDD {
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         for (Expression operand : expressionOperator.getOperands()) {
-            if (!TypeInteger.isInteger(operand.getType(new ExpressionToTypeDD(variables)))) {
+//            if (!TypeInteger.is(operand.getType(new ExpressionToTypeDD(variables)))) {
+            if (true) {
                 return false;
             }
             if (!canIntegerVectorOperator(operand, operator, variables)) {
-            	return false;
+                return false;
             }
         }
         return true;
     }
 
-    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorOneArg operator) throws EPMCException {
+    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorOneArg operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0]));
     }
-    
-    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgs operator) throws EPMCException {
+
+    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgs operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1]));
     }
-    
-    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorThreeArgs operator) throws EPMCException {
+
+    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorThreeArgs operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1], operands[2]));
     }
 
-    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperator operator) throws EPMCException {
+    public static List<DD> applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperator operator) {
         assert expression != null;
         List<EvaluatorDD> inner = new ArrayList<>();
         boolean allHaveVectors = true;
@@ -220,7 +220,8 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(variables)));
+//            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger = false;
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")
@@ -238,11 +239,11 @@ public final class UtilEvaluatorDD {
         return result;
     }
 
-    public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgsSingleDDResult operator) throws EPMCException {
+    public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorTwoArgsSingleDDResult operator) {
         return applyVector(expression, variables, (@SuppressWarnings("unchecked") List<DD>... operands) -> operator.apply(operands[0], operands[1]));
     }
-    
-    public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorSingleDDResult operator) throws EPMCException {
+
+    public static DD applyVector(Expression expression, Map<Expression,VariableDD> variables, VectorOperatorSingleDDResult operator) {
         assert expression != null;
         List<EvaluatorDD> inner = new ArrayList<>();
         boolean allHaveVectors = true;
@@ -251,7 +252,8 @@ public final class UtilEvaluatorDD {
         for (Expression op : expressionOperator.getOperands()) {
             EvaluatorDD evaluator = newEvaluator(op, variables);
             inner.add(evaluator);
-            allInteger &= TypeInteger.isInteger(op.getType(new ExpressionToTypeDD(variables)));
+//            allInteger &= TypeInteger.is(op.getType(new ExpressionToTypeDD(variables)));
+            allInteger = false;
             allHaveVectors &= evaluator.getVector() != null;
         }
         @SuppressWarnings("unchecked")

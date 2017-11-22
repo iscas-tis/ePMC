@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
 import java.io.FileNotFoundException;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.main.options.UtilOptionsEPMC;
@@ -32,33 +31,33 @@ import epmc.options.Options;
 import epmc.value.ContextValue;
 
 public class LTLTest {
-    
-    public static void main(String[] args) throws EPMCException, FileNotFoundException {
+
+    public static void main(String[] args) throws FileNotFoundException {
         String file = "/home/liyong/projects/test/mdptt.pctl";
         Options options = UtilOptionsEPMC.newOptions();
         RawProperties props = LTLHelper.readProperties(options, file);
         ContextValue.set(new ContextValue());
-        
-//        PropertiesImpl pList = new PropertiesImpl(context);
-  //      pList.parseProperties(props);
+
+        //        PropertiesImpl pList = new PropertiesImpl(context);
+        //      pList.parseProperties(props);
         Expression expression = null;
-        
+
         for (RawProperty prop : props.getProperties()) {
-           // expression = pList.getParsedProperty(prop);
+            // expression = pList.getParsedProperty(prop);
             System.out.println(expression);
             ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             Expression opera = expressionQuantifier.getQuantified();
-//            Set<Expression> labels = opera.collectIdentifiers();
-//            if (PropertySolverExplicitLTLFairness.canHandleProp(opera)) {
-//                Expression normForm = PropertySolverExplicitLTLFairness.getNormForm(opera, labels);
-//                System.out.println("normal form:\n" + normForm);
-//                System.out.println("flatten: \n" + PropertySolverExplicitLTLFairness.flatten(normForm, labels));
-//            }else {
-//                System.out.println("can not handle");
-//            }
-//            
-            
-                        
+            //            Set<Expression> labels = opera.collectIdentifiers();
+            //            if (PropertySolverExplicitLTLFairness.canHandleProp(opera)) {
+            //                Expression normForm = PropertySolverExplicitLTLFairness.getNormForm(opera, labels);
+            //                System.out.println("normal form:\n" + normForm);
+            //                System.out.println("flatten: \n" + PropertySolverExplicitLTLFairness.flatten(normForm, labels));
+            //            }else {
+            //                System.out.println("can not handle");
+            //            }
+            //            
+
+
         }
     }
 

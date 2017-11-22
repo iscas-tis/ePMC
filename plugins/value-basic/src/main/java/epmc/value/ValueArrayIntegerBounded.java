@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 final class ValueArrayIntegerBounded implements ValueArrayInteger {
@@ -28,7 +27,7 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
     private static final int LOG2LONGSIZE = 6;
     /** String containing a single space. */
     private final static String SPACE = " ";
-	private final TypeArrayIntegerBounded type;
+    private final TypeArrayIntegerBounded type;
     /** Lower bound of integers stored in this array. */
     private final int lower;
     /** Upper bound of integers stored in this array. */
@@ -41,15 +40,14 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
      * variable here because the computation would be too expensive.
      * */
     private final int bitsPerEntry;
-	private boolean immutable;
-	private int size;
-    
+    private int size;
+
     ValueArrayIntegerBounded(TypeArrayIntegerBounded type) {
         assert type != null;
         this.type = type;
         this.content = new long[0];
-        this.lower = TypeInteger.asInteger(type.getEntryType()).getLowerInt();
-        this.upper = TypeInteger.asInteger(type.getEntryType()).getUpperInt();
+        this.lower = TypeInteger.as(type.getEntryType()).getLowerInt();
+        this.upper = TypeInteger.as(type.getEntryType()).getUpperInt();
         this.bitsPerEntry = getType().getEntryType().getNumBits();
     }
 
@@ -61,82 +59,57 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
         for (int bitNr = 0; bitNr < getBitsPerEntry(); bitNr++) {
             int bitIndex = index * getBitsPerEntry() + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         number += lower;
         return number;
     }
 
     @Override
-    public ValueArrayIntegerBounded clone() {
-    	ValueArrayIntegerBounded other = new ValueArrayIntegerBounded(getType());
-    	other.set(this);
-    	return other;
-    }
-
-    @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType());
         assert index >= 0;
         assert index < size();
-        set(ValueInteger.asInteger(value).getInt(), index);
+        set(ValueInteger.as(value).getInt(), index);
     }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType());
         assert index >= 0;
         assert index < size();
-        ValueAlgebra.asAlgebra(value).set(getInt(index));
+        ValueAlgebra.as(value).set(getInt(index));
     }
 
     private int getBitsPerEntry() {
         return bitsPerEntry;
     }
-    
+
     @Override
     public TypeArrayIntegerBounded getType() {
-    	return type;
+        return type;
     }
-    
+
     public int getBoundLower() {
         return lower;
     }
-    
+
     public int getBoundUpper() {
         return upper;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
-    @Override
-    public void setImmutable() {
-    	immutable = true;
-    }
-    
-    @Override
-    public boolean isImmutable() {
-    	return immutable;
-    }
-	@Override
-	public void set(String value) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void set(int value, int index) {
-        assert !isImmutable();
+    @Override
+    public void set(int value, int index) {
         assert index >= 0;
         assert index < size();
         assert value >= lower : value + SPACE + lower;
@@ -152,25 +125,24 @@ final class ValueArrayIntegerBounded implements ValueArrayInteger {
                 content[offset] &= ~(1L << bitIndex);
             }
         }
-	}
+    }
 
-	@Override
-	public void setSize(int size) {
-        assert !isImmutable();
+    @Override
+    public void setSize(int size) {
         assert size >= 0;
         int numBits = size * getBitsPerEntry();
         int num = ((numBits - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[num];
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

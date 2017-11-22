@@ -16,18 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.prism.model.ModelPRISM;
 
 public interface SystemConverter {
-	void setPRISMModel(ModelPRISM modelPrism);
-	
-	void setJANIModel(ModelJANI modelJani);
-	
-	void convert() throws EPMCException;
+    void setPRISMModel(ModelPRISM modelPrism);
+
+    void setJANIModel(ModelJANI modelJani);
+
+    void convert();
 }

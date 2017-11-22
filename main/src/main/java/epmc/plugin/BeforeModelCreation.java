@@ -16,11 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
-
-import epmc.error.EPMCException;
 
 /**
  * Interface to perform tasks just before model creation on the server.
@@ -28,11 +26,10 @@ import epmc.error.EPMCException;
  * @author Ernst Moritz Hahn
  */
 public interface BeforeModelCreation extends PluginInterface {
-    
+
     /**
      * Performs a before model creation on server.
      * 
-     * @throws EPMCException thrown in case of a problem occurring
      */
-    void process() throws EPMCException;
+    void process();
 }

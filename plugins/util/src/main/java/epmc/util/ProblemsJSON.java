@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -25,7 +25,7 @@ import epmc.error.UtilError;
 
 public final class ProblemsJSON {
     private final static String PROBLEMS_JSON = "ProblemsJSON";
-    
+
     /** The given element may occur only once at given context but appears at least twice. */
     public final static Problem JSON_ELEMENT_ONLY_ONCE = newProblem("json-element-only-once");
     /** Element at given position should be a JSON value string but is not. */

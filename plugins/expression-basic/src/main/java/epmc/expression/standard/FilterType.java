@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -37,20 +37,20 @@ public enum FilterType implements Serializable {
     ARGMAX("argmax",false),
     PRINT("print", false),
     PRINTALL("printall", false);
-    
+
     private final String string;
     private final boolean singleValue;
-    
+
     private FilterType(String string, boolean singleValue) {
         this.string = string;
         this.singleValue = singleValue;
     }
-    
+
     @Override
     public String toString() {
         return string;
     }
-    
+
     public boolean isSingleValue() {
         return singleValue;
     }

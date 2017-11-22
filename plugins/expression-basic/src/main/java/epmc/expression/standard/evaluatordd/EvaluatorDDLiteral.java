@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -29,14 +29,16 @@ import epmc.value.ValueNumBitsKnown;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public class EvaluatorDDLiteral implements EvaluatorDD {
     public final static String IDENTIFIER = "literal";
-    
+
     private Expression expression;
     private DD dd;
     private List<DD> vector;
@@ -66,16 +68,16 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     }
 
     @Override
-    public void build() throws EPMCException {
-        Value value = getValue(expression);
+    public void build() {
+        Value value = UtilEvaluatorExplicit.evaluate(expression);
         boolean useVector = false;
-//        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
+        //        boolean useVector = options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_VECTOR);
         ContextDD contextDD = ContextDD.get();
-        if (useVector && ValueInteger.isInteger(value)) {
-            this.vector = contextDD.twoCplFromInt(ValueInteger.asInteger(value).getInt());
-        } else if (useVector && ValueEnum.isEnum(value)) {
+        if (useVector && ValueInteger.is(value)) {
+            this.vector = contextDD.twoCplFromInt(ValueInteger.as(value).getInt());
+        } else if (useVector && ValueEnum.is(value)) {
             int numBits = ValueNumBitsKnown.getNumBits(value);
-            int number = ValueEnum.asEnum(value).getEnum().ordinal();
+            int number = ValueEnum.as(value).getEnum().ordinal();
             this.vector = contextDD.twoCplFromInt(number, numBits);
         } else {
             this.dd = contextDD.newConstant(value);
@@ -83,7 +85,7 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         dd = UtilEvaluatorDD.getDD(dd, vector, expression);
         assert dd != null;
         return dd;
@@ -92,13 +94,6 @@ public class EvaluatorDDLiteral implements EvaluatorDD {
     @Override
     public List<DD> getVector() {
         return vector;
-    }
-
-    private static Value getValue(Expression expression) throws EPMCException {
-        assert expression != null;
-        assert expression instanceof ExpressionLiteral;
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return expressionLiteral.getValue();
     }
 
     @Override

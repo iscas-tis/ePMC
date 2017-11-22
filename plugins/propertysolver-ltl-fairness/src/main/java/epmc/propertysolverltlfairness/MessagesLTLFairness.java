@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
 import epmc.messages.Message;
 
 public final class MessagesLTLFairness {
-	public final static String MESSAGES_LTL_FAIRNESS = "MessagesLTLFairness";
-	
+    public final static String MESSAGES_LTL_FAIRNESS = "MessagesLTLFairness";
+
     public final static Message LTL_FAIRNESS_EXPLORING_STATE_SPACE = newMessage().setIdentifier("ltl-fairness-exploring-state-space").build();
     public final static Message LTL_FAIRNESS_EXPLORING_STATE_SPACE_DONE = newMessage().setIdentifier("ltl-fairness-exploring-state-space-done").build();
     public final static Message LTL_FAIRNESS_COMPUTING_END_COMPONENTS_DONE = newMessage().setIdentifier("ltl-fairness-computing-end-components-done").build();
@@ -37,6 +37,6 @@ public final class MessagesLTLFairness {
         return new Message.Builder().setBundle(MESSAGES_LTL_FAIRNESS);
     }
 
-	private MessagesLTLFairness() {
-	}
+    private MessagesLTLFairness() {
+    }
 }

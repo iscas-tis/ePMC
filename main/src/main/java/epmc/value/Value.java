@@ -16,63 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
-
 /**
  * Interface to represent values used during analysis.
- * TODO complete documentation
  * 
  * @author Ernst Moritz Hahn
  */
-public interface Value extends Comparable<Value> {
-    @Override
-    boolean equals(Object obj);
-   
-    @Override
-    int hashCode();
-
-    @Override
-    String toString();
-
+public interface Value {
     /**
      * Get type with which this value was created.
      * 
      * @return type with which this value was created
      */
     Type getType();
-
-    /**
-     * Set value to this value.
-     * The value parameter must not be {@code null}.
-     * 
-     * @param value value to set this value to
-     */
-    void set(Value value);
-    
-    void set(String value) throws EPMCException;
-
-    /**
-     * Sets value to be immutable.
-     * Attempts to modify immutable values should result in an assertion
-     * failure (if assertions are enabled).
-     * 
-     * @see #isImmutable()
-     */
-    void setImmutable();
-
-    /**
-     * Checks whether value is immutable.
-     * 
-     * @see #setImmutable()
-     * @return whether value is immutable
-     */
-    boolean isImmutable();
-
-    double distance(Value other) throws EPMCException;
-
-    boolean isEq(Value other) throws EPMCException;
 }

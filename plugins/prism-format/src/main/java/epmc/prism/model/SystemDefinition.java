@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -28,64 +28,64 @@ import epmc.expression.Expression;
 
 public interface SystemDefinition {
     List<SystemDefinition> getChildren();
-    
+
     Set<Expression> getAlphabet();
-    
+
     void setModel(ModelPRISM model);
-    
+
     ModelPRISM getModel();
-    
+
     Positional getPositional();
-    
+
     default boolean isAlphaParallel() {
         return this instanceof SystemAlphaParallel;
     }
-    
+
     default boolean isAsyncParallel() {
         return this instanceof SystemAsyncParallel;
     }
-    
+
     default boolean isHide() {
         return this instanceof SystemHide;
     }
-    
+
     default boolean isModule() {
         return this instanceof SystemModule;
     }
-    
+
     default boolean isRename() {
         return this instanceof SystemRename;
     }
-    
+
     default boolean isRestrictedParallel() {
         return this instanceof SystemRestrictedParallel;
     }
-    
+
     default SystemAlphaParallel asAlphaParallel() {
         assert isAlphaParallel();
         return (SystemAlphaParallel) this;
     }
-    
+
     default SystemAsyncParallel asAsyncParallel() {
         assert isAsyncParallel();
         return (SystemAsyncParallel) this;
     }
-    
+
     default SystemHide asHide() {
         assert isHide();
         return (SystemHide) this;
     }
-    
+
     default SystemModule asModule() {
         assert isModule();
         return (SystemModule) this;
     }
-    
+
     default SystemRename asRename() {
         assert isRename();
         return (SystemRename) this;
     }
-    
+
     default SystemRestrictedParallel asRestrictedParallel() {
         assert isRestrictedParallel();
         return (SystemRestrictedParallel) this;

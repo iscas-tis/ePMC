@@ -160,8 +160,7 @@ Cudd_MTBDD_Init(
   DD_VOP2 epmcCallback2,
   DD_VOP3 epmcCallback3,
   ASSERT_FAIL assertFail,
-  GET_OPERATOR_NUMBER getOperatorNumber,
-  GET_NUMBER_OF_OPERATORS getNumberOfOperators)
+  GET_OPERATOR_NUMBER getOperatorNumber)
 {
     DdManager *unique;
     int i,result;
@@ -183,73 +182,36 @@ Cudd_MTBDD_Init(
     unique->epmcCallback3 = epmcCallback3;
     unique->assertFail = assertFail;
     unique->getOperatorNumber = getOperatorNumber;
-    unique->numberOfOperators = getNumberOfOperators();
-    unique->operators = ALLOC(void*, unique->numberOfOperators);
-    if (unique->operators == NULL) return(NULL);
-    for (int i = 0; i < unique->numberOfOperators; i++) {
-    	unique->operators[i] = Cudd_addEPMCBinaryOp;
-    }
+//    unique->numberOfOperators = getNumberOfOperators();
+//    unique->operators = ALLOC(void*, unique->numberOfOperators);
+ //   if (unique->operators == NULL) return(NULL);
+   // for (int i = 0; i < unique->numberOfOperators; i++) {
+    //	unique->operators[i] = Cudd_addEPMCBinaryOp;
+    //}
     unique->opnr_add = getOperatorNumber("add");
-    unique->operators[unique->opnr_add] = Cudd_addPlus;
+//    unique->operators[unique->opnr_add] = Cudd_addPlus;
     unique->opnr_multiply = getOperatorNumber("multiply");
-    unique->operators[unique->opnr_multiply] = Cudd_addTimes;
+ //   unique->operators[unique->opnr_multiply] = Cudd_addTimes;
     unique->opnr_subtract = getOperatorNumber("subtract");
-    unique->operators[unique->opnr_subtract] = Cudd_addSubtract;
+ //   unique->operators[unique->opnr_subtract] = Cudd_addSubtract;
     unique->opnr_divide = getOperatorNumber("divide");
-    unique->operators[unique->opnr_divide] = Cudd_addDivide;
+  //  unique->operators[unique->opnr_divide] = Cudd_addDivide;
     unique->opnr_max = getOperatorNumber("max");
-    unique->operators[unique->opnr_max] = Cudd_addMax;
+  //  unique->operators[unique->opnr_max] = Cudd_addMax;
     unique->opnr_min = getOperatorNumber("min");
-    unique->operators[unique->opnr_min] = Cudd_addMin;
+  //  unique->operators[unique->opnr_min] = Cudd_addMin;
     unique->opnr_and = getOperatorNumber("and");
-    unique->operators[unique->opnr_and] = Cudd_addAnd;
+  //  unique->operators[unique->opnr_and] = Cudd_addAnd;
     unique->opnr_or = getOperatorNumber("or");
-    unique->operators[unique->opnr_or] = Cudd_addOr;
+  //  unique->operators[unique->opnr_or] = Cudd_addOr;
     unique->opnr_iff = getOperatorNumber("iff");
-    unique->operators[unique->opnr_iff] = Cudd_addIff;
+   // unique->operators[unique->opnr_iff] = Cudd_addIff;
     unique->opnr_implies = getOperatorNumber("implies");
-    unique->operators[unique->opnr_implies] = Cudd_addImplies;
+ //   unique->operators[unique->opnr_implies] = Cudd_addImplies;
 //    unique->opnr_eq = getOperatorNumber("eq");
   //  unique->operators[unique->opnr_eq] = Cudd_addEq;
   //  unique->opnr_ne = getOperatorNumber("ne");
    // unique->operators[unique->opnr_ne] = Cudd_addNe;
-    unique->bddOperators = ALLOC(void*, unique->numberOfOperators);
-    if (unique->bddOperators == NULL) return(NULL);
-    for (int i = 0; i < unique->numberOfOperators; i++) {
-    	unique->bddOperators[i] = NULL;
-    }
-    unique->bddOperators[getOperatorNumber("and")] = Cudd_bddAnd;
-    unique->bddOperators[getOperatorNumber("or")] = Cudd_bddOr;
-    unique->bddOperators[getOperatorNumber("iff")] = Cudd_bddXnor;
-    unique->bddOperators[getOperatorNumber("implies")] = Cudd_bddImplies;
-    unique->bddOperators[getOperatorNumber("eq")] = Cudd_bddXnor;
-    unique->bddOperators[getOperatorNumber("ne")] = Cudd_bddXor;
-    unique->epmcFunctions1 = ALLOC(DD_CTFP1, unique->numberOfOperators);
-    if (unique->epmcFunctions1 == NULL) return(NULL);
-    unique->epmcFunctions2 = ALLOC(DD_CTFP,  unique->numberOfOperators);
-    for (i = 0; i < unique->numberOfOperators; i++) {
-	  unique->epmcFunctions1[i] = (DD_CTFP1) ALLOC(int, 1);
-	  if (unique->epmcFunctions1[i] == NULL) {
-	  i--;
-	    while (i > 0) {
-	      FREE(unique->epmcFunctions1[i]);
-	      i--;
-	    }
-        return(NULL);
-	  }
-    }
-    if (unique->epmcFunctions2 == NULL) return(NULL);
-    for (i = 0; i < unique->numberOfOperators; i++) {
-	  unique->epmcFunctions2[i] = (DD_CTFP) ALLOC(int, 1);
-	  if (unique->epmcFunctions2[i] == NULL) {
-	  i--;
-	    while (i > 0) {
-	      FREE(unique->epmcFunctions2[i]);
-	      i--;
-	    }
-        return(NULL);
-	  }
-    }
     
     if (valueTable) {
       unique->two_value = valueTable->two;

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.smtlib;
 
@@ -37,7 +37,6 @@ import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.smtlib.ConstraintSolverSMTLib;
 import epmc.constraintsolver.smtlib.options.OptionsSMTLib;
 import epmc.constraintsolver.smtlib.options.SMTLibVersion;
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
@@ -46,7 +45,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 
 public class SMTLibTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -61,9 +60,8 @@ public class SMTLibTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareISat3Options() throws EPMCException {
+    private final static Options prepareISat3Options() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options);
@@ -71,7 +69,7 @@ public class SMTLibTest {
     }
 
     @Test
-    public void iSat3ManualTest() throws EPMCException {
+    public void iSat3ManualTest() {
         Options options = prepareISat3Options();
         options.set(OptionsSMTLib.SMTLIB_VERSION, SMTLibVersion.V25);
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
@@ -92,9 +90,9 @@ public class SMTLibTest {
         assertEquals(ConstraintSolverResult.SAT, solver.solve());
         /* multiple solutions possible, don't test result values */
     }
-    
+
     @Test
-    public void andreaTest() throws EPMCException {
+    public void andreaTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
@@ -109,7 +107,7 @@ public class SMTLibTest {
         /*
         commandLine.add("/Users/emhahn/yices.sh");
         commandLine.add("{0}");
-        */
+         */
         options.set(OptionsSMTLib.SMTLIB_COMMAND_LINE, commandLine);
         solver.addVariable("s0", typeReal, newValue(typeReal, 1), newValue(typeInteger, 1));
         solver.addVariable("s1", typeReal, newValue(typeReal, 0), newValue(typeInteger, 1));
@@ -123,9 +121,9 @@ public class SMTLibTest {
         assertEquals("0", solver.getResultVariablesValues()[2], 1E-100);
         assertEquals("2", solver.getResultVariablesValues()[3], 1E-100);
     }
-    
+
     @Test
-    public void fractionTest() throws EPMCException {
+    public void fractionTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
@@ -139,7 +137,7 @@ public class SMTLibTest {
         /*
         commandLine.add("/Users/emhahn/yices.sh");
         commandLine.add("{0}");
-        */
+         */
         options.set(OptionsSMTLib.SMTLIB_COMMAND_LINE, commandLine);
         solver.addVariable("s0", typeReal, newValue(typeReal, 1), newValue(typeReal, 1));
         solver.addVariable("s1", typeReal, newValue(typeReal, 0), newValue(typeReal, 1));
@@ -150,5 +148,5 @@ public class SMTLibTest {
         assertEquals(ConstraintSolverResult.SAT, solver.solve());
         System.out.println(Arrays.toString(solver.getResultVariablesValues()));
     }
-    
+
 }

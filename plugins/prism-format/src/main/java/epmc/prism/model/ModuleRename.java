@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -33,8 +33,8 @@ public final class ModuleRename implements Module {
     private final String name;
     private final String base;
     private final Map<Expression,Expression> map;
-	private Positional positional;
-    
+    private Positional positional;
+
     public ModuleRename(Expression name, Expression base, Map<Expression,Expression> map, Positional positional) {
         assert name != null;
         assert base != null;
@@ -51,22 +51,22 @@ public final class ModuleRename implements Module {
         this.base = baseI.getName();
         this.map.putAll(map);
     }
-    
+
     @Override
     public String getName() {
         return name;
     }
-    
+
     String getBase() {
         return base;
     }
-    
+
     Map<Expression,Expression> getMap() {
         return Collections.unmodifiableMap(map);
     }
 
-	@Override
-	public Positional getPositional() {
-		return positional;
-	}
+    @Override
+    public Positional getPositional() {
+        return positional;
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -28,7 +28,7 @@ public interface SemanticsNonDet extends Semantics {
      * 
      * @return whether this semantics contains nondeterminism
      */
-	static boolean isNonDet(Semantics semantics) {
-		return semantics instanceof SemanticsNonDet;
-	}
+    static boolean isNonDet(Semantics semantics) {
+        return semantics instanceof SemanticsNonDet;
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -34,10 +34,10 @@ public interface TypeArray extends Type {
      * @param type type for which to check whether it is an array type
      * @return whether given type is an array type
      */
-    static boolean isArray(Type type) {
+    static boolean is(Type type) {
         return type instanceof TypeArray;
     }
-    
+
     /**
      * Cast given type to array type.
      * If the type is not an array type, {@code null} will be returned.
@@ -45,8 +45,8 @@ public interface TypeArray extends Type {
      * @param type type to cast to array type
      * @return type casted to array type, or {@null} if not possible to cast
      */
-    static TypeArray asArray(Type type) {
-        if (isArray(type)) {
+    static TypeArray as(Type type) {
+        if (is(type)) {
             return (TypeArray) type;
         } else {
             return null;
@@ -65,21 +65,11 @@ public interface TypeArray extends Type {
     ValueArray newValue();
 
     @Override
-    default boolean canImport(Type type) {
-        assert type != null;
-        if (TypeArray.isArray(type)) {
-            TypeArray other = asArray(type);
-            return getEntryType().canImport(other.getEntryType());
-        }
-        return false;
-    }
-    
-    @Override
     boolean equals(Object obj);
-        
+
     @Override
     int hashCode();
-    
+
     @Override
     String toString();
 }

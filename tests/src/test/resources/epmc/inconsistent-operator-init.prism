@@ -1,0 +1,8 @@
+dtmc
+
+module inconsistentoperatorinit
+
+	s : bool init (true + 1);
+	
+	[] true -> true;
+endmodule

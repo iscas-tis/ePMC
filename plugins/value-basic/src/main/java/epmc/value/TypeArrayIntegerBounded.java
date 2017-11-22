@@ -16,45 +16,45 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 final class TypeArrayIntegerBounded implements TypeArrayInteger {
     private final static String ARRAY_INDICATOR = "[](integer-bounded)";
-	private final TypeInteger entryType;
+    private final TypeInteger entryType;
 
     TypeArrayIntegerBounded(TypeInteger entryType) {
-    	assert entryType != null;
-    	this.entryType = entryType;
+        assert entryType != null;
+        this.entryType = entryType;
         assert TypeInteger.isIntegerBothBounded(entryType);
     }
     @Override
     public TypeInteger getEntryType() {
-    	return entryType;
+        return entryType;
     }
-    
+
     @Override
     public ValueArrayIntegerBounded newValue() {
         return new ValueArrayIntegerBounded(this);
     }
-    
-	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof TypeArrayIntegerBounded)) {
-			return false;
-		}
-		TypeArrayIntegerBounded other = (TypeArrayIntegerBounded) obj;
-		return this.getEntryType().equals(other.getEntryType());
-	}
-	@Override
-	public int hashCode() {
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TypeArrayIntegerBounded)) {
+            return false;
+        }
+        TypeArrayIntegerBounded other = (TypeArrayIntegerBounded) obj;
+        return this.getEntryType().equals(other.getEntryType());
+    }
+    @Override
+    public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         hash = getEntryType().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
-	}
-	
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -62,11 +62,11 @@ final class TypeArrayIntegerBounded implements TypeArrayInteger {
         builder.append(ARRAY_INDICATOR);
         return builder.toString();
     }
-	@Override
-	public TypeArrayAlgebra getTypeArray() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-    
-    
+    @Override
+    public TypeArrayAlgebra getTypeArray() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+
 }

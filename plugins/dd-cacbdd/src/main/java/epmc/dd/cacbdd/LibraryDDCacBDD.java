@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cacbdd;
 
@@ -33,27 +33,26 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public final class LibraryDDCacBDD implements LibraryDD {
     public final static String IDENTIFIER = "cacbdd";
-    
+
     private final static class LowLevelPermutationCacBDD
     implements PermutationLibraryDD, Closeable {
         private final Pointer pointer;
@@ -62,7 +61,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         LowLevelPermutationCacBDD(Pointer pointer) {
             this.pointer = pointer;
         }
-        
+
         Pointer getPointer() {
             assert !closed;
             return pointer;
@@ -77,7 +76,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
             }
         }
     }
-    
+
     private static class CacBDD {
         static native Pointer cacwrapper_new_manager(int num_variables);
 
@@ -108,7 +107,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         static native Pointer cacwrapper_new_zero(Pointer manager);
 
         static native Pointer cacwrapper_new_variable(Pointer manager, int variable);
-        
+
         static native boolean cacwrapper_equals(Pointer op1, Pointer op2);
 
         static native boolean cacwrapper_is_leaf(Pointer op);
@@ -132,7 +131,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         static native void cacwrapper_free_permutation(Pointer permutation);
 
         static native Pointer cacwrapper_clone(Pointer op);
-        
+
         static native int cacwrapper_walker_variable(Pointer manager, int walker);
 
         static native int cacwrapper_walker_low(Pointer manager, int walker);
@@ -146,7 +145,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     private final static int COMPLEMENT = 0x80000000;
-    
+
     private ContextDD contextDD;
     private Pointer xbddmanager;
     private Pointer xmanager;
@@ -157,7 +156,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     private final List<LowLevelPermutationCacBDD> permutations = new ArrayList<>();
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CacBDD.loaded, ProblemsDD.CACBDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -173,24 +172,24 @@ public final class LibraryDDCacBDD implements LibraryDD {
         this.valueFalse = TypeBoolean.get().getFalse();
         this.valueTrue = TypeBoolean.get().getTrue();
     }
-    
+
     @Override
     public ContextDD getContextDD() {
         return contextDD;
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         Pointer result;
         if (operation.equals(OperatorNot.NOT)) {
-        	result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
+            result = CacBDD.cacwrapper_not(new Pointer(operands[0]));        	
         } else if (operation.equals(OperatorAnd.AND)) {
             result = CacBDD.cacwrapper_and(new Pointer(operands[0]), new Pointer(operands[1]));
         } else if (operation.equals(OperatorEq.EQ)
-        		|| operation.equals(OperatorIff.IFF)) {
+                || operation.equals(OperatorIff.IFF)) {
             result = CacBDD.cacwrapper_xnor(new Pointer(operands[0]), new Pointer(operands[1]));        	
         } else if (operation.equals(OperatorImplies.IMPLIES)) {
             Pointer np1 = CacBDD.cacwrapper_not(new Pointer(operands[0]));
@@ -202,21 +201,21 @@ public final class LibraryDDCacBDD implements LibraryDD {
         } else if (operation.equals(OperatorOr.OR)) {
             result = CacBDD.cacwrapper_or(new Pointer(operands[0]), new Pointer(operands[1]));
         } else if (operation.equals(OperatorIte.ITE)) {
-        	result = CacBDD.cacwrapper_ite(xbddmanager, new Pointer(operands[0]), new Pointer(operands[1]), new Pointer(operands[2]));
+            result = CacBDD.cacwrapper_ite(xbddmanager, new Pointer(operands[0]), new Pointer(operands[1]), new Pointer(operands[2]));
         } else {
-        	assert false;
-        	result = null;
+            assert false;
+            result = null;
         }
         ensure(result != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         return Pointer.nativeValue(result);
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
+        assert ValueBoolean.is(value);
         Pointer result;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             result = CacBDD.cacwrapper_new_one(xbddmanager);
         } else {
             result = CacBDD.cacwrapper_new_zero(xbddmanager);            
@@ -226,7 +225,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         Pointer result = CacBDD.cacwrapper_new_variable(xbddmanager, nextVariable);
         ensure(result != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         nextVariable++;
@@ -253,7 +252,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -264,7 +263,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCacBDD;
         Pointer p1 = new Pointer(dd);
@@ -338,7 +337,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         Pointer p1 = new Pointer(dd);
         Pointer p2 = new Pointer(cube);
         Pointer result = CacBDD.cacwrapper_exist(p1, p2);
@@ -347,7 +346,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         Pointer p1 = new Pointer(dd);
         Pointer p2 = new Pointer(cube);
         Pointer result = CacBDD.cacwrapper_universal(p1, p2);
@@ -356,32 +355,32 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         Pointer p1 = new Pointer(dd1);
         Pointer p2 = new Pointer(dd2);
         Pointer p3 = new Pointer(cube);
@@ -391,7 +390,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         assert permutation != null;
         Pointer p;
         if (permutation.length == 0) {
@@ -405,7 +404,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         }
         LowLevelPermutationCacBDD perm = new LowLevelPermutationCacBDD(p);
         permutations.add(perm);
-        
+
         return perm;
     }
 
@@ -455,7 +454,7 @@ public final class LibraryDDCacBDD implements LibraryDD {
         int node = (int) from;
         return (node & COMPLEMENT) != 0;
     }
-    
+
     private static boolean isInt(long number) {
         return number == (int) number;
     }
@@ -480,20 +479,20 @@ public final class LibraryDDCacBDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.is(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

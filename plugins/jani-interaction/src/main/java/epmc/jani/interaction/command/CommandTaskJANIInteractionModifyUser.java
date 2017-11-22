@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.command;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.UserManager;
 import epmc.jani.interaction.database.Database;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
@@ -28,26 +27,26 @@ import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
 
 public final class CommandTaskJANIInteractionModifyUser implements CommandTask {
-	/** Unique identifier of JANI interaction modify user command. */
-	public final static String IDENTIFIER = "jani-interaction-modify-user";
+    /** Unique identifier of JANI interaction modify user command. */
+    public final static String IDENTIFIER = "jani-interaction-modify-user";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void executeOnClient() throws EPMCException {
-		Database storage = new Database();
-		UserManager userManager = new UserManager(storage);
-		String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
-		String password = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
-		String usernameNew = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_NEW_USERNAME);
-		if (username != null) {
-			userManager.changeUsername(username, usernameNew);
-		}
-		if (password != null) {
-			userManager.changePassword(username, password);
-		}
-	}
+    @Override
+    public void executeOnClient() {
+        Database storage = new Database();
+        UserManager userManager = new UserManager(storage);
+        String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);
+        String password = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_PASSWORD);
+        String usernameNew = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_NEW_USERNAME);
+        if (username != null) {
+            userManager.changeUsername(username, usernameNew);
+        }
+        if (password != null) {
+            userManager.changePassword(username, password);
+        }
+    }
 }

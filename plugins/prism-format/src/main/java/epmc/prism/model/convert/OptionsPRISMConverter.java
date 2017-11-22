@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
 public enum OptionsPRISMConverter {
-	PRISM_CONVERTER_OPTIONS,
+    PRISM_CONVERTER_OPTIONS,
     PRISM_CONVERTER_REWARD_METHOD,
     PRISM_CONVERTER_SYSTEM_METHOD
 }

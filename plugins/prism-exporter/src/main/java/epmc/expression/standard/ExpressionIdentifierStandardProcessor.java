@@ -16,44 +16,49 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
+import epmc.jani.model.JANIIdentifier;
+import epmc.jani.model.Variable;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionIdentifierStandard identifier = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof ExpressionIdentifierStandard; 
-		
-		identifier = (ExpressionIdentifierStandard) obj;
-		return this;
-	}
+    private ExpressionIdentifierStandard identifier = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert identifier != null;
-		
-		return JANIComponentRegistrar.getVariableNameByName(identifier.getName());
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionIdentifierStandard; 
 
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert identifier != null;
-	}
+        identifier = (ExpressionIdentifierStandard) obj;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert identifier != null;
+    @Override
+    public String toPRISM() {
+        assert identifier != null;
 
-		return JANIComponentRegistrar.getVariableByName(identifier.getName())
-								     .isTransient();
-	}
+        return JANIComponentRegistrar.getIdentifierNameByName(identifier.getName());
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert identifier != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert identifier != null;
+
+        JANIIdentifier jid = JANIComponentRegistrar.getIdentifierByName(identifier.getName());
+        if (jid instanceof Variable) {
+        	return ((Variable) jid).isTransient();
+        } else {
+        	return false;
+        }
+    }
 }

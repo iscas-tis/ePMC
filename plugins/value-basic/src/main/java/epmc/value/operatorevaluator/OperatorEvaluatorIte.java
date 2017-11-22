@@ -16,73 +16,87 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIte;
 
-public enum OperatorEvaluatorIte implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorIte implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorIte.ITE;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 3) {
-			return false;
-		}
-		if (!TypeBoolean.isBoolean(types[0])) {
-			return false;
-		}
-		return true;
-	}
-
-    @Override
-    public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorIte.ITE);
-        assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-        if (!TypeBoolean.isBoolean(types[0])) {
-            return null;
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
         }
-        Type itUpper = UtilValue.upper(types[1], types[2]);
-        if (itUpper == null) {
-            return null;
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
         }
-        Type result = itUpper;
-        return result;
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorIte.ITE) {
+                return null;
+            }
+            if (types.length != 3) {
+                return null;
+            }
+            if (!TypeBoolean.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorIte(this);
+        }
+    }
+
+    private final OperatorEvaluator setIf;
+    private final OperatorEvaluator setElse;
+    private final Type resultType;
+
+    private OperatorEvaluatorIte(Builder builder) {
+        resultType = UtilValue.upper(builder.types[1], builder.types[2]);
+        setIf = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[1], resultType);
+        setElse = ContextValue.get().getEvaluator(OperatorSet.SET, builder.types[2], resultType);
     }
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	if (ValueBoolean.asBoolean(operands[0]).getBoolean()) {
-    		result.set(operands[1]);
-    	} else {
-    		result.set(operands[2]);    		
-    	}
+    public Type resultType() {
+        return resultType;
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        if (ValueBoolean.as(operands[0]).getBoolean()) {
+            setIf.apply(result, operands[1]);
+        } else {
+            setElse.apply(result, operands[2]);
+        }
     }
 }

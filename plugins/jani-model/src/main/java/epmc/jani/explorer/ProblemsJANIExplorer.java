@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -29,36 +29,36 @@ import epmc.error.UtilError;
  * @author Ernst Moritz Hahn
  */
 public final class ProblemsJANIExplorer {
-	/** Base name of resource file containing plugin problem descriptions. */
+    /** Base name of resource file containing plugin problem descriptions. */
     private final static String PROBLEMS_JANI_EXPLORER = "ProblemsJANIExplorer";
-    
+
     /** Global variable was written multiple times in explicit-state model explorer. */
-	public static final Problem JANI_EXPLORER_GLOBAL_MULTIPLE = newProblem("jani-explorer-global-multiple");
-	/** Deadlock state reached during explicit state space exploration. */
-	public static final Problem JANI_EXPLORER_DEADLOCK = newProblem("jani-explorer-deadlock");
-	/** Invalid assignment to variable during initial states computation. */
-	public static final Problem JANI_EXPLORER_TRANSITION_INVALID_INITIAL_STATE = newProblem("jani-explorer-transition-invalid-initial-state");
-	/** Invalid assignment to variable during transition. */
-	public static final Problem JANI_EXPLORER_TRANSITION_INVALID_ASSIGNMENT = newProblem("jani-explorer-transition-invalid-assignment");
-	/** Probabilities do not sum up to one. */
-	public static final Problem JANI_EXPLORER_PROBABILIY_SUM_NOT_ONE = newProblem("jani-explorer-probability-sum-not-one");
-	/** Negative rate or probability. */
-	public static final Problem JANI_EXPLORER_NEGATIVE_WEIGHT = newProblem("jani-explorer-negative-weight");
-	/** Infinitely many initial states. */
-	public static final Problem JANI_EXPLORER_INFINITELY_MANY_INITIAL_STATES = newProblem("jani-explorer-infinitely-many-initial-states");
-	/** Cannot use brute-force enumerator because of unbounded variable values. */
-	public static final Problem JANI_EXPLORER_INITIAL_STATES_BRUTE_FORCE_UNBOUNDED = newProblem("jani-explorer-initial-states-brute-force-unbounded-variables");
-	
-	/**
-	 * Create new problem object using plugin resource file.
-	 * The name parameter must not be {@code null}.
-	 * 
-	 * @param name problem identifier String
-	 * @return newly created problem identifier
-	 */
+    public static final Problem JANI_EXPLORER_GLOBAL_MULTIPLE = newProblem("jani-explorer-global-multiple");
+    /** Deadlock state reached during explicit state space exploration. */
+    public static final Problem JANI_EXPLORER_DEADLOCK = newProblem("jani-explorer-deadlock");
+    /** Invalid assignment to variable during initial states computation. */
+    public static final Problem JANI_EXPLORER_TRANSITION_INVALID_INITIAL_STATE = newProblem("jani-explorer-transition-invalid-initial-state");
+    /** Invalid assignment to variable during transition. */
+    public static final Problem JANI_EXPLORER_TRANSITION_INVALID_ASSIGNMENT = newProblem("jani-explorer-transition-invalid-assignment");
+    /** Probabilities do not sum up to one. */
+    public static final Problem JANI_EXPLORER_PROBABILIY_SUM_NOT_ONE = newProblem("jani-explorer-probability-sum-not-one");
+    /** Negative rate or probability. */
+    public static final Problem JANI_EXPLORER_NEGATIVE_WEIGHT = newProblem("jani-explorer-negative-weight");
+    /** Infinitely many initial states. */
+    public static final Problem JANI_EXPLORER_INFINITELY_MANY_INITIAL_STATES = newProblem("jani-explorer-infinitely-many-initial-states");
+    /** Cannot use brute-force enumerator because of unbounded variable values. */
+    public static final Problem JANI_EXPLORER_INITIAL_STATES_BRUTE_FORCE_UNBOUNDED = newProblem("jani-explorer-initial-states-brute-force-unbounded-variables");
+
+    /**
+     * Create new problem object using plugin resource file.
+     * The name parameter must not be {@code null}.
+     * 
+     * @param name problem identifier String
+     * @return newly created problem identifier
+     */
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(PROBLEMS_JANI_EXPLORER, name);
+        assert name != null;
+        return UtilError.newProblem(PROBLEMS_JANI_EXPLORER, name);
     }
 
     /**

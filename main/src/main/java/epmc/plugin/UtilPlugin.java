@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.options.Option;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
@@ -55,7 +54,7 @@ public final class UtilPlugin {
     private final static String EMPTY = "";
     /** String specifying US ASCII char set. */
     private final static String US_ASCII = "US-ASCII";
-    
+
     /**
      * <p>Load plugins as specified in options.</p>
      * <p>A plugin is a collection of classes and resources used to extend the
@@ -99,9 +98,8 @@ public final class UtilPlugin {
      * </p>
      * 
      * @param options defines plugin locations and will contain loaded plugins
-     * @throws EPMCException thrown in case of problems during plugin loading
      */
-    public static void loadPlugins(Options options) throws EPMCException {
+    public static void loadPlugins(Options options) {
         assert options != null;
         List<String> plugins = getPluginList(options);
 
@@ -115,7 +113,7 @@ public final class UtilPlugin {
             object.process(options);
         }
     }
-    
+
     /**
      * Get list of classes implementing a particular plugin interface.
      * The set of available plugin classes are read from a given options set
@@ -158,12 +156,11 @@ public final class UtilPlugin {
      * 
      * @param options options to read plugin list from
      * @return list of external plugins
-     * @throws EPMCException thrown in case of problems
      */
-    private static List<String> getPluginList(Options options) throws EPMCException {
+    private static List<String> getPluginList(Options options) {
         assert options != null;
         List<String> result = new ArrayList<>();
-        
+
         /* Read external plugins from plugin files list. */
         String pluginsListFilename = options.getString(OptionsPlugin.PLUGIN_LIST_FILE);
         if (pluginsListFilename != null) {
@@ -183,7 +180,7 @@ public final class UtilPlugin {
             }
             result.add(plugin);
         }
-        
+
         return result;
     }
 
@@ -197,9 +194,8 @@ public final class UtilPlugin {
      * 
      * @param pluginListPath file to read list of plugins from
      * @return list of plugins
-     * @throws EPMCException thrown in case of problems, e.g. non-existing files
      */
-    public static List<String> readPluginList(Path pluginListPath) throws EPMCException {
+    public static List<String> readPluginList(Path pluginListPath) {
         assert pluginListPath != null;
         Charset charset = Charset.forName(US_ASCII);
         List<String> result = new ArrayList<>();
@@ -228,13 +224,13 @@ public final class UtilPlugin {
         OptionTypeString typeString = OptionTypeString.getInstance();
 
         options.addOption().setBundleName(OptionsPlugin.OPTIONS_PLUGIN)
-            .setIdentifier(OptionsPlugin.PLUGIN)
-            .setType(typePluginList).setCommandLine().setGui().build();
+        .setIdentifier(OptionsPlugin.PLUGIN)
+        .setType(typePluginList).setCommandLine().setGui().build();
         options.addOption().setBundleName(OptionsPlugin.OPTIONS_PLUGIN)
-            .setIdentifier(OptionsPlugin.PLUGIN_LIST_FILE)
-            .setType(typeString).setCommandLine().setGui().build();
+        .setIdentifier(OptionsPlugin.PLUGIN_LIST_FILE)
+        .setType(typeString).setCommandLine().setGui().build();
     }
-    
+
     /**
      * Private constructor to avoid instantiation of this class.
      */

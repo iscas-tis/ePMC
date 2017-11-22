@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,21 +24,21 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public interface TypeArrayAlgebra extends TypeArray {
-	static boolean isArrayAlgebra(Type type) {
-		return type instanceof TypeArrayAlgebra;
-	}
-	
-	static TypeArrayAlgebra asArrayAlgebra(Type type) {
-		if (isArrayAlgebra(type)) {
-			return (TypeArrayAlgebra) type;
-		} else {
-			return null;
-		}
-	}
-	
-	@Override
-	TypeAlgebra getEntryType();
-	
+    static boolean is(Type type) {
+        return type instanceof TypeArrayAlgebra;
+    }
+
+    static TypeArrayAlgebra as(Type type) {
+        if (is(type)) {
+            return (TypeArrayAlgebra) type;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    TypeAlgebra getEntryType();
+
     @Override
     ValueArrayAlgebra newValue();    
 }

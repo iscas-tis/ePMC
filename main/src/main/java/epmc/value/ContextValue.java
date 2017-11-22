@@ -16,17 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Lists;
+
+import epmc.operator.Operator;
+
+import static epmc.error.UtilError.ensure;
 
 /**
  * Value context.
@@ -38,25 +42,24 @@ import com.google.common.collect.Lists;
 public final class ContextValue {
     /** String to indicate unchecked method. */
     private final static String UNCHECKED = "unchecked";
-    /** Unmodifiable map from operator identifier to according operator. */
-    private final List<OperatorEvaluator> operatorEvaluators = new LinkedList<>();
-    private final List<OperatorEvaluator> operatorEvaluatorsReversed = Lists.reverse(operatorEvaluators);
-    private final List<OperatorEvaluator> operatorEvaluatorsExternal = Collections.unmodifiableList(operatorEvaluatorsReversed);
+    
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactories = new LinkedList<>();
+    private final List<OperatorEvaluatorFactory> operatorEvaluatorFactoriesReversed = Lists.reverse(operatorEvaluatorFactories);
     /** Map from identifying objects to types. */
     private final Map<Object,Type> types = new HashMap<>();
     /** Map used to make types unique. */
     private final Map<Type,Type> typesUnique = new HashMap<>();
     /** The value context used in the model checking process. */
-	private static ContextValue CONTEXT_VALUE;
+    private static ContextValue CONTEXT_VALUE;
 
     public static void set(ContextValue contextValue) {
-    	ContextValue.CONTEXT_VALUE = contextValue;
+        ContextValue.CONTEXT_VALUE = contextValue;
     }
-    
+
     public static ContextValue get() {
-    	return CONTEXT_VALUE;
+        return CONTEXT_VALUE;
     }
-    
+
     /**
      * Get type identified by object.
      * Obtain the type previously set by
@@ -76,7 +79,7 @@ public final class ContextValue {
         T result = (T) types.get(key);
         return result;
     }
-    
+
     /**
      * Sets an object to identify a given type.
      * The type can later be obtained using {@link #getType(Object)}.
@@ -92,7 +95,7 @@ public final class ContextValue {
         assert type != null;
         types.put(key, makeUnique(type));
     }
-    
+
     /**
      * Returns a unique instance of the given type object.
      * The method checks whether there already exists a type for which
@@ -119,28 +122,30 @@ public final class ContextValue {
         }
         return result;
     }
-    
-    public void addOperatorEvaluator(OperatorEvaluator evaluator) {
-    	assert evaluator != null;
-    	operatorEvaluators.add(evaluator);
+
+    public void addEvaluatorFactory(OperatorEvaluatorFactory factory) {
+        assert factory != null;
+        operatorEvaluatorFactories.add(factory);
     }
     
-    public List<OperatorEvaluator> getOperatorEvaluators() {
-		return operatorEvaluatorsExternal;
-	}
-    
-    public OperatorEvaluator getOperatorEvaluator(Operator operator, Type...types) {
-    	assert operator != null;
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-    	for (OperatorEvaluator evaluator : operatorEvaluatorsReversed) {
-    		if (evaluator.getOperator().equals(operator)
-    				&& evaluator.canApply(types)) {
-    			return evaluator;
-    		}
-    	}
-    	return null;
+    public OperatorEvaluator getEvaluator(Operator operator, Type...types) {
+        OperatorEvaluator result = getEvaluatorOrNull(operator, types);
+        ensure(result != null, ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE, operator, Arrays.toString(types));
+        return result;
+    }
+
+    public OperatorEvaluator getEvaluatorOrNull(Operator operator, Type...types) {
+        assert operator != null;
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        for (OperatorEvaluatorFactory factory : operatorEvaluatorFactoriesReversed) {
+            OperatorEvaluator evaluator = factory.getEvaluator(operator, types);
+            if (evaluator != null) {
+                return evaluator;
+            }
+        }
+        return null;
     }
 }

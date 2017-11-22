@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 
 import epmc.error.EPMCException;
+import epmc.error.Positional;
 import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
 import epmc.main.options.OptionsEPMC;
@@ -48,7 +49,7 @@ public final class EPMC {
     private final static String EMPTY = "";
     /** String ": ".*/
     private final static String SPACE_COLON = ": ";
-    
+
     /**
      * The {@code main} entry point of EPMC.
      * 
@@ -70,6 +71,38 @@ public final class EPMC {
             MessageFormat formatter = new MessageFormat(EMPTY);
             formatter.applyPattern(message);
             String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
+            Positional positional = e.getPositional();
+            if (positional != null) {
+                if (positional.getContent() != null) {
+                    System.err.print(positional.getContent());
+                    if (positional.getPart() > 0
+                            || positional.getLine() > 0
+                            || positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }
+                }
+                if (positional.getPart() > 0) {
+                    System.err.print("part: " + positional.getPart());
+                    if (positional.getLine() > 0 || positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }
+                }
+                if (positional.getLine() > 0) {
+                    System.err.print("line: " + positional.getLine());
+                    if (positional.getColumn() > 0) {
+                        System.err.print(", ");
+                    }                    
+                }
+                if (positional.getColumn() > 0) {
+                    System.err.print("column: " + positional.getColumn());
+                }
+                if (positional.getContent() != null
+                        || positional.getPart() > 0
+                        || positional.getLine() > 0
+                        || positional.getColumn() > 0) {
+                    System.err.print(": ");
+                }
+            }
             System.err.println(formattedMessage);
             if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
                 e.printStackTrace();
@@ -77,7 +110,7 @@ public final class EPMC {
             System.exit(1);
         }
     }
-    
+
     /**
      * Prepare options from command line arguments.
      * The command line arguments parameters must not be {@code null} and must
@@ -85,9 +118,8 @@ public final class EPMC {
      * 
      * @param args command line arguments
      * @return options parsed from command line arguments
-     * @throws EPMCException thrown in case of problems
      */
-    private static Options prepareOptions(String[] args) throws EPMCException {
+    private static Options prepareOptions(String[] args) {
         assert args != null;
         for (String arg : args) {
             assert arg != null;
@@ -103,7 +135,7 @@ public final class EPMC {
         options.set(OptionsEPMC.LOCALE, locale);
         return options;
     }
-    
+
     /**
      * Start the command to be executed with output shown in standard output.
      * The command to be executed will be read for {@link Options#COMMAND}.
@@ -113,9 +145,8 @@ public final class EPMC {
      * The options parameter must not be {@code null}.
      * 
      * @param options options to use
-     * @throws EPMCException thrown in case of problems
      */
-    private static void startInConsole(Options options) throws EPMCException {
+    private static void startInConsole(Options options) {
         assert options != null;
         if (options.getString(Options.COMMAND) == null) {
             System.out.println(options.getShortUsage());
@@ -139,9 +170,8 @@ public final class EPMC {
      * 
      * @param options options to use
      * @param log2 
-     * @throws EPMCException thrown in case of problems
      */
-    private static void execute(Options options, LogCommandLine log) throws EPMCException {
+    private static void execute(Options options, LogCommandLine log) {
         assert options != null;
         RawModel model = new RawModelLocalFiles(
                 options.getStringList(OptionsEPMC.MODEL_INPUT_FILES).toArray(new String[0]),
@@ -159,9 +189,8 @@ public final class EPMC {
      * 
      * @param options options to use
      * @param log log used
-     * @throws EPMCException 
      */
-    private static void printResults(Options options, LogCommandLine log) throws EPMCException {
+    private static void printResults(Options options, LogCommandLine log) {
         assert options != null;
         assert log != null;
         for (RawProperty property : log.getProperties()) {
@@ -187,7 +216,7 @@ public final class EPMC {
             Scheduler scheduler = log.getScheduler(property);
             LowLevel lowLevel = log.getLowLevel(property);
             if (scheduler != null) {
-            	Util.printScheduler(System.out, lowLevel, scheduler);
+                Util.printScheduler(System.out, lowLevel, scheduler);
             }
         }
         if (log.getCommonResult() != null) {

@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.dtmc;
 
 public enum OptionsJANIDTMC {
-	/** Base name of resource file for options description. */
-	OPTIONS_JANI_DTMC,
+    /** Base name of resource file for options description. */
+    OPTIONS_JANI_DTMC,
 }

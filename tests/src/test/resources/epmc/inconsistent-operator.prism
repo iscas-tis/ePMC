@@ -1,0 +1,8 @@
+dtmc
+
+module inconsistentoperator
+
+	s : bool;
+	
+	[] true -> (s'=(true + 1));
+endmodule

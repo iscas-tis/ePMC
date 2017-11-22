@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -35,7 +35,7 @@ public final class SystemAlphaParallel implements SystemDefinition {
     private ModelPRISM model;
     private final Positional positional;
     private final List<SystemDefinition> children = new ArrayList<>();
-    
+
     public SystemAlphaParallel(SystemDefinition left, SystemDefinition right, Positional positional) {
         this.positional = positional;
         assert left != null;
@@ -43,7 +43,7 @@ public final class SystemAlphaParallel implements SystemDefinition {
         children.add(left);
         children.add(right);
     }
-    
+
     @Override
     public List<SystemDefinition> getChildren() {
         return Collections.unmodifiableList(children);
@@ -68,15 +68,15 @@ public final class SystemAlphaParallel implements SystemDefinition {
     public Positional getPositional() {
         return positional;
     }    
-    
+
     public SystemDefinition getLeft() {
         return children.get(0);
     }
-    
+
     public SystemDefinition getRight() {
         return children.get(1);
     }
-    
+
     @Override
     public String toString() {
         return "(" + children.get(0) + "||" + children.get(1) + ")";

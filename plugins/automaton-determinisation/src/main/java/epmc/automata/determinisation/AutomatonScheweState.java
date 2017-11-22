@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
@@ -48,7 +48,7 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
             this.children = new AutomatonScheweState[0];
         }
     }
-    
+
     AutomatonScheweState(AutomatonSchewe automaton) {
         this(automaton, (BitSet) null, null);
     }
@@ -68,7 +68,7 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
     public AutomatonStateUtil clone() {
         return new AutomatonScheweState(this);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof AutomatonScheweState)) {
@@ -89,7 +89,7 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -99,39 +99,39 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
         hash = Arrays.deepHashCode(children) + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public BitSet getStates() {
         return states;
     }
-    
+
     void setStates(BitSet states) {
         this.states = states;
     }
-    
+
     int getAcceptance() {
         return acceptance;
     }
-    
+
     void setAcceptance(int acceptance) {
         this.acceptance = acceptance;
     }
-    
+
     AutomatonScheweState[] getChildren() {
         return children;
     }
-    
+
     void setChildren(AutomatonScheweState[] children) {
         this.children = children;
     }
-    
+
     @Override
     public String toString() {
         return toString(0);
     }
-    
+
     private String toString(int indent) {
-    	assert indent >= 0;
+        assert indent >= 0;
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < indent; i++) {
             builder.append("  ");
@@ -142,18 +142,18 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
             builder.append("  " + index + "  ");
         }
         if (children.length > 0) {
-        	builder.append("\n");
+            builder.append("\n");
         }
         for (AutomatonScheweState child : children) {
             builder.append(child.toString(indent + 1));
         }
         return builder.toString();
     }
-    
+
     public int getIndex() {
         return index;
     }
-    
+
     void setIndex(int index) {
         assert index >= 0;
         this.index = index;

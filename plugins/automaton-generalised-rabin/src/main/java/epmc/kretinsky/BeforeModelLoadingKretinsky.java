@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky;
 
@@ -25,16 +25,16 @@ import epmc.options.Options;
 import epmc.plugin.BeforeModelCreation;
 
 public final class BeforeModelLoadingKretinsky implements BeforeModelCreation {
-	public final static String IDENTIFIER = "before-model-loading-kretinsky";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    public final static String IDENTIFIER = "before-model-loading-kretinsky";
 
-	@Override
-	public void process(Options options) throws EPMCException {
-		assert options != null;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process(Options options) {
+        assert options != null;
+    }
 
 }

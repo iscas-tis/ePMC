@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -29,21 +29,21 @@ import epmc.dd.DD;
 
 public interface AutomatonDD extends Closeable {
     DD getInitial();
-    
+
     DD getTransitions();
-    
+
     List<DD> getPresVars();
-    
+
     List<DD> getNextVars();
-    
+
     List<DD> getLabelVars();
-    
+
     DD getPresCube();
-    
+
     DD getNextCube();
-    
+
     DD getLabelCube();
-    
+
     @Override
     public void close();
 }

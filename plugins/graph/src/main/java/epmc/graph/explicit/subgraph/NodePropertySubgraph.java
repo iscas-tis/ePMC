@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit.subgraph;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.value.Type;
@@ -36,19 +35,19 @@ public class NodePropertySubgraph implements NodeProperty {
         this.graph = graph;
         this.inner = inner;
     }
-    
+
     @Override
     public GraphExplicit getGraph() {
         return graph;
     }
 
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         return inner.get(graph.subToOrig(node));
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         inner.set(graph.subToOrig(node), value);
     }
 

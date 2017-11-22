@@ -16,13 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.processor;
 
 import java.util.List;
 
 public interface JANI2PRISMProcessorExtended extends JANI2PRISMProcessorStrict {
-	
-	List<String> getUnsupportedFeature();
+
+    List<String> getUnsupportedFeature();
 }

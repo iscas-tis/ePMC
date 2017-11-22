@@ -34,7 +34,7 @@ public final class AfterOptionsCreationExample implements AfterOptionsCreation {
 		return IDENTIFIER;
 	}
 
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		System.out.println("processing the after-options-creation operation of plugin epmc-example");
 		// now try to load the CommandTask

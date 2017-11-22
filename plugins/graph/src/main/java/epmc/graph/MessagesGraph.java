@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -24,7 +24,7 @@ import epmc.messages.Message;
 
 public final class MessagesGraph {
     public static final String MESSAGES_GRAPH = "MessagesGraph";
-    
+
     public final static Message CONVERTING_DD_GRAPH_TO_EXPLICIT = newMessage().setIdentifier("converting-dd-graph-to-explicit").build();
     public final static Message CONVERTING_DD_GRAPH_TO_EXPLICIT_DONE = newMessage().setIdentifier("converting-dd-graph-to-explicit-done").build();
     public static final Message BUILD_MODEL_START = newMessage().setIdentifier("build-model-start").build();

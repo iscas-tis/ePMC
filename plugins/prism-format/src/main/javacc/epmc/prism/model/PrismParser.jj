@@ -36,6 +36,7 @@ import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBounded;
 import epmc.time.JANITypeClock;
 import epmc.prism.expression.UtilPrismExpressionParser;
+import epmc.expression.standard.ExpressionTypeInteger;
 
 import java.io.StringReader;
 import java.util.List;
@@ -60,7 +61,7 @@ final class PrismParser {
 		this.model = model;
 	}
 
-	public ModelPRISM parseModel() throws EPMCException {
+	public ModelPRISM parseModel()  {
 	    Options options = Options.get();
 		try {
 			return privParseModel(options);
@@ -78,13 +79,13 @@ final class PrismParser {
 		}
 	}
 
-	public ModelPRISM parseModel(boolean flatten) throws EPMCException {
+	public ModelPRISM parseModel(boolean flatten)  {
 		Options options = Options.get();
 		options.set(OptionsPRISM.PRISM_FLATTEN, flatten);
 		return parseModel();
 	}
 
-	private ModelPRISM privParseModel(Options options) throws EPMCException, ParseException {
+	private ModelPRISM privParseModel(Options options) throws ParseException {
 		SystemDefinition[] sd = new SystemDefinition[1]; 
 		sd[0] = null;
 		Semantics model[] = new Semantics[1];
@@ -126,7 +127,7 @@ final class PrismParser {
 		//}
 	}
 
-    private ValueInteger newValueInteger(String string) throws EPMCException {
+    private ValueInteger newValueInteger(String string)  {
       assert string != null;
       return UtilValue.newValue(TypeInteger.get(), string);
    }
@@ -357,7 +358,7 @@ TOKEN :
 }
 
 
-private Token actualParser(SystemDefinition[] sd, Semantics[] model, Expression[] init, Formulas formulae, List<Module> modules, Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues, List<RewardStructure> rewards, List<PlayerDefinition> players) throws EPMCException :
+private Token actualParser(SystemDefinition[] sd, Semantics[] model, Expression[] init, Formulas formulae, List<Module> modules, Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues, List<RewardStructure> rewards, List<PlayerDefinition> players)  :
 {
 	Token t;
 }
@@ -387,7 +388,7 @@ private Token actualParser(SystemDefinition[] sd, Semantics[] model, Expression[
 	{ return t; }
 }
 
-private Semantics parseModelType() throws EPMCException :
+private Semantics parseModelType()  :
 {
 	Semantics type = null;
 	Token t;
@@ -431,7 +432,8 @@ private Semantics parseModelType() throws EPMCException :
 		{ type = SemanticsSMG.SMG; }
 	|
 		t = <PTA> 
-		{ type = SemanticsPTA.PTA; }	)
+		{ type = SemanticsPTA.PTA; }
+	)
 	{ 
 		if (type != null) {
 			modelcount++;
@@ -441,7 +443,7 @@ private Semantics parseModelType() throws EPMCException :
 	}
 }
 
-private void parseConstant(Formulas formulae) throws EPMCException :
+private void parseConstant(Formulas formulae)  :
 {
 	Expression id, value = null;
 	JANIType type;
@@ -489,7 +491,7 @@ private void parseConstant(Formulas formulae) throws EPMCException :
 }
 
 
-private Expression parseIdentifier() throws EPMCException :
+private Expression parseIdentifier()  :
 {
 	Token literal;
 }
@@ -500,19 +502,20 @@ private Expression parseIdentifier() throws EPMCException :
 		.build(); }
 }
 
-private Expression parseInt() throws EPMCException :
+private Expression parseInt()  :
 {
 	Token intg;
 }
 {
 	intg = <NUM_INT>
 	{ return new ExpressionLiteral.Builder()
-		.setValueProvider(UtilPrismExpressionParser.newParseValueProviderInteger(intg.toString()))
+		.setValue(intg.toString())
+		.setType(ExpressionTypeInteger.TYPE_INTEGER)
 		.build();
 	}
 }
 
-private void parseLabel(Formulas formulae) throws EPMCException :
+private void parseLabel(Formulas formulae)  :
 {
 	Expression id, value;
 	Token t, tid;
@@ -539,7 +542,7 @@ private void parseLabel(Formulas formulae) throws EPMCException :
 	}
 }
 
-private void parseGlobal(Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues) throws EPMCException :
+private void parseGlobal(Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues)  :
 {
 }
 {
@@ -547,7 +550,7 @@ private void parseGlobal(Map<Expression, JANIType> globalVariables, Map<Expressi
 	parseVariableDeclaration(globalVariables, globalInitValues)
 }
 
-private void parseFormula(Formulas formulae) throws EPMCException :
+private void parseFormula(Formulas formulae)  :
 {
 	Expression id, value;
 	Token t;
@@ -569,7 +572,7 @@ private void parseFormula(Formulas formulae) throws EPMCException :
 	}
 }
 
-private void parsePlayer(List<PlayerDefinition> players) throws EPMCException :
+private void parsePlayer(List<PlayerDefinition> players)  :
 {
 	Token item;
 	Set<String> modules = new HashSet<String>();
@@ -613,7 +616,7 @@ private void parsePlayer(List<PlayerDefinition> players) throws EPMCException :
 	}
 }
 
-private void parseModule(List<Module> modules) throws EPMCException :
+private void parseModule(List<Module> modules)  :
 {
 	Module m;
 	Expression id;
@@ -648,7 +651,7 @@ private void parseModule(List<Module> modules) throws EPMCException :
 	}
 }
 
-private Module parseModuleRename(Expression newId) throws EPMCException :
+private Module parseModuleRename(Expression newId)  :
 {
 	Expression oldId;
 	Map<Expression, Expression> map = new HashMap<Expression,Expression>();
@@ -665,7 +668,7 @@ private Module parseModuleRename(Expression newId) throws EPMCException :
 	{ return new ModuleRename(newId, oldId, map, null); }
 }
 
-private void parseRenaming(Map<Expression, Expression> map) throws EPMCException :
+private void parseRenaming(Map<Expression, Expression> map)  :
 {
 	Expression oldId;
 	Expression newId;
@@ -677,7 +680,7 @@ private void parseRenaming(Map<Expression, Expression> map) throws EPMCException
 	{ map.put(oldId, newId); }
 }
 
-private void parseModuleContent(Map<Expression,JANIType> variables, Map<Expression,Expression> initValues, Expression[] invariants, List<Command> commands) throws EPMCException :
+private void parseModuleContent(Map<Expression,JANIType> variables, Map<Expression,Expression> initValues, Expression[] invariants, List<Command> commands)  :
 {
 	Command c;
 }
@@ -694,7 +697,7 @@ private void parseModuleContent(Map<Expression,JANIType> variables, Map<Expressi
 	)*	
 }
 
-private void parseVariableDeclaration(Map<Expression, JANIType> variables, Map<Expression, Expression> initValues) throws EPMCException :
+private void parseVariableDeclaration(Map<Expression, JANIType> variables, Map<Expression, Expression> initValues)  :
 {
 	Expression id;
 	JANIType type;
@@ -729,7 +732,7 @@ private void parseVariableDeclaration(Map<Expression, JANIType> variables, Map<E
 	}
 }
 
-private JANIType parseVariable() throws EPMCException :
+private JANIType parseVariable()  :
 {
 	JANIType type;
 	Expression low, high;
@@ -758,7 +761,7 @@ private JANIType parseVariable() throws EPMCException :
 	{ return type; }
 }
 
-private Expression parseInvariantDeclaration() throws EPMCException :
+private Expression parseInvariantDeclaration()  :
 {
 	Expression invar;
 }
@@ -770,7 +773,7 @@ private Expression parseInvariantDeclaration() throws EPMCException :
 	{ return invar; }
 }
 
-private void parseRewards(List<RewardStructure> rewards) throws EPMCException :
+private void parseRewards(List<RewardStructure> rewards)  :
 {
 	Expression id = null;
 	Expression label;
@@ -806,7 +809,7 @@ private void parseRewards(List<RewardStructure> rewards) throws EPMCException :
 		{ label = null; }
 		(
 			<LBRACKET>
-			{ label = label = new ExpressionIdentifierStandard.Builder()
+			{ label = new ExpressionIdentifierStandard.Builder()
 					.setName("")
 					.build(); }
 			( 
@@ -854,7 +857,7 @@ private void parseRewards(List<RewardStructure> rewards) throws EPMCException :
 	}
 }
 
-private Expression parseInit() throws EPMCException :
+private Expression parseInit()  :
 {
 	Expression init;
 	Token t;
@@ -870,7 +873,7 @@ private Expression parseInit() throws EPMCException :
 	}
 }
 
-private SystemDefinition parseSystem() throws EPMCException :
+private SystemDefinition parseSystem()  :
 {
 	SystemDefinition sd;
 	Token t;
@@ -886,7 +889,7 @@ private SystemDefinition parseSystem() throws EPMCException :
 	}
 }
 
-private SystemDefinition parseSystemContent() throws EPMCException :
+private SystemDefinition parseSystemContent()  :
 {
 	SystemDefinition sd;
 }
@@ -895,7 +898,7 @@ private SystemDefinition parseSystemContent() throws EPMCException :
 	{ return sd; }
 }
 
-private SystemDefinition parseSystemParallelCommonActions() throws EPMCException :
+private SystemDefinition parseSystemParallelCommonActions()  :
 {
 	SystemDefinition sd;
 	SystemDefinition other;
@@ -912,7 +915,7 @@ private SystemDefinition parseSystemParallelCommonActions() throws EPMCException
 	{ return sd; }
 }
 
-private SystemDefinition parseSystemParallelAsynchronous() throws EPMCException :
+private SystemDefinition parseSystemParallelAsynchronous()  :
 {
 	SystemDefinition sd;
 	SystemDefinition other;
@@ -930,7 +933,7 @@ private SystemDefinition parseSystemParallelAsynchronous() throws EPMCException 
 	{ return sd; }
 }
 
-private SystemDefinition parseSystemParallelSetActions() throws EPMCException :
+private SystemDefinition parseSystemParallelSetActions()  :
 {
 	SystemDefinition sd;
 	SystemDefinition other;
@@ -951,7 +954,7 @@ private SystemDefinition parseSystemParallelSetActions() throws EPMCException :
 	{ return sd; }
 }
 
-private SystemDefinition parseSystemRenHid() throws EPMCException :
+private SystemDefinition parseSystemRenHid()  :
 {
 	SystemDefinition sd;
 	Set<Expression> idSet;
@@ -974,7 +977,7 @@ private SystemDefinition parseSystemRenHid() throws EPMCException :
 	{ return sd; }
 }
 
-private Map<Expression, Expression> parseRenameMap() throws EPMCException :
+private Map<Expression, Expression> parseRenameMap()  :
 {
 	Map<Expression, Expression> map = new HashMap<Expression,Expression>();
 	Expression oldId, newId;
@@ -994,7 +997,7 @@ private Map<Expression, Expression> parseRenameMap() throws EPMCException :
 	{ return map; }
 }
 
-private Set<Expression> parseIdSet() throws EPMCException :
+private Set<Expression> parseIdSet()  :
 {
 	Set<Expression> le = new HashSet<Expression>();
 	Expression e;
@@ -1010,7 +1013,7 @@ private Set<Expression> parseIdSet() throws EPMCException :
 	{ return le; }
 }
 
-private SystemDefinition parseSystemBase() throws EPMCException :
+private SystemDefinition parseSystemBase()  :
 {
 	Expression e;
 	SystemDefinition sd;
@@ -1027,7 +1030,7 @@ private SystemDefinition parseSystemBase() throws EPMCException :
 	{ return sd; }
 }
 
-private Command parseGuardedCommandDeclaration() throws EPMCException, EPMCException :
+private Command parseGuardedCommandDeclaration() :
 {
 	Token literal;
 	Expression identifier = null;
@@ -1066,7 +1069,7 @@ private Command parseGuardedCommandDeclaration() throws EPMCException, EPMCExcep
 	{ return new Command(identifier, guard, updates, null); }
 }
 
-private List<Alternative> parseUpdate() throws EPMCException, EPMCException : 
+private List<Alternative> parseUpdate() : 
 {
 	List<Alternative> updates = new ArrayList<Alternative>();
 	Expression one = ExpressionLiteral.getOne();
@@ -1084,7 +1087,7 @@ private List<Alternative> parseUpdate() throws EPMCException, EPMCException :
 	{ return updates; }
 }
 
-private void parseProbUpdate(List<Alternative> updates) throws EPMCException, EPMCException : 
+private void parseProbUpdate(List<Alternative> updates) : 
 {
 	Expression weight;
 	Token t;
@@ -1115,7 +1118,7 @@ private void parseProbUpdate(List<Alternative> updates) throws EPMCException, EP
 	)*
 }
 
-private void parseDetUpdate(Expression weight, List<Alternative> updates) throws EPMCException, EPMCException :
+private void parseDetUpdate(Expression weight, List<Alternative> updates) :
 {
 	Expression id, value;
 	Map<Expression, Expression> effect = new HashMap<Expression,Expression>();
@@ -1160,7 +1163,7 @@ private void parseDetUpdate(Expression weight, List<Alternative> updates) throws
 	{ updates.add(new Alternative(weight, effect, null)); }
 }
 
-private Expression parseCondition() throws EPMCException, EPMCException : 
+private Expression parseCondition() : 
 {
 	Expression e;
 	token_source.SwitchTo(ARROW_ENV);
@@ -1170,7 +1173,7 @@ private Expression parseCondition() throws EPMCException, EPMCException :
 	{ return e; }
 }
 
-private Expression parseExpSemicolon() throws EPMCException : 
+private Expression parseExpSemicolon()  : 
 {
 	Token t;
 	StringBuilder exp = new StringBuilder();
@@ -1202,7 +1205,7 @@ private Expression parseExpSemicolon() throws EPMCException :
 	}
 }
 
-private Expression parseExpParenth() throws EPMCException : 
+private Expression parseExpParenth()  : 
 {
 	Token t;
 	StringBuilder exp = new StringBuilder();
@@ -1234,7 +1237,7 @@ private Expression parseExpParenth() throws EPMCException :
 	}
 }
 
-private Expression parseExpBrack() throws EPMCException : 
+private Expression parseExpBrack()  : 
 {
 	Token t;
 	StringBuilder exp = new StringBuilder();
@@ -1266,7 +1269,7 @@ private Expression parseExpBrack() throws EPMCException :
 	}
 }
 
-private Expression parseExpColon(Token old) throws EPMCException : 
+private Expression parseExpColon(Token old)  : 
 {
 	Token t;
 	StringBuilder exp = new StringBuilder();
@@ -1312,14 +1315,15 @@ private Expression parseExpColon(Token old) throws EPMCException :
 	}
 }
 
-private Expression parseExpInvariant() throws EPMCException :
+private Expression parseExpInvariant()  :
 {
 	StringBuilder content = new StringBuilder();
 	Token t;
 }
 {
 	{ expressionToken = getToken(1); }
-	(	    t = <INVARIANT_IDENTIFIER>
+	(
+	    t = <INVARIANT_IDENTIFIER>
 	    { content.append(t.toString()); }
 	|
 	    t = <INVARIANT_OTHER>
@@ -1331,7 +1335,7 @@ private Expression parseExpInvariant() throws EPMCException :
 	}
 }
 
-private Expression parseExpInit() throws EPMCException :
+private Expression parseExpInit()  :
 {
 	StringBuilder content = new StringBuilder();
 	Token t;
@@ -1352,7 +1356,7 @@ private Expression parseExpInit() throws EPMCException :
 	}
 }
 
-private Expression parseExpSepinterval() throws EPMCException :
+private Expression parseExpSepinterval()  :
 {
 	Token content;
 	token_source.SwitchTo(SEPINTERVAL_ENV);
@@ -1366,7 +1370,7 @@ private Expression parseExpSepinterval() throws EPMCException :
 	}
 }
 
-private Expression parseExpArrow() throws EPMCException :
+private Expression parseExpArrow()  :
 {
 	Token content;
 	token_source.SwitchTo(ARROW_ENV);
@@ -1380,7 +1384,7 @@ private Expression parseExpArrow() throws EPMCException :
 	}
 }
 
-private Expression ExpressionIdentifier() throws EPMCException :
+private Expression ExpressionIdentifier()  :
 {
 	Token literal;
 }

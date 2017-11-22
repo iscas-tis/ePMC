@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
@@ -35,48 +35,48 @@ import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.PlayerDefinition;
 
 final class PlayerConverter {
-	private ModelPRISM modelPRISM;
-	private ModelJANI modelJANI;
+    private ModelPRISM modelPRISM;
+    private ModelJANI modelJANI;
 
-	void setPRISMModel(ModelPRISM modelPrism) {
-		this.modelPRISM = modelPrism;
-	}
-	
-	void setJANIModel(ModelJANI modelJani) {
-		this.modelJANI = modelJani;
-	}
-	
-	void attachPlayers() {
-		if (!SemanticsSMG.isSMG(modelPRISM.getSemantics())) {
-			return;
-		}
-		PlayersJANI players = convertPlayers(modelPRISM.getPlayers());
-		ModelExtensionSMG extension = (ModelExtensionSMG) modelJANI.getSemanticsExtension();
-		extension.setPlayers(players);
-	}
+    void setPRISMModel(ModelPRISM modelPrism) {
+        this.modelPRISM = modelPrism;
+    }
 
-	private PlayersJANI convertPlayers(List<PlayerDefinition> playersPRISM) {
-		PlayersJANI players = new PlayersJANI();
-		players.setModel(modelJANI);
-		for (PlayerDefinition playerPRISM : playersPRISM) {
-			PlayerJANI playerJANI = new PlayerJANI();
-			playerJANI.setModel(modelJANI);
-			playerJANI.setName(playerPRISM.getName());
-			Set<Action> actions = new HashSet<>();
-			for (String actionName : playerPRISM.getLabels()) {
-				actions.add(modelJANI.getActions().get(actionName));
-			}
-			playerJANI.setActions(actions);
-			Set<Automaton> automata = new HashSet<>();
-			for (String moduleName : playerPRISM.getModules()) {
-				Automaton automaton = modelJANI.getAutomata().get(moduleName);
-				assert automaton != null : moduleName + " " + modelJANI.getAutomata().getAutomata().keySet();
-				automata.add(automaton);
-			}
-			playerJANI.setAutomata(automata);
-			players.add(playerJANI);
-		}
-		return players;
-	}
+    void setJANIModel(ModelJANI modelJani) {
+        this.modelJANI = modelJani;
+    }
+
+    void attachPlayers() {
+        if (!SemanticsSMG.isSMG(modelPRISM.getSemantics())) {
+            return;
+        }
+        PlayersJANI players = convertPlayers(modelPRISM.getPlayers());
+        ModelExtensionSMG extension = (ModelExtensionSMG) modelJANI.getSemanticsExtension();
+        extension.setPlayers(players);
+    }
+
+    private PlayersJANI convertPlayers(List<PlayerDefinition> playersPRISM) {
+        PlayersJANI players = new PlayersJANI();
+        players.setModel(modelJANI);
+        for (PlayerDefinition playerPRISM : playersPRISM) {
+            PlayerJANI playerJANI = new PlayerJANI();
+            playerJANI.setModel(modelJANI);
+            playerJANI.setName(playerPRISM.getName());
+            Set<Action> actions = new HashSet<>();
+            for (String actionName : playerPRISM.getLabels()) {
+                actions.add(modelJANI.getActions().get(actionName));
+            }
+            playerJANI.setActions(actions);
+            Set<Automaton> automata = new HashSet<>();
+            for (String moduleName : playerPRISM.getModules()) {
+                Automaton automaton = modelJANI.getAutomata().get(moduleName);
+                assert automaton != null : moduleName + " " + modelJANI.getAutomata().getAutomata().keySet();
+                automata.add(automaton);
+            }
+            playerJANI.setAutomata(automata);
+            players.add(playerJANI);
+        }
+        return players;
+    }
 
 }

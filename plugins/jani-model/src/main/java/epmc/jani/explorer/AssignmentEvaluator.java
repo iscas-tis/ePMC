@@ -16,34 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
 import epmc.jani.model.Variable;
 
 public interface AssignmentEvaluator {
-	interface Builder {
-		Builder setAssignment(Assignment assignment);
-		
-		Builder setVariableMap(Map<Variable, Integer> variableMap);
-		
-		Builder setVariables(Expression[] variables);
+    interface Builder {
+        Builder setAssignment(Assignment assignment);
 
-		Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal);
+        Builder setVariableMap(Map<Variable, Integer> variableMap);
 
-		Builder setExpressionToType(ExpressionToType expressionToType);
-		
-		boolean canHandle();
-		
-		AssignmentEvaluator build() throws EPMCException;
-	}
+        Builder setVariables(Expression[] variables);
 
-	void apply(NodeJANI node, NodeJANI successor) throws EPMCException;
+        Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal);
+
+        Builder setExpressionToType(ExpressionToType expressionToType);
+
+        boolean canHandle();
+
+        AssignmentEvaluator build();
+    }
+
+    void apply(NodeJANI node, NodeJANI successor);
 }

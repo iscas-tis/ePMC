@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
 import epmc.automaton.Automaton;
-import epmc.error.EPMCException;
 
 public interface AutomatonNumeredInput extends Automaton {
-    void queryState(int modelState, int observerState) throws EPMCException;
+    void queryState(int modelState, int observerState);
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -40,7 +40,7 @@ public final class OptionTypeLong implements OptionType {
     private final static String INFO = "<long>";
     /** Long option type. */
     private final static OptionTypeLong INSTANCE = new OptionTypeLong();
-    
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
@@ -49,9 +49,9 @@ public final class OptionTypeLong implements OptionType {
      */
     private OptionTypeLong() {
     }
-    
+
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();
@@ -63,12 +63,12 @@ public final class OptionTypeLong implements OptionType {
             return null;
         }
     }
-    
+
     @Override
     public String getInfo() {
         return INFO;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();

@@ -16,32 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.dtmc;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class ModelExtensionDTMCProcessor implements JANI2PRISMProcessorStrict {
 
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj instanceof ModelExtensionDTMC;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj instanceof ModelExtensionDTMC;
+        return this;
+    }
 
-	@Override
-	public String toPRISM() {
-		return "dtmc\n";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-	}
+    @Override
+    public String toPRISM() {
+        return "dtmc\n";
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		return false;
-	}	
+    @Override
+    public void validateTransientVariables() {
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        return false;
+    }	
 }

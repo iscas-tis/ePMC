@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -24,15 +24,15 @@ import epmc.util.BitStoreable;
 import epmc.value.Value;
 
 public interface ValueBitStoreable extends Value, BitStoreable {
-	static boolean isBitStoreable(Value value) {
-		return value instanceof ValueBitStoreable;
-	}
-	
-	static ValueBitStoreable asBitStoreable(Value value) {
-		if (isBitStoreable(value)) {
-			return (ValueBitStoreable) value;
-		} else {
-			return null;
-		}
-	}
+    static boolean is(Value value) {
+        return value instanceof ValueBitStoreable;
+    }
+
+    static ValueBitStoreable as(Value value) {
+        if (is(value)) {
+            return (ValueBitStoreable) value;
+        } else {
+            return null;
+        }
+    }
 }

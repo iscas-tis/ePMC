@@ -16,37 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public final class PropertyEdgeTransientValue implements PropertyEdge {
-	private final static String SPACE = " ";
-	private final ExplorerJANI explorer;
-	private final int varNr;
-	private final Type type;
+    private final static String SPACE = " ";
+    private final ExplorerJANI explorer;
+    private final int varNr;
+    private final Type type;
 
-	PropertyEdgeTransientValue(ExplorerJANI explorer, int varNr) throws EPMCException {
-		assert explorer != null;
-		assert varNr >= 0;
-		this.explorer = explorer;
-		this.varNr = varNr;
-		this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariableIdentifiers().get(varNr)).getType();
-	}
+    PropertyEdgeTransientValue(ExplorerJANI explorer, int varNr) {
+        assert explorer != null;
+        assert varNr >= 0;
+        this.explorer = explorer;
+        this.varNr = varNr;
+        this.type = explorer.getStateVariables().get(explorer.getStateVariables().getVariableIdentifiers().get(varNr)).getType();
+    }
 
-	@Override
-	public Value get(int successor) throws EPMCException {
-		assert successor >= 0 : successor;
-		assert successor < explorer.getNumSuccessors() : successor + SPACE + explorer.getNumSuccessors() ;
-		return explorer.getSuccessorNode(successor).getValue(varNr);
-	}
+    @Override
+    public Value get(int successor) {
+        assert successor >= 0 : successor;
+        assert successor < explorer.getNumSuccessors() : successor + SPACE + explorer.getNumSuccessors() ;
+        return explorer.getSuccessorNode(successor).getValue(varNr);
+    }
 
-	@Override
-	public Type getType() {
-		return type;
-	}	
+    @Override
+    public Type getType() {
+        return type;
+    }	
 }

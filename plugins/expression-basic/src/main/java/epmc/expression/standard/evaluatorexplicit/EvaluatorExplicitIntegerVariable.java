@@ -16,23 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.TypeInteger;
 import epmc.value.ValueInteger;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 
 public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -44,7 +44,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -58,13 +58,13 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         private Expression getExpression() {
             return expression;
         }
-        
+
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             for (Expression variable : variables) {
                 if (variable.equals(expression)
-                        && variable.getType(expressionToType) != null
-                        && TypeInteger.isInteger(variable.getType(expressionToType))) {
+                        && expressionToType.getType(variable) != null
+                        && TypeInteger.is(expressionToType.getType(variable))) {
                     return true;
                 }
             }
@@ -72,31 +72,31 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitIntegerVariable(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-        
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
-		
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
+
     }
-    
+
     public final static String IDENTIFIER = "integer-variable";
-    
+
     private final Expression[] variables;
     private final Expression expression;
     private final int index;
     private final Value result;
 
-    private EvaluatorExplicitIntegerVariable(Builder builder) throws EPMCException {
+    private EvaluatorExplicitIntegerVariable(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -111,7 +111,7 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
             }
         }
         this.index = index;
-        result = variables[index].getType(builder.getExpressionToType()).newValue();
+        result = builder.getExpressionToType().getType(variables[index]).newValue();
     }
 
     @Override
@@ -124,24 +124,24 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
-        result.set(values[index]);
+        ValueAlgebra.as(result).set(ValueInteger.as(values[index]).getInt());
         return result;
     }
 
     @Override
-    public int evaluateInteger(Value... values) throws EPMCException {
+    public int evaluateInteger(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
-        return ValueInteger.asInteger(values[index]).getInt();
+        return ValueInteger.as(values[index]).getInt();
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

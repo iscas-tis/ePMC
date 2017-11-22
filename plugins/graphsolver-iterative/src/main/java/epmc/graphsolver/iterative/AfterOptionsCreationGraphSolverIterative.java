@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.OptionsGraphsolver;
 import epmc.graphsolver.iterative.java.BoundedCumulativeDiscountedJava;
 import epmc.graphsolver.iterative.java.BoundedCumulativeJava;
@@ -51,40 +50,40 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
-        
+
         Category category = options.addCategory()
-        		.setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
-        		.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_CATEGORY)
-        		.setParent(OptionsGraphsolver.GRAPHSOLVER_CATEGORY)
-        		.build();
+                .setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
+                .setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_CATEGORY)
+                .setParent(OptionsGraphsolver.GRAPHSOLVER_CATEGORY)
+                .build();
         OptionTypeRealNonnegative typeRealNonnegative = OptionTypeRealNonnegative.getInstance();
 
         options.addOption().setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
-        	.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD)
-        	.setType(new OptionTypeEnum(IterationMethod.class))
-        	.setDefault(IterationMethod.GAUSS_SEIDEL)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD)
+        .setType(new OptionTypeEnum(IterationMethod.class))
+        .setDefault(IterationMethod.GAUSS_SEIDEL)
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
-        	.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION)
-        	.setType(new OptionTypeEnum(IterationStopCriterion.class))
-        	.setDefault(IterationStopCriterion.ABSOLUTE)
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION)
+        .setType(new OptionTypeEnum(IterationStopCriterion.class))
+        .setDefault(IterationStopCriterion.ABSOLUTE)
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         options.addOption().setBundleName(OptionsGraphSolverIterative.OPTIONS_GRAPH_SOLVER_ITERATIVE)
-        	.setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE)
-        	.setType(typeRealNonnegative)
-        	.setDefault("1.0E-10")
-        	.setCommandLine().setGui().setWeb()
-        	.setCategory(category).build();
+        .setIdentifier(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE)
+        .setType(typeRealNonnegative)
+        .setDefault("1.0E-10")
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category).build();
         Map<String, Class<?>> graphSolverMap = options.get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         assert graphSolverMap != null;
         graphSolverMap.put(BoundedCumulativeJava.IDENTIFIER, BoundedCumulativeJava.class);
         graphSolverMap.put(BoundedCumulativeDiscountedJava.IDENTIFIER, BoundedCumulativeDiscountedJava.class);
         graphSolverMap.put(UnboundedCumulativeJava.IDENTIFIER, UnboundedCumulativeJava.class);
-        graphSolverMap.put(UnboundedReachabilityJava.IDENTIFIER, UnboundedCumulativeJava.class);
+        graphSolverMap.put(UnboundedReachabilityJava.IDENTIFIER, UnboundedReachabilityJava.class);
         graphSolverMap.put(BoundedReachabilityJava.IDENTIFIER, BoundedReachabilityJava.class);
         graphSolverMap.put(BoundedJava.IDENTIFIER, BoundedJava.class);
         graphSolverMap.put(BoundedCumulativeNative.IDENTIFIER, BoundedCumulativeNative.class);

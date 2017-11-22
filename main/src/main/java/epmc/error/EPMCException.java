@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.error;
 
@@ -35,7 +35,7 @@ import java.util.Arrays;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class EPMCException extends Exception {
+public final class EPMCException extends RuntimeException {
     /**
      * Builder for {@link EPMCException}.
      * 
@@ -54,7 +54,7 @@ public final class EPMCException extends Exception {
             this.problem = problem;
             return this;
         }
-        
+
         private Problem getProblem() {
             return problem;
         }
@@ -64,37 +64,37 @@ public final class EPMCException extends Exception {
             this.message = message;
             return this;
         }
-        
+
         private String getMessage() {
             return message;
         }
-        
+
         public Builder setCause(Throwable cause) {
             assert !built;
             this.cause = cause;
             return this;
         }
-        
+
         private Throwable getCause() {
             return cause;
         }
-        
+
         public Builder setPositional(Positional positional) {
             assert !built;
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setArguments(Object... arguments) {
             assert !built;
             this.arguments = arguments;
             return this;
         }
-        
+
         private Object[] getArguments() {
             return arguments;
         }
@@ -105,7 +105,7 @@ public final class EPMCException extends Exception {
             return new EPMCException(this);
         }
     }
-    
+
     /** Serial version ID - 1L as I don't know any better. */
     private static final long serialVersionUID = 1L;
     /** String containing a single space. */
@@ -185,7 +185,7 @@ public final class EPMCException extends Exception {
         }
         return result;
     }
-    
+
     /**
      * Construct message to provide to parent class of {@link EPMCException}.
      * The message will then be obtained using
@@ -241,7 +241,7 @@ public final class EPMCException extends Exception {
             return message;
         }
     }
-    
+
     /**
      * Obtain the location of the input which caused the problem.
      * 

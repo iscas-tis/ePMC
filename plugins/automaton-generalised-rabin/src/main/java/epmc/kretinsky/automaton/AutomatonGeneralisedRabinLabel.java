@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
-import epmc.error.EPMCException;
-
 public interface AutomatonGeneralisedRabinLabel {
-    boolean isAccepting(int pair, int number) throws EPMCException;
+    boolean isAccepting(int pair, int number);
 
-    boolean isStable(int pair) throws EPMCException;
+    boolean isStable(int pair);
 }

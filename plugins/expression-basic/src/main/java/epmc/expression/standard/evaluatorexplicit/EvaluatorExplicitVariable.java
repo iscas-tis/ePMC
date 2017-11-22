@@ -16,22 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Value;
 
 public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -43,7 +45,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -53,13 +55,13 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             for (Expression variable : variables) {
                 if (variable.equals(expression)) {
                     return true;
@@ -69,30 +71,31 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitVariable(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
 
     public final static String IDENTIFIER = "variable";
-    
+
     private final Expression[] variables;
     private final Expression expression;
     private final int index;
     private final Value result;
+    private final OperatorEvaluator set;
 
-    private EvaluatorExplicitVariable(Builder builder) throws EPMCException {
+    private EvaluatorExplicitVariable(Builder builder) {
         assert builder != null;
         assert builder.getVariables() != null;
         assert builder.getExpression() != null;
@@ -107,38 +110,39 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
             }
         }
         this.index = index;
-        result = variables[index].getType(builder.getExpressionToType()).newValue();
+        result = builder.getExpressionToType().getType(variables[index]).newValue();
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, builder.getExpressionToType().getType(variables[index]), builder.getExpressionToType().getType(variables[index]));
     }
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
-        result.set(values[index]);
+        set.apply(result, values[index]);
         return result;
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
-        return ValueBoolean.asBoolean(values[index]).getBoolean();
+        return ValueBoolean.as(values[index]).getBoolean();
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main;
 
@@ -28,7 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.RawModel;
 import epmc.modelchecker.error.ProblemsModelChecker;
 
@@ -56,9 +55,8 @@ public final class RawModelLocalFiles implements RawModel {
      * 
      * @param modelFilenames model filenames
      * @param propertyFilenames property filenames
-     * @throws EPMCException thrown in case of problems
      */
-    public RawModelLocalFiles(String[] modelFilenames, String[] propertyFilenames) throws EPMCException {
+    public RawModelLocalFiles(String[] modelFilenames, String[] propertyFilenames) {
         assert modelFilenames != null;
         for (String filename : modelFilenames) {
             assert filename != null;
@@ -92,7 +90,7 @@ public final class RawModelLocalFiles implements RawModel {
         }
         return result;
     }
-    
+
     @Override
     public InputStream[] getPropertyInputStreams() {
         // TODO improve user feedback in case of errors

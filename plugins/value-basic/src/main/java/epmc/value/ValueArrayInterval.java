@@ -16,110 +16,82 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContentDoubleArray {
-	private final TypeArrayInterval type;
+    private final TypeArrayInterval type;
     private ValueArrayAlgebra content;
-	private boolean immutable;
-	private int size;
+    private int size;
 
     ValueArrayInterval(TypeArrayInterval type) {
-    	assert type != null;
-    	this.type = type;
+        assert type != null;
+        this.type = type;
         this.content = UtilValue.newArray(type.getTypeArrayReal(), size() * 2);
     }
-    
+
     @Override
     public TypeArrayInterval getType() {
-    	return type;
-    }
-    
-    @Override
-    public ValueArrayInterval clone() {
-        ValueArrayInterval clone = getType().newValue();
-        clone.set(this);
-        return clone;
+        return type;
     }
 
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
-        assert ValueInterval.isInterval(value);
+        assert ValueInterval.is(value);
         assert index >= 0;
         assert index < size() : index + " " + size();
-        content.set(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
-        content.set(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
+        content.set(ValueInterval.as(value).getIntervalLower(), index * 2);
+        content.set(ValueInterval.as(value).getIntervalUpper(), index * 2 + 1);
     }
 
-	@Override
-	public void set(int entry, int index) {
-        assert !isImmutable();
+    @Override
+    public void set(int entry, int index) {
         assert index >= 0;
         assert index < size() : index + " " + size();
         content.set(entry, index * 2);
         content.set(entry, index * 2 + 1);
-	}
+    }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueInterval.isInterval(value);
+        assert ValueInterval.is(value);
         assert index >= 0;
         assert index < size() : index + " " + size();
-        content.get(ValueInterval.asInterval(value).getIntervalLower(), index * 2);
-        content.get(ValueInterval.asInterval(value).getIntervalUpper(), index * 2 + 1);
+        content.get(ValueInterval.as(value).getIntervalLower(), index * 2);
+        content.get(ValueInterval.as(value).getIntervalUpper(), index * 2 + 1);
     }
-    
+
     @Override
     public double[] getDoubleArray() {
         return ValueContentDoubleArray.getContent(content);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = content.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
-    @Override
-    public void setImmutable() {
-    	this.immutable = true;
-    }
-    
-    @Override
-    public boolean isImmutable() {
-    	return immutable;
-    }
 
-	@Override
-	public void set(String value) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setSize(int size) {
-        assert !isImmutable();
+    @Override
+    public void setSize(int size) {
         assert size >= 0;
         content = UtilValue.newArray(getType().getTypeArrayReal(), size * 2);
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

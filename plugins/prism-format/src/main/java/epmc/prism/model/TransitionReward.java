@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -29,11 +29,11 @@ import epmc.expression.standard.UtilExpressionStandard;
 //Notice: objects of this class are immutable by purpose.
 //Do not modify the class to make them mutable.
 public final class TransitionReward implements Reward {
-	private final static String LBRACK = "[";
-	private final static String RBRACK = "]";
-	private final static String SPACE = " ";
-	private final static String COLON = ":";
-	
+    private final static String LBRACK = "[";
+    private final static String RBRACK = "]";
+    private final static String SPACE = " ";
+    private final static String COLON = ":";
+
     private Positional positional;
     private final String label;
     private final Expression guard;
@@ -48,15 +48,15 @@ public final class TransitionReward implements Reward {
         this.guard = guard;
         this.value = value;
     }
-    
+
     public String getLabel() {
         return label;
     }
-    
+
     public Expression getGuard() {
         return guard;
     }
-    
+
     public Expression getValue() {
         return value;
     }
@@ -64,7 +64,7 @@ public final class TransitionReward implements Reward {
     @Override
     public String toString() {
         return LBRACK + label + RBRACK + SPACE + guard
-        		+ SPACE + COLON + SPACE + value;
+                + SPACE + COLON + SPACE + value;
     }
 
     @Override

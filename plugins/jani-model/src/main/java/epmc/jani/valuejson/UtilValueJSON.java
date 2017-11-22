@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.valuejson;
 
@@ -29,22 +29,22 @@ import epmc.util.Util;
 import epmc.value.Value;
 
 public final class UtilValueJSON {
-	public static JsonValue valueToJson(Value value) {
-		assert value != null;
-		Options options = Options.get();
-		List<Class<? extends ValueJSON>> valueJsonClasses = options.get(OptionsJANIValueJSON.JANI_VALUEJSON_CLASS);
-		assert valueJsonClasses != null;
-		for (Class<? extends ValueJSON> clazz : valueJsonClasses) {
-			ValueJSON valueJson = Util.getInstance(clazz);
-			JsonValue result = valueJson.convert(value);
-			if (result != null) {
-				return result;
-			}
-		}
-		assert false;
-		return null;
-	}
-	
-	private UtilValueJSON() {
-	}
+    public static JsonValue valueToJson(Value value) {
+        assert value != null;
+        Options options = Options.get();
+        List<Class<? extends ValueJSON>> valueJsonClasses = options.get(OptionsJANIValueJSON.JANI_VALUEJSON_CLASS);
+        assert valueJsonClasses != null;
+        for (Class<? extends ValueJSON> clazz : valueJsonClasses) {
+            ValueJSON valueJson = Util.getInstance(clazz);
+            JsonValue result = valueJson.convert(value);
+            if (result != null) {
+                return result;
+            }
+        }
+        assert false;
+        return null;
+    }
+
+    private UtilValueJSON() {
+    }
 }

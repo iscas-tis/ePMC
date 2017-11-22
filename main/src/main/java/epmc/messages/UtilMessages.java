@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
 import epmc.options.Options;
@@ -43,17 +42,13 @@ public final class UtilMessages {
     private final static String SPACE = " ";
     /** Empty string. */
     private final static String EMPTY = "";
-    
+
     public static String translateTimeStamp(Options options, long timeStarted, long time) {
         assert options != null;
         assert timeStarted >= 0;
         assert time >= 0;
         TimeStampFormat solver;
-        try {
-            solver = UtilOptions.getInstance(OptionsMessages.TIME_STAMPS);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        solver = UtilOptions.getInstance(OptionsMessages.TIME_STAMPS);
         if (solver instanceof TimeStampFormatNone) {
             return EMPTY;
         }
@@ -71,9 +66,9 @@ public final class UtilMessages {
         assert options != null;
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption().setBundleName(OptionsMessages.OPTIONS_MESSAGES)
-            .setIdentifier(OptionsMessages.TRANSLATE_MESSAGES)
-            .setType(typeBoolean).setDefault(true)
-            .setCommandLine().setGui().setWeb().build();
+        .setIdentifier(OptionsMessages.TRANSLATE_MESSAGES)
+        .setType(typeBoolean).setDefault(true)
+        .setCommandLine().setGui().setWeb().build();
         Map<String, Class<?>> timeStampFormatMap = new OrderedMap<>(true);
         timeStampFormatMap.put(TimeStampFormatNone.IDENTIFIER, TimeStampFormatNone.class);
         timeStampFormatMap.put(TimeStampFormatJavaDate.IDENTIFIER, TimeStampFormatJavaDate.class);
@@ -83,12 +78,12 @@ public final class UtilMessages {
         timeStampFormatMap.put(TimeStampFormatSecondsAbsolute.IDENTIFIER, TimeStampFormatSecondsAbsolute.class);
         OptionTypeMap<Class<?>> timeStampFormatType = new OptionTypeMap<>(timeStampFormatMap);
         options.addOption().setBundleName(OptionsMessages.OPTIONS_MESSAGES)
-            .setIdentifier(OptionsMessages.TIME_STAMPS)
-            .setDefault(TimeStampFormatNone.class)
-            .setType(timeStampFormatType)
-            .setCommandLine().setGui().setWeb().build();
+        .setIdentifier(OptionsMessages.TIME_STAMPS)
+        .setDefault(TimeStampFormatNone.class)
+        .setType(timeStampFormatType)
+        .setCommandLine().setGui().setWeb().build();
     }
-    
+
     /**
      * Private constructor to avoid creation of objects of this class.
      */

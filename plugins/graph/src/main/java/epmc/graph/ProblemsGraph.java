@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -48,7 +48,7 @@ public final class ProblemsGraph {
         assert name != null;
         return UtilError.newProblem(ERROR_GRAPH, name);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

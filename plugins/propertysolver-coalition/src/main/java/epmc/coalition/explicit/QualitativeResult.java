@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
@@ -31,20 +31,20 @@ import epmc.util.BitSet;
  * @author Ernst Moritz Hahn
  */
 final class QualitativeResult {
-	/** String containing "set0", for {@link #toString()}. */
-	private final static String SET0 = "set0";
-	/** String containing "set1", for {@link #toString()}. */
-	private final static String SET1 = "set1";
-	/** String containing "strategies", for {@link #toString()}. */
-	private final static String STRATEGIES = "strategies";
+    /** String containing "set0", for {@link #toString()}. */
+    private final static String SET0 = "set0";
+    /** String containing "set1", for {@link #toString()}. */
+    private final static String SET1 = "set1";
+    /** String containing "strategies", for {@link #toString()}. */
+    private final static String STRATEGIES = "strategies";
 
-	/** Winning nodes of player 0. */
+    /** Winning nodes of player 0. */
     private final BitSet set0;
     /** Winning nodes of player 1. */
     private final BitSet set1;
     /** Optimal strategies of the two players, or {@code null}. */
     private final SchedulerSimple strategies;
-    
+
     /**
      * Construct new winning set pair.
      * The winning set parameters may not be {@code null} and must be mutually
@@ -55,8 +55,8 @@ final class QualitativeResult {
      * @param strategies mutually optimal strategies, or {@code null}
      */
     QualitativeResult(BitSet set0, BitSet set1, SchedulerSimple strategies) {
-    	assert set0 != null;
-    	assert set1 != null;
+        assert set0 != null;
+        assert set1 != null;
         this.set0 = set0;
         this.set1 = set1;
         this.strategies = strategies;
@@ -71,18 +71,18 @@ final class QualitativeResult {
      * @param set1 winning set of player 1
      */
     QualitativeResult(BitSet set0, BitSet set1) {
-    	this(set0, set1, null);
+        this(set0, set1, null);
     }
-    
+
     @Override
     public String toString() {
-    	return MoreObjects.toStringHelper(this)
-    	.add(SET0, set0)
-    	.add(SET1, set1)
-    	.add(STRATEGIES, strategies)
-    	.toString();
+        return MoreObjects.toStringHelper(this)
+                .add(SET0, set0)
+                .add(SET1, set1)
+                .add(STRATEGIES, strategies)
+                .toString();
     }
-    
+
     /**
      * Get set of winning nodes of player 0.
      * 
@@ -100,13 +100,13 @@ final class QualitativeResult {
     BitSet getSet1() {
         return set1;
     }
-    
+
     /**
      * Get mutually optimal strategies of players, or {@code null}.
      * 
      * @return mutually optimal strategies of players, or {@code null}
      */
     SchedulerSimple getStrategies() {
-		return strategies;
-	}
+        return strategies;
+    }
 }

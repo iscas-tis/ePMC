@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -39,7 +38,7 @@ import epmc.value.Type;
  * @author Ernst Moritz Hahn
  */
 public final class Alternative {
-	/** Weight (rate or probability) of this command. */
+    /** Weight (rate or probability) of this command. */
     private final Expression weight;
     /** Effect of this command.
      * Maps each variable which is changed to an expression about its new value.
@@ -47,7 +46,7 @@ public final class Alternative {
     private final Map<Expression,Expression> effect;
     /** Position information about the alternative. */
     private final Positional positional;
-    
+
     public Alternative(Expression weight, Map<Expression,Expression> effect, Positional positional) {
         assert weight != null;
         assert effect != null;
@@ -84,18 +83,18 @@ public final class Alternative {
         if (positional != null) {
             builder.append(" (" + positional + ")");
         }
-        
+
         return builder.toString();
     }
-    
+
     public Expression getWeight() {
         return weight;
     }
-    
+
     public Map<Expression,Expression> getEffect() {
         return Collections.unmodifiableMap(effect);
     }
-    
+
     Alternative replaceFormulas(Map<Expression,Expression> formulas) {
         Expression newWeight = UtilExpressionStandard.replace(this.weight, formulas);
         Map<Expression,Expression> newEffects = new HashMap<>();
@@ -106,19 +105,19 @@ public final class Alternative {
         }
         return new Alternative(newWeight, newEffects, positional);
     }
-    
+
     void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
             Map<Expression, JANIType> variables,
             Map<Expression, Type> types)
-                    throws EPMCException {
-    	// TODO
-    	/*
+    {
+        // TODO
+        /*
         Type weightType = weight.getType();
-        
+
         ensure(weightType == null || !TypeBoolean.isBoolean(weightType),
                 ProblemsPRISM.WEIGHT_BOOLEAN, weight);
-                */
+         */
         for (Entry<Expression,Expression> entry : effect.entrySet()) {
             Expression left = entry.getKey();
             Type definedType = types.get(left);
@@ -128,10 +127,10 @@ public final class Alternative {
             ensure(actualType != null, ProblemsPRISM.UNKNOWN_IN_EXPR, entry.getValue());
             ensure(definedType.canImport(actualType), ProblemsPRISM.INCOMPATIBLE_ASSIGNMENT,
                     entry.getKey(), entry.getValue());
-	        */
+             */
         }
     }    
-    
+
     public Positional getPositional() {
         return positional;
     }

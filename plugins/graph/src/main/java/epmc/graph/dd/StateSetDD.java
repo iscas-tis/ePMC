@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.dd;
 
 import java.io.Closeable;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 
@@ -43,7 +42,7 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         refs++;
         return this;
     }
-    
+
     @Override
     public void close() {
         if (closed()) {
@@ -57,14 +56,14 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
             statesDD.dispose();
         }
     }
-    
+
     @Override
     public int size() {
         assert !closed();
         GraphDD graphDD = (GraphDD) lowLevel;
         return statesDD.countSat(graphDD.getPresCube()).intValue();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert !closed();
@@ -81,20 +80,19 @@ public final class StateSetDD implements Closeable, Cloneable, StateSet {
         }        
         return true;
     }
-    
-    @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+
+    public boolean isSubsetOf(StateSet states) {
         assert !closed();
         assert states != null;
         assert states instanceof StateSetDD;
         StateSetDD other = (StateSetDD) states;
         return statesDD.andNot(other.statesDD).isFalseWith();
     }
-    
+
     public DD getStatesDD() {
         return statesDD;
     }
-    
+
     private boolean closed() {
         return refs == 0;
     }

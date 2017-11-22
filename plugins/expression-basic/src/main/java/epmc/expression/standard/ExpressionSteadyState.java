@@ -16,36 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
-
-import static epmc.error.UtilError.ensure;
 
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionSteadyState implements Expression {
     public static boolean isSteadyState(Expression expression) {
-    	return expression instanceof ExpressionSteadyState;
+        return expression instanceof ExpressionSteadyState;
     }
 
     public static ExpressionSteadyState asSteadyState(Expression expression) {
-    	if (!isSteadyState(expression)) {
-    		return null;
-    	}
-    	return (ExpressionSteadyState) expression;
+        if (!isSteadyState(expression)) {
+            return null;
+        }
+        return (ExpressionSteadyState) expression;
     }
 
     public final static class Builder {
@@ -56,25 +49,25 @@ public final class ExpressionSteadyState implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setStates(Expression states) {
             this.states = states;
             return this;
         }
-        
+
         private Expression getStates() {
             return states;
         }
-        
+
         public ExpressionSteadyState build() {
             return new ExpressionSteadyState(this);
         }
     }
-    
+
     private final Positional positional;
     private final Expression operand;
 
@@ -93,23 +86,11 @@ public final class ExpressionSteadyState implements Expression {
                 .setPositional(positional)
                 .build();
     }
-    
-    @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        ensure(TypeBoolean.isBoolean(operand.getType(expressionToType)),
-                ProblemsExpression.EXPR_INCONSISTENT, "", operand);
-        return TypeWeight.get();
-    }
-    
+
     public Expression getOperand1() {
         return operand;
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         return Collections.singletonList(operand);
@@ -119,7 +100,7 @@ public final class ExpressionSteadyState implements Expression {
     public Positional getPositional() {
         return positional;
     }    
-    
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -149,7 +130,7 @@ public final class ExpressionSteadyState implements Expression {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -161,11 +142,11 @@ public final class ExpressionSteadyState implements Expression {
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionSteadyState.Builder()
-				.setStates(operand)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionSteadyState.Builder()
+                .setStates(operand)
+                .setPositional(positional)
+                .build();
+    }
 }

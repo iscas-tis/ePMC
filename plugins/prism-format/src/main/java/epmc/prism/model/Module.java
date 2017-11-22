@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
 import java.util.Map;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.jani.model.type.JANIType;
@@ -36,7 +35,7 @@ public interface Module {
         assert false;
         return null;
     }
-    
+
     default Map<Expression, Expression> getInitValues() {
         assert false;
         return null;
@@ -54,7 +53,7 @@ public interface Module {
 
     default void checkExpressionConsistency(
             Map<Expression, JANIType> globalVariables,
-            Map<Expression, Type> types) throws EPMCException {
+            Map<Expression, Type> types) {
         assert false;
     }
 
@@ -62,11 +61,11 @@ public interface Module {
         assert false;
         return null;
     }
-    
+
     default boolean isCommands() {
         return this instanceof ModuleCommands;
     }
-    
+
     default ModuleCommands asCommands() {
         return (ModuleCommands) this;
     }    

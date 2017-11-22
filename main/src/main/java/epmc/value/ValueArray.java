@@ -16,11 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
-
-import epmc.error.EPMCException;
 
 /**
  * {@link Value} storing multiple {@link Value}s of given {@link Type}.
@@ -46,10 +44,10 @@ public interface ValueArray extends Value {
      * @param value value for which to check whether it is an array value
      * @return whether given value is an array value
      */
-    public static boolean isArray(Value value) {
+    public static boolean is(Value value) {
         return value instanceof ValueArray;
     }
-    
+
     /**
      * Cast given value to array type.
      * If the type is not an array value, {@code null} will be returned.
@@ -57,8 +55,8 @@ public interface ValueArray extends Value {
      * @param value value to cast to array type
      * @return value casted to array value, or {@null} if not possible to cast
      */
-    public static ValueArray asArray(Value value) {
-        if (isArray(value)) {
+    public static ValueArray as(Value value) {
+        if (is(value)) {
             return (ValueArray) value;
         } else { 
             return null;
@@ -67,95 +65,12 @@ public interface ValueArray extends Value {
 
     @Override
     TypeArray getType();
-        
+
     void setSize(int size);
-    
+
     int size();
 
     void get(Value presStateProb, int index);
-    
-    void set(Value value, int index);
 
-    @Override
-    default void set(Value op) {
-        assert !isImmutable();
-        if (this == op) {
-        	return;
-        }
-        ValueArray opArray = ValueArray.asArray(op);
-        setSize(opArray.size());
-        int totalSize = opArray.size();
-        Value entryAcc = getType().getEntryType().newValue();
-        for (int index = 0; index < totalSize; index++) {
-            opArray.get(entryAcc, index);
-            set(entryAcc, index);
-        }
-    }    
-    
-    @Override
-    default boolean isEq(Value other) throws EPMCException {
-    	assert other != null;
-    	assert isArray(other);
-        ValueArray otherArray = ValueArray.asArray(other);
-        if (size() != otherArray.size()) {
-        	return false;
-        }
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
-        for (int entry = 0; entry < size(); entry++) {
-            get(entryAccThis, entry);
-            otherArray.get(entryAccOther, entry);
-            if (!entryAccThis.isEq(entryAccOther)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    @Override
-    default int compareTo(Value other) {
-    	assert other != null;
-        assert !isImmutable();
-        ValueArray opArray = ValueArray.asArray(other);
-        int sizeCmp = Integer.compare(size(), opArray.size());
-        if (sizeCmp != 0) {
-            return sizeCmp;
-        }
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = getType().getEntryType().newValue();
-        int totalSize = size();
-        for (int entry = 0; entry < totalSize; entry++) {
-            get(entryAccThis, entry);
-            opArray.get(entryAccOther, entry);
-            int cmpEntry = entryAccThis.compareTo(entryAccOther);
-            if (cmpEntry != 0) {
-                return cmpEntry;
-            }
-        }
-        return 0;
-    }
-    
-    @Override
-    default double distance(Value other) throws EPMCException {
-        assert other != null;
-        if (!isArray(other)) {
-            return Double.POSITIVE_INFINITY;
-        }
-        ValueArray otherArray = ValueArray.asArray(other);
-        if (this.size() != otherArray.size()) {
-            return Double.POSITIVE_INFINITY;
-        }
-        ValueArray opArray = ValueArray.asArray(other);
-        double maxDistance = 0.0;
-        int totalSize = size();
-        Value entryAccThis = getType().getEntryType().newValue();
-        Value entryAccOther = opArray.getType().getEntryType().newValue();
-        for (int entry = 0; entry < totalSize; entry++) {
-            get(entryAccThis, entry);
-            opArray.get(entryAccOther, entry);
-            double entryDistance = entryAccThis.distance(entryAccOther);
-            Math.max(maxDistance, entryDistance);
-        }
-        return maxDistance;
-    }
+    void set(Value value, int index);
 }

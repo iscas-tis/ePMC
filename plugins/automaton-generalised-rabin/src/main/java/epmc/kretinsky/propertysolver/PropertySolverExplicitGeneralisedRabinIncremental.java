@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.propertysolver;
 
@@ -63,10 +63,10 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
         }
         this.nonDet = modelChecker.getModel().isNonDet();
     }
-    
+
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+    {
         System.out.println("INCREMENTAL");
         assert property != null;
         assert forStates != null;
@@ -78,7 +78,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
             min = false;
         }
         this.negate = min;
-        
+
         AutomatonKretinskyProduct observer = new AutomatonKretinskyProduct();// modelChecker.newObserverGeneralisedRabin(quantified, relExp);
         if (negate) {
             quantified = quantified.not();
@@ -119,7 +119,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
         BitSet undecided = new BitSet();
         BitSet initNs = graph.getInitialNodes();
         BitSet init = (java.util.BitSet) initNs.clone();
-        
+
         ComponentsExplicit components = modelChecker.newComponentsExplicit();
         EndComponents endComponents = components.maximalEndComponents(graph);
         int numComponents = 0;
@@ -141,7 +141,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
                     break;
                 }
             }
-            
+
             boolean decision;
             decision = decideComponent(graph, leafSCC);                
             if (decision) {
@@ -169,7 +169,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     @Override
-    public boolean canHandle(Expression property, StateSet states) throws EPMCException {
+    public boolean canHandle(Expression property, StateSet states) {
         assert property != null;
         assert states != null;
         if (!modelChecker.isEngineExplicit()) {
@@ -189,7 +189,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     private boolean decideComponent(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonKretinskyProduct mojmir = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         NodeProperty nodeAutomaton = graph.getNodeProperty(CommonProperties.NODE_AUTOMATON);
         NodeProperty origState = graph.getNodeProperty(CommonProperties.NODE_MODEL);
@@ -203,7 +203,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
         }
         AutomatonKretinskyProduct rabin = mojmir;
         rabin.setRunSlaves(true);
-        
+
         BitSet bsI = new BitSet();
         bsI.set(origStateNr);
         ProductGraphExplicit prodGraph = new ProductGraphExplicit(this.graph, bsI, rabin, nodeAutomatonNr);
@@ -243,7 +243,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }    
 
     private Value prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+    {
         log.send(MessagesEPMC.PREPARING_MDP_FOR_ITERATION);
         BitSet test = (BitSet) graph.getInitialNodes().clone();
         test.andNot(acc);
@@ -272,9 +272,9 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
         if (embed) {
             GraphExplicitModifier.embed(iterGraph);
         }
-        
+
         BitSet target = new BitSet(iterGraph.computeNumStates());
-        
+
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);
         for (int node = acc.nextSetBit(0); node >= 0; node = acc.nextSetBit(node+1)) {
             graph.queryNode(node);
@@ -308,7 +308,7 @@ public final class PropertySolverExplicitGeneralisedRabinIncremental implements 
     }
 
     private StateMap prodToOrigResult(Value iterResult,
-            GraphExplicit prodGraph) throws EPMCException {
+            GraphExplicit prodGraph) {
         assert iterResult != null;
         assert prodGraph != null;
         Type typeWeight = contextValue.getTypeWeight();

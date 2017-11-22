@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -29,24 +29,24 @@ import epmc.expression.Expression;
 //Do not modify the interface to make them mutable.
 public interface Reward {
     Positional getPositional();
-    
+
     default boolean isStateReward() {
         return this instanceof StateReward;
     }
-    
+
     default StateReward asStateReward() {
         assert isStateReward();
         return (StateReward) this;
     }
-    
+
     default boolean isTransitionReward() {
         return this instanceof TransitionReward;
     }
-    
+
     default TransitionReward asTransitionReward() {
         assert isTransitionReward();
         return (TransitionReward) this;
     }
-    
+
     Reward replace(Map<Expression,Expression> map);
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -24,13 +24,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public final class UtilEvaluatorExplicit {
@@ -38,7 +38,7 @@ public final class UtilEvaluatorExplicit {
         private final Class<?> returnType;
         private final Expression expression;
         private final Expression[] variables;
-        
+
         public EvaluatorCacheEntry(Class<?> returnType, Expression expression, Expression[] variables) {
             this.returnType = returnType;
             this.expression = expression;
@@ -55,7 +55,7 @@ public final class UtilEvaluatorExplicit {
             hash = Arrays.hashCode(variables) + (hash << 6) + (hash << 16) - hash;
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof EvaluatorCacheEntry)) {
@@ -82,25 +82,35 @@ public final class UtilEvaluatorExplicit {
     /** String containing a single space. */
     private final static String SPACE = " ";
 
-    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) {
         return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, expressionToType, variables);
     }
-    
-    public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+
+    public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) {
         Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
         return newEvaluator(returnType, expression, variables, cache, expressionToType);
     }
-    
-    public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) throws EPMCException {
+
+    public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) {
         Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
         return newEvaluator(null, expression, variables, cache, expressionToType);
     }
-    
-    public static Value evaluate(Expression expression, ExpressionToType expressionToType) throws EPMCException {
-    	assert expression != null;
-    	assert expressionToType != null;
+
+    public static Value evaluate(Expression expression, ExpressionToType expressionToType) {
+        assert expression != null;
+        assert expressionToType != null;
         EvaluatorExplicit evaluator = newEvaluator(expression, expressionToType, new Expression[0]);
         return evaluator.evaluate();
+    }
+
+    public static Value evaluate(Expression expression) {
+        return evaluate(expression, new ExpressionToType() {
+            
+            @Override
+            public Type getType(Expression expression) {
+                return null;
+            }
+        });
     }
     
     public static EvaluatorExplicit newEvaluator(
@@ -108,8 +118,8 @@ public final class UtilEvaluatorExplicit {
             Expression expression,
             Expression[] variables,
             Map<EvaluatorCacheEntry,EvaluatorExplicit> cache,
-            ExpressionToType expressionToType) throws EPMCException {
-//        UtilEvaluatorExplicitCompile.compile(returnType, expression, variables);
+            ExpressionToType expressionToType) {
+        //        UtilEvaluatorExplicitCompile.compile(returnType, expression, variables);
         assert expression != null;
         assert variables != null;
         assert cache != null;
@@ -122,7 +132,7 @@ public final class UtilEvaluatorExplicit {
         if (already != null) {
             return already;
         }
-        
+
         Options options = Options.get();
         Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluators = options.get(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS);
         for (Class<? extends EvaluatorExplicit.Builder> clazz : evaluators.values()) {

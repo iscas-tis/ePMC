@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -41,7 +41,7 @@ public final class OptionTypeStringList implements OptionType {
     private final static String GREATER_THAN = ">";
     /** String containing "*". */
     private final static String STAR = "*";
-    
+
     /** Entry name used in {@link #getInfo()} method. */
     private final String entryName;
 
@@ -56,7 +56,7 @@ public final class OptionTypeStringList implements OptionType {
         assert entryName != null;
         this.entryName = entryName;
     }
-    
+
     @Override
     public Object parse(String value, Object prevValue) {
         assert value != null;
@@ -78,7 +78,7 @@ public final class OptionTypeStringList implements OptionType {
         }
         return result;
     }
-    
+
     @Override
     public String getInfo() {
         StringBuilder result = new StringBuilder();
@@ -87,12 +87,12 @@ public final class OptionTypeStringList implements OptionType {
         result.append(GREATER_THAN + STAR);
         return result.toString();
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public String unparse(Object value) {
         assert value != null;
@@ -112,7 +112,7 @@ public final class OptionTypeStringList implements OptionType {
         }
         return result.toString();
     }
-    
+
     @Override
     public Object getDefault() {
         return new ArrayList<>();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -42,12 +42,12 @@ public class ExploreStatistics implements Serializable {
         this.numStates = numStates;
         this.numTransitions = numTransitions;
     }
-    
+
     public ExploreStatistics(int numNodes, int numStates, int numTransitions) {
         this(BigInteger.valueOf(numNodes), BigInteger.valueOf(numStates),
                 BigInteger.valueOf(numTransitions));
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -56,15 +56,15 @@ public class ExploreStatistics implements Serializable {
         builder.append("numTransitions: " + numTransitions + "\n");
         return builder.toString();
     }
-    
+
     public BigInteger getNumNodes() {
         return numNodes;
     }
-    
+
     public BigInteger getNumStates() {
         return numStates;
     }
-    
+
     public BigInteger getNumTransitions() {
         return numTransitions;
     }

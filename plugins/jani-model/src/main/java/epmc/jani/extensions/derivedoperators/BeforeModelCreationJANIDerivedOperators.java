@@ -16,28 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationJANIDerivedOperators implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani-derived-operators";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani-derived-operators";
 
-	@Override
-	public void process() throws EPMCException {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSgn.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAbs.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTrunc.INSTANCE);
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	}
+    @Override
+    public void process() {
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSgn.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAbs.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorTrunc.Builder.class);
+
+    }
 }

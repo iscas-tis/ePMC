@@ -16,60 +16,59 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class JANIPropertyEntryProcessor implements JANI2PRISMProcessorStrict {
 
-	private JANIPropertyEntry property = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof JANIPropertyEntry; 
-		
-		property = (JANIPropertyEntry) obj;
-		return this;
-	}
+    private JANIPropertyEntry property = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert property != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		String comment = property.getComment();
-		if (comment != null) {
-			prism.append("// ")
-				 .append(comment)
-				 .append("\n");
-		}
-		
-		prism.append(ProcessorRegistrar.getProcessor(property.getExpression())
-									   .toPRISM())
-			 .append("\n");
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert property != null;
-		
-		ProcessorRegistrar.getProcessor(property.getExpression())
-		                  .validateTransientVariables();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof JANIPropertyEntry; 
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert property != null;
-		
-		return ProcessorRegistrar.getProcessor(property.getExpression())
-					             .usesTransientVariables();
-	}	
+        property = (JANIPropertyEntry) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert property != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        String comment = property.getComment();
+        if (comment != null) {
+            prism.append("// ")
+            .append(comment)
+            .append("\n");
+        }
+
+        prism.append(ProcessorRegistrar.getProcessor(property.getExpression())
+                .toPRISM())
+        .append("\n");
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert property != null;
+
+        ProcessorRegistrar.getProcessor(property.getExpression())
+        .validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert property != null;
+
+        return ProcessorRegistrar.getProcessor(property.getExpression())
+                .usesTransientVariables();
+    }	
 }

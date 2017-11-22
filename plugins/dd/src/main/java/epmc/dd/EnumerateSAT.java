@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
@@ -33,7 +32,7 @@ public final class EnumerateSAT {
     public interface EnumerateSATCallback {
         void call(Value[] values);
     }
-    
+
     private DD dd;
     private VariableDD[] variables;
     private EnumerateSATCallback callback;
@@ -45,13 +44,13 @@ public final class EnumerateSAT {
     private ValueEnumerable[] values;
     private int[] highLevelFromTo;
     private int[] highLevelVariables;
-    
+
     public void setBDD(DD dd) {
         assert dd != null;
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         this.dd = dd;
     }
-    
+
     public void setVariables(VariableDD[] variables) {
         assert variables != null;
         for (VariableDD variable : variables) {
@@ -59,20 +58,20 @@ public final class EnumerateSAT {
         }
         this.variables = variables;
     }
-    
+
     public void setCallback(EnumerateSATCallback callback) {
         assert callback != null;
         this.callback = callback;
     }
-    
-    public void enumerate() throws EPMCException {
+
+    public void enumerate() {
         DD cube = buildCube();
         int cubeMaxSize = cubeMaxSize(cube);
         marks = new boolean[cubeMaxSize];
         values = new ValueEnumerable[variables.length];   
         types = new Type[variables.length];
         for (int varNr = 0; varNr < variables.length; varNr++) {
-            TypeEnumerable type = TypeEnumerable.asEnumerable(variables[varNr].getType());
+            TypeEnumerable type = TypeEnumerable.as(variables[varNr].getType());
             types[varNr] = type;
             values[varNr] = type.newValue();
         }
@@ -96,7 +95,7 @@ public final class EnumerateSAT {
         recurse();
         cube.dispose();
     }
-    
+
     private int cubeMaxSize(DD cube) {
         assert cube != null;
         int maxVar = 0;
@@ -119,7 +118,7 @@ public final class EnumerateSAT {
         return size;
     }
 
-    private DD buildCube() throws EPMCException {
+    private DD buildCube() {
         DD cube = getContextDD().newConstant(true);
         for (VariableDD variableDD : variables) {
             cube = cube.andWith(variableDD.newCube(0));
@@ -132,7 +131,7 @@ public final class EnumerateSAT {
             return;
         } else if (cubeWalker.isLeaf()) {
             assert ddWalker.isLeaf();
-            if (ValueBoolean.asBoolean(ddWalker.value()).getBoolean()) {
+            if (ValueBoolean.as(ddWalker.value()).getBoolean()) {
                 terminalCase();
             }
         } else {
@@ -156,7 +155,7 @@ public final class EnumerateSAT {
             cubeWalker.back();
         }
     }
-    
+
     private void terminalCase() {
         for (int highNr = 0; highNr < highLevelFromTo.length - 1; highNr++) {
             int from = highLevelFromTo[highNr];
@@ -171,7 +170,7 @@ public final class EnumerateSAT {
                 }
                 digit <<= 1;
             }
-            if (varValue >= TypeEnumerable.asEnumerable(types[highNr]).getNumValues()) {
+            if (varValue >= TypeEnumerable.as(types[highNr]).getNumValues()) {
                 return;
             }
             values[highNr].setValueNumber(varValue);

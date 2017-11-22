@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -30,73 +30,73 @@ import epmc.expression.Expression;
 import epmc.value.TypeNumBitsKnown;
 
 public final class StateVariables {
-	private final List<StateVariable> variables = new ArrayList<>();
-	private final List<StateVariable> variablesExternal = Collections.unmodifiableList(variables);
-	private final Map<Expression,Integer> numberMap = new LinkedHashMap<>();
-	private int numBits;
-	
-	public int add(StateVariable variable) {
-		assert variable != null;
-		int number = variables.size();
-		variables.add(variable);
-		numberMap.put(variable.getIdentifier(), number);
-		if (variable.isPermanent()) {
-			if (TypeNumBitsKnown.getNumBits(variable.getType()) == TypeNumBitsKnown.UNKNOWN
-					|| numBits == Integer.MAX_VALUE) {
-				numBits = Integer.MAX_VALUE;
-			} else {
-				numBits += TypeNumBitsKnown.getNumBits(variable.getType());
-			}
-		}
-		return number;
-	}
-	
-	public int getVariableNumber(Expression identifier) {
-		assert identifier != null;
-		assert numberMap != null;
-		assert numberMap.containsKey(identifier) : identifier;
-		return numberMap.get(identifier);
-	}
-		
-	public Expression[] getIdentifiersArray() {
-		Expression[] result = new Expression[variables.size()];
-		for (int i = 0; i < variables.size(); i++) {
-			result[i] = variables.get(i).getIdentifier();
-		}
-		return result;
-	}
-	
-	public List<Expression> getVariableIdentifiers() {
-		List<Expression> result = new ArrayList<>();
-		for (StateVariable variable : variables) {
-			result.add(variable.getIdentifier());
-		}
-		return result;
-	}
+    private final List<StateVariable> variables = new ArrayList<>();
+    private final List<StateVariable> variablesExternal = Collections.unmodifiableList(variables);
+    private final Map<Expression,Integer> numberMap = new LinkedHashMap<>();
+    private int numBits;
 
-	public int getNumBits() {
-		return numBits;
-	}
+    public int add(StateVariable variable) {
+        assert variable != null;
+        int number = variables.size();
+        variables.add(variable);
+        numberMap.put(variable.getIdentifier(), number);
+        if (variable.isPermanent()) {
+            if (TypeNumBitsKnown.getNumBits(variable.getType()) == TypeNumBitsKnown.UNKNOWN
+                    || numBits == Integer.MAX_VALUE) {
+                numBits = Integer.MAX_VALUE;
+            } else {
+                numBits += TypeNumBitsKnown.getNumBits(variable.getType());
+            }
+        }
+        return number;
+    }
 
-	public boolean contains(Expression identifier) {
-		assert identifier != null;
-		return numberMap.containsKey(identifier);
-	}
-	
-	public StateVariable get(int number) {
-		assert number >= 0;
-		assert number < variables.size();
-		return variables.get(number);
-	}
+    public int getVariableNumber(Expression identifier) {
+        assert identifier != null;
+        assert numberMap != null;
+        assert numberMap.containsKey(identifier) : identifier;
+        return numberMap.get(identifier);
+    }
 
-	public StateVariable get(Expression expression) {
-		assert expression != null;
-		assert numberMap.containsKey(expression) : expression + " " + numberMap;
-		int number = numberMap.get(expression);
-		return variables.get(number);
-	}
-	
-	public List<StateVariable> getVariables() {
-		return variablesExternal;
-	}
+    public Expression[] getIdentifiersArray() {
+        Expression[] result = new Expression[variables.size()];
+        for (int i = 0; i < variables.size(); i++) {
+            result[i] = variables.get(i).getIdentifier();
+        }
+        return result;
+    }
+
+    public List<Expression> getVariableIdentifiers() {
+        List<Expression> result = new ArrayList<>();
+        for (StateVariable variable : variables) {
+            result.add(variable.getIdentifier());
+        }
+        return result;
+    }
+
+    public int getNumBits() {
+        return numBits;
+    }
+
+    public boolean contains(Expression identifier) {
+        assert identifier != null;
+        return numberMap.containsKey(identifier);
+    }
+
+    public StateVariable get(int number) {
+        assert number >= 0;
+        assert number < variables.size();
+        return variables.get(number);
+    }
+
+    public StateVariable get(Expression expression) {
+        assert expression != null;
+        assert numberMap.containsKey(expression) : expression + " " + numberMap;
+        int number = numberMap.get(expression);
+        return variables.get(number);
+    }
+
+    public List<StateVariable> getVariables() {
+        return variablesExternal;
+    }
 }

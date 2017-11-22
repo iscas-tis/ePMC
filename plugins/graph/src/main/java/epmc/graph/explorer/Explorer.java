@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
 import java.util.Collection;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.LowLevel;
@@ -57,15 +56,14 @@ import epmc.value.Value;
  */
 public interface Explorer extends LowLevel {
     /* methods to be implemented by implementing classes. */
-    
+
     /**
      * Get the initial nodes of the explorer.
      * 
      * @return initial nodes of the explorer
-     * @throws EPMCException thrown in case of problems
      */
-    Collection<? extends ExplorerNode> getInitialNodes() throws EPMCException;
-    
+    Collection<? extends ExplorerNode> getInitialNodes();
+
     /**
      * <p>
      * Queries a given node.
@@ -89,10 +87,9 @@ public interface Explorer extends LowLevel {
      * </p>
      * 
      * @param node node to query
-     * @throws EPMCException thrown in case of problems
      */
-    void queryNode(ExplorerNode node) throws EPMCException;
-    
+    void queryNode(ExplorerNode node);
+
     /**
      * Obtain number of successor nodes.
      * The number refers to the node on which
@@ -103,7 +100,7 @@ public interface Explorer extends LowLevel {
      * @return number of successor nodes
      */
     int getNumSuccessors();
-    
+
     /**
      * Obtain successor node with the given number.
      * The result refers to the node on which {@link #queryNode(ExplorerNode)}
@@ -129,7 +126,7 @@ public interface Explorer extends LowLevel {
      * @see CommonProperties
      */
     Value getGraphProperty(Object property);
-    
+
     /**
      * Obtain node property with given identifier.
      * The method will return the given node property or {@code null} if there
@@ -140,7 +137,7 @@ public interface Explorer extends LowLevel {
      * @return property with given identifier, or {@code null}
      * @see CommonProperties
      */    
-    ExplorerNodeProperty getNodeProperty(Object property) throws EPMCException;
+    ExplorerNodeProperty getNodeProperty(Object property);
 
     /**
      * Obtain edge property with given identifier.
@@ -152,7 +149,7 @@ public interface Explorer extends LowLevel {
      * @return property with given identifier, or {@code null}
      * @see CommonProperties
      */    
-    ExplorerEdgeProperty getEdgeProperty(Object property) throws EPMCException;
+    ExplorerEdgeProperty getEdgeProperty(Object property);
 
     /**
      * Construct a new explorer node.
@@ -162,9 +159,8 @@ public interface Explorer extends LowLevel {
      * it.
      * 
      * @return new explorer node
-     * @throws EPMCException thrown in case of problems
      */
-    ExplorerNode newNode() throws EPMCException;
+    ExplorerNode newNode();
 
     /**
      * Obtain maximal number of bits needed to store a node of this explorer.
@@ -179,8 +175,8 @@ public interface Explorer extends LowLevel {
      * @return maximal number of bits needed to store a node of this explorer
      */
     int getNumNodeBits();
-    
-    
+
+
     /* default methods. */
 
     /**
@@ -212,7 +208,7 @@ public interface Explorer extends LowLevel {
      * @return type of property with given identifier, or {@code null}
      * @see CommonProperties
      */    
-    default Type getNodePropertyType(Object property) throws EPMCException {
+    default Type getNodePropertyType(Object property) {
         assert property != null;
         if (getNodeProperty(property) == null) {
             return null;
@@ -230,33 +226,33 @@ public interface Explorer extends LowLevel {
      * @return type of property with given identifier, or {@code null}
      * @see CommonProperties
      */    
-    default Type getEdgePropertyType(Object property) throws EPMCException {
+    default Type getEdgePropertyType(Object property) {
         assert property != null;
         assert getEdgeProperty(property) != null : property;
         return getEdgeProperty(property).getType();
     }
-    
+
     @Override
-    default StateSet newInitialStateSet() throws EPMCException {
+    default StateSet newInitialStateSet() {
         return new StateSetExplorer<>(this, getInitialNodes());
     }
-    
+
     @Override
-    default Type getType(Expression expression) throws EPMCException {
-    	assert expression != null;
-    	Type type = null;
-    	type = getGraphPropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	type = getNodePropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	type = getEdgePropertyType(expression);
-    	if (type != null) {
-    		return type;
-    	}
-    	return null;
+    default Type getType(Expression expression) {
+        assert expression != null;
+        Type type = null;
+        type = getGraphPropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        type = getNodePropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        type = getEdgePropertyType(expression);
+        if (type != null) {
+            return type;
+        }
+        return null;
     }
 }

@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit.subgraph;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitProperties;
@@ -83,7 +82,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
             properties.registerEdgeProperty(property, edgeProperty);
         }
     }
-    
+
     @Override
     public int getNumNodes() {
         return subToOrig.length;
@@ -94,7 +93,7 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         return initialNodes;
     }
 
-    void queryNode(int node) throws EPMCException {
+    void queryNode(int node) {
         assert node >= 0;
         assert node < subToOrig.length;
         if (queriedNode == node) {
@@ -118,18 +117,18 @@ public class GraphExplicitSubgraph implements GraphExplicit {
     }
 
     int getQueriedNode() {
-    	return queriedNode;
+        return queriedNode;
     }
-    
+
     @Override
-    public int getNumSuccessors(int node) throws EPMCException {
-    	queryNode(node);
+    public int getNumSuccessors(int node) {
+        queryNode(node);
         return numSuccessors;
     }
 
     @Override
-    public int getSuccessorNode(int node, int successor) throws EPMCException {
-    	queryNode(node);
+    public int getSuccessorNode(int node, int successor) {
+        queryNode(node);
         assert successor >= 0;
         assert successor < numSuccessors;
         return successors[successor];
@@ -139,27 +138,27 @@ public class GraphExplicitSubgraph implements GraphExplicit {
     public GraphExplicitProperties getProperties() {
         return properties;
     }
-    
+
     public int origToSub(int origNode) {
         assert origNode >= 0 : origNode;
         assert origNode < origToSub.length : origNode;
         assert origToSub[origNode] >= 0 : origNode;
         return origToSub[origNode];
     }
-    
+
     public int subToOrig(int subNode) {
         assert subNode >= 0;
         assert subNode < subToOrig.length;
         return subToOrig[subNode];
     }
-    
-    public int getOrigSuccNumber(int node, int succNr) throws EPMCException {
-    	queryNode(node);
+
+    public int getOrigSuccNumber(int node, int succNr) {
+        queryNode(node);
         assert succNr >= 0 : succNr;
         assert succNr < numSuccessors;
         return origSuccNumbers[succNr];
     }
-    
+
     private void ensureSuccessorsSize() {
         if (numSuccessors < successors.length) {
             return;
@@ -171,20 +170,15 @@ public class GraphExplicitSubgraph implements GraphExplicit {
         successors = Arrays.copyOf(successors, size);
         origSuccNumbers = Arrays.copyOf(origSuccNumbers, size);
     }
-    
+
     @Override
     public String toString() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try {
-            GraphExporterDOT.export(this, stream);
-            return stream.toString();
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            return null;
-        }
+        GraphExporterDOT.export(this, stream);
+        return stream.toString();
     }
 
-	@Override
-	public void close() {
-	}
+    @Override
+    public void close() {
+    }
 }

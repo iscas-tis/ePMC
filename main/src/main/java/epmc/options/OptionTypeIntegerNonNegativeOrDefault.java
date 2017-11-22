@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -40,29 +40,29 @@ import epmc.error.EPMCException;
  */
 public final class OptionTypeIntegerNonNegativeOrDefault implements OptionType {
     /** String containing "default". */
-	private final static String DEFAULT = "default";
+    private final static String DEFAULT = "default";
     /** String containing "|". */
-	private final static String PIPE = "|";
+    private final static String PIPE = "|";
     /** String containing "<". */
-	private final static String LANGLE = "<";
+    private final static String LANGLE = "<";
     /** String containing ">". */
-	private final static String RANGLE = ">";
+    private final static String RANGLE = ">";
     /** String containing "non-neg-integer". */
-	private final static String NON_NEG_INTEGER = "non-neg-integer";
+    private final static String NON_NEG_INTEGER = "non-neg-integer";
     /** Nonnegative integer option type or "default". */    
     private final static OptionTypeIntegerNonNegativeOrDefault INSTANCE = new OptionTypeIntegerNonNegativeOrDefault();
-	
+
     /**
      * Private constructor.
      * We want the option type to be obtained using
      * {@link OptionTypeIntegerNonNegativeOrDefault#getTypeIntegerNonNegativeOrDefault()} rather than by
      * directly calling the constructor.
      */
-	private OptionTypeIntegerNonNegativeOrDefault() {
+    private OptionTypeIntegerNonNegativeOrDefault() {
     }
-    
+
     @Override
-    public Object parse(String value, Object prevValue) throws EPMCException {
+    public Object parse(String value, Object prevValue) {
         assert value != null;
         ensure(prevValue == null, ProblemsOptions.OPTIONS_OPT_CMD_LINE_SET_MULTIPLE);
         value = value.trim();
@@ -78,17 +78,17 @@ public final class OptionTypeIntegerNonNegativeOrDefault implements OptionType {
             return null;
         }
     }
-    
+
     @Override
     public String getInfo() {
         return DEFAULT + PIPE + LANGLE + NON_NEG_INTEGER + RANGLE;
     }
-    
+
     @Override
     public String toString() {
         return getInfo();
     }
-    
+
     @Override
     public Object getDefault() {
         return DEFAULT;

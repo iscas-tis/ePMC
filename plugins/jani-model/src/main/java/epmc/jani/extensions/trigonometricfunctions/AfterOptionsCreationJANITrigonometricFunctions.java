@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.trigonometricfunctions;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.options.Options;
@@ -30,22 +29,22 @@ import epmc.plugin.AfterOptionsCreation;
 import epmc.util.OrderedMap;
 
 public class AfterOptionsCreationJANITrigonometricFunctions implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "jani-trigonometric-functions";
+    private final static String IDENTIFIER = "jani-trigonometric-functions";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) throws EPMCException {
+    @Override
+    public void process(Options options) {
         Map<String,Class<? extends ModelExtension>> modelExtensions =
-        		options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
+                options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {
-        	modelExtensions = new OrderedMap<>();
+            modelExtensions = new OrderedMap<>();
             options.set(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS, modelExtensions);
         }
         modelExtensions.put(ModelExtensionTrigonometricFunctions.IDENTIFIER,
-        		ModelExtensionTrigonometricFunctions.class);
-	}
+                ModelExtensionTrigonometricFunctions.class);
+    }
 }

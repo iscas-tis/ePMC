@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -27,35 +27,35 @@ public interface TypeWeight extends TypeAlgebra {
     static TypeWeight get() {
         return ContextValue.get().getType(TypeWeight.class);
     }
-    
+
     static void set(TypeWeight type) {
         assert type != null;
         ContextValue.get().setType(TypeWeight.class,
-        		ContextValue.get().makeUnique(type));
+                ContextValue.get().makeUnique(type));
     }
-    
-    static boolean isWeight(Type type) {
+
+    static boolean is(Type type) {
         return type instanceof TypeWeight;
     }
-    
-    static TypeWeight asWeight(Type type) {
-    	if (isWeight(type)) {
-    		return (TypeWeight) type;
-    	} else {
-    		return null;
-    	}
+
+    static TypeWeight as(Type type) {
+        if (is(type)) {
+            return (TypeWeight) type;
+        } else {
+            return null;
+        }
     }
-    
+
     ValueAlgebra getPosInf();
 
     ValueAlgebra getNegInf();
-    
+
     @Override
-	ValueAlgebra getZero();
-    
+    ValueAlgebra getZero();
+
     @Override
-	ValueAlgebra getOne();
-    
+    ValueAlgebra getOne();
+
     @Override
     ValueAlgebra newValue();
 }

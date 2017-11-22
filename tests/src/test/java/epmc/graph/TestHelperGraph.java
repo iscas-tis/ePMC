@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsSMG;
 import epmc.graph.dd.GraphDD;
@@ -75,9 +74,9 @@ public final class TestHelperGraph {
         }
         return result;
     }
-    
+
     public static GraphExplicit exploreModelGraph(Model model, Set<Object> graphProperties,
-    		Set<Object> nodeProperties, Set<Object> edgeProperties) {
+            Set<Object> nodeProperties, Set<Object> edgeProperties) {
         GraphExplicit result;
         assert model != null;
         try {
@@ -121,8 +120,8 @@ public final class TestHelperGraph {
             throw new RuntimeException(e);
         }
     }
-    
-    public static ExploreStatistics exploreModel(Model model) throws EPMCException {
+
+    public static ExploreStatistics exploreModel(Model model) {
         assert model != null;
         Options options = Options.get();
         ExploreStatistics result;
@@ -134,7 +133,7 @@ public final class TestHelperGraph {
         return result;
     }
 
-    private static ExploreStatistics explore(Model model) throws EPMCException {
+    private static ExploreStatistics explore(Model model) {
         Engine engine = UtilOptions.getSingletonInstance(Options.get(),
                 OptionsModelChecker.ENGINE);
         if (engine instanceof EngineExplicit) {
@@ -175,7 +174,7 @@ public final class TestHelperGraph {
     }
 
     private static Set<Object> prepareNodeProperties(Model model)
-            throws EPMCException {
+    {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.STATE);
@@ -187,14 +186,14 @@ public final class TestHelperGraph {
     }
 
     private static Set<Object> prepareEdgeProperties(Model model)
-            throws EPMCException {
+    {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.WEIGHT);
         return result;
     }
-    
-    public static GraphExplicit exploreToGraph(Model model, Set<Object> nodeProperties) throws EPMCException {
+
+    public static GraphExplicit exploreToGraph(Model model, Set<Object> nodeProperties) {
         Set<Object> graphProperties = new LinkedHashSet<>();
         graphProperties.add(CommonProperties.SEMANTICS);
         Set<Object> edgeProperties = new LinkedHashSet<>();
@@ -204,7 +203,7 @@ public final class TestHelperGraph {
         return graph;
     }
 
-    public static GraphExplicit exploreToGraph(Model model) throws EPMCException {
+    public static GraphExplicit exploreToGraph(Model model) {
         Set<Object> graphProperties = new LinkedHashSet<>();
         graphProperties.add(CommonProperties.SEMANTICS);
         Set<Object> nodeProperties = new LinkedHashSet<>();
@@ -215,14 +214,14 @@ public final class TestHelperGraph {
     }
 
     public static GraphExplicit exploreToGraph(Model model,
-    		Set<Object> graphProperties,
-    		Set<Object> nodeProperties,
-    		Set<Object> edgeProperties) throws EPMCException {
+            Set<Object> graphProperties,
+            Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
         GraphExplicit result = (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(),
                 graphProperties, nodeProperties, edgeProperties);
         return result;
     }
 
-	private TestHelperGraph() {
-	}
+    private TestHelperGraph() {
+    }
 }

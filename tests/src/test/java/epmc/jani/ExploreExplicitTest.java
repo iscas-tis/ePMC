@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
@@ -58,44 +58,41 @@ public final class ExploreExplicitTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIOptions() throws EPMCException {
+    private final static Options prepareJANIOptions() {
         Options options = UtilOptionsEPMC.newOptions();
-        
+
         prepareOptions(options, LogType.TRANSLATE, ModelJANI.IDENTIFIER);
         return options;
     }
-    
+
     /**
      * Test to explore a minimal JANI model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void minimalTest() throws EPMCException {
+    public void minimalTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         options.set(OptionsJANIModel.JANI_FIX_DEADLOCKS, false);
         Model model = null;
         boolean thrown = false;
-		try {
-			model = loadModel(options, MINIMAL);
-	        exploreModel(model);
-		} catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_DEADLOCK, e.getProblem());
-		}
-		Assert.assertTrue(thrown);		
+        try {
+            model = loadModel(options, MINIMAL);
+            exploreModel(model);
+        } catch (EPMCException e) {
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_DEADLOCK, e.getProblem());
+        }
+        Assert.assertTrue(thrown);		
     }
 
     /**
      * Test to explore a minimal non-deadlock MDP JANI model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void minimalNonDeadlockMDPTest() throws EPMCException {
+    public void minimalNonDeadlockMDPTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -110,10 +107,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore a minimal non-deadlock DTMC JANI model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void minimalNonDeadlockDTMCTest() throws EPMCException {
+    public void minimalNonDeadlockDTMCTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -128,10 +124,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore an MDP model of a cycle of two states.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void twoStatesCycleMDPTest() throws EPMCException {
+    public void twoStatesCycleMDPTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -146,10 +141,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore a DTMC model of a cycle of two states.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void twoStatesCycleDTMCPTest() throws EPMCException {
+    public void twoStatesCycleDTMCPTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -164,10 +158,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore Knuth's dice model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -181,10 +174,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore Knuth's dice model, exported from PRISM.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void dicePRISMTest() throws EPMCException {
+    public void dicePRISMTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -198,10 +190,9 @@ public final class ExploreExplicitTest {
     /**
      * Test to explore Knuth's dice model with global variable.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void diceGlobalTest() throws EPMCException {
+    public void diceGlobalTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -215,10 +206,9 @@ public final class ExploreExplicitTest {
     /**
      * Test of cell model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void cellTest() throws EPMCException {
+    public void cellTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -232,10 +222,9 @@ public final class ExploreExplicitTest {
     /**
      * Test of MDP diamond model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void diamondMDPTest() throws EPMCException {
+    public void diamondMDPTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -249,10 +238,9 @@ public final class ExploreExplicitTest {
     /**
      * Test of CTMC diamond model.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void diamondCTMCTest() throws EPMCException {
+    public void diamondCTMCTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -266,10 +254,9 @@ public final class ExploreExplicitTest {
     /**
      * MDP test whether simple synchronisation works.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void syncMDPTest() throws EPMCException {
+    public void syncMDPTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -284,10 +271,9 @@ public final class ExploreExplicitTest {
     /**
      * DTMC test whether simple synchronisation works.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void syncDTMCTest() throws EPMCException {
+    public void syncDTMCTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -301,10 +287,9 @@ public final class ExploreExplicitTest {
     /**
      * Conflict writing to global variable.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void syncConflictTest() throws EPMCException {
+    public void syncConflictTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -313,8 +298,8 @@ public final class ExploreExplicitTest {
         try {
             exploreModel(model);        	
         } catch (EPMCException e) {
-			thrown = true;
-			Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE, e.getProblem());
+            thrown = true;
+            Assert.assertEquals(ProblemsJANIExplorer.JANI_EXPLORER_GLOBAL_MULTIPLE, e.getProblem());
         }
         Assert.assertTrue(thrown);
     }
@@ -322,10 +307,9 @@ public final class ExploreExplicitTest {
     /**
      * Test for rewards.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void rewardsTest() throws EPMCException {
+    public void rewardsTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -336,10 +320,9 @@ public final class ExploreExplicitTest {
     /**
      * Test for BEB model from Arnd Hartmanns.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void bebTest() throws EPMCException {
+    public void bebTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -350,14 +333,13 @@ public final class ExploreExplicitTest {
         Assert.assertEquals(new BigInteger("4660"), statistics.getNumStates());
         Assert.assertEquals(new BigInteger("12037"), statistics.getNumTransitions());
     }
-    
+
     /**
      * Test for multiple initial states test.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void initTest() throws EPMCException {
+    public void initTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -368,7 +350,7 @@ public final class ExploreExplicitTest {
     }
 
     @Test
-    public void clusterTest() throws EPMCException {
+    public void clusterTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;
@@ -377,9 +359,9 @@ public final class ExploreExplicitTest {
         ExploreStatistics statistics = exploreModel(model);
         System.out.println(statistics);
     }
-    
+
     @Test
-    public void brpTest() throws EPMCException {
+    public void brpTest() {
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
         Model model = null;

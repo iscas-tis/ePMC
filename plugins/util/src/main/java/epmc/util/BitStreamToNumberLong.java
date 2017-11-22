@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -55,7 +55,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
             index++;
             assert index <= Long.SIZE;
         }
-        
+
         @Override
         public void write(int value, int numBits) {
             long valueLong = value;
@@ -68,7 +68,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
     private long bitSet;
     private int index;
     private final ReadWriteHelper helper = new ReadWriteHelper();
-    
+
     @Override
     public int toNumber(BitStoreable storeable) {
         assert storeable != null;
@@ -76,7 +76,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
         storeable.write(helper);
         return toNumber();
     }
-    
+
     @Override
     public void fromNumber(BitStoreable storeable, int number) {
         setNumber(number);
@@ -87,7 +87,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
         bitSet = 0L;
         index = 0;
     }
-        
+
     public void set(long bitSet) {
         this.bitSet = bitSet;
         index = 0;
@@ -103,7 +103,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
     private void setNumber(int number) {
         set(numberToNode.get(number));
     }
-    
+
     private int toNumber() {
         long key = get();
         int newNumber = nodeToNumber.size();
@@ -119,5 +119,5 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
     public int size() {
         return numberToNode.size();
     }
-    
+
 }

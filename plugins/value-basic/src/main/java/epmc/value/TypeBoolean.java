@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -25,25 +25,27 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
+    private final static String BOOL = "bool";
+    
     private final ValueBoolean valueFalse = new ValueBoolean(this, false);
     private final ValueBoolean valueTrue = new ValueBoolean(this, true);
 
-    public static boolean isBoolean(Type type) {
-    	return type instanceof TypeBoolean;
+    public static boolean is(Type type) {
+        return type instanceof TypeBoolean;
     }
-    
-    public static TypeBoolean asBoolean(Type type) {
-    	if (isBoolean(type)) {
-    		return (TypeBoolean) type;
-    	} else {
-    		return null;
-    	}
+
+    public static TypeBoolean as(Type type) {
+        if (is(type)) {
+            return (TypeBoolean) type;
+        } else {
+            return null;
+        }
     }
-    
+
     public static TypeBoolean get() {
         return ContextValue.get().getType(TypeBoolean.class);
     }
-    
+
     public static void set(TypeBoolean type) {
         assert type != null;
         ContextValue.get().setType(TypeBoolean.class, ContextValue.get().makeUnique(type));
@@ -53,25 +55,19 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
         valueFalse.setImmutable();
         valueTrue.setImmutable();
     }
-    
-    @Override
-    public boolean canImport(Type a) {
-        assert a != null;
-        return TypeBoolean.isBoolean(a);
-    }
 
     public ValueBoolean getFalse() {
         return valueFalse;
     }
-    
+
     public ValueBoolean getTrue() {
         return valueTrue;
     }
-        
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("bool");
+        builder.append(BOOL);
         return builder.toString();
     }
 
@@ -81,7 +77,7 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     }
 
     public ValueBoolean newValue(boolean i) {
-    	ValueBoolean result = newValue();
+        ValueBoolean result = newValue();
         result.set(i);
         return result;
     }
@@ -90,7 +86,7 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     public int getNumBits() {
         return 1;
     }
-    
+
     @Override
     public int getNumValues() {
         return 2;
@@ -109,13 +105,9 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
         if (this.getClass() != obj.getClass()) {
             return false;
         }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
-            return false;
-        }
         return true;
     }
-    
+
     @Override
     public TypeArray getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayBoolean(this));

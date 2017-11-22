@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -28,7 +28,6 @@ import static epmc.modelchecker.TestHelper.prepareOptions;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ExploreStatistics;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -41,7 +40,7 @@ public class MarkovAutomataTest {
     }
 
     @Test
-    public void constructionSimpleSingleModuleTest() throws EPMCException {
+    public void constructionSimpleSingleModuleTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         ExploreStatistics result;

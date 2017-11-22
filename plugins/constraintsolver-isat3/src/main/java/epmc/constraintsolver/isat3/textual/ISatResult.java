@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.isat3.textual;
 
@@ -24,6 +24,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.value.Value;
 
 final class ISatResult {
-	ConstraintSolverResult type;
-	Value[] values;
+    ConstraintSolverResult type;
+    Value[] values;
 }

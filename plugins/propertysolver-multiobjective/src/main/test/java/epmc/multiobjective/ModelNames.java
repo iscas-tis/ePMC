@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -26,9 +26,9 @@ package epmc.multiobjective;
  * @author Ernst Moritz Hahn
  */
 public final class ModelNames {
-	/** Directory containing the model files. */
+    /** Directory containing the model files. */
     private final static String PREFIX = "epmc/multiobjective/";
-    
+
     public final static String MULTI_OBJECTIVE_SIMPLE = PREFIX + "multiObjectiveSimple.prism";
     public final static String MULTI_OBJECTIVE_SIMPLE_REWARDS = PREFIX + "multiObjectiveSimpleRewards.prism";
     public final static String DINNER_REDUCED_PROB_BOUNDED_1 = PREFIX + "dinnerReducedProb-bounded-1.prism";

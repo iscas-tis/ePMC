@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
@@ -24,50 +24,49 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
 import epmc.util.Util;
 
 public final class TypeParser implements JANINode {
-	private JANIType type;
-	private ModelJANI model;
-	
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    private JANIType type;
+    private ModelJANI model;
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		assert model != null;
-		assert value != null;
-		Map<String,Class<? extends JANIType>> types = model.getTypes();
-		for (Class<? extends JANIType> clazz : types.values()) {
-			JANIType tryType = Util.getInstance(clazz);
-			tryType.setModel(model);
-			tryType = tryType.parseAsJANIType(value);
-			if (tryType != null) {
-				type = tryType;
-				break;
-			}
-		}
-		assert type != null : value; // TODO exception
-		return type;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		assert false;
-		return null;
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        Map<String,Class<? extends JANIType>> types = model.getTypes();
+        for (Class<? extends JANIType> clazz : types.values()) {
+            JANIType tryType = Util.getInstance(clazz);
+            tryType.setModel(model);
+            tryType = tryType.parseAsJANIType(value);
+            if (tryType != null) {
+                type = tryType;
+                break;
+            }
+        }
+        assert type != null : value; // TODO exception
+        return type;
+    }
 
-	public JANIType getType() {
-		return type;
-	}	
+    @Override
+    public JsonValue generate() {
+        assert false;
+        return null;
+    }
+
+    public JANIType getType() {
+        return type;
+    }	
 }

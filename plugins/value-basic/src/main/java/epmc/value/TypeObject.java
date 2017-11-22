@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
@@ -25,18 +25,18 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 
 public final class TypeObject implements TypeNumBitsKnown {
-	public static boolean isObject(Type type) {
-		return type instanceof TypeObject;
-	}
-	
-	public TypeObject asObject(Type type) {
-		if (type instanceof TypeObject) {
-			return (TypeObject) type;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean is(Type type) {
+        return type instanceof TypeObject;
+    }
+
+    public TypeObject as(Type type) {
+        if (type instanceof TypeObject) {
+            return (TypeObject) type;
+        } else {
+            return null;
+        }
+    }
+
     public final static class Builder {
         private Class<?> clazz;
         private StorageType storageType = StorageType.DIRECT;
@@ -45,31 +45,31 @@ public final class TypeObject implements TypeNumBitsKnown {
             this.clazz = clazz;
             return this;
         }
-        
+
         private Class<?> getClazz() {
             return clazz;
         }
-        
+
         public Builder setStorageClass(StorageType storageType) {
             this.storageType = storageType;
             return this;
         }
-        
+
         private StorageType getStorageType() {
             return storageType;
         }
-        
+
         public TypeObject build() {
             return ContextValue.get().makeUnique(new TypeObject(this));
         }
     }
-    
+
     public enum StorageType {
         DIRECT,
         NUMERATED_NORMAL,
         NUMERATED_IDENTITY
     }
-    
+
     private final Class<?> usedClass;
     private final StorageType storageType;
 
@@ -80,25 +80,15 @@ public final class TypeObject implements TypeNumBitsKnown {
         this.storageType = builder.getStorageType();
     }
 
-    @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        TypeObject other = asObject(type);
-        if (other == null) {
-            return false;
-        }
-        return usedClass == other.getUsedClass();
-    }
-
     public Class<?> getUsedClass() {
         return usedClass;
     }
-    
+
     @Override
     public ValueObject newValue() {
         return new ValueObject(this);
     }
-    
+
 
     public ValueObject newValue(Object object) {
         assert object != null;
@@ -115,9 +105,6 @@ public final class TypeObject implements TypeNumBitsKnown {
             return false;
         }
         TypeObject other = (TypeObject) obj;
-        if (!canImport(other) || !other.canImport(this)) {
-            return false;
-        }
         if (this.usedClass != other.usedClass) {
             return false;
         }
@@ -126,7 +113,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -134,7 +121,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         hash = usedClass.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -145,28 +132,28 @@ public final class TypeObject implements TypeNumBitsKnown {
         builder.append(")");
         return builder.toString();
     }
-    
+
     @Override
     public int getNumBits() {
         return Integer.SIZE;
     }
-    
+
     StorageType getStorageType() {
         return storageType;
     }
-    
+
     boolean isDirect() {
         return storageType == StorageType.DIRECT;
     }
-    
+
     boolean isNumeratedNormal() {
         return storageType == StorageType.NUMERATED_NORMAL;
     }
-    
+
     boolean isNumeratedIdentity() {
         return storageType == StorageType.NUMERATED_IDENTITY;
     }
-    
+
     @Override
     public TypeArray getTypeArray() {
         if (isDirect()) {

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -26,12 +26,12 @@ import epmc.options.Options;
 
 public final class TimeStampFormatJavaDate implements TimeStampFormat {
     public static String IDENTIFIER = "java-date";
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public String toString(Options options, long timeStarted, long time) {
         return new Date(timeStarted + time).toString();

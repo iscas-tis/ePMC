@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.java;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
 import epmc.graph.Semantics;
@@ -44,6 +43,15 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.StopWatch;
@@ -51,15 +59,18 @@ import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
+import epmc.value.ValueReal;
+import epmc.value.ValueSetString;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -78,15 +89,34 @@ import epmc.value.operator.OperatorMin;
  */
 public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     public static String IDENTIFIER = "graph-solver-iterative-unbounded-reachability-java";
-    
+
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
     private ValueArrayAlgebra inputValues;
     private ValueArrayAlgebra outputValues;
-    private int numIterations;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
 
+    private final OperatorEvaluator distanceEvaluator;
+    private final OperatorEvaluator maxEvaluator;
+    private final OperatorEvaluator divideEvaluator;
+    private final OperatorEvaluator gtEvaluator;
+    private final OperatorEvaluator isZeroEvaluator;
+    private final ValueReal thisDistance;
+    private final ValueReal zeroDistance;
+    private final ValueBoolean cmp;
+
+    public UnboundedReachabilityJava() {
+        distanceEvaluator = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
+        maxEvaluator = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        divideEvaluator = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeReal.get(), TypeReal.get());
+        gtEvaluator = ContextValue.get().getEvaluator(OperatorGt.GT, TypeReal.get(), TypeReal.get());
+        isZeroEvaluator = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeReal.get());
+        thisDistance = TypeReal.get().newValue();
+        zeroDistance = TypeReal.get().newValue();
+        cmp = TypeBoolean.get().newValue();
+    }
+    
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -94,35 +124,35 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        assert origGraph != null;
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
             return false;
         }
         return true;
     }
 
     @Override
-    public void solve() throws EPMCException {
-    	prepareIterGraph();
-    	unboundedReachability();
+    public void solve() {
+        prepareIterGraph();
+        unboundedReachability();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean embed = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -133,10 +163,10 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         sinks = new ArrayList<>();
         GraphSolverObjectiveExplicitUnboundedReachability unbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         if (unbounded.getZeroSet() != null) {
-        	sinks.add(unbounded.getZeroSet());
+            sinks.add(unbounded.getZeroSet());
         }
         sinks.add(unbounded.getTarget());
-        
+
         if (sinks != null) {
             builder.addSinks(sinks);
         }
@@ -150,8 +180,8 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         }
         BitSet targets = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability) {
-        	GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
-        	targets = objectiveUnboundedReachability.getTarget();
+            GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
+            targets = objectiveUnboundedReachability.getTarget();
         }
         if (targets != null) {
             assert this.inputValues == null;
@@ -167,75 +197,77 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+    private void prepareResultValues() {
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
-    private void unboundedReachability() throws EPMCException {
+    private void unboundedReachability() {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         StopWatch timer = new StopWatch(true);
         log.send(MessagesGraphSolverIterative.ITERATING);
         IterationMethod iterMethod = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_METHOD);
         IterationStopCriterion stopCriterion = options.getEnum(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_STOP_CRITERION);
-        numIterations = 0;
+        int[] numIterations = new int[1];
         GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
         if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-        	dtmcUnboundedJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
+            dtmcUnboundedJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision);
+            dtmcUnboundedGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
+            mdpUnboundedJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
         } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision);
+            mdpUnboundedGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
         } else {
             assert false : iterGraph.getClass();
         }
-        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations,
+        log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
                 timer.getTimeSeconds());
     }
 
     /* auxiliary methods */
-    
-    private static void compDiff(double[] distance, ValueAlgebra previous,
-            Value current, IterationStopCriterion stopCriterion) throws EPMCException {
+
+    private void compDiff(ValueReal distance, ValueAlgebra previous,
+            Value current, IterationStopCriterion stopCriterion) {
         if (stopCriterion == null) {
             return;
         }
-        double thisDistance = previous.distance(current);
+        distanceEvaluator.apply(thisDistance, previous, current);
+        ValueAlgebra zero = previous.getType().getZero();
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
-            double presNorm = previous.norm();
-            if (presNorm != 0.0) {
-                thisDistance /= presNorm;
+            distanceEvaluator.apply(zeroDistance, previous, zero);
+            isZeroEvaluator.apply(cmp, zeroDistance);
+            if (!cmp.getBoolean()) {
+                divideEvaluator.apply(thisDistance, thisDistance, zeroDistance);
             }
         }
-        distance[0] = Math.max(distance[0], thisDistance);
+        maxEvaluator.apply(distance, distance, thisDistance);
     }
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPJava(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -246,7 +278,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovJava(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -257,42 +289,51 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-    
+
     /* implementation of iteration algorithms */    
-    
+
     private void dtmcUnboundedJacobiJava(GraphExplicitSparse graph,
             ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance,
+            int[] numIterationsResult) {
         int numStates = graph.computeNumStates();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
         ValueArray swap;
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueAlgebra zero = values.getType().getEntryType().getZero();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
+        int iterations = 0;
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         do {
-            distance[0] = 0.0;
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
+                set.apply(nextStateProb, zero);
                 for (int succ = from; succ < to; succ++) {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     presValues.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
+                    multiply.apply(weighted, succStateProb, weight);
+                    add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 presValues.get(presStateProb, state);
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
@@ -301,87 +342,110 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
             swap = presValues;
             presValues = nextValues;
             nextValues = swap;
-        } while (distance[0] > tolerance / 2);
-        values.set(presValues);
+            iterations++;
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
+        setArray.apply(values, presValues);
+        numIterationsResult[0] = iterations;
     }
 
     private void dtmcUnboundedGaussseidelJava(GraphExplicitSparse graph,
             ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance) throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance,
+            int[] numIterationsResult) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
+        int iterations = 0;
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         do {
-            distance[0] = 0.0;
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
-                nextStateProb.set(zero);
+                set.apply(nextStateProb, zero);
                 for (int succ = from; succ < to; succ++) {
                     weights.get(weight, succ);
                     int succState = targets[succ];
                     values.get(succStateProb, succState);
-                    weighted.multiply(succStateProb, weight);
-                    nextStateProb.add(nextStateProb, weighted);
+                    multiply.apply(weighted, succStateProb, weight);
+                    add.apply(nextStateProb, nextStateProb, weighted);
                 }
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
-        } while (distance[0] > tolerance / 2);
+            iterations++;
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
+        numIterationsResult[0] = iterations;
     }
 
     private void mdpUnboundedJacobiJava(
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
-            double tolerance) throws EPMCException {
+            double tolerance,
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
-        OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        int iterations = 0;
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         do {
-            distance[0] = 0.0;
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                set.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         presValues.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
+                        multiply.apply(weighted, weight, succStateProb);
+                        add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
-                    	minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
                         maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
@@ -392,51 +456,61 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
             ValueArrayAlgebra swap = nextValues;
             nextValues = presValues;
             presValues = swap;
-        } while (distance[0] > tolerance / 2);
-        values.set(presValues);
+            iterations++;
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
+        setArray.apply(values, presValues);
+        numIterationsResult[0] = iterations;
     }
 
     private void mdpUnboundedGaussseidelJava(
             GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
-            IterationStopCriterion stopCriterion, double tolerance)
-                    throws EPMCException {
+            IterationStopCriterion stopCriterion, double tolerance,
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        ValueArrayAlgebra weights = ValueArrayAlgebra.asArrayAlgebra(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        ValueArrayAlgebra weights = ValueArrayAlgebra.as(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         ValueAlgebra weight = newValueWeight();
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        double[] distance = new double[1];
+        ValueReal distance = TypeReal.get().newValue();
         Value zero = values.getType().getEntryType().getZero();
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
-        OperatorEvaluator minEv = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
-        OperatorEvaluator maxEv = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
+        OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
+        int iterations = 0;
+        ValueReal precisionValue = TypeReal.get().newValue();
+        ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         do {
-            distance[0] = 0.0;
+            setReal.apply(distance, TypeReal.get().getZero());
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
                 int stateTo = stateBounds[state + 1];
-                nextStateProb.set(optInitValue);
+                set.apply(nextStateProb, optInitValue);
                 for (int nondetNr = stateFrom; nondetNr < stateTo; nondetNr++) {
                     int nondetFrom = nondetBounds[nondetNr];
                     int nondetTo = nondetBounds[nondetNr + 1];
-                    choiceNextStateProb.set(zero);
+                    set.apply(choiceNextStateProb, zero);
                     for (int stateSucc = nondetFrom; stateSucc < nondetTo; stateSucc++) {
                         weights.get(weight, stateSucc);
                         int succState = targets[stateSucc];
                         values.get(succStateProb, succState);
-                        weighted.multiply(weight, succStateProb);
-                        choiceNextStateProb.add(choiceNextStateProb, weighted);
+                        multiply.apply(weighted, weight, succStateProb);
+                        add.apply(choiceNextStateProb, choiceNextStateProb, weighted);
                     }
                     if (min) {
-                    	minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
+                        minEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     } else {
                         maxEv.apply(nextStateProb, nextStateProb, choiceNextStateProb);
                     }
@@ -444,10 +518,13 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
-        } while (distance[0] > tolerance / 2);
+            iterations++;
+            gtEvaluator.apply(cmp, distance, precisionValue);
+        } while (cmp.getBoolean());
+        numIterationsResult[0] = iterations;
     }
-        
+
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

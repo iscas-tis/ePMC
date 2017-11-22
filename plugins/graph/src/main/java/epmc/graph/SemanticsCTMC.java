@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for continuous-time Markov chains (CTMCs).
  */
 public enum SemanticsCTMC implements SemanticsStochastic, SemanticsContinuousTime, SemanticsMarkovChain {
-	/** Singleton element. */
-	CTMC;
-	
+    /** Singleton element. */
+    CTMC;
+
     /**
      * Checks whether this is a continuous-time Markov chain (CTMC).
      * 
      * @return whether this is a continuous-time Markov chain (CTMC)
      */
-	public static boolean isCTMC(Semantics semantics) {
-		return semantics instanceof SemanticsCTMC;
-	}
+    public static boolean isCTMC(Semantics semantics) {
+        return semantics instanceof SemanticsCTMC;
+    }
 }

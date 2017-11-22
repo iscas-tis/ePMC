@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -53,10 +52,9 @@ public interface ExplorerEdgeProperty {
      * 
      * @param successor number of successor edge
      * @return value for edge with the given number of the node queried last
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get(int successor) throws EPMCException;
-    
+    Value get(int successor);
+
     /**
      * Obtain type of the values returned by {@link #get(int)}.
      * 

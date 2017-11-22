@@ -16,22 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Type;
 
 public interface TypeNumber extends TypeAlgebra {
-	static boolean isNumber(Type type) {
-		return type instanceof TypeNumber;
-	}
-	
-	static TypeNumber asNumber(Type type) {
-		if (isNumber(type)) {
-			return (TypeNumber) type;
-		} else {
-			return null;
-		}
-	}
+    static boolean is(Type type) {
+        return type instanceof TypeNumber;
+    }
+
+    static TypeNumber as(Type type) {
+        if (is(type)) {
+            return (TypeNumber) type;
+        } else {
+            return null;
+        }
+    }
 }

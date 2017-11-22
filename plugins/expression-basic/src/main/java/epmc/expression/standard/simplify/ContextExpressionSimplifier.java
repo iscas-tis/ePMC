@@ -16,16 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
 
@@ -43,8 +42,8 @@ public final class ContextExpressionSimplifier {
             simplifierNr++;
         }
     }
-    
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         Expression result = expression;
         boolean changed = true;
         while (changed) {

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -34,7 +34,7 @@ final class TodoElem implements Comparable<TodoElem> {
         this.block = block;
         this.randomNumber = RANDOM.nextInt();
     }
-    
+
     @Override
     public int compareTo(TodoElem o) {
         int[] thisBlock = blocks.get(this.block);
@@ -56,15 +56,15 @@ final class TodoElem implements Comparable<TodoElem> {
         }
         return 0;
     }
-    
+
     int[] getBlock() {
         return blocks.get(this.block);
     }
-    
+
     int getBlockInt() {
         return block;
     }
-    
+
     int getRandom() {
         return randomNumber;
     }

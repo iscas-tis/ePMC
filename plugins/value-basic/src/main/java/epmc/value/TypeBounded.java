@@ -16,47 +16,47 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.Type;
 
 public interface TypeBounded extends TypeAlgebra {
-	static boolean isBounded(Type type) {
-		return type instanceof TypeBounded;
-	}
-	
-	static  TypeBounded asBounded(Type type) {
-		if (isBounded(type)) {
-			return (TypeBounded) type;
-		} else {
-			return null;
-		}
-	}
-	
-	static ValueAlgebra getLower(Type type) {
-		TypeBounded typeBounded = asBounded(type);
-		if (typeBounded != null) {
-			return typeBounded.getLower();
-		} else {
-			return null;
-		}
-	}
+    static boolean is(Type type) {
+        return type instanceof TypeBounded;
+    }
 
-	static ValueAlgebra getUpper(Type type) {
-		TypeBounded typeBounded = asBounded(type);
-		if (typeBounded != null) {
-			return typeBounded.getUpper();
-		} else {
-			return null;
-		}
-	}
+    static  TypeBounded as(Type type) {
+        if (is(type)) {
+            return (TypeBounded) type;
+        } else {
+            return null;
+        }
+    }
+
+    static ValueAlgebra getLower(Type type) {
+        TypeBounded typeBounded = as(type);
+        if (typeBounded != null) {
+            return typeBounded.getLower();
+        } else {
+            return null;
+        }
+    }
+
+    static ValueAlgebra getUpper(Type type) {
+        TypeBounded typeBounded = as(type);
+        if (typeBounded != null) {
+            return typeBounded.getUpper();
+        } else {
+            return null;
+        }
+    }
 
     default ValueAlgebra getLower() {
         return null;
     }
-    
+
     default ValueAlgebra getUpper() {
         return null;
     }

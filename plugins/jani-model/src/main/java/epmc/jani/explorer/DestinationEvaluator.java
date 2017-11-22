@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -24,22 +24,26 @@ import static epmc.error.UtilError.ensure;
 
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
 import epmc.jani.value.TypeLocation;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
-import epmc.value.TypeReal;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
-import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
 
 /**
  * Evaluator for edge destinations.
@@ -47,141 +51,152 @@ import epmc.value.ValueAlgebra;
  * @author Ernst Moritz Hahn
  */
 public final class DestinationEvaluator {
-	public final static class Builder {
-		private Destination destination;
-		private Expression[] variables;
-		private Map<Variable, Integer> variableMap;
-		private int locationVariable;
-		private Map<Expression, Expression> autVarToLocal;
-		private TypeLocation typeLocation;
-		private ExpressionToType expressionToType;
-		
-		public Builder setDestination(Destination destination) {
-			this.destination = destination;
-			return this;
-		}
-		
-		private Destination getDestination() {
-			return destination;
-		}
-		
-		public Builder setVariables(Expression[] variables) {
-			this.variables = variables;
-			return this;
-		}
-		
-		private Expression[] getVariables() {
-			return variables;
-		}
-		
-		public Builder setVariableMap(Map<Variable, Integer> variableMap) {
-			this.variableMap = variableMap;
-			return this;
-		}
-		
-		private Map<Variable, Integer> getVariableMap() {
-			return variableMap;
-		}
-		
-		public Builder setLocationVariable(int locationVariable) {
-			this.locationVariable = locationVariable;
-			return this;
-		}
-		
-		private int getLocationVariable() {
-			return locationVariable;
-		}
-		
-		public Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal) {
-			this.autVarToLocal = autVarToLocal;
-			return this;
-		}
-		
-		private Map<Expression, Expression> getAutVarToLocal() {
-			return autVarToLocal;
-		}
-		
-		public Builder setTypeLocation(TypeLocation typeLocation) {
-			this.typeLocation = typeLocation;
-			return this;
-		}
-		
-		private TypeLocation getTypeLocation() {
-			return typeLocation;
-		}
-		
-		public Builder setExpressionToType(ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		public ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
-		
-		public DestinationEvaluator build() throws EPMCException {
-			return new DestinationEvaluator(this);
-		}
-	}
-	
-	/** Probability (reference in {@link #evaluator}). */
-	private final EvaluatorExplicit probability;
-	/** Location to which the destination moves. */
-	private final int location;
-	/** Assignments performed by this evaluator. */
-	private final AssignmentsEvaluator assignments;
-	/** Zero real. */
-	private final Value zeroReal;
-	/** Number of location variable in the automaton evaluator belongs to. */
-	private final int locationVariable;
-	
-	private DestinationEvaluator(Builder builder) throws EPMCException {
-		assert builder != null;
-		assert builder.getDestination() != null;
-		assert builder.getExpressionToType() != null;
-		this.locationVariable = builder.getLocationVariable();
-		Destination destination = builder.getDestination();
-		Map<Expression, Expression> autVarToLocal = builder.getAutVarToLocal();
-		Map<Variable, Integer> variableMap = builder.getVariableMap();
-		Expression[] variables = builder.getVariables();
-		Expression probExpr = destination.getProbabilityExpressionOrOne();
-		probExpr = destination.getModel().replaceConstants(probExpr);
-		probExpr = UtilExpressionStandard.replace(probExpr, autVarToLocal);
-		Type typeWeight = TypeWeight.get();
-		probExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), probExpr, typeWeight);
-		probability = UtilEvaluatorExplicit.newEvaluator(probExpr, builder.getExpressionToType(), variables);
-		TypeLocation typeLocation = builder.getTypeLocation();
+    public final static class Builder {
+        private Destination destination;
+        private Expression[] variables;
+        private Map<Variable, Integer> variableMap;
+        private int locationVariable;
+        private Map<Expression, Expression> autVarToLocal;
+        private TypeLocation typeLocation;
+        private ExpressionToType expressionToType;
 
-		location = typeLocation.getNumber(destination.getLocation());
-		
-		assignments = new AssignmentsEvaluator.Builder()
-				.setAssignments(destination.getAssignmentsOrEmpty())
-				.setAutVarToLocal(autVarToLocal)
-				.setExpressionToType(builder.getExpressionToType())
-				.setVariableMap(variableMap)
-				.setVariables(variables)
-				.build();
-		zeroReal = UtilValue.newValue(TypeReal.get(), 0);
-	}
+        public Builder setDestination(Destination destination) {
+            this.destination = destination;
+            return this;
+        }
 
-	Value evaluateProbability(NodeJANI node) throws EPMCException {
-		ValueAlgebra result = ValueAlgebra.asAlgebra(probability.evaluate(node.getValues()));
-		ensure(result.isGe(zeroReal), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
-		return result;
-	}
+        private Destination getDestination() {
+            return destination;
+        }
 
-	/**
-	 * Assign to an explorer node the effect of the destination.
-	 * The parameter may not be {@code null}.
-	 * 
-	 * @param toNode node to assign effect to
-	 * @throws EPMCException thrown in case of problems
-	 */
-	void assignTo(NodeJANI fromNode, NodeJANI toNode) throws EPMCException {
-		assert toNode != null;
-		assignments.apply(fromNode, toNode);
-		if (locationVariable != -1) {
-			toNode.setVariable(locationVariable, location);
-		}
-	}
+        public Builder setVariables(Expression[] variables) {
+            this.variables = variables;
+            return this;
+        }
+
+        private Expression[] getVariables() {
+            return variables;
+        }
+
+        public Builder setVariableMap(Map<Variable, Integer> variableMap) {
+            this.variableMap = variableMap;
+            return this;
+        }
+
+        private Map<Variable, Integer> getVariableMap() {
+            return variableMap;
+        }
+
+        public Builder setLocationVariable(int locationVariable) {
+            this.locationVariable = locationVariable;
+            return this;
+        }
+
+        private int getLocationVariable() {
+            return locationVariable;
+        }
+
+        public Builder setAutVarToLocal(Map<Expression, Expression> autVarToLocal) {
+            this.autVarToLocal = autVarToLocal;
+            return this;
+        }
+
+        private Map<Expression, Expression> getAutVarToLocal() {
+            return autVarToLocal;
+        }
+
+        public Builder setTypeLocation(TypeLocation typeLocation) {
+            this.typeLocation = typeLocation;
+            return this;
+        }
+
+        private TypeLocation getTypeLocation() {
+            return typeLocation;
+        }
+
+        public Builder setExpressionToType(ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        public ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
+
+        public DestinationEvaluator build() {
+            return new DestinationEvaluator(this);
+        }
+    }
+
+    /** Probability (reference in {@link #evaluator}). */
+    private final EvaluatorExplicit probability;
+    /** Location to which the destination moves. */
+    private final int location;
+    /** Assignments performed by this evaluator. */
+    private final AssignmentsEvaluator assignments;
+    /** Zero real. */
+    private final ValueAlgebra zeroWeight;
+    /** Number of location variable in the automaton evaluator belongs to. */
+    private final int locationVariable;
+    private final OperatorEvaluator ge;
+    private final ValueBoolean cmp = TypeBoolean.get().newValue();
+    private final ValueAlgebra probabilityV = TypeWeightTransition.get().newValue();
+    private final OperatorEvaluator setProbability;
+
+    private DestinationEvaluator(Builder builder) {
+        assert builder != null;
+        assert builder.getDestination() != null;
+        assert builder.getExpressionToType() != null;
+        this.locationVariable = builder.getLocationVariable();
+        Destination destination = builder.getDestination();
+        Map<Expression, Expression> autVarToLocal = builder.getAutVarToLocal();
+        Map<Variable, Integer> variableMap = builder.getVariableMap();
+        Expression[] variables = builder.getVariables();
+        Expression probExpr = destination.getProbabilityExpressionOrOne();
+        probExpr = destination.getModel().replaceConstants(probExpr);
+        probExpr = UtilExpressionStandard.replace(probExpr, autVarToLocal);
+        Type typeWeight = TypeWeight.get();
+        probExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), probExpr, typeWeight);
+        probability = UtilEvaluatorExplicit.newEvaluator(probExpr, builder.getExpressionToType(), variables);
+        TypeLocation typeLocation = builder.getTypeLocation();
+
+        location = typeLocation.getNumber(destination.getLocation());
+
+        assignments = new AssignmentsEvaluator.Builder()
+                .setAssignments(destination.getAssignmentsOrEmpty())
+                .setAutVarToLocal(autVarToLocal)
+                .setExpressionToType(builder.getExpressionToType())
+                .setVariableMap(variableMap)
+                .setVariables(variables)
+                .build();
+        zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
+        ge = ContextValue.get().getEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        setProbability = ContextValue.get().getEvaluator(OperatorSet.SET, probability.getResultValue().getType(), TypeWeightTransition.get());
+    }
+
+    ValueAlgebra evaluateProbability(NodeJANI node) {
+        ValueAlgebra result = ValueAlgebra.as(probability.evaluate(node.getValues()));
+        /* make sure that we return values of correct type to avoid problems 
+         * with operator evaluators. */
+        setProbability.apply(probabilityV, result);
+        if (ge != null) {
+            ge.apply(cmp, probabilityV, zeroWeight);
+            ensure(cmp.getBoolean(), ProblemsJANIExplorer.JANI_EXPLORER_NEGATIVE_WEIGHT);
+        }
+        return probabilityV;
+    }
+
+    /**
+     * Assign to an explorer node the effect of the destination.
+     * The parameter may not be {@code null}.
+     * 
+     * @param toNode node to assign effect to
+     */
+    void assignTo(NodeJANI fromNode, NodeJANI toNode) {
+        assert toNode != null;
+        assignments.apply(fromNode, toNode);
+        if (locationVariable != -1) {
+            toNode.setVariable(locationVariable, location);
+        }
+    }
 }

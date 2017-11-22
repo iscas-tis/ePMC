@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAbs;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeNumber;
@@ -29,58 +29,78 @@ import epmc.value.Value;
 import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 /**
  * Operator to compute absolute value of a value.
  * 
  * @author Ernst Moritz Hahn
  */
-public enum OperatorEvaluatorAbs implements OperatorEvaluator {
-	INSTANCE;
-	
-	@Override
-	public Operator getOperator() {
-		return OperatorAbs.ABS;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeNumber.isNumber(types[0])) {
-			return false;
-		}
-		return true;
-	}
+public final class OperatorEvaluatorAbs implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return types[0];
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
 
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		if (ValueDouble.isDouble(result)) {
-			double value = ValueNumber.asNumber(operands[0]).getDouble();
-			ValueDouble.asDouble(result).set(Math.abs(value));
-		} else if (ValueInteger.isInteger(result)) {
-			int value = ValueNumber.asNumber(operands[0]).getInt();
-			ValueInteger.asInteger(result).set(Math.abs(value));			
-		} else {
-			assert false;
-		}
-	}
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (operator != OperatorAbs.ABS) {
+                return null;
+            }
+            if (types.length != 1) {
+                return null;
+            }
+            if (!TypeNumber.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorAbs(this);
+        }
+    }
+
+    private final Type resultType;
+
+    private OperatorEvaluatorAbs(Builder builder) {
+        this.resultType = builder.types[0];
+    }
+
+    @Override
+    public Type resultType() {
+        return resultType;
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        if (ValueDouble.is(result)) {
+            double value = ValueNumber.as(operands[0]).getDouble();
+            ValueDouble.as(result).set(Math.abs(value));
+        } else if (ValueInteger.is(result)) {
+            int value = ValueNumber.as(operands[0]).getInt();
+            ValueInteger.as(result).set(Math.abs(value));			
+        } else {
+            assert false;
+        }
+    }
 }

@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.GraphExplicit;
@@ -29,14 +28,14 @@ import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 
 public final class ComponentsExplicit {
-	private final static String SPACE = " ";
+    private final static String SPACE = " ";
 
     public EndComponents endComponents(GraphExplicit graph,
             BitSet existingNodes, boolean mecsOnly) {
         return new EndComponentsImpl(graph, existingNodes, mecsOnly);
     }
 
-    public void removeLeavingAttr(GraphExplicit graph, BitSet set) throws EPMCException {
+    public void removeLeavingAttr(GraphExplicit graph, BitSet set) {
         assert graph != null;
         assert set != null;
         assert set.length() <= graph.getNumNodes();
@@ -76,7 +75,7 @@ public final class ComponentsExplicit {
                 }
             }
         }
-        
+
         while (leavingIndex != 0) {
             leavingIndex--;
             int node = leaving[leavingIndex];
@@ -95,9 +94,9 @@ public final class ComponentsExplicit {
             }
         }
     }
-    
+
     public BitSet removeLeavingAttr(GraphExplicit graph,
-            int[] leaving, int leavingSize) throws EPMCException {
+            int[] leaving, int leavingSize) {
         int[] remaining = new int[graph.getNumNodes()];
         BitSet existingStates = UtilBitSet.newBitSetUnbounded(graph.getNumNodes());
         existingStates.flip(0, graph.getNumNodes());
@@ -120,7 +119,7 @@ public final class ComponentsExplicit {
     private static void removeLeavingAttr(GraphExplicit graph,
             BitSet existingStates, int[] remaining,
             BitSet scc, int[] leaving, int leavingIndex,
-            int[] sccStates, int sccBegin, int sccEnd) throws EPMCException {
+            int[] sccStates, int sccBegin, int sccEnd) {
         graph.computePredecessors();
         NodeProperty player = graph.getNodeProperty(CommonProperties.PLAYER);
         for (int nodeNr = sccBegin; nodeNr < sccEnd; nodeNr++) {
@@ -156,10 +155,10 @@ public final class ComponentsExplicit {
             }
         }
     }
-    
+
     public BitSet reachPre(GraphExplicit graph,
             BitSet target, BitSet nodes, boolean min, boolean one)
-                    throws EPMCException {
+    {
         assert graph != null;
         assert target != null;
         assert nodes != null;
@@ -216,23 +215,23 @@ public final class ComponentsExplicit {
         } while (!newNodes.isEmpty());
         return result;
     }
-    
+
     public BitSet reachPre(GraphExplicit graph,
-            BitSet target, boolean min, boolean one) throws EPMCException {
+            BitSet target, boolean min, boolean one) {
         assert graph != null;
         assert target != null;
         if (!min && one) {
-        	return reachMaxOne(graph, target);
+            return reachMaxOne(graph, target);
         } else {
-        	BitSet nodes = UtilBitSet.newBitSetUnbounded();
-        	nodes.set(0, graph.getNumNodes(), true);
-        	return reachPre(graph, target, nodes, min, one);
+            BitSet nodes = UtilBitSet.newBitSetUnbounded();
+            nodes.set(0, graph.getNumNodes(), true);
+            return reachPre(graph, target, nodes, min, one);
         }
     }
 
     /**
      * Compute nodes which may reach given set of target nodes with certainty.
-	 *
+     *
      * Adapted from
      * <a href="http://www.prismmodelchecker.org/lectures/pmc/14-mdp%20model%20checking.pdf">
      * Dave Parker's slides</a>
@@ -240,9 +239,8 @@ public final class ComponentsExplicit {
      * @param graph graph for which to compute set
      * @param target target nodes
      * @return set of nodes which may reach target set with probability one
-     * @throws EPMCException
      */
-    public BitSet reachMaxOne(GraphExplicit graph, BitSet target) throws EPMCException {
+    public BitSet reachMaxOne(GraphExplicit graph, BitSet target) {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
@@ -254,49 +252,49 @@ public final class ComponentsExplicit {
         boolean done = false;
         graph.computePredecessors();
         while (!done) {
-        	BitSet Rprimed = target.clone();
-        	boolean donePrimed = false;
-        	while (!donePrimed) {
-        		BitSet RprimedPrimed = Rprimed.clone();
-        		for (int node = Rprimed.nextSetBit(0); node >= 0; node = Rprimed.nextSetBit(node+1)) {
-        			int numNodePredecessors = graph.getProperties().getNumPredecessors(node);
-        			for (int predNr = 0; predNr < numNodePredecessors; predNr++) {
-        				int predNode = graph.getProperties().getPredecessorNode(node, predNr);
-            			Player player = playerProp.getEnum(predNode);
-            			if (player == Player.ONE) {
-            				RprimedPrimed.set(predNode);
-            			} else if (player == Player.STOCHASTIC) {
-            				boolean include = true;
-            				int numPredNodeSuccessors = graph.getNumSuccessors(predNode);
-            				for (int predSuccNr = 0; predSuccNr < numPredNodeSuccessors; predSuccNr++) {
-            					int predSucc = graph.getSuccessorNode(predNode, predSuccNr);
-            					if (!R.get(predSucc)) {
-            						include = false;
-            						break;
-            					}
-            				}
-            				if (include) {
-            					RprimedPrimed.set(predNode);
-            				}
-            			} else {
-            				assert false : player;
-            			}        				
-        			}
-        		}
-        		if (RprimedPrimed.equals(Rprimed)) {
-        			donePrimed = true;
-        		}
-        		Rprimed = RprimedPrimed;
-        	}
-        	if (Rprimed.equals(R)) {
-        		done = true;
-        	}
-        	R = Rprimed.clone();
+            BitSet Rprimed = target.clone();
+            boolean donePrimed = false;
+            while (!donePrimed) {
+                BitSet RprimedPrimed = Rprimed.clone();
+                for (int node = Rprimed.nextSetBit(0); node >= 0; node = Rprimed.nextSetBit(node+1)) {
+                    int numNodePredecessors = graph.getProperties().getNumPredecessors(node);
+                    for (int predNr = 0; predNr < numNodePredecessors; predNr++) {
+                        int predNode = graph.getProperties().getPredecessorNode(node, predNr);
+                        Player player = playerProp.getEnum(predNode);
+                        if (player == Player.ONE) {
+                            RprimedPrimed.set(predNode);
+                        } else if (player == Player.STOCHASTIC) {
+                            boolean include = true;
+                            int numPredNodeSuccessors = graph.getNumSuccessors(predNode);
+                            for (int predSuccNr = 0; predSuccNr < numPredNodeSuccessors; predSuccNr++) {
+                                int predSucc = graph.getSuccessorNode(predNode, predSuccNr);
+                                if (!R.get(predSucc)) {
+                                    include = false;
+                                    break;
+                                }
+                            }
+                            if (include) {
+                                RprimedPrimed.set(predNode);
+                            }
+                        } else {
+                            assert false : player;
+                        }        				
+                    }
+                }
+                if (RprimedPrimed.equals(Rprimed)) {
+                    donePrimed = true;
+                }
+                Rprimed = RprimedPrimed;
+            }
+            if (Rprimed.equals(R)) {
+                done = true;
+            }
+            R = Rprimed.clone();
         }
         return R;
     }
 
-    public BitSet reachMinOne(GraphExplicit graph, BitSet target) throws EPMCException {
+    public BitSet reachMinOne(GraphExplicit graph, BitSet target) {
         assert graph != null;
         assert target != null;
         assert target.length() <= graph.getNumNodes()
@@ -307,10 +305,10 @@ public final class ComponentsExplicit {
         return reachPre(graph, target, nodes, true, true);
     }
 
-    public BitSet reachMaxOne(GraphExplicit graph, BitSet target, BitSet nodes) throws EPMCException {
+    public BitSet reachMaxOne(GraphExplicit graph, BitSet target, BitSet nodes) {
         return reachPre(graph, target, nodes, false, true);
     }
-    
+
     public EndComponents maximalEndComponents(GraphExplicit graph) {
         return endComponents(graph, true);
     }

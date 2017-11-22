@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -41,7 +40,7 @@ public final class AutomatonProduct implements Automaton {
         AutomatonProductLabelImpl(int[] labels) {
             this.labels = Arrays.copyOf(labels, labels.length);
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -51,17 +50,17 @@ public final class AutomatonProduct implements Automaton {
             AutomatonProductLabelImpl other = (AutomatonProductLabelImpl) obj;
             return Arrays.equals(labels, other.labels);
         }
-        
+
         @Override
         public int hashCode() {
             return Arrays.hashCode(labels);
         }
-        
+
         @Override
         public String toString() {
             return Arrays.toString(labels);
         }
-        
+
         @Override
         public int get(int i) {
             assert i >= 0;
@@ -79,9 +78,9 @@ public final class AutomatonProduct implements Automaton {
             this.number = number;
         }
     }
-    
+
     private final AutomatonMaps automatonMaps = new AutomatonMaps();
-    
+
     @Override
     public int getNumStates() {
         return automatonMaps.getNumStates();
@@ -106,7 +105,7 @@ public final class AutomatonProduct implements Automaton {
 
         CacheKey() {
         }
-        
+
         CacheKey(Value[] modelState, int automatonState) {
             this.modelState = new Value[modelState.length];
             for (int i = 0; i < modelState.length; i++) {
@@ -114,7 +113,7 @@ public final class AutomatonProduct implements Automaton {
             }
             this.automatonState = automatonState;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -128,10 +127,10 @@ public final class AutomatonProduct implements Automaton {
             if (this.automatonState != other.automatonState) {
                 return false;
             }
-            
+
             return true;
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -139,7 +138,7 @@ public final class AutomatonProduct implements Automaton {
             hash = automatonState + (hash << 6) + (hash << 16) - hash;
             return hash;
         }
-        
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -151,12 +150,12 @@ public final class AutomatonProduct implements Automaton {
             return builder.toString();
         }
     }
-    
+
     private final static class CacheValue {
         AutomatonProductState state;
         AutomatonProductLabelImpl label;
     }
-    
+
     public final static class AutomatonProductState implements AutomatonStateUtil {
         private final Automaton automaton;
         private final int[] states;
@@ -166,16 +165,16 @@ public final class AutomatonProduct implements Automaton {
             this.automaton = automaton;
             this.states = Arrays.copyOf(states, states.length);
         }
-        
+
         AutomatonProductState(AutomatonProductState other) {
             this(other.getAutomaton(), other.states);
         }
-        
+
         @Override
         protected AutomatonStateUtil clone() {
             return new AutomatonProductState(this);
         };
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -185,17 +184,17 @@ public final class AutomatonProduct implements Automaton {
             AutomatonProductState other = (AutomatonProductState) obj;
             return Arrays.equals(states, other.states);
         }
-        
+
         @Override
         public int hashCode() {
             return Arrays.hashCode(states);
         }
-        
+
         @Override
         public String toString() {
             return Arrays.toString(states);
         }
-        
+
         public int get(int i) {
             assert i >= 0;
             assert i < states.length;
@@ -228,7 +227,7 @@ public final class AutomatonProduct implements Automaton {
     private final Map<CacheKey,CacheValue> cache = new THashMap<>();
     private final CacheKey testEntry = new CacheKey();
 
-    public AutomatonProduct(Automaton[] automata) throws EPMCException {
+    public AutomatonProduct(Automaton[] automata) {
         assert assertConstructor(automata);
         this.automata = automata.clone();
         this.succStateArray = new int[automata.length];
@@ -245,10 +244,10 @@ public final class AutomatonProduct implements Automaton {
         automataExternal = Collections.unmodifiableList(automataList);
     }
 
-    public AutomatonProduct(List<? extends Automaton> automata) throws EPMCException {
+    public AutomatonProduct(List<? extends Automaton> automata) {
         this(automata.toArray(new Automaton[0]));
     }
-    
+
     private static boolean assertConstructor(Automaton[] automata) {
         assert automata != null;
         assert automata.length >= 0;
@@ -269,7 +268,7 @@ public final class AutomatonProduct implements Automaton {
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+    {
         assert assertQueryState(modelState, automatonState);
         testEntry.modelState = modelState;
         testEntry.automatonState = automatonState;
@@ -322,17 +321,17 @@ public final class AutomatonProduct implements Automaton {
     public int getNumComponents() {
         return automata.length;
     }
-    
+
     public Automaton getAutomaton(int number) {
         assert number >= 0;
         assert number < automata.length;
         return automata[number];
     }
-    
+
     public List<Automaton> getAutomata() {
         return automataExternal;
     }
-    
+
     @Override
     public void close() {
         for (Automaton automaton : automata) {

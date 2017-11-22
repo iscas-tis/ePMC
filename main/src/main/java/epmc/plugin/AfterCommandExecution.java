@@ -16,11 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
-
-import epmc.error.EPMCException;
 
 /**
  * Interface to perform tasks after a command has been executed on the server.
@@ -31,7 +29,6 @@ public interface AfterCommandExecution extends PluginInterface {
     /**
      * Performs a task after a command has been executed on the server.
      * 
-     * @throws EPMCException thrown in case of a problem occurring
      */
-    void process() throws EPMCException;
+    void process();
 }

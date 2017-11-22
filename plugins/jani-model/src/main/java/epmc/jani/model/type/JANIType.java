@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
@@ -24,21 +24,20 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANINode;
 import epmc.value.Type;
 import epmc.value.Value;
 
 public interface JANIType extends JANINode {
-	
-	JANIType parseAsJANIType(JsonValue value) throws EPMCException;
-	
-	Type toType() throws EPMCException;
 
-	Value getDefaultValue() throws EPMCException;
-	
-	default JANIType replace(Map<Expression, Expression> map) {
-		return this;
-	}
+    JANIType parseAsJANIType(JsonValue value);
+
+    Type toType();
+
+    Value getDefaultValue();
+
+    default JANIType replace(Map<Expression, Expression> map) {
+        return this;
+    }
 }

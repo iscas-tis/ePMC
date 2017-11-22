@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -70,15 +70,15 @@ public class CommandTaskExpression2Automaton implements CommandTask {
         for (RawProperty property : properties.getRawProperties()) {
             Expression expression = properties.getParsedProperty(property);
             if (ExpressionQuantifier.isQuantifier(expression)) {
-            	ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+                ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
                 expression = expressionQuantifier.getQuantified();
             }
-            
+
             Set<Expression> identifiers = UtilExpressionStandard.collectIdentifiers(expression);
             boolean fail = false;
             for (Expression rel : identifiers) {
                 if (ExpressionIdentifier.isIdentifier(rel)) {
-                	/*
+                    /*
                     try {
 						if (rel.getType() == null) {
 						    ContextValue.get().registerType(rel, TypeBoolean.get(contextValue));
@@ -87,16 +87,16 @@ public class CommandTaskExpression2Automaton implements CommandTask {
 						log.send(new ModelCheckerResult(property, e));
 						fail = true;
 					}
-					*/
+                     */
                 }
             }
             if (fail) {
-            	continue;
+                continue;
             }
             Set<Expression> relevantExpressions = collectLTLInner(expression);
             fail = false;
             for (Expression rel : relevantExpressions) {
-            	/*
+                /*
                 try {
 					if (rel.getType() == null) {
 					    ContextValue.get().registerType(rel, TypeBoolean.get(contextValue));
@@ -105,21 +105,21 @@ public class CommandTaskExpression2Automaton implements CommandTask {
 					log.send(new ModelCheckerResult(property, e));
 					fail = true;
 				}
-				*/
+                 */
             }
             if (fail) {
-            	continue;
+                continue;
             }
             Automaton automaton = null;
             try {
-            	Automaton.Builder builder;
+                Automaton.Builder builder;
                 builder = UtilOptions.getInstance(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE);
-				builder.setExpression(expression);
-				automaton = builder.build();
-			} catch (EPMCException e) {
-				log.send(new ModelCheckerResult(property,  e));
-				continue;
-			}
+                builder.setExpression(expression);
+                automaton = builder.build();
+            } catch (EPMCException e) {
+                log.send(new ModelCheckerResult(property,  e));
+                continue;
+            }
             AutomatonExporter exporter = new AutomatonExporterImpl();
             exporter.setAutomaton(automaton);
             exporter.setFormat(Format.DOT);
@@ -127,31 +127,31 @@ public class CommandTaskExpression2Automaton implements CommandTask {
             log.send(result);
         }
     }
-    
-	private static Set<Expression> collectLTLInner(Expression expression) {
-		assert expression != null;
-		if (isPropositional(expression)) {
-			return Collections.singleton(expression);
-		} else if (expression instanceof ExpressionTemporal) {
-			ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-			Set<Expression> result = new LinkedHashSet<>();
-			for (Expression inner : expressionTemporal.getOperands()) {
-				result.addAll(collectLTLInner(inner));
-			}
-			return result;
-		} else if (ExpressionOperator.isOperator(expression)) {
-			ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
-			Set<Expression> result = new LinkedHashSet<>();
-			for (Expression inner : expressionOperator.getOperands()) {
-				result.addAll(collectLTLInner(inner));
-			}
-			return result;
-		} else {
-			return Collections.singleton(expression);			
-		}
-	}
 
-	private Log getLog() {
-		return Options.get().get(OptionsMessages.LOG);
-	}
+    private static Set<Expression> collectLTLInner(Expression expression) {
+        assert expression != null;
+        if (isPropositional(expression)) {
+            return Collections.singleton(expression);
+        } else if (expression instanceof ExpressionTemporal) {
+            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+            Set<Expression> result = new LinkedHashSet<>();
+            for (Expression inner : expressionTemporal.getOperands()) {
+                result.addAll(collectLTLInner(inner));
+            }
+            return result;
+        } else if (ExpressionOperator.isOperator(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            for (Expression inner : expressionOperator.getOperands()) {
+                result.addAll(collectLTLInner(inner));
+            }
+            return result;
+        } else {
+            return Collections.singleton(expression);			
+        }
+    }
+
+    private Log getLog() {
+        return Options.get().get(OptionsMessages.LOG);
+    }
 }

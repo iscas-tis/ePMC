@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMC;
@@ -36,8 +35,12 @@ import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedReachability;
+import epmc.operator.OperatorAdd;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -62,7 +65,8 @@ public final class EquivalenceStrong implements Equivalence {
     private int maxOrigFanout;
     private GraphExplicit original;
     private final List<int[]> newBlocks = new ArrayList<>();
-	private GraphSolverObjectiveExplicit objective;
+    private GraphSolverObjectiveExplicit objective;
+    OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
 
     @Override
     public void setSuccessorsFromTo(int[] successorsFromTo) {
@@ -95,7 +99,7 @@ public final class EquivalenceStrong implements Equivalence {
     }
 
     @Override
-    public void prepare() throws EPMCException {
+    public void prepare() {
         assert successorsFromTo != null;
         assert successorStates != null;
         assert successorWeights != null;
@@ -107,14 +111,14 @@ public final class EquivalenceStrong implements Equivalence {
         this.weight = successorWeights.getType().getEntryType().newValue();
         computeCmpSignature();
     }
-    
+
     @Override
-	public void prepareInitialPartition(int[] partition) {
+    public void prepareInitialPartition(int[] partition) {
     }
-    
+
     @Override
     public List<int[]> splitBlock(int[] block, int[] partition)
-            throws EPMCException {
+    {
         newBlocks.clear();
         signatureToStates.clear();
         int blockSize = block.length;
@@ -127,8 +131,8 @@ public final class EquivalenceStrong implements Equivalence {
         }
         return newBlocks;
     }
-    
-    private void computeSignature(int node, int[] stateToBlock) throws EPMCException {
+
+    private void computeSignature(int node, int[] stateToBlock) {
         blockToNumber.clear();
         int size = 0;
         int from = successorsFromTo[node];
@@ -147,7 +151,7 @@ public final class EquivalenceStrong implements Equivalence {
             int block = stateToBlock[succState];
             blocksSeen[block] = false;
         }
-        
+
         Arrays.sort(blocksArr, 0, size);
         cmpSignature.size = size;
         for (int i = 0; i < size; i++) {
@@ -156,7 +160,7 @@ public final class EquivalenceStrong implements Equivalence {
             cmpSignature.blocks[i] = block;
             cmpSignature.values[i].set(0);
         }
-        
+
         for (int succNr = from; succNr < to; succNr++) {
             int succState = successorStates[succNr];
             int block = stateToBlock[succState];
@@ -164,7 +168,7 @@ public final class EquivalenceStrong implements Equivalence {
             int blockNumber = blockToNumber.get(block);
             assert blockNumber >= 0;
             successorWeights.get(weight, succNr);
-            cmpSignature.values[blockNumber].add(cmpSignature.values[blockNumber], weight);
+            add.apply(cmpSignature.values[blockNumber], cmpSignature.values[blockNumber], weight);
         }
         TIntList states = signatureToStates.get(cmpSignature);
         if (states == null) {
@@ -173,7 +177,7 @@ public final class EquivalenceStrong implements Equivalence {
         }
         states.add(node);
     }
-    
+
     private Signature cloneSignature(Signature signature) {
         assert signature != null;
         Signature clone = new Signature();
@@ -185,15 +189,15 @@ public final class EquivalenceStrong implements Equivalence {
         }
         return clone;
     }
-    
-    private void computeCmpSignature() throws EPMCException {
+
+    private void computeCmpSignature() {
         this.maxOrigFanout = 0;
         int numStates = successorsFromTo.length - 1;
         for (int state = 0; state < numStates; state++) {
             int numSuccStates = successorsFromTo[state + 1] - successorsFromTo[state];
             maxOrigFanout = Math.max(maxOrigFanout, numSuccStates);
         }
-        
+
         TypeAlgebra typeWeight = TypeWeight.get();
 
         Signature cmpSignature = new Signature();
@@ -205,9 +209,9 @@ public final class EquivalenceStrong implements Equivalence {
         }
         this.cmpSignature = cmpSignature;        
     }
-    
+
     @Override
-    public GraphExplicit computeQuotient(int[] originalToQuotientState, List<int[]> blocks) throws EPMCException {
+    public GraphExplicit computeQuotient(int[] originalToQuotientState, List<int[]> blocks) {
         GraphExplicit quotient;
         int numStates = blocks.size();
         int numTotalOut = 0;
@@ -217,7 +221,7 @@ public final class EquivalenceStrong implements Equivalence {
         for (int j = 0; j < numBlocks; j++) {
             int[] block = blocks.get(j);
             if (block.length == 0) {
-            	continue;
+                continue;
             }
             int representant = block[0];
             int from = successorsFromTo[representant];
@@ -250,7 +254,7 @@ public final class EquivalenceStrong implements Equivalence {
         for (int j = 0; j < numBlocks; j++) {
             int[] block = blocks.get(j);
             if (block.length == 0) {
-            	continue;
+                continue;
             }
             int representant = block[0];
             int origFrom = successorsFromTo[representant];
@@ -279,7 +283,7 @@ public final class EquivalenceStrong implements Equivalence {
                 int blockNr = blockToNumber.get(succRepresentant);
                 ValueAlgebra blockValue = quotWeightsArr[blockNr];
                 successorWeights.get(weight, succNr);
-                blockValue.add(blockValue, weight);
+                add.apply(blockValue, blockValue, weight);
                 quotSuccStatesArr[blockNr] = succRepresentant;
             }
             quotient.prepareNode(quotState, numQuotSucc);
@@ -287,33 +291,33 @@ public final class EquivalenceStrong implements Equivalence {
                 quotient.setSuccessorNode(quotState, i, quotSuccStatesArr[i]);
                 quotWeight.set(quotState, i, quotWeightsArr[i]);
             }
-            
+
             quotState++;
         }
         quotient.addSettableGraphProperty(CommonProperties.SEMANTICS,
-        		original.getGraphProperty(CommonProperties.SEMANTICS).getType());
+                original.getGraphProperty(CommonProperties.SEMANTICS).getType());
         quotient.setGraphProperty(CommonProperties.SEMANTICS,
-        		original.getGraphPropertyObject(CommonProperties.SEMANTICS));
+                original.getGraphPropertyObject(CommonProperties.SEMANTICS));
         return quotient;
     }
-    
-	@Override
-	public void setObjective(GraphSolverObjectiveExplicit objective) {
-		this.objective = objective;
-		original = objective.getGraph();
-	}
 
-	@Override
-	public boolean canHandle() {
-		Semantics semantics = objective.getGraph().getGraphPropertyObject(CommonProperties.SEMANTICS);
-		if (!SemanticsDTMC.isDTMC(semantics)) {
-			return false;
-		}
-		if (!(objective instanceof GraphSolverObjectiveExplicitLump)
-				&& !(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public void setObjective(GraphSolverObjectiveExplicit objective) {
+        this.objective = objective;
+        original = objective.getGraph();
+    }
+
+    @Override
+    public boolean canHandle() {
+        Semantics semantics = objective.getGraph().getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!SemanticsDTMC.isDTMC(semantics)) {
+            return false;
+        }
+        if (!(objective instanceof GraphSolverObjectiveExplicitLump)
+                && !(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
+            return false;
+        }
+        return true;
+    }
 
 }

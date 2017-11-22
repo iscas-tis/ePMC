@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -24,29 +24,28 @@ import java.util.Map;
 
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorNe;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorNe;
 
 public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -58,7 +57,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -72,19 +71,19 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         private Expression getExpression() {
             return expression;
         }
-        
+
         @Override
         public Builder setCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             assert expression != null;
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
@@ -104,15 +103,12 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
                     && !opName.equals(OperatorNe.NE)) {
                 return false;
             }
-            for (Expression child : expressionOperator.getOperands()) {
-                if (child.getType(expressionToType) == null
-                        || !TypeInteger.isInteger(child.getType(expressionToType))) {
-                    return false;
-                }
-            }
             for (Expression operand : expressionOperator.getOperands()) {
                 EvaluatorExplicit op = UtilEvaluatorExplicit.newEvaluator(null, operand, variables, cache, expressionToType);
                 if (!(op instanceof EvaluatorExplicitInteger)) {
+                    return false;
+                }
+                if (!TypeInteger.is(op.getType())) {
                     return false;
                 }
             }
@@ -120,21 +116,21 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperatorBinaryIntegerToBoolean(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
 
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
-        
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
+
     }
     @FunctionalInterface
     private static interface BinaryIntegerToBoolean {
@@ -142,7 +138,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     }
 
     public final static String IDENTIFIER = "operator-binary-integer-to-boolean";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicitInteger[] operands;
@@ -151,8 +147,8 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     private final BinaryIntegerToBoolean binaryIntegerToBoolean;
 
     private final OperatorEvaluator evaluator;
-    
-    private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) throws EPMCException {
+
+    private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -182,24 +178,24 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         } else if (operator.equals(OperatorNe.NE)) {
             binaryIntegerToBoolean = (a,b) -> a != b;
         } else {
-        	binaryIntegerToBoolean = null;
+            binaryIntegerToBoolean = null;
         }
-        this.evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(expression.getOperator(), types).newValue();
+        this.evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
+        result = evaluator.resultType().newValue();
     }
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -211,9 +207,9 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         evaluator.apply(result, operandValues);
         return result;
     }
-    
+
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -221,7 +217,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         return binaryIntegerToBoolean.call(operands[0].evaluateInteger(values),
                 operands[1].evaluateInteger(values));
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

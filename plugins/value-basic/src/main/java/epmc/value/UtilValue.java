@@ -16,56 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
+import epmc.operator.OperatorSet;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class UtilValue {
-    public static Type algebraicResultNonIntegerType(Type[] types) {
-        Type upper = upper(types);
-        if (allTypesKnown(types) && upper == null) {
-            return null;
-        } else {
-            Type result;
-            if (TypeAlgebra.isAlgebra(upper)) {
-                result = upper;
-            } else if (TypeArray.isArray(upper)) {
-                // TODO dimensions check
-                result = upper;
-            } else {
-                return null;
-            }
-            if (TypeInteger.isInteger(result)) {
-                result = TypeReal.get();
-            }
-            return result;
-        }
-    }
-
-    public static Type algebraicResultType(Type[] types) {
-        Type upper = upper(types);
-        if (allTypesKnown(types) && upper == null) {
-            return null;
-        } else {
-            Type result;
-            if (TypeAlgebra.isAlgebra(upper)) {
-                result = upper;
-            } else if (TypeArray.isArray(upper)) {
-                // TODO dimensions check
-                result = upper;
-            } else {
-                return null;
-            }
-            return result;
-        }
-    }
-
+    private final static String LBRACK = "[";
+    private final static String RBRACK = "]";
+    private final static String COMMA = ",";
+    private final static String UNCHECKED = "unchecked";
+    
+    // TODO get rid of this method
     public static Type upper(Type... types) {
         Type upper = types[0];
         for (Type type : types) {
@@ -83,71 +50,47 @@ public final class UtilValue {
         return upper;
     }
 
-    public static Type booleanResultType(Type[] types) {
-        for (Type type : types) {
-            if (type == null || !TypeBoolean.isBoolean(type)) {
-                return null;
-            }
-        }
-        Type result = TypeBoolean.get();
-        return result;
-    }
-
-    public static boolean allTypesKnown(Type... types) {
-        boolean allTypesKnown = true;
-        for (Type type : types) {
-            if (type == null) {
-                allTypesKnown = false;
-            }
-        }
-        return allTypesKnown;
-    }
-    
-    public static <T extends Value, U extends Type> T newValue(U type, String valueString) throws EPMCException {
-        @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
-        value.set(valueString);
-        return value;
-    }
-
-    public static <T extends ValueReal, U extends TypeReal> T newValueDouble(U type, double valueDouble) throws EPMCException {
-        @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
-        value.set(valueDouble);
+    public static <T extends Value, U extends Type> T newValue(U type, String valueString) {
+        @SuppressWarnings(UNCHECKED)
+        T value = (T) type.newValue();
+        ValueSetString.as(value).set(valueString);
         return value;
     }
 
     public static <T extends ValueAlgebra, U extends TypeAlgebra> T newValue(U type, int valueInt) {
-        @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
+        @SuppressWarnings(UNCHECKED)
+        T value = (T) type.newValue();
         value.set(valueInt);
         return value;
     }
 
     public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int size) {
-    	assert type != null;
-    	assert size >= 0;
-        @SuppressWarnings("unchecked")
-		T value = (T) type.newValue();
+        assert type != null;
+        assert size >= 0;
+        @SuppressWarnings(UNCHECKED)
+        T value = (T) type.newValue();
         value.setSize(size);
         return value;
     }
-    
-    @SuppressWarnings("unchecked")
-	public static <T extends Type> T upper(T a, T b) {
-    	assert a != null;
+
+    // TODO get rid of this method
+    @SuppressWarnings(UNCHECKED)
+    public static <T extends Type> T upper(T a, T b) {
+        assert a != null;
         assert b != null;
         T upper = null;
-        if (TypeInteger.isInteger(a) && TypeInteger.isInteger(b)) {
-            int lowerBound = Math.min(TypeInteger.asInteger(a).getLowerInt(),
-            		TypeInteger.asInteger(b).getLowerInt());
-            int upperBound = Math.max(TypeInteger.asInteger(a).getUpperInt(),
-            		TypeInteger.asInteger(b).getUpperInt());
+        if (TypeInteger.is(a) && TypeInteger.is(b)) {
+            int lowerBound = Math.min(TypeInteger.as(a).getLowerInt(),
+                    TypeInteger.as(b).getLowerInt());
+            int upperBound = Math.max(TypeInteger.as(a).getUpperInt(),
+                    TypeInteger.as(b).getUpperInt());
             upper = (T) new TypeInteger(lowerBound, upperBound);
         } else {
-            if (a.canImport(b)) {
+            OperatorEvaluator setAB = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, b, a);
+            OperatorEvaluator setBA = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, a, b);
+            if (setAB != null) {
                 upper = a;
-            } else if (b.canImport(a)) {
+            } else if (setBA != null) {
                 upper = b;
             } else {
                 upper = null;
@@ -160,17 +103,27 @@ public final class UtilValue {
     }
 
     public static <T extends Value> T clone(T value) {
-    	assert value != null;
-    	@SuppressWarnings("unchecked")
-		T clone = (T) value.getType().newValue();
-    	clone.set(value);
-    	return clone;
+        assert value != null;
+        @SuppressWarnings(UNCHECKED)
+        T clone = (T) value.getType().newValue();
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        set.apply(clone, value);
+        return clone;
     }
-    
+
+    public static <T extends Value> T clone(EvaluatorCache cache, T value) {
+        assert value != null;
+        @SuppressWarnings(UNCHECKED)
+        T clone = (T) value.getType().newValue();
+        OperatorEvaluator set = cache.getEvaluator(OperatorSet.SET, value.getType(), value.getType());
+        set.apply(clone, value);
+        return clone;
+    }
+
     public static <T extends ValueArray> T ensureSize(T array, int size) {
-    	if (size <= array.size()) {
-    		return array;
-    	}
+        if (size <= array.size()) {
+            return array;
+        }
         int newSize = 1;
         while (newSize < size) {
             newSize <<= 1;
@@ -178,55 +131,56 @@ public final class UtilValue {
         T result = newArray(array.getType(), newSize);
         Value entry = array.getType().getEntryType().newValue();
         for (int i = 0; i < array.size(); i++) {
-        	array.get(entry, i);
-        	result.set(entry, i);
+            array.get(entry, i);
+            result.set(entry, i);
         }
         return result;
     }
 
-    public static boolean arrayEquals(ValueArray array, Object obj) {
-        if (!(obj instanceof ValueArray)) {
-            return false;
-        }
-        ValueArray other = (ValueArray) obj;
-        if (array.size() != other.size()) {
-            return false;
-        }
-        int totalSize = array.size();
-        Value entryAccThis = array.getType().getEntryType().newValue();
-        Value entryAccOther = array.getType().getEntryType().newValue();
-        for (int entry = 0; entry < totalSize; entry++) {
-            try {
-            	array.get(entryAccThis, entry);
-                other.get(entryAccOther, entry);
-                if (!entryAccThis.isEq(entryAccOther)) {
-                    return false;
-                }
-            } catch (EPMCException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return true;
-    }
-    
     public static String arrayToString(ValueArray array) {
         StringBuilder builder = new StringBuilder();
         Value entry = array.getType().getEntryType().newValue();
-        builder.append("[");
+        builder.append(LBRACK);
         for (int entryNr = 0; entryNr < array.size(); entryNr++) {
-        	array.get(entry, entryNr);
-        	builder.append(entry);
-        	if (entryNr < array.size() - 1) {
-        		builder.append(",");
-        	}
+            array.get(entry, entryNr);
+            builder.append(entry);
+            if (entryNr < array.size() - 1) {
+                builder.append(COMMA);
+            }
         }
-        builder.append("]");
+        builder.append(RBRACK);
         return builder.toString();
     }
+
+    public static double getDoubleOrInt(Value value) {
+        assert value != null;
+        assert ValueDouble.is(value) || ValueInteger.is(value)
+        : value.getType();
+        if (ValueDouble.is(value)) {
+            return ValueDouble.as(value).getDouble();
+        } else if (ValueInteger.is(value)) {
+            return ValueInteger.as(value).getInt();
+        } else {
+            assert false;
+            return Double.NaN;
+        }
+    }
     
+    public static double getDouble(Value value) {
+        assert value != null;
+        assert ValueDouble.is(value) : value.getType();
+        return ValueDouble.as(value).getDouble();
+    }
+
+    public static int getInt(Value value) {
+        assert value != null;
+        assert ValueInteger.is(value) : value.getType();
+        return ValueInteger.as(value).getInt();
+    }
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private UtilValue() {
-	}
+    private UtilValue() {
+    }
 }

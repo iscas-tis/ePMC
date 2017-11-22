@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explorer;
 
@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.StateSet;
 
 /**
@@ -48,7 +47,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
      * @param collection collection of which to construct nodes
      */
     @SuppressWarnings("unchecked")
-	StateSetExplorer(Explorer explorer, Collection<T> collection) {
+    StateSetExplorer(Explorer explorer, Collection<T> collection) {
         assert explorer != null;
         assert collection != null;
         for (ExplorerNode node : collection) {
@@ -59,7 +58,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
             this.nodes.add((T) node.clone());
         }
     }
-    
+
     @Override
     public int size() {
         return nodes.size();
@@ -69,8 +68,7 @@ final class StateSetExplorer <T extends ExplorerNode> implements StateSet {
     public void close() {
     }
 
-    @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+    public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplorer;
         StateSetExplorer other = (StateSetExplorer) states;

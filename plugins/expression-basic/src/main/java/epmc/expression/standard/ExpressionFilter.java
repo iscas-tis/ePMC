@@ -16,29 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
-
-import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.value.TypeAlgebra;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeInterval;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
-import epmc.value.UtilValue;
-import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.Value;
 
 /**
  * Expression representing a state filter.
@@ -49,18 +35,18 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionFilter implements Expression {
-	public static boolean isFilter(Expression expression) {
-		return expression instanceof ExpressionFilter;
-	}
-	
-	public static ExpressionFilter asFilter(Expression expression) {
-		if (isFilter(expression)) {
-			return (ExpressionFilter) expression;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean isFilter(Expression expression) {
+        return expression instanceof ExpressionFilter;
+    }
+
+    public static ExpressionFilter asFilter(Expression expression) {
+        if (isFilter(expression)) {
+            return (ExpressionFilter) expression;
+        } else {
+            return null;
+        }
+    }
+
     public final static class Builder {
         private Positional positional;
         private FilterType type;
@@ -71,48 +57,48 @@ public final class ExpressionFilter implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setFilterType(FilterType type) {
             this.type = type;
             return this;
         }
-        
+
         private FilterType getFilterType() {
             return type;
         }
-        
+
         public Builder setProp(Expression prop) {
             this.prop = prop;
             return this;
         }
-        
+
         private Expression getProp() {
             return prop;
         }
-        
+
         public Builder setStates(Expression states) {
             this.states = states;
             return this;
         }
-        
+
         private Expression getStates() {
             return states;
         }
-        
+
         public ExpressionFilter build() {
             return new ExpressionFilter(this);
         }
     }
-    
+
     private final Positional positional;
     private final FilterType type;
     private Expression prop;
     private Expression states;
-    
+
     private ExpressionFilter(Builder builder) {
         assert builder != null;
         assert builder.getFilterType() != null;
@@ -134,66 +120,7 @@ public final class ExpressionFilter implements Expression {
                 .setStates(children.get(1))
                 .build();
     }
-    
-    @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Type propType = prop.getType(expressionToType);
-        if (TypeInteger.isIntegerWithBounds(propType)) {
-            propType = TypeInteger.get();
-        }
-        Type statesType = states.getType(expressionToType);
-        ensure(statesType == null || TypeBoolean.isBoolean(statesType),
-                ProblemsExpression.EXPR_INCONSISTENT, "", this);
-        switch (type) {
-        case AVG:
-            ensure(propType == null || TypeWeight.isWeight(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeWeight.get();
-            break;
-        case SUM:
-            ensure(propType == null || TypeWeight.isWeight(propType)
-            || TypeInteger.isInteger(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeWeight.get();
-            break;
-        case RANGE:
-            ensure(propType == null || TypeReal.isReal(propType)
-            	|| TypeInterval.isInterval(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeInterval.get();
-            break;
-        case MAX: case MIN:
-            ensure(propType == null || TypeReal.isReal(propType)
-            	|| TypeInteger.isInteger(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeReal.get();
-            break;
-        case COUNT:
-            ensure(propType == null || TypeBoolean.isBoolean(propType),
-            	ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeInteger.get();
-            break;
-        case FIRST: case STATE: case PRINT: case PRINTALL:
-            result = propType;
-            break;
-        case FORALL: case EXISTS:
-            ensure(propType == null || TypeBoolean.isBoolean(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeBoolean.get();
-            break;
-        case ARGMAX: case ARGMIN:
-            ensure(propType == null || TypeReal.isReal(propType),
-            ProblemsExpression.EXPR_INCONSISTENT, "", this);
-            result = TypeBoolean.get();
-            break;
-        }
-        return result;
-    }
-    
+
     public FilterType getFilterType() {
         return type;
     }
@@ -201,7 +128,7 @@ public final class ExpressionFilter implements Expression {
     public boolean isSingleValue() {
         return type.isSingleValue();
     }
-    
+
     public boolean isSameResultForAllStates() {
         return type != FilterType.ARGMIN && type != FilterType.ARGMAX
                 && type != FilterType.PRINT && type != FilterType.PRINTALL;
@@ -210,11 +137,11 @@ public final class ExpressionFilter implements Expression {
     public boolean isCount() {
         return type == FilterType.COUNT;
     }
-    
+
     public boolean isExists() {
         return type == FilterType.EXISTS;
     }
-    
+
     public boolean isForall() {
         return type == FilterType.FORALL;
     }
@@ -222,11 +149,11 @@ public final class ExpressionFilter implements Expression {
     public boolean isRange() {
         return type == FilterType.RANGE;
     }
-    
+
     public boolean isAvg() {
         return type == FilterType.AVG;
     }
-    
+
     public boolean isState() {
         return type == FilterType.STATE;
     }
@@ -238,42 +165,23 @@ public final class ExpressionFilter implements Expression {
     public boolean isArgMax() {
         return type == FilterType.ARGMAX;
     }
-    
+
     public boolean isSum() {
         return type == FilterType.SUM;
     }
-    
+
     public Expression getProp() {
         return prop;
     }
-    
+
     public Expression getStates() {
         return states;
-    }
-    
-    public Value initialAccumulatorValue(ExpressionToType expressionToType, Value value) throws EPMCException {
-    	assert expressionToType != null;
-        assert value != null;
-        switch (type) {
-        case COUNT:
-            return UtilValue.clone(TypeInteger.get().getZero());
-        case EXISTS:
-            return UtilValue.clone(TypeBoolean.get().getFalse());
-        case FORALL:
-            return UtilValue.clone(TypeBoolean.get().getTrue());
-        case RANGE:
-            return TypeInterval.get().newValue(value, value);
-        case AVG: case SUM:
-            return UtilValue.clone(TypeAlgebra.asAlgebra(getType(expressionToType)).getZero());
-        default:
-            return UtilValue.clone(value);
-        }
     }
 
     public boolean isPrint() {
         return type == FilterType.PRINT;
     }
-    
+
     public boolean isPrintAll() {
         return type == FilterType.PRINTALL;
     }
@@ -290,20 +198,14 @@ public final class ExpressionFilter implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("filter(" + type + ",");
         builder.append(prop);
-        try {
-			if (!isTrue(states)) {
-			    builder.append(",");
-			    builder.append(states);
-			}
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        builder.append(",");
+        builder.append(states);
         builder.append(")");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -330,7 +232,7 @@ public final class ExpressionFilter implements Expression {
         }
         return this.type == other.type;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -342,30 +244,14 @@ public final class ExpressionFilter implements Expression {
         hash = type.hashCode() + (hash << 6) + (hash << 16) - hash;            
         return hash;
     }
-    
-    private static boolean isTrue(Expression expression) throws EPMCException {
-        assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
-            return false;
-        }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
-    }
-    
-    private static Value getValue(Expression expression) throws EPMCException {
-        assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
-        return expressionLiteral.getValue();
-    }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionFilter.Builder()
-				.setFilterType(type)
-				.setProp(prop)
-				.setStates(states)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionFilter.Builder()
+                .setFilterType(type)
+                .setProp(prop)
+                .setStates(states)
+                .setPositional(positional)
+                .build();
+    }
 }

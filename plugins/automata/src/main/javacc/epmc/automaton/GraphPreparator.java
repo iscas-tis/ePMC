@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -38,85 +37,85 @@ import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 
 final class GraphPreparator {
-	private final static class Transition {
-	    private final int to;
-	    private final Expression guard;
-	    private final BitSet label;
-	    
-	    private Transition(int to, Expression guard, BitSet label) {
-	    	this.to = to;
-	    	this.guard = guard;
-	    	this.label = label;
-	    }
-	    
-	    private int getTo() {
-			return to;
-		}
-	    
-	    private Expression getGuard() {
-			return guard;
-		}
-	    
-	    private BitSet getLabel() {
-			return label;
-		}
-	}
-	
-	private final HanoiHeader header;
-	private final List<Set<Transition>> transitions;
+    private final static class Transition {
+        private final int to;
+        private final Expression guard;
+        private final BitSet label;
 
-	GraphPreparator(HanoiHeader header) {
-		assert header != null;
-		this.header = header;
-		transitions = new ArrayList<>();
-		for (int i = 0; i < header.getNumStates(); i++) {
-			transitions.add(new LinkedHashSet<>());
-		}
-	}
-	
-	void addTransition(int from, int to, Expression guard, BitSet label) {
-		assert from >= 0;
-		assert from < transitions.size();
-		if (label == null) {
-			label = new BitSetUnboundedLongArray();
-		}
-		Set<Transition> stateTransitions = transitions.get(from);
-		stateTransitions.add(new Transition(to, guard, label));
-	}
-	
-	GraphExplicitWrapper toGraph() throws EPMCException {
-	    GraphExplicitWrapper graph = new GraphExplicitWrapper();
-	    TypeInteger typeInteger = TypeInteger.get();
-	    TypeObject typeLabel = new TypeObject.Builder()
+        private Transition(int to, Expression guard, BitSet label) {
+            this.to = to;
+            this.guard = guard;
+            this.label = label;
+        }
+
+        private int getTo() {
+            return to;
+        }
+
+        private Expression getGuard() {
+            return guard;
+        }
+
+        private BitSet getLabel() {
+            return label;
+        }
+    }
+
+    private final HanoiHeader header;
+    private final List<Set<Transition>> transitions;
+
+    GraphPreparator(HanoiHeader header) {
+        assert header != null;
+        this.header = header;
+        transitions = new ArrayList<>();
+        for (int i = 0; i < header.getNumStates(); i++) {
+            transitions.add(new LinkedHashSet<>());
+        }
+    }
+
+    void addTransition(int from, int to, Expression guard, BitSet label) {
+        assert from >= 0;
+        assert from < transitions.size();
+        if (label == null) {
+            label = new BitSetUnboundedLongArray();
+        }
+        Set<Transition> stateTransitions = transitions.get(from);
+        stateTransitions.add(new Transition(to, guard, label));
+    }
+
+    GraphExplicitWrapper toGraph() {
+        GraphExplicitWrapper graph = new GraphExplicitWrapper();
+        TypeInteger typeInteger = TypeInteger.get();
+        TypeObject typeLabel = new TypeObject.Builder()
                 .setClazz(BuechiTransition.class)
                 .build();
-	    ValueInteger numLabels = typeInteger.newValue();
-	    graph.addSettableGraphProperty(CommonProperties.NUM_LABELS, typeInteger);
-	    EdgeProperty labelProp = graph.addSettableEdgeProperty(CommonProperties.AUTOMATON_LABEL, typeLabel);
-	    
-	    ValueObject transitionValue = typeLabel.newValue();
-	    for (int from = 0; from < transitions.size(); from++) {
-	    	Set<Transition> stateTransitions = transitions.get(from);
-	    	int numSuccessors = stateTransitions.size();
-		    graph.prepareNode(from, numSuccessors);
-		    int succNr = 0;
-		    for (Transition transition : stateTransitions) {
-		    	BuechiTransition buchiTransition = new BuechiTransitionImpl(transition.getGuard(), transition.getLabel());
-		    	graph.setSuccessorNode(from, succNr, transition.getTo());
-		    	transitionValue.set(buchiTransition);
-		    	labelProp.set(from, succNr, transitionValue);
-		    	succNr++;
-		    }
-	    }
-	    
-	    numLabels.set(header.getNumAcc());
-	    BitSet init = graph.getInitialNodes();
-	    init.or(header.getStartStates());
-	    graph.setGraphProperty(CommonProperties.NUM_LABELS, numLabels);
-	    return graph;
-	}
-	
-	HanoiHeader getHeader() {
-		return header;
-	}
+        ValueInteger numLabels = typeInteger.newValue();
+        graph.addSettableGraphProperty(CommonProperties.NUM_LABELS, typeInteger);
+        EdgeProperty labelProp = graph.addSettableEdgeProperty(CommonProperties.AUTOMATON_LABEL, typeLabel);
+
+        ValueObject transitionValue = typeLabel.newValue();
+        for (int from = 0; from < transitions.size(); from++) {
+            Set<Transition> stateTransitions = transitions.get(from);
+            int numSuccessors = stateTransitions.size();
+            graph.prepareNode(from, numSuccessors);
+            int succNr = 0;
+            for (Transition transition : stateTransitions) {
+                BuechiTransition buchiTransition = new BuechiTransitionImpl(transition.getGuard(), transition.getLabel());
+                graph.setSuccessorNode(from, succNr, transition.getTo());
+                transitionValue.set(buchiTransition);
+                labelProp.set(from, succNr, transitionValue);
+                succNr++;
+            }
+        }
+
+        numLabels.set(header.getNumAcc());
+        BitSet init = graph.getInitialNodes();
+        init.or(header.getStartStates());
+        graph.setGraphProperty(CommonProperties.NUM_LABELS, numLabels);
+        return graph;
+    }
+
+    HanoiHeader getHeader() {
+        return header;
+    }
 }

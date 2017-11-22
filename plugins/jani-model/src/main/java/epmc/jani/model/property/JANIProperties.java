@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -49,103 +48,103 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class JANIProperties implements JANINode, Properties {
-	/** String used for naming unnamed properties as DEFAULT_NAME_num */
-	private final static String DEFAULT_NAME = "Property_%d";
+    /** String used for naming unnamed properties as DEFAULT_NAME_num */
+    private final static String DEFAULT_NAME = "Property_%d";
 
-	/** Model to which the properties belong. */
-	private ModelJANI model;
-	private Map<String, ? extends JANIIdentifier> validIdentifiers;
-	/** Properties stored in this properties object, transformed form. */
-	private final Map<String,JANIPropertyEntry> properties = new LinkedHashMap<>();
+    /** Model to which the properties belong. */
+    private ModelJANI model;
+    private Map<String, ? extends JANIIdentifier> validIdentifiers;
+    /** Properties stored in this properties object, transformed form. */
+    private final Map<String,JANIPropertyEntry> properties = new LinkedHashMap<>();
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	public void setValidIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-		this.validIdentifiers = identifiers;
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		assert model != null;
-		assert value != null;
-		assert validIdentifiers != null;
-		properties.clear();		
-		JsonArray array = UtilJSON.toArrayObject(value);
-		for (JsonValue entryValue : array) {
-			JANIPropertyEntry entry = new JANIPropertyEntry();
-			entry.setModel(model);
-			entry.setValidIdentifiers(validIdentifiers);
-			entry.parse(entryValue);
-			properties.put(entry.getName(), entry);
-		}
-		return this;
-	}
+    public void setValidIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.validIdentifiers = identifiers;
+    }
 
-	@Override
-	public JsonValue generate() throws EPMCException {
-		assert validIdentifiers != null;
-		assert model != null;
-		assert properties != null;
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (JANIPropertyEntry property : properties.values()) {
-			result.add(property.generate());
-		}
-		return result.build();
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        assert validIdentifiers != null;
+        properties.clear();		
+        JsonArray array = UtilJSON.toArrayObject(value);
+        for (JsonValue entryValue : array) {
+            JANIPropertyEntry entry = new JANIPropertyEntry();
+            entry.setModel(model);
+            entry.setValidIdentifiers(validIdentifiers);
+            entry.parse(entryValue);
+            properties.put(entry.getName(), entry);
+        }
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
-	
-	public void addProperty(String name, Expression property, String comment) {
-		assert property != null;
-		if (name == null) {
-			int propertyNumber = 0;
-			do {
-				name = String.format(DEFAULT_NAME, propertyNumber);
-				propertyNumber++;
-			} while (properties.containsKey(name));
-		}
-		JANIPropertyEntry janiProperty = new JANIPropertyEntry();
-		janiProperty.setModel(model);
-		janiProperty.setValidIdentifiers(validIdentifiers);
-		janiProperty.setExpression(property);
-		janiProperty.setName(name);
-		janiProperty.setComment(comment);
-		properties.put(name, janiProperty);
-	}
-	
-	@Override
-	public void parseProperties(InputStream... inputs) throws EPMCException {
-		assert inputs != null;
-		for (InputStream input : inputs) {
-			assert input != null;
-		}
-		assert false;
-	}
+    @Override
+    public JsonValue generate() {
+        assert validIdentifiers != null;
+        assert model != null;
+        assert properties != null;
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (JANIPropertyEntry property : properties.values()) {
+            result.add(property.generate());
+        }
+        return result.build();
+    }
 
-	@Override
-	public List<RawProperty> getRawProperties() {
-		List<RawProperty> rawProperties = new ArrayList<>();
-		for (JANIPropertyEntry entry : this.properties.values()) {
-			RawProperty raw = new RawProperty();
-			raw.setName(entry.getName());
-			rawProperties.add(raw);
-		}
-		return rawProperties;
-	}
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 
-	@Override
-	public Expression getParsedProperty(RawProperty property) {
-		return model.replaceConstants(properties.get(property.getName()).getExpression());
-	}
+    public void addProperty(String name, Expression property, String comment) {
+        assert property != null;
+        if (name == null) {
+            int propertyNumber = 0;
+            do {
+                name = String.format(DEFAULT_NAME, propertyNumber);
+                propertyNumber++;
+            } while (properties.containsKey(name));
+        }
+        JANIPropertyEntry janiProperty = new JANIPropertyEntry();
+        janiProperty.setModel(model);
+        janiProperty.setValidIdentifiers(validIdentifiers);
+        janiProperty.setExpression(property);
+        janiProperty.setName(name);
+        janiProperty.setComment(comment);
+        properties.put(name, janiProperty);
+    }
+
+    @Override
+    public void parseProperties(InputStream... inputs) {
+        assert inputs != null;
+        for (InputStream input : inputs) {
+            assert input != null;
+        }
+        assert false;
+    }
+
+    @Override
+    public List<RawProperty> getRawProperties() {
+        List<RawProperty> rawProperties = new ArrayList<>();
+        for (JANIPropertyEntry entry : this.properties.values()) {
+            RawProperty raw = new RawProperty();
+            raw.setName(entry.getName());
+            rawProperties.add(raw);
+        }
+        return rawProperties;
+    }
+
+    @Override
+    public Expression getParsedProperty(RawProperty property) {
+        return model.replaceConstants(properties.get(property.getName()).getExpression());
+    }
 }

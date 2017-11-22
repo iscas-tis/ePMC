@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.UtilValue;
@@ -94,26 +93,26 @@ public final class NodePropertyGeneral implements NodeProperty {
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         ensureSize(node);
         content.set(value, node);
     }
 
     @Override
-    public void set(int node, Object object) throws EPMCException {
+    public void set(int node, Object object) {
         assert object != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         ensureSize(node);
-        ValueObject.asObject(value).set(object);
+        ValueObject.as(value).set(object);
         content.set(value, node);
     }    
 
     @Override
-    public void set(int node, Enum<?> object) throws EPMCException {
+    public void set(int node, Enum<?> object) {
         assert object != null;
-        assert ValueEnum.isEnum(value);
+        assert ValueEnum.is(value);
         ensureSize(node);
-        ValueEnum.asEnum(value).set(object);
+        ValueEnum.as(value).set(object);
         content.set(value, node);
     }
 
@@ -135,10 +134,10 @@ public final class NodePropertyGeneral implements NodeProperty {
      * node values to ensure {@link #content} is large enough.
      */
     private void ensureSize(int queriedNode) {
-    	int oldSize = content.size();
+        int oldSize = content.size();
         content = UtilValue.ensureSize(content, queriedNode + 1);
         for (int i = oldSize; i < content.size(); i++) {
-        	content.set(defaultValue, i);
+            content.set(defaultValue, i);
         }
     }
 }

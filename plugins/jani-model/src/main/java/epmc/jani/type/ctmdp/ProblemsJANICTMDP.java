@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.ctmdp;
 
@@ -29,23 +29,23 @@ import epmc.error.UtilError;
  * @author Ernst Moritz Hahn
  */
 public final class ProblemsJANICTMDP {
-	/** Base name of resource file containing plugin problem descriptions. */
+    /** Base name of resource file containing plugin problem descriptions. */
     private final static String PROBLEMS_JANI_CTMDP = "ProblemsJANICTMDP";
-    
-	public static final Problem JANI_CTMDP_EDGE_REQUIRES_RATE = newProblem("jani-ctmdp-edge-requires-rate");
-	/** Time progress conditions are disallowed in CTMDPs. */
-	public static final Problem JANI_CTMDP_DISALLOWED_TIME_PROGRESSES = newProblem("jani-ctmdp-disallowed-time-progresses");
-	
-	/**
-	 * Create new problem object using plugin resource file.
-	 * The name parameter must not be {@code null}.
-	 * 
-	 * @param name problem identifier String
-	 * @return newly created problem identifier
-	 */
+
+    public static final Problem JANI_CTMDP_EDGE_REQUIRES_RATE = newProblem("jani-ctmdp-edge-requires-rate");
+    /** Time progress conditions are disallowed in CTMDPs. */
+    public static final Problem JANI_CTMDP_DISALLOWED_TIME_PROGRESSES = newProblem("jani-ctmdp-disallowed-time-progresses");
+
+    /**
+     * Create new problem object using plugin resource file.
+     * The name parameter must not be {@code null}.
+     * 
+     * @param name problem identifier String
+     * @return newly created problem identifier
+     */
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(PROBLEMS_JANI_CTMDP, name);
+        assert name != null;
+        return UtilError.newProblem(PROBLEMS_JANI_CTMDP, name);
     }
 
     /**

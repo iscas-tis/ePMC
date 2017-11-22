@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.util.BitSet;
@@ -28,41 +27,41 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 final class EdgePropertyRestricted implements EdgeProperty {
-	private final GraphExplicitRestricted graph;
-	private final EdgeProperty original;
-	private final BitSet restriction;
-	private final int[] substitute;
-	private final int maxNumSuccessors;
+    private final GraphExplicitRestricted graph;
+    private final EdgeProperty original;
+    private final BitSet restriction;
+    private final int[] substitute;
+    private final int maxNumSuccessors;
 
-	EdgePropertyRestricted(GraphExplicitRestricted graph, EdgeProperty original) {
-		assert graph != null;
-		assert original != null;
-		this.graph = graph;
-		this.original = original;
-		this.restriction = graph.getRestriction();
-		this.substitute = graph.getSubstitute();
-		this.maxNumSuccessors = graph.getMaxNumSuccessors();
-	}
-	
-	@Override
-	public GraphExplicit getGraph() {
-		return graph;
-	}
+    EdgePropertyRestricted(GraphExplicitRestricted graph, EdgeProperty original) {
+        assert graph != null;
+        assert original != null;
+        this.graph = graph;
+        this.original = original;
+        this.restriction = graph.getRestriction();
+        this.substitute = graph.getSubstitute();
+        this.maxNumSuccessors = graph.getMaxNumSuccessors();
+    }
 
-	@Override
-	public Value get(int queriedNode, int successor) throws EPMCException {
-		boolean valid = restriction.get(queriedNode * maxNumSuccessors + successor);
-		return original.get(queriedNode, valid ? successor : substitute[queriedNode]);
-	}
+    @Override
+    public GraphExplicit getGraph() {
+        return graph;
+    }
 
-	@Override
-	public void set(int node, int succ, Value value) {
-		assert false;
-	}
+    @Override
+    public Value get(int queriedNode, int successor) {
+        boolean valid = restriction.get(queriedNode * maxNumSuccessors + successor);
+        return original.get(queriedNode, valid ? successor : substitute[queriedNode]);
+    }
 
-	@Override
-	public Type getType() {
-		return original.getType();
-	}
+    @Override
+    public void set(int node, int succ, Value value) {
+        assert false;
+    }
+
+    @Override
+    public Type getType() {
+        return original.getType();
+    }
 
 }

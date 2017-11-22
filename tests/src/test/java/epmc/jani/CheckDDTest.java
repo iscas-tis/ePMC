@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineDD;
@@ -45,10 +44,10 @@ import java.util.Map;
  * @author Ernst Moritz Hahn
  */
 public final class CheckDDTest {
-	private final static String USER_DIR = "user.dir";
-	private final static String TARGET_CLASSES = "/target/classes/";
-	
-	/** Location of plugin directory in file system. */
+    private final static String USER_DIR = "user.dir";
+    private final static String TARGET_CLASSES = "/target/classes/";
+
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty(USER_DIR) + TARGET_CLASSES;
 
     /**
@@ -63,22 +62,20 @@ public final class CheckDDTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIOptions() throws EPMCException {
+    private final static Options prepareJANIOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, ModelJANI.IDENTIFIER);
         return options;
     }
-    
+
     /**
      * Test for BEB model from Arnd Hartmanns.
      * 
-     * @throws EPMCException thrown in case of problems
      */
     @Test
-    public void bebTest() throws EPMCException {
+    public void bebTest() {
         Options options = prepareJANIOptions();
         prepareOptions(options, ModelJANI.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
@@ -89,9 +86,9 @@ public final class CheckDDTest {
         assertEquals("0.9166259765625", result.get("LineSeized"), 1E-15);
         assertEquals("0.0833740234375", result.get("GaveUp"), 1E-15);
     }
-    
+
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareJANIOptions();
         prepareOptions(options, ModelJANI.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);

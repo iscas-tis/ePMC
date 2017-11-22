@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.measure;
 
@@ -24,16 +24,16 @@ import epmc.value.Type;
 import epmc.value.Value;
 
 public interface DiscreteMeasure {
-	static int NEG_INF = Integer.MIN_VALUE;
-	static int POS_INF = Integer.MAX_VALUE;	
+    static int NEG_INF = Integer.MIN_VALUE;
+    static int POS_INF = Integer.MAX_VALUE;	
 
-	Type getEntryType();
-	
-	void getTotal(Value total);
-	
-	int getFrom();
-	
-	int getTo();
-	
-	void getValue(Value value, int of);
+    Type getEntryType();
+
+    void getTotal(Value total);
+
+    int getFrom();
+
+    int getTo();
+
+    void getValue(Value value, int of);
 }

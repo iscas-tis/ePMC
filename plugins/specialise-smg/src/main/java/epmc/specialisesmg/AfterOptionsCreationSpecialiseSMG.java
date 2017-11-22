@@ -24,11 +24,9 @@ import epmc.algorithms.OptionsAlgorithm;
 import epmc.dd.OptionsDD;
 import epmc.dd.cudd.OptionsDDCUDD;
 import epmc.dd.cuddmtbdd.OptionsDDCUDDMTBDD;
-import epmc.error.EPMCException;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.graph.options.OptionsGraph;
 import epmc.graphsolver.OptionsGraphsolver;
-import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.type.ctmc.OptionsJANICTMC;
@@ -51,7 +49,7 @@ public final class AfterOptionsCreationSpecialiseSMG implements AfterOptionsCrea
 	}
 
 	@Override
-	public void process(Options options) throws EPMCException {
+	public void process(Options options) {
 		assert options != null;
 		options.disableOption(OptionsEPMC.PORT);
 		options.disableOption(OptionsModelChecker.MODEL_INPUT_TYPE);

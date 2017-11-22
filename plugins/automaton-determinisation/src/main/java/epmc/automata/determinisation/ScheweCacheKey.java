@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
@@ -25,7 +25,7 @@ import epmc.util.BitSet;
 final class ScheweCacheKey implements Cloneable {
     AutomatonScheweState state;
     BitSet guards;
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -33,23 +33,23 @@ final class ScheweCacheKey implements Cloneable {
         hash = guards.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-    	assert obj != null;
+        assert obj != null;
         if (!(obj instanceof ScheweCacheKey)) {
             return false;
         }
         ScheweCacheKey other = (ScheweCacheKey) obj;
         if (!state.equals(other.state)) {
-        	return false;
+            return false;
         }
         if (!guards.equals(other.guards)) {
-        	return false;
+            return false;
         }
         return true;
     }
-    
+
     @Override
     protected ScheweCacheKey clone() {
         ScheweCacheKey result = new ScheweCacheKey();

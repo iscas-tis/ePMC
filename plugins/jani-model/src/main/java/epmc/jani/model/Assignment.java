@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
 
 public interface Assignment extends JANINode {
-	@Override
-	public ModelJANI getModel();
+    @Override
+    public ModelJANI getModel();
 }

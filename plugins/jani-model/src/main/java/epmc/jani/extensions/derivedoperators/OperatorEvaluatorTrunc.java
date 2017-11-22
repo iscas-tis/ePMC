@@ -16,12 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeInteger;
@@ -29,46 +28,63 @@ import epmc.value.TypeNumber;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueNumber;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
-public enum OperatorEvaluatorTrunc implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorTrunc implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorTrunc.TRUNC;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeNumber.isNumber(types[0])) {
-			return false;
-		}
-		return true;
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return TypeInteger.get();
-	}
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
 
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		double opValue = ValueNumber.asNumber(operands[0]).getDouble();
-		ValueAlgebra.asAlgebra(result).set((int) opValue);
-	}
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (operator != OperatorTrunc.TRUNC) {
+                return null;
+            }
+            if (types.length != 1) {
+                return null;
+            }
+            if (!TypeNumber.is(types[0])) {
+                return null;
+            }
+            return new OperatorEvaluatorTrunc(this);
+        }
+    }
+
+    private OperatorEvaluatorTrunc(Builder builder) {
+    }
+
+    @Override
+    public Type resultType() {
+        return TypeInteger.get();
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        double opValue = ValueNumber.as(operands[0]).getDouble();
+        ValueAlgebra.as(result).set((int) opValue);
+    }
 }

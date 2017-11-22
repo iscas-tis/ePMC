@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
 public enum OptionsCommandExpression2Automaton {
-	OPTIONS_COMMAND_EXPRESSION2AUTOMATON,
+    OPTIONS_COMMAND_EXPRESSION2AUTOMATON,
     EXPRESSION2AUTOMATON,
     AUTOMATON_EXPRESSION2TYPE,
 }

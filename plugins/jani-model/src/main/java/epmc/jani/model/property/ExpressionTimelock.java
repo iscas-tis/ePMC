@@ -16,24 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
 import java.util.Collections;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
 
 public final class ExpressionTimelock implements Expression {
-	private final static String TIMELOCK = "\"timelock\"";
+    private final static String TIMELOCK = "\"timelock\"";
     private final Positional positional;
-    
+
     public ExpressionTimelock(Positional positional) {
         this.positional = positional;
     }
@@ -44,28 +40,18 @@ public final class ExpressionTimelock implements Expression {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-    	return TypeBoolean.get();
-    }
-
-    @Override
     public List<Expression> getChildren() {
-    	return Collections.emptyList();
+        return Collections.emptyList();
     }
 
     @Override
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
-    	return TIMELOCK;
+        return TIMELOCK;
     }
 
     @Override
@@ -76,17 +62,17 @@ public final class ExpressionTimelock implements Expression {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        
+
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionTimelock(positional);
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionTimelock(positional);
+    }
 }

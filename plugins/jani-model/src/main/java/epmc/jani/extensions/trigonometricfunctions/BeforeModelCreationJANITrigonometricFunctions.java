@@ -16,30 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.trigonometricfunctions;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationJANITrigonometricFunctions implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani-trigonometric-functions";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani-trigonometric-functions";
 
-	@Override
-	public void process() throws EPMCException {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorSin.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorCos.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorTan.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAsin.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAcos.INSTANCE);
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorAtan.INSTANCE);
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process() {
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSin.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorCos.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorTan.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAsin.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAcos.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorAtan.Builder.class);
+    }
 }

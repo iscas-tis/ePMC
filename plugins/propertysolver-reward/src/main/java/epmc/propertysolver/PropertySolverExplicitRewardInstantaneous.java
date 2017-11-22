@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
@@ -49,7 +48,7 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeWeight;
@@ -65,64 +64,64 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     public final static String IDENTIFIER = "reward-explicit-instantaneous";
     private ModelChecker modelChecker;
     private GraphExplicit graph;
-	private Expression property;
-	private StateSet forStates;
+    private Expression property;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
     }
 
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
 
-	@Override
-	public Set<Object> getRequiredGraphProperties() throws EPMCException {
-		Set<Object> required = new LinkedHashSet<>();
-		required.add(CommonProperties.SEMANTICS);
-		return Collections.unmodifiableSet(required);
-	}
+    @Override
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
+    }
 
 
-	@Override
-	public Set<Object> getRequiredNodeProperties() throws EPMCException {
-		Set<Object> required = new LinkedHashSet<>();
-		required.add(CommonProperties.STATE);
-		required.add(CommonProperties.PLAYER);
-		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+    @Override
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
         required.add(quantifiedReward.getReward());
         RewardType rewardType = quantifiedReward.getRewardType();
         if (rewardType.isReachability()) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(quantifiedReward.getRewardReachSet(), forStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(quantifiedReward.getRewardReachSet(), forStates));
         }
-		return Collections.unmodifiableSet(required);
-	}
-
-	@Override
-	public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-		Set<Object> required = new LinkedHashSet<>();
-		required.add(CommonProperties.WEIGHT);
-		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        required.add(((ExpressionReward) (propertyQuantifier.getQuantified())).getReward());
-		return Collections.unmodifiableSet(required);
-	}
+        return Collections.unmodifiableSet(required);
+    }
 
     @Override
-    public StateMap solve() throws EPMCException {
-		ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        required.add(((ExpressionReward) (propertyQuantifier.getQuantified())).getReward());
+        return Collections.unmodifiableSet(required);
+    }
+
+    @Override
+    public StateMap solve() {
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         ExpressionReward quantifiedProp = (ExpressionReward) propertyQuantifier.getQuantified();
         DirType dirType = ExpressionQuantifier.computeQuantifierDirType(propertyQuantifier);
         boolean min = dirType == DirType.MIN;
@@ -136,7 +135,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     }
 
     public StateMap doSolve(Expression property, StateSetExplicit states, boolean min)
-            throws EPMCException {
+    {
         assert property != null;
         assert states != null;
         RewardSpecification rewardStructure = ((ExpressionReward) property).getReward();
@@ -145,11 +144,11 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
         assert stateReward != null;
         assert transReward != null;
         ExpressionReward propertyReward = (ExpressionReward) property;
-        ValueAlgebra time = ValueAlgebra.asAlgebra(evaluateValue(propertyReward.getTime()));
+        ValueAlgebra time = ValueAlgebra.as(evaluateValue(propertyReward.getTime()));
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
         for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
-        	Value reward = stateReward.get(graphNode);
-        	values.set(reward, graphNode);
+            Value reward = stateReward.get(graphNode);
+            values.set(reward, graphNode);
         }
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
@@ -161,7 +160,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
         configuration.solve();
         values = objective.getResult();
         StateMapExplicit result = valuesToResult(values, states);
-        
+
         return result;
     }
 
@@ -180,7 +179,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -194,7 +193,7 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
         }
         ExpressionReward quantifiedReward = (ExpressionReward) propertyQuantifier.getQuantified();
         if (quantifiedReward.getRewardType() != RewardType.INSTANTANEOUS) {
-        	return false;
+            return false;
         }
         return true;
     }
@@ -203,8 +202,8 @@ public final class PropertySolverExplicitRewardInstantaneous implements Property
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-    private Value evaluateValue(Expression expression) throws EPMCException {
+
+    private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
         return evaluator.evaluate();

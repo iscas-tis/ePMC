@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -48,10 +48,10 @@ public final class ProblemsOptions {
     public final static Problem OPTIONS_PARSE_OPTION_FAILED = newProblem("options-parse-option-failed");
     // TODO document
     public final static Problem OPTIONS_OPTION_NOT_SET = newProblem("options-option-not-set");
- // TODO move out of main part
+    // TODO move out of main part
     /** Value parsed by interval option type outside its interval. */
     public final static Problem OPTIONS_VALUE_OUTSIDE_INTERVAL = newProblem("options-value-outside-interval");
-    
+
     /**
      * Create new problem object using plugin resource file.
      * The name parameter may not be {@code null}.

@@ -1,54 +1,47 @@
 package epmc.value;
 
-import epmc.error.EPMCException;
-import epmc.value.operator.OperatorNot;
+import epmc.operator.Operator;
+import epmc.operator.OperatorNot;
 
 public final class OperatorEvaluatorNot implements OperatorEvaluator {
 
-	@Override
-	public Operator getOperator() {
-		return OperatorNot.NOT;
-	}
+    public Operator getOperator() {
+        return OperatorNot.NOT;
+    }
 
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeTernary.isTernary(types[0])) {
-			return false;
-		}
-		return true;
-	}
+    public boolean canApply(Type... types) {
+        assert types != null;
+        for (Type type : types) {
+            assert type != null;
+        }
+        if (types.length != 1) {
+            return false;
+        }
+        if (!TypeTernary.is(types[0])) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		assert types.length == 1;
-		return TypeTernary.get();
-	}
+    @Override
+    public Type resultType() {
+        return TypeTernary.get();
+    }
 
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		for (Value operand : operands) {
-			assert operand != null;
-		}
-		assert operands.length == 1;
-		Ternary operand = UtilTernary.getTernary(operands[0]);
-		ValueTernary.asTernary(result).set(apply(operand));
-	}
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        assert operands.length == 1;
+        Ternary operand = UtilTernary.getTernary(operands[0]);
+        ValueTernary.as(result).set(apply(operand));
+    }
 
-	private Ternary apply(Ternary operand) {
-		assert operand != null;
+    private Ternary apply(Ternary operand) {
+        assert operand != null;
         if (operand.isTrue()) {
             return Ternary.FALSE;
         } else if (operand.isFalse()) {
@@ -59,5 +52,5 @@ public final class OperatorEvaluatorNot implements OperatorEvaluator {
             assert false;
             return null;
         }
-	}
+    }
 }

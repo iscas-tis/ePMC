@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.dd;
 
@@ -30,16 +30,16 @@ import epmc.dd.DD;
  * @author Ernst Moritz Hahn
  */
 final class DDPair {
-	/** String containing "set0", for {@link #toString()}. */
-	private final static String SET0 = "set0";
-	/** String containing "set1", for {@link #toString()}. */
-	private final static String SET1 = "set1";
+    /** String containing "set0", for {@link #toString()}. */
+    private final static String SET0 = "set0";
+    /** String containing "set1", for {@link #toString()}. */
+    private final static String SET1 = "set1";
 
-	/** Winning nodes of player 0. */
+    /** Winning nodes of player 0. */
     private final DD set0;
     /** Winning nodes of player 1. */
     private final DD set1;
-    
+
     /**
      * Construct new winning set pair.
      * The winning set parameters may not be {@code null} and must be mutually
@@ -49,20 +49,20 @@ final class DDPair {
      * @param set1 winning set of player 1
      */
     DDPair(DD set0, DD set1) {
-    	assert set0 != null;
-    	assert set1 != null;
+        assert set0 != null;
+        assert set1 != null;
         this.set0 = set0;
         this.set1 = set1;
     }
-    
+
     @Override
     public String toString() {
-    	return MoreObjects.toStringHelper(this)
-    	.add(SET0, set0)
-    	.add(SET1, set1)
-    	.toString();
+        return MoreObjects.toStringHelper(this)
+                .add(SET0, set0)
+                .add(SET1, set1)
+                .toString();
     }
-    
+
     /**
      * Get set of winning nodes of player 0.
      * 
@@ -71,7 +71,7 @@ final class DDPair {
     DD getSet0() {
         return set0;
     }
-    
+
     /**
      * Get set of winning nodes of player 1.
      * 

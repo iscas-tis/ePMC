@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -29,24 +29,24 @@ import epmc.jani.model.type.JANIType;
  * @author Ernst Moritz Hahn
  */
 public interface JANIIdentifier {
-	/**
-	 * Get identifier expression of this JANI identifier.
-	 * 
-	 * @return expression identifier of this JANI identifier.
-	 */
-	ExpressionIdentifierStandard getIdentifier();
+    /**
+     * Get identifier expression of this JANI identifier.
+     * 
+     * @return expression identifier of this JANI identifier.
+     */
+    ExpressionIdentifierStandard getIdentifier();
 
-	/**
-	 * Get JANI type of this identifier.
-	 * 
-	 * @return JANI type of this identifier
-	 */
-	JANIType getType();
+    /**
+     * Get JANI type of this identifier.
+     * 
+     * @return JANI type of this identifier
+     */
+    JANIType getType();
 
-	/**
-	 * Get name of this identifier.
-	 * 
-	 * @return name of this identifier
-	 */
-	String getName();
+    /**
+     * Get name of this identifier.
+     * 
+     * @return name of this identifier
+     */
+    String getName();
 }

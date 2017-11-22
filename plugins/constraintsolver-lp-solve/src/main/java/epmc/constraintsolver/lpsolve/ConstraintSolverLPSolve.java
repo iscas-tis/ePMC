@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.lpsolve;
 
@@ -33,7 +33,6 @@ import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.error.ProblemsConstraintsolver;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.util.JNATools;
@@ -51,14 +50,16 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueContentDoubleArray;
+import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueNumber;
 import epmc.value.ValueReal;
+import epmc.value.ValueSetString;
 
 public final class ConstraintSolverLPSolve implements ConstraintSolver {
-	public final static String IDENTIFIER = "lp-solve";
+    public final static String IDENTIFIER = "lp-solve";
     /* input constants to lp_solve */
-    
+
     /** Encoding constant {@code false} of lp_solve. */
     private final static byte FALSE = 0;
     /** Encoding constant {@code true} of lp_solve. */
@@ -69,9 +70,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     private final static int EQ = 3;
     /** Encoding greater-or-equal in lp_solve. */    
     private final static int GE = 2;
-    
+
     /* return codes of lp_solve */
-    
+
     private final static int NOTRUN = -1;
     private final static int NOMEMORY = -2;
     private final static int NOBFP = -3;
@@ -88,9 +89,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     private final static int PROCBREAK = 11;
     private final static int FEASFOUND = 12;
     private final static int NOFEASFOUND = 13;
-    
+
     /* reporting details mode of lp_solve */
-    
+
     private final static int NEUTRAL = 0;
     private final static int CRITICAL = 1;
     private final static int SEVERE = 2;
@@ -98,61 +99,61 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     private final static int NORMAL = 4;
     private final static int DETAILED = 5;
     private final static int FULL = 6;
-    
+
     private final static class LpSolve {
-        
+
         static native Pointer make_lp(int rows, int columns);
-        
+
         static native void delete_lp(Pointer lp);
-        
+
         static native byte set_add_rowmode(Pointer lp, byte turnon);
-        
+
         static native byte add_constraint(Pointer lp, double[] row, int constr_type, double rh);
-        
+
         static native byte add_constraintex(Pointer lp, int count, double[] row, int[] colno, int constr_type, double rh);
-        
+
         static native int solve(Pointer lp);
-        
+
         static native byte has_BFP(Pointer lp);
 
         static native byte is_feasible(Pointer lp, double[] values, double threshold);
-        
+
         static native byte get_primal_solution(Pointer lp, double[] pv);
-        
+
         static native double get_objective(Pointer lp);
-        
+
         static native byte set_obj_fn(Pointer lp, double[] row);
-        
+
         static native byte set_obj_fnex(Pointer lp, int count, double[] row, int[] colno);
-        
+
         static native void set_maxim(Pointer lp);
 
         static native void set_minim(Pointer lp);
 
         static native void print_constraints(Pointer lp, int columns);
-        
+
         static native void print_lp(Pointer lp);
-        
+
         static native byte set_int(Pointer lp, int column, byte must_be_int);
-        
+
         static native byte set_binary(Pointer lp, int column, byte must_be_bin);
-        
+
         static native byte add_columnex(Pointer lp, int count, double[] column, int[] rowno);
-        
+
         static native byte set_rowex(Pointer lp, int row_no, int count, double[] row, int[] colno);
-        
+
         static native void set_debug(Pointer lp, byte debug);
-        
+
         static native void set_verbose(Pointer lp, int verbose);
-        
+
         static native double get_var_primalresult(Pointer lp, int index);
-        
+
         static native byte set_bounds(Pointer lp, int column, double lower, double upper);
 
         static native byte set_col_name(Pointer lp, int column, String name);
 
         static native void set_use_names(Pointer lp, byte isrow, byte use_names);
-        
+
         static native void set_outputstream(Pointer lp, Pointer stream);
 
         private final static boolean loaded =
@@ -164,36 +165,36 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     private int numVariables;
     private int numConstraints;
     private boolean closed;
-    
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
 
-	@Override
-	public void requireFeature(Feature feature) {
-		assert feature != null;
-		features.add(feature);
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public boolean canHandle() {
-		for (Feature feature : features) {
-			if (feature != Feature.LP) {
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public void requireFeature(Feature feature) {
+        assert feature != null;
+        features.add(feature);
+    }
 
-	@Override
-	public void build() throws EPMCException {
+    @Override
+    public boolean canHandle() {
+        for (Feature feature : features) {
+            if (feature != Feature.LP) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void build() {
         this.lp = LpSolve.make_lp(numConstraints, numVariables);
         ensure(this.lp != null, ProblemsConstraintsolver.CONSTRAINTSOLVER_INSUFFICIENT_NATIVE_MEMORY);
         LpSolve.set_debug(this.lp, FALSE);
         LpSolve.set_verbose(this.lp, NEUTRAL);
         LpSolve.set_use_names(this.lp, (byte) 0, (byte) 1);
-	}
+    }
 
     private int toLpSolveConstraintType(ConstraintType type) {
         assert type != null;
@@ -209,24 +210,24 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             return -1;
         }
     }
-    
+
     @Override
     public int addVariable(String name, Type type, Value lower, Value upper) {
         assert !closed;
         assert type != null;
-        assert TypeReal.isReal(type) || TypeInteger.isInteger(type);
-        assert lower == null || ValueReal.isReal(lower) || ValueInteger.isInteger(lower) || ValueBoolean.isBoolean(lower);
-        assert upper == null || ValueReal.isReal(upper) || ValueInteger.isInteger(upper) || ValueBoolean.isBoolean(upper);
+        assert TypeReal.is(type) || TypeInteger.is(type);
+        assert lower == null || ValueReal.is(lower) || ValueInteger.is(lower) || ValueBoolean.is(lower);
+        assert upper == null || ValueReal.is(upper) || ValueInteger.is(upper) || ValueBoolean.is(upper);
         LpSolve.set_add_rowmode(lp, FALSE);
         LpSolve.add_columnex(lp, 0, new double[0], new int[0]);
         int variable = numVariables;
-        if (TypeInteger.isInteger(type)) {
+        if (TypeInteger.is(type)) {
             LpSolve.set_int(lp, variable, TRUE);
-        } else if (TypeBoolean.isBoolean(type)) {
+        } else if (TypeBoolean.is(type)) {
             LpSolve.set_binary(lp, variable, TRUE);
         }
         if (lower != null && upper != null) {
-        	LpSolve.set_bounds(lp, variable + 1, ValueNumber.asNumber(lower).getDouble(), ValueNumber.asNumber(upper).getDouble());
+            LpSolve.set_bounds(lp, variable + 1, ValueNumber.as(lower).getDouble(), ValueNumber.as(upper).getDouble());
         }
         if (name != null) {
             LpSolve.set_col_name(lp, variable + 1, name);
@@ -247,9 +248,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         incIntArrayOne(variables);
         LpSolve.set_add_rowmode(lp, TRUE);
         int lpConstraintType = toLpSolveConstraintType(constraintType);
-        double lpRhs = ValueNumber.asNumber(rightHandSide).getDouble();
+        double lpRhs = ValueNumber.as(rightHandSide).getDouble();
         LpSolve.add_constraintex(lp, row.length, row, variables,
-        		lpConstraintType, lpRhs);
+                lpConstraintType, lpRhs);
         decIntArrayOne(variables);
         numConstraints++;
     }
@@ -274,9 +275,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             assert var < numVariables;
         }
         assert rightHandSide != null;
-        assert TypeReal.isReal(rightHandSide.getType());
+        assert TypeReal.is(rightHandSide.getType());
         double[] rowDouble = arrayToDouble(row);
-        
+
         addConstraint(rowDouble, variables, constraintType, rightHandSide);
     }
 
@@ -291,9 +292,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
             assert var < numVariables;
         }
         assert rightHandSide != null;
-        assert TypeReal.isReal(rightHandSide.getType());
+        assert TypeReal.is(rightHandSide.getType());
         double[] rowDouble = arrayToDouble(row);
-        
+
         addConstraint(rowDouble, variables, constraintType, rightHandSide);
     }
 
@@ -338,14 +339,14 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         assert expression != null;
         assert false;
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void setDirection(Direction direction) {
         assert !closed;
         assert direction != null;
-		switch (direction) {
+        switch (direction) {
         case MAX:
             LpSolve.set_maxim(this.lp);
             break;
@@ -400,15 +401,15 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
     private double[] arrayToDouble(ValueArray row) {
         assert row != null;
         double[] rowDouble = null;
-        
-        if (TypeDouble.isDouble(row.getType().getEntryType())) {
+
+        if (TypeDouble.is(row.getType().getEntryType())) {
             rowDouble = ValueContentDoubleArray.getContent(row);
         } else {
             rowDouble = new double[row.size()];
             Value entry = row.getType().getEntryType().newValue();
             for (int i = 0; i < row.size(); i++) {
                 row.get(entry, i);
-                rowDouble[i] = ValueNumber.asNumber(entry).getDouble();
+                rowDouble[i] = ValueNumber.as(entry).getDouble();
             }
         }
         return rowDouble;
@@ -422,44 +423,65 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         }
         double[] rowDouble = new double[row.length];
         for (int i = 0; i < row.length; i++) {
-            rowDouble[i] =  ValueNumber.asNumber(row[i]).getDouble();
+            rowDouble[i] =  ValueNumber.as(row[i]).getDouble();
         }
         return rowDouble;
     }
 
     @Override
-    public ValueReal getResultObjectiveValue() throws EPMCException {
+    public ValueReal getResultObjectiveValue() {
         assert !closed;
         double result = LpSolve.get_var_primalresult(lp, 0);
-        return UtilValue.newValueDouble(TypeReal.get(), result);
+        ValueReal resultValue = TypeReal.get().newValue();
+        if (ValueDouble.is(resultValue)) {
+            ValueDouble.as(resultValue).set(result);
+        } else if (ValueSetString.is(resultValue)) {
+            ValueSetString.as(resultValue).set(Double.toString(result));
+        } else {
+            assert false;
+        }
+        return resultValue;
     }
-    
+
     @Override
-    public ValueArray getResultVariablesValuesSingleType() throws EPMCException {
+    public ValueArray getResultVariablesValuesSingleType() {
         assert !closed;
         Value entry = TypeReal.get().newValue();
         ValueArray result = UtilValue.newArray(TypeReal.get().getTypeArray(),
-        		numVariables);
+                numVariables);
         for (int i = 0; i < result.size(); i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            entry.set(Double.toString(doubleVal));
+            if (ValueDouble.is(entry)) {
+                ValueDouble.as(entry).set(doubleVal);
+            } else if (ValueSetString.is(entry)) {
+                ValueSetString.as(entry).set(Double.toString(doubleVal));
+            } else {
+                assert false;
+            }
             result.set(entry, i);
         }
         return result;
     }
-    
-	@Override
-	public Value[] getResultVariablesValues() throws EPMCException {
+
+    @Override
+    public Value[] getResultVariablesValues() {
         assert !closed;
         Value[] result = new Value[numVariables];
+        TypeReal typeReal = TypeReal.get();
         for (int i = 0; i < result.length; i++) {
             double doubleVal = LpSolve.get_var_primalresult(lp, 1 + numConstraints + i);
-            Value entry = UtilValue.newValueDouble(TypeReal.get()
-            		, doubleVal);
+            Value entry = typeReal.newValue();
+            if (ValueDouble.is(entry)) {
+                ValueDouble.as(entry).set(doubleVal);
+            } else if (ValueSetString.is(entry)) {
+                ValueSetString.as(entry).set(Double.toString(doubleVal));
+            } else {
+                assert false;
+            }
             result[i] = entry;
         }
         return result;
-	}
+    }
 
     private void incIntArrayOne(int[] variables) {
         for (int i = 0; i < variables.length; i++) {
@@ -488,9 +510,9 @@ public final class ConstraintSolverLPSolve implements ConstraintSolver {
         }
     }
 
-	@Override
-	public String getVariableName(int number) {
-		// TODO
-		return null;
-	}
+    @Override
+    public String getVariableName(int number) {
+        // TODO
+        return null;
+    }
 }

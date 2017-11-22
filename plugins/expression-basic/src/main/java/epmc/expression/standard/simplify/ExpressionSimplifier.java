@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 
 /**
  * Expression simplifier interface.
@@ -41,7 +40,6 @@ public interface ExpressionSimplifier {
      * @param expressionToType expression types
      * @param expression expression to simplify
      * @return simplified expression, or {@code null}
-     * @throws EPMCException thrown in case of problems
      */
-    Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException;
+    Expression simplify(ExpressionToType expressionToType, Expression expression);
 }

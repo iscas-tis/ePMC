@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -68,9 +68,8 @@ public interface OptionType {
      * @param value value to be parsed
      * @param previousValue value parsed previously, or {@code null}
      * @return parsed value
-     * @throws EPMCException thrown if the value could not be parsed
      */
-    Object parse(String value, Object previousValue) throws EPMCException;
+    Object parse(String value, Object previousValue);
 
     /**
      * Obtain short description of option type.
@@ -81,7 +80,7 @@ public interface OptionType {
      * @return short description of option type
      */
     String getInfo();
-    
+
     /**
      * Obtain default value for this options type.
      * This value is used as the default value of {@link Option}s in case no

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.util;
 
@@ -34,7 +34,7 @@ import epmc.options.Options;
 public final class UtilKretinsky {
     private UtilKretinsky() {
     }
-    
+
     public static boolean isTemporal(Expression expression) {
         if (expression.isTemporal()) {
             return true;
@@ -47,8 +47,8 @@ public final class UtilKretinsky {
         }
         return false;
     }
-    
-    public static boolean spotLTLEquivalent(Expression expression1, Expression expression2) throws EPMCException {
+
+    public static boolean spotLTLEquivalent(Expression expression1, Expression expression2) {
         assert expression1 != null;
         assert expression2 != null;
         Map<Expression,String> expr2str = contextExpression.newMap();

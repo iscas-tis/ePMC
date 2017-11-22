@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -31,11 +31,11 @@ import java.io.OutputStream;
 public final class NullOutputStream extends OutputStream {
     /** instance of output stream ignoring all output */
     private final static NullOutputStream INSTANCE = new NullOutputStream();
-    
+
     @Override
     public void write(int b) throws IOException {
     }
-    
+
     /**
      * Obtain an instance of the null output stream.
      * Because the output is ignored anyway rather than being distributed to

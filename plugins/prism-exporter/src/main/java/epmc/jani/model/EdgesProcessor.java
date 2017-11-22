@@ -16,77 +16,76 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 
-	private Edges edges = null;
-	private String prefix = null;
-	private Automaton automaton = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof Edges; 
-		
-		edges = (Edges) obj;
-		return this;
-	}
+    private Edges edges = null;
+    private String prefix = null;
+    private Automaton automaton = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
-		this.automaton = automaton;
-		return this;
-	}
-	
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert edges != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		for (Edge edge : edges) {
-			prism.append(ProcessorRegistrar.getProcessor(edge)
-					  					   .setPrefix(prefix)
-					  					   .setAutomaton(automaton)
-					  					   .toPRISM());
-		}
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert edges != null;
-		
-		for (Edge edge : edges) {
-			ProcessorRegistrar.getProcessor(edge)
-							  .validateTransientVariables();
-		}
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Edges; 
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert edges != null;
-		
-		boolean usesTransient = false;
-		for (Edge edge : edges) {
-			usesTransient |= ProcessorRegistrar.getProcessor(edge)
-											   .usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+        edges = (Edges) obj;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+        this.automaton = automaton;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert edges != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        for (Edge edge : edges) {
+            prism.append(ProcessorRegistrar.getProcessor(edge)
+                    .setPrefix(prefix)
+                    .setAutomaton(automaton)
+                    .toPRISM());
+        }
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert edges != null;
+
+        for (Edge edge : edges) {
+            ProcessorRegistrar.getProcessor(edge)
+            .validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert edges != null;
+
+        boolean usesTransient = false;
+        for (Edge edge : edges) {
+            usesTransient |= ProcessorRegistrar.getProcessor(edge)
+                    .usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

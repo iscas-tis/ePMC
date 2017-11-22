@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -42,14 +42,14 @@ public interface BitStream {
         }
         return result;
     }
-    
+
     /**
      * Write next bit to bit stream and increate write cursor by one.
      * 
      * @param value bit to write
      */
     void write(boolean value);
-    
+
     default void write(int value, int numBits) {
         int mark = 1;
         for (int bitNr = 0; bitNr < numBits; bitNr++) {

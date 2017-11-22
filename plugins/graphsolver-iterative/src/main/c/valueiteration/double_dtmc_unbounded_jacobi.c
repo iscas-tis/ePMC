@@ -25,9 +25,10 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_dtmc_unbounded_jacobi(int relative, double precision,
         int numStates, int *stateBounds, int *targets, double *weights,
-        double *values) {
+        double *values, int *iterationsResult) {
     double *presValues = values;
     double *nextValues = malloc(sizeof(double) * numStates);
+    int iterations = 0;
     if (nextValues == NULL) {
         return OUT_OF_MEMORY;
     }
@@ -58,10 +59,12 @@ epmc_error_t double_dtmc_unbounded_jacobi(int relative, double precision,
         double *swap = presValues;
         presValues = nextValues;
         nextValues = swap;
+        iterations++;
     } while (maxDiff > precision / 2);
     for (int state = 0; state < numStates; state++) {
         values[state] = presValues[state];
     }
     free(allocated);
+    iterationsResult[0] = iterations;
     return SUCCESS;
 }

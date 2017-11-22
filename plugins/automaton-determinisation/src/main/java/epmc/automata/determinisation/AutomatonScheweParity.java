@@ -16,63 +16,62 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
 import epmc.automaton.AutomatonParity;
 import epmc.automaton.AutomatonSafra;
 import epmc.automaton.Buechi;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.value.Value;
 
 public final class AutomatonScheweParity implements AutomatonParity, AutomatonSafra {
-	public final static class Builder implements AutomatonSafra.Builder, AutomatonParity.Builder {
-		private Buechi buechi;
-		private BitSet init;
+    public final static class Builder implements AutomatonSafra.Builder, AutomatonParity.Builder {
+        private Buechi buechi;
+        private BitSet init;
 
-		@Override
-		public Builder setBuechi(Buechi buechi) {
-			this.buechi = buechi;
-			return this;
-		}
-		
-		private Buechi getBuechi() {
-			return buechi;
-		}
-		
-		@Override
-		public Builder setInit(BitSet initialStates) {
-			this.init = initialStates;
-			return this;
-		}
-		
-		private BitSet getInit() {
-			return init;
-		}
-		
-		@Override
-		public AutomatonScheweParity build() throws EPMCException {
-			return new AutomatonScheweParity(this);
-		}
-		
-	}
-	
+        @Override
+        public Builder setBuechi(Buechi buechi) {
+            this.buechi = buechi;
+            return this;
+        }
+
+        private Buechi getBuechi() {
+            return buechi;
+        }
+
+        @Override
+        public Builder setInit(BitSet initialStates) {
+            this.init = initialStates;
+            return this;
+        }
+
+        private BitSet getInit() {
+            return init;
+        }
+
+        @Override
+        public AutomatonScheweParity build() {
+            return new AutomatonScheweParity(this);
+        }
+
+    }
+
     public final static String IDENTIFIER = "schewe-parity";
 
     private final AutomatonSchewe inner;
-    
-    private AutomatonScheweParity(Builder builder) throws EPMCException {
-    	AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
-    	scheweBuilder.setParity(true);
-    	scheweBuilder.setBuechi(builder.getBuechi());
-    	scheweBuilder.setInit(builder.getInit());
-    	this.inner = scheweBuilder.build();
-	}
 
-	@Override
+    private AutomatonScheweParity(Builder builder) {
+        AutomatonSchewe.Builder scheweBuilder = new AutomatonSchewe.Builder();
+        scheweBuilder.setParity(true);
+        scheweBuilder.setBuechi(builder.getBuechi());
+        scheweBuilder.setInit(builder.getInit());
+        this.inner = scheweBuilder.build();
+    }
+
+    @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
@@ -89,7 +88,7 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+    {
         inner.queryState(modelState, automatonState);
     }
 
@@ -128,7 +127,7 @@ public final class AutomatonScheweParity implements AutomatonParity, AutomatonSa
     public int getNumPriorities() {
         return inner.getNumPriorities();
     }
-    
+
     @Override
     public String toString() {
         return inner.toString();

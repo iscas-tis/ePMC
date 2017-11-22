@@ -16,82 +16,93 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorMax;
 
 public final class GraphExplicitModifier {    
-    public static void embed(GraphExplicit graph) throws EPMCException {
+    public static void embed(GraphExplicit graph) {
         assert graph != null;
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
-                sum.set(zero);
+                set.apply(sum, zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
-                    sum.add(sum, weightProp.get(node, succNr));
+                    add.apply(sum, sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
-                    weight.set(weightProp.get(node, succNr));
-                    weight.divide(weight, sum);
+                    set.apply(weight, weightProp.get(node, succNr));
+                    divide.apply(weight, weight, sum);
                     weightProp.set(node, succNr, weight);
                 }
             }
         }
     }
 
-    public static void uniformise(GraphExplicit graph, Value uniRate) throws EPMCException {
+    public static void uniformise(GraphExplicit graph, Value uniRate) {
         assert graph != null;
         Value uniformisationRate = computeUniformisationRate(graph);
         if (uniRate != null) {
-            uniRate.set(uniformisationRate);
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
+            set.apply(uniRate, uniformisationRate);
         }
         ValueAlgebra zero = TypeWeight.get().getZero();
         ValueAlgebra sum = newValueWeight();
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weightProp = graph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         for (int node = 0; node < graph.getNumNodes(); node++) {
             Player player = playerProp.getEnum(node);
             if (player == Player.STOCHASTIC) {
-                sum.set(zero);
+                set.apply(sum, zero);
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
-                    sum.add(sum, weightProp.get(node, succNr));
+                    add.apply(sum, sum, weightProp.get(node, succNr));
                 }
                 for (int succNr = 0; succNr < graph.getNumSuccessors(node) - 1; succNr++) {
-                    weight.set(weightProp.get(node, succNr));
-                    weight.divide(weight, uniformisationRate);
+                    set.apply(weight, weightProp.get(node, succNr));
+                    divide.apply(weight, weight, uniformisationRate);
                     weightProp.set(node, succNr, weight);
                 }
-                weight.subtract(uniformisationRate, sum);
-                weight.divide(weight, uniformisationRate);
+                subtract.apply(weight, uniformisationRate, sum);
+                divide.apply(weight, weight, uniformisationRate);
                 weightProp.set(node, graph.getNumSuccessors(node) - 1, weight);
                 graph.setSuccessorNode(node, graph.getNumSuccessors(node) - 1, node);
             }
         }
     }
-    
-    private static Value computeUniformisationRate(GraphExplicit graph)
-            throws EPMCException {
+
+    private static Value computeUniformisationRate(GraphExplicit graph) {
         ValueAlgebra result = newValueWeight();
         ValueAlgebra sumRate = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, result.getType(), sumRate.getType());
+        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, result.getType(), sumRate.getType());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         for (int inputNode = 0; inputNode < graph.getNumNodes(); inputNode++) {
             Player player = playerProp.getEnum(inputNode);
             if (player == Player.STOCHASTIC) {
@@ -99,20 +110,20 @@ public final class GraphExplicitModifier {
                 int numSuccs = graph.getNumSuccessors(inputNode) - 1;
                 for (int succNr = 0; succNr < numSuccs; succNr++) {
                     Value rate = weight.get(inputNode, succNr);
-                    sumRate.add(sumRate, rate);
+                    add.apply(sumRate, sumRate, rate);
                 }
                 max.apply(result, result, sumRate);
             }
         }
         return result;
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
     private GraphExplicitModifier() {
     }
-    
+
     private static ValueAlgebra newValueWeight() {
         return TypeWeight.get().newValue();
     }

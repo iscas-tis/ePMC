@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.StateMap;
 import epmc.graph.StateSet;
@@ -42,14 +41,14 @@ public interface PropertySolver {
      * @return identifier for this solver
      */
     String getIdentifier();
-    
+
     /**
      * Sets the model checker for this property solver.
      * 
      * @param modelChecker model checker to set
      */
     void setModelChecker(ModelChecker modelChecker);
-    
+
     /**
      * Set the property to be checked.
      * The property must not be {@code null}.
@@ -57,7 +56,7 @@ public interface PropertySolver {
      * @param property property to be checked
      */
     void setProperty(Expression property);
-    
+
     /**
      * Set for which states the property shall be solved.
      * The set of states must not be {@code null}.
@@ -68,7 +67,7 @@ public interface PropertySolver {
 
     default void setComputeScheduler(boolean computeScheduler) {
     }
-    
+
     /**
      * Checks whether a property can be decided by this solver.
      * If the property can be solved, the method will return true.
@@ -81,43 +80,38 @@ public interface PropertySolver {
      * exception instead of returning false.
      * 
      * @return whether the solver can decide the property
-     * @throws EPMCException thrown for invalid model/property combinations
      */
-    boolean canHandle() throws EPMCException;
+    boolean canHandle();
 
-    default boolean canComputeScheduler() throws EPMCException {
-    	return false;
+    default boolean canComputeScheduler() {
+        return false;
     }
-    
+
     /**
      * Obtain set of identifiers of graph properties required by this solver.
      * 
      * @return set of identifiers of graph properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredGraphProperties() throws EPMCException;
+    Set<Object> getRequiredGraphProperties();
 
     /**
      * Obtain set of identifiers of node properties required by this solver.
      * 
      * @return set of identifiers of node properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredNodeProperties() throws EPMCException;
+    Set<Object> getRequiredNodeProperties();
 
     /**
      * Obtain set of identifiers of edge properties required by this solver.
      * 
      * @return set of identifiers of edge properties required by this solver
-     * @throws EPMCException thrown in case of problems
      */
-    Set<Object> getRequiredEdgeProperties() throws EPMCException;
-    
+    Set<Object> getRequiredEdgeProperties();
+
     /**
      * Decide given property.
      * 
      * @return value of the property for given relevant states
-     * @throws EPMCException if a problem occurs during computation
      */
-    StateMap solve() throws EPMCException;
+    StateMap solve();
 }

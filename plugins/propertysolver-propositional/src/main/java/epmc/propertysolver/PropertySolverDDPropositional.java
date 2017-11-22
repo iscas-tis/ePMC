@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -28,10 +28,10 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.StateMap;
 import epmc.graph.StateMapDD;
@@ -46,66 +46,65 @@ public final class PropertySolverDDPropositional implements PropertySolver {
     public final static String IDENTIFIER = "propositional-dd";
     private ModelChecker modelChecker;
     private ExpressionToDD expressionToDD;
-	private Expression property;
-	private StateSet forStates;
-    
+    private Expression property;
+    private StateSet forStates;
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
-
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         DD value;
         if (modelChecker.getEngine() instanceof EngineDD) {
-        	GraphDD graphDD = modelChecker.getLowLevel();
+            GraphDD graphDD = modelChecker.getLowLevel();
             this.expressionToDD = graphDD.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
-        
-        if (property instanceof ExpressionLiteral) {
-        	ExpressionLiteral propertyLiteral = (ExpressionLiteral) property;
-            value = (ContextDD.get()).newConstant(propertyLiteral.getValue());
+
+        if (ExpressionLiteral.isLiteral(property)) {
+            value = ContextDD.get().newConstant(UtilEvaluatorExplicit.evaluate(property));
         } else {
             value = expressionToDD.translate(property);
         }
         StateMap result = new StateMapDD((StateSetDD) forStates.clone(), value);
         return result;
     }
-    
+
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	return Collections.unmodifiableSet(required);
-    }
-    
-    @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
-    }
-    
-    @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
+    }
+
+    @Override
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
+    }
+
+    @Override
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;

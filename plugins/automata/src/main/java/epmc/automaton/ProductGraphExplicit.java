@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -46,12 +45,12 @@ import gnu.trove.map.TLongIntMap;
 import gnu.trove.map.hash.TLongIntHashMap;
 
 public final class ProductGraphExplicit implements GraphExplicit {
-    
+
     @FunctionalInterface
     public interface NextAutomatonState {
-       boolean move(int node) throws EPMCException;
+        boolean move(int node);
     }
-    
+
     /**
      * Product graph explicit automaton builder.
      * We use the builder pattern, because
@@ -80,139 +79,139 @@ public final class ProductGraphExplicit implements GraphExplicit {
         private int modelInitialNode = -1;
         private boolean manual;
         private NextAutomatonState nextAutomatonState;
-        
+
         public Builder setModel(GraphExplicit model) {
             this.model = model;
             return this;
         }
-        
+
         private GraphExplicit getModel() {
             return model;
         }
-        
+
         public Builder setModelInitialNodes(BitSet modelInitNodes) {
             this.modelIinitNodes = modelInitNodes;
             return this;
         }
-        
+
         private int getModelInitialNode() {
             return modelInitialNode;
         }
-        
+
         public Builder setModelInitialNode(int initialNode) {
             this.modelInitialNode = initialNode;
             return this;
         }
-        
+
         private BitSet getModelIinitialNodes() {
             return modelIinitNodes;
         }
-        
+
         public Builder setAutomaton(Automaton automaton) {
             this.automaton = automaton;
             return this;
         }
-        
+
         private Automaton getAutomaton() {
             return automaton;
         }
-        
+
         public Builder setAutomatonInitialState(int automatonInitialState) {
             this.automatonInitState = automatonInitialState;
             return this;
         }
-        
+
         private int getAutomatonInitialState() {
             return automatonInitState;
         }
-        
+
         public Builder addGraphProperty(Object property) {
             graphProperties.add(property);
             return this;
         }
-        
+
         public Builder addGraphProperties(Collection<Object> properties) {
             graphProperties.addAll(properties);
             return this;
         }
-        
+
         private List<Object> getGraphProperties() {
             return graphProperties;
         }
-        
+
         public Builder addNodeProperty(Object property) {
             nodeProperties.add(property);
             return this;
         }
-        
+
         public Builder addNodeProperties(Collection<? extends Object> properties) {
             nodeProperties.addAll(properties);
             return this;
         }
-        
+
         private List<Object> getNodeProperties() {
             return nodeProperties;
         }
-        
+
         public Builder addEdgeProperty(Object property) {
             edgeProperties.add(property);
             return this;
         }
-        
+
         public Builder addEdgeProperties(Collection<Object> properties) {
             edgeProperties.addAll(properties);
             return this;
         }
-        
+
         private List<Object> getEdgeProperties() {
             return edgeProperties;
         }
-        
+
         public Builder setManual(boolean manual) {
             this.manual = manual;
             return this;
         }
-        
+
         public Builder setManual() {
             this.manual = true;
             return this;
         }
-        
+
         private boolean isManual() {
             return manual;
         }
-        
+
         public void setNextAutomatonState(NextAutomatonState nextAutomatonState) {
             this.nextAutomatonState = nextAutomatonState;
         }
-        
+
         private NextAutomatonState getNextAutomatonState() {
             return nextAutomatonState;
         }
-        
-        public ProductGraphExplicit build() throws EPMCException {
+
+        public ProductGraphExplicit build() {
             return new ProductGraphExplicit(this);
         }
     }
-    
+
     private final class NodePropertyDerived implements NodeProperty {
         private final GraphExplicit graph;
         private final NodeProperty from;
-        
+
         NodePropertyDerived(GraphExplicit graph, NodeProperty from) {
             assert graph != null;
             assert from != null;
             this.graph = graph;
             this.from = from;
         }
-        
+
         @Override
-        public Value get(int node) throws EPMCException {
+        public Value get(int node) {
             return from.get(getModelNode(node));
         }
-        
+
         @Override
-        public void set(int node, Value value) throws EPMCException {
+        public void set(int node, Value value) {
             assert false;
         }
 
@@ -230,26 +229,26 @@ public final class ProductGraphExplicit implements GraphExplicit {
     private final class NodePropertySettable implements NodeProperty {
         private final GraphExplicit graph;
         private final Value value;
-        
+
         NodePropertySettable(GraphExplicit graph, Value value) {
             assert graph != null;
             assert value != null;
             this.graph = graph;
             this.value = value;
         }
-        
+
         @Override
-        public Value get(int node) throws EPMCException {
+        public Value get(int node) {
             if (queriedNode != node) {
-            	long combined = numberToCombined[node];
-            	queryNode(combined);
-            	queriedNode = node;
+                long combined = numberToCombined[node];
+                queryNode(combined);
+                queriedNode = node;
             }
             return value;
         }
-        
+
         @Override
-        public void set(int node, Value value) throws EPMCException {
+        public void set(int node, Value value) {
             assert false;
         }
 
@@ -262,21 +261,21 @@ public final class ProductGraphExplicit implements GraphExplicit {
         public GraphExplicit getGraph() {
             return graph;
         }
-        
+
         @Override
-        public void set(int node, Object object) throws EPMCException {
+        public void set(int node, Object object) {
             assert object != null;
-            assert ValueObject.isObject(value);
-            assert false;
-        }    
-        
-        @Override
-        public void set(int node, int value) throws EPMCException {
+            assert ValueObject.is(value);
             assert false;
         }    
 
         @Override
-        public void set(int node, Enum<?> object) throws EPMCException {
+        public void set(int node, int value) {
+            assert false;
+        }    
+
+        @Override
+        public void set(int node, Enum<?> object) {
             assert object != null;
             assert false;
         }
@@ -286,24 +285,24 @@ public final class ProductGraphExplicit implements GraphExplicit {
     private final class EdgePropertySettable implements EdgeProperty {
         private final GraphExplicit graph;
         private final Value[] value;
-        
+
         EdgePropertySettable(GraphExplicit graph, Value[] value) {
             assert graph != null;
             assert value != null;
             this.graph = graph;
             this.value = value;
         }
-        
+
         @Override
-        public Value get(int node, int succNr) throws EPMCException {
+        public Value get(int node, int succNr) {
             if (queriedNode != node) {
-            	long combined = numberToCombined[node];
-            	queryNode(combined);
-            	queriedNode = node;
+                long combined = numberToCombined[node];
+                queryNode(combined);
+                queriedNode = node;
             }
             return value[succNr];
         }
-        
+
         @Override
         public void set(int node, int succ, Value value) {
             assert false;
@@ -330,9 +329,9 @@ public final class ProductGraphExplicit implements GraphExplicit {
             this.graph = graph;
             this.from = from;
         }
-        
+
         @Override
-        public Value get(int node, int successor) throws EPMCException {
+        public Value get(int node, int successor) {
             assert successor >= 0 : successor;
             assert successor < numSuccessors : successor;
             if (automaton.isDeterministic()) {
@@ -341,7 +340,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
                 return from.get(getModelNode(node), successor % model.getNumSuccessors(node));                
             }
         }
-        
+
         @Override
         public void set(int node, int succ, Value value) {
             assert false;
@@ -382,7 +381,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     private final NextAutomatonState nextAutomatonState;
     private int queriedNode = -1;
 
-    private ProductGraphExplicit(Builder builder) throws EPMCException {
+    private ProductGraphExplicit(Builder builder) {
         assert builder != null;
         assert builder.getModel() != null;
         assert builder.getAutomaton() != null;
@@ -461,7 +460,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         } else {
             int num = 1024;
             propAutomatonValues = new ValueObject[num];
-            
+
             for (int i = 0; i < num; i++) {
                 propAutomatonValues[i] = new TypeObject.Builder()
                         .setClazz(Object.class)
@@ -483,7 +482,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
                 .build().newValue();
         NodePropertySettable automatonStateProperty = new NodePropertySettable(this, automatonState);
         registerNodeProperty(CommonProperties.NODE_AUTOMATON, automatonStateProperty);
-        
+
         Expression[] expressions = builder.getAutomaton().getExpressions();
         queryArray = new Value[expressions.length];
         expressionProps = new NodeProperty[expressions.length];
@@ -498,21 +497,21 @@ public final class ProductGraphExplicit implements GraphExplicit {
             this.nextAutomatonState = builder.getNextAutomatonState();
         }
     }
-    
+
     int getModelNode(int node) {
         long combined = numberToCombined[node];
         return combinedToModelNode(combined);
     }
-    
-    private void queryNode(long combined) throws EPMCException {
+
+    private void queryNode(long combined) {
         int modelNode = combinedToModelNode(combined);
         int propNodeAutomatonValue = combinedToAutomatonNode(combined);
-        
+
         propNodeModelValue.set(modelNode);
         Object oState = automaton.numberToState(propNodeAutomatonValue);
         automatonState.set(oState); /* set automaton state and get atomic proposition labeling below */
         for (int exprNr = 0; exprNr < expressionProps.length; exprNr++) {
-        	assert expressionProps[exprNr] != null;
+            assert expressionProps[exprNr] != null;
             queryArray[exprNr] = expressionProps[exprNr].get(modelNode);
         }
         automaton.queryState(queryArray, propNodeAutomatonValue);
@@ -557,7 +556,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
     }
 
-    private void addSuccessor(int modelNode, int automatonNode) throws EPMCException {
+    private void addSuccessor(int modelNode, int automatonNode) {
         if (manualEnumeration) {
             manualSuccessorNodes[numSuccessors] = combine(modelNode, automatonNode);
         } else {
@@ -567,18 +566,18 @@ public final class ProductGraphExplicit implements GraphExplicit {
         numSuccessors++;
         reserveSuccessors();
     }
-    
+
     public void addNodeManually(long combined, int node) {
-        
+
     }
-    
+
     @Override
-    public int getNumSuccessors(int node) throws EPMCException {
+    public int getNumSuccessors(int node) {
         assert node >= 0 : node;
         if (queriedNode != node) {
-        	long combined = numberToCombined[node];
-        	queryNode(combined);
-        	this.queriedNode = node;
+            long combined = numberToCombined[node];
+            queryNode(combined);
+            this.queriedNode = node;
         }
         return numSuccessors;
     }
@@ -586,20 +585,20 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public long getManualSuccessorNode(int successor) {
         return manualSuccessorNodes[successor];
     }
-    
+
     @Override
-    public int getSuccessorNode(int node, int successor) throws EPMCException {
+    public int getSuccessorNode(int node, int successor) {
         assert node >= 0 : node;
         if (queriedNode != node) {
-        	long combined = numberToCombined[node];
-        	queryNode(combined);
-        	this.queriedNode = node;
+            long combined = numberToCombined[node];
+            queryNode(combined);
+            this.queriedNode = node;
         }
         return successorNodes[successor];
     }
 
     @Override
-    public void computePredecessors(BitSet nodes) throws EPMCException {
+    public void computePredecessors(BitSet nodes) {
         assert false;
     }
 
@@ -611,11 +610,11 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public static long combine(int modelState, int automatonState) {
         return (((long) modelState) << 32) | (automatonState);
     }
-    
+
     public int combineToNode(int modelState, int automatonState) {
         return combineToNode(combine(modelState, automatonState));
     }
-    
+
     public int combineToNode(long both) {
         int newValue = numberToCombinedSize;
         int value = combinedToNumber.putIfAbsent(both, newValue);
@@ -628,7 +627,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         }
         return value;
     }
-    
+
     public int combinedToModelNode(long state) {
         state >>>= 32;
         return (int) state;
@@ -638,8 +637,8 @@ public final class ProductGraphExplicit implements GraphExplicit {
         state &= 0xFFFFL;
         return (int) state;
     }
-    
-    private void reserveSuccessors() throws EPMCException {
+
+    private void reserveSuccessors() {
         if (manualEnumeration) {
             int succLength = manualSuccessorNodes.length;        
             if (succLength >= numSuccessors) {
@@ -664,14 +663,14 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public long[] getManualInitNodes() {
         return manualInitNodes;
     }
-    
+
     @Override
     public BitSet getInitialNodes() {
         return initStates;
     }
-    
+
     @Override
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
         properties.explore(start);
     }
 
@@ -679,7 +678,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public Set<Object> getGraphProperties() {
         return properties.getGraphProperties();
     }
-    
+
     @Override
     public Value getGraphProperty(Object property) {
         return properties.getGraphProperty(property);
@@ -692,7 +691,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
 
     @Override
     public void setGraphProperty(Object property, Value value)
-            throws EPMCException {
+    {
         properties.setGraphProperty(property, value);
     }
 
@@ -701,7 +700,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
             NodeProperty property) {
         properties.registerNodeProperty(propertyName, property);
     }
-    
+
     @Override
     public NodeProperty getNodeProperty(Object property) {
         return properties.getNodeProperty(property);
@@ -711,13 +710,13 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public Set<Object> getNodeProperties() {
         return properties.getNodeProperties();
     }
-    
+
     @Override
     public void registerEdgeProperty(Object propertyName,
             EdgeProperty property) {
         properties.registerEdgeProperty(propertyName, property);
     }
-    
+
     @Override
     public EdgeProperty getEdgeProperty(Object property) {
         return properties.getEdgeProperty(property);
@@ -752,7 +751,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     public int getNumNodes() {
         return numNodes;
     }
-    
+
     private void ensureSize() {
         assert numberToCombinedSize >= 0;
         int size = numberToCombined.length;
@@ -766,13 +765,13 @@ public final class ProductGraphExplicit implements GraphExplicit {
         numberToCombined = Arrays.copyOf(numberToCombined, newSize);
     }
 
-	@Override
-	public void close() {
-	}
+    @Override
+    public void close() {
+    }
 
-	@Override
-	public Type getType(Expression expression) throws EPMCException {
-		assert expression != null;
-		return model.getType(expression);
-	}
+    @Override
+    public Type getType(Expression expression) {
+        assert expression != null;
+        return model.getType(expression);
+    }
 }

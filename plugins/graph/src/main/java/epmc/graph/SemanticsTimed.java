@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -28,7 +28,7 @@ public interface SemanticsTimed extends Semantics {
      * 
      * @return whether this is a timed semantics type
      */
-	static boolean isTimed(Semantics semantics) {
-		return semantics instanceof SemanticsTimed;
-	}
+    static boolean isTimed(Semantics semantics) {
+        return semantics instanceof SemanticsTimed;
+    }
 }

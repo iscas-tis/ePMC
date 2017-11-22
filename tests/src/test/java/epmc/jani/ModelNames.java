@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
@@ -28,23 +28,23 @@ import java.io.File;
  * @author Ernst Moritz Hahn
  */
 public final class ModelNames {
-	public final static String JANI_EXPORT_DIR = System.getProperty("user.home") + "/exported-jani-models/";
-	public final static String JANI_EXTENSION = ".jani";
-	
-	public static String getJANIFilenameFromPRISMFilename(String prismFilename) {
-		return getJANIFilenameFromPRISMFilename(prismFilename, "");
-	}
-	
-	public static String getJANIFilenameFromPRISMFilename(String prismFilename, String prefix) {
-		String janiFilename = new File(prismFilename).getName();
-		janiFilename = janiFilename.substring(0, janiFilename.lastIndexOf('.'));
-		janiFilename = JANI_EXPORT_DIR + prefix + janiFilename + JANI_EXTENSION;
-		return janiFilename;
-	}
+    public final static String JANI_EXPORT_DIR = System.getProperty("user.home") + "/exported-jani-models/";
+    public final static String JANI_EXTENSION = ".jani";
 
-	/** Prefix of path where models are stored. */
+    public static String getJANIFilenameFromPRISMFilename(String prismFilename) {
+        return getJANIFilenameFromPRISMFilename(prismFilename, "");
+    }
+
+    public static String getJANIFilenameFromPRISMFilename(String prismFilename, String prefix) {
+        String janiFilename = new File(prismFilename).getName();
+        janiFilename = janiFilename.substring(0, janiFilename.lastIndexOf('.'));
+        janiFilename = JANI_EXPORT_DIR + prefix + janiFilename + JANI_EXTENSION;
+        return janiFilename;
+    }
+
+    /** Prefix of path where models are stored. */
     private final static String PREFIX = "epmc/jani/";
-    
+
     /** Minimal model including only parts required by JANI specification. */
     public final static String MINIMAL = PREFIX + "minimal.jani";
 
@@ -101,10 +101,10 @@ public final class ModelNames {
     public final static String CLUSTER = PREFIX + "cluster.jani";
 
     public final static String BRP = PREFIX + "brp.jani";
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private ModelNames() {
-	}
+    private ModelNames() {
+    }
 }

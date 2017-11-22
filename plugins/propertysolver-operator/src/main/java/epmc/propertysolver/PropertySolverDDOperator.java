@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -28,7 +28,6 @@ import java.util.Set;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.StateMap;
 import epmc.graph.StateMapDD;
@@ -42,32 +41,32 @@ import epmc.modelchecker.PropertySolver;
 public final class PropertySolverDDOperator implements PropertySolver {
     public final static String IDENTIFIER = "operator-dd";
     private ModelChecker modelChecker;
-	private Expression property;
-	private ExpressionOperator propertyOperator;
-	private StateSet forStates;
-    
+    private Expression property;
+    private ExpressionOperator propertyOperator;
+    private StateSet forStates;
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionOperator) {
-			this.propertyOperator = (ExpressionOperator) property;
-		}
-	}
 
-
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-    
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionOperator) {
+            this.propertyOperator = (ExpressionOperator) property;
+        }
+    }
+
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         List<DD> operandsDD = new ArrayList<>();
         List<StateMap> operandsState = new ArrayList<>();
         for (Expression operand : propertyOperator.getOperands()) {
@@ -84,7 +83,7 @@ public final class PropertySolverDDOperator implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -97,33 +96,33 @@ public final class PropertySolverDDOperator implements PropertySolver {
             modelChecker.ensureCanHandle(operand, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return required;
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        return required;
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
         for (Expression operand : propertyOperator.getOperands()) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(operand, forStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(operand, forStates));
         }
-    	return required;
+        return required;
     }
-    
+
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
         for (Expression operand : propertyOperator.getOperands()) {
-        	required.addAll(modelChecker.getRequiredEdgeProperties(operand, forStates));
+            required.addAll(modelChecker.getRequiredEdgeProperties(operand, forStates));
         }
-    	return required;
+        return required;
     }
 
 
@@ -132,9 +131,9 @@ public final class PropertySolverDDOperator implements PropertySolver {
         return IDENTIFIER;
     }
 
-    public ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get();
-	}
+    public ContextDD getContextDD() {
+        return ContextDD.get();
+    }
 
 
 }

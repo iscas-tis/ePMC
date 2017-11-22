@@ -16,24 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
-
-import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
-import epmc.value.Value;
-import epmc.value.ValueBoolean;
 
 /**
  * @author Ernst Moritz Hahn
@@ -51,80 +42,80 @@ public final class ExpressionQuantifier implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
-        
+
         public Builder setDirType(DirType dirType) {
             this.dirType = dirType;
             return this;
         }
-        
+
         private DirType getDirType() {
             return dirType;
         }
-        
+
         public Builder setCmpType(CmpType cmpType) {
             this.cmpType = cmpType;
             return this;
         }
-        
+
         private CmpType getCmpType() {
             return cmpType;
         }
-        
+
         public Builder setQuantified(Expression quantified) {
             this.quantified = quantified;
             return this;
         }
-        
+
         private Expression getQuantified() {
             return quantified;
         }
-        
+
         public Builder setCompare(Expression compare) {
             this.compare = compare;
             return this;
         }
-        
+
         private Expression getCompare() {
             return compare;
         }
-        
+
         public Builder setCondition(Expression condition) {
             this.condition = condition;
             return this;
         }
-        
+
         private Expression getCondition() {
             return condition;
         }
-        
+
         public ExpressionQuantifier build() {
             return new ExpressionQuantifier(this);
         }
     }
 
     public static boolean isQuantifier(Expression expression) {
-    	return expression instanceof ExpressionQuantifier;
+        return expression instanceof ExpressionQuantifier;
     }
-    
+
     public static ExpressionQuantifier asQuantifier(Expression expression) {
-    	if (isQuantifier(expression)) {
-    		return (ExpressionQuantifier) expression;
-    	} else {
-    		return null;
-    	}
+        if (isQuantifier(expression)) {
+            return (ExpressionQuantifier) expression;
+        } else {
+            return null;
+        }
     }
-    
+
     private final Positional positional;
     private final DirType dirType;
     private final CmpType cmpType;
     private final Expression quantified;
     private final Expression compare;
     private final Expression condition;
-    
+
     private ExpressionQuantifier(Builder builder) {
         assert builder != null;
         if (builder.getCompare() == null) {
@@ -136,13 +127,9 @@ public final class ExpressionQuantifier implements Expression {
         assert builder.getDirType() != null;
         assert builder.getCmpType() != null;
         assert builder.getQuantified() != null;
-        try {
-			assert builder.getCmpType() != CmpType.IS
-			        || isTrue(builder.getCompare());
-	        assert isTrue(builder.getCondition());
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        assert builder.getCmpType() != CmpType.IS
+                || isTrue(builder.getCompare());
+        assert isTrue(builder.getCondition());
         this.positional = builder.getPositional();
         this.dirType = builder.getDirType();
         this.cmpType = builder.getCmpType();
@@ -154,23 +141,23 @@ public final class ExpressionQuantifier implements Expression {
     public DirType getDirType() {
         return dirType;
     }
-    
+
     public CmpType getCompareType() {
         return cmpType;
     }
-    
+
     public Expression getQuantified() {
         return quantified;
     }
-    
+
     public Expression getCompare() {
         return compare;
     }
-    
+
     public Expression getCondition() {
         return condition;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new Builder()
@@ -183,25 +170,6 @@ public final class ExpressionQuantifier implements Expression {
                 .build();
     }
 
-    @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Type booleanType = TypeBoolean.get();
-        Expression condition = getCondition();
-        Type conditionType = condition.getType(expressionToType);
-        ensure(conditionType == null || TypeBoolean.isBoolean(conditionType),
-                ProblemsExpression.EXPR_INCONSISTENT, "", condition);
-        if (cmpType == CmpType.IS) {
-            return TypeWeight.get();
-        } else {
-            return booleanType;
-        }
-    }
-    
     public boolean isDirMin() {
         return dirType == DirType.MIN;
     }
@@ -209,7 +177,7 @@ public final class ExpressionQuantifier implements Expression {
     public boolean isDirNone() {
         return dirType == DirType.NONE;
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         List<Expression> result = new ArrayList<>();
@@ -223,8 +191,8 @@ public final class ExpressionQuantifier implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
-    
+
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -237,14 +205,10 @@ public final class ExpressionQuantifier implements Expression {
         } else {
             builder.append("P");
         }
-        
-        try {
-			if (rewardStructure != null && !isTrue(rewardStructure)) {
-			    builder.append("{" + rewardStructure + "}");
-			}
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+
+        if (rewardStructure != null && !isTrue(rewardStructure)) {
+            builder.append("{" + rewardStructure + "}");
+        }
         builder.append(dirType);
         builder.append(cmpType);
         if (cmpType != CmpType.IS) {
@@ -252,14 +216,10 @@ public final class ExpressionQuantifier implements Expression {
         }
         builder.append("[");
         builder.append(getQuantified());
-        try {
-			if (!isTrue(getCondition())) {
-			    builder.append(" given ");
-			    builder.append(getCondition());
-			}
-		} catch (EPMCException e) {
-			throw new RuntimeException(e);
-		}
+        if (!isTrue(getCondition())) {
+            builder.append(" given ");
+            builder.append(getCondition());
+        }
         builder.append("]");
         if (getPositional() != null) {
             builder.append(" (" + getPositional() + ")");
@@ -286,7 +246,7 @@ public final class ExpressionQuantifier implements Expression {
         }
         return this.dirType == other.dirType && this.cmpType == other.cmpType;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -299,17 +259,17 @@ public final class ExpressionQuantifier implements Expression {
         hash = cmpType.hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
-    private static boolean isTrue(Expression expression) throws EPMCException {
+
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(getValue(expressionLiteral));
+        return Boolean.valueOf(getValue(expressionLiteral));
     }
-    
-    private static Value getValue(Expression expression) throws EPMCException {
+
+    private static String getValue(Expression expression) {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
@@ -338,19 +298,19 @@ public final class ExpressionQuantifier implements Expression {
                 assert false;
             }
         }
-    
+
         return dirType;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionQuantifier.Builder()
-				.setCmpType(cmpType)
-				.setCompare(compare)
-				.setCondition(condition)
-				.setDirType(dirType)
-				.setQuantified(quantified)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionQuantifier.Builder()
+                .setCmpType(cmpType)
+                .setCompare(compare)
+                .setCondition(condition)
+                .setDirType(dirType)
+                .setQuantified(quantified)
+                .setPositional(positional)
+                .build();
+    }
 }

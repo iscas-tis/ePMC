@@ -16,13 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cacbdd;
 
 public enum OptionsDDCacBDD {
     OPTIONS_DD_CACBDD,
-    
+
     DD_CACBDD_CATEGORY,
     DD_CACBDD_MAX_NUM_VARIABLES,
     DD_CACBDD_MAX_CACHE_SIZE,

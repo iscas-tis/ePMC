@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -25,9 +25,10 @@ import epmc.error.UtilError;
 
 public final class ProblemsExpression {
     private final static String PROBLEMS_EXPRESSION = "ProblemsExpression";
-    
+
     public final static Problem EXPR_INCONSISTENT = newProblem("expr-inconsistent");
-    public final static Problem VALUE_INCONSISTENT_INFO = newProblem("value-inconsistent-info");
+    public final static Problem EXPRESSION_INCONSISTENT_OPERATOR = newProblem("expression-inconsistent-operator");
+    public final static Problem EXPRESSION_INCONSISTENT_IDENTIFIER_STANDARD = newProblem("expression-inconsistent-identifier-standard");
 
     private static Problem newProblem(String name) {
         assert name != null;

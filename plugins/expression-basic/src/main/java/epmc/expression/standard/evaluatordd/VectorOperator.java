@@ -16,16 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
 import java.util.List;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 
 @FunctionalInterface
 public interface VectorOperator {
-    List<DD> apply(List<DD>... operands) throws EPMCException;
+    List<DD> apply(List<DD>... operands);
 }

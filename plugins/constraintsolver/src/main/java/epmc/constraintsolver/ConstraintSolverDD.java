@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
@@ -25,7 +25,6 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.value.Type;
@@ -40,8 +39,8 @@ import epmc.value.ValueArray;
  * @author Ernst Moritz Hahn
  */
 public final class ConstraintSolverDD implements ConstraintSolver {
-	public final static String IDENTIFIER = "dd";
-	
+    public final static String IDENTIFIER = "dd";
+
     private boolean closed;
     private ExpressionToDD expressionToDD;
     private DD conjunction;
@@ -49,36 +48,36 @@ public final class ConstraintSolverDD implements ConstraintSolver {
     private Direction direction;
     private final Set<Feature> features = new LinkedHashSet<>();
 
-	@Override
-	public void requireFeature(Feature feature) {
-		assert feature != null;
-		features.add(feature);
-	}
+    @Override
+    public void requireFeature(Feature feature) {
+        assert feature != null;
+        features.add(feature);
+    }
 
-	@Override
-	public boolean canHandle() {
-		// TODO 
-		return false;
-	}
+    @Override
+    public boolean canHandle() {
+        // TODO 
+        return false;
+    }
 
-	@Override
-	public void build() throws EPMCException {
+    @Override
+    public void build() {
         this.conjunction = getContextDD().newConstant(false);
-	}
+    }
 
-    
-    private ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get();
-	}
 
-	public void addConstraint(DD constraint) throws EPMCException {
+    private ContextDD getContextDD() {
+        return ContextDD.get();
+    }
+
+    public void addConstraint(DD constraint) {
         assert !closed;
         assert constraint != null;
         conjunction = conjunction.andWith(constraint);
     }
 
     @Override
-    public void addConstraint(Expression expression) throws EPMCException {
+    public void addConstraint(Expression expression) {
         DD dd = expressionToDD.translate(expression);
         addConstraint(dd);
     }
@@ -107,14 +106,14 @@ public final class ConstraintSolverDD implements ConstraintSolver {
     public void addConstraint(ValueArray row, int[] variables,
             ConstraintType constraintType, Value rightHandSide) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void addConstraint(Value[] row, int[] variables,
             ConstraintType constraintType, Value rightHandSide) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -126,7 +125,7 @@ public final class ConstraintSolverDD implements ConstraintSolver {
     @Override
     public void setObjective(ValueArray row, int[] variables) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -138,7 +137,7 @@ public final class ConstraintSolverDD implements ConstraintSolver {
     @Override
     public void setObjective(Value[] row, int[] variables) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -153,22 +152,22 @@ public final class ConstraintSolverDD implements ConstraintSolver {
         return null;
     }
 
-	@Override
-	public int addVariable(String name, Type type, Value lower, Value upper) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int addVariable(String name, Type type, Value lower, Value upper) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public Value[] getResultVariablesValues() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Value[] getResultVariablesValues() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }
 

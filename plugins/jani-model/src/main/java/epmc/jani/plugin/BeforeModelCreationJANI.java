@@ -16,12 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.plugin;
 
-import epmc.error.EPMCException;
+import epmc.jani.value.OperatorEvaluatorSetDecisionDecision;
+import epmc.jani.value.OperatorEvaluatorSetLocationLocation;
 import epmc.plugin.BeforeModelCreation;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 /**
  * JANI plugin class containing method to execute just before model creation.
@@ -29,15 +31,17 @@ import epmc.plugin.BeforeModelCreation;
  * @author Ernst Moritz Hahn
  */
 public final class BeforeModelCreationJANI implements BeforeModelCreation {
-	/** Identifier of this class. */
-	public final static String IDENTIFIER = "before-model-loading-jani";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani";
 
-	@Override
-	public void process() throws EPMCException {
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process() {
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetDecisionDecision.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetLocationLocation.Builder.class);
+    }
 }

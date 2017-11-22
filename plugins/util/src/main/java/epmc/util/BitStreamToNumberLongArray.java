@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -30,7 +30,7 @@ import java.util.Arrays;
 final class BitStreamToNumberLongArray implements BitStoreableToNumber {
     private final class ReadWriteHelper implements BitStream {
         private static final int LOG2LONGSIZE = 6;
-        
+
         @Override
         public boolean read() {
             int offset = index >>> LOG2LONGSIZE;
@@ -62,18 +62,18 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
         storeable.write(helper);
         return toNumber();
     }
-    
+
     @Override
     public void fromNumber(BitStoreable storeable, int number) {
         setNumber(number);
         storeable.read(helper);
     }
-    
+
     private void set(long[] bitSet) {
         this.bitSet = bitSet;
         index = 0;
     }
-    
+
     private final static class LongArrayStrategy implements HashingStrategy<long[]> {
         private static final long serialVersionUID = 1L;
 
@@ -100,7 +100,7 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
     private void setNumber(int number) {
         set(numberToNode.get(number));
     }
-    
+
     private void reset() {
         Arrays.fill(testLongArray, 0L);
         set(testLongArray);
@@ -116,7 +116,7 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
         }
         return number;
     }
-    
+
     public BitStreamToNumberLongArray(int numBits) {
         assert numBits >=0;
         this.size = numBits / Long.SIZE + (numBits % Long.SIZE > 0 ? 1 : 0);

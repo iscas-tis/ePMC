@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.options.Options;
 import epmc.plugin.UtilPlugin;
@@ -30,7 +29,7 @@ import epmc.plugin.UtilPlugin;
 public class OptionsTest {
 
     @Test
-    public void testOptions() throws EPMCException {
+    public void testOptions() {
         Options options;
 
         // had some crashes when no arguments were present
@@ -42,7 +41,7 @@ public class OptionsTest {
         options.parseOptions(noArgs, false);
 
         String[] helpArgs = {"help"};
-        
+
         options = UtilOptionsEPMC.newOptions();
         options.parseOptions(helpArgs, true);
         options.reset();
@@ -51,7 +50,7 @@ public class OptionsTest {
 
         options.getShortUsage();
         // check whether we forgot to specify resource strings
-//        options.getUsage();
+        //        options.getUsage();
     }
 
 }

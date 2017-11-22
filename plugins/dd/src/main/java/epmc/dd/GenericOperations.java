@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -28,15 +28,14 @@ import gnu.trove.map.hash.THashMap;
 import java.util.List;
 import java.util.Map;
 
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorIte;
 import epmc.util.BitSet;
 import epmc.util.HashingStrategyArrayLong;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorIte;
 
 /**
  * Class to allow to execute operations not supported by a certain DD library.
@@ -54,7 +53,7 @@ import epmc.value.operator.OperatorIte;
  * @author Ernst Moritz Hahn
  */
 final class GenericOperations {
-    
+
     /**
      * Cache storing results for a given low-level DD library and given operator.
      * 
@@ -65,22 +64,22 @@ final class GenericOperations {
         private final TObjectLongMap<long[]> content;
         /** Low-level DD library this cache belongs to. */
         private final LibraryDD lowLevel;
-        
+
         Cache(LibraryDD lowLevel) {
             content = new TObjectLongCustomHashMap<>(HashingStrategyArrayLong.getInstance());
             this.lowLevel = lowLevel;
         }
-        
+
         boolean contains(long... entry) {
             assert entry != null;
             return content.containsKey(entry);
         }
-        
+
         long get(long... entry) {
             assert entry != null;
             return content.get(entry);
         }
-        
+
         /**
          * Store the according cached result.
          * The entry array will be cloned before storing.
@@ -102,7 +101,7 @@ final class GenericOperations {
             content.clear();
         }
     }
-    
+
     /**
      * Maintains a cache pairs of DD library and operator.
      * Thus, if a certain operator shall be executed, the first step is to
@@ -115,11 +114,11 @@ final class GenericOperations {
     private final static class Caches {
         /** Map from DD libraries to map of operators to caches. */
         private final Map<LibraryDD, Map<OperatorEvaluator,Cache>> caches;
-        
+
         Caches() {
             caches = new THashMap<>();
         }
-        
+
         Cache get(LibraryDD lowLevel, OperatorEvaluator operation) {
             assert lowLevel != null;
             assert operation != null;
@@ -136,7 +135,7 @@ final class GenericOperations {
             return result;
         }
     }
-    
+
     private final static int LEAF_REACHED = Integer.MAX_VALUE;
     private final ContextDD contextDD;
     private final Map<LibraryDD, List<DD>> llVariables;
@@ -155,7 +154,7 @@ final class GenericOperations {
     }
 
     long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD lowLevel, long... operands)
-            throws EPMCException {
+    {
         assert operator != null;
         assert lowLevel != null;
         assert lowLevel.getContextDD() == contextDD;
@@ -176,7 +175,7 @@ final class GenericOperations {
         cache.clear();
         return result;
     }
-    
+
     /**
      * Internal apply function.
      * 
@@ -192,11 +191,10 @@ final class GenericOperations {
      * @param recursionDepth 
      * @param back2 
      * @return
-     * @throws EPMCException
      */
     private long apply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD libraryDD,
             Cache cache, long[] cacheEntry, Walker[] operands, int recursionDepth, BitSet[] backSets)
-            throws EPMCException {
+    {
         /* Check whether result has already been compute before. */
         for (int index = 0; index < operands.length; index++) {
             cacheEntry[index] = operands[index].uniqueId();
@@ -204,14 +202,14 @@ final class GenericOperations {
         if (cache.contains(cacheEntry)) {
             return cache.get(cacheEntry);
         }
-        
+
         int lowestVar = LEAF_REACHED;
         for (Walker dd : operands) {
             // TODO adapt once we implement reordering
             int var = dd.isLeaf() ? LEAF_REACHED : dd.variable();
             lowestVar = Math.min(lowestVar, var);
         }
-        
+
         long result ;
         if (lowestVar == LEAF_REACHED) {
             /* If all walkers have reached a leaf node, we can compute the

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for Markov automata (MA).
  */
 public enum SemanticsMA implements SemanticsContinuousTime, SemanticsNonDet, SemanticsStochastic {
-	/** Singleton element. */
-	MA;
-	
+    /** Singleton element. */
+    MA;
+
     /**
      * Checks whether this is a Markov automaton (MA).
      * 
      * @return whether this is a Markov automaton (MA)
      */
-	public static boolean isMA(Semantics semantics) {
-		return semantics instanceof SemanticsMA;
-	}
+    public static boolean isMA(Semantics semantics) {
+        return semantics instanceof SemanticsMA;
+    }
 }

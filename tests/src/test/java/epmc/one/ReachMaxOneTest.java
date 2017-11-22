@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.one;
 
@@ -29,7 +29,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.algorithms.explicit.ComponentsExplicit;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.explicit.EdgeProperty;
@@ -49,7 +48,7 @@ public class ReachMaxOneTest {
     }
 
     @Test
-    public void reachMaxOneLiYongsMailTest() throws EPMCException {
+    public void reachMaxOneLiYongsMailTest() {
         Options options = prepareOptions();
         GraphExplicitWrapper graph = new GraphExplicitWrapper();
         EdgeProperty weights = graph.addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeightTransition.get());

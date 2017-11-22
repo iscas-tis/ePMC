@@ -16,41 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.time;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeClockProcessor implements JANI2PRISMProcessorStrict {
-	
-	private JANITypeClock clock = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj instanceof JANITypeClock;
 
-		clock = (JANITypeClock) obj;
-		return this;
-	}
+    private JANITypeClock clock = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert clock != null;
-		
-		return "clock";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert clock != null;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj instanceof JANITypeClock;
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert clock != null;
-		
-		return false;
-	}	
+        clock = (JANITypeClock) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert clock != null;
+
+        return "clock";
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert clock != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert clock != null;
+
+        return false;
+    }	
 }

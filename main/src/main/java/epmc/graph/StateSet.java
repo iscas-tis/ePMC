@@ -16,28 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 import java.io.Closeable;
-
-import epmc.error.EPMCException;
 
 //TODO complete documentation
 
 public interface StateSet extends Closeable, Cloneable {
 
     int size();
- 
+
     @Override
     void close();
 
-    boolean isSubsetOf(StateSet states) throws EPMCException;
-    
     StateSet clone();
-
-    default boolean isEmpty() {
-        return size() == 0;
-    }
 }

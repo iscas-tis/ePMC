@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -31,7 +31,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.ModelNamesPRISM;
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.ExploreStatistics;
 import epmc.modelchecker.TestHelper;
@@ -47,7 +46,7 @@ public class ModelConstructionDDTest {
     }
 
     @Test
-    public void noDDVariablesAtAllTest() throws EPMCException {
+    public void noDDVariablesAtAllTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -61,9 +60,9 @@ public class ModelConstructionDDTest {
         assertEquals(1, result, tolerance);
         close(options);
     }
-    
+
     @Test
-    public void clusterTest() throws EPMCException {
+    public void clusterTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         double tolerance = 1E-13;
@@ -78,7 +77,7 @@ public class ModelConstructionDDTest {
     }
 
     @Test
-    public void googleTest() throws EPMCException {
+    public void googleTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         double tolerance = 1E-13;

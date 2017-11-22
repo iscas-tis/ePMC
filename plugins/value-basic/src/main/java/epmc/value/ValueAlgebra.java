@@ -16,92 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public interface ValueAlgebra extends Value {
-	@Override
-	TypeAlgebra getType();
-	
-	static boolean isAlgebra(Value value) {
-		return value instanceof ValueAlgebra;
-	}
-	
-	static ValueAlgebra asAlgebra(Value value) {
-		if (isAlgebra(value)) {
-			return (ValueAlgebra) value;
-		} else {
-			return null;
-		}
-	}
-	
-    void set(int value);
-    
-    void add(Value operand1, Value operand2) throws EPMCException;
-    
-    void divide(Value operand1, Value operand2) throws EPMCException;
-
-    void subtract(Value operand1, Value operand2) throws EPMCException;
-    
-    void multiply(Value operand1, Value operand2) throws EPMCException;
-    
-    void addInverse(Value operand) throws EPMCException;
-
-    boolean isZero();
-
-    boolean isOne();
-
-    boolean isPosInf();
-    
-    boolean isNegInf();
-    
-    // TODO move
     @Override
-    default int compareTo(Value other) {
-        try {
-            if (isEq(other)) {
-                return 0;
-            } else if (isLt(other)) {
-                return -1;
-            } else {
-                assert isGt(other) : this + " " + other;
-                return 1;
-            }
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
+    TypeAlgebra getType();
+
+    static boolean is(Value value) {
+        return value instanceof ValueAlgebra;
+    }
+
+    static ValueAlgebra as(Value value) {
+        if (is(value)) {
+            return (ValueAlgebra) value;
+        } else {
+            return null;
         }
     }
-    
-    // TODO move?
-    default boolean isLt(Value other) throws EPMCException {
-    	assert false;
-        return false;
-    }
-    
-    // TODO move?
-    default boolean isLe(Value other) throws EPMCException {
-        return isLt(other) || isEq(other);
-    }
-    
-    // TODO move?
-    default boolean isGe(Value other) throws EPMCException {
-        return ValueAlgebra.asAlgebra(other).isLe(this);
-    }
 
-    // TODO move?
-    default boolean isGt(Value other) throws EPMCException {
-        return ValueAlgebra.asAlgebra(other).isLt(this);
-    }    
-    
-    double norm() throws EPMCException;
-    
-
-    @Override
-	default boolean isEq(Value other) throws EPMCException {
-        return distance(other) < 1E-6;
-    }
+    void set(int value);
 }

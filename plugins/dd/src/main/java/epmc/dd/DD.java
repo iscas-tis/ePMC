@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -27,37 +27,36 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorDivideIgnoreZero;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMod;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSubtract;
 import epmc.util.Util;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorCeil;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorDivideIgnoreZero;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorFloor;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLog;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMod;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSubtract;
 
 // Note: MTBDD DDs always store values of a single value.Type.
 
@@ -79,7 +78,7 @@ public final class DD implements Cloneable {
     private StackTraceElement[] createdTrace;
     /** In debug mode, stores the stack at the point the node was disposed. */
     private StackTraceElement[] disposeTrace;
-    
+
     DD(LibraryDD lowLevelDD, long uniqueId) {
         assert lowLevelDD != null;
         this.libraryDD = lowLevelDD;
@@ -91,13 +90,13 @@ public final class DD implements Cloneable {
         }
         this.alive = true;
     }
-    
+
     @Override
     public String toString() {
         assert alive() : alreadyDeadMessage();
         return getContext().toString(this);
     }
-    
+
     /**
      * Get the context to which this node belongs.
      * 
@@ -106,7 +105,7 @@ public final class DD implements Cloneable {
     public ContextDD getContext() {
         return context;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert alive() : alreadyDeadMessage();
@@ -116,17 +115,17 @@ public final class DD implements Cloneable {
         DD other = (DD) obj;
         return libraryDD.equals(uniqueId, other.uniqueId());
     }
-    
+
     @Override
     public final int hashCode() {
         assert alive() : alreadyDeadMessage();
         return libraryDD.hashCode(uniqueId);
     }
-    
+
     long uniqueId() {
         return uniqueId;
     }
-    
+
     /**
      * Checks whether this node is still alive and may be used.
      * The node is alive if it has not been disposed and its context has not
@@ -137,17 +136,17 @@ public final class DD implements Cloneable {
     public boolean alive() {
         return getContext().alive() && alive;
     }
-    
+
     public LibraryDD getLowLevel() {
         return libraryDD;
     }
-    
+
     @Override
     public DD clone() {
         assert alive() : alreadyDeadMessage();
         return libraryDD.getContextDD().cloneDD(this);
     }
-    
+
     /**
      * Dispose the DD node.
      * After disposing the node, it may not be longer be operated with, that is,
@@ -157,14 +156,14 @@ public final class DD implements Cloneable {
      */
     public void dispose() {
         assert alive : alreadyDeadMessage();
-        alive = false;
-        getContext().removeDD(this);
-        if (getContext().isDebugDD()) {
-            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            this.disposeTrace = trace.clone();
-        }
+    alive = false;
+    getContext().removeDD(this);
+    if (getContext().isDebugDD()) {
+        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+        this.disposeTrace = trace.clone();
     }
-    
+    }
+
     /**
      * Checks whether the node has not been disposed.
      * The function does still return true if the node has not been disposed but
@@ -175,12 +174,12 @@ public final class DD implements Cloneable {
     boolean internalAlive() {
         return alive;
     }
-    
+
     String buildCreateTraceString() {
         assert createdTrace != null;
         return Util.stackTraceToString(createdTrace);
     }
-    
+
     String buildCloseTraceString() {
         assert disposeTrace != null;
         return Util.stackTraceToString(disposeTrace);
@@ -190,11 +189,11 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return getContext().support(this);
     }
-    
+
     public Type getType() {
         return getContext().getType(this);
     }
-    
+
     private String alreadyDeadMessage() {
         if (getContext().isDebugDD()) {
             return "DD already closed. Allocated at\n"
@@ -205,32 +204,32 @@ public final class DD implements Cloneable {
         }
     }
 
-    public DD apply(Operator operator) throws EPMCException {
+    public DD apply(Operator operator) {
         assert operator != null;
         return getContext().apply(operator, this);
     }
-    
-    public DD apply(DD other, Operator operator) throws EPMCException {
+
+    public DD apply(DD other, Operator operator) {
         return getContext().apply(operator, this, other);
     }
 
-    public DD apply(DD other1, DD other2, Operator operator) throws EPMCException {
+    public DD apply(DD other1, DD other2, Operator operator) {
         return getContext().apply(operator, this, other1, other2);
     }
-    
-    public DD add(DD other) throws EPMCException {
+
+    public DD add(DD other) {
         return apply(other, OperatorAdd.ADD);
     }
 
-    public DD multiply(DD other) throws EPMCException {
+    public DD multiply(DD other) {
         return apply(other, OperatorMultiply.MULTIPLY);
     }
 
-    public DD subtract(DD other) throws EPMCException {
+    public DD subtract(DD other) {
         return apply(other, OperatorSubtract.SUBTRACT);
     }
 
-    public DD subtractWith(DD other) throws EPMCException {
+    public DD subtractWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive() : other.alreadyDeadMessage();
@@ -239,79 +238,79 @@ public final class DD implements Cloneable {
         other.dispose();
         return result;
     }
-    
-    public DD divide(DD other) throws EPMCException {
+
+    public DD divide(DD other) {
         return apply(other, OperatorDivide.DIVIDE);
     }
 
-    public DD divideWith(DD other) throws EPMCException {
+    public DD divideWith(DD other) {
         DD result = apply(other, OperatorDivide.DIVIDE);
         dispose();
         other.dispose();
         return result;
     }
 
-    public DD eq(DD other) throws EPMCException {
+    public DD eq(DD other) {
         return apply(other, OperatorEq.EQ);
     }
 
-    public DD gt(DD other) throws EPMCException {
+    public DD gt(DD other) {
         return apply(other, OperatorGt.GT);
     }
 
-    public DD gtWith(DD other) throws EPMCException {
+    public DD gtWith(DD other) {
         DD result = apply(other, OperatorGt.GT);
         dispose();
         other.dispose();
         return result;
     }
 
-    public DD ge(DD other) throws EPMCException {
+    public DD ge(DD other) {
         return apply(other, OperatorGe.GE);
     }
 
-    public DD ne(DD other) throws EPMCException {
+    public DD ne(DD other) {
         return apply(other, OperatorNe.NE);
     }
 
-    public DD neWith(DD other) throws EPMCException {
+    public DD neWith(DD other) {
         DD result = apply(other, OperatorNe.NE);
         dispose();
         other.dispose();
         return result;
     }
 
-    public DD geWith(DD other) throws EPMCException {
+    public DD geWith(DD other) {
         DD result = ge(other);
         other.dispose();
         dispose();
         return result;
     }
-    
-    public DD lt(DD other) throws EPMCException {
+
+    public DD lt(DD other) {
         return apply(other, OperatorLt.LT);
     }
 
-    public DD le(DD other) throws EPMCException {
+    public DD le(DD other) {
         return apply(other, OperatorLe.LE);
     }
-    
-    public DD leWith(DD other) throws EPMCException {
+
+    public DD leWith(DD other) {
         DD result = le(other);
         other.dispose();
         dispose();
         return result;
     }
 
-    public DD and(DD other) throws EPMCException {
+    public DD and(DD other) {
         assert alive() : alreadyDeadMessage();
         assert isBoolean() : this;
         assert assertValidDD(other);
         assert other.isBoolean();
         return apply(other, OperatorAnd.AND);
     }
-    
-    public DD and(DD... others) throws EPMCException {
+
+    public DD and(DD... others) {
         assert others != null;
         for (DD other : others) {
             assert other != null;
@@ -326,7 +325,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD andWith(DD... others) throws EPMCException {
+    public DD andWith(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
         for (DD other : others) {
@@ -342,11 +341,11 @@ public final class DD implements Cloneable {
             other.dispose();
         }
         dispose();
-        
+
         return result;
     }
 
-    public DD orWith(DD... others) throws EPMCException {
+    public DD orWith(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
         for (DD other : others) {
@@ -362,11 +361,11 @@ public final class DD implements Cloneable {
             other.dispose();
         }
         dispose();
-        
+
         return result;
     }
 
-    public DD or(DD... others) throws EPMCException {
+    public DD or(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
         for (DD other : others) {
@@ -380,11 +379,11 @@ public final class DD implements Cloneable {
             result = result.or(other);
             resultOld.dispose();
         }
-        
+
         return result;
     }
 
-    public DD add(DD... others) throws EPMCException {
+    public DD add(DD... others) {
         assert others != null;
         for (DD other : others) {
             assert other != null;
@@ -399,7 +398,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD addWith(DD... others) throws EPMCException {
+    public DD addWith(DD... others) {
         assert others != null;
         for (DD other : others) {
             assert other != null;
@@ -418,7 +417,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD multiply(DD... others) throws EPMCException {
+    public DD multiply(DD... others) {
         assert others != null;
         for (DD other : others) {
             assert other != null;
@@ -433,14 +432,14 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD or(DD other) throws EPMCException {
+    public DD or(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive() : other.alreadyDeadMessage();
         return apply(other, OperatorOr.OR);
     }
-    
-    public DD orWith(DD other) throws EPMCException {
+
+    public DD orWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive() : other.alreadyDeadMessage();
@@ -450,7 +449,7 @@ public final class DD implements Cloneable {
         return result;
     }    
 
-    public DD maxWith(DD other) throws EPMCException {
+    public DD maxWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive() : other.alreadyDeadMessage();
@@ -460,14 +459,14 @@ public final class DD implements Cloneable {
         return result;
     }    
 
-    public DD andWith(DD other) throws EPMCException {
+    public DD andWith(DD other) {
         DD result = and(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD abstractAndExistWith(DD other, DD cube) throws EPMCException {
+    public DD abstractAndExistWith(DD other, DD cube) {
         DD result = abstractAndExist(other, cube);
         this.dispose();
         other.dispose();
@@ -475,89 +474,89 @@ public final class DD implements Cloneable {
         return result;
     }    
 
-    public DD multiplyWith(DD other) throws EPMCException {
+    public DD multiplyWith(DD other) {
         DD result = multiply(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD abstractExistWith(DD other) throws EPMCException {
+    public DD abstractExistWith(DD other) {
         DD result = abstractExist(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD abstractMinWith(DD other) throws EPMCException {
+    public DD abstractMinWith(DD other) {
         DD result = abstractMin(other);
         this.dispose();
         other.dispose();
         return result;
     }
 
-    public DD abstractMaxWith(DD other) throws EPMCException {
+    public DD abstractMaxWith(DD other) {
         DD result = abstractMax(other);
         this.dispose();
         other.dispose();
         return result;
     }
 
-    public DD notWith() throws EPMCException {
+    public DD notWith() {
         DD result = not();
         this.dispose();
         return result;
     }    
 
-    public DD andNotWith(DD other) throws EPMCException {
+    public DD andNotWith(DD other) {
         DD result = andNot(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD eqWith(DD other) throws EPMCException {
+    public DD eqWith(DD other) {
         DD result = eq(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD addWith(DD other) throws EPMCException {
+    public DD addWith(DD other) {
         DD result = add(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD modWith(DD other) throws EPMCException {
+    public DD modWith(DD other) {
         DD result = mod(other);
         this.dispose();
         other.dispose();
         return result;
     }    
 
-    public DD not() throws EPMCException {
+    public DD not() {
         return apply(OperatorNot.NOT);
     }
 
-    public DD iff(DD other) throws EPMCException {
+    public DD iff(DD other) {
         return apply(other, OperatorIff.IFF);
     }
 
-    public DD iffWith(DD other) throws EPMCException {
+    public DD iffWith(DD other) {
         DD result = iff(other);
         dispose();
         other.dispose();
-        
+
         return result;
     }
 
-    public DD implies(DD other) throws EPMCException {
+    public DD implies(DD other) {
         return apply(other, OperatorImplies.IMPLIES);
     }
 
-    public DD impliesWith(DD andEx) throws EPMCException {
+    public DD impliesWith(DD andEx) {
         assert alive() : alreadyDeadMessage();
         assert isBoolean();
         assert assertValidDD(andEx);
@@ -568,38 +567,38 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD ceil() throws EPMCException {
+    public DD ceil() {
         return apply(OperatorCeil.CEIL);
     }
 
-    public DD floor() throws EPMCException {
+    public DD floor() {
         return apply(OperatorFloor.FLOOR);
     }
 
-    public DD log(DD other) throws EPMCException {
+    public DD log(DD other) {
         return apply(other, OperatorLog.LOG);
     }
 
-    public DD max(DD other) throws EPMCException {
+    public DD max(DD other) {
         return apply(other, OperatorMax.MAX);
     }
 
-    public DD min(DD other) throws EPMCException {
+    public DD min(DD other) {
         return apply(other, OperatorMin.MIN);
     }
 
-    public DD mod(DD other) throws EPMCException {
+    public DD mod(DD other) {
         return apply(other, OperatorMod.MOD);
     }
 
-    public DD pow(DD other) throws EPMCException {
+    public DD pow(DD other) {
         return apply(other, OperatorPow.POW);
     }
-    public DD ite(DD thenNode, DD elseNode) throws EPMCException {
+    public DD ite(DD thenNode, DD elseNode) {
         return apply(thenNode, elseNode, OperatorIte.ITE);
     }
 
-    public DD iteWith(DD constValDD, DD singleDD) throws EPMCException {
+    public DD iteWith(DD constValDD, DD singleDD) {
         DD result = ite(constValDD, singleDD);
         dispose();
         constValDD.dispose();
@@ -607,13 +606,13 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD abstractExist(DD cube) throws EPMCException {
+    public DD abstractExist(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractExist(this, cube);
     }
-    
-    public DD abstractExist(DD... cubes) throws EPMCException {
+
+    public DD abstractExist(DD... cubes) {
         assert alive() : alreadyDeadMessage();
         assert cubes != null;
         for (DD cube : cubes) {
@@ -628,8 +627,8 @@ public final class DD implements Cloneable {
         allCubes.dispose();
         return result;
     }
-    
-    public DD abstractExistWith(DD... cubes) throws EPMCException {
+
+    public DD abstractExistWith(DD... cubes) {
         assert alive() : alreadyDeadMessage();
         assert cubes != null;
         for (DD cube : cubes) {
@@ -644,19 +643,19 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD abstractForall(DD cube) throws EPMCException {
+    public DD abstractForall(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractForall(this, cube);
     }
 
-    public DD abstractSum(DD cube) throws EPMCException {
+    public DD abstractSum(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractSum(this, cube);
     }
-    
-    public DD abstractSumWith(DD cube) throws EPMCException {
+
+    public DD abstractSumWith(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         DD result = abstractSum(cube);
@@ -665,25 +664,25 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD abstractProduct(DD cube) throws EPMCException {
+    public DD abstractProduct(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractProduct(this, cube);
     }
 
-    public DD abstractMax(DD cube) throws EPMCException {
+    public DD abstractMax(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractMax(this, cube);
     }
 
-    public DD abstractMin(DD cube) throws EPMCException {
+    public DD abstractMin(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().abstractMin(this, cube);
     }
-    
-    public DD abstractAndExist(DD other, DD cube) throws EPMCException {
+
+    public DD abstractAndExist(DD other, DD cube) {
         assert alive() : alreadyDeadMessage();
         assert other != null;
         assert cube != null;
@@ -691,12 +690,12 @@ public final class DD implements Cloneable {
     }
 
     /* other public functions */
-    
+
     public boolean isLeaf() {
         assert alive() : alreadyDeadMessage();
         return getContext().isLeaf(this);
     }
-    
+
     public Value value() {
         assert alive() : alreadyDeadMessage();
         return getContext().getValue(this);
@@ -706,14 +705,14 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return getContext().variable(this);
     }
-    
-    public DD permute(Permutation permutation) throws EPMCException {
+
+    public DD permute(Permutation permutation) {
         assert alive() : alreadyDeadMessage();
         assert permutation != null;
         return getContext().permute(this, permutation);
     }
 
-    public DD permuteWith(Permutation permutation) throws EPMCException {
+    public DD permuteWith(Permutation permutation) {
         assert alive() : alreadyDeadMessage();
         assert permutation != null;
         DD result = getContext().permute(this, permutation);
@@ -745,13 +744,13 @@ public final class DD implements Cloneable {
         return getContext().countNodes(this).intValue();
     }
 
-    public DD findSat(DD cube) throws EPMCException {
+    public DD findSat(DD cube) {
         assert alive() : alreadyDeadMessage();
         assert cube != null;
         return getContext().findSat(this, cube);
     }
 
-    public DD findSatWith(DD cube) throws EPMCException {
+    public DD findSatWith(DD cube) {
         assert alive() : alreadyDeadMessage();
         DD result = findSat(cube);
         dispose();
@@ -763,7 +762,7 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return isLeaf() && ValueBoolean.isFalse(value());
     }
-    
+
     public boolean isFalseWith() {
         assert alive() : alreadyDeadMessage();
         boolean result = isFalse();
@@ -775,24 +774,24 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         return isLeaf() && ValueBoolean.isTrue(value());
     }
-    
+
     public boolean isTrueWith() {
         assert alive() : alreadyDeadMessage();
         boolean result = isLeaf() && ValueBoolean.isTrue(value());
         dispose();
         return result;
     }
-    
+
     public Set<VariableDD> highLevelSupport() {
         assert alive() : alreadyDeadMessage();
         return getContext().highLevelSupport(this);
     }
-    
+
     public Walker walker(boolean autoComplement) {
         assert alive() : alreadyDeadMessage();
         return getContext().walker(this, autoComplement);
     }
-    
+
     public SupportWalker supportWalker(DD support, boolean stopAtFalse, boolean stopAtZero) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -800,7 +799,7 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support, stopAtFalse, stopAtZero);
     }
-    
+
     public SupportWalker supportWalker(DD support) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -808,7 +807,7 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support);
     }
-    
+
     public SupportWalker supportWalker(DD support, Collection<Value> stopWhere) {
         assert alive() : alreadyDeadMessage();
         assert support != null;
@@ -816,28 +815,28 @@ public final class DD implements Cloneable {
         assert support.assertCube();
         return getContext().supportWalker(this, support, stopWhere);
     }
-    
+
     public SupportWalker supportWalkerWith(DD support) {
         SupportWalker result = supportWalker(support);
         dispose();
         return result;
     }
 
-    public SupportWalker supportWalker() throws EPMCException {
+    public SupportWalker supportWalker() {
         assert alive() : alreadyDeadMessage();
         DD support = supportDD();
         SupportWalker result = getContext().supportWalker(this, support);
         support.dispose();
         return result;
     }
-    
-    
+
+
     public Walker walker() {
         assert alive() : alreadyDeadMessage();
         return getContext().walker(this, true);        
     }
 
-    public DD andNot(DD scc) throws EPMCException {
+    public DD andNot(DD scc) {
         DD sccNot = scc.not();
         DD result = and(sccNot);
         sccNot.dispose();
@@ -847,101 +846,101 @@ public final class DD implements Cloneable {
     public boolean isComplement() {
         return getContext().isComplement(this);
     }
-    
+
     /* internal functions */
-    
-    public DD toMT(Value forTrue, Value forFalse) throws EPMCException {
+
+    public DD toMT(Value forTrue, Value forFalse) {
         return getContext().toMT(this, forTrue, forFalse);
     }
-    
-    public DD toMT(int forTrue, int forFalse) throws EPMCException {
+
+    public DD toMT(int forTrue, int forFalse) {
         return getContext().toMT(this, forTrue, forFalse);
     }
-    
-    public DD toMTWith(int forTrue, int forFalse) throws EPMCException {
+
+    public DD toMTWith(int forTrue, int forFalse) {
         DD result = toMT(forTrue, forFalse);
         dispose();
         return result;
     }
 
-    public DD toMTWith(Value forTrue, Value forFalse) throws EPMCException {
+    public DD toMTWith(Value forTrue, Value forFalse) {
         DD result = getContext().toMT(this, forTrue, forFalse);
         dispose();
         return result;
     }
 
-    public DD toMT() throws EPMCException {
+    public DD toMT() {
         return getContext().toInt(this);
     }
 
-    public DD toMTWith()  throws EPMCException {
+    public DD toMTWith()  {
         DD result = toMT();
         dispose();
         return result;
     }
-    
-    public void printSupport() throws EPMCException {
+
+    public void printSupport() {
         getContext().printSupport(this);
     }
 
-    public String supportString() throws EPMCException {
+    public String supportString() {
         return getContext().supportString(this);
     }
 
-    public DD abstractExist(Iterable<DD> nextVars) throws EPMCException {
+    public DD abstractExist(Iterable<DD> nextVars) {
         return getContext().abstractExist(this, nextVars);
     }
 
- // TODO get rid of dependency to TIntSet
-    public TIntSet findSatSet(DD cube) throws EPMCException {
+    // TODO get rid of dependency to TIntSet
+    public TIntSet findSatSet(DD cube) {
         return getContext().findSatSet(this, cube);
     }
 
-    public DD divide(int intValue) throws EPMCException {
+    public DD divide(int intValue) {
         return getContext().divide(this, intValue);
     }
 
-    public Value applyOverSat(Operator operator, DD sat) throws EPMCException {
+    public Value applyOverSat(Operator operator, DD sat) {
         assert operator != null;
         assert assertValidDD(sat);
-        assert TypeBoolean.isBoolean(sat.getType());
+        assert TypeBoolean.is(sat.getType());
         return getContext().applyOverSat(operator, this, sat);
     }
 
     public Value applyOverSat(Operator operator, DD support, DD sat)
-            throws EPMCException {
+    {
         assert operator != null;
         assert assertValidDD(sat);
-        assert TypeBoolean.isBoolean(sat.getType());
+        assert TypeBoolean.is(sat.getType());
         return getContext().applyOverSat(operator, this, support, sat);
     }
 
     public Value maxOverSat(DD sat)
-            throws EPMCException {
+    {
         return getContext().maxOverSat(this, sat);
     }
 
     public Value minOverSat(DD sat)
-            throws EPMCException {
+    {
         return getContext().minOverSat(this, sat);
     }
-    
-    public DD supportDD() throws EPMCException {
+
+    public DD supportDD() {
         return getContext().supportDD(this);
     }
-    
+
     public boolean assertCube() {
         return getContext().assertCube(this);
     }
-    
-    public DD xor(DD other) throws EPMCException {
+
+    public DD xor(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
         assert other.alive();
         return apply(other, OperatorNe.NE);
     }
 
-    public DD xor(DD... others) throws EPMCException {
+    public DD xor(DD... others) {
         assert others != null;
         for (DD other : others) {
             assert other != null;
@@ -955,7 +954,7 @@ public final class DD implements Cloneable {
         }
         return result;
     }
-    
+
     public boolean isBoolean() {
         assert alive() : alreadyDeadMessage();
         return getContext().isBoolean(this);
@@ -966,28 +965,28 @@ public final class DD implements Cloneable {
         assert dd.alive() : dd.alreadyDeadMessage();
         return true;
     }
-    
+
     public Value getSomeLeafValue() {
         assert alive() : alreadyDeadMessage();
         return getContext().getSomeLeafValue(this);
     }
 
-    public Value getSomeLeafValue(DD sat) throws EPMCException {
+    public Value getSomeLeafValue(DD sat) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(sat);
         assert sat.isBoolean();
         return getContext().getSomeLeafValue(this, sat);
     }
 
-    public Value andOverSat(DD sat) throws EPMCException {
+    public Value andOverSat(DD sat) {
         return getContext().andOverSat(this, sat);
     }
 
-    public Value orOverSat(DD sat) throws EPMCException {
+    public Value orOverSat(DD sat) {
         return getContext().orOverSat(this, sat);
     }
 
-    public DD gt(int i) throws EPMCException {
+    public DD gt(int i) {
         assert alive() : alreadyDeadMessage();
         DD constant = getContext().newConstant(i);
         DD result = gt(constant);
@@ -995,13 +994,13 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD divideIgnoreZero(DD other) throws EPMCException {
+    public DD divideIgnoreZero(DD other) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         return apply(other, OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO);
     }
 
-    public DD divideIgnoreZeroWith(DD other) throws EPMCException {
+    public DD divideIgnoreZeroWith(DD other) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         DD result = divideIgnoreZero(other);
@@ -1010,8 +1009,8 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    
-    public DD multiply(int value) throws EPMCException {
+
+    public DD multiply(int value) {
         assert alive() : alreadyDeadMessage();
         DD constant = getContext().newConstant(value);
         DD result = multiply(constant);
@@ -1019,14 +1018,14 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD multiplyWith(int value) throws EPMCException {
+    public DD multiplyWith(int value) {
         assert alive() : alreadyDeadMessage();
         DD result = multiply(value);
         dispose();
         return result;
     }
 
-    public DD ite(int value, DD encoding) throws EPMCException {
+    public DD ite(int value, DD encoding) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(encoding);
         DD constant = getContext().newConstant(value);
@@ -1035,7 +1034,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD multiplyWith(DD... others) throws EPMCException {
+    public DD multiplyWith(DD... others) {
         DD result = multiply(others);
         for (DD other : others) {
             other.dispose();
@@ -1044,15 +1043,15 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public boolean isSubset(DD other) throws EPMCException {
+    public boolean isSubset(DD other) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         assert isBoolean();
         assert other.isBoolean();
         return andNot(other).isFalseWith();
     }
-    
-    public boolean isSubsetWith(DD other)  throws EPMCException {
+
+    public boolean isSubsetWith(DD other)  {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         assert isBoolean();
@@ -1063,7 +1062,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public boolean isDisjoint(DD other) throws EPMCException {
+    public boolean isDisjoint(DD other) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         assert isBoolean();
@@ -1071,7 +1070,7 @@ public final class DD implements Cloneable {
         return and(other).isFalseWith();
     }
 
-    public DD andNot(List<DD> dds) throws EPMCException {
+    public DD andNot(List<DD> dds) {
         assert alive() : alreadyDeadMessage();
         assert isBoolean();
         assert dds != null;
@@ -1086,7 +1085,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD andNot(DD... dds) throws EPMCException {
+    public DD andNot(DD... dds) {
         assert alive() : alreadyDeadMessage();
         assert isBoolean();
         assert dds != null;
@@ -1101,15 +1100,15 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public void collectValues(Set<Value> values, DD sat) throws EPMCException {
+    public void collectValues(Set<Value> values, DD sat) {
         getContext().collectValues(values, this, sat);
     }
-    
+
     public boolean assertSupport(DD... support) {
         return getContext().assertSupport(this, support);
     }
 
-    public DD abstractImpliesForall(DD other, DD cube) throws EPMCException {
+    public DD abstractImpliesForall(DD other, DD cube) {
         assert alive() : alreadyDeadMessage();
         assert other != null;
         assert cube != null;

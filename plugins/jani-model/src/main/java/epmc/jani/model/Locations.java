@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -31,7 +31,6 @@ import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 /**
@@ -40,88 +39,88 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class Locations implements JANINode, Iterable<Location>, Serializable {
-	/** 1L, as I don't know any better. */
-	private static final long serialVersionUID = 1L;
+    /** 1L, as I don't know any better. */
+    private static final long serialVersionUID = 1L;
 
-	/** Map from names of locations to locations. */
-	private final Map<String,Location> locations = new LinkedHashMap<>();
-	/** Unmodifiable map from names of locations to locations. */
-	private final Map<String,Location> locationsExternal = Collections.unmodifiableMap(locations);
+    /** Map from names of locations to locations. */
+    private final Map<String,Location> locations = new LinkedHashMap<>();
+    /** Unmodifiable map from names of locations to locations. */
+    private final Map<String,Location> locationsExternal = Collections.unmodifiableMap(locations);
 
-	private transient ModelJANI model;
+    private transient ModelJANI model;
 
-	private Map<String, JANIIdentifier> validVariables;
+    private Map<String, JANIIdentifier> validVariables;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		assert model != null;
-		assert value != null;
-		JsonArray array = UtilJSON.toArray(value);
-		for (JsonValue locVar : array) {
-			Location location = new Location();
-			location.setValidIdentifiers(validVariables);
-			location.setModel(model);
-			location.parse(locVar);
-			UtilJSON.ensureUnique(location.getName(), locations);
-			locations.put(location.getName(), location);
-		}
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() throws EPMCException {
-		JsonArrayBuilder result = Json.createArrayBuilder();
-		for (Location location : locations.values()) {
-			result.add(location.generate());
-		}
-		return result.build();
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	/**
-	 * Obtain a map from location names to locations.
-	 * The map returned is unmodifiable. The method may only be called after the
-	 * object has been parsed.
-	 * 
-	 * @return map from location names to locations
-	 */
-	public Map<String, Location> getLocations() {
-		return locationsExternal;
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        JsonArray array = UtilJSON.toArray(value);
+        for (JsonValue locVar : array) {
+            Location location = new Location();
+            location.setValidIdentifiers(validVariables);
+            location.setModel(model);
+            location.parse(locVar);
+            UtilJSON.ensureUnique(location.getName(), locations);
+            locations.put(location.getName(), location);
+        }
+        return this;
+    }
 
-	@Override
-	public Iterator<Location> iterator() {
-		return locationsExternal.values().iterator();
-	}
-	
-	public void add(Location location) {
-		this.locations.put(location.getName(), location);
-	}
-	
-	/**
-	 * Obtain number of locations.
-	 * 
-	 * @return number of locations
-	 */
-	public int size() {
-		return locationsExternal.size();
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public JsonValue generate() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (Location location : locations.values()) {
+            result.add(location.generate());
+        }
+        return result.build();
+    }
 
-	public void setValidIdentifiers(Map<String, JANIIdentifier> validVariables) {
-		this.validVariables = validVariables;
-	}
+    /**
+     * Obtain a map from location names to locations.
+     * The map returned is unmodifiable. The method may only be called after the
+     * object has been parsed.
+     * 
+     * @return map from location names to locations
+     */
+    public Map<String, Location> getLocations() {
+        return locationsExternal;
+    }
+
+    @Override
+    public Iterator<Location> iterator() {
+        return locationsExternal.values().iterator();
+    }
+
+    public void add(Location location) {
+        this.locations.put(location.getName(), location);
+    }
+
+    /**
+     * Obtain number of locations.
+     * 
+     * @return number of locations
+     */
+    public int size() {
+        return locationsExternal.size();
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
+
+    public void setValidIdentifiers(Map<String, JANIIdentifier> validVariables) {
+        this.validVariables = validVariables;
+    }
 }

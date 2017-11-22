@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -24,7 +24,6 @@ import static epmc.error.UtilError.fail;
 
 import java.rmi.RemoteException;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.RawModel;
 import epmc.options.Options;
 
@@ -53,42 +52,39 @@ public interface TaskServer {
      * {@link #stop} was called afterwards. Instead, a new task server object
      * should be created to restart the server.
      * 
-     * @throws EPMCException thrown if problems happen during the start
      */
-    void start() throws EPMCException;
-    
+    void start();
+
     /**
      * Terminate given server process.
      * The method may only be called after {@link #start()} has been called.
      * It may only be called once for a given task server object.
      * 
-     * @throws EPMCException thrown in case of problems terminating server
      */
-	void stop() throws EPMCException;
-	
-	/**
-	 * Obtain interface to execute tasks on server.
-	 * This method may only be called once {@link #start()} has been called. It
-	 * may not be called after {@link #stop()} has been called.
-	 * 
-	 * @return interface to execute tasks on server.
-	 */
-	JANIRemote getServer();
-	
-	/**
-	 * Execute task on server
+    void stop();
+
+    /**
+     * Obtain interface to execute tasks on server.
      * This method may only be called once {@link #start()} has been called. It
      * may not be called after {@link #stop()} has been called.
-	 * 
-	 * @param userOptions options to send to the server
-	 * @param channel message channel to use
-	 * @param model model to analyse
-	 * @param ignoreConnectionErrors whether to silently ignore connection problems
-	 * @throws EPMCException thrown in case of problems during analysis
-	 */
-    default void execute(Options userOptions, EPMCChannel channel, RawModel model, boolean ignoreConnectionErrors) throws EPMCException {
-    	assert userOptions != null;
-    	assert channel != null;
+     * 
+     * @return interface to execute tasks on server.
+     */
+    JANIRemote getServer();
+
+    /**
+     * Execute task on server
+     * This method may only be called once {@link #start()} has been called. It
+     * may not be called after {@link #stop()} has been called.
+     * 
+     * @param userOptions options to send to the server
+     * @param channel message channel to use
+     * @param model model to analyse
+     * @param ignoreConnectionErrors whether to silently ignore connection problems
+     */
+    default void execute(Options userOptions, EPMCChannel channel, RawModel model, boolean ignoreConnectionErrors) {
+        assert userOptions != null;
+        assert channel != null;
         assert model != null;
         userOptions = userOptions.clone();
         try {

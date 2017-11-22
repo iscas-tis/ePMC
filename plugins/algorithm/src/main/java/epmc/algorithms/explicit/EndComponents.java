@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms.explicit;
 
-import epmc.error.EPMCException;
 import epmc.util.BitSet;
 
 public interface EndComponents {
-    public BitSet next() throws EPMCException;
+    public BitSet next();
 }

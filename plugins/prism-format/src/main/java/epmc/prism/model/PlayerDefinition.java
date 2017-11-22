@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -33,7 +33,7 @@ public final class PlayerDefinition {
     private final Set<String> externalModules = Collections.unmodifiableSet(modules);
     private final Set<String> externalLabels = Collections.unmodifiableSet(labels);
     private final Positional positional;
-    
+
     public PlayerDefinition(String name, Set<String> modules, Set<String> labels,
             Positional positional) {
         assert name != null;
@@ -50,7 +50,7 @@ public final class PlayerDefinition {
         this.labels.addAll(labels);
         this.positional = positional;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -74,21 +74,21 @@ public final class PlayerDefinition {
         builder.append("\nendplayer");
         return builder.toString();
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     public Set<String> getModules() {
         return externalModules;
     }
-    
+
     public Set<String> getLabels() {
         return externalLabels;
     }
-    
+
     public Positional getPositional() {
         return positional;
     }
-    
+
 }

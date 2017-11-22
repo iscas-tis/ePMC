@@ -25,9 +25,11 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_mdp_unbounded_gaussseidel(int relative, double precision,
         int numStates, int *stateBounds, int *nondetBounds, int *targets,
-        double *weights, int min, double *values) {
+        double *weights, int min, double *values,
+        int *iterationsResult) {
     double maxDiff;
     double optInitValue = min ? INFINITY : -INFINITY;
+    int iterations = 0;
     do {
         maxDiff = 0.0;
         for (int state = 0; state < numStates; state++) {
@@ -55,6 +57,8 @@ epmc_error_t double_mdp_unbounded_gaussseidel(int relative, double precision,
             maxDiff = diff > maxDiff ? diff : maxDiff;
             values[state] = nextStateProb;
         }
+        iterations++;
     } while (maxDiff > precision / 2);
+    iterationsResult[0] = iterations;
     return SUCCESS;
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -27,8 +27,6 @@ import gnu.trove.strategy.IdentityHashingStrategy;
 
 import java.util.Arrays;
 import java.util.Map;
-
-import epmc.error.EPMCException;
 
 /**
  * Represents a permutation of DD variables.
@@ -44,7 +42,7 @@ public final class Permutation  {
     private final Map<LibraryDD,PermutationLibraryDD> libraryPermutations = new TCustomHashMap<>(new IdentityHashingStrategy<>());
     /** Maps each index to the new variable to which it is permuted. */
     private int[] array;
-    
+
     /**
      * Create new permutation.
      * The array parameter must represent a permutation. The length of this
@@ -53,9 +51,8 @@ public final class Permutation  {
      * 
      * @param contextDD context to which this permutation will belong
      * @param array array representing a permutation
-     * @throws EPMCException thrown in case of problems
      */
-    Permutation(ContextDD contextDD, int[] array) throws EPMCException {
+    Permutation(ContextDD contextDD, int[] array) {
         assert contextDD != null;
         assert assertPermutation(array);
         assert array.length == contextDD.numVariables();
@@ -95,9 +92,8 @@ public final class Permutation  {
      * needs to be done if after the creation of the permutations new DD
      * variables have been created.
      * 
-     * @throws EPMCException used in case of problems
      */
-    private void createLowLevelPermutations() throws EPMCException {
+    private void createLowLevelPermutations() {
         if (array.length != contextDD.numVariables()) {
             int[] newArray = Arrays.copyOf(array, contextDD.numVariables());
             for (int variable = array.length; variable < contextDD.numVariables(); variable++) {
@@ -111,7 +107,7 @@ public final class Permutation  {
             libraryPermutations.put(lowLevel, permutationLowLevel);
         }
     }
-    
+
     /**
      * Get context to which this permutation belongs.
      * 
@@ -120,7 +116,7 @@ public final class Permutation  {
     public ContextDD getContextDD() {
         return contextDD;
     }
-    
+
     /**
      * Get variable to which the variable is permuted.
      * 
@@ -136,7 +132,7 @@ public final class Permutation  {
             return variable;
         }
     }
-    
+
     /**
      * Get a DD library permutation for the given library.
      * The library parameter must not be {@code null}. The DD library must be a
@@ -144,9 +140,8 @@ public final class Permutation  {
      * 
      * @param libraryDD library to get DD library permutation of
      * @return DD library permutation for the given DD library
-     * @throws EPMCException
      */
-    PermutationLibraryDD getLowLevel(LibraryDD libraryDD) throws EPMCException {
+    PermutationLibraryDD getLowLevel(LibraryDD libraryDD) {
         assert libraryDD != null;
         assert libraryDD.getContextDD() == contextDD;
         if (array.length != contextDD.numVariables()) {
@@ -155,7 +150,7 @@ public final class Permutation  {
         assert libraryPermutations.containsKey(libraryDD);
         return libraryPermutations.get(libraryDD);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

@@ -16,13 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -57,6 +58,9 @@ import epmc.modelchecker.RawProperties;
 import epmc.modelchecker.RawProperty;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
+import epmc.operator.OperatorDistance;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorLt;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.plugin.AfterCommandExecution;
@@ -66,8 +70,13 @@ import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
 import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.Value;
+import epmc.value.ValueBoolean;
+import epmc.value.ValueSetString;
 
 /**
  * Static auxiliary methods and constants for JUnit tests.
@@ -94,14 +103,14 @@ public final class TestHelper {
     private final static String UNKNOWN_HOST = "Unknown";
     private final static String PLUGINLIST_NOT_FOUND = "Plugin list file "
             + "\"%s\" not found.";
-    
+
     public enum LogType {
         TRANSLATE,
         NOTRANSLATE,
         SILENT,
         LIST
     }
-    
+
     public static void prepare() {
         boolean assertionsEnabled = false;
         try {
@@ -119,7 +128,7 @@ public final class TestHelper {
             System.err.println(COULDNTSTARTLTL2TGBA);
         }
     }
-    
+
     public static Model loadModel(Options options,
             List<InputStream> inputs, InputStream propertyStream) {
         assert options != null;
@@ -127,62 +136,62 @@ public final class TestHelper {
         for (InputStream input : inputs) {
             assert input != null;
         }
-        try {
-            Model model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
-            assert model != null;
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            assert classloader != null;
-            InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
-            model.read(inputsArray);
-            if (propertyStream != null) {
-                model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
-            }
-            return model;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        Model model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
+        assert model != null;
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        assert classloader != null;
+        InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
+        model.read(inputsArray);
+        if (propertyStream != null) {
+            model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
         }
+        return model;
     }
 
     public static Model loadModel(Options options,
             InputStream input, InputStream propertyStream) {
         return loadModel(options, Collections.singletonList(input), propertyStream);
     }
-    
+
     public static Model loadModel(Options options,
-            List<String> modelFiles, String propertiesFile) throws EPMCException {
+            List<String> modelFiles, String propertiesFile) {
         assert options != null;
         assert modelFiles != null;
-        try {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            assert classloader != null;
-            List<InputStream> inputs = new ArrayList<>();
-            for (String modelFile : modelFiles) {
-                InputStream input = classloader.getResourceAsStream(modelFile);
-                if (input == null) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        assert classloader != null;
+        List<InputStream> inputs = new ArrayList<>();
+        for (String modelFile : modelFiles) {
+            InputStream input = classloader.getResourceAsStream(modelFile);
+            if (input == null) {
+                try {
                     input = new FileInputStream(modelFile);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
                 }
-                assert input != null : modelFile;
-                inputs.add(input);
             }
-            InputStream propertyStream = null;
-            if (propertiesFile != null) {
-                propertyStream = classloader.getResourceAsStream(propertiesFile);
-                if (propertyStream == null) {
-                    propertyStream = new FileInputStream(propertiesFile);
-                }
-                assert propertyStream != null : propertiesFile;
-            }
-            return loadModel(options, inputs, propertyStream);
-        } catch (Exception e) {
-        	throw new RuntimeException(e);
+            assert input != null : modelFile;
+            inputs.add(input);
         }
+        InputStream propertyStream = null;
+        if (propertiesFile != null) {
+            propertyStream = classloader.getResourceAsStream(propertiesFile);
+            if (propertyStream == null) {
+                try {
+                    propertyStream = new FileInputStream(propertiesFile);
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            assert propertyStream != null : propertiesFile;
+        }
+        return loadModel(options, inputs, propertyStream);
     }
-    
+
     public static Model loadModel(Options options,
-            String modelFile, String propertiesFile) throws EPMCException {
+            String modelFile, String propertiesFile) {
         return loadModel(options, Collections.singletonList(modelFile), propertiesFile);
     }
-    
+
     public static Model loadModelFromString(Options options,
             String... modelParts) {
         List<InputStream> inputs = new ArrayList<>();
@@ -193,7 +202,7 @@ public final class TestHelper {
         return loadModel(options, inputs, null);
     }
 
-    public static Model loadModelMulti(Options options, String... modelFiles) throws EPMCException {
+    public static Model loadModelMulti(Options options, String... modelFiles) {
         assert options != null;
         assert modelFiles != null;
         for (String modelFile : modelFiles) {
@@ -202,14 +211,14 @@ public final class TestHelper {
         return loadModel(options, Arrays.asList(modelFiles), null);
     }
 
-    
-    public static Model loadModel(Options options, String modelFile) throws EPMCException {
+
+    public static Model loadModel(Options options, String modelFile) {
         assert options != null;
         assert modelFile != null;
         return loadModel(options, modelFile, null);
     }
 
-    public static Model loadModel(String modelFile) throws EPMCException {
+    public static Model loadModel(String modelFile) {
         assert modelFile != null;
         Options options = prepareOptions();
         return loadModel(options, modelFile, null);
@@ -218,19 +227,15 @@ public final class TestHelper {
     public static void addProperty(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            Properties properties = model.getPropertyList();
-            RawProperty rawProp = new RawProperty();
-            rawProp.setDefinition(property);
-            rawProp.setDescription(null);
-            ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
-            properties.parseProperties(new InputStream[]{input});
-            assert properties.getRawProperties().size() >= 1;
-        } catch (Exception e) {
-        	throw new RuntimeException(e);
-        }
+        Properties properties = model.getPropertyList();
+        RawProperty rawProp = new RawProperty();
+        rawProp.setDefinition(property);
+        rawProp.setDescription(null);
+        ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
+        properties.parseProperties(new InputStream[]{input});
+        assert properties.getRawProperties().size() >= 1;
     }
-    
+
     public static Log prepareLog(Options options, LogType logType) {
         assert logType != null;
         return new LogTest(options, logType);
@@ -258,7 +263,7 @@ public final class TestHelper {
         System.exit(1);
     }
 
-    private static List<String> readPluginList() throws EPMCException {
+    private static List<String> readPluginList() {
         URL url = TestHelper.class.getClassLoader().getResource(getPluginsListFilename());
         if (url == null) {
             exitPluginListNotFound();
@@ -274,17 +279,13 @@ public final class TestHelper {
     }
 
     public static void prepareOptions(Options options, LogType logType,
-            String modelInputType) throws EPMCException {
+            String modelInputType) {
         Options.set(options);
         List<String> pluginDir = readPluginList();
         List<String> oldPluginDir = options.getStringList(OptionsPlugin.PLUGIN);
         pluginDir.addAll(oldPluginDir);        
         options.set(OptionsPlugin.PLUGIN, pluginDir);
-        try {
-            UtilPlugin.loadPlugins(options);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        UtilPlugin.loadPlugins(options);
         Locale locale = Locale.getDefault();
         options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
@@ -292,50 +293,46 @@ public final class TestHelper {
         ContextValue.set(new ContextValue());
         processBeforeModelLoading(options);
     }
-    
+
     public static Options prepareOptions(LogType logType,
-            String modelInputType) throws EPMCException {
+            String modelInputType) {
         assert logType != null;
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, logType, modelInputType);
         return options;
     }
-    
-    public static Options prepareOptions() throws EPMCException {
+
+    public static Options prepareOptions() {
         return prepareOptions(LogType.TRANSLATE, MODEL_INPUT_TYPE_PRISM);
     }
 
-    public static void prepareOptions(Options options, String modelInputType) throws EPMCException {
+    public static void prepareOptions(Options options, String modelInputType) {
         prepareOptions(options, LogType.LIST, modelInputType);
     }
 
-    public static void prepareOptions(Options options) throws EPMCException {
+    public static void prepareOptions(Options options) {
         prepareOptions(options, LogType.LIST, MODEL_INPUT_TYPE_PRISM);        
     }
 
-    public static Options prepareOptions(String modelInputType) throws EPMCException {
+    public static Options prepareOptions(String modelInputType) {
         return prepareOptions(LogType.LIST, modelInputType);
     }
-    
+
     private static String prepareMessage(Value expected, Value actual,
             double tolerance) {
         String message = expected + NEQ + actual;
         return message;
     }
-    
+
     private static Value stringToValue(String expected) {
         assert expected != null;
         Value expectedValue = null;
-        try {
-            Options options = Options.get();
-            String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
-            options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
-            Expression expectedExpression = UtilModelChecker.parseExpression(expected);
-            options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, modelInputType);
-            expectedValue = evaluateValue(expectedExpression);
-        } catch (EPMCException e) {
-        	throw new RuntimeException(e);
-        }
+        Options options = Options.get();
+        String modelInputType = options.getAndUnparse(OptionsModelChecker.PROPERTY_INPUT_TYPE);
+        options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, MODEL_INPUT_TYPE_PRISM);
+        Expression expectedExpression = UtilModelChecker.parseExpression(expected);
+        options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, modelInputType);
+        expectedValue = evaluateValue(expectedExpression);
 
         return expectedValue;
     }
@@ -349,18 +346,17 @@ public final class TestHelper {
         if (message == null) {
             message = prepareMessage(expected, actual, tolerance);
         }
-        try {
-            if (!expected.getType().canImport(actual.getType()) && !actual.getType().canImport(expected.getType())) {
-                assertTrue("types of expected value \"" + expected + "\" and "
-                        + " actual value \""+ actual + "\" are incompatible",
-                        false);
-            }
-            assertTrue(message, expected.distance(actual) < tolerance);
-        } catch (EPMCException e) {
-            throw new Error(e);
-        }
+        OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, expected.getType(), actual.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
+        Value distanceValue = TypeReal.get().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        distance.apply(distanceValue, expected, actual);
+        Value toleranceV = TypeReal.get().newValue();
+        ValueSetString.as(toleranceV).set(Double.toString(tolerance));
+        lt.apply(cmp, distanceValue, toleranceV);
+        assertTrue(message, cmp.getBoolean());
     }
-    
+
     public static void assertEquals(Value expected, Value actual,
             double tolerance) {
         assert expected != null;
@@ -374,11 +370,7 @@ public final class TestHelper {
         assert expected != null;
         assert tolerance >= 0.0;
         Value actualValue = expected.getType().newValue();
-        try {
-            actualValue.set("" + actual);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        ValueSetString.as(actualValue).set("" + actual);
         assertEquals(null, expected, actualValue, tolerance);
     }
 
@@ -387,11 +379,7 @@ public final class TestHelper {
         assert actual != null;
         assert tolerance >= 0.0;
         Value expectedValue = actual.getType().newValue();
-        try {
-            expectedValue.set("" + expected);
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        ValueSetString.as(expectedValue).set("" + expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
 
@@ -417,29 +405,28 @@ public final class TestHelper {
         Value expectedValue = stringToValue(expected);
         assertEquals(null, expectedValue, actual, tolerance);
     }
-    
+
     public static void assertEquals(String message, Value expected,
             Value actual) {
         assert expected != null;
         assert actual != null;
         assertEquals(null, expected, actual, 0.0);
     }
-    
+
     public static void assertEquals(Value expected, Value actual) {
         assert expected != null;
         assert actual != null;
         assertEquals(null, expected, actual, 0.0);
     }
-    
+
     public static void assertEquals(boolean expected, Value actual) {
         assert actual != null;
         Value expectedValue = actual.getType().newValue();
-        try {
-            expectedValue.set(Boolean.toString(expected));
-            assertTrue(expectedValue.isEq(actual));
-        } catch (EPMCException e) {
-            throw new RuntimeException(e);
-        }
+        ValueSetString.as(expectedValue).set(Boolean.toString(expected));
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, expectedValue.getType(), actual.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        eq.apply(cmp, expectedValue, actual);
+        assertTrue(cmp.getBoolean());
     }
 
     public static void assertEquals(String message,
@@ -459,22 +446,18 @@ public final class TestHelper {
         addProperty(model, property);
         return computeResults(model);
     }
-    
+
     public static ModelCheckerResults computeResults(Model model) {
         assert model != null;
-        try {
-            Options options = Options.get();
-            ModelChecker checker = new ModelChecker(model);
-            LogTest log = options.get(OptionsMessages.LOG);
-            log.getResults().clear();
-            checker.check();
-            checker.close();
-            return log.getResults();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Options options = Options.get();
+        ModelChecker checker = new ModelChecker(model);
+        LogTest log = options.get(OptionsMessages.LOG);
+        log.getResults().clear();
+        checker.check();
+        checker.close();
+        return log.getResults();
     }
-    
+
     public static Map<String,Value> computeResultsMapName(Model model) {
         ModelCheckerResults mcr = computeResults(model);
         Map<String,Value> result = new LinkedHashMap<>();
@@ -487,7 +470,7 @@ public final class TestHelper {
         }
         return result;
     }
-    
+
     public static Map<String,Value> computeResultsMapDefinition(Model model) {
         ModelCheckerResults mcr = computeResults(model);
         Map<String,Value> result = new LinkedHashMap<>();
@@ -500,57 +483,47 @@ public final class TestHelper {
         }
         return result;
     }
-    
+
     public static Value computeResult(Options options, String modelFile,
             String property) {
         assert options != null;
         assert modelFile != null;
         assert property != null;
-        try {
-            Model model = loadModel(options, modelFile);
-            assert model != null;
-            return computeResult(model, property);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        Model model = loadModel(options, modelFile);
+        assert model != null;
+        return computeResult(model, property);
     }
 
     public static Value computeResult(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            addProperty(model, property);
-            ModelCheckerResults results = computeResults(model);
-            assert results.getProperties().size() == 1;
-            Object result = results.get(results.getProperties().iterator().next());
-            if (result instanceof Exception) {
-                throw new RuntimeException((Exception) result);
-            }
-            return (Value) result;
-        } catch (Exception e) {
-        	throw new RuntimeException(e);
+        addProperty(model, property);
+        ModelCheckerResults results = computeResults(model);
+        assert results.getProperties().size() == 1;
+        Object result = results.get(results.getProperties().iterator().next());
+        if (result instanceof EPMCException) {
+            throw (EPMCException) result;
+        } else if (result instanceof Exception) {
+            throw new RuntimeException((Exception) result);
         }
+        return (Value) result;
     }
 
     public static Value computeScheduler(Model model, String property) {
         assert model != null;
         assert property != null;
-        try {
-            addProperty(model, property);
-            ModelCheckerResults results = computeResults(model);
-            assert results.getProperties().size() == 1;
-            Object result = results.get(results.getProperties().iterator().next());
-            if (result instanceof Exception) {
-                throw new RuntimeException((Exception) result);
-            }
-            return (Value) result;
-        } catch (Exception e) {
-        	throw new RuntimeException(e);
+        addProperty(model, property);
+        ModelCheckerResults results = computeResults(model);
+        assert results.getProperties().size() == 1;
+        Object result = results.get(results.getProperties().iterator().next());
+        if (result instanceof Exception) {
+            throw new RuntimeException((Exception) result);
         }
+        return (Value) result;
     }
 
     public static void processAfterCommandExecution()
-            throws EPMCException {
+    {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
@@ -558,7 +531,7 @@ public final class TestHelper {
         }
     }
 
-    public static void processBeforeModelLoading(Options options) throws EPMCException {
+    public static void processBeforeModelLoading(Options options) {
         assert options != null;
         for (Class<? extends BeforeModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, BeforeModelCreation.class)) {
             BeforeModelCreation beforeModelLoading = null;
@@ -566,8 +539,8 @@ public final class TestHelper {
             beforeModelLoading.process();
         }
     }
-    
-    public static void processAfterModelLoading(Options options) throws EPMCException {
+
+    public static void processAfterModelLoading(Options options) {
         assert options != null;
         for (Class<? extends AfterModelCreation> clazz : UtilPlugin.getPluginInterfaceClasses(options, AfterModelCreation.class)) {
             AfterModelCreation afterModelLoading = null;
@@ -575,24 +548,24 @@ public final class TestHelper {
             afterModelLoading.process();
         }
     }
-    
+
     public static void close(Options options) {
         assert options != null;
     }
-    
-    private static Value evaluateValue(Expression expression) throws EPMCException {
+
+    private static Value evaluateValue(Expression expression) {
         assert expression != null;
-        return UtilEvaluatorExplicit.evaluate(expression, new ExpressionToTypeEmpty());
+        return UtilEvaluatorExplicit.evaluate(expression);
     }
-    
-    
-    public static Value newValue(Type type, String valueString) throws EPMCException {
+
+
+    public static Value newValue(Type type, String valueString) {
         Value value = type.newValue();
-        value.set(valueString);
+        ValueSetString.as(value).set(valueString);
         return value;
     }
-    
-    public static void readProperties(Property property, RawProperties properties, String fileName) throws EPMCException {
+
+    public static void readProperties(Property property, RawProperties properties, String fileName) {
         try (InputStream input = new FileInputStream(fileName)) {
             property.readProperties(properties, input);
         } catch (IOException e) {
