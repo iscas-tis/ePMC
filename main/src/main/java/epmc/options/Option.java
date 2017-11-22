@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -29,8 +29,6 @@ import java.util.Map;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.base.MoreObjects;
-
-import epmc.error.EPMCException;
 
 import java.util.ResourceBundle;
 
@@ -111,7 +109,7 @@ public final class Option implements Serializable, Cloneable {
 
         Builder() {
         }
-        
+
         /**
          * Set the options set the option belongs to.
          * 
@@ -123,7 +121,7 @@ public final class Option implements Serializable, Cloneable {
             this.options = options;
             return this;
         }
-        
+
         /**
          * Get the options set the option belongs to.
          * 
@@ -133,7 +131,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return options;
         }
-        
+
         /**
          * Set the base name of the resource bundle descriptions are read from.
          * 
@@ -162,7 +160,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return bundleName;
         }
-        
+
         /**
          * Set the identifier of the option.
          * 
@@ -191,7 +189,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return identifier;
         }
-        
+
         /**
          * Set the option type with which values of the option are parsed.
          * 
@@ -213,7 +211,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return type;
         }
-        
+
         /**
          * Set the default value of the option.
          * 
@@ -225,7 +223,7 @@ public final class Option implements Serializable, Cloneable {
             this.defaultValue = defaultValue;
             return this;
         }
-        
+
         /**
          * Get the default value of the option.
          * 
@@ -235,7 +233,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return defaultValue;
         }
-        
+
         /**
          * Set whether option shall be visible and modifiable from command line.
          * 
@@ -258,7 +256,7 @@ public final class Option implements Serializable, Cloneable {
             this.commandLine = true;
             return this;
         }
-        
+
         /**
          * Returns whether option is visible and modifiable from command line.
          * 
@@ -280,7 +278,7 @@ public final class Option implements Serializable, Cloneable {
             this.gui = gui;
             return this;
         }
-        
+
         /**
          * Set the option to be visible and modifiable from GUI.
          * 
@@ -313,7 +311,7 @@ public final class Option implements Serializable, Cloneable {
             this.web = web;
             return this;
         }
-        
+
         /**
          * Set option to be visiable and modifiable in web interface.
          * 
@@ -324,7 +322,7 @@ public final class Option implements Serializable, Cloneable {
             this.web = true;
             return this;
         }
-        
+
         /**
          * Returns whether option is visible and modifiable in web interface.
          * 
@@ -334,7 +332,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return web;
         }
-        
+
         /**
          * Set the value with which the option is initially created.
          * 
@@ -346,28 +344,28 @@ public final class Option implements Serializable, Cloneable {
             this.value = value;
             return this;
         }
-        
+
         public Builder setValueUnparsed(String valueUnparsed) {
             this.valueUnparsed = valueUnparsed;
             return this;
         }
-        
+
         // TODO describe
         private String getValueUnparsed() {
             return valueUnparsed;
         }
-        
+
         // TODO describe
         public Builder setDefaultUnparsed(String defaultUnparsed) {
             this.defaultUnparsed = defaultUnparsed;
             return this;
         }
-        
+
         // TODO describe
         private String getDefaultUnparsed() {
             return defaultUnparsed;
         }
-        
+
         /**
          * Get the value with which the option is initially created.
          * 
@@ -377,7 +375,7 @@ public final class Option implements Serializable, Cloneable {
             assert built;
             return value;
         }
-        
+
         /**
          * Set category of the option.
          * 
@@ -403,8 +401,8 @@ public final class Option implements Serializable, Cloneable {
         public Builder setCategory(Category category) {
             this.category = category != null
                     ? category.getIdentifier()
-                    : null;
-            return this;
+                            : null;
+                    return this;
         }
 
         /**
@@ -415,7 +413,7 @@ public final class Option implements Serializable, Cloneable {
         private String getCategory() {
             return category;
         }
-        
+
         /**
          * Build a new option.
          * The values set previously using the setter methods will be used to
@@ -443,7 +441,7 @@ public final class Option implements Serializable, Cloneable {
             return option;
         }
     }
-    
+
     /** Serial version UID - 1L, as I don't know any better. */
     private static final long serialVersionUID = 1L;
     /** Message to print in <code>assert</code> for missing resource. */
@@ -476,7 +474,7 @@ public final class Option implements Serializable, Cloneable {
     private static final String WEB = "web";
     /** String "unchecked" to suppress according warning. */
     private final static String UNCHECKED = "unchecked";
-    
+
     /** The options collection this option belongs to. */
     private final Options options;
     /** Base name of resource bundle descriptions are read from. */
@@ -575,7 +573,7 @@ public final class Option implements Serializable, Cloneable {
     public String getIdentifier() {
         return identifier;
     }
-    
+
     /**
      * Obtain short user-readable description of the option.
      * The description shall be short enough to be shown in a single line of
@@ -587,7 +585,7 @@ public final class Option implements Serializable, Cloneable {
         ResourceBundle poMsg = getBundle();
         return poMsg.getString(SHORT_PREFIX + identifier);
     }
-    
+
     /**
      * Obtain long user-readable description of the option.
      * The description is not restricted in size but shall concisely describe
@@ -602,7 +600,7 @@ public final class Option implements Serializable, Cloneable {
         ResourceBundle poMsg = getBundle();
         return poMsg.getString(LONG_PREFIX + identifier);
     }
-    
+
     /**
      * Sets the value of the object manually, without parsing a {@link String}.
      * It is also marked as already set. This function can be used if the option
@@ -620,7 +618,7 @@ public final class Option implements Serializable, Cloneable {
             this.value = value;
         }
     }
-    
+
     // TODO describe
     public void setDirect(Object value) {
         this.unparsedValue = null;
@@ -631,15 +629,11 @@ public final class Option implements Serializable, Cloneable {
      * Parse an option from a {@link String} by the options {@link OptionType}.
      * The parameter must not be {@code null}. Whether the function may called
      * multiple times before resetting the option depends on
-     * {@link OptionType#allowMulti()} of the option type used. If the function
-     * is called while this is not allowed by the {@link OptionType}, an
-     * {@link EPMCException} is thrown. An {@link EPMCException} is also
-     * thrown in case of an error while parsing the value string.
+     * {@link OptionType#allowMulti()} of the option type used.
      * 
      * @param value the {@link String} to parse to an option value
-     * @throws EPMCException thrown in case of parsing errors.or too many calls
      */
-    public void parse(String value) throws EPMCException {
+    public void parse(String value) {
         assert value != null;
         assert type != null;
         Object previous = null;
@@ -648,7 +642,7 @@ public final class Option implements Serializable, Cloneable {
         }
         unparsedValue = type.unparse(type.parse(value, previous));
     }
-    
+
     /**
      * Obtain the value of this option.
      * If a value has been set by {@link #set(Object)} or by
@@ -682,7 +676,7 @@ public final class Option implements Serializable, Cloneable {
     public String getUnparsed() {
         return unparsedValue;
     }
-    
+
     /**
      * Obtain description of the type of the option.
      * The result is obtained using the method {@link OptionType#getInfo()} of
@@ -698,7 +692,7 @@ public final class Option implements Serializable, Cloneable {
             return type.getInfo();
         }
     }
-    
+
     /**
      * Return the type used to parse Strings to values of this option.
      * 
@@ -709,7 +703,7 @@ public final class Option implements Serializable, Cloneable {
         T typeCasted = (T) this.type;
         return typeCasted;
     }
-    
+
     /**
      * Reset the option value to its default value and mark it as not set.
      */
@@ -717,7 +711,7 @@ public final class Option implements Serializable, Cloneable {
         this.value = null;
         this.unparsedValue = null;
     }
-    
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -797,7 +791,7 @@ public final class Option implements Serializable, Cloneable {
     public boolean isWeb() {
         return this.web;
     }
-    
+
     /**
      * Read resource bundle from base name given with {@link Options} {@link Locale}.
      * @return
@@ -808,7 +802,7 @@ public final class Option implements Serializable, Cloneable {
         poMsg = ResourceBundle.getBundle(this.bundleName, locale, Thread.currentThread().getContextClassLoader());
         return poMsg;
     }
-    
+
     /**
      * Returns whether the option has a value.
      * 
@@ -817,7 +811,7 @@ public final class Option implements Serializable, Cloneable {
     public boolean hasValue() {
         return get() != null;
     }
-    
+
     /**
      * Return value as string.
      * If the value contained in the option is a {@link String}, the value will
@@ -834,7 +828,7 @@ public final class Option implements Serializable, Cloneable {
             return got.toString();
         }
     }
-    
+
     /**
      * Return value as boolean.
      * If the value contained in the option is a {@link Boolean}, the value will
@@ -895,7 +889,7 @@ public final class Option implements Serializable, Cloneable {
         T t = (T) get();
         return t;
     }
-    
+
     /**
      * Return value as map.
      * If the value is a {@link Map}, the value will be casted to a map and
@@ -909,7 +903,7 @@ public final class Option implements Serializable, Cloneable {
         Map<K,V> map = (Map<K,V>) get();
         return map;
     }
-    
+
     /**
      * Return value as integer.
      * If the value contained in the option is a {@link Integer}, the value will
@@ -930,7 +924,7 @@ public final class Option implements Serializable, Cloneable {
             return Integer.parseInt((String) got);
         } else {
             assert false : got + SPACE + got.getClass();
-            return -1;
+        return -1;
         }
     }
 
@@ -966,7 +960,7 @@ public final class Option implements Serializable, Cloneable {
         value = null;
         unparsedValue = null;
     }
-    
+
     /**
      * Deserialize option.
      * This method is used for Java deserialization. It provides some more
@@ -982,7 +976,7 @@ public final class Option implements Serializable, Cloneable {
             in.defaultReadObject();
         } catch (ClassNotFoundException | NotSerializableException e) {
             assert false : identifier;
-            throw new RuntimeException(identifier, e);
+        throw new RuntimeException(identifier, e);
         }
     }    
 
@@ -994,7 +988,7 @@ public final class Option implements Serializable, Cloneable {
     String getBundleName() {
         return bundleName;
     }
-    
+
     /**
      * Return whether the option has already been set by the user.
      * 
@@ -1003,7 +997,7 @@ public final class Option implements Serializable, Cloneable {
     public boolean isAlreadyParsed() {
         return unparsedValue != null || value != null;
     }
-    
+
     @Override
     public Option clone() {
         return toBuilder().build();
@@ -1017,7 +1011,7 @@ public final class Option implements Serializable, Cloneable {
     Options getOptions() {
         return options;
     }
-    
+
     /**
      * Parse string to value, ignoring exceptions.
      * This method can be used in cases where we already know that a certain
@@ -1030,15 +1024,10 @@ public final class Option implements Serializable, Cloneable {
      */
     private Object parseInternal(String unparsedValue) {
         Object result = null;
-        try {
-            result = type.parse(unparsedValue, result);
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false : unparsedValue;
-        }
+        result = type.parse(unparsedValue, result);
         return result;
     }
-    
+
     /**
      * Set the unparsed value of the option.
      * This method is intended to be used after in combination with
@@ -1054,7 +1043,7 @@ public final class Option implements Serializable, Cloneable {
     public Category getCategory() {
         return category;
     }
-    
+
     /**
      * Build a builder with the information with which the option was built.
      * 

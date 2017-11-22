@@ -16,22 +16,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.io.InputStream;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 
 // TODO documentation
 
 public interface Properties {
-    void parseProperties(InputStream... inputs) throws EPMCException;
-    
+    void parseProperties(InputStream... inputs);
+
     List<RawProperty> getRawProperties();
-    
+
     Expression getParsedProperty(RawProperty property);
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata;
 
@@ -25,8 +25,8 @@ package epmc.automata;
 // TODO change to assertThat
 
 public class Ltl2baTest {
-/*
-    private LtlToBa stringToBa(String string, LtlToBa.AbstractionType absType) throws EPMCException {
+    /*
+    private LtlToBa stringToBa(String string, LtlToBa.AbstractionType absType) {
         string = "P=? [" + string + "];";
         PropertyList list = new PropertyList();
         list.addProperty(new Property(string, ""));
@@ -43,9 +43,9 @@ public class Ltl2baTest {
         }
         return result;
     }
-    
+
     @Test
-    public void falseTest() throws EPMCException {
+    public void falseTest() {
         LtlToBa ba = stringToBa("false", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -56,7 +56,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void notFalseTest() throws EPMCException {
+    public void notFalseTest() {
         LtlToBa ba = stringToBa("!false", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -67,9 +67,9 @@ public class Ltl2baTest {
         BDDAutomatonState next = ba.succState(0);
         assertEquals(init, next);
     }    
-    
+
     @Test
-    public void trueTest() throws EPMCException {
+    public void trueTest() {
         LtlToBa ba = stringToBa("true", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -82,7 +82,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void notTrueTest() throws EPMCException {
+    public void notTrueTest() {
         LtlToBa ba = stringToBa("!true", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -94,7 +94,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void actionTest() throws EPMCException {
+    public void actionTest() {
         LtlToBa ba = stringToBa("a", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -119,7 +119,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void notActionTest() throws EPMCException {
+    public void notActionTest() {
         LtlToBa ba = stringToBa("!a", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -143,9 +143,9 @@ public class Ltl2baTest {
         assertEquals(1, ba.stateEnd() - ba.stateBegin());
         assertEquals(next, ba.succState(0));
     }
-    
+
     @Test
-    public void nextFalseTest() throws EPMCException {
+    public void nextFalseTest() {
         LtlToBa ba = stringToBa("X(false)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -159,7 +159,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void nextTrueTest() throws EPMCException {
+    public void nextTrueTest() {
         LtlToBa ba = stringToBa("X(true)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -171,9 +171,9 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(1, ba.stateEnd() - ba.stateBegin());        
     }
-    
+
     @Test
-    public void notNextFalseTrue() throws EPMCException {
+    public void notNextFalseTrue() {
         LtlToBa ba = stringToBa("!(X(true))", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -187,7 +187,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void notNextFalseTest() throws EPMCException {
+    public void notNextFalseTest() {
         LtlToBa ba = stringToBa("!(X(false))", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -199,9 +199,9 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(1, ba.stateEnd() - ba.stateBegin());        
     }
-    
+
     @Test
-    public void nextNotTrueTest() throws EPMCException {
+    public void nextNotTrueTest() {
         LtlToBa ba = stringToBa("X(!true)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -215,7 +215,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void nextNotFalseTest() throws EPMCException {
+    public void nextNotFalseTest() {
         LtlToBa ba = stringToBa("X(!false)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -230,7 +230,7 @@ public class Ltl2baTest {
 
 
     @Test
-    public void nextLabelTest() throws EPMCException {
+    public void nextLabelTest() {
         LtlToBa ba = stringToBa("X(a)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -261,7 +261,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void notNextLabelTest() throws EPMCException {
+    public void notNextLabelTest() {
         LtlToBa ba = stringToBa("!(X(a))", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -291,9 +291,9 @@ public class Ltl2baTest {
         ba.queryState(expressions, active, next);
         assertEquals(next, ba.succState(0));
     }
-    
+
     @Test
-    public void nextNotLabelTest() throws EPMCException {
+    public void nextNotLabelTest() {
         LtlToBa ba = stringToBa("X(!a)", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());        
         BDDAutomatonState init = ba.getInitState();
@@ -325,7 +325,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void trueUntilTrueTest() throws EPMCException {
+    public void trueUntilTrueTest() {
         LtlToBa ba = stringToBa("true U true", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -342,7 +342,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void trueUntilFalseTest() throws EPMCException {
+    public void trueUntilFalseTest() {
         LtlToBa ba = stringToBa("true U false", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -358,7 +358,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void falseUntilTrueTest() throws EPMCException {
+    public void falseUntilTrueTest() {
         LtlToBa ba = stringToBa("false U true", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -374,7 +374,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void falseUntilFalseTest() throws EPMCException {
+    public void falseUntilFalseTest() {
         LtlToBa ba = stringToBa("false U false", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -385,7 +385,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void labelUntilLabelTest() throws EPMCException {
+    public void labelUntilLabelTest() {
         LtlToBa ba = stringToBa("a U b", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -429,7 +429,7 @@ public class Ltl2baTest {
     }
 
     @Test
-    public void labelReleaseLabelTest() throws EPMCException {
+    public void labelReleaseLabelTest() {
         LtlToBa ba = stringToBa("a R b", AbstractionType.LeaveNonDet);
         assertEquals(0, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -468,9 +468,9 @@ public class Ltl2baTest {
         assertEquals(1, ba.stateEnd() - ba.stateBegin());
         assertEquals(trueState, ba.succState(0));
     }
-    
+
     @Test
-    public void eventuallyAlwaysTest() throws EPMCException {
+    public void eventuallyAlwaysTest() {
         LtlToBa ba = stringToBa("true U (false R a)", AbstractionType.LeaveNonDet);
         assertEquals(1, ba.getNumLabels());
         BDDAutomatonState init = ba.getInitState();
@@ -538,5 +538,5 @@ public class Ltl2baTest {
     // also for under and overapproximation
     // transformation to normal negation form
      * */
-     
+
 }

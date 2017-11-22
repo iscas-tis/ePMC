@@ -16,42 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
-
-import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeInteger;
-import epmc.value.TypeReal;
-import epmc.value.TypeWeight;
 
 /**
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionReward implements Expression {
-	public static boolean isReward(Expression expression) {
-		return expression instanceof ExpressionReward;
-	}
-	
-	public static ExpressionReward asReward(Expression expression) {
-		if (isReward(expression)) {
-			return (ExpressionReward) expression;
-		} else {
-			return null;
-		}
-	}
-	
-	public final static class Builder {
+    public static boolean isReward(Expression expression) {
+        return expression instanceof ExpressionReward;
+    }
+
+    public static ExpressionReward asReward(Expression expression) {
+        if (isReward(expression)) {
+            return (ExpressionReward) expression;
+        } else {
+            return null;
+        }
+    }
+
+    public final static class Builder {
         private Expression reward;
         private Expression reachSet;
         private Expression time;
@@ -60,69 +51,69 @@ public final class ExpressionReward implements Expression {
         private Positional positional;
 
         public Builder setReward(Expression reward) {
-        	this.reward = reward;
-        	return this;
+            this.reward = reward;
+            return this;
         }
-        
+
         private Expression getReward() {
-        	return reward;
+            return reward;
         }
-        
+
         public Builder setReachSet(Expression reachSet) {
-        	this.reachSet = reachSet;
-        	return this;
+            this.reachSet = reachSet;
+            return this;
         }
-        
+
         private Expression getReachSet() {
-        	return reachSet;
+            return reachSet;
         }
-        
+
         public Builder setTime(Expression time) {
-        	this.time = time;
-        	return this;
+            this.time = time;
+            return this;
         }
-        
+
         private Expression getTime() {
-        	return time;
+            return time;
         }
-        
+
         public Builder setDiscount(Expression discount) {
-        	this.discount = discount;
-        	return this;
+            this.discount = discount;
+            return this;
         }
-        
+
         private Expression getDiscount() {
-        	return discount;
+            return discount;
         }
-        
+
         public Builder setRewardType(RewardType rewardType) {
-        	this.rewardType = rewardType;
-        	return this;
+            this.rewardType = rewardType;
+            return this;
         }
-        
+
         private RewardType getRewardType() {
             return rewardType;
         }
-        
+
         public Builder setPositional(Positional positional) {
-        	this.positional = positional;
-        	return this;
+            this.positional = positional;
+            return this;
         }
-        
+
         private Positional getPositional() {
-        	return positional;
+            return positional;
         }
-        
+
         public ExpressionReward build() {
-        	return new ExpressionReward(this);
+            return new ExpressionReward(this);
         }
-	}
-	
+    }
+
     private final static String SPACE = " ";
     private final static String COMMA = ",";
     private final static String LBRACE = "(";
     private final static String RBRACE = ")";
-    
+
     private final Positional positional;
     private final RewardType type;
     private final Expression reward;
@@ -131,7 +122,7 @@ public final class ExpressionReward implements Expression {
     private final Expression discount;
 
     private ExpressionReward(Builder builder) {
-    	assert builder != null;
+        assert builder != null;
         assert builder.getRewardType() != null;
         assert builder.getReward() != null;
         this.positional = builder.getPositional();
@@ -139,17 +130,17 @@ public final class ExpressionReward implements Expression {
         this.reward = builder.getReward();
         Expression reachSet = builder.getReachSet();
         if (reachSet == null) {
-        	reachSet = ExpressionLiteral.getFalse();
+            reachSet = ExpressionLiteral.getFalse();
         }
         this.reachSet = reachSet;
         Expression time = builder.getTime();
         if (time == null) {
-        	time = ExpressionLiteral.getPosInf();
+            time = ExpressionLiteral.getPosInf();
         }
         this.time = time;
         Expression discount = builder.getDiscount();
         if (discount == null) {
-        	discount = ExpressionLiteral.getOne();
+            discount = ExpressionLiteral.getOne();
         }
         this.discount = discount;
     }
@@ -165,64 +156,36 @@ public final class ExpressionReward implements Expression {
         this.time = children.get(2);
         this.discount = children.get(3);
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
-//        // TODO works for now, not sure whether best way
-//        // purpose is to prevent labels being replaced
-//        Expression structure = getReward().getExpression();
-//        if (structure instanceof ExpressionIdentifier
-//        		&& ((ExpressionIdentifierStandard) structure).getName().startsWith(QUOT)) {
-//            List<Expression> oldChildren = children.subList(1, children.size());
-//            children = new ArrayList<>(children.size());
-//            children.add(structure);
-//            children.addAll(oldChildren);
-//        }
-//    	The above part has been commented out since reward labels have to be relabelled 
-//    	on exporting to JANI while they should not be relabelled for internal use; this 
-//    	is now considered inside PRISM2JANIConverter
+        //        // TODO works for now, not sure whether best way
+        //        // purpose is to prevent labels being replaced
+        //        Expression structure = getReward().getExpression();
+        //        if (structure instanceof ExpressionIdentifier
+        //        		&& ((ExpressionIdentifierStandard) structure).getName().startsWith(QUOT)) {
+        //            List<Expression> oldChildren = children.subList(1, children.size());
+        //            children = new ArrayList<>(children.size());
+        //            children.add(structure);
+        //            children.addAll(oldChildren);
+        //        }
+        //    	The above part has been commented out since reward labels have to be relabelled 
+        //    	on exporting to JANI while they should not be relabelled for internal use; this 
+        //    	is now considered inside PRISM2JANIConverter
         return new ExpressionReward.Builder()
-        		.setRewardType(type)
-        		.setReward(children.get(0))
-        		.setReachSet(children.get(1))
-        		.setTime(children.get(2))
-        		.setDiscount(children.get(3))
-        		.setPositional(positional)
-        		.build();
+                .setRewardType(type)
+                .setReward(children.get(0))
+                .setReachSet(children.get(1))
+                .setTime(children.get(2))
+                .setDiscount(children.get(3))
+                .setPositional(positional)
+                .build();
     }
-    
-    @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        switch (type) {
-        case CUMULATIVE:
-        case INSTANTANEOUS:
-        case DISCOUNTED:
-            Type timeType = getTime().getType(expressionToType);
-            ensure(TypeReal.isReal(timeType) || TypeInteger.isInteger(timeType),
-            		ProblemsExpression.EXPR_INCONSISTENT, "", getTime());
-            break;
-        case REACHABILITY: 
-            Type reachType = getRewardReachSet().getType(expressionToType);
-            ensure(TypeBoolean.isBoolean(reachType), ProblemsExpression.EXPR_INCONSISTENT, "", getRewardReachSet());
-            break;
-        case STEADYSTATE:
-            break;
-        default:
-            assert false;
-            break;        
-        }
-        return TypeWeight.get();
-    }
-    
+
     public RewardSpecification getReward() {
         return new RewardSpecificationImpl(reward);
     }
-    
+
     public Expression getRewardReachSet() {
         return reachSet;
     }
@@ -230,16 +193,16 @@ public final class ExpressionReward implements Expression {
     public Expression getTime() {
         return time;
     }
-    
+
     public Expression getDiscount() {
         assert type == RewardType.DISCOUNTED;
         return discount;
     }
-    
+
     public RewardType getRewardType() {
         return type;
     }
-    
+
     @Override
     public List<Expression> getChildren() {
         List<Expression> result = new ArrayList<>();
@@ -254,8 +217,8 @@ public final class ExpressionReward implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
-    
+
+
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
@@ -299,7 +262,7 @@ public final class ExpressionReward implements Expression {
         }
         return this.type == other.type;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -312,15 +275,15 @@ public final class ExpressionReward implements Expression {
         return hash;
     }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionReward.Builder()
-				.setDiscount(discount)
-				.setReachSet(reachSet)
-				.setReward(reward)
-				.setRewardType(type)
-				.setTime(time)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionReward.Builder()
+                .setDiscount(discount)
+                .setReachSet(reachSet)
+                .setReward(reward)
+                .setRewardType(type)
+                .setTime(time)
+                .setPositional(positional)
+                .build();
+    }
 }

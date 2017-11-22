@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit.subgraph;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.value.Type;
@@ -44,9 +43,9 @@ public class EdgePropertySubgraph implements EdgeProperty {
     }
 
     @Override
-    public Value get(int node, int successor) throws EPMCException {
-    	int old = graph.getQueriedNode();
-    	graph.queryNode(node);
+    public Value get(int node, int successor) {
+        int old = graph.getQueriedNode();
+        graph.queryNode(node);
         Value res = inner.get(graph.subToOrig(node), graph.getOrigSuccNumber(node, successor));
         graph.queryNode(old);
         return res;
@@ -54,8 +53,8 @@ public class EdgePropertySubgraph implements EdgeProperty {
 
     @Override
     public void set(int node, int successor, Value value) {
-    	throw new RuntimeException();
-//        inner.set(graph.subToOrig(node), graph.getOrigSuccNumber(successor), value);
+        throw new RuntimeException();
+        //        inner.set(graph.subToOrig(node), graph.getOrigSuccNumber(successor), value);
     }
 
     @Override

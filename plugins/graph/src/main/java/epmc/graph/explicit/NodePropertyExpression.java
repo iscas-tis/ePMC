@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -35,19 +34,17 @@ public final class NodePropertyExpression implements NodeProperty {
     private final NodeProperty[] variableNodeProperties;
     private final EvaluatorExplicit evaluator;
     private final GraphExplicit graph;
-    private final Type type;
     private final Value[] values;
 
-    public NodePropertyExpression(GraphExplicit graph, Expression expression) throws EPMCException {
+    public NodePropertyExpression(GraphExplicit graph, Expression expression) {
         assert expression != null;
         this.graph = graph;
-        type = expression.getType(graph);
         Expression[] variables = computeVariables(graph, expression).toArray(new Expression[0]);
         variableNodeProperties = computeVariableNodeProperties(variables);
         values = new Value[variables.length];
         evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, variables);
     }
-    
+
     private NodeProperty[] computeVariableNodeProperties(
             Expression[] variables) {
         NodeProperty[] variableNodeProperties = new NodeProperty[variables.length];
@@ -65,7 +62,7 @@ public final class NodePropertyExpression implements NodeProperty {
     }
 
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         for (int i = 0; i < variableNodeProperties.length; i++) {
             values[i] = variableNodeProperties[i].get(node);
         }
@@ -74,12 +71,12 @@ public final class NodePropertyExpression implements NodeProperty {
     }
 
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
     }
 
     @Override
     public Type getType() {
-        return type;
+        return evaluator.getType();
     }
 
     private static Set<Expression> computeVariables(GraphExplicit original, Expression expression) {

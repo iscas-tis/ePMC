@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -25,17 +25,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
-import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -54,13 +50,21 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorExp;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -69,10 +73,8 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
+import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
-import epmc.value.ValueReal;
-import epmc.value.operator.OperatorExp;
-import epmc.value.operator.OperatorNot;
 
 public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     public final static String IDENTIFIER = "pctl-explicit-next";
@@ -80,30 +82,30 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
     private boolean negate;
-	private Expression property;
-	private StateSet forStates;
+    private Expression property;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
-
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         assert property instanceof ExpressionQuantifier;
@@ -122,82 +124,50 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return result;
     }
 
-    public StateMap doSolve(Expression property, StateSet states, boolean min)
-            throws EPMCException {
+    public StateMap doSolve(Expression property, StateSet states, boolean min) {
         if (isNot(property)) {
-        	ExpressionOperator propertyOperator = (ExpressionOperator) property;
+            ExpressionOperator propertyOperator = ExpressionOperator.asOperator(property);
             property = propertyOperator.getOperand1();
             negate = true;
             min = !min;
-        } else if (isRelease(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = pathTemporal.getOperand1();
-            Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(), property.getPositional());
-            min = !min;
-            negate = true;
-        } else if (isFinally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue();
-            Expression right = pathTemporal.getOperand1();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
-            negate = false;
-        } else if (isGlobally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = ExpressionLiteral.getTrue();
-            Expression right = not(pathTemporal.getOperand1());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
-            min = !min;
-            negate = true;
         } else {
             negate = false;
         }
-        Set<Expression> inners = UtilPCTL.collectPCTLInner(property);
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
-        for (Expression inner : inners) {
-            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
-            UtilGraph.registerResult(graph, inner, innerResult);
-        }
+        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
+        Expression inner = propertyTemporal.getOperand1();
+        StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
+        UtilGraph.registerResult(graph, inner, innerResult);
         allStates.close();
         this.computeForStates = (StateSetExplicit) states;
-        return solve((ExpressionTemporal) property, min);
+        return solve(propertyTemporal, min, innerResult);
     }
-    
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min)
-            throws EPMCException {
+
+    private StateMap solve(ExpressionTemporal pathTemporal, boolean min, StateMapExplicit inner) {
         assert pathTemporal != null;
-        Expression[] expressions = UtilPCTL.collectPCTLInner(pathTemporal).toArray(new Expression[0]);
-        Value[] evalValues = new Value[expressions.length];
-        for (int varNr = 0; varNr < expressions.length; varNr++) {
-            evalValues[varNr] = expressions[varNr].getType(graph).newValue();
-        }
-        EvaluatorExplicitBoolean[] evaluators = new EvaluatorExplicitBoolean[pathTemporal.getOperands().size()];
-        for (int i = 0; i < pathTemporal.getOperands().size(); i++) {
-        	evaluators[i] = UtilEvaluatorExplicit.newEvaluatorBoolean(pathTemporal.getOperands().get(i), graph, expressions);
-        }
-        
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = UtilValue.newValue(typeWeight, 1);
         ValueArray resultValues = newValueArrayWeight(computeForStates.size());
-//        ValueArray result = typeArray.newValue(computeForStates.length());
+        //        ValueArray result = typeArray.newValue(computeForStates.length());
 
-        solveNext(pathTemporal, expressions, evalValues, evaluators, min);
+        solveNext(pathTemporal, inner, min);
+        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
             for (int i = 0; i < resultValues.size(); i++) {
                 resultValues.get(entry, i);
-                entry.subtract(one, entry);
+                subtract.apply(entry, one, entry);
                 resultValues.set(entry, i);
             }
         }
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
-    private void solveNext(ExpressionTemporal pathTemporal, Expression[] expressions, Value[] evalValues, EvaluatorExplicitBoolean[] evaluators, boolean min) throws EPMCException {
+    private void solveNext(ExpressionTemporal pathTemporal, StateMapExplicit inner, boolean min) {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
-        Semantics semanticsType = ValueObject.asObject(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         BitSet allNodes = UtilBitSet.newBitSetUnbounded();
         allNodes.set(0, graph.getNumNodes());
         List<Object> nodeProperties = new ArrayList<>();
@@ -208,11 +178,11 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         int iterNumStates = graph.computeNumStates();
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterNumStates);
-        for (int state = allNodes.nextSetBit(0); state >= 0; state = allNodes.nextSetBit(state+1)) {
-            for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-                evalValues[exprNr] = graph.getNodeProperty(expressions[exprNr]).get(state);
-            }
-            boolean innerBoolean = evaluators[0].evaluateBoolean(evalValues);
+        ValueBoolean valueInner = TypeBoolean.get().newValue();
+        for (int i = 0; i < inner.size(); i++) {
+            int state = inner.getExplicitIthState(i);
+            inner.getExplicitIthValue(valueInner, i);
+            boolean innerBoolean = valueInner.getBoolean();
             values.set(innerBoolean ? one : zero, state);
         }
         GraphSolverObjectiveExplicitBounded objective = new GraphSolverObjectiveExplicitBounded();
@@ -226,49 +196,54 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         values = objective.getResult();
         TimeBound timeBound = pathTemporal.getTimeBound();
         if (SemanticsContinuousTime.isContinuousTime(semanticsType)) {
-        	OperatorEvaluator exp = ContextValue.get().getOperatorEvaluator(OperatorExp.EXP, TypeReal.get());
-            Value rightValue = timeBound.getRightValue();
+            OperatorEvaluator exp = ContextValue.get().getEvaluator(OperatorExp.EXP, TypeReal.get());
+            Value rightValue = ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getRight()));
             ValueAlgebra entry = typeWeight.newValue();
             BitSet iterStates = UtilBitSet.newBitSetUnbounded();
             iterStates.set(0, graph.getNumNodes());
-            Value leftValue = TypeWeight.get().newValue();
-            leftValue.set(timeBound.getLeftValue());
+            ValueAlgebra leftValue = TypeWeight.get().newValue();
+            OperatorEvaluator setLV = ContextValue.get().getEvaluator(OperatorSet.SET, leftValue.getType(), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType());
+            setLV.apply(leftValue, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())));
             ValueAlgebra sum = TypeWeight.get().newValue();
             ValueAlgebra jump = TypeWeight.get().newValue();
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+            OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, jump.getType());
+            OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, entry.getType(), jump.getType());
+            OperatorEvaluator setW = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int state = 0; state < iterNumStates; state++) {
-                sum.set(TypeWeight.get().getZero());
+                setW.apply(sum, TypeWeight.get().getZero());
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
-                    sum.add(sum, succWeight);
+                    add.apply(sum, sum, succWeight);
                 }
-                jump.multiply(leftValue, sum);
-                jump.addInverse(jump);
+                multiply.apply(jump, leftValue, sum);
+                addInverse.apply(jump, jump);
                 exp.apply(jump, jump);
                 values.get(entry, state);
-                entry.multiply(entry, jump);
+                multiply.apply(entry, entry, jump);
                 values.set(entry, state);
             }
         }
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
         }
         Semantics semantics = modelChecker.getModel().getSemantics();
         if (!SemanticsDiscreteTime.isDiscreteTime(semantics)
-        		&& !SemanticsContinuousTime.isContinuousTime(semantics)) {
-        	return false;
+                && !SemanticsContinuousTime.isContinuousTime(semantics)) {
+            return false;
         }
         if (!(property instanceof ExpressionQuantifier)) {
             return false;
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         if (!isNext(propertyQuantifier.getQuantified())) {
-        	return false;
+            return false;
         }
         Set<Expression> inners = UtilPCTL.collectPCTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -276,57 +251,49 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
-	@Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	return required;
+    @Override
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return required;
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         Set<Expression> inners = UtilPCTL.collectPCTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return required;
+        return required;
     }
-    
+
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return required;
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return required;
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     private ValueArray newValueArrayWeight(int size) {
         TypeArray typeArray = TypeWeight.get().getTypeArray();
         return UtilValue.newArray(typeArray, size);
     }
-    
-    private Expression not(Expression expression) {
-    	return new ExpressionOperator.Builder()
-    			.setOperator(OperatorNot.NOT)
-    			.setPositional(expression.getPositional())
-    			.setOperands(expression)
-    			.build();
-    }
-    
+
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -335,45 +302,12 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isNext(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
         }
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.NEXT;
-    }
-    
-    private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
-    }
-    
-    private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
-    }
-    
-    private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
-    }
-    
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound, Positional positional) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, positional);
     }
 }

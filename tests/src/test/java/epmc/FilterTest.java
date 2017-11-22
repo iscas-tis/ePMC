@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -48,7 +47,7 @@ public class FilterTest {
     }
 
     @Test
-    public void chainTest() throws EPMCException {
+    public void chainTest() {
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         chainTestRun(options);
@@ -72,7 +71,7 @@ public class FilterTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, CHAIN, "filter(sum,s*s,true)");
         assertEquals(770, result, tolerance);
-        
+
         constants.put("N", "10");
         constants.put("M", "3");
         options.set(OptionsModelChecker.CONST, constants);

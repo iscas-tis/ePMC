@@ -16,11 +16,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 /**
  * Operator to truncate a real to an integer.
@@ -28,5 +28,5 @@ import epmc.value.Operator;
  * @author Ernst Moritz Hahn
  */
 public enum OperatorTrunc implements Operator {
-	TRUNC
+    TRUNC
 }

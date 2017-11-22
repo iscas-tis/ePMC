@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -27,20 +27,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.value.Operator;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 import epmc.expression.Expression;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 
 // TODO probably should get rid of most of these methods
 
@@ -61,11 +59,10 @@ public final class UtilExpressionStandard {
 
     public static Expression opAdd(Expression op1, int op2) {
         assert op1 != null;
-        TypeInteger typeInteger = TypeInteger.get();
-        
         Expression op2Expr = new ExpressionLiteral.Builder()
-        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op2))
-        		.build();
+                .setValue(Integer.toString(op2))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                .build();
         return newOperator(OperatorAdd.ADD, op1, op2Expr);
     }
 
@@ -100,9 +97,9 @@ public final class UtilExpressionStandard {
 
     public static Expression opMin(int op1, Expression op2) {
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get();
         Expression op1Expr = new ExpressionLiteral.Builder()
-                .setValueProvider(() -> UtilValue.newValue(typeInteger, op1))
+                .setValue(Integer.toString(op1))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
                 .build();
         return newOperator(OperatorMin.MIN, op1Expr, op2);
     }
@@ -129,10 +126,10 @@ public final class UtilExpressionStandard {
     public static Expression opIte(Expression op1, Expression op2, int op3) {
         assert op1 != null;
         assert op2 != null;
-        TypeInteger typeInteger = TypeInteger.get();
         Expression op3Expr = new ExpressionLiteral.Builder()
-        		.setValueProvider(() -> UtilValue.newValue(typeInteger, op3))
-        		.build();
+                .setValue(Integer.toString(op3))
+                .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                .build();
         return newOperator(OperatorIte.ITE, op1, op2, op3Expr);
     }
 
@@ -144,7 +141,7 @@ public final class UtilExpressionStandard {
     public static Expression replace(Expression expression, Map<Expression, Expression> replacement) {
         assert expression != null;
         if (replacement.containsKey(expression)
-        		&& replacement.get(expression) != null) {
+                && replacement.get(expression) != null) {
             return replacement.get(expression).replacePositional(expression.getPositional());
         }
         ArrayList<Expression> newChildren = new ArrayList<>();
@@ -160,7 +157,7 @@ public final class UtilExpressionStandard {
                 .setOperands(Arrays.asList(operands))
                 .build();
     }
-    
+
     public static Set<Expression> collectIdentifiers(Expression expression) {
         assert expression != null;
         if (expression instanceof ExpressionIdentifier) {
@@ -182,15 +179,15 @@ public final class UtilExpressionStandard {
      * @return human-readable representation of expression
      */
     public static String niceForm(Expression expression) {
-    	assert expression != null;
-    	if (expression.getPositional() == null
-    			|| expression.getPositional().getContent() == null) {
-    		return expression.toString();
-    	} else {
-    		return expression.getPositional().getContent();
-    	}
+        assert expression != null;
+        if (expression.getPositional() == null
+                || expression.getPositional().getContent() == null) {
+            return expression.toString();
+        } else {
+            return expression.getPositional().getContent();
+        }
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

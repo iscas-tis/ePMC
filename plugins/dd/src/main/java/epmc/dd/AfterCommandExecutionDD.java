@@ -16,23 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
-import epmc.error.EPMCException;
 import epmc.plugin.AfterCommandExecution;
 
 public final class AfterCommandExecutionDD implements AfterCommandExecution {
-	public final static String IDENTIFIER = "after-command-execution-dd";
-	
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    public final static String IDENTIFIER = "after-command-execution-dd";
 
-	@Override
-	public void process() throws EPMCException {
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
+    public void process() {
+    }
 
 }

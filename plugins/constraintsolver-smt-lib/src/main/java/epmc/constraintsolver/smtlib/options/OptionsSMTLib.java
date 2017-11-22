@@ -16,14 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.smtlib.options;
 
 public enum OptionsSMTLib {
-	OPTIONS_SMTLIB,
-	SMTLIB_CATEGORY,
-	SMTLIB_COMMAND_LINE,
-	SMTLIB_KEEP_TEMPORARY_FILES,
-	SMTLIB_VERSION,	
+    OPTIONS_SMTLIB,
+    SMTLIB_CATEGORY,
+    SMTLIB_COMMAND_LINE,
+    SMTLIB_KEEP_TEMPORARY_FILES,
+    SMTLIB_VERSION,	
 }

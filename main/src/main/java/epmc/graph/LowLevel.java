@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 
 /**
  * Low-level representation of a model.
@@ -36,10 +35,9 @@ public interface LowLevel extends Closeable, ExpressionToType {
      * Create new set of initial states of this low-level model.
      * 
      * @return new set of initial states
-     * @throws EPMCException thrown in case of problems during creation
      */
-    StateSet newInitialStateSet() throws EPMCException;
-    
+    StateSet newInitialStateSet();
+
     @Override
     void close();
 }

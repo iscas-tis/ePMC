@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
@@ -25,11 +25,11 @@ public enum ConstraintType {
     EQ,
     GE
     ;
-    
+
     public boolean isLe() {
         return this == LE;
     }
-    
+
     public boolean isEq() {
         return this == EQ;
     }

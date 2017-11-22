@@ -16,41 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.type;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class JANITypeIntProcessor implements JANI2PRISMProcessorStrict {
-	
-	private JANITypeInt integer = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj instanceof JANITypeInt;
 
-		integer = (JANITypeInt) obj;
-		return this;
-	}
+    private JANITypeInt integer = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert integer != null;
-		
-		return "int";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert integer != null;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj instanceof JANITypeInt;
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert integer != null;
-		
-		return false;
-	}	
+        integer = (JANITypeInt) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert integer != null;
+
+        return "int";
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert integer != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert integer != null;
+
+        return false;
+    }	
 }

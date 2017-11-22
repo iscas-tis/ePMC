@@ -16,45 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class InitialStatesProcessor implements JANI2PRISMProcessorStrict {
 
-	private InitialStates initialStates = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof InitialStates; 
-		
-		initialStates = (InitialStates) obj;
-		return this;
-	}
+    private InitialStates initialStates = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		return "";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert initialStates != null;
-		
-		ProcessorRegistrar.getProcessor(initialStates.getExp())
-						  .validateTransientVariables();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof InitialStates; 
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert initialStates != null;
-		
-		return ProcessorRegistrar.getProcessor(initialStates.getExp())
-								 .usesTransientVariables();
-	}	
+        initialStates = (InitialStates) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        return "";
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert initialStates != null;
+
+        ProcessorRegistrar.getProcessor(initialStates.getExp())
+        .validateTransientVariables();
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert initialStates != null;
+
+        return ProcessorRegistrar.getProcessor(initialStates.getExp())
+                .usesTransientVariables();
+    }	
 }

@@ -16,50 +16,49 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ActionProcessor implements JANI2PRISMProcessorStrict {
 
-	private Action action = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof Action; 
-		
-		action = (Action) obj;
-		return this;
-	}
+    private Action action = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert action != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		prism.append("[")
-			 .append(JANIComponentRegistrar.getActionName(action))
-			 .append("]");
-		
-		return prism.toString();
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Action; 
 
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert action != null;
-	}
-	
+        action = (Action) obj;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert action != null;
-		
-		return false;
-	}	
+    @Override
+    public String toPRISM() {
+        assert action != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        prism.append("[")
+        .append(JANIComponentRegistrar.getActionName(action))
+        .append("]");
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert action != null;
+    }
+
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert action != null;
+
+        return false;
+    }	
 }

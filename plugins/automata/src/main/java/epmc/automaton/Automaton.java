@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -47,61 +46,61 @@ import epmc.value.ValueBoolean;
 public interface Automaton extends Closeable {
     interface Builder {
         default String getIdentifier() {
-        	return null;
+            return null;
         }
-        
+
         default Builder setBuechi(Buechi buechi) {
-        	return this;
+            return this;
         }
-        
-        default Builder setExpression(Expression expression, Expression[] expressions) throws EPMCException {
+
+        default Builder setExpression(Expression expression, Expression[] expressions) {
             ValueBoolean negate = TypeBoolean.get().newValue(false);
             Buechi buechi = UtilAutomaton.newBuechi(expression, expressions, true, negate);
             setBuechi(buechi);
             return this;
         }
-        
-        default Builder setExpression(Expression expression) throws EPMCException {
+
+        default Builder setExpression(Expression expression) {
             Expression[] expressions = UtilAutomaton.collectLTLInner(expression).toArray(new Expression[0]);
             setExpression(expression, expressions);
             return this;
         }
 
-        Automaton build() throws EPMCException;
+        Automaton build();
     }
 
     int getInitState();
-   
+
     int getNumStates();
 
     Object numberToState(int number);
 
     Object numberToLabel(int number);
-    
+
     Expression[] getExpressions();
-    
+
     void queryState(Value[] modelState, int automatonState)
-            throws EPMCException;
-    
+    ;
+
     default String getIdentifier() {
         return null;
     }
-    
+
     default Buechi getBuechi() {
         assert false;
         return null;
     }
-        
+
     default int getSuccessorState() {
         assert false;
         return -1;
     }
-    
+
     default int getSuccessorLabel() {
         assert false;
         return -1;
     }
-    
+
     default int getNumberSuccessors() {
         assert isDeterministic();
         return 1;
@@ -118,11 +117,11 @@ public interface Automaton extends Closeable {
         assert successorNumber < 1;
         return getSuccessorLabel();
     }
-    
+
     @Override
     default void close() {
     }
-    
+
     default boolean isDeterministic() {
         return true;
     }

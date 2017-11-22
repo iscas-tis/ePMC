@@ -16,67 +16,105 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.derivedoperators;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
+import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
+import epmc.value.ValueBoolean;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
-public enum OperatorEvaluatorSgn implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorSgn implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorSgn.SGN;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 1) {
-			return false;
-		}
-		if (!TypeAlgebra.isAlgebra(types[0])) {
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert operator != null;
-		assert types != null;
-		assert types.length >= 1;
-		assert types[0] != null;
-		return TypeInteger.get();
-	}
-	
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length >= 1;
-		assert operands[0] != null;
-		Value zero = TypeInteger.get().getZero();
-		Value one = TypeInteger.get().getOne();
-		if (operands[0].isEq(zero)) {
-			result.set(zero);
-		} else if (ValueAlgebra.asAlgebra(operands[0]).isGt(zero)) {
-			result.set(one);
-		} else if (ValueAlgebra.asAlgebra(operands[0]).isLt(zero)) {
-			ValueAlgebra.asAlgebra(result).addInverse(one);
-		} else {
-			assert false;
-		}
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (operator != OperatorSgn.SGN) {
+                return null;
+            }
+            if (types.length != 1) {
+                return null;
+            }
+            if (!TypeAlgebra.is(types[0])) {
+                return null;
+            }
+
+            return new OperatorEvaluatorSgn(this);
+        }
+    }
+
+    private OperatorEvaluatorSgn(Builder builder) {
+    }
+
+    @Override
+    public Type resultType() {
+        return TypeInteger.get();
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length >= 1;
+        assert operands[0] != null;
+        Value zero = TypeInteger.get().getZero();
+        Value one = TypeInteger.get().getOne();
+        OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, operands[0].getType(), zero.getType());
+        OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, operands[0].getType(), zero.getType());
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        eq.apply(cmp, operands[0], zero);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, zero.getType(), result.getType());
+        if (cmp.getBoolean()) {
+            set.apply(result, zero);
+            return;
+        }
+        lt.apply(cmp, operands[0], zero);
+        if (cmp.getBoolean()) {
+            set.apply(result, one);
+            return;
+        }
+        gt.apply(cmp, operands[0], zero);
+        if (cmp.getBoolean()) {
+            addInverse.apply(ValueAlgebra.as(result), one);
+            return;
+        }
+        assert false;
+    }
 }

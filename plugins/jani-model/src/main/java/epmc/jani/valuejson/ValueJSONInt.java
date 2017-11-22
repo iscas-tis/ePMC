@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.valuejson;
 
@@ -29,15 +29,15 @@ import epmc.value.ValueInteger;
 public class ValueJSONInt implements ValueJSON {
     final static String ARBITRARY = "arbitrary";
 
-	@Override
-	public JsonValue convert(Value value) {
-		assert value != null;
-		if (!ValueInteger.isInteger(value)) {
-			return null;
-		}
+    @Override
+    public JsonValue convert(Value value) {
+        assert value != null;
+        if (!ValueInteger.is(value)) {
+            return null;
+        }
         return Json.createObjectBuilder().add(ARBITRARY,
-        		ValueInteger.asInteger(value).getInt())
+                ValueInteger.as(value).getInt())
                 .build().get(ARBITRARY);
-	}
+    }
 
 }

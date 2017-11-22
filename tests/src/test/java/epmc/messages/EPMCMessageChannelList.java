@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -36,7 +36,7 @@ public final class EPMCMessageChannelList implements EPMCMessageChannel {
         private final List<String> arguments = new ArrayList<>();
         private final List<String> publicArguments
         = Collections.unmodifiableList(arguments);
-        
+
         LogEntry(long time, Message key, String... arguments) {
             assert time >= 0;
             assert key != null;
@@ -64,15 +64,15 @@ public final class EPMCMessageChannelList implements EPMCMessageChannel {
         public long getTime() {
             return time;
         }
-        
+
         public Message getKey() {
             return key;
         }
-        
+
         public List<String> getArguments() {
             return publicArguments;
         }
-        
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -90,11 +90,11 @@ public final class EPMCMessageChannelList implements EPMCMessageChannel {
             return builder.toString();
         }
     }
-    
+
     boolean started;
     private final List<LogEntry> list = new ArrayList<>();
     private final List<LogEntry> publicList = Collections.unmodifiableList(list);
-    
+
     public EPMCMessageChannelList() throws RemoteException {
         super();
     }

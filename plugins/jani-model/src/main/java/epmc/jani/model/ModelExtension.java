@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
-
-import epmc.error.EPMCException;
 
 /**
  * Extension for JANI models.
@@ -33,29 +31,29 @@ import epmc.error.EPMCException;
  * @author Ernst Moritz Hahn
  */
 public interface ModelExtension {
-	String getIdentifier();
-	
-	default void setModel(ModelJANI model) throws EPMCException {
-	}
-	
+    String getIdentifier();
 
-	default ModelJANI getModel() {
-		return null;
-	}
+    default void setModel(ModelJANI model) {
+    }
 
-	
-	default void setNode(JANINode node) throws EPMCException {
-	}
-	
-	default void setJsonValue(JsonValue value) throws EPMCException {
-	}
 
-	default void parseBefore() throws EPMCException {
-	}
-	
-	default void parseAfter() throws EPMCException {
-	}
-	
-	default void generate(JsonObjectBuilder generate) throws EPMCException {
-	}
+    default ModelJANI getModel() {
+        return null;
+    }
+
+
+    default void setNode(JANINode node) {
+    }
+
+    default void setJsonValue(JsonValue value) {
+    }
+
+    default void parseBefore() {
+    }
+
+    default void parseAfter() {
+    }
+
+    default void generate(JsonObjectBuilder generate) {
+    }
 }

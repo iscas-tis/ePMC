@@ -1,22 +1,20 @@
 package epmc.prism.plugin;
 
-import epmc.error.EPMCException;
 import epmc.plugin.BeforeModelCreation;
 import epmc.prism.value.OperatorEvaluatorPRISMPow;
-import epmc.prism.value.OperatorPRISMPow;
-import epmc.value.ContextValue;
+import epmc.value.operatorevaluator.SimpleEvaluatorFactory;
 
 public final class BeforeModelCreationPRISM implements BeforeModelCreation {
-	public final static String IDENTIFIER = "before-model-creation-prism";
+    public final static String IDENTIFIER = "before-model-creation-prism";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process() throws EPMCException {
-		ContextValue.get().addOperatorEvaluator(OperatorEvaluatorPRISMPow.INSTANCE);
-	}
+    @Override
+    public void process() {
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorPRISMPow.Builder.class);
+    }
 
 }

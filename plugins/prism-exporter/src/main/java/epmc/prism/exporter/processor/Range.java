@@ -16,17 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.processor;
 
 public class Range {
-	public final int low;
-	public final int high;
-	
-	public Range(int low, int high) {
-		this.low = low;
-		this.high = high;
-	}
+    public final int low;
+    public final int high;
+
+    public Range(int low, int high) {
+        this.low = low;
+        this.high = high;
+    }
 }
 

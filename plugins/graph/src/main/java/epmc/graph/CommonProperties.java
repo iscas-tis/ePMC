@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -55,7 +55,7 @@ public enum CommonProperties {
     NODE_MODEL,
     /** Automaton node part of a model automaton product. */
     NODE_AUTOMATON,
-    
+
     /* edge properties */
     /** edge weight (rate or probability) */
     WEIGHT,

@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.io.InputStream;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 
@@ -45,7 +44,7 @@ public interface Model {
      * @return unique identifier of model type
      */
     String getIdentifier();
-    
+
     /**
      * Reads the model from its input file(s).
      * For some model classes (e.g. RDDL, MRMC), the model might be split into
@@ -57,9 +56,8 @@ public interface Model {
      * <code>null</code>.
      * 
      * @param inputs input files of this model
-     * @throws EPMCException model could not be read (e.g. syntax error)
      */
-    void read(InputStream... inputs) throws EPMCException;
+    void read(InputStream... inputs);
 
     /**
      * Get the semantics type of the model.
@@ -69,7 +67,7 @@ public interface Model {
      * @return semantics type of the model
      */
     Semantics getSemantics();
-    
+
     /**
      * Create a low-level representation of the model for analysis.
      * Creating a low-level representation might fail for many reasons. For
@@ -89,13 +87,12 @@ public interface Model {
      * @param nodeProperties node properties to use
      * @param edgeProperties edge properties to use
      * @return symbolic graph representation of model
-     * @throws EPMCException thrown if creation fails
      */
     LowLevel newLowLevel(Engine engine,
             Set<Object> graphProperties,
             Set<Object> nodeProperties,
-            Set<Object> edgeProperties) throws EPMCException;
-    
+            Set<Object> edgeProperties);
+
     /**
      * Returns the list of properties associated to this model.
      * These properties might be part of the model files itself (e.g.

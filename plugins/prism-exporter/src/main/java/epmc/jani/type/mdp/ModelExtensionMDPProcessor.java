@@ -16,32 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.type.mdp;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public final class ModelExtensionMDPProcessor implements JANI2PRISMProcessorStrict {
 
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj instanceof ModelExtensionMDP;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj instanceof ModelExtensionMDP;
+        return this;
+    }
 
-	@Override
-	public String toPRISM() {
-		return "mdp\n";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-	}
+    @Override
+    public String toPRISM() {
+        return "mdp\n";
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		return false;
-	}	
+    @Override
+    public void validateTransientVariables() {
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        return false;
+    }	
 }

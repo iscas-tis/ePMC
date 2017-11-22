@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
@@ -44,7 +43,7 @@ import epmc.value.ValueContentIntArray;
  * @author Ernst Moritz Hahn
  */
 public final class GraphExplicitSparse implements GraphExplicit {
-    
+
     public final class EdgePropertySparse implements EdgeProperty {
         private final GraphExplicit graph;
         private Value value;
@@ -58,7 +57,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
             TypeArray typeArray = type.getTypeArray();
             this.content = UtilValue.newArray(typeArray, numTotalOut > 0 ? numTotalOut : 1);
         }
-        
+
         @Override
         public Value get(int currentNode, int successor) {
             int entry = bounds.getInt(currentNode) + successor;
@@ -72,7 +71,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
             content = ensureSize(content, entry + 1);
             content.set(value, entry);
         }
-        
+
         public Value getContent() {
             return content;
         }
@@ -113,7 +112,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
         bounds = UtilValue.newArray(typeArrayInteger, 1);
         successors = UtilValue.newArray(typeArrayInteger, 1);
     }
-    
+
     public GraphExplicitSparse(int numNodes, int numTotalOut) {
         initNodes = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);
@@ -123,11 +122,11 @@ public final class GraphExplicitSparse implements GraphExplicit {
         TypeArray typeArrayInteger = TypeInteger.get().getTypeArray();
         bounds = UtilValue.newArray(typeArrayInteger, numNodes + 1);
         successors = UtilValue.newArray(typeArrayInteger, numTotalOut);
-        
+
         addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
         addNodePropertyConstant(CommonProperties.STATE, TypeBoolean.get().getTrue());
     }
-    
+
     public NodeProperty addNodePropertyConstant(Object name, Value constant) {
         if (getNodeProperties().contains(name)) {
             return getNodeProperty(name);
@@ -136,17 +135,17 @@ public final class GraphExplicitSparse implements GraphExplicit {
         registerNodeProperty(name, property);
         return property;
     }
-    
+
     @Override
     public Value addSettableGraphProperty(Object property, Type type)
-            throws EPMCException {
+    {
         assert property != null;
         assert type != null;
         Value value = type.newValue();
         registerGraphProperty(property, value);
         return getGraphProperty(property);
     }
- 
+
     @Override
     public NodeProperty addSettableNodeProperty(Object name, Type type) {
         assert name != null;
@@ -181,7 +180,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     }
 
     @Override
-    public void computePredecessors(BitSet nodes) throws EPMCException {
+    public void computePredecessors(BitSet nodes) {
         this.properties.computePredecessors(nodes);
     }
 
@@ -205,7 +204,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     public int[] getTargetsJava() {
         return ValueContentIntArray.getContent(successors);
     }
-    
+
     @Override
     public void setSuccessorNode(int currentNode, int succNr, int succNode) {
         assert succNr >= 0;
@@ -217,10 +216,10 @@ public final class GraphExplicitSparse implements GraphExplicit {
         successors = ensureSize(successors, entry + 1);
         successors.set(succNode, entry);
     }
-    
+
     @Override
     public void prepareNode(int currentNode, int numSuccessors)
-            throws EPMCException {
+    {
         assert numSuccessors >= 0;
         int from = bounds.getInt(currentNode);
         bounds = ensureSize(bounds, currentNode + 1 + 1);
@@ -230,31 +229,31 @@ public final class GraphExplicitSparse implements GraphExplicit {
             this.numTotalOut += numSuccessors;
         }
     }
-    
+
     @Override
-    public int computeNumStates() throws EPMCException {
+    public int computeNumStates() {
         return numNodes;
     }
-    
+
     public int getNumStates() {
         return numNodes;
     }
-    
+
     public int getNumTotalOut() {
         return numTotalOut;
     }
-    
+
     public void setNumStates(int numStates) {
         this.numNodes = numStates;
     }
-    
+
     @Override
     public BitSet getInitialNodes() {
         return initNodes;
     }
 
     @Override
-    public void explore(BitSet start) throws EPMCException {
+    public void explore(BitSet start) {
     }
 
     @Override
@@ -276,12 +275,12 @@ public final class GraphExplicitSparse implements GraphExplicit {
         T result = UtilValue.newArray(array.getType(), size);
         Value entry = array.getType().getEntryType().newValue();
         for (int i = 0; i < array.size(); i++) {
-        	array.get(entry, i);
-        	result.set(entry, i);
+            array.get(entry, i);
+            result.set(entry, i);
         }
         return result;
     }
-    
+
     public void clear() {
         assert !fixedMode;
         numNodes = 0;
@@ -292,7 +291,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
     public GraphExplicitProperties getProperties() {
         return properties;
     }
-    
+
     @Override
     public EdgePropertySparse getEdgeProperty(Object property) {
         return (EdgePropertySparse) properties.getEdgeProperty(property);
@@ -302,8 +301,8 @@ public final class GraphExplicitSparse implements GraphExplicit {
     public int getNumNodes() {
         return numNodes;
     }
-    
-	@Override
-	public void close() {
-	}
+
+    @Override
+    public void close() {
+    }
 }

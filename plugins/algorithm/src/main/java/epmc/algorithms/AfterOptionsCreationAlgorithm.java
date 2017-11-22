@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.algorithms;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeEnum;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
@@ -34,12 +33,12 @@ public class AfterOptionsCreationAlgorithm implements AfterOptionsCreation {
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         options.addOption().setIdentifier(OptionsAlgorithm.DD_SCC_ALGORITHM)
-        	.setBundleName(OptionsAlgorithm.OPTIONS_ALGORITHM)
-        	.setType(new OptionTypeEnum(DdSccAlgorithm.class))
-        	.setDefault(DdSccAlgorithm.BLOEM)
-        	.setCommandLine().setGui().setWeb().build();
+        .setBundleName(OptionsAlgorithm.OPTIONS_ALGORITHM)
+        .setType(new OptionTypeEnum(DdSccAlgorithm.class))
+        .setDefault(DdSccAlgorithm.BLOEM)
+        .setCommandLine().setGui().setWeb().build();
     }
 }

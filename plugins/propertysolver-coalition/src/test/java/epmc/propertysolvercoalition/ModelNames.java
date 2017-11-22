@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolvercoalition;
 
@@ -26,9 +26,9 @@ package epmc.propertysolvercoalition;
  * @author Ernst Moritz Hahn
  */
 public final class ModelNames {
-	/** Prefix of path where models are stored. */
+    /** Prefix of path where models are stored. */
     private final static String PREFIX = "epmc/propertysolvercoalition/";
-    
+
     /** Two robots model from our paper. */
     public final static String ROBOTS = PREFIX + "robots.prism";
     /** Small version of the robot model from our paper. */
@@ -49,6 +49,6 @@ public final class ModelNames {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private ModelNames() {
-	}
+    private ModelNames() {
+    }
 }

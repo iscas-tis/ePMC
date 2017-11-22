@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.buddy;
 
@@ -32,27 +32,26 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public final class LibraryDDBuDDy implements LibraryDD {
     public final static String IDENTIFIER = "buddy";
-    
+
     private final static class LowLevelPermutationBuDDy
     implements PermutationLibraryDD, Closeable {
         private final Pointer pointer;
@@ -62,7 +61,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
             assert pointer != null;
             this.pointer = pointer;
         }
-        
+
         Pointer getPointer() {
             assert !closed;
             return pointer;
@@ -75,24 +74,24 @@ public final class LibraryDDBuDDy implements LibraryDD {
             }
         }
     }
-    
+
     private static final class BuDDy {
         static native int bdd_init(int nodesize, int cachesize);
 
         static native void bdd_done();
 
         static native int bdd_true();
-        
+
         static native int bdd_false();
-        
+
         static native int bdd_setvarnum(int num);
-        
+
         static native int bdd_ithvar(int var);
 
         static native int bdd_low(int r);
-        
+
         static native int bdd_high(int r);
-        
+
         static native int bdd_or(int l, int r);
 
         static native int bdd_and(int l, int r);
@@ -106,11 +105,11 @@ public final class LibraryDDBuDDy implements LibraryDD {
         static native int bdd_not(int r);
 
         static native int bdd_ite(int f, int g, int h);
-        
+
         static native int bdd_addref(int r);
-        
+
         static native int bdd_delref(int r);
-        
+
         static native int bdd_exist(int op, int cube);
 
         static native int bdd_forall(int op, int cube);
@@ -126,17 +125,17 @@ public final class LibraryDDBuDDy implements LibraryDD {
         static native void bdd_freepair(Pointer pair);
 
         static native int bdd_replace(int r, Pointer pair);
-        
+
         static native void epmc_buddy_silence();
-        
+
         static native void bdd_disable_reorder();
-        
+
         static native void bdd_enable_reorder();
 
         static native int bdd_setcacheratio(int r);
-        
+
         static native int bdd_setmaxincrease(int size);
-        
+
         static native int bdd_setmaxnodenum(int size);
 
         static native int bdd_setminfreenodes(int mf);
@@ -146,7 +145,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     private static int instancesRunning;
-    
+
     private final static int BDD_MEMORY = -1;
     private final static int BDD_VAR = -2;
     private final static int BDD_RANGE = -3;
@@ -166,13 +165,13 @@ public final class LibraryDDBuDDy implements LibraryDD {
     private final static int BDD_NODENUM = -17;
     private final static int BDD_ILLBDD = -18;
     private final static int BDD_SIZE = -19;
-    
+
     private final static int BVEC_SIZE = -20;
     private final static int BVEC_SHIFT = -21;
     private final static int BVEC_DIVZERO = -22;
 
     private final static int BDD_ERRNUM = 24;
-    
+
     private ContextDD contextDD;
     private Value valueTrue;
     private Value valueFalse;
@@ -183,7 +182,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     private int initVarNum;
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(BuDDy.loaded, ProblemsDD.BUDDY_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -214,35 +213,35 @@ public final class LibraryDDBuDDy implements LibraryDD {
 
         this.trueNode = BuDDy.bdd_true();
         this.falseNode = BuDDy.bdd_false();
-        
+
         this.valueFalse = TypeBoolean.get().getFalse();
         this.valueTrue = TypeBoolean.get().getTrue();
-        
+
         instancesRunning++;
     }
-    
+
     @Override
     public ContextDD getContextDD() {
         return contextDD;
     }
-    
+
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         for (int opNr = 0; opNr < operands.length; opNr++) {
             assert assertNonNegInt(operands[opNr]);        	
         }
         int result;
         if (operation.equals(OperatorId.ID)) {
-        	result = (int) operands[0];        	
+            result = (int) operands[0];        	
         } else if (operation.equals(OperatorNot.NOT)) {
             result = BuDDy.bdd_not((int) operands[0]);
         } else if (operation.equals(OperatorAnd.AND)) {
             result = BuDDy.bdd_and((int) operands[0], (int) operands[1]);
         } else if (operation.equals(OperatorEq.EQ)
-        		|| operation.equals(OperatorIff.IFF)) {
+                || operation.equals(OperatorIff.IFF)) {
             result = BuDDy.bdd_biimp((int) operands[0], (int) operands[1]);
         } else if (operation.equals(OperatorImplies.IMPLIES)) {
             result = BuDDy.bdd_imp((int) operands[0], (int) operands[1]);
@@ -253,8 +252,8 @@ public final class LibraryDDBuDDy implements LibraryDD {
         } else if (operation.equals(OperatorIte.ITE)) {
             result = BuDDy.bdd_ite((int) operands[0], (int) operands[1], (int) operands[2]);
         } else {
-        	result = -1;
-        	assert false;
+            result = -1;
+            assert false;
         }
         checkBuDDyResult(result);
         BuDDy.bdd_addref(result);
@@ -262,11 +261,11 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
+        assert ValueBoolean.is(value) : value.getType() + " " + value;
         int result;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             result = trueNode;
         } else {
             result = falseNode;
@@ -277,7 +276,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         if (nextVariable + 1 > initVarNum) {
             checkBuDDyResult(BuDDy.bdd_setvarnum(nextVariable + 1));
         }
@@ -310,7 +309,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -321,7 +320,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationBuDDy;
         assert assertNonNegInt(dd);
@@ -386,7 +385,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert assertNonNegInt(dd);
         assert assertNonNegInt(cube);
         int p1 = (int) dd;
@@ -398,7 +397,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert assertNonNegInt(dd);
         assert assertNonNegInt(cube);
         int p1 = (int) dd;
@@ -410,32 +409,32 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         assert assertNonNegInt(dd1);
         assert assertNonNegInt(dd2);
         assert assertNonNegInt(cube);
@@ -449,7 +448,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         Pointer p = BuDDy.bdd_newpair();
         ensure(p != null, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         for (int var = 0; var < permutation.length; var++) {
@@ -457,7 +456,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
         }
         LowLevelPermutationBuDDy perm = new LowLevelPermutationBuDDy(p);
         permutations.add(perm);
-        
+
         return perm;
     }
 
@@ -506,7 +505,7 @@ public final class LibraryDDBuDDy implements LibraryDD {
         assert assertNonNegInt(from);
         return false;
     }
-    
+
     private static boolean assertNonNegInt(long number) {
         assert number >= 0 : number;
         assert number == (int) number : number;
@@ -528,8 +527,8 @@ public final class LibraryDDBuDDy implements LibraryDD {
     public boolean hasAndExist() {
         return true;
     }
-    
-    private void checkBuDDyResult(int result) throws EPMCException {
+
+    private void checkBuDDyResult(int result) {
         ensure(result != BDD_MEMORY, ProblemsDD.INSUFFICIENT_NATIVE_MEMORY);
         if (result >= 0) {
             return;
@@ -541,20 +540,20 @@ public final class LibraryDDBuDDy implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.is(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

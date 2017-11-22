@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.graph.Scheduler;
 
 /**
@@ -51,7 +50,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
     private int numEntryBits;
     /** Decisions for the nodes of the graph. */
     private final long[] content;
-	private final int numNodes;
+    private final int numNodes;
 
     /**
      * Constructs a new space-efficient array-based simple scheduler.
@@ -64,9 +63,8 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
      * 
      * @param graph graph to construct scheduler for
      * @param content array to use for content of scheduler, or {@code null}
-     * @throws EPMCException thrown in case of problems during construction
      */
-    private SchedulerSimpleCompact(GraphExplicit graph, long[] content) throws EPMCException {
+    private SchedulerSimpleCompact(GraphExplicit graph, long[] content) {
         this.graph = graph;
         numNodes = graph.getNumNodes();
         int numValues = 0;
@@ -83,7 +81,7 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
             this.content = new long[numLongs];
         }
     }
-    
+
     /**
      * Construct a new simple simple scheduler.
      * The graph parameter must not be {@code null}.
@@ -91,12 +89,11 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
      * {@link Scheduler#UNSET}.
      * 
      * @param graph graph to construct scheduler for
-     * @throws EPMCException thrown in case of problems during construction
      */
-    public SchedulerSimpleCompact(GraphExplicit graph) throws EPMCException {
+    public SchedulerSimpleCompact(GraphExplicit graph) {
         this(graph, null);
     }
-    
+
     @Override
     public void set(int node, int decision) {
         decision++;
@@ -120,15 +117,15 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
         for (int bitNr = 0; bitNr < numEntryBits; bitNr++) {
             int bitIndex = node * numEntryBits + bitNr;
             int offset = bitIndex >> LOG2LONGSIZE;
-            boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
-            if (bitValue) {
-                number |= (1 << bitNr);
-            }
+        boolean bitValue = (content[offset] & (1L << bitIndex)) != 0;
+        if (bitValue) {
+            number |= (1 << bitNr);
+        }
         }
         number--;
         return number;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -142,15 +139,9 @@ public final class SchedulerSimpleCompact implements SchedulerSimpleSettable {
         builder.append(SQUARE_BRACKETS_CLOSE);
         return builder.toString();
     }
-    
+
     @Override
     public SchedulerSimple clone() {
-        try {
-            return new SchedulerSimpleCompact(graph, content.clone());
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false;
-            return null;
-        }
+        return new SchedulerSimpleCompact(graph, content.clone());
     }    
 }

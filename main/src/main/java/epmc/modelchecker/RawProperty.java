@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -83,7 +83,7 @@ public final class RawProperty implements Serializable, Cloneable {
     public String getDefinition() {
         return definition;
     }
-    
+
     /**
      * Set the name of the property
      * 
@@ -110,7 +110,7 @@ public final class RawProperty implements Serializable, Cloneable {
     public void setDescription(String description) {
         this.description = description;
     }
-        
+
     /**
      * Obtain description of the property
      * 
@@ -119,7 +119,7 @@ public final class RawProperty implements Serializable, Cloneable {
     public String getDescription() {
         return description;
     }
-    
+
     /**
      * Set the type of the property
      * 
@@ -155,7 +155,7 @@ public final class RawProperty implements Serializable, Cloneable {
     public String getEditor() {
         return editor;
     }
-    
+
     /**
      * Obtain a string representation of the property
      * 
@@ -171,7 +171,7 @@ public final class RawProperty implements Serializable, Cloneable {
                 .add(EDITOR, editor)
                 .toString();
     }
-    
+
     @Override
     public RawProperty clone() {
         RawProperty clone = new RawProperty();

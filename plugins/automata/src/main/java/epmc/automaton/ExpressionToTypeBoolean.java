@@ -16,41 +16,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 
 final class ExpressionToTypeBoolean implements ExpressionToType {
-	private final Set<Expression> mapped = new HashSet<>();
+    private final Set<Expression> mapped = new HashSet<>();
 
-	ExpressionToTypeBoolean(Expression[] expressions) {
-		Set<Expression> seen = new HashSet<>();
-		assert expressions != null;
-		for (Expression expression : expressions) {
-			assert expression != null;
-			assert !seen.contains(expression);
-			seen.add(expression);
-		}
-		for (Expression expression : expressions) {
-			mapped.add(expression);
-		}
-	}
-	
-	@Override
-	public Type getType(Expression expression) throws EPMCException {
-		assert expression != null;
-		if (mapped.contains(expression)) {
-			return TypeBoolean.get();
-		}
-		return null;
-	}
+    ExpressionToTypeBoolean(Expression[] expressions) {
+        Set<Expression> seen = new HashSet<>();
+        assert expressions != null;
+        for (Expression expression : expressions) {
+            assert expression != null;
+            assert !seen.contains(expression);
+            seen.add(expression);
+        }
+        for (Expression expression : expressions) {
+            mapped.add(expression);
+        }
+    }
+
+    @Override
+    public Type getType(Expression expression) {
+        assert expression != null;
+        if (mapped.contains(expression)) {
+            return TypeBoolean.get();
+        }
+        return null;
+    }
 }

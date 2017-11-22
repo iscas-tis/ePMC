@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -69,7 +69,7 @@ public final class MessageInstance {
         this.message = message;
         this.parameters.addAll(Arrays.asList(parameters));
     }
-    
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(getClass())
@@ -87,7 +87,7 @@ public final class MessageInstance {
     public long getTime() {
         return time;
     }
-    
+
     /**
      * Obtain message identifier.
      * 
@@ -96,7 +96,7 @@ public final class MessageInstance {
     public Message getMessage() {
         return message;
     }
-    
+
     /**
      * Obtain parameters of this message instance.
      * The returned list is write-protected.
@@ -106,7 +106,7 @@ public final class MessageInstance {
     public List<String> getParameters() {
         return parametersExternal;
     }
-    
+
     /**
      * Obtain copy of parameters of this message as array.
      * 

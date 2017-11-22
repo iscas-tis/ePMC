@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automata.determinisation;
 
 import java.util.Map;
 
 import epmc.automaton.OptionsAutomaton;
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 
@@ -36,7 +35,7 @@ public class AfterOptionsCreationAutomatonSchewe implements AfterOptionsCreation
     }
 
     @Override
-    public void process(Options options) throws EPMCException {
+    public void process(Options options) {
         assert options != null;
         Map<String, Class<?>> automatonMap = options.get(OptionsAutomaton.AUTOMATON_CLASS);
         assert automatonMap != null;

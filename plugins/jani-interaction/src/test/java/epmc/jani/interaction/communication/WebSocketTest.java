@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication;
 
@@ -27,7 +27,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.command.CommandTaskJaniInteractionStartServer;
 import epmc.jani.interaction.options.JANIInteractionIO;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
@@ -41,7 +40,7 @@ import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
 
 public class WebSocketTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -56,22 +55,21 @@ public class WebSocketTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareJANIInteractionOptions() throws EPMCException {
+    private final static Options prepareJANIInteractionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.NOTRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);        
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
-		options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_URL, "jdbc:sqlite:test.db");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_USERNAME, "asdf");
+        options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_PASSWORD, "password");
         return options;
     }
 
     @Test
-    public void webSocketsTest() throws EPMCException {
+    public void webSocketsTest() {
         Options options = prepareJANIInteractionOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_TYPE, JANIInteractionIO.WEBSOCKETS);
@@ -81,10 +79,10 @@ public class WebSocketTest {
         CommandTaskJaniInteractionStartServer task = new CommandTaskJaniInteractionStartServer();
         task.executeOnClient();
     }
-    
+
     @Ignore
     @Test
-    public void userManagementTest() throws EPMCException {
+    public void userManagementTest() {
         Options options = prepareJANIInteractionOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_TYPE, JANIInteractionIO.WEBSOCKETS);

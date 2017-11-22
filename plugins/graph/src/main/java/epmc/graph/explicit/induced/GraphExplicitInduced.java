@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit.induced;
 
 import java.io.ByteArrayOutputStream;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitProperties;
 import epmc.graph.explicit.GraphExporterDOT;
@@ -64,7 +63,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     @Override
-    public int getNumSuccessors(int node) throws EPMCException {
+    public int getNumSuccessors(int node) {
         int decision = scheduler.getDecision(node);
         if (decision == -1) {
             return original.getNumSuccessors(node);
@@ -74,7 +73,7 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     @Override
-    public int getSuccessorNode(int node, int successor) throws EPMCException {
+    public int getSuccessorNode(int node, int successor) {
         int decision = scheduler.getDecision(node);
         if (decision == -1) {
             return original.getSuccessorNode(node, successor);
@@ -89,23 +88,17 @@ public final class GraphExplicitInduced implements GraphExplicit {
     }
 
     int getDecision(int node) {
-    	return scheduler.getDecision(node);
+        return scheduler.getDecision(node);
     }
-    
+
     @Override
     public String toString() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-            GraphExporterDOT.export(this, out);
-        } catch (EPMCException e) {
-            e.printStackTrace();
-            assert false;
-            return null;
-        }
+        GraphExporterDOT.export(this, out);
         return out.toString();
     }
-    
-	@Override
-	public void close() {
-	}
+
+    @Override
+    public void close() {
+    }
 }

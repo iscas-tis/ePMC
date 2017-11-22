@@ -16,185 +16,165 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
-import static epmc.error.UtilError.ensure;
-
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.jani.extensions.derivedoperators.OperatorAbs;
-import epmc.jani.extensions.derivedoperators.OperatorSgn;
-import epmc.jani.extensions.derivedoperators.OperatorTrunc;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAcosh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAsinh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorAtanh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorCosh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorSinh;
-import epmc.jani.extensions.hyperbolicfunctions.OperatorTanh;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAcos;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAsin;
-import epmc.jani.extensions.trigonometricfunctions.OperatorAtan;
-import epmc.jani.extensions.trigonometricfunctions.OperatorCos;
-import epmc.jani.extensions.trigonometricfunctions.OperatorSin;
-import epmc.jani.extensions.trigonometricfunctions.OperatorTan;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorDivideIgnoreZero;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMod;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorMultiplyInverse;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSubtract;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.prism.value.OperatorPRISMPow;
-import epmc.value.Operator;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorCeil;
-import epmc.value.operator.OperatorDivideIgnoreZero;
-import epmc.value.operator.OperatorExp;
-import epmc.value.operator.OperatorFloor;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLog;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMod;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorMultiplyInverse;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorPow;
-import epmc.value.operator.OperatorSubtract;
+import epmc.prism.operator.OperatorPRISMPow;
 
 public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionOperator expressionOperator = null;
-	private String prefix = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof ExpressionOperator; 
-		
-		expressionOperator = (ExpressionOperator) obj;
-		return this;
-	}
+    private ExpressionOperator expressionOperator = null;
+    private String prefix = null;
 
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionOperator; 
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert expressionOperator != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		if (prefix != null) {
-			prism.append(prefix);
-		}
-		
-		Operator operator = expressionOperator.getOperator();
-		if (operator.equals(OperatorNot.NOT)
-			|| operator.equals(OperatorFloor.FLOOR)
-			|| operator.equals(OperatorCeil.CEIL)) {
-        	prism.append(operator);
+        expressionOperator = (ExpressionOperator) obj;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert expressionOperator != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        if (prefix != null) {
+            prism.append(prefix);
+        }
+
+        Operator operator = expressionOperator.getOperator();
+        if (operator.equals(OperatorNot.NOT)
+                || operator.equals(OperatorFloor.FLOOR)
+                || operator.equals(OperatorCeil.CEIL)) {
+            prism.append(operator);
             prism.append("(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
-    		prism.append(")");
-		} else if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
-            prism.append("-(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(")");
-		} else if (operator.equals(OperatorIte.ITE)) {
-        	boolean needBraces = true;
+        } else if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
+            prism.append("-(");
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(")");
+        } else if (operator.equals(OperatorIte.ITE)) {
+            boolean needBraces = true;
             prism.append("(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(")");
             prism.append(" ? ");
-    		Expression exp = expressionOperator.getOperand2();
+            Expression exp = expressionOperator.getOperand2();
             if (exp instanceof ExpressionLiteral || exp instanceof ExpressionIdentifier) {
-            	needBraces = false;
+                needBraces = false;
             }
             if (needBraces) {
-            	prism.append("(");
+                prism.append("(");
             }
-    		prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
             if (needBraces) {
-            	prism.append(")");
+                prism.append(")");
             }
             prism.append(" : ");
             needBraces = true;
-    		exp = expressionOperator.getOperand3();
+            exp = expressionOperator.getOperand3();
             if (exp instanceof ExpressionLiteral || exp instanceof ExpressionIdentifier) {
-            	needBraces = false;
+                needBraces = false;
             }
             if (needBraces) {
-            	prism.append("(");
+                prism.append("(");
             }
-    		prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(exp).toPRISM());
             if (needBraces) {
-            	prism.append(")");
+                prism.append(")");
             }
-		} else if (operator.equals(OperatorMin.MIN)
-				|| operator.equals(OperatorMax.MAX)
-				|| operator.equals(OperatorPow.POW)
-				|| operator.equals(OperatorLog.LOG)) {
+        } else if (operator.equals(OperatorMin.MIN)
+                || operator.equals(OperatorMax.MAX)
+                || operator.equals(OperatorPow.POW)
+                || operator.equals(OperatorLog.LOG)) {
             prism.append(operator);
             prism.append("(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-		} else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
+        } else if (operator.equals(OperatorPRISMPow.PRISM_POW)) {
             prism.append("pow(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-		} else if (operator.equals(OperatorMod.MOD)) {
+        } else if (operator.equals(OperatorMod.MOD)) {
             prism.append("mod(");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1()).toPRISM());
             prism.append(", ");
-    		prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2()).toPRISM());
             prism.append(")");
-		} else {
-        	List<Expression> children = expressionOperator.getChildren();
-        	String operatorSymbol = null;
-        	if (operator.equals(OperatorAnd.AND)) {
-    			operatorSymbol = "&";
-        	} else if (operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO)) {
-    			operatorSymbol = "/";
-        	} else if (operator.equals(OperatorGe.GE)) {
-    			operatorSymbol = ">=";
-        	} else if (operator.equals(OperatorLe.LE)) {
-    			operatorSymbol = "<=";
-        	} else if (operator.equals(OperatorIff.IFF)) {
-    			operatorSymbol = "<=>";
-        	} else if (operator.equals(OperatorImplies.IMPLIES)) {
-    			operatorSymbol = "=>";
-        	} else if (operator.equals(OperatorOr.OR)) {
-    			operatorSymbol = "|";
-        	} else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
-    			operatorSymbol = "1/";
-        	} else if (operator.equals(OperatorNe.NE)) {
-    			operatorSymbol = "!=";
-        	} else {
-    			//TODO: Maybe the following operators can be recovered
-        		/*
+        } else {
+            List<Expression> children = expressionOperator.getChildren();
+            String operatorSymbol = null;
+            if (operator.equals(OperatorAnd.AND)) {
+                operatorSymbol = "&";
+            } else if (operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO)) {
+                operatorSymbol = "/";
+            } else if (operator.equals(OperatorGe.GE)) {
+                operatorSymbol = ">=";
+            } else if (operator.equals(OperatorLe.LE)) {
+                operatorSymbol = "<=";
+            } else if (operator.equals(OperatorIff.IFF)) {
+                operatorSymbol = "<=>";
+            } else if (operator.equals(OperatorImplies.IMPLIES)) {
+                operatorSymbol = "=>";
+            } else if (operator.equals(OperatorOr.OR)) {
+                operatorSymbol = "|";
+            } else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
+                operatorSymbol = "1/";
+            } else if (operator.equals(OperatorNe.NE)) {
+                operatorSymbol = "!=";
+            } else {
+                //TODO: Maybe the following operators can be recovered
+                /*
     		case OperatorAbs.IDENTIFIER:
     		case OperatorExp.IDENTIFIER:
     		case OperatorSgn.IDENTIFIER:
     		case OperatorTrunc.IDENTIFIER:
-    		*/
-    			//these no.
-        		/*
+                 */
+                //these no.
+                /*
     		case OperatorAcosh.IDENTIFIER:
     		case OperatorAsinh.IDENTIFIER:
     		case OperatorAtanh.IDENTIFIER:
@@ -208,71 +188,71 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
     		case OperatorSin.IDENTIFIER:
     		case OperatorTan.IDENTIFIER:
     			ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, operator);
-    			*/
-    			operatorSymbol = operator.toString();
-        	}
+                 */
+                operatorSymbol = operator.toString();
+            }
             if (children.size() == 1) {
                 prism.append(operatorSymbol)
-                	 .append("(")
-                	 .append(ProcessorRegistrar.getProcessor(children.get(0)).toPRISM())
-                	 .append(")");
+                .append("(")
+                .append(ProcessorRegistrar.getProcessor(children.get(0)).toPRISM())
+                .append(")");
             } else {
-            	boolean remaining = false;
-	            for (Expression child : children) {
-	                boolean needBraces = true;
-	                if (remaining) {
-	                    prism.append(" " + operatorSymbol + " ");
-	                } else {
-	                	remaining = true;
-	                }
-	                if (child instanceof ExpressionOperator) {
-	                    ExpressionOperator childOp = (ExpressionOperator) child;
-	                    if (operator.equals(childOp.getOperator())) {
-	                        needBraces = false;
-	                    }
-	                    if ((OperatorAdd.ADD.equals(expressionOperator.getOperator())
-	                    		|| OperatorSubtract.SUBTRACT.equals(expressionOperator.getOperator()))
-	                    		&& (OperatorMultiply.MULTIPLY.equals(childOp.getOperator())
-	                            		|| OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO.equals(childOp.getOperator()))) {
-	                        needBraces = false;
-	                    }
-	                }
-	                if (child instanceof ExpressionLiteral || child instanceof ExpressionIdentifier) {
-	                	needBraces = false;
-	                }
-	                if (needBraces) {
-	                    prism.append("(");
-	                }
-	        		prism.append(ProcessorRegistrar.getProcessor(child)
-	        									   .toPRISM());
-	                if (needBraces) {
-	                    prism.append(")");
-	                }
-	            }
+                boolean remaining = false;
+                for (Expression child : children) {
+                    boolean needBraces = true;
+                    if (remaining) {
+                        prism.append(" " + operatorSymbol + " ");
+                    } else {
+                        remaining = true;
+                    }
+                    if (child instanceof ExpressionOperator) {
+                        ExpressionOperator childOp = (ExpressionOperator) child;
+                        if (operator.equals(childOp.getOperator())) {
+                            needBraces = false;
+                        }
+                        if ((OperatorAdd.ADD.equals(expressionOperator.getOperator())
+                                || OperatorSubtract.SUBTRACT.equals(expressionOperator.getOperator()))
+                                && (OperatorMultiply.MULTIPLY.equals(childOp.getOperator())
+                                        || OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO.equals(childOp.getOperator()))) {
+                            needBraces = false;
+                        }
+                    }
+                    if (child instanceof ExpressionLiteral || child instanceof ExpressionIdentifier) {
+                        needBraces = false;
+                    }
+                    if (needBraces) {
+                        prism.append("(");
+                    }
+                    prism.append(ProcessorRegistrar.getProcessor(child)
+                            .toPRISM());
+                    if (needBraces) {
+                        prism.append(")");
+                    }
+                }
             }
         }
 
         return prism.toString();
-	}
+    }
 
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert expressionOperator != null;
-		
-		for (Expression child : expressionOperator.getChildren()) {
-			ProcessorRegistrar.getProcessor(child).validateTransientVariables();
-		}
-	}
-	
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert expressionOperator != null;
-		
-		boolean usesTransient = false;
-		for (Expression child : expressionOperator.getChildren()) {
-			usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
-		}
-		
-		return usesTransient;
-	}	
+    @Override
+    public void validateTransientVariables() {
+        assert expressionOperator != null;
+
+        for (Expression child : expressionOperator.getChildren()) {
+            ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+        }
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert expressionOperator != null;
+
+        boolean usesTransient = false;
+        for (Expression child : expressionOperator.getChildren()) {
+            usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+        }
+
+        return usesTransient;
+    }	
 }

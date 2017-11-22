@@ -16,52 +16,42 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
 final class ValueArrayObjectDirect implements ValueArray {
-	private final TypeArrayObjectDirect type;
+    private final TypeArrayObjectDirect type;
     private Object[] content;
-	private boolean immutable;
-	private int size;
+    private int size;
 
     ValueArrayObjectDirect(TypeArrayObjectDirect type) {
-    	this.type = type;
+        this.type = type;
         this.content = new Object[size()];
     }
-    
-    @Override
-    public ValueArrayObjectDirect clone() {
-    	ValueArrayObjectDirect other = new ValueArrayObjectDirect(getType());
-    	other.set(this);
-    	return other;
-    }
-    
+
     @Override
     public void set(Value value, int index) {
-        assert !isImmutable();
         assert value != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         assert index >= 0;
         assert index < size();
-        content[index] = ValueObject.asObject(value).getObject();
+        content[index] = ValueObject.as(value).getObject();
     }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert ValueObject.isObject(value);
+        assert ValueObject.is(value);
         assert index >= 0;
         assert index < size();
         Object entry = content[index];
-        ValueObject.asObject(value).set(entry);
+        ValueObject.as(value).set(entry);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -74,45 +64,28 @@ final class ValueArrayObjectDirect implements ValueArray {
         }        
         return hash;
     }
-    
+
     @Override
     public TypeArrayObjectDirect getType() {
-    	return type;
-    }
-    
-    @Override
-    public void setImmutable() {
-    	immutable = true;
-    }
-    
-    @Override
-    public boolean isImmutable() {
-    	return immutable;
+        return type;
     }
 
-	@Override
-	public void set(String value) throws EPMCException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setSize(int size) {
-        assert !isImmutable();
+    @Override
+    public void setSize(int size) {
         assert size >= 0;
         if (this.content.length < size) {
             content = new Object[size];
         }
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

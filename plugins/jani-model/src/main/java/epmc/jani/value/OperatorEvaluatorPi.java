@@ -16,55 +16,77 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.value;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.jani.operator.OperatorPi;
+import epmc.operator.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
-public enum OperatorEvaluatorPi implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorPi implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorPi.PI;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 0) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeReal.isReal(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
 
-	@Override
-	public void apply(Value result, Value... operands) throws EPMCException {
-		assert result != null;
-		assert operands != null;
-		assert operands.length == 0;
-		ValueDouble.asDouble(result).set(Math.PI);
-	}
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
 
-	@Override
-	public Type resultType(Operator operator, Type... types) {
-		assert types != null;
-		assert types.length == 0;
-		return TypeReal.get();
-	}
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (types.length != 0) {
+                return null;
+            }
+            if (operator != OperatorPi.PI) {
+                return null;
+            }
+            if (types.length != 0) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeReal.is(type)) {
+                    return null;
+                }
+            }
+            return new OperatorEvaluatorPi(this);
+        }
+    }
+
+    private OperatorEvaluatorPi(Builder builder) {
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        assert operands.length == 0;
+        ValueDouble.as(result).set(Math.PI);
+    }
+
+    @Override
+    public Type resultType() {
+        return TypeReal.get();
+    }
 }

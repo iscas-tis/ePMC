@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -46,8 +45,8 @@ public final class NodePropertyApply implements NodeProperty {
     private final Value[] callOperands;
     /** Value returned by {@link #get()}. */
     private final Value value;
-	private OperatorEvaluator evaluator;
-    
+    private OperatorEvaluator evaluator;
+
     /**
      * Construct a new apply node property.
      * None of the arguments may be {@code null} or contain {@code null}
@@ -73,12 +72,12 @@ public final class NodePropertyApply implements NodeProperty {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
-        Type type = evaluator.resultType(operator, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(operator, types);
+        Type type = evaluator.resultType();
         this.evaluator = evaluator;
         this.value = type.newValue();
     }
-    
+
     /**
      * {@inheritDoc}
      * For this property type, the result of this function is computed as
@@ -88,7 +87,7 @@ public final class NodePropertyApply implements NodeProperty {
      * resulting value.
      */
     @Override
-    public Value get(int node) throws EPMCException {
+    public Value get(int node) {
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             callOperands[operandNr] = operands[operandNr].get(node);
         }
@@ -102,7 +101,7 @@ public final class NodePropertyApply implements NodeProperty {
      * to this function have no effect.
      */
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         assert value != null;
     }
 

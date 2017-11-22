@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.plugin;
 
-import epmc.error.EPMCException;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
@@ -28,31 +27,31 @@ import epmc.plugin.AfterOptionsCreation;
 import epmc.value.OptionsValue;
 
 public final class AfterOptionsCreationValueBasic implements AfterOptionsCreation {
-	private final static String IDENTIFIER = "after-options-creation-value-basic";
+    private final static String IDENTIFIER = "after-options-creation-value-basic";
     private final static String VALUE_FLOATING_POINT_DEFAULT = "%.7f";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void process(Options options) throws EPMCException {
+    @Override
+    public void process(Options options) {
         assert options != null;
         OptionTypeString typeString = OptionTypeString.getInstance();
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         options.addOption().setBundleName(OptionsValue.OPTIONS_VALUE)
-            .setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT)
-            .setType(typeString).setDefault(VALUE_FLOATING_POINT_DEFAULT)
-            .setCommandLine().setGui().setWeb().build();
+        .setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT)
+        .setType(typeString).setDefault(VALUE_FLOATING_POINT_DEFAULT)
+        .setCommandLine().setGui().setWeb().build();
 
         options.addOption().setBundleName(OptionsValue.OPTIONS_VALUE)
-        	.setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)
-        	.setType(typeBoolean)
-        	.setDefault(false)
-        	.setCommandLine().setGui().setWeb()
-        	.build();
-	}
+        .setIdentifier(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)
+        .setType(typeBoolean)
+        .setDefault(false)
+        .setCommandLine().setGui().setWeb()
+        .build();
+    }
 
 
 }

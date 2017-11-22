@@ -16,33 +16,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import static epmc.error.UtilError.fail;
 
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.value.Value;
 
-public final class ValueDouble implements ValueReal {
-	public static boolean isDouble(Value value) {
-		return value instanceof ValueDouble;
-	}
-	
-	public static ValueDouble asDouble(Value value) {
-		if (isDouble(value)) {
-			return (ValueDouble) value;
-		} else {
-			return null;
-		}
-	}
-	
+public final class ValueDouble implements ValueReal, ValueSetString {
+    public static boolean is(Value value) {
+        return value instanceof ValueDouble;
+    }
+
+    public static ValueDouble as(Value value) {
+        if (is(value)) {
+            return (ValueDouble) value;
+        } else {
+            return null;
+        }
+    }
+
     private final static String NAN = "NaN";
-    private final static String SPACE = " ";
     private final static String DIVIDED = "/";
-    
+
     private final TypeDouble type;
     private double value;
     private boolean immutable;
@@ -56,23 +54,22 @@ public final class ValueDouble implements ValueReal {
     ValueDouble(TypeDouble type) {
         this(type, 0.0);
     }    
-    
+
     @Override
     public TypeDouble getType() {
         return type;
     }
-    
+
     @Override
     public double getDouble() {
         return value;
     }
 
-    @Override
     public void set(double value) {
         assert !isImmutable();
         this.value = value;
     }
-    
+
     @Override
     public ValueDouble clone() {
         return new ValueDouble(getType(), value);
@@ -116,106 +113,15 @@ public final class ValueDouble implements ValueReal {
         if (Double.isNaN(value)) {
             return NAN;
         } else {
-        	Options options = Options.get();
-        	if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
-        		return String.valueOf(value);
-        	} else {
-	            String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
-	            assert format != null;
-	            return String.format(format, value);
-        	}
+            Options options = Options.get();
+            if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
+                return String.valueOf(value);
+            } else {
+                String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
+                assert format != null;
+                return String.format(format, value);
+            }
         }
-    }
-    
-    @Override
-    public void set(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double opDouble = castOrImport(op);
-        this.value = opDouble;
-        
-    }
-    
-    @Override
-    public void add(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 + doubleOp2);
-    }
-
-    @Override
-    public void multiply(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 * doubleOp2);
-    }
-
-    @Override
-    public void addInverse(Value op) {
-        assert !isImmutable();
-        assert op != null;
-        double doubleOp = castOrImport(op);
-        set(-doubleOp);
-    }
-
-    @Override
-    public void divide(Value op1, Value op2) {
-        assert !isImmutable();
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 / doubleOp2);
-        // TODO hack to avoid NaNs in ContextDD
-        if (doubleOp2 == 0.0) {
-            set(0);
-        }
-    }
-
-    @Override
-    public void subtract(Value op1, Value op2) {
-        assert !isImmutable() : this;
-        assert op1 != null;
-        assert op2 != null;
-        double doubleOp1 = castOrImport(op1);
-        double doubleOp2 = castOrImport(op2);
-        set(doubleOp1 - doubleOp2);
-    }
-
-    @Override
-    public double distance(Value op) throws EPMCException {
-        assert op != null;
-        if (!getType().canImport(op.getType())) {
-            return op.distance(this);
-        }
-        ValueNumber opNumber = ValueNumber.asNumber(op);
-        return Math.abs(value - opNumber.getDouble());
-    }
-    
-    @Override
-    public boolean isZero() {
-        return getDouble() == 0.0;
-    }
-
-    @Override
-    public boolean isOne() {
-        return getDouble() == 1.0;
-    }
-
-    @Override
-    public boolean isPosInf() {
-        return getDouble() == Double.POSITIVE_INFINITY;
-    }
-
-    @Override
-    public double norm() {
-        return Math.abs(getDouble());
     }
 
     @Override
@@ -224,32 +130,13 @@ public final class ValueDouble implements ValueReal {
     }
 
     @Override
-    public boolean isLt(Value operand) {
-        assert operand != null;
-        double op2Double = castOrImport(operand);
-        return getDouble() < op2Double;
-    }
-    
-    @Override
     public void set(int operand) {
         assert !isImmutable();
         set((double) operand);
     }
-    
-    private double castOrImport(Value operand) {
-        assert operand != null;
-        if (ValueReal.isReal(operand)) {
-            return ValueNumber.asNumber(operand).getDouble();
-        } else if (ValueInteger.isInteger(operand)) {
-            return ValueInteger.asInteger(operand).getInt();
-        } else {
-            assert false : operand + SPACE + operand.getType();
-            return Double.NaN;
-        }
-    }
-    
+
     @Override
-    public void set(String string) throws EPMCException {
+    public void set(String string) {
         assert string != null;
         if (string.contains(DIVIDED)) {
             String[] parts = string.split(DIVIDED);
@@ -266,22 +153,14 @@ public final class ValueDouble implements ValueReal {
                 fail(ProblemsValueBasic.VALUES_STRING_INVALID_VALUE, e, value, type);
             }
         }
-        
+
     }
-    
-    @Override
-    public void setImmutable() {
+
+    void setImmutable() {
         this.immutable = true;
     }
 
-    @Override
-    public boolean isImmutable() {
+    boolean isImmutable() {
         return immutable;
     }
-
-	@Override
-	public boolean isNegInf() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -43,7 +43,7 @@ public final class Walker {
         this.history[0] = lowLevel.getWalker(uniqueId);
         historySize++;
     }
-    
+
     Walker(DD node, boolean autoComplement) {
         this(node, getLowLevel(node), getUniqueId(node), autoComplement);
     }
@@ -52,12 +52,12 @@ public final class Walker {
         assert node != null;
         return node.getLowLevel();
     }
-    
+
     private static long getUniqueId(DD node) {
         assert node != null;
         return node.uniqueId();
     }
-    
+
     public void low() {
         assert assertAlive();
         assert !isLeaf();
@@ -71,7 +71,7 @@ public final class Walker {
             history[historySize - 1] = lowLevel.walkerComplement(history[historySize - 1]);
         }
     }
-    
+
     public void high() {
         assert assertAlive();
         assert !isLeaf();
@@ -85,19 +85,19 @@ public final class Walker {
             history[historySize - 1] = lowLevel.walkerComplement(history[historySize - 1]);
         }
     }
-    
+
     public void back() {
         assert assertAlive();
         assert historySize > 1;
         historySize--;
     }
-    
+
     public int variable() {
         assert assertAlive();
         assert !isLeaf();
         return lowLevel.walkerVariable(lowLevel.walkerRegular(current()));
     }
-    
+
     public boolean isLeaf() {
         assert assertAlive();
         return lowLevel.walkerIsLeaf(lowLevel.walkerRegular(current()));
@@ -108,12 +108,12 @@ public final class Walker {
         assert isLeaf();
         return lowLevel.walkerValue(current());
     }
-    
+
     public boolean isFalse() {
         assert assertAlive();
         return isLeaf() && ValueBoolean.isFalse(value());
     }
-    
+
     public boolean isTrue() {
         assert assertAlive();
         return isLeaf() && ValueBoolean.isTrue(value());
@@ -123,14 +123,14 @@ public final class Walker {
         assert assertAlive();
         return current();
     }
-    
+
     public void regular() {
         assert assertAlive();
         if (!autoComplement) {
             history[historySize - 1] = lowLevel.walkerRegular(current());
         }
     }
-    
+
     public boolean isComplement() {
         assert assertAlive();
         if (autoComplement) {
@@ -139,17 +139,12 @@ public final class Walker {
             return lowLevel.walkerIsComplement(current());
         }
     }
-    
+
     public void complement() {
         assert assertAlive();
         if (!autoComplement) {
             history[historySize - 1] = lowLevel.walkerComplement(current());
         }
-    }
-    
-    public boolean isZero() {
-        assert assertAlive();
-        return isLeaf() && ValueAlgebra.asAlgebra(value()).isZero();
     }
 
     /* helper functions */
@@ -158,7 +153,7 @@ public final class Walker {
         return "DD of walker has already been closed at "
                 + node.buildCloseTraceString();
     }
-    
+
     private long current() {
         return history[historySize - 1];
     }
@@ -166,10 +161,10 @@ public final class Walker {
     private boolean assertAlive() {
         assert node == null || node.alive() : buildClosedString();
         assert !invalid : "walker has been invalidated, e.g. due to (possible) "
-            + "variable reordering";
+        + "variable reordering";
         return true;
     }
-    
+
     void invalidate() {
         invalid = true;
     }    

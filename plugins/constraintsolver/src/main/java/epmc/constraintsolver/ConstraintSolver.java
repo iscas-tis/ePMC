@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.Type;
 import epmc.value.UtilValue;
@@ -40,38 +39,38 @@ import epmc.value.ValueArray;
  * @author Ernst Moritz Hahn
  */
 public interface ConstraintSolver extends Closeable {
-	/* methods to be implemented by implementing classes */
-	
-	String getIdentifier();
-	
-	void requireFeature(Feature feature);
+    /* methods to be implemented by implementing classes */
 
-	boolean canHandle();
+    String getIdentifier();
 
-	void build() throws EPMCException;
-	
+    void requireFeature(Feature feature);
+
+    boolean canHandle();
+
+    void build();
+
     int addVariable(String name, Type type, Value lower, Value upper);
 
-    void addConstraint(Expression expression) throws EPMCException;
-    
-    void setObjective(Expression objective);
-    
-    void setDirection(Direction direction);
-    
-    ConstraintSolverResult solve() throws EPMCException;
-    
-    Value[] getResultVariablesValues() throws EPMCException;
+    void addConstraint(Expression expression);
 
-    Value getResultObjectiveValue() throws EPMCException;
+    void setObjective(Expression objective);
+
+    void setDirection(Direction direction);
+
+    ConstraintSolverResult solve();
+
+    Value[] getResultVariablesValues();
+
+    Value getResultObjectiveValue();
 
     @Override
     void close();
-    
-    
+
+
     /* default methods */
-    
-	/*
-    default int addVariable(ExpressionIdentifierStandard identifier) throws EPMCException {
+
+    /*
+    default int addVariable(ExpressionIdentifierStandard identifier) {
         assert identifier != null;
         String name = identifier.getName();
         Object scope = identifier.getScope();
@@ -81,47 +80,47 @@ public interface ConstraintSolver extends Closeable {
         Type type = identifier.getType();
         return addVariable(name, type);
     }
-    */
+     */
 
     default int addVariable(String name, Type type) {
-    	// TODO
-//		Value lower = type.getNegInf();
-//		Value upper = type.getPosInf();
-		return addVariable(name, type, null, null);
-	}
-
-    default ValueArray getResultVariablesValuesSingleType() throws EPMCException {
-    	Value[] values = getResultVariablesValues();
-    	Type type = values[0].getType();
-    	for (Value value : values) {
-    		type = UtilValue.upper(type, value.getType());
-    	}
-    	ValueArray result = UtilValue.newArray(type.getTypeArray(), values.length);
-    	for (int index = 0; index < values.length; index++) {
-    		result.set(values[index], index);
-    	}
-    	return result;
+        // TODO
+        //		Value lower = type.getNegInf();
+        //		Value upper = type.getPosInf();
+        return addVariable(name, type, null, null);
     }
-    
+
+    default ValueArray getResultVariablesValuesSingleType() {
+        Value[] values = getResultVariablesValues();
+        Type type = values[0].getType();
+        for (Value value : values) {
+            type = UtilValue.upper(type, value.getType());
+        }
+        ValueArray result = UtilValue.newArray(type.getTypeArray(), values.length);
+        for (int index = 0; index < values.length; index++) {
+            result.set(values[index], index);
+        }
+        return result;
+    }
+
     default String getVariableName(int number) {
-    	return null;
+        return null;
     }
 
     default void addConstraint(ValueArray row, int[] variables,
-            ConstraintType constraintType, Value rightHandSide) throws EPMCException {
-    	addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
+            ConstraintType constraintType, Value rightHandSide) {
+        addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
     }
-    
+
     default void addConstraint(Value[] row, int[] variables,
-            ConstraintType constraintType, Value rightHandSide) throws EPMCException {
-    	addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
+            ConstraintType constraintType, Value rightHandSide) {
+        addConstraint(UtilConstraintSolver.linearToExpression(this, row, variables, constraintType, rightHandSide));
     }
-    
+
     default void setObjective(ValueArray row, int[] variables) {
-    	setObjective(UtilConstraintSolver.linearToExpression(this, row, variables));
+        setObjective(UtilConstraintSolver.linearToExpression(this, row, variables));
     }
-    
+
     default void setObjective(Value[] row, int[] variables) {
-    	setObjective(UtilConstraintSolver.linearToExpression(this, row, variables));
+        setObjective(UtilConstraintSolver.linearToExpression(this, row, variables));
     }
 }

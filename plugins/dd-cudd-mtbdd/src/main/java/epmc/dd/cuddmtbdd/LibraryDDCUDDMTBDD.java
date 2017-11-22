@@ -16,21 +16,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.cuddmtbdd;
 
 import static epmc.error.UtilError.ensure;
 import static epmc.error.UtilError.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Memory;
@@ -43,10 +42,24 @@ import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
@@ -54,20 +67,6 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
-import epmc.value.operator.OperatorSubtract;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
@@ -75,6 +74,49 @@ import gnu.trove.strategy.IdentityHashingStrategy;
 
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public final static String IDENTIFIER = "cudd-mtbdd";
+
+    private final static class OperatorKey {
+        private Operator operator;
+        private Type[] types;
+        
+        @Override
+        public boolean equals(Object obj) {
+            OperatorKey other = (OperatorKey) obj;
+            if (operator != other.operator) {
+                return false;
+            }
+            if (!Arrays.equals(types, other.types)) {
+                return false;
+            }
+            return true;
+        }
+        
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            hash = operator.hashCode() + (hash << 6) + (hash << 16) - hash;            
+            hash = Arrays.hashCode(types) + (hash << 6) + (hash << 16) - hash;
+            return hash;
+        }
+    }
+    
+    private final OperatorKey testKey = new OperatorKey();
+    private final Map<OperatorKey,OperatorEvaluator> evaluators = new HashMap<>(); 
+    
+    private OperatorEvaluator getEvaluator(Operator operator, Type[] types) {
+        testKey.operator = operator;
+        testKey.types = types;
+        OperatorEvaluator result = evaluators.get(testKey);
+        if (result != null) {
+            return result;
+        }
+        result = ContextValue.get().getEvaluator(operator, types);
+        OperatorKey newKey = new OperatorKey();
+        newKey.operator = operator;
+        newKey.types = types.clone();
+        evaluators.put(newKey, result);
+        return result;
+    }
     
     private final static class LowLevelPermutationCUDD
     implements PermutationLibraryDD {
@@ -84,11 +126,11 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             assert (numVariables == 0) == (memory == null);
             this.memory = memory;
         }
-        
+
         Memory getMemory() {
             return memory;
         }
-        
+
     }
 
     private static interface DD_VOP1 extends Callback {
@@ -109,11 +151,11 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
+                Operator operator = numberToOperator(op);
                 assert operator != null;
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -122,19 +164,19 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             }
         }
     }
-    
+
     private class DD_VOP2Impl implements DD_VOP2 {
         @Override
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -143,11 +185,11 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             }
         }
     }
-    
+
     private class DD_VOP3Impl implements DD_VOP3 {
         @Override
         public long invoke(int op, long f, long g, long h) {
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
             Value op3Value = numberToValue(h);
@@ -157,7 +199,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
                 types[2] = op3Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value, op3Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -176,7 +218,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     private class AssertFailImpl implements AssertFail {
-
         @Override
         public void invoke(String file, int line) {
             try {
@@ -196,22 +237,10 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             assert cuddName != null;
             assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
             Operator name = OPERATOR_TO_MTBDD.get(cuddName);
-            int number = operatorToNumber.get(name);
-//            assert operators[number].getIdentifier().equals(name) : 
-//                operators[number].getIdentifier() + " " + name;
+            int number = operatorToNumber(name);
+            //            assert operators[number].getIdentifier().equals(name) : 
+            //                operators[number].getIdentifier() + " " + name;
             return number;
-        }
-    }
-
-    private interface GetNumberOfOperators extends Callback  {
-        int invoke();
-    }
-
-    private class GetNumberOfOperatorsImpl implements GetNumberOfOperators {
-
-        @Override
-        public int invoke() {
-            return operators.length;
         }
     }
 
@@ -260,8 +289,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 DdValueTable valueTable,
                 DD_VOP1 vop1, DD_VOP2 vop2, DD_VOP3 vop3,
                 AssertFail assertFail,
-                GetOperatorNumber getOperatorNumber,
-                GetNumberOfOperators getNumberOfOperators);
+                GetOperatorNumber getOperatorNumber);
         /** free CUDD manager */
         static native void Cudd_MTBDD_Quit(Pointer unique);
 
@@ -292,7 +320,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
 
         /** variable permutations for MTBDDs */
         static native Pointer Cudd_MTBDD_addPermute(Pointer manager, Pointer node, Memory permut);
-        
+
         static native int Cudd_MTBDD_CheckZeroRef(Pointer manager);
 
         static native int Cudd_DebugCheck(Pointer table);
@@ -300,13 +328,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         static native void Cudd_SetMinHit(Pointer dd, int hr);
 
         static native void Cudd_EnableGarbageCollection(Pointer dd);
-        
+
         static native void Cudd_DisableGarbageCollection (Pointer dd);
 
         static native void Cudd_SetLooseUpTo(Pointer dd, int  lut);
-        
+
         static native void Cudd_SetMaxCacheHard(Pointer dd, int mc);
-        
+
         private final static boolean loaded =
                 JNATools.registerLibrary(CUDD.class, "cudd-modified");
     }
@@ -320,37 +348,37 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
             CUDD_MAXINDEX = ((short) ~0);
         }
     };
-    
+
     /** constant to mark that a constant is not a variable but a constant */
     static final long CUDD_CONST_INDEX = CUDD_MAXINDEX;
-    
+
     final static int CUDD_CACHE_SLOTS = 262144;
-//    final static int CUDD_UNIQUE_SLOTS = 256;
+    //    final static int CUDD_UNIQUE_SLOTS = 256;
     final static int MTR_DEFAULT = 0x00000000;
     final static int MTR_TERMINAL = 0x00000001;
     final static int MTR_SOFT = 0x00000002;
     final static int MTR_FIXED = 0x00000004;
     final static int MTR_NEWNODE = 0x00000008;
-    
+
     private static final Map<String,Operator> OPERATOR_TO_MTBDD;
     static {
-    	Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
-    	mtbddToOperatorName.put("add", OperatorAdd.ADD);
-    	mtbddToOperatorName.put("subtract", OperatorSubtract.SUBTRACT);
-    	mtbddToOperatorName.put("multiply", OperatorMultiply.MULTIPLY);
-    	mtbddToOperatorName.put("divide", OperatorDivide.DIVIDE);
-    	mtbddToOperatorName.put("max", OperatorMax.MAX);
-    	mtbddToOperatorName.put("min", OperatorMin.MIN);
-    	mtbddToOperatorName.put("and", OperatorAnd.AND);
-    	mtbddToOperatorName.put("or", OperatorOr.OR);
-    	mtbddToOperatorName.put("not", OperatorNot.NOT);
-    	mtbddToOperatorName.put("iff", OperatorIff.IFF);
-    	mtbddToOperatorName.put("implies", OperatorImplies.IMPLIES);
-    	mtbddToOperatorName.put("eq", OperatorEq.EQ);
-    	mtbddToOperatorName.put("ne", OperatorNe.NE);
-    	OPERATOR_TO_MTBDD = Collections.unmodifiableMap(mtbddToOperatorName);
+        Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
+        mtbddToOperatorName.put("add", OperatorAdd.ADD);
+        mtbddToOperatorName.put("subtract", OperatorSubtract.SUBTRACT);
+        mtbddToOperatorName.put("multiply", OperatorMultiply.MULTIPLY);
+        mtbddToOperatorName.put("divide", OperatorDivide.DIVIDE);
+        mtbddToOperatorName.put("max", OperatorMax.MAX);
+        mtbddToOperatorName.put("min", OperatorMin.MIN);
+        mtbddToOperatorName.put("and", OperatorAnd.AND);
+        mtbddToOperatorName.put("or", OperatorOr.OR);
+        mtbddToOperatorName.put("not", OperatorNot.NOT);
+        mtbddToOperatorName.put("iff", OperatorIff.IFF);
+        mtbddToOperatorName.put("implies", OperatorImplies.IMPLIES);
+        mtbddToOperatorName.put("eq", OperatorEq.EQ);
+        mtbddToOperatorName.put("ne", OperatorNe.NE);
+        OPERATOR_TO_MTBDD = Collections.unmodifiableMap(mtbddToOperatorName);
     }
-    
+
     /** pointer to native CUDD manager we are using */
     private Pointer cuddManager;
     /** DD nodes alive just after creation of the manager */
@@ -371,7 +399,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private DD_VOP1 vop1;
     private DD_VOP2 vop2;
     private DD_VOP3 vop3;
-        
+
     /**
      * Obtain number of existing {@code Value} object in table or create new.
      * 
@@ -395,11 +423,10 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return it.key();
             }
         }
-        */
+         */
         long currentNumber = nextNumber;
-//            currentNumber |= (long) value.getTypeNumber() << 32;
+        //            currentNumber |= (long) value.getTypeNumber() << 32;
         Value clone = UtilValue.clone(value);
-        clone.setImmutable();
         numberToValue.put(currentNumber, clone);
         valueToNumber.put(clone, currentNumber);
         nextNumber++;
@@ -416,41 +443,43 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private Value numberToValue(long number) {
         return numberToValue.get(number);
     }
-    
+
     private ContextDD contextDD;
     private boolean alive = true;
     private AssertFailImpl assertFail;
     private GetOperatorNumberImpl getOperatorNumber;
-    private GetNumberOfOperators getNumberOfOperators;
     private Type resultType;
-    private Operator[] operators;
-    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>());
+    private List<Operator> operators = new ArrayList<>();
+    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>(), 1000, 0.5f, -1);
     private Operator opId;
     private int opIdNr;
-    
-    private Operator[] collectOperators() {
-    	Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
-        for (OperatorEvaluator evaluator : identifiers) {
-        	operators.add(evaluator.getOperator());
+
+    private int operatorToNumber(Operator operator) {
+        assert operator != null;
+        int result = operatorToNumber.get(operator);
+        if (result > -1) {
+            return result;
         }
-        return operators.toArray(new Operator[0]);
+        result = operatorToNumber.size();
+        operators.add(operator);
+        operatorToNumber.put(operator, result);
+        return result;
+    }
+    
+    private Operator numberToOperator(int number) {
+        assert number >= 0 : number;
+        assert number < operators.size() : number;
+        return operators.get(number);
     }
     
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(CUDD.loaded, ProblemsDD.CUDD_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
-        this.operators = collectOperators();
-        int index = 0;
-        for (Operator operator : operators) {
-            this.operatorToNumber.put(operator, index);
-        	index++;
-        }
         opId = OperatorId.ID;
-        opIdNr = operatorToNumber.get(opId);
-        
+        opIdNr = operatorToNumber(opId);
+
         this.numberToValue = new TLongObjectHashMap<>();
         this.valueToNumber = new TObjectLongHashMap<>();
         this.valueTable = new DdValueTable();
@@ -459,7 +488,6 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         this.vop3 = new DD_VOP3Impl();
         this.assertFail = new AssertFailImpl();
         this.getOperatorNumber = new GetOperatorNumberImpl();
-        this.getNumberOfOperators = new GetNumberOfOperatorsImpl();
         Options options = Options.get();
         int initCache = options.getInteger(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_INIT_CACHE_SIZE);
         long maxMemory = options.getLong(OptionsDDCUDDMTBDD.DD_CUDD_MTBDD_MAX_MEMORY);
@@ -468,7 +496,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         cuddManager = CUDD.Cudd_MTBDD_Init(0, 0, uniqueSlots,
                 initCache, new NativeLong(maxMemory),
                 valueTable, vop1, vop2, vop3,
-                assertFail, getOperatorNumber, getNumberOfOperators);
+                assertFail, getOperatorNumber);
         if (cuddManager == null) {
             if (badProblem != null) {
                 throw badProblem;
@@ -489,14 +517,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         CUDD.Cudd_SetLooseUpTo(cuddManager, looseUpTo);
         initNodesAlive = CUDD.Cudd_MTBDD_CheckZeroRef(cuddManager);
     }
-    
+
     @Override
-    public long apply(Operator operation, Type type, long... operands)
-            throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         this.resultType = type;
-        int opNr = operatorToNumber.get(operation);
+        int opNr = operatorToNumber(operation);
         Pointer op1Ptr = operands.length >= 1 ? new Pointer(operands[0]) : null;
         Pointer op2Ptr = operands.length >= 2 ? new Pointer(operands[1]) : null;
         Pointer op3Ptr = operands.length >= 3 ? new Pointer(operands[2]) : null;
@@ -504,12 +531,12 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         if (operands.length == 1) {
             resPtr = CUDD.Cudd_MTBDD_addMonadicApplyOpNumber(cuddManager, opNr, op1Ptr);
         } else if (operands.length == 2) {
-        	resPtr = CUDD.Cudd_MTBDD_addApplyOpNumber(cuddManager, opNr, op1Ptr, op2Ptr);
+            resPtr = CUDD.Cudd_MTBDD_addApplyOpNumber(cuddManager, opNr, op1Ptr, op2Ptr);
         } else if (operands.length == 3) {
             boolean doFree = false;
             Pointer iPtr2;
             Pointer iPtr3;
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 iPtr2 = op2Ptr;
                 iPtr3 = op3Ptr;
             } else {
@@ -526,8 +553,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 CUDD.Cudd_MTBDD_RecursiveDeref(cuddManager, iPtr3);
             }
         } else {
-        	assert false;
-        	resPtr = null;
+            assert false;
+            resPtr = null;
         }
         if (resPtr == null) {
             if (badProblem != null) {
@@ -545,9 +572,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         return Pointer.nativeValue(resPtr);
     }
 
-    
+
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         long valueNumber = valueToNumber(value);
         Pointer res = CUDD.Cudd_MTBDD_addConst(cuddManager, valueNumber);
         if (res == null) {
@@ -559,14 +586,14 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         CUDD.Cudd_MTBDD_Ref(res);
         return Pointer.nativeValue(res);
     }
-    
+
     @Override
     public Value value(long dd) {
         Pointer node = new Pointer(dd);
         long value = node.getLong(Pointer.SIZE * 2 - cmplBit(dd));
         return numberToValue(value);
     }
-    
+
     @Override
     public void close() {
         if (!alive) {
@@ -590,7 +617,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         Pointer var;
         var = CUDD.Cudd_MTBDD_addIthVar(cuddManager, numVariables);
         if (var == null) {
@@ -613,12 +640,12 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     boolean isLeaf(Pointer node) {
         return variable(node) == CUDD_CONST_INDEX;
     }
-    
+
     @Override
     public boolean isLeaf(long dd) {
         return isLeaf(new Pointer(dd));
     }
-    
+
     private int variable(Pointer node) {
         int index;
         if (Pointer.SIZE == 8) {
@@ -637,7 +664,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     long uniqueId(Pointer node) {
         return Pointer.nativeValue(node);
     }
-          
+
     private long cmplBit(long pointer) {
         return 0;
     }
@@ -649,7 +676,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private long cmplBit(Pointer pointer) {
         return 0;
     }
-    
+
     @Override
     public long walkerLow(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
@@ -665,13 +692,13 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         assert alive;
     }
 
     @Override
     public long permute(long node, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationCUDD;
         LowLevelPermutationCUDD permutationCUDD = (LowLevelPermutationCUDD) permutation;
@@ -711,25 +738,25 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public long walkerComplement(long from) {
         return from;
     }
-    
+
     @Override
     public void addGroup(int startVariable, int numVariables, boolean fixedOrder) {
     }
-    
+
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -750,9 +777,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         CUDD.Cudd_MTBDD_Ref(result);
         return Pointer.nativeValue(result);
     }
-    
+
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -773,16 +800,16 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         CUDD.Cudd_MTBDD_Ref(result);
         return Pointer.nativeValue(result);
     }
-    
+
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         assert false;
         return -1;
     }
-    
+
     @Override
-	public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -803,9 +830,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         CUDD.Cudd_MTBDD_Ref(result);
         return Pointer.nativeValue(result);
     }
-    
+
     @Override
-	public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert type != null;
         Pointer f = new Pointer(dd);
         Pointer g = new Pointer(cube);
@@ -899,7 +926,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public boolean hasAndExist() {
         return false;
     }
-    
+
     @Override
     public boolean checkConsistent() {
         return CUDD.Cudd_DebugCheck(cuddManager) == 0;
@@ -909,12 +936,12 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (operands.length > 3) {
-			return false;
-		}
-		return true;
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (operands.length > 3) {
+            return false;
+        }
+        return true;
+    }
 }

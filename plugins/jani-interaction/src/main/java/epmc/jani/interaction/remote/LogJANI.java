@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -45,22 +45,22 @@ import epmc.util.Util;
  * @author Ernst Moritz Hahn
  */
 public final class LogJANI implements Log {
-	private final static String VALUE = "value";
-	private final static String FORMATTED_VALUE = "formatted-value";
+    private final static String VALUE = "value";
+    private final static String FORMATTED_VALUE = "formatted-value";
     private final static String LABEL = "label";
     private final static String LABEL_RESULT = "Result";
-	private final static String TYPE = "type";
+    private final static String TYPE = "type";
 
-	private final Options options;
+    private final Options options;
     /** Message channel used by this log. */
     private final EPMCChannel channel;
     /** Stop watch mesuring time since creation of the log. */
     private final StopWatch watch = new StopWatch(true);
     /** Whether messages send should be suppressed. */
     private boolean silent;
-    
-    public LogJANI(Options options, EPMCChannel channel) throws EPMCException {
-    	assert options != null;
+
+    public LogJANI(Options options, EPMCChannel channel) {
+        assert options != null;
         assert channel != null;
         this.options = options;
         this.channel = channel;
@@ -70,9 +70,9 @@ public final class LogJANI implements Log {
             fail(ProblemsMessages.REMOTE, e);
         }
     }
-    
+
     @Override
-	public void send(Message key, Object... params) {
+    public void send(Message key, Object... params) {
         assert key != null;
         assert params != null;
         for (Object param : params) {
@@ -93,7 +93,7 @@ public final class LogJANI implements Log {
     }
 
     @Override
-	public void send(EPMCException exception) {
+    public void send(EPMCException exception) {
         assert exception != null;
         try {
             getChannel().send(exception);
@@ -103,67 +103,67 @@ public final class LogJANI implements Log {
     }
 
     @Override
-	public void send(ModelCheckerResult result) {
+    public void send(ModelCheckerResult result) {
         assert result != null;
         if (result.getResult() instanceof EPMCException) {
-        	EPMCException exception = (EPMCException) result.getResult();
-        	try {
-				getChannel().send(exception);
-			} catch (RemoteException e) {
-	            throw new RuntimeException(e);
-			}
+            EPMCException exception = (EPMCException) result.getResult();
+            try {
+                getChannel().send(exception);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-        	try {
-        		getChannel().send(result.getProperty().getName(), formatResult(result));
-        	} catch (RemoteException e) {
-        		throw new RuntimeException(e);
-        	}
+            try {
+                getChannel().send(result.getProperty().getName(), formatResult(result));
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private JsonValue formatResult(ModelCheckerResult mcResult) {
-		Object value = mcResult.getResult();
+        Object value = mcResult.getResult();
         ResultFormatter formatter = getResultFormatter(value);
         String label = formatter.getLabel();
         if (label == null) {
-        	label = LABEL_RESULT;
+            label = LABEL_RESULT;
         }
-		return Json.createObjectBuilder()
-				.add(LABEL, label)
-				.add(TYPE, formatter.getType())
-				.add(VALUE, formatter.getValue())
-				.add(FORMATTED_VALUE, formatter.getFormattedValue())
-				.build();
-	}
+        return Json.createObjectBuilder()
+                .add(LABEL, label)
+                .add(TYPE, formatter.getType())
+                .add(VALUE, formatter.getValue())
+                .add(FORMATTED_VALUE, formatter.getFormattedValue())
+                .build();
+    }
 
-	@Override
-	public void setSilent(boolean silent) {
+    @Override
+    public void setSilent(boolean silent) {
         this.silent = silent;
     }
-    
+
     @Override
-	public boolean isSilent() {
+    public boolean isSilent() {
         return silent;
     }
-    
+
     public EPMCChannel getChannel() {
         return channel;
     }
-    
-	private ResultFormatter getResultFormatter(Object result) {
-		assert result != null;
+
+    private ResultFormatter getResultFormatter(Object result) {
+        assert result != null;
         Map<String,Class<ResultFormatter>> formatterClasses = options.get(OptionsJANIInteraction.JANI_INTERACTION_RESULT_FORMATTER_CLASS);
         for (Class<ResultFormatter> formatterClass : formatterClasses.values()) {
-        	ResultFormatter formatter = Util.getInstance(formatterClass);
-        	assert formatter != null : formatterClass;
-        	formatter.setResult(result);
-        	if (formatter.canHandle()) {
-        		return formatter;
-        	}
+            ResultFormatter formatter = Util.getInstance(formatterClass);
+            assert formatter != null : formatterClass;
+            formatter.setResult(result);
+            if (formatter.canHandle()) {
+                return formatter;
+            }
         }
         /* Because we have a general result handler, the lines below should
          * never be reached. */
         assert false;
-		return null;
-	}
+        return null;
+    }
 }

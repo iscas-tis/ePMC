@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.objective;
 
@@ -25,10 +25,10 @@ import epmc.value.ValueArray;
 
 public interface GraphSolverObjectiveExplicit {
     void setGraph(GraphExplicit graph);
-    
+
     GraphExplicit getGraph();
-    
+
     void setResult(ValueArray result);
-    
+
     ValueArray getResult();
 }

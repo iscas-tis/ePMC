@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -38,26 +38,23 @@ import java.util.Set;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionLiteral;
-import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
+import epmc.operator.OperatorEq;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
 import epmc.value.Value;
 import epmc.value.ValueEnumerable;
-import epmc.value.operator.OperatorEq;
 
 public final class AutomatonExporterImpl implements AutomatonExporter {
     private Automaton automaton;
     private OutputStream outStream;
     private Format format = Format.DOT;
     private Value[][] validInputs;
-    
+
     @Override
     public void setAutomaton(Automaton automaton) {
         this.automaton = automaton;
@@ -74,7 +71,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     }
 
     @Override
-    public void export() throws EPMCException {
+    public void export() {
         assert automaton != null;
         assert outStream != null;
         assert format != null;
@@ -104,7 +101,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
                 out.println(label + "\"];");
             }
         }        
-        
+
         out.println("}");
     }
 
@@ -120,8 +117,8 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     }
 
     private Value[][] computeValidInputs(Automaton automaton)
-            throws EPMCException {
-    	assert automaton != null;
+    {
+        assert automaton != null;
         ContextDD contextDD = ContextDD.get();
         Expression[] expressions = automaton.getExpressions();
         Set<Expression> identifiers = new HashSet<>();
@@ -133,10 +130,10 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
             variables.put(identifier, contextDD.newVariable(identifier.toString(), TypeBoolean.get(), 1));
         }
         ExpressionToDD checkE2D = new ExpressionToDD(variables);
-        
+
         List<Value[]> values = new ArrayList<>();
         int maxNumValues = (int) Math.pow(TypeBoolean.get().getNumValues(),
-        		expressions.length);
+                expressions.length);
         for (int entryNr = 0; entryNr < maxNumValues; entryNr++) {
             int usedNr = entryNr;
             DD check = contextDD.newConstant(true);
@@ -151,10 +148,10 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
                 ValueEnumerable value = type.newValue();
                 value.setValueNumber(valueNr);
                 entry[exprNr] = value;
-                Expression literal = new ExpressionLiteral.Builder()
-                		.setValue(value)
-                		.build();
-                DD eq = checkE2D.translate(eq(expression, literal));
+                DD expressionDD = checkE2D.translate(expression);
+                DD eq = ContextDD.get().applyWith(OperatorEq.EQ,
+                        expressionDD,
+                        ContextDD.get().newConstant(value));
                 check = check.andWith(eq);
                 if (check.isFalse()) {
                     invalid = true;
@@ -174,7 +171,7 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         return result;
     }
 
-	private TIntObjectMap<Object> exploreStates() throws EPMCException {
+    private TIntObjectMap<Object> exploreStates() {
         TIntStack todo = new TIntArrayStack();
         assert automaton.getInitState() == 0;
         todo.push(0);
@@ -195,13 +192,6 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
         }
 
         return result;
-    }
-    
-    private Expression eq(Expression a, Expression b) {
-    	return new ExpressionOperator.Builder()
-        	.setOperator(OperatorEq.EQ)
-        	.setOperands(a, b)
-        	.build();
     }
 
     @Override

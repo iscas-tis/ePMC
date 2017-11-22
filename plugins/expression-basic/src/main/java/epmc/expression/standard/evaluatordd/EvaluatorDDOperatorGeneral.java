@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -26,20 +26,19 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 
 public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-general";
-    
+
     private Map<Expression, VariableDD> variables;
     private Expression expression;
     private ExpressionOperator expressionOperator;
     private DD dd;
     private boolean closed;
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -74,8 +73,8 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
     }
 
     @Override
-    public void build() throws EPMCException {
-    	Operator operator = expressionOperator.getOperator();
+    public void build() {
+        Operator operator = expressionOperator.getOperator();
         DD[] dds = new DD[expressionOperator.getOperands().size()];
         for (int i = 0; i < expressionOperator.getOperands().size(); i++) {
             Expression operand = expressionOperator.getOperands().get(i);
@@ -101,7 +100,7 @@ public final class EvaluatorDDOperatorGeneral implements EvaluatorDD {
         closed = UtilEvaluatorDD.close(closed, dd, null);
     }
 
-    private ContextDD getContextDD() throws EPMCException {
+    private ContextDD getContextDD() {
         return ContextDD.get();
     }
 }

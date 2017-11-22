@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.exporter.messages;
 
@@ -38,7 +38,7 @@ public final class MessagesJANIExporter {
     public final static Message JANI_EXPORTER_JANI_MODEL_CREATION_DONE = newMessage().setIdentifier("jani-exporter-jani-model-creation-done").build();
     public final static Message JANI_EXPORTER_JANI_FILE_CREATION = newMessage().setIdentifier("jani-exporter-jani-file-creation").build();
     public final static Message JANI_EXPORTER_JANI_FILE_CREATION_DONE = newMessage().setIdentifier("jani-exporter-jani-file-creation-done").build();
-    
+
     /**
      * Creates a new message with given identifier with this resource bundle.
      * The parameter may not be {@code null}.
@@ -53,6 +53,6 @@ public final class MessagesJANIExporter {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private MessagesJANIExporter() {
-	}
+    private MessagesJANIExporter() {
+    }
 }

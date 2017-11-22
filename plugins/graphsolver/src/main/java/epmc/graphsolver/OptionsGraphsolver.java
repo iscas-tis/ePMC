@@ -16,19 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
 import java.util.Collection;
 
 public enum OptionsGraphsolver {
-	OPTIONS_GRAPHSOLVER,
-	GRAPHSOLVER_CATEGORY,
+    OPTIONS_GRAPHSOLVER,
+    GRAPHSOLVER_CATEGORY,
 
     GRAPHSOLVER_PREPROCESSOR_EXPLICIT,
     GRAPHSOLVER_PREPROCESSOR_EXPLICIT_CLASS,
-	
+
     /** {@link Collection} of {@link String} of graph solver identifiers to try to solve graph problems */
     GRAPHSOLVER_SOLVER,
     GRAPHSOLVER_SOLVER_CLASS,

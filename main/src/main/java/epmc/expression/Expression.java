@@ -16,15 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.Positional;
-import epmc.value.Type;
 
 /**
  * Base interface for expressions.
@@ -33,6 +31,13 @@ import epmc.value.Type;
  * to be analysed.
  * On the other hand, they are intended to be used as parts of models, such as
  * for specifying guards, the set of initial states, etc.
+ * <br/>
+ * Note: Do not introduce dependencies of specific expression types to
+ * values (or types, etc.). Evaluating expressions should be performed by
+ * evaluators.
+ * <br/>
+ * I'm aware that such dependencies currently exist, trying to get rid of
+ * them.
  * 
  * @author Ernst Moritz Hahn
  */
@@ -60,12 +65,12 @@ public interface Expression {
     Expression replaceChildren(List<Expression> newChildren);
 
     Expression replacePositional(Positional positional);
-    
+
     // TODO it might later be useful to attach more general information to
     // expressions which do not influence equality of two expressions. For
     // example, for user feedback it might be useful to store the exact string
     // from which the expression was created during parsing.
-    
+
     /**
      * Obtain positional information if available.
      * These positional information usually refer to the position in the input
@@ -78,18 +83,4 @@ public interface Expression {
      * @return positional information if available
      */
     Positional getPositional();
-    
-    // TODO might make sense to modify this method in such a way that it gets
-    // a map from expressions to their type. The reason is that the types change
-    // often after the model has been constructed, and using a map there would
-    // make it more transparent from where the type is actually obtained.
-    
-    // TODO adapt documentation
-    /**
-     * Get (or compute) type of the expression.
-     * 
-     * @return type of expression
-     * @throws EPMCException throw in case of problems
-     */
-    Type getType(ExpressionToType expressionToType) throws EPMCException;
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.error;
 
@@ -38,88 +38,83 @@ public final class UtilError {
      * @param condition condition to check
      * @param problem problem description to use
      * @param arguments
-     * @throws EPMCException
      */
     public static void ensure(boolean condition, Problem problem,
-            Object... arguments) throws EPMCException {
+            Object... arguments) {
         if (!condition) {
             throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setArguments(arguments)
-                .build();
-        }
-    }
-
-    /**
-     * Throw new {@link EPMCException} if a condition does not hold.
-     * 
-     * @param condition condition to check
-     * @param problem problem description to use
-     * @param cause
-     * @param arguments
-     * @throws EPMCException
-     */
-    public static void ensure(boolean condition, Problem problem,
-            Throwable cause, Object... arguments) throws EPMCException {
-        if (!condition) {
-            throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setCause(cause)
-                .setArguments(arguments)
-                .build();
-        }
-    }
-    
-    /**
-     * Throw new {@link EPMCException} if a condition does not hold.
-     * 
-     * @param condition condition to check
-     * @param problem problem description to use
-     * @param positional
-     * @param arguments
-     * @throws EPMCException
-     */
-    public static void ensure(boolean condition, Problem problem,
-            Positional positional, Object... arguments) throws EPMCException {
-        if (!condition) {
-            throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setPositional(positional)
-                .setArguments(arguments)
-                .build();
-        }
-    }
-    
-    /**
-     * Throw new {@link EPMCException}.
-     * 
-     * @param problem problem description to use
-     * @param arguments
-     * @throws EPMCException
-     */
-    public static void fail(Problem problem, Object... arguments)
-            throws EPMCException {
-        throw new EPMCException.Builder()
             .setProblem(problem)
             .setArguments(arguments)
             .build();
+        }
     }
 
     /**
-     * Throw new {@link EPMCException}.
+     * Throw new {@link EPMCException} if a condition does not hold.
      * 
+     * @param condition condition to check
      * @param problem problem description to use
      * @param cause
      * @param arguments
-     * @throws EPMCException
      */
-    public static void fail(Problem problem, Throwable cause,
-            Object... arguments) throws EPMCException {
-        throw new EPMCException.Builder()
+    public static void ensure(boolean condition, Problem problem,
+            Throwable cause, Object... arguments) {
+        if (!condition) {
+            throw new EPMCException.Builder()
             .setProblem(problem)
             .setCause(cause)
             .setArguments(arguments)
             .build();
+        }
+    }
+
+    /**
+     * Throw new {@link EPMCException} if a condition does not hold.
+     * 
+     * @param condition condition to check
+     * @param problem problem description to use
+     * @param positional
+     * @param arguments
+     */
+    public static void ensure(boolean condition, Problem problem,
+            Positional positional, Object... arguments) {
+        if (!condition) {
+            throw new EPMCException.Builder()
+            .setProblem(problem)
+            .setPositional(positional)
+            .setArguments(arguments)
+            .build();
+        }
+    }
+
+    /**
+     * Throw new {@link EPMCException}.
+     * 
+     * @param problem problem description to use
+     * @param arguments
+     */
+    public static void fail(Problem problem, Object... arguments)
+    {
+        throw new EPMCException.Builder()
+        .setProblem(problem)
+        .setArguments(arguments)
+        .build();
+    }
+
+    /**
+     * Throw new {@link EPMCException}.
+     * 
+     * @param problem problem description to use
+     * @param cause
+     * @param arguments
+     */
+    public static void fail(Problem problem, Throwable cause,
+            Object... arguments) {
+        throw new EPMCException.Builder()
+        .setProblem(problem)
+        .setCause(cause)
+        .setArguments(arguments)
+        .build();
     }
 
     /**
@@ -128,17 +123,16 @@ public final class UtilError {
      * @param problem problem description to use
      * @param positional
      * @param arguments
-     * @throws EPMCException
      */
     public static void fail(Problem problem, Positional positional,
-            Object... arguments) throws EPMCException {
+            Object... arguments) {
         throw new EPMCException.Builder()
-                .setProblem(problem)
-                .setPositional(positional)
-                .setArguments(arguments)
-                .build();
+        .setProblem(problem)
+        .setPositional(positional)
+        .setArguments(arguments)
+        .build();
     }    
-    
+
     /**
      * Creates a new {@link Problem} description.
      * The problem is described the key {@code name} of the resource bundle

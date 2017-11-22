@@ -16,72 +16,71 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.extensions.trigonometricfunctions;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.JANIOperators;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
 
 public final class ModelExtensionTrigonometricFunctions implements ModelExtension {
-	public final static String IDENTIFIER = "trigonometric-functions";
-	private ModelJANI model;
-	private JANINode node;
+    public final static String IDENTIFIER = "trigonometric-functions";
+    private ModelJANI model;
+    private JANINode node;
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setModel(ModelJANI model) throws EPMCException {
-		this.model = model;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public void setNode(JANINode node) throws EPMCException {
-		this.node = node;
-	}
+    @Override
+    public void setNode(JANINode node) {
+        this.node = node;
+    }
 
-	@Override
-	public void parseBefore() throws EPMCException {
-		if (!(this.node instanceof ModelJANI)) {
-			return;
-		}
-		JANIOperators operators = model.getJANIOperators();
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorSin.SIN)
-			.setJANI("sin")
-			.build();
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorCos.COS)
-			.setJANI("cos")
-			.build();
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorTan.TAN)
-			.setJANI("tan")
-			.build();
-		
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorAsin.ASIN)
-			.setJANI("asin")
-			.build();
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorAcos.ACOS)
-			.setJANI("acos")
-			.build();
-		operators.add()
-			.setArity(1)
-			.setEPMC(OperatorAtan.ATAN)
-			.setJANI("atan")
-			.build();
-	}
+    @Override
+    public void parseBefore() {
+        if (!(this.node instanceof ModelJANI)) {
+            return;
+        }
+        JANIOperators operators = model.getJANIOperators();
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorSin.SIN)
+        .setJANI("sin")
+        .build();
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorCos.COS)
+        .setJANI("cos")
+        .build();
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorTan.TAN)
+        .setJANI("tan")
+        .build();
+
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorAsin.ASIN)
+        .setJANI("asin")
+        .build();
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorAcos.ACOS)
+        .setJANI("acos")
+        .build();
+        operators.add()
+        .setArity(1)
+        .setEPMC(OperatorAtan.ATAN)
+        .setJANI("atan")
+        .build();
+    }
 }

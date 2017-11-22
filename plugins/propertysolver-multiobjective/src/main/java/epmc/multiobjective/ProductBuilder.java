@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
@@ -39,7 +39,6 @@ import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonRabinLabel;
 import epmc.automaton.ProductGraphExplicit;
 import epmc.automaton.UtilAutomaton;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionMultiObjective;
@@ -59,49 +58,53 @@ import epmc.graph.explicit.NodePropertyApply;
 import epmc.graph.explicit.NodePropertyConstant;
 import epmc.graph.explicit.StateSetExplicit;
 import epmc.modelchecker.ModelChecker;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAddInverse;
+import epmc.operator.OperatorSet;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorAddInverse;
 import gnu.trove.map.hash.THashMap;
 
 final class ProductBuilder {
     private AutomatonProduct automatonProduct;
-	private StateSetExplicit initialStates;
+    private StateSetExplicit initialStates;
     private BitSet[][] stable;
     private BitSet[][] accepting;
     private int numAutomata;
-	private ExpressionMultiObjective property;
-	private GraphExplicit graph;
-	private BitSet invertedRewards;
+    private ExpressionMultiObjective property;
+    private GraphExplicit graph;
+    private BitSet invertedRewards;
 
-	ProductBuilder() {
-	}
-	
-	ProductBuilder setProperty(ExpressionMultiObjective property) {
-		this.property = property;
-		return this;
-	}
-	
-	ProductBuilder setModelChecker(ModelChecker modelChecker) {
+    ProductBuilder() {
+    }
+
+    ProductBuilder setProperty(ExpressionMultiObjective property) {
+        this.property = property;
         return this;
-	}
-	
-	ProductBuilder setGraph(GraphExplicit graph) {
-		this.graph = graph;
-		initialStates = graph.newInitialStateSet();
-		return this;
-	}
-	
-	ProductBuilder setInvertedRewards(BitSet invertedRewards) {
-		this.invertedRewards = invertedRewards;
-		return this;
-	}
-	
-	Product build() throws EPMCException {
-    	assert initialStates != null;
+    }
+
+    ProductBuilder setModelChecker(ModelChecker modelChecker) {
+        return this;
+    }
+
+    ProductBuilder setGraph(GraphExplicit graph) {
+        this.graph = graph;
+        initialStates = graph.newInitialStateSet();
+        return this;
+    }
+
+    ProductBuilder setInvertedRewards(BitSet invertedRewards) {
+        this.invertedRewards = invertedRewards;
+        return this;
+    }
+
+    Product build() {
+        assert initialStates != null;
         GraphExplicit prodWrapper = computeProductGraph(initialStates);
         GraphBuilderExplicit builder = new GraphBuilderExplicit();
         builder.setInputGraph(prodWrapper);
@@ -114,24 +117,24 @@ final class ProductBuilder {
         GraphExplicit iterGraph = builder.getOutputGraph();
         IterationRewards rewards = computeRewards(builder);
         return new Product(iterGraph, rewards, numAutomata);
-	}
-	
-	private GraphExplicit computeProductGraph(StateSetExplicit initialStates) throws EPMCException {
+    }
+
+    private GraphExplicit computeProductGraph(StateSetExplicit initialStates) {
         Set<Expression> expressionsSet = new HashSet<>();
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (ExpressionReward.isReward(quantified)) {
-            	// TODO
+                // TODO
             } else {
-            	Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
-            	expressionsSet.addAll(inners);
+                Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
+                expressionsSet.addAll(inners);
             }
         }
         Expression[] expressions = expressionsSet.toArray(new Expression[expressionsSet.size()]);
         List<Automaton> automata = new ArrayList<>();
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
                 quantified = ExpressionLiteral.getFalse();
@@ -147,7 +150,7 @@ final class ProductBuilder {
         List<Object> prodEdgeProperties = new ArrayList<>();
         prodEdgeProperties.add(CommonProperties.WEIGHT);
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
                 RewardSpecification rewardStructure = ((ExpressionReward) quantified).getReward();
@@ -156,15 +159,15 @@ final class ProductBuilder {
             }
         }
         ProductGraphExplicit product = new ProductGraphExplicit.Builder()
-        		.setModel(graph)
-        		.setModelInitialNodes(initialStates.getStatesExplicit())
-        		.setAutomaton(automatonProduct)
-        		.setAutomatonInitialState(automatonProduct.getInitState())
-        		.addGraphProperties(graph.getGraphProperties())
-        		.addNodeProperties(prodNodeProperties)
-        		.addEdgeProperties(prodEdgeProperties)
-        		.build();
-        
+                .setModel(graph)
+                .setModelInitialNodes(initialStates.getStatesExplicit())
+                .setAutomaton(automatonProduct)
+                .setAutomatonInitialState(automatonProduct.getInitState())
+                .addGraphProperties(graph.getGraphProperties())
+                .addNodeProperties(prodNodeProperties)
+                .addEdgeProperties(prodEdgeProperties)
+                .build();
+
         GraphExplicitWrapper prodWrapper = new GraphExplicitWrapper(product);
         prodWrapper.addDerivedGraphProperties(product.getGraphProperties());
         prodWrapper.addDerivedNodeProperty(CommonProperties.STATE);
@@ -172,9 +175,9 @@ final class ProductBuilder {
         prodWrapper.addDerivedNodeProperty(CommonProperties.AUTOMATON_LABEL);
         prodWrapper.addDerivedNodeProperty(CommonProperties.NODE_MODEL);
         prodWrapper.addDerivedEdgeProperty(CommonProperties.WEIGHT);
-        
+
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
                 RewardSpecification rewardStructure = ((ExpressionReward) quantified).getReward();
@@ -185,17 +188,17 @@ final class ProductBuilder {
 
         prodWrapper.explore();
         return prodWrapper;
-	}
-	
+    }
+
     private IterationRewards computeRewards(GraphBuilderExplicit builder)
-    		throws EPMCException {
-    	GraphExplicit prodWrapper = builder.getInputGraph();
+    {
+        GraphExplicit prodWrapper = builder.getInputGraph();
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
         EdgeProperty[] transRewards = new EdgeProperty[property.getOperands().size()];
         int propNr = 0;
         Value zero = TypeWeight.get().getZero();
         for (Expression objective : property.getOperands()) {
-        	ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
             if (ExpressionReward.isReward(quantified)) {
                 RewardSpecification rewardStructure = ((ExpressionReward) quantified).getReward();
@@ -214,7 +217,7 @@ final class ProductBuilder {
 
         Map<BitSet,BitSet> resultMap = computeCombinations(builder);
         GraphExplicitSparseAlternate iterGraph = (GraphExplicitSparseAlternate) builder.getOutputGraph();
-        
+
         IterationRewards result = new IterationRewards(iterGraph, numAutomata);
         int numStates = iterGraph.computeNumStates();
         BitSet empty = UtilBitSet.newBitSetUnbounded();
@@ -237,18 +240,20 @@ final class ProductBuilder {
             }
             ValueAlgebra stateReward = newValueWeight();
             ValueAlgebra transReward = newValueWeight();
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
             int numSucc = iterGraph.getNumSuccessors(iterState);
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int obj = 0; obj < numAutomata; obj++) {
-                stateReward.set(zero);
+                set.apply(stateReward, zero);
                 NodeProperty stateRewardProp = stateRewards[obj];
-                stateReward.set(stateRewardProp.get(state));
+                set.apply(stateReward, stateRewardProp.get(state));
                 EdgeProperty edgeRewardProp = transRewards[obj];
                 for (int succNr = 0; succNr < numSucc; succNr++) {
-                	// TODO HACK
-                    transReward.set(stateReward);
-                    transReward.add(transReward, edgeRewardProp.get(state, succNr));
+                    // TODO HACK
+                    set.apply(transReward, stateReward);
+                    add.apply(transReward, transReward, edgeRewardProp.get(state, succNr));
                     int succ = prodWrapper.getSuccessorNode(state, succNr);
-                    transReward.add(transReward, edgeRewardProp.get(succ, 0));
+                    add.apply(transReward, transReward, edgeRewardProp.get(succ, 0));
                     result.setReward(transReward, succNr, obj);
                 }
             }
@@ -256,12 +261,12 @@ final class ProductBuilder {
         }
         return result;
     }
-    
-    private Map<BitSet,BitSet> computeCombinations(GraphBuilderExplicit builder) throws EPMCException {
+
+    private Map<BitSet,BitSet> computeCombinations(GraphBuilderExplicit builder) {
         computeStableAccepting(builder.getInputGraph());
         Map<BitSet,BitSet> todoMap = new THashMap<>();
         Map<BitSet,BitSet> resultMap = new THashMap<>();
-        
+
         Deque<BitSet> todo = new LinkedList<>();
         BitSet initBitSet = UtilBitSet.newBitSetUnbounded();
         for (int prop = 0; prop < numAutomata; prop++) {
@@ -296,9 +301,9 @@ final class ProductBuilder {
         }
         return resultMap;
     }
-    
-	private void computeStableAccepting(GraphExplicit prodWrapper) throws EPMCException {
-		NodeProperty automatonLabel = prodWrapper.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
+
+    private void computeStableAccepting(GraphExplicit prodWrapper) {
+        NodeProperty automatonLabel = prodWrapper.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         stable = new BitSet[automatonProduct.getNumComponents()][];
         accepting = new BitSet[automatonProduct.getNumComponents()][];
         int automatonNr = 0;
@@ -326,7 +331,7 @@ final class ProductBuilder {
     }
 
     private BitSet computeAccepting(GraphExplicit prodWrapper, BitSet states, BitSet properties)
-            throws EPMCException {
+    {
         assert states != null;
         assert properties != null;
         int numCombinations = 1;
@@ -335,7 +340,7 @@ final class ProductBuilder {
             AutomatonRabin automaton = (AutomatonRabin) automatonProduct.getAutomaton(prop);
             numCombinations *= automaton.getNumPairs();
         }
-        
+
         BitSet result = UtilBitSet.newBitSetUnbounded();
         BitSet stable = UtilBitSet.newBitSetUnbounded();
         for (int combNumber = 0; combNumber < numCombinations; combNumber++) {
@@ -379,11 +384,11 @@ final class ProductBuilder {
                 }
             }
         }
-//        result = ComponentsExplicit.reachMaxOne(prodWrapper, result);
+        //        result = ComponentsExplicit.reachMaxOne(prodWrapper, result);
         return result;
     }
-    
+
     private ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

@@ -16,14 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.io.InputStream;
 import java.io.Serializable;
-
-import epmc.error.EPMCException;
 
 // TODO complete documentation
 
@@ -52,9 +50,8 @@ public interface RawModel extends Serializable {
      * 
      * @return input streams for this model
      * 
-     * @throws EPMCException thrown if problem occurs
      */
-    InputStream[] getModelInputStreams() throws EPMCException;
-    
-    InputStream[] getPropertyInputStreams() throws EPMCException;
+    InputStream[] getModelInputStreams();
+
+    InputStream[] getPropertyInputStreams();
 }

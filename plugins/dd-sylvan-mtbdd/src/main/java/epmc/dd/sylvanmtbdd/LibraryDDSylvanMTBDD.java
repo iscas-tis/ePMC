@@ -16,15 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.sylvanmtbdd;
 
 import static epmc.error.UtilError.ensure;
 
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -38,28 +42,99 @@ import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
 import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMultiply;
 
 public class LibraryDDSylvanMTBDD implements LibraryDD {
-    public final static String IDENTIFIER = "sylvan-mtbdd";
+    private static final Map<String,Operator> OPERATOR_TO_MTBDD;
+    static {
+        Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
+        mtbddToOperatorName.put("add", OperatorAdd.ADD);
+        mtbddToOperatorName.put("subtract", OperatorSubtract.SUBTRACT);
+        mtbddToOperatorName.put("multiply", OperatorMultiply.MULTIPLY);
+        mtbddToOperatorName.put("divide", OperatorDivide.DIVIDE);
+        mtbddToOperatorName.put("max", OperatorMax.MAX);
+        mtbddToOperatorName.put("min", OperatorMin.MIN);
+        mtbddToOperatorName.put("and", OperatorAnd.AND);
+        mtbddToOperatorName.put("or", OperatorOr.OR);
+        mtbddToOperatorName.put("not", OperatorNot.NOT);
+        mtbddToOperatorName.put("iff", OperatorIff.IFF);
+        mtbddToOperatorName.put("implies", OperatorImplies.IMPLIES);
+        mtbddToOperatorName.put("eq", OperatorEq.EQ);
+        mtbddToOperatorName.put("ne", OperatorNe.NE);
+        OPERATOR_TO_MTBDD = Collections.unmodifiableMap(mtbddToOperatorName);
+    }
+
+    private final static class OperatorKey {
+        private Operator operator;
+        private Type[] types;
+        
+        @Override
+        public boolean equals(Object obj) {
+            OperatorKey other = (OperatorKey) obj;
+            if (operator != other.operator) {
+                return false;
+            }
+            if (!Arrays.equals(types, other.types)) {
+                return false;
+            }
+            return true;
+        }
+        
+        @Override
+        public int hashCode() {
+            int hash = 0;
+            hash = operator.hashCode() + (hash << 6) + (hash << 16) - hash;            
+            hash = Arrays.hashCode(types) + (hash << 6) + (hash << 16) - hash;
+            return hash;
+        }
+    }
     
+    private final OperatorKey testKey = new OperatorKey();
+    private final Map<OperatorKey,OperatorEvaluator> evaluators = new HashMap<>(); 
+    
+    private OperatorEvaluator getEvaluator(Operator operator, Type[] types) {
+        testKey.operator = operator;
+        testKey.types = types;
+        OperatorEvaluator result = evaluators.get(testKey);
+        if (result != null) {
+            return result;
+        }
+        result = ContextValue.get().getEvaluator(operator, types);
+        OperatorKey newKey = new OperatorKey();
+        newKey.operator = operator;
+        newKey.types = types.clone();
+        evaluators.put(newKey, result);
+        return result;
+    }
+
+    public final static String IDENTIFIER = "sylvan-mtbdd";
+
     private final static class LowLevelPermutationSylvan
-        implements PermutationLibraryDD {
+    implements PermutationLibraryDD {
 
         private long permMap;
 
@@ -80,7 +155,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         long getMap() {
             return permMap;
         }
-        
+
     }
 
     private static interface DD_VOP1 extends Callback {
@@ -90,17 +165,17 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private static interface DD_VOP2 extends Callback {
         long invoke(int op, long f, long g);
     }
-    
+
     private class DD_VOP1Impl implements DD_VOP1 {
         @Override
         public long invoke(int op, long f) {
             Value opValue = numberToValue(f);
             try {
                 Value result = resultType.newValue();
-                Operator operator = operators[op];
+                Operator operator = numberToOperator(op);
                 Type[] types = new Type[1];
                 types[0] = opValue.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, opValue);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -109,19 +184,19 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             }
         }
     }
-    
+
     private class DD_VOP2Impl implements DD_VOP2 {
         @Override
         public long invoke(int op, long f, long g) {
             Value op1Value = numberToValue(f);
             Value op2Value = numberToValue(g);
-            Operator operator = operators[op];
+            Operator operator = numberToOperator(op);
             try {
                 Value result = resultType.newValue();
                 Type[] types = new Type[2];
                 types[0] = op1Value.getType();
                 types[1] = op2Value.getType();
-                OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(operator, types);
+                OperatorEvaluator evaluator = getEvaluator(operator, types);
                 evaluator.apply(result, op1Value, op2Value);
                 return valueToNumber(result);
             } catch (EPMCException e) {
@@ -130,8 +205,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
             }
         }
     }
-    
-    private void checkValueProblem() throws EPMCException {
+
+    private void checkValueProblem() {
         if (valueProblem != null) {
             EPMCException toThrow = valueProblem;
             valueProblem = null;
@@ -146,15 +221,17 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private class GetOperatorNumberImpl implements GetOperatorNumber {
 
         @Override
-        public int invoke(String name) {
-            assert name != null;
-            int number = operatorToNumber.get(name);
-//            assert operators[number].getIdentifier().equals(name) : 
-  //              operators[number].getIdentifier() + " " + name;
+        public int invoke(String cuddName) {
+            assert cuddName != null;
+            assert OPERATOR_TO_MTBDD.containsKey(cuddName) : cuddName;
+            Operator name = OPERATOR_TO_MTBDD.get(cuddName);
+            int number = operatorToNumber(name);
+            //            assert operators[number].getIdentifier().equals(name) : 
+            //                operators[number].getIdentifier() + " " + name;
             return number;
         }
     }
-    
+
     /**
      * Obtain number of existing {@code Value} object in table or create new.
      * 
@@ -178,18 +255,17 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 return it.key();
             }
         }
-        */
+         */
         long currentNumber = nextNumber;
-    //        currentNumber |= (long) value.getTypeNumber() << 32;
+        //        currentNumber |= (long) value.getTypeNumber() << 32;
         Value clone = UtilValue.clone(value);
-        clone.setImmutable();
         numberToValue.put(currentNumber, clone);
         valueToNumber.put(clone, currentNumber);
         nextNumber++;
         valueToNumberTime += System.nanoTime();
         return currentNumber;
     }
-    
+
     /**
      * Obtain {@code Value} object with given number.
      * 
@@ -199,7 +275,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private Value numberToValue(long number) {
         return numberToValue.get(number);
     }
-    
+
     /**
      * Interface to call native functions of Sylvan library.
      * The functions that start with a capital letter call
@@ -221,14 +297,14 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         static native long mtbdd_ref(long n);
         /** decrease reference counter of Sylvan DD node */
         static native void mtbdd_deref(long n);
-        
+
         static native long MTBDD_uapply(long f, int op);
         static native long MTBDD_apply(long f, long g, int op);
-        
+
         static native long MTBDD_ite(long f, long g, long h);
-        
+
         static native long mtbdd_getlow(long f);
-        
+
         static native long mtbdd_gethigh(long f);
 
         /** obtain variable BDD node (with boolean branches) */
@@ -237,21 +313,21 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         static native long mtbdd_makeleaf(int type, long value);
         static native int mtbdd_isleaf(long f);
         static native long mtbdd_getvalue(long g);
-        
+
         static native long MTBDD_abstract(long f, long cube, int op);
-        
+
         /** functions used for permutations */
         static native long MTBDD_compose(long f, long map);
         static native long MTBDD_map_empty();
         static native long MTBDD_map_add(long map, int fromVar, int toVar);
-        
+
         /** debug function to print f to stdout */
         static native void MTBDD_print(long f);
-        
+
         private final static boolean loaded =
                 JNATools.registerLibrary(Sylvan.class, "sylvan-mtbdd");
     }
-    
+
     private static final long COMPLEMENT = 0x8000000000000000L;
     private long falseNode;
     private long trueNode;
@@ -265,7 +341,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private TLongObjectHashMap<Value> numberToValue;
     /** maps Value object to its number */
     private TObjectLongHashMap<Value> valueToNumber;
-    private Operator[] operators;
+    private final List<Operator> operators = new ArrayList<>();
     private TObjectIntHashMap<Operator> operatorToNumber = new TObjectIntHashMap<>();
 
     private long valueToNumberTime;
@@ -273,38 +349,40 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     private long valueToNumberEqq;
     private long valueToNumberEquals;
     private EPMCException valueProblem;
-        
+
     private ContextDD contextDD;
     private DD_VOP1 vop1;
     private DD_VOP2 vop2;
     private boolean alive = true;
-    
-    private Operator[] collectOperators() {
-    	Set<Operator> operators = new LinkedHashSet<>();
-        Collection<OperatorEvaluator> identifiers = ContextValue.get().getOperatorEvaluators();
-        for (OperatorEvaluator evaluator : identifiers) {
-        	operators.add(evaluator.getOperator());
+
+    private int operatorToNumber(Operator operator) {
+        assert operator != null;
+        int result = operatorToNumber.get(operator);
+        if (result > -1) {
+            return result;
         }
-        return operators.toArray(new Operator[0]);
+        result = operatorToNumber.size();
+        operators.add(operator);
+        operatorToNumber.put(operator, result);
+        return result;
     }
     
-    
+    private Operator numberToOperator(int number) {
+        assert number >= 0 : number;
+        assert number < operators.size() : number;
+        return operators.get(number);
+    }
+
     // TODO make sure mapping of operators still works
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD !=null;
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
-        
+
         this.contextDD = contextDD;
-        this.operators = collectOperators();
-        int opNr = 0;
-        for (Operator operator : operators) {
-            this.operatorToNumber.put(operator, opNr);
-        	opNr++;
-        }
         this.numberToValue = new TLongObjectHashMap<>();
         this.valueToNumber = new TObjectLongHashMap<>();
-        
+
         vop1 = new DD_VOP1Impl();
         vop2 = new DD_VOP2Impl();
         GetOperatorNumber getOperatorNumber = new GetOperatorNumberImpl();
@@ -312,12 +390,12 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         long initMem = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_NODES);
         long initCache = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_INIT_CACHE_SIZE);
         int cacheGranularity = Options.get().getInteger(OptionsDDSylvanMTBDD.DD_SYLVAN_MTBDD_CACHE_GRANULARITY);
-        
+
         Sylvan.lace_init(workers, 1000000);
         Sylvan.lace_startup(0, Pointer.NULL, Pointer.NULL);
         Sylvan.sylvan_init_package(initMem, 1 << 27, initCache, 1 << 26);
         Sylvan.sylvan_init_mtbdd(cacheGranularity);
-        
+
         this.valueTrue = TypeBoolean.get().getTrue();
         this.valueFalse = TypeBoolean.get().getFalse();
         falseNode = newConstant(valueFalse);
@@ -331,20 +409,20 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
         this.resultType = type;
         long result;
         if (operands.length == 1) {
-            result = Sylvan.MTBDD_uapply(operands[0], operatorToNumber.get(operation));
+            result = Sylvan.MTBDD_uapply(operands[0], operatorToNumber(operation));
         } else if (operands.length == 2) {
-            result = Sylvan.MTBDD_apply(operands[0], operands[1], operatorToNumber.get(operation));
+            result = Sylvan.MTBDD_apply(operands[0], operands[1], operatorToNumber(operation));
         } else if (operands.length == 3) {
             this.resultType = type;
             boolean doFree = false;
             long idOp2, idOp3;
-            if (TypeBoolean.isBoolean(type)) {
+            if (TypeBoolean.is(type)) {
                 idOp2 = operands[1];
                 idOp3 = operands[2];
             } else {
@@ -361,8 +439,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 Sylvan.mtbdd_deref(idOp3);
             }        	
         } else {
-        	assert false;
-        	result = -1;
+            assert false;
+            result = -1;
         }
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
@@ -370,7 +448,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
         long result = Sylvan.mtbdd_makeleaf(3, valueToNumber(value));
         Sylvan.mtbdd_ref(result);
@@ -378,9 +456,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         long result = Sylvan.mtbdd_makenode(nextVariable, falseNode, trueNode);
-//        result = Sylvan.mtbdd_makenode(10, result, trueNode);
+        //        result = Sylvan.mtbdd_makenode(10, result, trueNode);
         nextVariable++;
         Sylvan.mtbdd_ref(result);
         return result;
@@ -403,18 +481,18 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
-        
+    public void reorder() {
+
     }
 
     @Override
     public void addGroup(int startVariable, int numVariables, boolean fixedOrder) {
-        
+
     }
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationSylvan;
         return Sylvan.mtbdd_ref(Sylvan.MTBDD_compose(dd, ((LowLevelPermutationSylvan) permutation).getMap()));
@@ -462,19 +540,19 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.ADD));
@@ -484,7 +562,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.MULTIPLY));
@@ -494,7 +572,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.MAX));
@@ -504,7 +582,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
         long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.MIN));
@@ -515,13 +593,13 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         assert false;
         return -1;
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         return new LowLevelPermutationSylvan(permutation, falseNode, trueNode);
     }
 
@@ -587,15 +665,15 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (operands.length > 3) {
-			return false;
-		}
-		if (operands.length == 3 && !operation.equals(OperatorIte.ITE)) {
-			return false;
-		}
-		return true;
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (operands.length > 3) {
+            return false;
+        }
+        if (operands.length == 3 && !operation.equals(OperatorIte.ITE)) {
+            return false;
+        }
+        return true;
+    }
 }

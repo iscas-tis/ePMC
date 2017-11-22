@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 import static epmc.error.UtilError.ensure;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.StateSetDD;
@@ -41,7 +40,7 @@ import epmc.value.ValueArray;
 
 public final class UtilGraph {
 
-    public static BitStoreableToNumber newNodeStore(int numBits) throws EPMCException {
+    public static BitStoreableToNumber newNodeStore(int numBits) {
         BitStoreableToNumber nodeStore;
         OptionsTypesGraph.StateStorage stateStorage;
         stateStorage = Options.get().getEnum(OptionsGraph.STATE_STORAGE);
@@ -77,7 +76,7 @@ public final class UtilGraph {
         return nodeStore;
     }
 
-    public static StateSetDD computeAllStatesDD(GraphDD graphDD) throws EPMCException {
+    public static StateSetDD computeAllStatesDD(GraphDD graphDD) {
         if (graphDD == null) {
             return null;
         }
@@ -86,7 +85,7 @@ public final class UtilGraph {
         return new StateSetDD(graphDD, statesDD);
     }
 
-    public static StateSetExplicit computeAllStatesExplicit(GraphExplicit explicit) throws EPMCException {
+    public static StateSetExplicit computeAllStatesExplicit(GraphExplicit explicit) {
         if (explicit == null) {
             return null;
         }
@@ -115,15 +114,13 @@ public final class UtilGraph {
      * @param lowLevel graph to register result in
      * @param property subformula to register result of
      * @param results result resulting from checking subformula
-     * @throws EPMCException thrown in case of problems
      */
-    public static void registerResult(GraphExplicit lowLevel, Expression property, StateMapExplicit results)
-            throws EPMCException {
+    public static void registerResult(GraphExplicit lowLevel, Expression property, StateMapExplicit results) {
         assert lowLevel != null;
         assert property != null;
         assert results != null;
         if (!lowLevel.getNodeProperties().contains(property)) {
-            lowLevel.addSettableNodeProperty(property, property.getType(lowLevel));
+            lowLevel.addSettableNodeProperty(property, results.getType());
         }
         NodeProperty nodeProp = lowLevel.getNodeProperty(property);
         Value entry = results.getType().newValue();

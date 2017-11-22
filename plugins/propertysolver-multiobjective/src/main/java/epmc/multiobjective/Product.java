@@ -16,34 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective;
 
 import epmc.graph.explicit.GraphExplicit;
 
 final class Product {
-	private final GraphExplicit graph;
-	private final IterationRewards rewards;
-	private final int numAutomata;
-	
-	Product(GraphExplicit graph, IterationRewards rewards, int numAutomata) {
-		assert graph != null;
-		assert rewards != null;
-		this.graph = graph;
-		this.rewards = rewards;
-		this.numAutomata = numAutomata;
-	}
-	
-	GraphExplicit getGraph() {
-		return graph;
-	}
-	
-	IterationRewards getRewards() {
-		return rewards;
-	}
-	
-	int getNumAutomata() {
-		return numAutomata;
-	}
+    private final GraphExplicit graph;
+    private final IterationRewards rewards;
+    private final int numAutomata;
+
+    Product(GraphExplicit graph, IterationRewards rewards, int numAutomata) {
+        assert graph != null;
+        assert rewards != null;
+        this.graph = graph;
+        this.rewards = rewards;
+        this.numAutomata = numAutomata;
+    }
+
+    GraphExplicit getGraph() {
+        return graph;
+    }
+
+    IterationRewards getRewards() {
+        return rewards;
+    }
+
+    int getNumAutomata() {
+        return numAutomata;
+    }
 }

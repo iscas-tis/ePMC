@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.options;
 
@@ -26,8 +26,8 @@ package epmc.jani.interaction.options;
  * @author Ernst Moritz Hahn
  */
 public enum JANIInteractionIO {
-	/** Communication using {@link System#out} and {@link System#in}. */
-	STDIO,
-	/** Communication using WebSockets. */
-	WEBSOCKETS
+    /** Communication using {@link System#out} and {@link System#in}. */
+    STDIO,
+    /** Communication using WebSockets. */
+    WEBSOCKETS
 }

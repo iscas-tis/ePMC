@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.error;
 
@@ -30,10 +30,10 @@ public final class ProblemsKretinsky {
     public final static Problem KRETINSKY_PO_INV_PGR_OPT_VALUE = newProblem("kretinsky-po-inv-prg-opt-value");
 
     private static Problem newProblem(String name) {
-    	assert name != null;
-    	return UtilError.newProblem(ERROR_KRETINSKY, ProblemsKretinsky.class, name);
+        assert name != null;
+        return UtilError.newProblem(ERROR_KRETINSKY, ProblemsKretinsky.class, name);
     }
-    
+
     private ProblemsKretinsky() {
     }
 }

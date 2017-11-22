@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
@@ -26,13 +26,13 @@ package epmc.jani.explorer;
  * @author Ernst Moritz Hahn
  */
 public enum OptionsJANIExplorer {
-	/** Base name of resource file for options description. */
-	OPTIONS_JANI_EXPLORER,
-	
-	/** Storage point for JANI explorer extensions. */
-	JANI_EXPLORER_EXTENSION_CLASS,
-	/** Storage point for JANI explorer assignment evaluators. */
-	JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS,
-	/** Initial states enumeration method. */
-	JANI_EXPLORER_INITIAL_ENUMERATOR,
+    /** Base name of resource file for options description. */
+    OPTIONS_JANI_EXPLORER,
+
+    /** Storage point for JANI explorer extensions. */
+    JANI_EXPLORER_EXTENSION_CLASS,
+    /** Storage point for JANI explorer assignment evaluators. */
+    JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS,
+    /** Initial states enumeration method. */
+    JANI_EXPLORER_INITIAL_ENUMERATOR,
 }

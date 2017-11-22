@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -80,9 +80,9 @@ public final class TaskServerLocal implements TaskServer {
     private boolean started;
     /** whether the server has been stopped */
     private boolean stopped;
-    
+
     @Override
-    public void start() throws EPMCException {
+    public void start() {
         assert !started;
         started = true;
         Class<EPMC> mainClass = epmc.main.EPMC.class;
@@ -144,14 +144,14 @@ public final class TaskServerLocal implements TaskServer {
         this.process = process;
         this.server = iscasMcServer;
     }
-    
+
     @Override
     public JANIRemote getServer() {
         return server;
     }
-    
+
     @Override
-    public void stop() throws EPMCException {
+    public void stop() {
         assert started;
         assert !stopped;
         stopped = true;
@@ -168,15 +168,15 @@ public final class TaskServerLocal implements TaskServer {
                     @Override
                     public void setTimeStarted(long time) throws RemoteException {
                     }
-					@Override
-					public void send(long time, Message key, String... arguments) throws RemoteException {
-					}
-					@Override
-					public void send(EPMCException exception) throws RemoteException {
-					}
-					@Override
-					public void send(String name, JsonValue result) throws RemoteException {
-					}
+                    @Override
+                    public void send(long time, Message key, String... arguments) throws RemoteException {
+                    }
+                    @Override
+                    public void send(EPMCException exception) throws RemoteException {
+                    }
+                    @Override
+                    public void send(String name, JsonValue result) throws RemoteException {
+                    }
                 };
                 Options userOptions = Options.get().clone();
                 userOptions.set(Options.COMMAND, JANIServer.EXIT);

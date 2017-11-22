@@ -1,0 +1,55 @@
+mdp
+
+global flag0 : bool init false;
+global flag1 : bool init false;
+global turn : [0..1];
+
+module P0
+	state0 : [0..3] init 0;
+	
+//	//not wanting to enter
+//	[] state0 = 0 -> true;
+
+	//wanting to enter the critial section; protocol starts
+
+	//flag[0] = true
+	[] state0 = 0 -> (state0'=1) & (flag0'=true);
+	
+	//turn = 1;
+	[] state0 = 1 -> (state0'=2) & (turn'=1);
+	
+//	//while (flag[1] && turn == 1) { ... }, guard satisfied
+//	[] state0 = 2 & flag1 & turn = 1 -> true;
+	
+	//while (flag[1] && turn == 1) { ... }, guard violated
+	[] state0 = 2 & !( flag1 & turn = 1) -> (state0'=3);
+	
+	//flag[0] = false
+	[] state0 = 3 -> (state0'=0) & (flag0'=false);
+	
+endmodule
+
+module P1
+	state1 : [0..3] init 0;
+	
+//	//not wanting to enter
+//	[] state1 = 0 -> true;
+
+	//wanting to enter the critial section; protocol starts
+
+	//flag[1] = true
+	[] state1 = 0 -> (state1'=1) & (flag1'=true);
+	
+	//turn = 0;
+	[] state1 = 1 -> (state1'=2) & (turn'=0);
+	
+//	//while (flag[0] && turn == 0) { ... }, guard satisfied
+//	[] state1 = 2 & flag0 & turn = 0 -> true;
+	
+	//while (flag[1] && turn == 1) { ... }, guard violated
+	[] state1 = 2 & !( flag0 & turn = 0) -> (state1'=3);
+	
+	//flag[1] = false
+	[] state1 = 3 -> (state1'=0) & (flag1'=false);
+	
+endmodule

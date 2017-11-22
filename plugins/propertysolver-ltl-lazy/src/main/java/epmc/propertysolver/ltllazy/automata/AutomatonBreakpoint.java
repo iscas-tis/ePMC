@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy.automata;
 
@@ -29,7 +29,6 @@ import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
 import epmc.automaton.BuechiTransition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -39,45 +38,45 @@ import epmc.util.UtilBitSet;
 import epmc.value.Value;
 
 public final class AutomatonBreakpoint implements Automaton {
-	public final static class Builder implements Automaton.Builder {
-		private Buechi buechi;
-		private AutomatonSubsetState init;
+    public final static class Builder implements Automaton.Builder {
+        private Buechi buechi;
+        private AutomatonSubsetState init;
 
-		@Override
-		public Builder setBuechi(Buechi buechi) {
-			this.buechi = buechi;
-			return this;
-		}
-		
-		private Buechi getBuechi() {
-			return buechi;
-		}
-		
-		public Builder setInit(AutomatonSubsetState init) {
-			this.init = init;
-			return this;
-		}
-		
-		private AutomatonSubsetState getInit() {
-			return init;
-		}
-		
-		@Override
-		public AutomatonBreakpoint build() throws EPMCException {
-			return new AutomatonBreakpoint(this);
-		}
-		
-	}
-	
+        @Override
+        public Builder setBuechi(Buechi buechi) {
+            this.buechi = buechi;
+            return this;
+        }
+
+        private Buechi getBuechi() {
+            return buechi;
+        }
+
+        public Builder setInit(AutomatonSubsetState init) {
+            this.init = init;
+            return this;
+        }
+
+        private AutomatonSubsetState getInit() {
+            return init;
+        }
+
+        @Override
+        public AutomatonBreakpoint build() {
+            return new AutomatonBreakpoint(this);
+        }
+
+    }
+
     private final AutomatonMaps automatonMaps = new AutomatonMaps();
     public final static String IDENTIFIER = "breakpoint";
-    
+
     private enum AutomatonBreakpointLabelEnum implements AutomatonBreakpointLabel, AutomatonLabelUtil {
         ACCEPTING,
         REJECTING,
         NEUTRAL
         ;
-        
+
         @Override
         public int getNumber() {
             return ordinal();
@@ -86,12 +85,12 @@ public final class AutomatonBreakpoint implements Automaton {
         @Override
         public void setNumber(int number) {
         }
-        
+
         @Override
         public boolean isNeutral() {
             return this == NEUTRAL;
         }
-        
+
         @Override
         public boolean isAccepting() {
             return this == ACCEPTING;
@@ -102,11 +101,11 @@ public final class AutomatonBreakpoint implements Automaton {
             return this == REJECTING;
         }
     }
-    
+
     private final class BreakpointCacheKey implements Cloneable {
         private AutomatonBreakpointState state;
         private BitSet guards;
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -114,7 +113,7 @@ public final class AutomatonBreakpoint implements Automaton {
             hash = guards.hashCode() + (hash << 6) + (hash << 16) - hash;
             return hash;
         }
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -124,7 +123,7 @@ public final class AutomatonBreakpoint implements Automaton {
             BreakpointCacheKey other = (BreakpointCacheKey) obj;
             return state.equals(other.state) && guards.equals(other.guards);
         }
-        
+
         @Override
         protected BreakpointCacheKey clone() {
             BreakpointCacheKey result = new BreakpointCacheKey();
@@ -133,11 +132,11 @@ public final class AutomatonBreakpoint implements Automaton {
             return result;
         }
     }
-    
+
     private final class BreakpointCacheValue {
         private final AutomatonBreakpointState state;
         private final AutomatonBreakpointLabelEnum labeling;
-        
+
         BreakpointCacheValue(AutomatonBreakpointState state,
                 AutomatonBreakpointLabelEnum labeling) {
             assert state != null;
@@ -160,34 +159,34 @@ public final class AutomatonBreakpoint implements Automaton {
     private final BreakpointCacheKey breakpointCacheKey = new BreakpointCacheKey();
 
     private AutomatonBreakpoint(Builder builder) {
-    	this.buechi = builder.getBuechi();
+        this.buechi = builder.getBuechi();
         BitSet initStates = null;
         if (builder.getInit() == null) {
-        	initStates = buechi.getGraph().getInitialNodes();
+            initStates = buechi.getGraph().getInitialNodes();
         } else {
-        	initStates = builder.getInit().getStates();
+            initStates = builder.getInit().getStates();
         }
         this.numLabels = buechi.getNumLabels();
         this.automaton = buechi.getGraph();
         this.initState = makeUnique(new AutomatonBreakpointState(this, initStates));
         this.trueState = buechi.getTrueState();
         this.expressions = buechi.getExpressions();
-    	guardsValid = UtilBitSet.newBitSetUnbounded();
+        guardsValid = UtilBitSet.newBitSetUnbounded();
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public int getInitState() {
         return initState.getNumber();
     }
-    
+
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+    {
         AutomatonBreakpointState breakpointState = (AutomatonBreakpointState) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(breakpointState);
@@ -244,9 +243,9 @@ public final class AutomatonBreakpoint implements Automaton {
         succLabel = makeUnique(succLabel);
         insertCache();
     }
-    
+
     private void lookupCache(AutomatonBreakpointState breakpointState)
-            throws EPMCException {
+    {
         int entryNr = 0;
         EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < automaton.getNumNodes(); state++) {
@@ -303,17 +302,17 @@ public final class AutomatonBreakpoint implements Automaton {
     public int getSuccessorLabel() {
         return succLabel.getNumber();
     }
-    
+
     int getNumLabels() {
         return numLabels;
     }
-    
+
     GraphExplicit getGraph() {
         return automaton;
     }
-    
+
     @Override
-	public Buechi getBuechi() {
+    public Buechi getBuechi() {
         return buechi;
     }
 
@@ -321,7 +320,7 @@ public final class AutomatonBreakpoint implements Automaton {
     public Expression[] getExpressions() {
         return expressions;
     }
-    
+
     @Override
     public int getNumStates() {
         return automatonMaps.getNumStates();

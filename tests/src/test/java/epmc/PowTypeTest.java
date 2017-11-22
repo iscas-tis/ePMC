@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -25,7 +25,6 @@ import static epmc.modelchecker.TestHelper.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.graph.TestHelperGraph;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ExploreStatistics;
@@ -39,14 +38,14 @@ import epmc.options.Options;
  * @author Ernst Moritz Hahn
  */
 public final class PowTypeTest {
-	
+
     @BeforeClass
     public static void initialise() {
         prepare();
     }
 
     @Test
-    public void powTypeTest() throws EPMCException {
+    public void powTypeTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

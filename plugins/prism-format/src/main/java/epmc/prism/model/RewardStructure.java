@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -60,15 +60,15 @@ public final class RewardStructure implements Iterable<Reward> {
             }
         }
     }
-    
+
     public String getName() {
         return name;
     }
-    
+
     List<Reward> getRewards() {
         return rewardsExt;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -83,7 +83,7 @@ public final class RewardStructure implements Iterable<Reward> {
         builder.append("endrewards");
         return builder.toString();
     }
-    
+
     public Positional getPositional() {
         return positional;
     }
@@ -92,15 +92,15 @@ public final class RewardStructure implements Iterable<Reward> {
     public Iterator<Reward> iterator() {
         return rewards.iterator();
     }
-    
+
     public List<StateReward> getStateRewards() {
         return stateRewardsExt;
     }
-    
+
     public List<TransitionReward> getTransitionRewards() {
         return transRewardsExt;
     }
-    
+
     RewardStructure replace(Map<Expression, Expression> map) {
         List<Reward> newRewards = new ArrayList<>();
         for (Reward rew : rewards) {

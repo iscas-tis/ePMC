@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lumping;
 
-import epmc.error.EPMCException;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 
@@ -51,7 +50,7 @@ public interface LumperExplicit {
      * @param objective graph solver objective to use
      */
     void setOriginal(GraphSolverObjectiveExplicit objective);
-    
+
     /**
      * Checks whether lumper can perform lumping for the given configuration.
      * 
@@ -71,16 +70,15 @@ public interface LumperExplicit {
      * @return whether lumper can perform lumping for the given configuration
      */
     boolean canLump();
-    
+
     /**
      * Perform lumping for given configuration.
      * The method may only be called if an immediately preceding call to {@link
      * #canLump()} would be allowed and returns or would return {@code true}.
      * The method may only be called once for a given object.
      * 
-     * @throws EPMCException thrown if an error occurs during computation
      */
-    void lump() throws EPMCException;
+    void lump();
 
     /**
      * Obtain quotient model.
@@ -90,6 +88,6 @@ public interface LumperExplicit {
      * @return quotient model
      */
     GraphSolverObjectiveExplicit getQuotient();
-    
-    void quotientToOriginal() throws EPMCException;
+
+    void quotientToOriginal();
 }

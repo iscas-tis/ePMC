@@ -16,64 +16,76 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorIff;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorIff;
 
-public enum OperatorEvaluatorIff implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorIff implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorIff.IFF;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		for (Type type : types) {
-			if (!TypeBoolean.isBoolean(type)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
 
-    @Override
-    public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorIff.IFF);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-        return UtilValue.booleanResultType(types);
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorIff.IFF) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            for (Type type : types) {
+                if (!TypeBoolean.is(type)) {
+                    return null;
+                }
+            }
+            return new OperatorEvaluatorIff(this);
+        }
+    }
+
+    private OperatorEvaluatorIff(Builder builder) {
     }
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-    	ValueBoolean.asBoolean(result).set(
-    			ValueBoolean.asBoolean(operands[0]).getBoolean() == ValueBoolean.asBoolean(operands[1]).getBoolean());
+    public Type resultType() {
+        return TypeBoolean.get();
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        ValueBoolean.as(result).set(
+                ValueBoolean.as(operands[0]).getBoolean() == ValueBoolean.as(operands[1]).getBoolean());
     }
 }

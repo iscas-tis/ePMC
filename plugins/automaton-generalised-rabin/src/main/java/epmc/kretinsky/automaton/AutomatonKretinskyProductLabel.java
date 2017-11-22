@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -24,14 +24,13 @@ package epmc.kretinsky.automaton;
 import java.util.Arrays;
 
 import epmc.automaton.AutomatonLabelUtil;
-import epmc.error.EPMCException;
 
 public final class AutomatonKretinskyProductLabel implements AutomatonGeneralisedRabinLabel, AutomatonLabelUtil {
     private final AutomatonKretinskyProduct observer;
     private int number;
     private AutomatonKretinskyProductState state;
     private AutomatonLabelUtil[] succLabel;
-    
+
     public AutomatonKretinskyProductLabel(
             AutomatonKretinskyProduct observerKretinskyProduct, AutomatonKretinskyProductState current, AutomatonLabelUtil[] succLabel) {
         this.state = current;
@@ -40,7 +39,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     }
 
     @Override
-    public boolean isAccepting(int pair, int number) throws EPMCException {
+    public boolean isAccepting(int pair, int number) {
         int[] acceptance = observer.getAcceptance(pair);
         int slaveNr = observer.acceptanceToSlaveNumber(pair, number);
         AutomatonSlaveLabel label = (AutomatonSlaveLabel) succLabel[slaveNr + 1];
@@ -49,7 +48,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     }
 
     @Override
-    public boolean isStable(int pair) throws EPMCException {
+    public boolean isStable(int pair) {
         if (!state.isStable(pair)) {
             return false;
         }
@@ -64,7 +63,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -90,7 +89,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
         }
         return true;
     }
-    
+
     @Override
     public int getNumber() {
         return this.number;
@@ -100,7 +99,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
     public void setNumber(int number) {
         this.number = number;
     }
-    
+
     public void toString(StringBuilder builder) {
         try {
             for (int pair = 0; pair < observer.getNumPairs(); pair++) {
@@ -119,7 +118,7 @@ public final class AutomatonKretinskyProductLabel implements AutomatonGeneralise
             builder.append(e);
         }
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

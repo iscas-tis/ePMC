@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -30,52 +30,51 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.util.UtilJSON;
 
 public final class Metadata implements JANINode {
-	Map<String,String> values = new LinkedHashMap<>();
-	private ModelJANI model;
+    Map<String,String> values = new LinkedHashMap<>();
+    private ModelJANI model;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		assert model != null;
-		assert value != null;
-		JsonObject object = UtilJSON.toObjectString(value);
-		for (Entry<String, JsonValue> entry : object.entrySet()) {
-			values.put(entry.getKey(), value.toString());
-		}
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() {
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		for (Entry<String, String> entry : values.entrySet()) {
-			builder.add(entry.getKey(), entry.getValue());
-		}
-		return builder.build();
-	}
-	
-	public Map<String,String> getValues() {
-		return Collections.unmodifiableMap(values);
-	}
-	
-	public void put(String key, String value) {
-		values.put(key, value);
-	}
-	
-	public String get(String key) {
-		return values.get(key);
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        JsonObject object = UtilJSON.toObjectString(value);
+        for (Entry<String, JsonValue> entry : object.entrySet()) {
+            values.put(entry.getKey(), value.toString());
+        }
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        for (Entry<String, String> entry : values.entrySet()) {
+            builder.add(entry.getKey(), entry.getValue());
+        }
+        return builder.build();
+    }
+
+    public Map<String,String> getValues() {
+        return Collections.unmodifiableMap(values);
+    }
+
+    public void put(String key, String value) {
+        values.put(key, value);
+    }
+
+    public String get(String key) {
+        return values.get(key);
+    }
 }

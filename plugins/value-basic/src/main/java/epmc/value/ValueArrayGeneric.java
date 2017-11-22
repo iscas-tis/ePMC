@@ -16,56 +16,42 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
+import epmc.operator.OperatorSet;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class ValueArrayGeneric implements ValueArray {
+    private final static String SPACE = " ";
     private final TypeArrayGeneric type;
+    private final OperatorEvaluator set;
     private Value[] content;
-    private boolean immutable;
-	private int size;
+    private int size;
 
     ValueArrayGeneric(TypeArrayGeneric type) {
         this.type = type;
         this.content = new Value[0];
-    }
-    
-    @Override
-    public ValueArrayGeneric clone() {
-        ValueArrayGeneric clone = getType().newValue();
-        clone.set(this);
-        return clone;
-    }
-
-    void setContent(Type entryType, Value[] content) throws EPMCException {
-        assert !isImmutable();
-        for (int index = 0; index < size(); index++) {
-            this.content[index].set(content[index]);
-        }
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, type.getEntryType(), type.getEntryType());
     }
 
     @Override
     public void set(Value value, int index) {
         assert value != null;
-        assert getType().getEntryType().canImport(value.getType()) : getType().getEntryType() + " " + value + " " + value.getType();
         assert index >= 0;
         assert index < size();
-        content[index].set(value);
+        set.apply(content[index], value);
     }
 
     @Override
     public void get(Value value, int index) {
         assert value != null;
-        assert value.getType().canImport(getType().getEntryType());
         assert index >= 0 : index;
-        assert index < size() : index + " " + size();
-        value.set(content[index]);
+        assert index < size() : index + SPACE + size();
+        set.apply(value, content[index]);
     }
 
     @Override
@@ -81,42 +67,25 @@ public final class ValueArrayGeneric implements ValueArray {
     public TypeArrayGeneric getType() {
         return type;
     }
-    
-    @Override
-    public void setImmutable() {
-        immutable = true;
-    }
-    
-    @Override
-    public boolean isImmutable() {
-        return immutable;
-    }
 
     @Override
-    public void set(String value) throws EPMCException {
-        // TODO Auto-generated method stub
-        
-    }
-
-	@Override
-	public void setSize(int size) {
-        assert !isImmutable();
+    public void setSize(int size) {
         assert size >= 0;
         Type entryType = getType().getEntryType();
         this.content = new Value[size];
         for (int index = 0; index < size; index++) {
-        	this.content[index] = entryType.newValue();
+            this.content[index] = entryType.newValue();
         }
         this.size = size;
-	}
+    }
 
-	@Override
-	public int size() {
-		return size;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilValue.arrayToString(this);
-	}
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public String toString() {
+        return UtilValue.arrayToString(this);
+    }
 }

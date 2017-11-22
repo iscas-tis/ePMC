@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -46,7 +46,7 @@ public final class RMIConnectionData {
         this.name = name;
         this.port = port;
     }
-    
+
     /**
      * Obtain server name.
      * 

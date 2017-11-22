@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.Model;
 
 // TODO documentation
@@ -31,14 +30,13 @@ import epmc.modelchecker.Model;
  * @author Ernst Moritz Hahn
  */
 public interface ModelJANIConverter extends Model {
-	/**
-	 * Convert model to equivalent JANI representation.
-	 * An exception might be thrown in case the concrete model instance uses
-	 * features which cannot be converted to a JANI model (at present).
-	 * 
-	 * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
-	 * @return JANI representation of model
-	 * @throws EPMCException thrown in case of problems
-	 */
-	ModelJANI toJANI(boolean forExporting) throws EPMCException;
+    /**
+     * Convert model to equivalent JANI representation.
+     * An exception might be thrown in case the concrete model instance uses
+     * features which cannot be converted to a JANI model (at present).
+     * 
+     * @param forExporting when set to true, the method transforms the JANI structures so to agree with the JANI-specification
+     * @return JANI representation of model
+     */
+    ModelJANI toJANI(boolean forExporting);
 }

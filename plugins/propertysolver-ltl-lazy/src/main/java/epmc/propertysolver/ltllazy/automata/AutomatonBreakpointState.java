@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy.automata;
 
@@ -31,7 +31,7 @@ final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonSta
     private final BitSet children;
     private final AutomatonBreakpoint automaton;
     private int number = 0;
-    
+
     AutomatonBreakpointState(AutomatonBreakpoint automaton,
             BitSet states, int acceptance, BitSet children) {
         this.automaton = automaton;
@@ -43,7 +43,7 @@ final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonSta
     AutomatonBreakpointState(AutomatonBreakpoint automaton, BitSet states) {
         this(automaton, states, 0, UtilBitSet.newBitSetUnbounded());
     }
-    
+
     AutomatonBreakpointState(AutomatonBreakpoint automaton,
             AutomatonSubsetState state) {
         this(automaton, state.getStates().clone(), 0, UtilBitSet.newBitSetUnbounded());
@@ -52,34 +52,34 @@ final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonSta
     AutomatonBreakpointState(AutomatonBreakpointState other) {
         this(other.getAutomaton(), other.states, other.acceptance, other.children);
     }
-    
+
     @Override
     protected AutomatonBreakpointState clone() {
         return new AutomatonBreakpointState(this);
     }
-    
+
     @Override
     public AutomatonBreakpoint getAutomaton() {
         return automaton;
     }
-    
+
     @Override
     public String toString() {
         return states + " " + acceptance + " " + children;
     }
-    
+
     boolean getState(int index) {
         return states.get(index);
     }
-    
+
     int getAcceptance() {
         return acceptance;
     }
-    
+
     boolean getChild(int index) {
         return children.get(index);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof AutomatonBreakpointState)) {
@@ -90,7 +90,7 @@ final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonSta
                 && this.acceptance == other.acceptance
                 && this.children.equals(other.children);
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;

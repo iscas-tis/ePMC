@@ -16,13 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
 public final class ModelNamesPRISM {
     private final static String PREFIX = System.getProperty("user.home") + "/prism-examples/";
-//    private final static String PREFIX = "/Users/emhahn/prism-4.2.1-src/examples/";
+    //    private final static String PREFIX = "/Users/emhahn/prism-4.2.1-src/examples/";
     private final static String PREFIX_PTA = PREFIX + "pta/";
 
     private final static String PREFIX_HP = "/Users/emhahn/prism-models-homepage/";
@@ -157,7 +157,7 @@ public final class ModelNamesPRISM {
     public final static String UAV_MDP_MODEL = PREFIX_HP + "uav-mdp.nm";
     public final static String VIRUS_MODEL = PREFIX_HP + "virus%d.nm";
     public final static String WALKERS_RING_LL_MODEL = PREFIX_HP + "walkers_ringLL.sm";
-    
+
     public final static String PTA_CSMA_ABST_MODEL = PREFIX_PTA + "csma/abst/csma.nm";
     public final static String PTA_CSMA_ABST_PROPERTY = PREFIX_PTA + "csma/abst/deadline.pctl";
     public final static String PTA_CSMA_FULL_MODEL = PREFIX_PTA + "csma/full/csma.nm";

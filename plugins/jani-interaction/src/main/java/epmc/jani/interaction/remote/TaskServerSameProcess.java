@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -25,8 +25,6 @@ import static epmc.error.UtilError.fail;
 import java.rmi.NoSuchObjectException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-
-import epmc.error.EPMCException;
 
 /**
  * Task server which runs in the same process as the one who starts it.
@@ -42,7 +40,7 @@ public final class TaskServerSameProcess implements TaskServer {
     private JANIServer server;
 
     @Override
-    public void start() throws EPMCException {
+    public void start() {
         try {
             server = new JANIServer(null, 0);
         } catch (RemoteException e) {
@@ -51,7 +49,7 @@ public final class TaskServerSameProcess implements TaskServer {
     }
 
     @Override
-    public void stop() throws EPMCException {
+    public void stop() {
         try {
             UnicastRemoteObject.unexportObject(server, true);
         } catch (NoSuchObjectException e) {

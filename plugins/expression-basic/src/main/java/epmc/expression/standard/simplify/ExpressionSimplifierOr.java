@@ -16,25 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     public final static String IDENTIFIER = "or";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (!isOr(expression)) {
             return null;
@@ -87,7 +87,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isOr(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -96,22 +96,20 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorOr.OR);
     }
-    
-    private static boolean isFalse(Expression expression) throws EPMCException {
+
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return ValueBoolean.isFalse(UtilEvaluatorExplicit.evaluate(expression));
     }
-    
-    private static boolean isTrue(Expression expression) throws EPMCException {
+
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return ValueBoolean.isTrue(UtilEvaluatorExplicit.evaluate(expression));
     }
 }

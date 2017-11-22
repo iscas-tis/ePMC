@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatordd;
 
@@ -26,18 +26,17 @@ import java.util.Map;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.value.operator.OperatorEq;
+import epmc.operator.OperatorEq;
 
 public final class EvaluatorDDOperatorVectorEq implements EvaluatorDD {
     public final static String IDENTIFIER = "operator-vector-eq";
-    
+
     private Map<Expression, VariableDD> variables;
     private Expression expression;
     private DD dd;
     private boolean closed;
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
@@ -54,17 +53,17 @@ public final class EvaluatorDDOperatorVectorEq implements EvaluatorDD {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         return UtilEvaluatorDD.canVectorOperator(expression, OperatorEq.EQ, variables);
     }
 
     @Override
-    public void build() throws EPMCException {
+    public void build() {
         dd = UtilEvaluatorDD.applyVector(expression, variables, getContextDD()::twoCplEq);
     }
 
     @Override
-    public DD getDD() throws EPMCException {
+    public DD getDD() {
         assert dd != null;
         return dd;
     }
@@ -78,8 +77,8 @@ public final class EvaluatorDDOperatorVectorEq implements EvaluatorDD {
     public void close() {
         closed = UtilEvaluatorDD.close(closed, dd, null);
     }
-    
-    private ContextDD getContextDD() throws EPMCException {
+
+    private ContextDD getContextDD() {
         return ContextDD.get();
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -53,7 +53,7 @@ public final class IntDeque {
         assert initialSize >= 1;
         this.values = new int[initialSize];
     }
-    
+
     /**
      * Create new deque.
      * The initial capacity will be 1, but will be increased later if necessary.
@@ -61,7 +61,7 @@ public final class IntDeque {
     public IntDeque() {
         this(1);
     }
-    
+
     /**
      * Adds an element at the end of the deque.
      * 
@@ -127,7 +127,7 @@ public final class IntDeque {
         int elem = values[head];
         return elem;
     }
-    
+
     /**
      * Check whether deque is empty.
      * 

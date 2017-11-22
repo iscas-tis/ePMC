@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -27,7 +27,7 @@ public final class UtilBitSet {
     private static String CURLY_BRACE_CLOSE = "}";
     /** String containing a comma. */
     private static String COMMA = ",";
-    
+
     /**
      * Auxiliary method to implement {@link BitSet#equals(Object)}.
      * 

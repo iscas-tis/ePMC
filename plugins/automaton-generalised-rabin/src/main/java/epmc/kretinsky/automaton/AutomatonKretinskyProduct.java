@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -69,7 +69,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     private final TLongLongMap cache = new TLongLongHashMap(100, 0.5f, -1, -1);
     private final TLongLongMap cacheNoSlaves = new TLongLongHashMap(100, 0.5f, -1, -1);
     private boolean runSlaves = true;
-    
+
     @Override
     public int getNumStates() {
         return observerMaps.getNumStates();
@@ -92,21 +92,21 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         this.modelChecker = modelChecker;
     }
-    
+
     @Override
     public ModelChecker getModelChecker() {
         return this.modelChecker;
     }
-    
+
     public AutomatonKretinskyProduct() {
     }
-    
-    public void setExpression(Expression expression, Expression[] expressions) throws EPMCException {
+
+    public void setExpression(Expression expression, Expression[] expressions) {
         assert expression != null;
         assert expressions != null;
         this.disableUnusedSlaves = options.get(OptionsKretinsky.KRETINSKY_DISABLE_UNUSED_SLAVES);
@@ -130,7 +130,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         }
         AutomatonStateUtil[] init = new AutomatonStateUtil[allAutomata.length];
         this.expressions = expressions.clone();
-        
+
         preprocessSlaves();
 
         init[0] = master.numberToState(master.getInitState());
@@ -141,15 +141,15 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         initState = makeUnique(new AutomatonKretinskyProductState(this, init));
         prepareAcceptance();
     };
-    
+
     @Override
-    public void setExpression(Expression expression) throws EPMCException {
+    public void setExpression(Expression expression) {
         expression = UtilExpression.toNegationNormalForm(expression);
         Expression[] expressions = getModelChecker().relevantExpressionsArray(expression);
         setExpression(expression, expressions);
     }
-    
-    private void preprocessSlaves() throws EPMCException {
+
+    private void preprocessSlaves() {
         AutomatonStateUtil[] slStates = new AutomatonStateUtil[slaves.length];
         for (int i = 0; i < slaves.length; i++) {
             slStates[i] = slaves[i].numberToState(slaves[i].getInitState());
@@ -168,7 +168,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     }
 
     AutomatonKretinskyProduct(Expression expression, Expression[] expressions)
-            throws EPMCException {
+    {
         assert assertConstructor(expression, expressions);
         setExpression(expression, expressions);
     }
@@ -183,7 +183,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return true;
     }
 
-    private void disableUnusedSlaves(AutomatonStateUtil[] state) throws EPMCException {
+    private void disableUnusedSlaves(AutomatonStateUtil[] state) {
         if (!disableUnusedSlaves) {
             return;
         }
@@ -209,7 +209,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     }
 
     public void queryState(int modelState, int automatonState)
-            throws EPMCException {
+    {
         if (runSlaves) {
             long cacheKey = (((long) modelState) << 32) | (automatonState);
             long cacheVal = cache.get(cacheKey);
@@ -255,14 +255,14 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
             }
         }
     }
-   
+
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+    {
         int modelStateNr = expressionsUnique.valueToNumber(modelState);
         queryState(modelStateNr, automatonState);
     }
-    
+
     @Override
     public int getSuccessorState() {
         return succState;
@@ -282,7 +282,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public Expression[] getExpressions() {
         return expressions;
     }
-    
+
     @Override
     public void close() {
         for (Automaton automaton : allAutomata) {
@@ -307,7 +307,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         exporter.setAutomaton(this);
         return exporter.toString();
     }
-    
+
     @Override
     public AutomatonLabelUtil numberToLabel(int number) {
         return observerMaps.numberToLabel(number);
@@ -330,7 +330,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         return result;
     }
 
-    private void prepareAcceptance() throws EPMCException {
+    private void prepareAcceptance() {
         ContextDD contextDD = ContextDD.get();
         int numAcceptancePairs = 1;
         for (int i = 0; i < slaves.length; i++) {
@@ -340,7 +340,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
         acceptances = new int[numAcceptancePairs][];
         acceptancesToSlaveNumber = new int[numAcceptancePairs][];
         TIntList acceptanceToSlaveNumber = new TIntArrayList();
-        
+
         for (int acceptanceNumber = 0; acceptanceNumber < numAcceptancePairs; acceptanceNumber++) {
             int usedNumber = acceptanceNumber;
             int[] acceptance = new int[slaves.length];
@@ -358,7 +358,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
             acceptancesToSlaveNumber[acceptanceNumber] = acceptanceToSlaveNumber.toArray();
             acceptances[acceptanceNumber] = acceptance;
         }
-        
+
         System.out.println(numAcceptancePairs);
 
         pairSlaveToStates = new boolean[numAcceptancePairs][][];
@@ -375,7 +375,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
                 expressionsUnique.getExpressionDD(subformula);
                 leftSide = leftSide.andWith(expressionsUnique.getExpressionDD(subformula).clone());
             }
-            
+
             for (int slaveNr = 0; slaveNr < slaves.length; slaveNr++) {
                 AutomatonSlave slave = slaves[slaveNr];
                 AutomatonMojmir mojmir = slave.getMojmir();
@@ -394,47 +394,47 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     int[] getAcceptance(int number) {
         return acceptances[number];
     }
-    
+
     public int acceptanceToSlaveNumber(int pair, int number) {
         return acceptancesToSlaveNumber[pair][number];
     }
-    
+
     public boolean[] getStateAcc(int pair, int number) {
         return pairSlaveToStates[pair][number];
     }
-    
-    public static void main(String[] args) throws EPMCException {
+
+    public static void main(String[] args) {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsEPMC.PLUGIN, "/Users/emhahn/Documents/workspace/iscasmc/plugins/kretinsky");
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
-//        options.set(Options.KRETINSKY_GFFG_OPTIMISATION, false);
-//      options.set(Options.KRETINSKY_OPTIMISE_MOJMIR, KretinskyOptimiseMojmir.LANGUAGE);
-//        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
-//        Expression formula = contextExpression.parse("(a R b)");
-//          Expression formula = contextExpression.parse("(G(G(b)))");
-//        Expression formula = contextExpression.parse("(F(G(X((G(a)) | (X(G(b)))))))");
-//        Expression formula = contextExpression.parse("(F(G(a))) | (G(F(b)))");
-//      Expression formula = contextExpression.parse("((G(F(a))) | (F(G(b)))) & ((G(F(c))) | (F(G(d | (F(G(X(e))))))))");
-//        Expression formula = contextExpression.parse("(X((G(r)) | (r U (r & (s U p))))) U (G(r) | ((r) U (r & s)))");
-//        Expression formula = contextExpression.parse("(F(G(((a) & (X(X(b))) & (G(F(b)))) U (G((X(X(!c))) | (X(X(a & b))))))))");
-//      Expression formula = contextExpression.parse("(G(F(!c | (a & b))))");
-//        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");
-//        Expression formula = contextExpression.parse("(G(F(c & (X(X(a)))) & (F(a & (X(b))))))");
-//        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c))))");
-//        Expression formula = contextExpression.parse("((a) U (b))");
+        //        options.set(Options.KRETINSKY_GFFG_OPTIMISATION, false);
+        //      options.set(Options.KRETINSKY_OPTIMISE_MOJMIR, KretinskyOptimiseMojmir.LANGUAGE);
+        //        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
+        //        Expression formula = contextExpression.parse("(a R b)");
+        //          Expression formula = contextExpression.parse("(G(G(b)))");
+        //        Expression formula = contextExpression.parse("(F(G(X((G(a)) | (X(G(b)))))))");
+        //        Expression formula = contextExpression.parse("(F(G(a))) | (G(F(b)))");
+        //      Expression formula = contextExpression.parse("((G(F(a))) | (F(G(b)))) & ((G(F(c))) | (F(G(d | (F(G(X(e))))))))");
+        //        Expression formula = contextExpression.parse("(X((G(r)) | (r U (r & (s U p))))) U (G(r) | ((r) U (r & s)))");
+        //        Expression formula = contextExpression.parse("(F(G(((a) & (X(X(b))) & (G(F(b)))) U (G((X(X(!c))) | (X(X(a & b))))))))");
+        //      Expression formula = contextExpression.parse("(G(F(!c | (a & b))))");
+        //        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");
+        //        Expression formula = contextExpression.parse("(G(F(c & (X(X(a)))) & (F(a & (X(b))))))");
+        //        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c))))");
+        //        Expression formula = contextExpression.parse("((a) U (b))");
 
-//        Expression formula = contextExpression.parse("(G(G(G(a))))");
+        //        Expression formula = contextExpression.parse("(G(G(G(a))))");
         // TODO ask Jan Kretinsky about simplification steps for this formula
-//      Expression formula = contextExpression.parse("(F(G(a)))");
-//      Expression formula = contextExpression.parse("((G(a)))");
+        //      Expression formula = contextExpression.parse("(F(G(a)))");
+        //      Expression formula = contextExpression.parse("((G(a)))");
 
-        
-//        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c & (X(c))))))");
-//        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c))))");
-//        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F((b) | (X(c))))) & (G(F((c) & (X(X(a))))))");
-//        Expression formula = contextExpression.parse("(G((!(q)) | (((!(p)) | ((!(r)) U ((!(r)) & (s) & (!(z)) & (X(((!(r)) & (!(z))) U (t)))))) U ((r) | (G((!(p)) | ((s) & (!(z)) & (X((!(z)) U (t))))))))))");
-//        Expression formula = contextExpression.parse("(G(((p1) & (X(!(p1)))) | (X((p1) U ((p1) & (!(p2)) & (X((p1) & (p2) & ((p1) U ((p1) & (!(p2)) & (X((p1) & (p2))))))))))))");
+
+        //        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c & (X(c))))))");
+        //        Expression formula = contextExpression.parse("(G(F(a))) | (b & (G(F(c))))");
+        //        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F((b) | (X(c))))) & (G(F((c) & (X(X(a))))))");
+        //        Expression formula = contextExpression.parse("(G((!(q)) | (((!(p)) | ((!(r)) U ((!(r)) & (s) & (!(z)) & (X(((!(r)) & (!(z))) U (t)))))) U ((r) | (G((!(p)) | ((s) & (!(z)) & (X((!(z)) U (t))))))))))");
+        //        Expression formula = contextExpression.parse("(G(((p1) & (X(!(p1)))) | (X((p1) U ((p1) & (!(p2)) & (X((p1) & (p2) & ((p1) U ((p1) & (!(p2)) & (X((p1) & (p2))))))))))))");
         Expression formula = UtilModelChecker.parse(options, "(F(G((G(a)) & (G(b)) )))");
         Set<Expression> identifiers = formula.collectIdentifiers();
         int idNr = 0;
@@ -462,7 +462,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
     public DD expressionToDD(Expression expression) {
         return expressionsUnique.getExpressionDD(expression);
     }    
-    
+
     public void setExpressionUnique(ExpressionsUnique expressionsUnique) {
         this.expressionsUnique = expressionsUnique;
     }

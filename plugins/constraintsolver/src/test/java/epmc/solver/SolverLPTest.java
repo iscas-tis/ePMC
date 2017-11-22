@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.solver;
 
@@ -34,20 +34,19 @@ import epmc.constraintsolver.ConstraintSolverConfiguration;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
-import epmc.error.EPMCException;
 import epmc.value.TypeReal;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public class SolverLPTest {
-    
+
     @BeforeClass
     public static void initialise() {
         prepare();
     }
 
     @Test
-    public void wikipediaTest() throws EPMCException {
+    public void wikipediaTest() {
         final double tolerance = 1E-10;
         prepareOptions();
         ConstraintSolverConfiguration contextSolver = new ConstraintSolverConfiguration();
@@ -58,15 +57,15 @@ public class SolverLPTest {
         int y = problem.addVariable("y", TypeReal.get());
         TypeReal typeReal = TypeReal.get();
         int[] variables = new int[]{x, y};
-        
+
         problem.setObjective(new Value[]{newValue(typeReal, 300), newValue(typeReal, 500)},
                 variables);
         problem.addConstraint(new Value[]{newValue(typeReal, 1), newValue(typeReal, 2)}, variables,
-        ConstraintType.LE, newValue(typeReal, 170));
+                ConstraintType.LE, newValue(typeReal, 170));
         problem.addConstraint(new Value[]{newValue(typeReal, 1), newValue(typeReal, 1)}, variables,
-        ConstraintType.LE, newValue(typeReal, 150));
+                ConstraintType.LE, newValue(typeReal, 150));
         problem.addConstraint(new Value[]{newValue(typeReal, 0), newValue(typeReal, 3)}, variables,
-        ConstraintType.LE, newValue(typeReal, 180));
+                ConstraintType.LE, newValue(typeReal, 180));
         problem.solve();
         Value optimalValue = problem.getResultObjectiveValue();
         ValueArray optimalVariables = problem.getResultVariablesValuesSingleType();

@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.iterative.natives;
 
 import java.util.List;
 
-import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -72,7 +71,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     private ValueArrayAlgebra outputValues;
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
-	private ValueArrayAlgebra cumulativeStateRewards;
+    private ValueArrayAlgebra cumulativeStateRewards;
 
     @Override
     public String getIdentifier() {
@@ -81,35 +80,35 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
 
     @Override
     public void setGraphSolverObjective(GraphSolverObjectiveExplicit objective) {
-    	this.objective = objective;
+        this.objective = objective;
         origGraph = objective.getGraph();
     }
 
     @Override
     public boolean canHandle() {
-    	assert origGraph != null;
-        Semantics semantics = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        assert origGraph != null;
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         if (!SemanticsCTMC.isCTMC(semantics)
-         && !SemanticsDTMC.isDTMC(semantics)
-         && !SemanticsMDP.isMDP(semantics)) {
-        	return false;
+                && !SemanticsDTMC.isDTMC(semantics)
+                && !SemanticsMDP.isMDP(semantics)) {
+            return false;
         }
-    	if (!(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted)) {
             return false;
         }
         return true;
     }
 
     @Override
-    public void solve() throws EPMCException {
-    	prepareIterGraph();
-    	boundedCumulativeDiscounted();
+    public void solve() {
+        prepareIterGraph();
+        boundedCumulativeDiscounted();
         prepareResultValues();
     }
 
-    private void prepareIterGraph() throws EPMCException {
+    private void prepareIterGraph() {
         assert origGraph != null;
-        Semantics semanticsType = ValueObject.asObject(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semanticsType = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean uniformise = SemanticsContinuousTime.isContinuousTime(semanticsType) && (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted);
         this.builder = new GraphBuilderExplicit();
         builder.setInputGraph(origGraph);
@@ -118,10 +117,10 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         builder.addDerivedEdgeProperties(origGraph.getEdgeProperties());
         List<BitSet> sinks = null;
         if (objective instanceof GraphSolverObjectiveExplicitUnboundedCumulative) {
-        	GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
-        	sinks = objectiveUnboundedCumulative.getSinks();
+            GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
+            sinks = objectiveUnboundedCumulative.getSinks();
         }
-        
+
         if (sinks != null) {
             builder.addSinks(sinks);
         }
@@ -134,17 +133,17 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
         }
-        
+
         cumulativeStateRewards = null;
         if (objective instanceof GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) {
-        	GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        	cumulativeStateRewards = objectiveBoundedCumulativeDiscounted.getStateRewards();
+            GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
+            cumulativeStateRewards = objectiveBoundedCumulativeDiscounted.getStateRewards();
         }
         if (cumulativeStateRewards != null) {
-        	if (SemanticsNonDet.isNonDet(semanticsType)) {
-        		// TODO
-        	} else {
-        		int size = 0;
+            if (SemanticsNonDet.isNonDet(semanticsType)) {
+                // TODO
+            } else {
+                int size = 0;
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
@@ -152,8 +151,8 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
                     }
                     size++;
                 }
-        		ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
-        		Value value = cumulativeStateRewards.getType().getEntryType().newValue();
+                ValueArrayAlgebra cumulativeStateRewardsNew = UtilValue.newArray(cumulativeStateRewards.getType(), size);
+                Value value = cumulativeStateRewards.getType().getEntryType().newValue();
                 for (int origNode = 0; origNode < origGraph.getNumNodes(); origNode++) {
                     int iterNode = builder.inputToOutputNode(origNode);
                     if (iterNode < 0) {
@@ -163,37 +162,37 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
                     cumulativeStateRewardsNew.set(value, iterNode);
                 }
                 cumulativeStateRewards = cumulativeStateRewardsNew;
-        	}
+            }
         }
     }
 
-    private void prepareResultValues() throws EPMCException {
-    	TypeAlgebra typeWeight = TypeWeight.get();
-    	TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
-    	this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
-    	Value val = typeWeight.newValue();
-    	int origStateNr = 0;
-    	for (int i = 0; i < origGraph.getNumNodes(); i++) {
-    		int iterState = builder.inputToOutputNode(i);
-    		if (iterState == -1) {
-    			continue;
-    		}
-    		inputValues.get(val, iterState);
-    		outputValues.set(val, origStateNr);
-    		origStateNr++;
-    	}
-    	objective.setResult(outputValues);
+    private void prepareResultValues() {
+        TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArrayAlgebra typeArrayWeight = typeWeight.getTypeArray();
+        this.outputValues = UtilValue.newArray(typeArrayWeight, origGraph.computeNumStates());
+        Value val = typeWeight.newValue();
+        int origStateNr = 0;
+        for (int i = 0; i < origGraph.getNumNodes(); i++) {
+            int iterState = builder.inputToOutputNode(i);
+            if (iterState == -1) {
+                continue;
+            }
+            inputValues.get(val, iterState);
+            outputValues.set(val, origStateNr);
+            origStateNr++;
+        }
+        objective.setResult(outputValues);
     }
 
-    private void boundedCumulativeDiscounted() throws EPMCException {
+    private void boundedCumulativeDiscounted() {
         assert iterGraph != null;
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         GraphSolverObjectiveExplicitBoundedCumulativeDiscounted objectiveBoundedCumulativeDiscounted = (GraphSolverObjectiveExplicitBoundedCumulativeDiscounted) objective;
-        ValueInteger time = ValueInteger.asInteger(objectiveBoundedCumulativeDiscounted.getTime());
+        ValueInteger time = ValueInteger.as(objectiveBoundedCumulativeDiscounted.getTime());
         assert time.getInt() >= 0;
         ValueReal discount = objectiveBoundedCumulativeDiscounted.getDiscount();
         assert discount != null;
-        assert ValueReal.isReal(discount) || ValueInteger.isInteger(discount);
+        assert ValueReal.is(discount) || ValueInteger.is(discount);
         boolean min = objectiveBoundedCumulativeDiscounted.isMin();
         if (isSparseMarkovNative(iterGraph)) {
             dtmcBoundedCumulativeDiscountedNative(time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
@@ -204,18 +203,18 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         }
     }
 
-    
+
 
     /* auxiliary methods */
-    
+
     private static boolean isSparseNondet(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparseAlternate;
     }
-    
+
     private static boolean isSparseMarkov(GraphExplicit graph) {
         return graph instanceof GraphExplicitSparse;
     }
-    
+
     private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
@@ -226,7 +225,7 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         }
         return true;
     }
-    
+
     private static boolean isSparseMarkovNative(GraphExplicit graph) {
         if (!isSparseMarkov(graph)) {
             return false;
@@ -237,16 +236,16 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     private static GraphExplicitSparseAlternate asSparseNondet(GraphExplicit graph) {
         return (GraphExplicitSparseAlternate) graph;
     }
-    
+
     private static GraphExplicitSparse asSparseMarkov(GraphExplicit graph) {
         return (GraphExplicitSparse) graph;
     }
-    
+
     /* implementation/native call of/to iteration algorithms */    
-    
+
     private static void dtmcBoundedCumulativeDiscountedNative(int bound,
             ValueReal discount, GraphExplicitSparse graph, Value values, Value cumul)
-                    throws EPMCException {
+    {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -262,12 +261,12 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
 
     private static void mdpBoundedCumulativeDiscountedNative(int bound,
             ValueReal discount, GraphExplicitSparseAlternate graph, boolean min,
-            Value values, Value cumul) throws EPMCException {
+            Value values, Value cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
         int[] nondetBounds = graph.getNondetBoundsJava();
         int[] targets = graph.getTargetsJava();
-        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
         double discountDouble = discount.getDouble();
@@ -279,6 +278,6 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
     }
 
     private static ValueAlgebra newValueWeight() {
-    	return TypeWeight.get().newValue();
+        return TypeWeight.get().newValue();
     }
 }

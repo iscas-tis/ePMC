@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication.resultformatter;
 
@@ -28,57 +28,57 @@ import epmc.value.ValueDouble;
 
 
 public final class ResultFormatterDouble implements ResultFormatter {
-	public final static String IDENTIFIER = "double";
-	private final static String DECIMAL = "decimal";
-	private final static JsonValue DECIMAL_VALUE = UtilJSON.toStringValue(DECIMAL);
-	private Object result;
+    public final static String IDENTIFIER = "double";
+    private final static String DECIMAL = "decimal";
+    private final static JsonValue DECIMAL_VALUE = UtilJSON.toStringValue(DECIMAL);
+    private Object result;
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public void setResult(Object result) {
-		assert result != null;
-		this.result = result;
-	}
+    @Override
+    public void setResult(Object result) {
+        assert result != null;
+        this.result = result;
+    }
 
-	@Override
-	public boolean canHandle() {
-		if (!(result instanceof Value)) {
-			return false;
-		}
-		Value valueResult = (Value) result;
-		if (!ValueDouble.isDouble(valueResult)) {
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean canHandle() {
+        if (!(result instanceof Value)) {
+            return false;
+        }
+        Value valueResult = (Value) result;
+        if (!ValueDouble.is(valueResult)) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public String getLabel() {
-		assert canHandle();
-		return null;
-	}
+    @Override
+    public String getLabel() {
+        assert canHandle();
+        return null;
+    }
 
-	@Override
-	public JsonValue getType() {
-		assert canHandle();
-		return DECIMAL_VALUE;
-	}
+    @Override
+    public JsonValue getType() {
+        assert canHandle();
+        return DECIMAL_VALUE;
+    }
 
-	@Override
-	public JsonValue getValue() {
-		assert canHandle();
-		ValueDouble valueResult = ValueDouble.asDouble((Value) result);
-		return UtilJSON.toNumberValue(valueResult.getDouble());
-	}
+    @Override
+    public JsonValue getValue() {
+        assert canHandle();
+        ValueDouble valueResult = ValueDouble.as((Value) result);
+        return UtilJSON.toNumberValue(valueResult.getDouble());
+    }
 
-	@Override
-	public String getFormattedValue() {
-		assert canHandle();
-		return result.toString();
-	}
+    @Override
+    public String getFormattedValue() {
+        assert canHandle();
+        return result.toString();
+    }
 
 }

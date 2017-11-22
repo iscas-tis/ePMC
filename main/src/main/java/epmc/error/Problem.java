@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.error;
 
@@ -47,7 +47,7 @@ public final class Problem implements Serializable {
     private final String resourceBundle;
     /** Identifier of the problem, key in resource file to obtain user-readable text. */
     private final String name;
-    
+
     /**
      * Construct new problem identifier.
      * The problem identifier will be given the base name of the resource bundle
@@ -114,12 +114,12 @@ public final class Problem implements Serializable {
                 locale, Thread.currentThread().getContextClassLoader());
         return messages.getString(this.name);
     }
-    
+
     @Override
     public String toString() {
         return name;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -129,7 +129,7 @@ public final class Problem implements Serializable {
         Problem other = (Problem) obj;
         return name.equals(other.getIdentifier());
     }
-    
+
     @Override
     public int hashCode() {
         return name.hashCode();

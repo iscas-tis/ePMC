@@ -16,33 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.processor;
 
-import epmc.error.EPMCException;
 import epmc.jani.model.ModelJANI;
 
 public final class JANI2PRISMConverter {
 
-	private final ModelJANI jani;
-	
-	public JANI2PRISMConverter(ModelJANI jani) {
-		assert jani != null;
-		JANIComponentRegistrar.reset();
-		
-		this.jani = jani;
-	}
-	
-	public String convertModel() throws EPMCException {
-		assert jani != null;
-		
-		return ProcessorRegistrar.getProcessor(jani).toPRISM();
-	}
+    private final ModelJANI jani;
 
-	public String convertProperties() throws EPMCException {
-		assert jani != null;
-		
-		return ProcessorRegistrar.getProcessor(jani.getPropertyList()).toPRISM();
-	}
+    public JANI2PRISMConverter(ModelJANI jani) {
+        assert jani != null;
+        JANIComponentRegistrar.reset();
+
+        this.jani = jani;
+    }
+
+    public String convertModel() {
+        assert jani != null;
+
+        return ProcessorRegistrar.getProcessor(jani).toPRISM();
+    }
+
+    public String convertProperties() {
+        assert jani != null;
+
+        return ProcessorRegistrar.getProcessor(jani.getPropertyList()).toPRISM();
+    }
 }

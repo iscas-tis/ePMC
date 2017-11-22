@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -39,42 +38,42 @@ public interface StateMap extends Closeable, Cloneable {
 
     StateSet getStateSet();
 
-    StateMap restrict(StateSet to) throws EPMCException;
+    StateMap restrict(StateSet to);
 
-    StateMap apply(Operator operator, StateMap other) throws EPMCException;
+    StateMap apply(Operator operator, StateMap other);
 
     StateMap clone();
-    
-    Value applyOver(Operator operator, StateSet over) throws EPMCException;
-    
-    boolean isConstant() throws EPMCException;
 
-    void getRange(Value range, StateSet of) throws EPMCException;
-    
-    void getSomeValue(Value to, StateSet of) throws EPMCException;
+    Value applyOver(Operator operator, StateSet over);
 
-    default void getSomeValue(Value to) throws EPMCException {
+    boolean isConstant();
+
+    void getRange(Value range, StateSet of);
+
+    void getSomeValue(Value to, StateSet of);
+
+    default void getSomeValue(Value to) {
         assert to != null;
         getSomeValue(to, getStateSet());
     }
-    
+
     default StateMap applyWith(Operator operator, StateMap operand)
-            throws EPMCException {
+    {
         StateMap result = apply(operator, operand);
         close();
         operand.close();
         return result;
     }
-    
-    default Value getSomeValue() throws EPMCException {
+
+    default Value getSomeValue() {
         Value value = getType().newValue();
         getSomeValue(value);
         return value;
     }
-    
-    Value subsumeResult(StateSet initialStates) throws EPMCException;
-    
+
+    Value subsumeResult(StateSet initialStates);
+
     default Scheduler getScheduler() {
-    	return null;
+        return null;
     }
 }

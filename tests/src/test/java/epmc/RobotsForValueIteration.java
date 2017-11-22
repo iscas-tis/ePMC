@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -33,7 +33,6 @@ import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -48,7 +47,7 @@ public class RobotsForValueIteration {
     }
 
     @Test
-    public void smallTest() throws EPMCException {
+    public void smallTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -64,12 +63,12 @@ public class RobotsForValueIteration {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_REDUCED, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0) ]");
         assertEquals(1, result, tolerance);
-        
+
         close(options);
     }
-    
+
     @Test
-    public void mediumTest() throws EPMCException {
+    public void mediumTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -93,13 +92,13 @@ public class RobotsForValueIteration {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_ONE_DIR, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0 & box1At = 1) ]");
         assertEquals(1, result, tolerance);
-        
+
         options.set(GRAPHSOLVER_ITERATIVE_NATIVE, false);
         constants.put("N", "10");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOT_ONE_DIR, "Pmax=? [ F ((!running) & robotAt = 0 & box0At = 0 & box1At = 1) ]");
         assertEquals(1, result, tolerance);
-        
+
         close(options);
     }
 }

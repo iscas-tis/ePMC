@@ -16,27 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
 import epmc.value.ContextValue;
 import epmc.value.Type;
-import epmc.value.Value;
 
 public final class TypeInterval implements TypeWeightTransition, TypeWeight {
-	public static boolean isInterval(Type type) {
-		return type instanceof TypeInterval;
-	}
-	
-	public static TypeInterval asInterval(Type type) {
-		if (type instanceof TypeInterval) {
-			return (TypeInterval) type;
-		} else {
-			return null;
-		}
-	}
-	
+    public static boolean is(Type type) {
+        return type instanceof TypeInterval;
+    }
+
+    public static TypeInterval as(Type type) {
+        if (type instanceof TypeInterval) {
+            return (TypeInterval) type;
+        } else {
+            return null;
+        }
+    }
+
     private final ValueInterval one;
     private final ValueInterval zero;
     private final ValueInterval posInf;
@@ -45,13 +44,13 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     public static TypeInterval get() {
         return ContextValue.get().getType(TypeInterval.class);
     }
-    
+
     public static void set(TypeInterval type) {
         assert type != null;
         ContextValue.get().setType(TypeInterval.class,
-        		ContextValue.get().makeUnique(type));
+                ContextValue.get().makeUnique(type));
     }
-    
+
     public TypeInterval() {
         TypeReal typeReal = TypeReal.get();
         one = new ValueInterval(this, typeReal.getOne(), typeReal.getOne());
@@ -59,91 +58,61 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
         posInf = new ValueInterval(this, typeReal.getPosInf(), typeReal.getPosInf());
         negInf = new ValueInterval(this, typeReal.getNegInf(), typeReal.getNegInf());
     }
-    
-    @Override
-    public boolean canImport(Type type) {
-        assert type != null;
-        if (type instanceof TypeInterval) {
-            return true;
-        }
-        if (type instanceof TypeInteger) {
-            return true;
-        }
-        if (TypeReal.isReal(type)) {
-            return true;
-        }
-        return false;
-    }
 
     @Override
     public ValueInterval newValue() {
         return new ValueInterval(this);
     }
-    
-    public ValueInterval newValue(Value lower, Value upper) {
-        assert lower != null;
-        assert upper != null;
-        assert ValueReal.isReal(lower) || ValueInteger.isInteger(lower);
-        assert ValueReal.isReal(upper) || ValueInteger.isInteger(upper);
-        ValueInterval result = newValue();
-        result.getIntervalLower().set(lower);
-        result.getIntervalUpper().set(upper);
-        return result;
-    }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("interval");
         return builder.toString();
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
         if (this.getClass() != obj.getClass()) {
             return false;
         }
-        Type other = (Type) obj;
-        if (!canImport(other) || !other.canImport(this)) {
-            return false;
-        }
         return true;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
         hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
         return hash;
     }
-    
+
     @Override
     public ValueInterval getOne() {
         return one;
     }
-    
+
     @Override
     public ValueInterval getZero() {
         return zero;
     }
-    
+
     public TypeReal getEntryType() {
         return TypeReal.get();
     }
-    
+
     @Override
-	public ValueInterval getPosInf() {
+    public ValueInterval getPosInf() {
         return posInf;
     }
-    
+
     @Override
     public TypeArrayInterval getTypeArray() {
         return ContextValue.get().makeUnique(new TypeArrayInterval(this));
     }
 
-	@Override
-	public ValueAlgebra getNegInf() {
-		return negInf;
-	}
+    @Override
+    public ValueAlgebra getNegInf() {
+        return negInf;
+    }
 }

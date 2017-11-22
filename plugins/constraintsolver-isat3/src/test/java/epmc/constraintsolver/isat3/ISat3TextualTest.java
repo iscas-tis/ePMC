@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.isat3;
 
@@ -35,7 +35,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.Feature;
 import epmc.constraintsolver.isat3.textual.ConstraintSolverISat3Textual;
 import epmc.constraintsolver.sat3.options.OptionsISat3;
-import epmc.error.EPMCException;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
@@ -44,7 +43,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 
 public class ISat3TextualTest {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -59,17 +58,16 @@ public class ISat3TextualTest {
      * Prepare options including loading JANI plugin.
      * 
      * @return options usable for JANI model analysis
-     * @throws EPMCException thrown in case problem occurs
      */
-    private final static Options prepareISat3Options() throws EPMCException {
+    private final static Options prepareISat3Options() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options);
         return options;
     }
-    
+
     @Test
-    public void iSat3ManualTest() throws EPMCException {
+    public void iSat3ManualTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
@@ -90,9 +88,9 @@ public class ISat3TextualTest {
         assertEquals(ConstraintSolverResult.SAT, solver.solve());
         /* multiple solutions possible, don't test result values */
     }
-    
+
     @Test
-    public void andreaTest() throws EPMCException {
+    public void andreaTest() {
         Options options = prepareISat3Options();
         ConstraintSolverConfiguration configuration = new ConstraintSolverConfiguration();
         configuration.requireFeature(Feature.SMT);
@@ -118,6 +116,6 @@ public class ISat3TextualTest {
         assertEquals("0", solver.getResultVariablesValues()[2], 1E-100);
         assertEquals("2", solver.getResultVariablesValues()[3], 1E-100);
     }
-    
-    
+
+
 }

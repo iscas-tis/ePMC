@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -31,7 +31,7 @@ public interface SemanticsDTMC extends SemanticsDiscreteTime, SemanticsStochasti
      * 
      * @return whether this is a discrete-time Markov chain (DTMC)
      */
-	public static boolean isDTMC(Semantics semantics) {
-		return semantics instanceof SemanticsDTMC;
-	}
+    public static boolean isDTMC(Semantics semantics) {
+        return semantics instanceof SemanticsDTMC;
+    }
 }

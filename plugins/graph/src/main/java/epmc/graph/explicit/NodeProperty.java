@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -56,10 +55,9 @@ public interface NodeProperty {
      * stored e.g. in an array value or copied using {@link UtilValue#clone(Value)}.
      * 
      * @return value for node queried last
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get(int node) throws EPMCException;
-    
+    Value get(int node);
+
     /**
      * Set value for node queried last.
      * The value is set for the node from the latest call of
@@ -73,9 +71,8 @@ public interface NodeProperty {
      * {@link #getType()} may be set using this function.
      * 
      * @param value value to set for the node
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(int node, Value value) throws EPMCException;
+    void set(int node, Value value);
 
     /**
      * Obtain type of the values returned by {@link #get()}.
@@ -83,7 +80,7 @@ public interface NodeProperty {
      * @return type of the values returned by {@link #get()}
      */
     Type getType();
-    
+
 
     /* default methods */
 
@@ -94,12 +91,11 @@ public interface NodeProperty {
      * {@link AssertionError} may be thrown if assertions are enabled.
      * 
      * @return value of this node as boolean
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default boolean getBoolean(int node) throws EPMCException {
+    default boolean getBoolean(int node) {
         Value value = get(node);
-        assert ValueBoolean.isBoolean(value);
-        return ValueBoolean.asBoolean(value).getBoolean();
+        assert ValueBoolean.is(value);
+        return ValueBoolean.as(value).getBoolean();
     }
 
     /**
@@ -109,12 +105,11 @@ public interface NodeProperty {
      * {@link AssertionError} may be thrown if assertions are enabled.
      * 
      * @return value of this node as integer
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default int getInt(int node) throws EPMCException {
+    default int getInt(int node) {
         Value value = get(node);
-        assert ValueInteger.isInteger(value);
-        return ValueInteger.asInteger(value).getInt();
+        assert ValueInteger.is(value);
+        return ValueInteger.as(value).getInt();
     }
 
     /**
@@ -124,14 +119,13 @@ public interface NodeProperty {
      * {@link AssertionError} may be thrown if assertions are enabled.
      * 
      * @return value of this node as object
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T> T getObject(int node) throws EPMCException {
+    default <T> T getObject(int node) {
         Value value = get(node);
-        assert ValueObject.isObject(value) : value + " " + value.getType();
-        return ValueObject.asObject(value).getObject();
+        assert ValueObject.is(value) : value + " " + value.getType();
+        return ValueObject.as(value).getObject();
     }
-    
+
     /**
      * Return value of this node as enum.
      * In addition to the requirements of {@link #get()}, the node property must
@@ -139,14 +133,13 @@ public interface NodeProperty {
      * {@link AssertionError} may be thrown if assertions are enabled.
      * 
      * @return value of this node as enum
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T extends Enum<?>> T getEnum(int node) throws EPMCException {
+    default <T extends Enum<?>> T getEnum(int node) {
         Value value = get(node);
-        assert ValueEnum.isEnum(value);
-        return ValueEnum.asEnum(value).getEnum();
+        assert ValueEnum.is(value);
+        return ValueEnum.as(value).getEnum();
     }
-    
+
     /**
      * Set object value for node queried last.
      * The method has the same functionality as {@link #set(Value)}, except that
@@ -159,9 +152,8 @@ public interface NodeProperty {
      * not the case.
      * 
      * @param value object value to set for the node
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(int node, Object object) throws EPMCException {
+    default void set(int node, Object object) {
         assert object != null;
         assert false : getClass();
     }    
@@ -178,9 +170,8 @@ public interface NodeProperty {
      * this is not the case.
      * 
      * @param value integer value to set for the node
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(int node, int value) throws EPMCException {
+    default void set(int node, int value) {
         assert false : getClass();
     }    
 
@@ -196,9 +187,8 @@ public interface NodeProperty {
      * not the case.
      * 
      * @param value enum value to set for the node
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    default void set(int node, Enum<?> object) throws EPMCException {
+    default void set(int node, Enum<?> object) {
         assert object != null;
         assert false : getClass();
     }

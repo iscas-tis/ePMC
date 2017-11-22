@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.value.Type;
 
@@ -39,7 +38,7 @@ public interface Property {
      * @return unique identifier of property type
      */
     String getIdentifier();
-        
+
     /**
      * Parse a property in the syntax of this property type.
      * An exception might be thrown if the input string is not a valid
@@ -48,9 +47,8 @@ public interface Property {
      * 
      * @param expression expression to be parsed.
      * @return parsed expression
-     * @throws EPMCException parsing failed, e.g. due to syntax errors
      */
-    Expression parseExpression(InputStream expression) throws EPMCException;
+    Expression parseExpression(InputStream expression);
 
     /**
      * Parse a type in the syntax of this property type.
@@ -60,19 +58,17 @@ public interface Property {
      * 
      * @param expression expression to be parsed.
      * @return parsed expression
-     * @throws EPMCException parsing failed, e.g. due to syntax errors
      */
-    Type parseType(String type) throws EPMCException;
-    
+    Type parseType(String type);
+
     /**
      * Reads a complete list of properties in the format of this property type.
      * 
      * @param properties where to store properties
      * @param stream stream from which to read the properties
-     * @throws EPMCException thrown in case of problems during reading
      */
-    void readProperties(RawProperties properties, InputStream stream) throws EPMCException;
-    
+    void readProperties(RawProperties properties, InputStream stream);
+
     /**
      * Writes a complete list of properties in the format of this property type.
      * This will only work if all properties are of the property type of this
@@ -80,7 +76,6 @@ public interface Property {
      * 
      * @param properties properties to be stored
      * @param stream stream to store properties to
-     * @throws EPMCException thrown in case of problems during writing
      */
-    void writeProperties(RawProperties properties, OutputStream stream) throws EPMCException;
+    void writeProperties(RawProperties properties, OutputStream stream);
 }

@@ -16,55 +16,75 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value.operatorevaluator;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorSet;
+import epmc.value.EvaluatorCache;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorId;
 
-public enum OperatorEvaluatorId implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorId implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorId.ID;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length < 1) {
-			return false;
-		}
-		return true;
-	}
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
+        }
 
-    @Override
-    public Type resultType(Operator operator, Type... types) {
-    	assert operator != null;
-    	assert operator.equals(OperatorId.ID);
-    	assert types != null;
-    	for (Type type : types) {
-    		assert type != null;
-    	}
-        return types[0];
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            for (Type type : types) {
+                assert type != null;
+            }
+            built = true;
+            if (operator != OperatorId.ID) {
+                return null;
+            }
+            if (types.length < 1) {
+                return null;
+            }
+            return new OperatorEvaluatorId(this);
+        }
+    }
+
+    private final EvaluatorCache evaluatorCache = new EvaluatorCache();
+    private final Type resultType;
+    
+    private OperatorEvaluatorId(Builder builder) {
+        resultType = builder.types[0];
     }
 
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	assert result != null;
-    	assert operands != null;
-    	for (Value operand : operands) {
-    		assert operand != null;
-    	}
-        result.set(operands[0]);
+    public Type resultType() {
+        return resultType;
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        assert result != null;
+        assert operands != null;
+        for (Value operand : operands) {
+            assert operand != null;
+        }
+        OperatorEvaluator set = evaluatorCache.getEvaluator(OperatorSet.SET, operands[0].getType(), result.getType());
+        set.apply(result, operands[0]);
     }
 }

@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
@@ -66,43 +65,43 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
     private ModelChecker modelChecker;
     private GraphExplicit graph;
     private StateSetExplicit computeForStates;
-	private Expression property;
-	private StateSet forStates;
-	
+    private Expression property;
+    private StateSet forStates;
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	/** setModelchecker will be called by the main program
+
+    /** setModelchecker will be called by the main program
 	    to establish the procedure for model checking */
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
         // no need to use contextExpression
         //this.contextExpression = modelChecker.getContextExpression();
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
 
-	// initial states
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-
-	/**
-	 * main program will call this function to solve the model checking problem
-	 * */
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    // initial states
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    /**
+     * main program will call this function to solve the model checking problem
+     * */
+    @Override
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         assert property instanceof ExpressionQuantifier;
@@ -119,32 +118,31 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
 
     /** collect the states which satisfy a */
     private StateMap doSolve(Expression property, StateSet states)
-            throws EPMCException {
+    {
         // set states we are interested in
-    	this.computeForStates = (StateSetExplicit) states;
-        
-    	// use propertysolver propositional to check the innners
+        this.computeForStates = (StateSetExplicit) states;
+
+        // use propertysolver propositional to check the innners
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         Set<Expression> inners = UtilReachability.collectReachabilityInner(property);
-        for (Expression inner : inners) {
-            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
-            UtilGraph.registerResult(graph, inner, innerResult);
-        }
-        allStates.close();
-        
-        BitSet oneStates = UtilBitSet.newBitSetUnbounded();        
-        // collect all states which satisfied the propositional formula property
         Expression[] expressions = inners.toArray(new Expression[0]);
         Value[] evalValues = new Value[expressions.length];
         for (int varNr = 0; varNr < expressions.length; varNr++) {
-            evalValues[varNr] = expressions[varNr].getType(modelChecker.getLowLevel()).newValue();
+            Expression inner = expressions[varNr];
+            StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
+            UtilGraph.registerResult(graph, inner, innerResult);
+            evalValues[varNr] = innerResult.getType().newValue();
         }
- 
+        allStates.close();
+
+        BitSet oneStates = UtilBitSet.newBitSetUnbounded();        
+        // collect all states which satisfied the propositional formula property
+
         ExpressionTemporal propertyTemporal = (ExpressionTemporal)property;
         // evaluator for propositional formula a out of F a
         EvaluatorExplicitBoolean evaluator = UtilEvaluatorExplicit.newEvaluatorBoolean(
-        		propertyTemporal.getOperand1(), graph, expressions);
-        
+                propertyTemporal.getOperand1(), graph, expressions);
+
         for (int node = 0; node < graph.getNumNodes(); node ++) {
             // collect the truth value of all atomic propositions in this state
             for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
@@ -156,7 +154,7 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
             boolean sat = evaluator.evaluateBoolean(evalValues);
 
             if (sat)  oneStates.set(node);
-            
+
         }
         Log log = Options.get().get(OptionsMessages.LOG);
         log.send(MessagesReachability.REACHABILITY_NUM_ONE_STATES, graph.getNumNodes(), oneStates.cardinality());
@@ -164,20 +162,20 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
         ValueArrayAlgebra results = UtilReachability.computeReachabilityProbability(graph, oneStates);
         return prepareStateMap(results);
     }
-    
 
-    
+
+
     /** get results for states we are interested in */
     private StateMap prepareStateMap(ValueArrayAlgebra values) {
-    	TypeArray typeArray = TypeWeight.get().getTypeArray();
-    	ValueArray resultValues = UtilValue.newArray(typeArray, computeForStates.size());
-    	TypeAlgebra typeWeight = TypeWeight.get();
+        TypeArray typeArray = TypeWeight.get().getTypeArray();
+        ValueArray resultValues = UtilValue.newArray(typeArray, computeForStates.size());
+        TypeAlgebra typeWeight = TypeWeight.get();
         Value val = typeWeight.newValue();
         for (int i = 0; i < computeForStates.size(); i++) {
             values.get(val, i);
             resultValues.set(val, i);
         }
-        
+
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
@@ -185,28 +183,28 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
      * this function determine whether the propertysolver can handle the model checking task
      * */
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
         }
-        
+
         Semantics semantics = modelChecker.getModel().getSemantics();
         // only allow DTMC
         if (! SemanticsDTMC.isDTMC(semantics)) {
-        	return false;
+            return false;
         }
         // has P=? quantifier
         if (!(property instanceof ExpressionQuantifier)) {
             return false;
         }
-        
+
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         // only allow F a
         if (!UtilReachability.isReachability(propertyQuantifier.getQuantified())) {
             return false;
         }
-        
+
         // check whether atomic propositions can be handled by propertysolver-propositional (if exists)
         Set<Expression> inners = UtilReachability.collectReachabilityInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -214,53 +212,53 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
 
     // ---------------- some functions which are used for building the model graph
-	@Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	// semantics for the graph (MDP, MC and etc.)
-    	required.add(CommonProperties.SEMANTICS);
-    	return required;
+    @Override
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        // semantics for the graph (MDP, MC and etc.)
+        required.add(CommonProperties.SEMANTICS);
+        return required;
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	// for node properties
-    	Set<Object> required = new LinkedHashSet<>();
-    	// STATE and PLAYER properties are required for all models
-    	// will be used in compute SCCs
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	
-    	ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-    	// collect atomic propositions in the formula
+    public Set<Object> getRequiredNodeProperties() {
+        // for node properties
+        Set<Object> required = new LinkedHashSet<>();
+        // STATE and PLAYER properties are required for all models
+        // will be used in compute SCCs
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+
+        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        // collect atomic propositions in the formula
         Set<Expression> inners = UtilReachability.collectReachabilityInner(propertyQuantifier.getQuantified());
         // get the state set in graph
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         // evaluate the satisfaction for all atomic propositions in the states
         for (Expression inner : inners) {
-        	required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
+            required.addAll(modelChecker.getRequiredNodeProperties(inner, allStates));
         }
-    	return required;
+        return required;
     }
-    
+
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	// require the edges of constructed graph being labelled by weights (probabilities)
-    	required.add(CommonProperties.WEIGHT);
-    	return required;
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        // require the edges of constructed graph being labelled by weights (probabilities)
+        required.add(CommonProperties.WEIGHT);
+        return required;
     }
-    
 
 
-    
+
+
 
 
 }

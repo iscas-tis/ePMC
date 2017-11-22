@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -43,7 +43,7 @@ public final class ExpressionsUnique {
             return "dummy" + super.hashCode();
         }
     }
-    
+
     private final Map<Expression,Expression> uniqueMap;
     private final Map<Expression,DD> atomicMap;
     private final Map<DD,Expression> ddToExpressionMap = new HashMap<>();
@@ -61,7 +61,7 @@ public final class ExpressionsUnique {
     private Map<Expression, Expression> replacementInverse;
     private Dummy dummy = new Dummy();
 
-    public ExpressionsUnique(ContextExpression contextExpression, Expression[] expressions) throws EPMCException {
+    public ExpressionsUnique(ContextExpression contextExpression, Expression[] expressions) {
         assert contextExpression != null;
         assert expressions != null;
         computeReplacement(expressions);
@@ -72,12 +72,12 @@ public final class ExpressionsUnique {
         this.atomicMap = contextExpression.newMap();
         this.contextDD = contextExpression.getContextDD();
         Map<Expression,VariableDD> variables = contextExpression.newMap();
-        
+
         this.replaced = new Expression[expressions.length];
         for (int i = 0; i < expressions.length; i++) {
             this.replaced[i] = replacement.get(expressions[i]);
         }
-        
+
         this.ddReplacedVariables = new VariableDD[expressions.length];
         for (int i = 0; i < replaced.length; i++) {
             Expression repl = replaced[i];
@@ -94,8 +94,8 @@ public final class ExpressionsUnique {
         ddToExpressionMap.put(contextDD.newConstant(true), contextExpression.getTrue());
         expressionToDdMap.put(contextExpression.getTrue(), contextDD.newConstant(true));
     }
-    
-    Expression makeUnique(Expression formula) throws EPMCException {
+
+    Expression makeUnique(Expression formula) {
         Expression retrieved = uniqueMap.get(formula);
         if (retrieved != null) {
             return retrieved;
@@ -116,7 +116,7 @@ public final class ExpressionsUnique {
                 }
             }
         }
-        */
+         */
         if (retrieved == null) {
             ddToExpressionMap.put(dd.clone(), formula);
             expressionToDdMap.put(formula, dd.clone());
@@ -127,19 +127,19 @@ public final class ExpressionsUnique {
         return retrieved;
     }
 
-    DD formulaToDD(Expression formula) throws EPMCException {
+    DD formulaToDD(Expression formula) {
         DD result;
         if (formula.isLiteral() || formula.isIdentifier()) {
             result = replacedToDD.translate(formula);
         } else if (formula.isAnd()) {
             DD left = formulaToDD(makeUnique(formula.getOperand1()));
             DD right = formulaToDD(makeUnique(formula.getOperand2()));
-//            formula = ddToFormula(left).and(ddToFormula(right));
+            //            formula = ddToFormula(left).and(ddToFormula(right));
             result = left.andWith(right);
         } else if (formula.isOr()) {
             DD left = formulaToDD(makeUnique(formula.getOperand1()));
             DD right = formulaToDD(makeUnique(formula.getOperand2()));
-//            formula = ddToFormula(left).or(ddToFormula(right));
+            //            formula = ddToFormula(left).or(ddToFormula(right));
             result = left.orWith(right);
         } else if (formula.isNext()) {
             Expression inner = makeUnique(formula.getOperand1());
@@ -168,16 +168,16 @@ public final class ExpressionsUnique {
             result = inner.notWith();
         } else {
             assert false : formula;
-            result = null;
+        result = null;
         }
         assert result != null : formula;
-//        if (!formulaUniqueMap.containsKey(result)) {
-//            formulaUniqueMap.put(result, formula);
-//        }
+        //        if (!formulaUniqueMap.containsKey(result)) {
+        //            formulaUniqueMap.put(result, formula);
+        //        }
         return result;
     }
-    
-    private DD atomicExpressionToDD(Expression expression) throws EPMCException {
+
+    private DD atomicExpressionToDD(Expression expression) {
         DD entry = atomicMap.get();
         if (entry == null) {
             entry = contextDD.newVariable(expression.toString(), contextValue.getTypeBoolean(), 1)
@@ -186,15 +186,15 @@ public final class ExpressionsUnique {
         }
         return entry;
     }
-    
-    void simplifyGuard(DD guard, int expression, List<List<Expression>> result, List<Expression> current) throws EPMCException {
+
+    void simplifyGuard(DD guard, int expression, List<List<Expression>> result, List<Expression> current) {
         if (expression >= replaced.length) {
             if (!guard.isFalse()) {
                 result.add(new ArrayList<>(current));
             }
             return;
         }
-        
+
         Set<VariableDD> support = guard.highLevelSupport();
         Expression repl = replaced[expression];
         VariableDD varDD = ddReplacedVariables[expression];
@@ -224,8 +224,8 @@ public final class ExpressionsUnique {
             simplifyGuard(guard, expression + 1, result, current);
         }
     }
-    
-    Expression simplifyGuard(Expression guard) throws EPMCException {
+
+    Expression simplifyGuard(Expression guard) {
         DD dd = formulaToDD(guard);
         if (dd.isTrue()) {
             dd.dispose();
@@ -248,8 +248,8 @@ public final class ExpressionsUnique {
         }
         return result;
     }
-    
-    void enumerateExpressionsValues() throws EPMCException {
+
+    void enumerateExpressionsValues() {
         Set<Expression> identifiers = contextExpression.newSet();
         for (Expression expression : expressions) {
             identifiers.addAll(expression.collectIdentifiers());
@@ -259,7 +259,7 @@ public final class ExpressionsUnique {
             variables.put(identifier, contextDD.newVariable(identifier.toString(), identifier.getType(), 1));
         }
         ExpressionToDD checkE2D = new ExpressionToDD(contextExpression, contextDD, variables);
-        
+
         List<Value[]> values = new ArrayList<>();
         List<Expression> consistentExpressions = new ArrayList<>();
         int maxNumValues = 1;
@@ -299,19 +299,19 @@ public final class ExpressionsUnique {
         this.consistentValues = values.toArray(new Value[values.size()][]);
         this.consistentExpressions = consistentExpressions.toArray(new Expression[consistentExpressions.size()]);
     }
-    
+
     Expression[] getReplaced() {
         return replaced;
     }
-    
+
     Value[][] getConsistentValues() {
         return consistentValues;
     }
-    
+
     Expression[] getConsistentExpressions() {
         return consistentExpressions;
     }
-    
+
     int valueToNumber(Value[] value) {
         int number = valueToNumber.get(value);
         if (number == -1) {
@@ -324,7 +324,7 @@ public final class ExpressionsUnique {
         }
         return number;
     }
-    
+
     Expression valueEntryToExpression(Value[] succ) {
         Expression result = null;
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
@@ -354,13 +354,13 @@ public final class ExpressionsUnique {
     public Expression[] getExpressions() {
         return expressions;
     }
-    
+
     public Map<Expression, Expression> getReplacement() {
         return replacement;
     }
 
     private void computeReplacement(
-            Expression[] expressions) throws EPMCException {
+            Expression[] expressions) {
         assert expressions != null;
         if (expressions.length == 0) {
             replacement = Collections.emptyMap();
@@ -376,13 +376,13 @@ public final class ExpressionsUnique {
             replExpr.setType(expressions[i].getType());
         }
     }
-    
+
     DD getExpressionDD(Expression expression) {
         assert expression != null;
         assert expressionToDdMap.containsKey(expression);
         return expressionToDdMap.get();
     }
-    
+
     public Expression toUnreplaced(Expression expression) {
         return expression.replace(replacementInverse);
     }

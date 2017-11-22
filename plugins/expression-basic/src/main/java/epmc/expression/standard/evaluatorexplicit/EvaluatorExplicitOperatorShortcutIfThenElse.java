@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -24,22 +24,22 @@ import java.util.Map;
 
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorSet;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorIte;
 
 public final class EvaluatorExplicitOperatorShortcutIfThenElse implements EvaluatorExplicit, EvaluatorExplicitBoolean {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -51,7 +51,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -61,7 +61,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -71,13 +71,13 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             assert expression != null;
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
@@ -95,31 +95,33 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperatorShortcutIfThenElse(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
-    
+
     public final static String IDENTIFIER = "operator-shortcut-if-then-else";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;
     private final Value result;
+    private final OperatorEvaluator setThen;
+    private final OperatorEvaluator setElse;
 
-    private EvaluatorExplicitOperatorShortcutIfThenElse(Builder builder) throws EPMCException {
+    private EvaluatorExplicitOperatorShortcutIfThenElse(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -135,22 +137,24 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             types[opNr] = operands[opNr].getResultValue().getType();
             opNr++;
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(expression.getOperator(), types).newValue();
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
+        result = evaluator.resultType().newValue();
+        setThen = ContextValue.get().getEvaluator(OperatorSet.SET, types[1], evaluator.resultType());
+        setElse = ContextValue.get().getEvaluator(OperatorSet.SET, types[2], evaluator.resultType());
     }
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -158,29 +162,29 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean(values)) {
             EvaluatorExplicit thenOp = operands[1];
             thenOp.evaluate(values);
-            result.set(thenOp.getResultValue());
+            setThen.apply(result, thenOp.getResultValue());
         } else {
             EvaluatorExplicit elseOp = operands[2];
             elseOp.evaluate(values);
-            result.set(elseOp.getResultValue());
+            setElse.apply(result, elseOp.getResultValue());
         }
         return result;
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;
     }
 
-	@Override
-	public boolean evaluateBoolean(Value... values) throws EPMCException {
+    @Override
+    public boolean evaluateBoolean(Value... values) {
         for (Value variable : values) {
             assert variable != null;
         }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean(values)) {
-        	return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean(values);
+            return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean(values);
         } else {
-        	return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean(values);
+            return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean(values);
         }
-	}
+    }
 }

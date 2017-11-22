@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.remote;
 
@@ -59,10 +59,9 @@ public final class UtilRemote {
      * 
      * @param stream stream to read data/problems from
      * @return data about RMI connection to use
-     * @throws EPMCException thrown if the server indicates problems
      */
     public static RMIConnectionData readServerStatus(InputStream stream)
-            throws EPMCException {
+    {
         assert stream != null;
         Reader isr = new InputStreamReader(stream);
         BufferedReader br = new BufferedReader(isr);
@@ -94,7 +93,7 @@ public final class UtilRemote {
         }
         return new RMIConnectionData(name, port);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

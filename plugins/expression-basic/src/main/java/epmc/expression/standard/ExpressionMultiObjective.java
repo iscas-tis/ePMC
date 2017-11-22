@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -24,13 +24,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
-import epmc.error.EPMCException;
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
-import epmc.value.Type;
 
 public final class ExpressionMultiObjective implements Expression {
     public final static class Builder {
@@ -41,7 +36,7 @@ public final class ExpressionMultiObjective implements Expression {
             this.positional = positional;
             return this;
         }
-        
+
         private Positional getPositional() {
             return positional;
         }
@@ -50,16 +45,16 @@ public final class ExpressionMultiObjective implements Expression {
             this.operands = operands;
             return this;
         }
-        
+
         private List<Expression> getOperands() {
             return operands;
         }
-        
+
         public ExpressionMultiObjective build() {
             return new ExpressionMultiObjective(this);
         }
     }
-    
+
     private final Positional positional;
     private final List<Expression> children = new ArrayList<>();
     private final List<Expression> childrenExternal = Collections.unmodifiableList(children);
@@ -70,13 +65,13 @@ public final class ExpressionMultiObjective implements Expression {
         for (Expression operand : builder.getOperands()) {
             assert operand != null;
             // TODO
-//          assert child instanceof ExpressionQuantifier : child.getClass();
+            //          assert child instanceof ExpressionQuantifier : child.getClass();
 
         }
         this.children.addAll(builder.getOperands());
         this.positional = builder.getPositional();
     }
-    
+
     public Expression getOperand1() {
         return getChildren().get(0);
     }
@@ -90,9 +85,9 @@ public final class ExpressionMultiObjective implements Expression {
     }
 
     public List<Expression> getOperands() {
-    	return childrenExternal;
+        return childrenExternal;
     }
-    
+
     @Override
     public Expression replaceChildren(List<Expression> children) {
         return new Builder()
@@ -102,21 +97,6 @@ public final class ExpressionMultiObjective implements Expression {
     }
 
     @Override
-    public Type getType(ExpressionToType expressionToType) throws EPMCException {
-    	assert expressionToType != null;
-        Type result = expressionToType.getType(this);
-        if (result != null) {
-            return result;
-        }
-        Expression op1 = getOperand1();
-        if (isQuantEq(op1)) {
-            return TypeWeight.get();
-        } else {
-            return TypeBoolean.get();
-        }
-    }
-    
-    @Override
     public List<Expression> getChildren() {
         return children;
     }
@@ -125,7 +105,7 @@ public final class ExpressionMultiObjective implements Expression {
     public Positional getPositional() {
         return positional;
     }
-    
+
     @Override
     public final String toString() {
         List<Expression> children = getChildren();
@@ -160,7 +140,7 @@ public final class ExpressionMultiObjective implements Expression {
         }
         return true;
     }    
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -171,21 +151,12 @@ public final class ExpressionMultiObjective implements Expression {
         }
         return hash;
     }
-    
-    private boolean isQuantEq(Expression expression) {
-        assert expression != null;
-        if (!(expression instanceof ExpressionQuantifier)) {
-            return false;
-        }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
-        return expressionQuantifier.getCompareType().isEq();
-    }
 
-	@Override
-	public Expression replacePositional(Positional positional) {
-		return new ExpressionMultiObjective.Builder()
-				.setOperands(children)
-				.setPositional(positional)
-				.build();
-	}
+    @Override
+    public Expression replacePositional(Positional positional) {
+        return new ExpressionMultiObjective.Builder()
+                .setOperands(children)
+                .setPositional(positional)
+                .build();
+    }
 }

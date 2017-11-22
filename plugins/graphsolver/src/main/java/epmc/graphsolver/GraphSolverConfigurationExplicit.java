@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
-import epmc.error.EPMCException;
 import epmc.graphsolver.lumping.LumperExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.preprocessor.PreprocessorExplicit;
@@ -36,44 +35,44 @@ import epmc.util.Util;
 public final class GraphSolverConfigurationExplicit {
     private GraphSolverObjectiveExplicit objective;
     private GraphSolverExplicit graphSolver;
-	private boolean lumpBeforeGraphSolving;
+    private boolean lumpBeforeGraphSolving;
 
     GraphSolverConfigurationExplicit() {
         this.lumpBeforeGraphSolving = Options.get().getBoolean(OptionsGraphsolver.GRAPHSOLVER_LUMP_BEFORE_GRAPH_SOLVING);
     }
-    
+
     public void setLumpBeforeGraphSolving(boolean lumpBeforeGraphSolving) {
-		this.lumpBeforeGraphSolving = lumpBeforeGraphSolving;
-	}
-    
+        this.lumpBeforeGraphSolving = lumpBeforeGraphSolving;
+    }
+
     public boolean isLumpBeforeGraphSolving() {
-		return lumpBeforeGraphSolving;
-	}
-    
+        return lumpBeforeGraphSolving;
+    }
+
     public void setObjective(GraphSolverObjectiveExplicit objective) {
         this.objective = objective;
     }
 
-    public void solve() throws EPMCException {
+    public void solve() {
         preprocess();
         LumperExplicit lumper = getLumperExplicit();
         GraphSolverObjectiveExplicit objective;
         if (lumper != null) {
-        	lumper.lump();
-        	objective = lumper.getQuotient();
+            lumper.lump();
+            objective = lumper.getQuotient();
         } else {
-        	objective = this.objective;
+            objective = this.objective;
         }
         doSolve(objective);
         if (lumper != null) {
-        	lumper.quotientToOriginal();
+            lumper.quotientToOriginal();
         }
     }
 
     private LumperExplicit getLumperExplicit() {
-    	if (!lumpBeforeGraphSolving) {
-    		return null;
-    	}
+        if (!lumpBeforeGraphSolving) {
+            return null;
+        }
         Map<String,Class<? extends LumperExplicit>> lumpersExplicit = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
         Collection<String> lumperExplicitt = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
@@ -91,7 +90,7 @@ public final class GraphSolverConfigurationExplicit {
         return null;
     }
 
-    private void doSolve(GraphSolverObjectiveExplicit objective) throws EPMCException {
+    private void doSolve(GraphSolverObjectiveExplicit objective) {
         Collection<String> solvers = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER);
         Map<String,Class<GraphSolverExplicit>> solverClasses = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_SOLVER_CLASS);
         graphSolver = Util.getInstance(solverClasses, solvers,
@@ -102,7 +101,7 @@ public final class GraphSolverConfigurationExplicit {
         graphSolver.solve();
     }
 
-    private void preprocess() throws EPMCException {
+    private void preprocess() {
         Map<String,Class<? extends PreprocessorExplicit>> preprocessors = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT_CLASS);
         Collection<String> preprocessorsC = Options.get().get(OptionsGraphsolver.GRAPHSOLVER_PREPROCESSOR_EXPLICIT);
         for (String lumperId : preprocessorsC) {
@@ -113,8 +112,8 @@ public final class GraphSolverConfigurationExplicit {
             PreprocessorExplicit preprocessor = Util.getInstance(preprocessorClass);
             preprocessor.setObjective(objective);
             if (preprocessor.canHandle()) {
-            	preprocessor.process();
-            	return;
+                preprocessor.process();
+                return;
             }
         }
     }

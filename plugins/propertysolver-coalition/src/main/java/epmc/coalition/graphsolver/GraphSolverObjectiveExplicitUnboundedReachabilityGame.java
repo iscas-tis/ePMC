@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.coalition.graphsolver;
 
@@ -35,45 +35,45 @@ public final class GraphSolverObjectiveExplicitUnboundedReachabilityGame impleme
     private SchedulerSimple scheduler;
 
     @Override
-	public void setGraph(GraphExplicit graph) {
+    public void setGraph(GraphExplicit graph) {
         this.graph = graph;
     }
-    
+
     @Override
-	public GraphExplicit getGraph() {
+    public GraphExplicit getGraph() {
         return graph;
     }
-    
+
     public void setComputeScheduler(boolean computeScheduler) {
         this.computeScheduler = computeScheduler;
     }
-    
+
     public boolean isComputeScheduler() {
         return computeScheduler;
     }
-    
+
     public void setTarget(BitSet target) {
         this.target = target;
     }
-    
+
     public BitSet getTarget() {
         return target;
     }
-    
+
     @Override
- 	public void setResult(ValueArray result) {
-        this.result = ValueArrayAlgebra.asArrayAlgebra(result);
+    public void setResult(ValueArray result) {
+        this.result = ValueArrayAlgebra.as(result);
     }
-    
+
     @Override
-	public ValueArrayAlgebra getResult() {
+    public ValueArrayAlgebra getResult() {
         return result;
     }
-    
+
     public void setScheduler(SchedulerSimple scheduler) {
         this.scheduler = scheduler;
     }
-    
+
     public SchedulerSimple getScheduler() {
         return scheduler;
     }

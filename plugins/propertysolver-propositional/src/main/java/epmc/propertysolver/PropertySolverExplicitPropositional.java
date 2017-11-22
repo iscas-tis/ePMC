@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -28,7 +28,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
@@ -51,51 +50,51 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
     public final static String IDENTIFIER = "propositional-explicit";
     private ModelChecker modelChecker;
     private GraphExplicit graph;
-	private Expression property;
-	private StateSet forStates;
+    private Expression property;
+    private StateSet forStates;
 
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
         this.modelChecker = modelChecker;
         if (modelChecker.getEngine() instanceof EngineExplicit) {
-        	this.graph = modelChecker.getLowLevel();
+            this.graph = modelChecker.getLowLevel();
         }
     }
-    
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-	}
 
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-    
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         assert property != null;
         assert forStates != null;
         List<Expression> identifiers = new ArrayList<>();
         identifiers.addAll(UtilExpressionStandard.collectIdentifiers(property));
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(property, graph, identifiers.toArray(new Expression[0]));
         Value[] values = new Value[identifiers.size()];
-        
-        Type type = property.getType(graph);
+
+        Type type = evaluator.getType();
         assert type != null : property;
         ValueArray resultValues = UtilValue.newArray(type.getTypeArray(), forStates.size());
         StateSetExplicit forStatesExplicit = (StateSetExplicit) forStates;
         NodeProperty[] nodeProperties = new NodeProperty[identifiers.size()];
         for (int idNr = 0; idNr < identifiers.size(); idNr++) {
-        	nodeProperties[idNr] = graph.getNodeProperty(identifiers.get(idNr));
-        	assert nodeProperties[idNr] != null : identifiers.get(idNr);
+            nodeProperties[idNr] = graph.getNodeProperty(identifiers.get(idNr));
+            assert nodeProperties[idNr] != null : identifiers.get(idNr);
         }
         int forStateSize = forStates.size();
         for (int stateNr = 0; stateNr < forStateSize; stateNr++) {
             int state = forStatesExplicit.getExplicitIthState(stateNr);
             for (int idNr = 0; idNr < nodeProperties.length; idNr++) {
-            	values[idNr] = nodeProperties[idNr].get(state);
+                values[idNr] = nodeProperties[idNr].get(state);
             }
             evaluator.evaluate(values);
             Value entry = evaluator.getResultValue();
@@ -118,22 +117,22 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
-    }
-    
-    @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-        required.addAll(UtilExpressionStandard.collectIdentifiers(property));
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.addAll(UtilExpressionStandard.collectIdentifiers(property));
+        return Collections.unmodifiableSet(required);
+    }
+
+    @Override
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        return Collections.unmodifiableSet(required);
     }
 
     @Override

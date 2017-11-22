@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.plugin;
 
@@ -48,7 +48,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import epmc.error.EPMCException;
 import epmc.options.Options;
 import epmc.util.Util;
 
@@ -67,7 +66,7 @@ final class PluginLoader {
      * working on Linux, you must check whether the plugin loader also still
      * works on windows after a change.
      */
-    
+
     /** String "plugins:\n" for {@link #toString()} method. */
     private final static String TOSTRING_PLUGINS = "plugins:\n";
     /** String "\n" for {@link #toString()} method. */
@@ -122,7 +121,7 @@ final class PluginLoader {
     private final static String CLASS_FILE_ENDING = ".class";
     /** String containing a single space. */
     private final static String SPACE = " ";
-    
+
     /** Class loader constructed by this plugin loader. */
     private final ClassLoader classLoader;
     /** List of all plugins loaded. */
@@ -133,7 +132,7 @@ final class PluginLoader {
     private final Options options;
 
     PluginLoader(Options options, List<String> pluginPathStrings)
-            throws EPMCException {
+    {
         assert options != null;
         assert pluginPathStrings != null;
         for (String name : pluginPathStrings) {
@@ -165,7 +164,7 @@ final class PluginLoader {
         return new URLClassLoader(urls);
     }
 
-    private List<Path> buildAllPluginPaths(List<Path> pluginFiles) throws EPMCException {
+    private List<Path> buildAllPluginPaths(List<Path> pluginFiles) {
         assert pluginFiles != null;
         for (Path plugin : pluginFiles) {
             assert plugin != null;
@@ -189,12 +188,12 @@ final class PluginLoader {
 
         return result;
     }
-    
+
     List<Class<? extends PluginInterface>> getPluginInterfaceClasses() {
         return classes;
     }
 
-    private static List<Path> stringsToPaths(List<String> plugins) throws EPMCException {
+    private static List<Path> stringsToPaths(List<String> plugins) {
         assert plugins != null;
         for (String plugin : plugins) {
             assert plugin != null;
@@ -220,7 +219,7 @@ final class PluginLoader {
         return result;
     }
 
-    private void loadPluginClasses(Plugin plugin) throws EPMCException {
+    private void loadPluginClasses(Plugin plugin) {
         assert plugin != null;
         Path directory = plugin.getPath();
         boolean isJar = directory.toString().endsWith(JAR_ENDING);
@@ -228,11 +227,11 @@ final class PluginLoader {
     }
 
     private void readClassFileNames(Path path, boolean isJAR, Plugin plugin, Path directory)
-            throws EPMCException {
+    {
         assert path != null;
         assert plugin != null;
         assert directory != null;
-        
+
         if (Files.isRegularFile(path) && path.toString().endsWith(CLASS_FILE_ENDING)) {
             readClassFileNamesClass(path, isJAR, plugin, directory);
         } else if (Files.isRegularFile(path) && path.toString().endsWith(JAR_ENDING)) {
@@ -243,11 +242,11 @@ final class PluginLoader {
     }
 
     private void readClassFileNamesClass(Path path, boolean isJAR, Plugin plugin,
-            Path directory) throws EPMCException {
+            Path directory) {
         assert path != null;
         assert plugin != null;
         assert path != null;
-        
+
         String pathString = null;
         if (isJAR) {
             /* subpath in following line is indeed necessary, don't remove */
@@ -270,7 +269,7 @@ final class PluginLoader {
     }
 
     private void readClassFileNamesJAR(Path path, boolean isJAR, Plugin plugin,
-            Path directory) throws EPMCException {
+            Path directory) {
         try (FileSystem fs = FileSystems.newFileSystem(path, null)) {
             for (Path root : fs.getRootDirectories()) {
                 readClassFileNames(root, isJAR, plugin, directory);
@@ -281,7 +280,7 @@ final class PluginLoader {
     }
 
     private void readClassFileNamesDirectory(Path path, boolean isJAR,
-            Plugin plugin, Path directory) throws EPMCException {
+            Plugin plugin, Path directory) {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
             for (Path sub : stream) {
                 readClassFileNames(sub, isJAR, plugin, directory);
@@ -293,7 +292,7 @@ final class PluginLoader {
 
     @SuppressWarnings(UNCHECKED)
     private void processClass(Plugin plugin, Class<?> clazz)
-            throws EPMCException {
+    {
         assert plugin != null;
         assert clazz != null;
         if (isPluginClass(clazz)) {
@@ -306,7 +305,7 @@ final class PluginLoader {
         return name.substring(0, name.length() - 6).replace(SEPARATOR_CHAR, CLASS_NAME_SEPARATOR);
     }
 
-    private static boolean isPluginClass(Class<?> clazz) throws EPMCException {
+    private static boolean isPluginClass(Class<?> clazz) {
         assert clazz != null;
         if (Modifier.isAbstract(clazz.getModifiers())) {
             return false;
@@ -368,7 +367,7 @@ final class PluginLoader {
     }
 
     private List<Plugin> loadPlugins(ClassLoader classLoader, List<Path> pluginPaths)
-            throws EPMCException {
+    {
         assert classLoader != null;
         assert pluginPaths != null;
         for (Path path : pluginPaths) {
@@ -398,8 +397,7 @@ final class PluginLoader {
     /**
      * Perform sanity checks for plugins used.
      * It is checked whether each plugin is loaded only once and whether plugins
-     * depending on other plugins are loaded after their dependencies. If this
-     * is not the case, an {@link EPMCException} is thrown.
+     * depending on other plugins are loaded after their dependencies. 
      * This list of plugins must not be {@code null} and must not contain
      * {@code null} entries.
      * Note that the order of plugins is strict in the sense depending plugins
@@ -412,9 +410,8 @@ final class PluginLoader {
      * user careless about the order in which they are specified.
      * 
      * @param plugins list of plugins to be checked
-     * @throws EPMCException thrown if plugin list invalid according to above
      */
-    private void checkPluginSanity(List<Plugin> plugins) throws EPMCException {
+    private void checkPluginSanity(List<Plugin> plugins) {
         assert plugins != null;
         for (Plugin plugin : plugins) {
             assert plugin != null;
@@ -434,7 +431,7 @@ final class PluginLoader {
         }
     }
 
-    private static void addManifestInformation(Plugin plugin) throws EPMCException {
+    private static void addManifestInformation(Plugin plugin) {
         assert plugin != null;
         Path path = preparePathForReadingManifest(plugin.getPath());
         ensure(Files.isDirectory(path), ProblemsPlugin.PLUGIN_IO_PROBLEM, path);
@@ -471,13 +468,13 @@ final class PluginLoader {
         plugin.addDependencies(pluginDependenciesArray);
     }
 
-    private static Path preparePathForReadingManifest(Path path) throws EPMCException {
+    private static Path preparePathForReadingManifest(Path path) {
         assert path != null;
         if (!Files.isDirectory(path)) {
             try {
-            	// TODO leads to resource leak;
-            	// however, cannot return path of already closed file system
-            	FileSystem system = FileSystems.newFileSystem(path,
+                // TODO leads to resource leak;
+                // however, cannot return path of already closed file system
+                FileSystem system = FileSystems.newFileSystem(path,
                         PluginLoader.class.getClassLoader());
                 Iterator<Path> iterator = system.getRootDirectories().iterator();
                 assert iterator.hasNext();
@@ -491,7 +488,7 @@ final class PluginLoader {
         return path;
     }
 
-    private List<Path> getEmbeddedPluginsList() throws EPMCException {
+    private List<Path> getEmbeddedPluginsList() {
         Path origPath = null;
         boolean origIsJar = false;
         List<Path> result = null;
@@ -537,7 +534,7 @@ final class PluginLoader {
                 Path embeddedPluginPath = embeddedPluginsPath.resolve(pluginSub);
                 ensure(Files.exists(embeddedPluginPath), ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_FOUND, embeddedPluginPath);
                 ensure(Files.isReadable(embeddedPluginPath), ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_READABLE, embeddedPluginPath);
-//                checkPluginPath(embeddedPluginPath);
+                //                checkPluginPath(embeddedPluginPath);
                 assert Files.isDirectory(embeddedPluginPath) || !origIsJar;
                 result.add(embeddedPluginPath);
             }

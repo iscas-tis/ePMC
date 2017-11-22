@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -75,20 +75,20 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     private boolean useGFFGOptimisation;
     private KretinskyOptimiseMojmir optimisation;
     private Map<Expression,Expression> languageMap;
-    
+
     public AutomatonMojmir(Expression formula, ExpressionsUnique expressionsUnique,
-            boolean implicit, boolean simpleG) throws EPMCException {
+            boolean implicit, boolean simpleG) {
         formula = UtilExpression.toNegationNormalForm(formula);
         this.languageMap = contextExpression.newMap();
         this.expressionsUnique = expressionsUnique;
         this.implicit = implicit;
         this.simpleG = simpleG;
-        
+
         Options options = Options.get();
         this.useGFFGOptimisation = options.getBoolean(OptionsKretinsky.KRETINSKY_GFFG_OPTIMISATION);
         this.optimisation = options.get(OptionsKretinsky.KRETINSKY_OPTIMISE_MOJMIR);
         formula = formula.replace(expressionsUnique.getReplacement());
-                
+
         this.formulaEvaluator = contextExpression.newEvaluator(expressionsUnique.getReplaced());
         Map<Expression, Type> propositionalTypes = collectPropositionalTypes(formula);
         for (Expression propositional : propositionalTypes.keySet()) {
@@ -96,7 +96,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         }
         formulaEvaluator.addExpression(contextExpression.getFalse());
         formulaEvaluator.addExpression(contextExpression.getTrue()); 
-        
+
         formula = expressionsUnique.makeUnique(formula);
         this.initState = makeUnique(new AutomatonMojmirState(this, formula));
         this.consistentValues = expressionsUnique.getConsistentValues();
@@ -105,7 +105,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
             explore();
         }
     }
-    
+
     @Override
     public int getNumStates() {
         return observerMaps.getNumStates();
@@ -124,7 +124,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         return (AutomatonMojmirState) observerMaps.numberToState(number);
     }
 
-    private void explore() throws EPMCException {
+    private void explore() {
         Set<AutomatonMojmirState> seen = new HashSet<>();
         Queue<AutomatonMojmirState> todo = new LinkedList<>();
         todo.add(initState);
@@ -161,7 +161,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
 
     private AutomatonMojmirState computeSuccessor(
-            AutomatonMojmirState current, Value[] succ) throws EPMCException {
+            AutomatonMojmirState current, Value[] succ) {
         Expression formula = current.getExpression();
         Expression succExpr = af(formula, succ, simpleG);
         succExpr = expressionsUnique.makeUnique(succExpr);
@@ -188,9 +188,9 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         AutomatonMojmirState succState = makeUnique(new AutomatonMojmirState(this, succExpr));
         return succState;
     }
-    
+
     private Map<Expression, Type> collectPropositionalTypes(Expression formula)
-            throws EPMCException {
+    {
         assert formula != null;
         if (formula.isPropositional() && !formula.isTrue() && !formula.isFalse()) {
             return Collections.singletonMap(formula, formula.getType());
@@ -210,14 +210,14 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
 
     @Override
     public void queryState(Value[] input, int automatonState)
-            throws EPMCException {
+    {
         assert assertModelState(input);
         int inputNr = expressionsUnique.valueToNumber(input);
         queryState(inputNr, automatonState);
     }
 
     @Override
-    public void queryState(int inputNr, int automatonState) throws EPMCException {
+    public void queryState(int inputNr, int automatonState) {
         if (implicit) {
             Value[] modelState = consistentValues[inputNr];
             AutomatonMojmirState kretinskyState = numberToState(automatonState);
@@ -228,9 +228,9 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
             this.succState = successorStates[automatonState * consistentValues.length + inputNr];
         }
     }
-    
+
     private Expression af(Expression formula, Value[] modelState, boolean simpleG)
-            throws EPMCException {
+    {
         formula = expressionsUnique.makeUnique(formula);
         if (formula.isPropositional()) {
             formulaEvaluator.setVariableValues(modelState);
@@ -275,7 +275,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
             return and(afLpart, or(afP2, formula));
         } else {
             assert false : formula;
-            return null;
+        return null;
         }
     }
 
@@ -319,12 +319,12 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         }
     }
 
-    private boolean assertModelState(Value[] modelState) throws EPMCException {
+    private boolean assertModelState(Value[] modelState) {
         assert modelState != null;
         assert modelState.length == expressionsUnique.getReplaced().length
                 : Arrays.toString(modelState) + " " + Arrays.toString(expressionsUnique.getReplaced());
         for (int i = 0; i < modelState.length; i++) {
-            assert expressionsUnique.getReplaced()[i].getType().canImport(modelState[i]);
+//            assert expressionsUnique.getReplaced()[i].getType().canImport(modelState[i]);
         }
         return true;
     }
@@ -350,10 +350,10 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     }
 
     // TODO remove
-    Value[][] getConsistentValues() throws EPMCException {
+    Value[][] getConsistentValues() {
         return consistentValues;
     }
-    
+
     @Override
     public void close() {
         if (closed) {
@@ -361,15 +361,15 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         }
         closed = true;
     }
-    
+
     boolean isImplicit() {
         return implicit;
     }
-    
+
     boolean isSimpleG() {
         return simpleG;
     }
-    
+
     @Override
     public String toString() {
         if (implicit) {
@@ -401,8 +401,8 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         buffer.append("}\n");        
         return buffer.toString();
     }
-    
-    boolean isSink(int state) throws EPMCException {
+
+    boolean isSink(int state) {
         while (sinkMask.size() <= state) {
             sinkMask.add(-1);
         }
@@ -425,7 +425,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     public AutomatonLabelUtil numberToLabel(int number) {
         return observerMaps.numberToLabel(number);
     }
-    
+
     DD getStateExpressionDD(int number) {
         return stateExpressionsDD[number];
     }
@@ -433,18 +433,18 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
     Expression getStateExpression(int number) {
         return stateExpressions[number];
     }
-    
-    public static void main(String[] args) throws EPMCException {
+
+    public static void main(String[] args) {
         StopWatch watch = Util.newStopWatch(true);
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);
         options.set(OptionsValue.CONTEXT_VALUE, contextValue);
-//        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
-//        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");
-//        Expression formula = contextExpression.parse("(G(F(c & (X(X(a)))) & (F(a & (X(b))))))");
-//        Expression formula = contextExpression.parse("(G(((p1) & (X(!(p1)))) | (X((p1) U ((p1) & (!(p2)) & (X((p1) & (p2) & ((p1) U ((p1) & (!(p2)) & (X((p1) & (p2))))))))))))");
-//        Expression formula = contextExpression.parse("(X((G(a)) | (X(G(b)))))");
+        //        Expression formula = contextExpression.parse("b & (X(b)) & (G(a & (X(b U c))))");
+        //        Expression formula = contextExpression.parse("(G(F((X(X(X(a)))) & (X(X(X(X(b)))))))) & (G(F(b | (X(c))))) & (G(F(c & (X(X(a))))))");
+        //        Expression formula = contextExpression.parse("(G(F(c & (X(X(a)))) & (F(a & (X(b))))))");
+        //        Expression formula = contextExpression.parse("(G(((p1) & (X(!(p1)))) | (X((p1) U ((p1) & (!(p2)) & (X((p1) & (p2) & ((p1) U ((p1) & (!(p2)) & (X((p1) & (p2))))))))))))");
+        //        Expression formula = contextExpression.parse("(X((G(a)) | (X(G(b)))))");
         Expression formula = UtilModelChecker.parse(options, "a & (G(a))");
         Set<Expression> identifiers = formula.collectIdentifiers();
         int idNr = 0;
@@ -459,7 +459,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         AutomatonExporter exporter = new AutomatonExporterImpl();
         exporter.setAutomaton(master);
         exporter.print();
-        
+
         System.out.println(master);
         int state = master.getInitState();
         System.out.println(state);
@@ -471,12 +471,12 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         master.queryState(modelState, state);
         state = master.getSuccessorState();
         System.out.println(state);
-        
+
         master.close();
         contextExpression.close();
         System.out.println(watch.getTimeSeconds());
     }
-    
+
     public ExpressionsUnique getExpressionsUnique() {
         return expressionsUnique;
     }

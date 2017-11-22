@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.main.options;
 
@@ -61,7 +61,7 @@ public final class UtilOptionsEPMC {
         prepareOptions(options);
         return options;
     }
-    
+
     /**
      * Adds options specific to EPMC to options.
      * This does not include options from plugins.
@@ -74,19 +74,19 @@ public final class UtilOptionsEPMC {
         OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         OptionTypeStringList typeFileList = new OptionTypeStringList(FILE);
-        
+
         options.addOption().setIdentifier(OptionsEPMC.MODEL_INPUT_FILES)
-            .setType(typeFileList).setCommandLine().build();
+        .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PROPERTY_INPUT_FILES)
-            .setType(typeFileList).setCommandLine().build();
+        .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PORT)
-            .setType(typeInteger).setDefault(DEFAULT_SERVER_PORT)
-            .setCommandLine().build();
+        .setType(typeInteger).setDefault(DEFAULT_SERVER_PORT)
+        .setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.SERVER_NAME)
-            .setType(typeString).setDefault(DEFAULT_SERVER_NAME)
-            .setCommandLine().setGui().build();
+        .setType(typeString).setDefault(DEFAULT_SERVER_NAME)
+        .setCommandLine().setGui().build();
         options.addOption().setIdentifier(OptionsEPMC.PRINT_STACKTRACE)
-            .setType(typeBoolean).setDefault(false).build();
+        .setType(typeBoolean).setDefault(false).build();
 
         Map<String,Class<?>> commands = new HashMap<>();
         String commandTaskClassString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, OptionsEPMC.COMMAND_CLASS.name());

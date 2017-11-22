@@ -16,31 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.Value;
 
 final class PropertyNodeConstant implements PropertyNode {
-	private final Value value;
+    private final Value value;
 
-	PropertyNodeConstant(ExplorerJANI explorer, Value value) {
-		assert explorer != null;
-		assert value != null;
-		this.value = value;
-	}
-	
-	@Override
-	public Value get() throws EPMCException {
-		return value;
-	}
+    PropertyNodeConstant(ExplorerJANI explorer, Value value) {
+        assert explorer != null;
+        assert value != null;
+        this.value = value;
+    }
 
-	@Override
-	public Type getType() {
-		return value.getType();
-	}
+    @Override
+    public Value get() {
+        return value;
+    }
+
+    @Override
+    public Type getType() {
+        return value.getType();
+    }
 
 }

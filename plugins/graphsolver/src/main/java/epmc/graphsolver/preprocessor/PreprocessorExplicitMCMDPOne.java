@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.preprocessor;
 
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Scheduler;
 import epmc.graph.Semantics;
@@ -42,52 +41,52 @@ import epmc.util.UtilBitSet;
 import epmc.value.ValueObject;
 
 public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit {
-	public final static String IDENTIFIER = "mc-mdp-one";
-	
-	private GraphSolverObjectiveExplicit objective;
+    public final static String IDENTIFIER = "mc-mdp-one";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
-	
-	@Override
-	public void setObjective(GraphSolverObjectiveExplicit objective) {
-		this.objective = objective;
-	}
+    private GraphSolverObjectiveExplicit objective;
 
-	@Override
-	public GraphSolverObjectiveExplicit getObjective() {
-		return objective;
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	@Override
-	public boolean canHandle() {
-		assert objective != null;
-		Semantics semantics = objective.getGraph().getGraphPropertyObject(CommonProperties.SEMANTICS);
-		if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
-			return false;
-		}
-		if (!(SemanticsDTMC.isDTMC(semantics)
-				|| SemanticsCTMC.isCTMC(semantics)
-				|| SemanticsMDP.isMDP(semantics)
-				|| SemanticsCTMDP.isCTMDP(semantics))) {
-			return false;
-		}
+    @Override
+    public void setObjective(GraphSolverObjectiveExplicit objective) {
+        this.objective = objective;
+    }
+
+    @Override
+    public GraphSolverObjectiveExplicit getObjective() {
+        return objective;
+    }
+
+    @Override
+    public boolean canHandle() {
+        assert objective != null;
+        Semantics semantics = objective.getGraph().getGraphPropertyObject(CommonProperties.SEMANTICS);
+        if (!(objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
+            return false;
+        }
+        if (!(SemanticsDTMC.isDTMC(semantics)
+                || SemanticsCTMC.isCTMC(semantics)
+                || SemanticsMDP.isMDP(semantics)
+                || SemanticsCTMDP.isCTMDP(semantics))) {
+            return false;
+        }
         GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         // TODO fix for non-null case
-		if (objectiveUnboundedReachability.getZeroSet() != null) {
-			return false;
-		}
-		return true;
-	}
+        if (objectiveUnboundedReachability.getZeroSet() != null) {
+            return false;
+        }
+        return true;
+    }
 
-	@Override
-	public void process() throws EPMCException {
+    @Override
+    public void process() {
         GraphExplicit graphExplicit = null;
         GraphSolverObjectiveExplicitUnboundedReachability objectiveUnboundedReachability = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         graphExplicit = objectiveUnboundedReachability.getGraph();
-        Semantics semantics = ValueObject.asObject(graphExplicit.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        Semantics semantics = ValueObject.as(graphExplicit.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
 
         boolean min = objectiveUnboundedReachability.isMin();
         BitSet target = objectiveUnboundedReachability.getTarget();
@@ -100,10 +99,10 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
         if (SemanticsNonDet.isNonDet(semantics) && objectiveUnboundedReachability.isComputeScheduler()) {
             objectiveUnboundedReachability.setScheduler(computeScheduler(graphExplicit, oldTarget, target));
         }
-	}
+    }
 
     private Scheduler computeScheduler(GraphExplicit graph,
-            BitSet target, BitSet extendedTarget) throws EPMCException {
+            BitSet target, BitSet extendedTarget) {
         SchedulerSimpleSettable scheduler = new SchedulerSimpleArray(graph);
         graph.computePredecessors();
         NodeProperty states = graph.getNodeProperty(CommonProperties.STATE);
@@ -125,7 +124,7 @@ public final class PreprocessorExplicitMCMDPOne implements PreprocessorExplicit 
                     if (states.getBoolean(predecessor) && scheduler.getDecision(predecessor) == -1) {
                         for (int succNr = 0; succNr < graph.getNumSuccessors(predecessor); succNr++) {
                             if (graph.getSuccessorNode(predecessor, succNr) == node) {
-                            	scheduler.set(predecessor, succNr);
+                                scheduler.set(predecessor, succNr);
                             }
                         }
                     }

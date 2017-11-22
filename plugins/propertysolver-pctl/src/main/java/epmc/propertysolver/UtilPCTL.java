@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver;
 
@@ -30,19 +30,19 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionTemporal;
 
 public final class UtilPCTL {
-	public static Set<Expression> collectPCTLInner(Expression expression) {
-		if (expression instanceof ExpressionTemporal) {
-			ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-			Set<Expression> result = new LinkedHashSet<>();
-			for (Expression inner : expressionTemporal.getOperands()) {
-				result.addAll(collectPCTLInner(inner));
-			}
-			return result;
-		} else {
-			return Collections.singleton(expression);			
-		}
-	}
-	
+    public static Set<Expression> collectPCTLInner(Expression expression) {
+        if (expression instanceof ExpressionTemporal) {
+            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+            Set<Expression> result = new LinkedHashSet<>();
+            for (Expression inner : expressionTemporal.getOperands()) {
+                result.addAll(collectPCTLInner(inner));
+            }
+            return result;
+        } else {
+            return Collections.singleton(expression);			
+        }
+    }
+
     public static boolean isPCTLPath(Expression pathProp) {
         if (!(pathProp instanceof ExpressionTemporal)) {
             return false;
@@ -53,28 +53,28 @@ public final class UtilPCTL {
                 return false;
             }
         }
-        
+
         return true;
     }
 
     public static boolean isPCTLPathUntil(Expression pathProp) {
-    	if (!isPCTLPath(pathProp)) {
-    		return false;
-    	}
+        if (!isPCTLPath(pathProp)) {
+            return false;
+        }
         ExpressionTemporal asTemporal = (ExpressionTemporal) pathProp;
         switch (asTemporal.getTemporalType()) {
-		case FINALLY:
-		case GLOBALLY:
-		case RELEASE:
-		case UNTIL:
-			break;
-		default:
-			return false;
-        	
+        case FINALLY:
+        case GLOBALLY:
+        case RELEASE:
+        case UNTIL:
+            break;
+        default:
+            return false;
+
         }
         return true;
     }
 
-	private UtilPCTL() {
-	}
+    private UtilPCTL() {
+    }
 }

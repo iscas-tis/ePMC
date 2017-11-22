@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.messages;
 
@@ -24,6 +24,6 @@ import epmc.options.Options;
 
 public interface TimeStampFormat {
     String getIdentifier();
-    
+
     String toString(Options options, long timeStarted, long time);
 }

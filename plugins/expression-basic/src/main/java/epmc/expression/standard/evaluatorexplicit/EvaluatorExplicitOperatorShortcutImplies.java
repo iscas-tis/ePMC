@@ -16,20 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
 import java.util.Map;
 
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorImplies;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorImplies;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
@@ -39,7 +38,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -51,7 +50,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -61,7 +60,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -71,13 +70,13 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             assert expression != null;
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
@@ -95,24 +94,24 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperatorShortcutImplies(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		private ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        private ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
 
     public final static String IDENTIFIER = "operator-shortcut-implies";
-    
+
     private Expression[] variables;
     private ExpressionOperator expression;
     private EvaluatorExplicitBoolean[] operands;
@@ -120,7 +119,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
     private ValueBoolean result;
 
 
-    public EvaluatorExplicitOperatorShortcutImplies(Builder builder) throws EPMCException {
+    public EvaluatorExplicitOperatorShortcutImplies(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -142,14 +141,14 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
-    
+
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -161,9 +160,9 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
         }
         return result;
     }
-    
+
     @Override
-    public boolean evaluateBoolean(Value... values) throws EPMCException {
+    public boolean evaluateBoolean(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -174,7 +173,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
             return operands[1].evaluateBoolean(values);
         }
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;

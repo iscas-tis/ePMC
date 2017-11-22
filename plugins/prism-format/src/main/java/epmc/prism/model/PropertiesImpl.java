@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -60,22 +59,22 @@ public final class PropertiesImpl implements Properties {
     private final Map<String,Type> constantTypes = new LinkedHashMap<>();
     private final Map<String,Expression> formulas = new LinkedHashMap<>();
     private final Map<String,Expression> labels = new LinkedHashMap<>();
-	private final ModelPRISM model;
-    
-    public PropertiesImpl(ModelPRISM model) throws EPMCException {
+    private final ModelPRISM model;
+
+    public PropertiesImpl(ModelPRISM model) {
         assert model != null;
         this.model = model;
         // TODO check duplicates
     }
 
     @Override
-    public void parseProperties(InputStream... inputs) throws EPMCException {
+    public void parseProperties(InputStream... inputs) {
         for (InputStream input : inputs) {
             parseProperties(input);
         }
     }
-    
-    private void parseProperties(InputStream input) throws EPMCException {
+
+    private void parseProperties(InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
@@ -83,8 +82,8 @@ public final class PropertiesImpl implements Properties {
         parseProperties(properties);
         expand();
     }
-    
-    public void parseProperties(RawProperties rawProperties) throws EPMCException {
+
+    public void parseProperties(RawProperties rawProperties) {
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
@@ -129,7 +128,7 @@ public final class PropertiesImpl implements Properties {
         }
     }
 
-    public void addProperty(RawProperty prop, Expression parsed) throws EPMCException {
+    public void addProperty(RawProperty prop, Expression parsed) {
         assert prop != null;
         assert parsed != null;
         properties.put(prop, parsed);
@@ -137,7 +136,7 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addConst(String name, Type type, Expression entry)
-            throws EPMCException {
+    {
         assert name != null;
         assert type != null;
         // entry might be null for undefined constants
@@ -146,9 +145,9 @@ public final class PropertiesImpl implements Properties {
         this.constantTypes.put(name, type);
         this.names.add(name);
     }
-    
+
     public void addFormula(String name, Expression entry)
-            throws EPMCException {
+    {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
@@ -157,36 +156,36 @@ public final class PropertiesImpl implements Properties {
     }
 
     public void addLabel(String name, Expression entry)
-            throws EPMCException {
+    {
         assert name != null;
         assert entry != null;
         ensure(!names.contains(name), ProblemsModelChecker.DEFINED_TWICE, name);
         this.labels.put(name, entry);
         this.names.add(name);
     }
-    
+
     @Override
     public Expression getParsedProperty(RawProperty property) {
         return properties.get(property);
     }
-    
-    public void expandAndCheckWithDefinedCheck() throws EPMCException {
+
+    public void expandAndCheckWithDefinedCheck() {
         checkCyclic();
         expand();
         checkNonConstantConst();
         checkUndefinedConst();
         checkTypes();
     }
-    
-    private void checkTypes() throws EPMCException {
-//        for (Entry<Property,Expression> entry : properties.entrySet()) {
-// TODO temporarily disabled
-//            entry.getValue().computeType();
- //       }
+
+    private void checkTypes() {
+        //        for (Entry<Property,Expression> entry : properties.entrySet()) {
+        // TODO temporarily disabled
+        //            entry.getValue().computeType();
+        //       }
     }
-    
+
     // private methods
-    
+
     private void expand() {
         Map<Expression,Expression> seen = new HashMap<>();
         for (Entry<RawProperty,Expression> entry : properties.entrySet()) {
@@ -194,7 +193,7 @@ public final class PropertiesImpl implements Properties {
             properties.put(entry.getKey(), newExpr);
         }
     }
-    
+
     private Expression expand(Expression value, Map<Expression,Expression> seen) {
         if (value == null) {
             return null;
@@ -202,12 +201,12 @@ public final class PropertiesImpl implements Properties {
         if (seen.containsKey(value)) {
             return seen.get(value);
         }
-        
+
         Expression goDeeper = null;
         if (ExpressionIdentifier.isIdentifier(value)) {
             ExpressionIdentifier valueId = (ExpressionIdentifier) value;
             if (goDeeper == null) {
-            	goDeeper = constants.get(valueId.toString());
+                goDeeper = constants.get(valueId.toString());
             }
             if (goDeeper == null) {
                 goDeeper = formulas.get(valueId.toString());
@@ -232,7 +231,7 @@ public final class PropertiesImpl implements Properties {
     }
 
 
-    private void checkUndefinedConst() throws EPMCException {
+    private void checkUndefinedConst() {
         Set<String> usedConstants = new LinkedHashSet<>();
         Set<Expression> seen = new HashSet<>();
         for (Expression expr : properties.values()) {
@@ -243,7 +242,7 @@ public final class PropertiesImpl implements Properties {
             ensure(constDef != null, ProblemsModelChecker.CONST_UNDEFINED, name);
         }
     }
-    
+
     private void findUsedConstants(Expression value, Set<Expression> seen,
             Set<String> usedConstants) {
         if (value == null) {
@@ -267,9 +266,8 @@ public final class PropertiesImpl implements Properties {
     /**
      * Checks for constant definitions which do not evaluate to constant values.
      * 
-     * @throws EPMCException thrown if non-constant constants found
      */
-    private void checkNonConstantConst() throws EPMCException {
+    private void checkNonConstantConst() {
         Set<Expression> seen = new HashSet<>();
         for (Entry<String, Expression> entry : constants.entrySet()) {
             ArrayList<String> path = new ArrayList<>();
@@ -335,9 +333,8 @@ public final class PropertiesImpl implements Properties {
     /**
      * Checks whether there are cyclic const or formula definitions.
      * 
-     * @throws EPMCException thrown if there are cyclic definitions
      */
-    private void checkCyclic() throws EPMCException {
+    private void checkCyclic() {
         for (Entry<String, Expression> entry : constants.entrySet()) {
             Set<Expression> seen = new HashSet<>();
             ArrayList<String> path = new ArrayList<>();
@@ -353,7 +350,7 @@ public final class PropertiesImpl implements Properties {
                     ProblemsModelChecker.CONST_CYCLIC, entry.getKey(), pathToString(path));
         }
     }
-    
+
     private String pathToString(ArrayList<String> path) {
         StringBuilder builder = new StringBuilder();
         Iterator<String> iter = path.iterator();
@@ -365,7 +362,7 @@ public final class PropertiesImpl implements Properties {
         }
         return builder.toString();
     }
-    
+
     private boolean checkCyclic(Expression value, Set<Expression> seen,
             List<String> path, Set<Expression> onPath) {
         if (value == null) {
@@ -409,7 +406,7 @@ public final class PropertiesImpl implements Properties {
         onPath.remove(value);
         return true;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -431,22 +428,22 @@ public final class PropertiesImpl implements Properties {
         }
         return builder.toString();
     }
-    
-    public void ensureNoUndefinedConstants() throws EPMCException {
+
+    public void ensureNoUndefinedConstants() {
         for (Entry<String, Expression> entry : constants.entrySet()) {
             ensure(entry.getValue() != null, ProblemsModelChecker.CONST_UNDEFINED, entry.getKey());
         }
     }
-    
+
     public Map<String, Expression> getConstants() {
         return constants;
     }
-    
+
     public Type getConstantType(String constant) {
         assert constant != null;
         return constantTypes.get(constant);
     }
-    
+
     public Expression getConstantValue(String constant) {
         assert constant != null;
         return constants.get(constant);

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.options;
 
@@ -74,7 +74,7 @@ public final class Category implements Serializable, Cloneable {
         private String identifier;
         /** Parent which to use for constructed category, or {@code null}. */
         private String parent;
-        
+
         /**
          * Construct new builder.
          * This method is package-private, because we want builders to be
@@ -83,7 +83,7 @@ public final class Category implements Serializable, Cloneable {
          */
         Builder() {
         }
-        
+
         /**
          * Set options the category will belong to.
          * This method may only be called if {@link #build()} has not been
@@ -97,7 +97,7 @@ public final class Category implements Serializable, Cloneable {
             this.options = options;
             return this;
         }
-        
+
         private Options getOptions() {
             assert built;
             return options;
@@ -116,7 +116,7 @@ public final class Category implements Serializable, Cloneable {
             this.bundleName = bundleName;
             return this;
         }
-        
+
         public Builder setBundleName(Enum<?> bundleName) {
             assert !built;
             this.bundleName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, bundleName.name());
@@ -141,7 +141,7 @@ public final class Category implements Serializable, Cloneable {
             this.identifier = identifier;
             return this;
         }
-        
+
         /**
          * Set identifier the category will have.
          * This method may only be called if {@link #build()} has not been
@@ -181,11 +181,11 @@ public final class Category implements Serializable, Cloneable {
             this.parent = parent.getIdentifier();
             return this;
         }
-        
+
         private String getParent() {
             return parent;
         }
-        
+
         public Category build() {
             assert !built;
             assert options != null;
@@ -195,7 +195,7 @@ public final class Category implements Serializable, Cloneable {
             return result;
         }
     }
-    
+
     /** 1L, as I don't know any better. */
     private static final long serialVersionUID = 1L;
     /** Prefix for short description in resource file. */
@@ -215,19 +215,19 @@ public final class Category implements Serializable, Cloneable {
         assert builder.getOptions() != null;
         assert builder.getBundleName() != null;
         assert builder.getIdentifier() != null;
-        
+
         options = builder.getOptions();
         bundleName = builder.getBundleName();
         identifier = builder.getIdentifier();
         parent = builder.getParent() != null
                 ? options.getCategory(builder.getParent())
-                : null;
+                        : null;
     }
-    
+
     public String getBundleName() {
         return bundleName;
     }
-    
+
     /**
      * Get identifier of this category.
      * 
@@ -236,7 +236,7 @@ public final class Category implements Serializable, Cloneable {
     public String getIdentifier() {
         return identifier;
     }
-    
+
     /**
      * Get parent category of this category, or {@code null}.
      * If {@code null} is obtained, this category is at top level.
@@ -258,7 +258,7 @@ public final class Category implements Serializable, Cloneable {
         ResourceBundle poMsg = getBundle();
         return poMsg.getString(SHORT_PREFIX + identifier);
     }
-    
+
     /**
      * Read resource bundle from base name given with {@link Options} {@link Locale}.
      * @return

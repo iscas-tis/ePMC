@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -30,7 +30,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -45,7 +44,7 @@ public final class RewardSolverExplicitTest {
     }
 
     @Test
-    public void hermanTest() throws EPMCException {
+    public void hermanTest() {
         Value result;
         double tolerance = 1E-10;
         Options options = prepareOptions();
@@ -53,7 +52,7 @@ public final class RewardSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         Map<String,Object> constants = new HashMap<>();
-        
+
         constants.put("N", "50");
         options.set(OptionsModelChecker.CONST, constants);
 
@@ -86,7 +85,7 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(HERMAN_MODEL, 3), String.format(propMin, 3));
         assertEquals("1.333333333333263", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
@@ -105,7 +104,7 @@ public final class RewardSolverExplicitTest {
         constants.put("k", "5");
         result = computeResult(options, String.format(HERMAN_MODEL, 5), String.format(propMin, 5));
         assertEquals("2.93333333332863", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
@@ -129,12 +128,12 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(HERMAN_MODEL, 7), String.format(propMin, 7));
         assertEquals("5.493326596754396", result, tolerance * 10);
-        
+
         close(options);
     }
 
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -149,7 +148,7 @@ public final class RewardSolverExplicitTest {
 
         String propMax = "Rmax=? [ F \"stable\" {num_tokens=%d}{max} ]";
         String propMin = "Rmin=? [ F \"stable\" {num_tokens=%d}{min} ]";
-        
+
         result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMax, 1));
         assertEquals("0", result, tolerance * 10);
 
@@ -158,7 +157,7 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMax, 3));
         assertEquals("2.999999999998181", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(IJ_MODEL, 3), String.format(propMin, 1));
         assertEquals("0", result, tolerance * 10);
 
@@ -191,14 +190,14 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(IJ_MODEL, 7), String.format(propMin, 5));
         assertEquals("17.999999999874547", result, tolerance * 10);
-        
+
         close(options);
     }
 
     // TODO Moritz: ignoring this test for now, let's see what to do after the release
     @Ignore
     @Test
-    public void ijDiscountedTest() throws EPMCException {
+    public void ijDiscountedTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -216,12 +215,12 @@ public final class RewardSolverExplicitTest {
         System.out.println("RESULT " + result);
         result = computeResult(options, String.format(IJ_MODEL, 3), "Rmax=? [ C<=7, DISCOUNT=2 ]");
         System.out.println("RESULT " + result);
-//        assertEquals("2.999999999998181", result, tolerance * 10);
+        //        assertEquals("2.999999999998181", result, tolerance * 10);
 
     }
-    
+
     @Test
-    public void beauquierTest() throws EPMCException {
+    public void beauquierTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -236,13 +235,13 @@ public final class RewardSolverExplicitTest {
 
         String propA = "Rmax=? [ F num_tokens=1 {num_tokens=%d}{max} ]";
         String propB = "Rmin=? [ F num_tokens=1 {num_tokens=%d}{min} ]";
-        
+
         result = computeResult(options, String.format(BEAUQUIER_MODEL, 3), String.format(propA, 1));
         assertEquals("0", result, tolerance * 10);
 
         result = computeResult(options, String.format(BEAUQUIER_MODEL, 3), String.format(propA, 3));
         assertEquals("1.999999999998181", result, tolerance * 10);
-        
+
         constants.put("k", "1");
         result = computeResult(options, String.format(BEAUQUIER_MODEL, 3), String.format(propB, 1));
         assertEquals("0", result, tolerance * 10);
@@ -267,12 +266,12 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(BEAUQUIER_MODEL, 7), String.format(propB, 5));
         assertEquals("5.00407207291629", result, tolerance * 10);
-        
+
         close(options);
     }
 
     @Test
-    public void testAndSetTest() throws EPMCException {
+    public void testAndSetTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -284,15 +283,15 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, TEST_AND_SET_MODEL, "filter(forall, t=1=>R{\"process0\"}<=10 [ F t=1&(l0=8|l0=9) ])");
         assertEquals(true, result);
-        
+
         result = computeResult(options, TEST_AND_SET_MODEL, "filter(forall, t=1=>R{\"process1\"}<=10 [ F t=1&(l1=8|l1=9) ])");
         assertEquals(true, result);
-        
+
         close(options);
     }
-    
+
     @Test
-    public void leaderSynchronousTest() throws EPMCException {
+    public void leaderSynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -304,15 +303,15 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options,  String.format(LEADER_SYNC_MODEL, 3, 2), "R{\"num_rounds\"}=? [ F \"elected\" ]");
         assertEquals("1.3333333333330302", result, tolerance * 10);
-        
+
         result = computeResult(options,  String.format(LEADER_SYNC_MODEL, 4, 5), "R{\"num_rounds\"}=? [ F \"elected\" ]");
         assertEquals("1.1160714285714137", result, tolerance * 10);
-        
+
         close(options);
     }
-    
+
     @Test
-    public void leaderAsynchronousTest() throws EPMCException {
+    public void leaderAsynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -324,21 +323,21 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(LEADER_ASYNC_MODEL, 3), "Rmin=? [ F \"elected\" ]");
         assertEquals("3.333333333321818", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(LEADER_ASYNC_MODEL, 3), "Rmax=? [ F \"elected\" ]");
         assertEquals("3.333333333321818", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(LEADER_ASYNC_MODEL, 6), "Rmin=? [ F \"elected\" ]");
         assertEquals("5.649769585206279", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(LEADER_ASYNC_MODEL, 6), "Rmax=? [ F \"elected\" ]");
         assertEquals("5.649769585205323", result, tolerance * 10);
-        
+
         close(options);
     }
-    
+
     @Test
-    public void gossipDTMCTest() throws EPMCException {
+    public void gossipDTMCTest() {
         Options options = prepareOptions();
         double tolerance = 1E-9;
         Value result;
@@ -349,7 +348,7 @@ public final class RewardSolverExplicitTest {
         String prop = "R{\"max_path_len\"}=?[I=%d]";
         result = computeResult(options, String.format(GOSSIP_DTMC_MODEL, 4), String.format(prop, 0));
         assertEquals("4", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(GOSSIP_DTMC_MODEL, 4), String.format(prop, 1));
         assertEquals("4", result, tolerance * 10);
 
@@ -371,12 +370,12 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(GOSSIP_DTMC_MODEL, 4), String.format(propB, 2342, 2342, 2342));
         assertEquals("2.0011971678770712", result, tolerance * 1000);
-        
+
         close(options);
     }
 
     @Test
-    public void gossipMDPTest() throws EPMCException {
+    public void gossipMDPTest() {
         Options options = prepareOptions();
         double tolerance = 1E-9;
         Value result;
@@ -386,10 +385,10 @@ public final class RewardSolverExplicitTest {
 
         String prop_min = "R{\"max_path_len\"}min=?[I=%d]";
         String prop_max = "R{\"max_path_len\"}max=?[I=%d]";
-        
+
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 0));
         assertEquals("4", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 1));
         assertEquals("4", result, tolerance * 10);
 
@@ -401,10 +400,10 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_min, 2342));
         assertEquals("2.0", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 0));
         assertEquals("4", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 1));
         assertEquals("4", result, tolerance * 10);
 
@@ -416,12 +415,12 @@ public final class RewardSolverExplicitTest {
 
         result = computeResult(options, String.format(GOSSIP_MODEL, 4), String.format(prop_max, 2342));
         assertEquals("2.0817980708028925", result, tolerance * 100);
-        
+
         close(options);
     }
 
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -42,12 +42,12 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
     AutomatonSlaveState(AutomatonSlaveState other) {
         this(other.getAutomaton(), other.content);
     }
-    
+
     @Override
     protected AutomatonStateUtil clone() {
         return new AutomatonSlaveState(this);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -57,12 +57,12 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
         AutomatonSlaveState other = (AutomatonSlaveState) obj;
         return Arrays.equals(content, other.content);
     }
-    
+
     @Override
     public int hashCode() {
         return Arrays.hashCode(content);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -79,14 +79,14 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
             }
         }
         builder.append("]");
-        
+
         return builder.toString();
     }
 
     AutomatonSlaveState disable() {
         return getAutomaton().makeUnique(new AutomatonSlaveState(getAutomaton(), new int[0]));
     }
-    
+
     int get(int position) {
         if (position < content.length) {
             return content[position];
@@ -94,16 +94,16 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
             return Integer.MAX_VALUE;
         }
     }
-    
+
     int size() {
         return content.length;
     }
-    
+
     @Override
     public AutomatonSlave getAutomaton() {
         return this.observer;
     }
-    
+
     AutomatonMojmir getObserverMojmir() {
         return getAutomaton().getMojmir();
     }
@@ -117,12 +117,12 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
     public int getNumber() {
         return number;
     }
-    
+
     public int[] getContent() {
         return content;
     }
 
-    public DD getDDAssignsRank(int rank) throws EPMCException {
+    public DD getDDAssignsRank(int rank) {
         DD result = observer.getContextDD().newConstant(true);
         for (int i = 0; i < content.length; i++) {
             if (content[i] == -1 || content[i] > rank) {
@@ -131,7 +131,7 @@ final class AutomatonSlaveState implements AutomatonStateUtil {
             DD stateDD = observer.getMojmir().getStateExpressionDD(i);
             result = result.andWith(stateDD.clone());
         }
-        
+
         return result;
     }
 }

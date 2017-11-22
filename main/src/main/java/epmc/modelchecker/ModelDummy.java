@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
 import java.io.InputStream;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 
@@ -46,7 +45,7 @@ public final class ModelDummy implements Model {
     }
 
     @Override
-    public void read(InputStream... inputs) throws EPMCException {
+    public void read(InputStream... inputs) {
         assert inputs != null;
         assert inputs.length == 0;
     }
@@ -59,7 +58,7 @@ public final class ModelDummy implements Model {
     @Override
     public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties,
             Set<Object> nodeProperties, Set<Object> edgeProperties)
-                    throws EPMCException {
+    {
         return null;
     }
 

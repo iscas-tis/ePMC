@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -28,7 +28,7 @@ public interface SemanticsContinuousTime extends Semantics {
      * 
      * @return whether this is a continuous-time semantics type
      */
-	static boolean isContinuousTime(Semantics semantics) {
-		return semantics instanceof SemanticsContinuousTime;
-	}
+    static boolean isContinuousTime(Semantics semantics) {
+        return semantics instanceof SemanticsContinuousTime;
+    }
 }

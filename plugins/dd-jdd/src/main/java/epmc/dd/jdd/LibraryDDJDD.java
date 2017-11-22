@@ -16,29 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.jdd;
 
 import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 import gnu.trove.list.TIntList;
 import gnu.trove.list.array.TIntArrayList;
 import jdd.bdd.BDD;
@@ -46,20 +45,20 @@ import jdd.bdd.Permutation;
 
 public final class LibraryDDJDD implements LibraryDD {
     public final static String IDENTIFIER = "jdd";
-    
+
     private final static class LowLevelPermutationJDD
     implements PermutationLibraryDD{
         private final Permutation bddPerm;
-        
+
         LowLevelPermutationJDD(Permutation bddPerm) {
             this.bddPerm = bddPerm;
         }
-        
+
         Permutation getPermutation() {
             return bddPerm;
         }
     }
-    
+
     private BDD bdd;
     private ContextDD contextDD;
     private Value oneValue;
@@ -68,20 +67,20 @@ public final class LibraryDDJDD implements LibraryDD {
     private int oneNode;
     private boolean alive;
     private final TIntList variables = new TIntArrayList();
-    
+
     @Override
     public long apply(Operator operator, Type type, long... operands)
-            throws EPMCException {
+    {
         assert alive;
         assert operator != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         for (int opNr = 0; opNr < operands.length; opNr++) {
-        	assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
+            assert operands[opNr] >= 0 : opNr + " " + operands[opNr];
         }
         int result;
         if (operator.equals(OperatorId.ID)) {
-        	result = (int) operands[0];
+            result = (int) operands[0];
         } else if (operator.equals(OperatorNot.NOT)) {
             result = bdd.not((int) operands[0]);
         } else if (operator.equals(OperatorAnd.AND)) {
@@ -101,7 +100,7 @@ public final class LibraryDDJDD implements LibraryDD {
         } else if (operator.equals(OperatorIte.ITE)) {
             result = bdd.ite((int) operands[0], (int) operands[1], (int) operands[2]);
         } else {
-        	assert false;
+            assert false;
             return -1;
         }
         bdd.ref(result);
@@ -109,17 +108,17 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert alive;
         assert value != null;
-        assert ValueBoolean.isBoolean(value);
-        int result = ValueBoolean.asBoolean(value).getBoolean() ? bdd.getOne() : bdd.getZero();
+        assert ValueBoolean.is(value);
+        int result = ValueBoolean.as(value).getBoolean() ? bdd.getOne() : bdd.getZero();
         bdd.ref(result);
         return result;
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         assert alive;
         int result = bdd.createVar();
         bdd.ref(result);
@@ -161,7 +160,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert alive;
         assert dd >= 0;
         assert permutation != null;
@@ -249,14 +248,14 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert alive;
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert alive;
         assert false;
         return -1;
@@ -264,7 +263,7 @@ public final class LibraryDDJDD implements LibraryDD {
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         assert alive;
         assert dd1 >= 0;
         assert dd2 >= 0;
@@ -285,7 +284,7 @@ public final class LibraryDDJDD implements LibraryDD {
             from[index] = variables.get(index);
             to[index] = variables.get(permutation[index]);
         }
-        
+
         Permutation jddPerm = bdd.createPermutation(from, to);
         return new LowLevelPermutationJDD(jddPerm);
     }
@@ -298,7 +297,7 @@ public final class LibraryDDJDD implements LibraryDD {
     }
 
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         this.contextDD = contextDD;
         int initCache = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
@@ -371,21 +370,21 @@ public final class LibraryDDJDD implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.is(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

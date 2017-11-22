@@ -16,11 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -35,6 +37,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
     private final GraphExplicit graph;
     /** Value returned by {@link #get()} . */
     private final Value value;
+    private final OperatorEvaluator set;
 
     /**
      * Create new constant node property.
@@ -48,16 +51,16 @@ public final class EdgePropertyConstant implements EdgeProperty {
         assert value != null;
         this.graph = graph;
         this.value = UtilValue.clone(value);
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), value.getType());
     }
-    
+
     /**
      * {@inheritDoc}
      * In this implementation, the value is the same value for all edges,
      * given by the constructor of this class.
-     * @throws EPMCException 
      */
     @Override
-    public Value get(int node, int successor) throws EPMCException {
+    public Value get(int node, int successor) {
         assert successor >= 0;
         assert successor < graph.getNumSuccessors(node) : successor;
         return value;
@@ -72,7 +75,7 @@ public final class EdgePropertyConstant implements EdgeProperty {
     public void set(int node, int successor, Value value) {
         assert value != null;
         assert successor >= 0;
-        this.value.set(value);
+        set.apply(this.value, value);
     }
 
     @Override

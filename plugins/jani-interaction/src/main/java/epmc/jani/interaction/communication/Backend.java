@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication;
 
@@ -57,236 +57,235 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class Backend {
-	/** Type field of JANI messages. */
-	private final static String MESSAGE_TYPE = "type";
-	/** Identifier of JSON field identifying reason to close connection. */
-	private final static String CLOSE_REASON = "reason";
-	
-	/** Authentification message type identifier. */
-	private final static String MESSAGE_TYPE_AUTHENTICATE = "authenticate";
-	/** Close connection message type identifier. */
-	private final static String MESSAGE_TYPE_CLOSE = "close";
-	
-	/** JANI version with which this server works TODO indeed 1? */
-	private final static BigInteger OUR_JANI_VERSION = new BigInteger("1");
-	/** String denoting major version. */
-	private final static String VERSION_MAJOR = "major";
-	/** String denoting minor version. */
-	private final static String VERSION_MINOR = "minor";
-	/** String denoting revision version. */
-	private final static String VERSION_REVISION = "revision";
-	
-	/** Version of our server.
-	 * We use the SVN revision number of EPMC. */
-	private final static JsonValue OUR_SERVER_VERSION;
-	static {
+    /** Type field of JANI messages. */
+    private final static String MESSAGE_TYPE = "type";
+    /** Identifier of JSON field identifying reason to close connection. */
+    private final static String CLOSE_REASON = "reason";
+
+    /** Authentification message type identifier. */
+    private final static String MESSAGE_TYPE_AUTHENTICATE = "authenticate";
+    /** Close connection message type identifier. */
+    private final static String MESSAGE_TYPE_CLOSE = "close";
+
+    /** JANI version with which this server works TODO indeed 1? */
+    private final static BigInteger OUR_JANI_VERSION = new BigInteger("1");
+    /** String denoting major version. */
+    private final static String VERSION_MAJOR = "major";
+    /** String denoting minor version. */
+    private final static String VERSION_MINOR = "minor";
+    /** String denoting revision version. */
+    private final static String VERSION_REVISION = "revision";
+
+    /** Version of our server.
+     * We use the SVN revision number of EPMC. */
+    private final static JsonValue OUR_SERVER_VERSION;
+    static {
         String versionString = Util.getManifestEntry(Util.SCM_REVISION);
         int version = 0;
         if (versionString != null) {
-        	version = Integer.parseInt(versionString);
+            version = Integer.parseInt(versionString);
         }
         OUR_SERVER_VERSION = Json.createObjectBuilder()
-        		.add(VERSION_MAJOR, 0)
-        		.add(VERSION_MINOR, 0)
-        		.add(VERSION_REVISION, version)
-        		.build();
-	}
-    
+                .add(VERSION_MAJOR, 0)
+                .add(VERSION_MINOR, 0)
+                .add(VERSION_REVISION, version)
+                .build();
+    }
+
     /** Handlers for the different JANI interaction messages. */
-	private final Map<String,Handler> handlers;
-	private final BackendFeedback feedback;
-	private final Map<Object,ClientInfo> clients = new LinkedHashMap<>();
-	private final Map<Object,ClientInfo> clientsExternal = Collections.unmodifiableMap(clients);
-	private final boolean stdio;
-	private final Database permanentStorage;
-	private final Map<String,InteractionExtension> extensions = new LinkedHashMap<>();
-	
-	/**
-	 * Construct a new backend.
-	 * None of the parameters may be {@code null}.
-	 * @param feedback feedback channel
-	 * 
-	 * @throws EPMCException 
-	 */
-	Backend(BackendFeedback feedback) throws EPMCException {
-		assert feedback != null;
-		this.feedback = feedback;
-		permanentStorage = new Database();
-		prepareExtensions();
-		JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
-		stdio = type == JANIInteractionIO.STDIO;
-		handlers = buildHandlers();
-	}
+    private final Map<String,Handler> handlers;
+    private final BackendFeedback feedback;
+    private final Map<Object,ClientInfo> clients = new LinkedHashMap<>();
+    private final Map<Object,ClientInfo> clientsExternal = Collections.unmodifiableMap(clients);
+    private final boolean stdio;
+    private final Database permanentStorage;
+    private final Map<String,InteractionExtension> extensions = new LinkedHashMap<>();
 
-	private void prepareExtensions() {
-		Map<String,Class<? extends InteractionExtension>> extensions = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_EXTENSION_CLASS);
-		assert extensions != null;
-		for (Entry<String, Class<? extends InteractionExtension>> entry : extensions.entrySet()) {
-			this.extensions.put(entry.getKey(), Util.getInstance(entry.getValue()));
-		}
-	}
+    /**
+     * Construct a new backend.
+     * None of the parameters may be {@code null}.
+     * @param feedback feedback channel
+     * 
+     */
+    Backend(BackendFeedback feedback) {
+        assert feedback != null;
+        this.feedback = feedback;
+        permanentStorage = new Database();
+        prepareExtensions();
+        JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
+        stdio = type == JANIInteractionIO.STDIO;
+        handlers = buildHandlers();
+    }
 
-	private Map<String, Handler> buildHandlers() throws EPMCException {
-		Map<String,Handler> handlers = new LinkedHashMap<>();
-		UtilHandler.addIntegratedHandlers(this, handlers);
-        for (InteractionExtension extension : this.extensions.values()) {
-        	handlers.putAll(extension.getHandlers());
+    private void prepareExtensions() {
+        Map<String,Class<? extends InteractionExtension>> extensions = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_EXTENSION_CLASS);
+        assert extensions != null;
+        for (Entry<String, Class<? extends InteractionExtension>> entry : extensions.entrySet()) {
+            this.extensions.put(entry.getKey(), Util.getInstance(entry.getValue()));
         }
-		return Collections.unmodifiableMap(handlers);
-	}
+    }
 
-	/**
-	 * Handle a message in text form.
-	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param client client sending the message
-	 * @param message message to be handled
-	 */
-	synchronized void handle(Object client, String message) {
-		assert client != null;
-		assert message != null;
-		assert feedback != null;
-		JsonValue value = null;
-		try {
-			value = UtilJSON.read(message);
-			handle(client, value);
-		} catch (EPMCException e) {
-			closeConnection(client, e);
-		}
-	}
+    private Map<String, Handler> buildHandlers() {
+        Map<String,Handler> handlers = new LinkedHashMap<>();
+        UtilHandler.addIntegratedHandlers(this, handlers);
+        for (InteractionExtension extension : this.extensions.values()) {
+            handlers.putAll(extension.getHandlers());
+        }
+        return Collections.unmodifiableMap(handlers);
+    }
 
-	/**
-	 * Close connection for the given client.
-	 * This will send a close message to the client with the according error
-	 * message (if given), will tell the feedback object to log off the client
-	 * and will remove the client from the list of clients logged in.
-	 * 
-	 * @param client
-	 * @param exception
-	 */
-	private void closeConnection(Object client, EPMCException exception) {
-		assert client != null;
-		JsonObjectBuilder object = Json.createObjectBuilder();
-		object.add(MESSAGE_TYPE, MESSAGE_TYPE_CLOSE);
-		if (exception != null) {
-			object.add(CLOSE_REASON, buildUserErrorMessage(exception));
-		}
-		send(client, object.build());
-		logOffClient(client);
-	}
+    /**
+     * Handle a message in text form.
+     * None of the parameters may be {@code null}.
+     * 
+     * @param client client sending the message
+     * @param message message to be handled
+     */
+    synchronized void handle(Object client, String message) {
+        assert client != null;
+        assert message != null;
+        assert feedback != null;
+        JsonValue value = null;
+        try {
+            value = UtilJSON.read(message);
+            handle(client, value);
+        } catch (EPMCException e) {
+            closeConnection(client, e);
+        }
+    }
 
-	/**
-	 * Handle a message which is already parsed to a JSON value.
-	 * None of the parameters may be {@code null}.
-	 * 
-	 * @param client client sending the message
-	 * @param message message to be handled
-	 */
-	private void handle(Object client, JsonValue value) throws EPMCException {
-		assert client != null;
-		assert value != null;
-		JsonObject object = null;
-		object = UtilJSON.toObject(value);
-		String type = null;
-		if (object.get(MESSAGE_TYPE) != null) {
-			type = UtilJSON.toOneOf(object, MESSAGE_TYPE, handlers.keySet());
-		} else {
-			type = MESSAGE_TYPE_AUTHENTICATE;
-		}
-		Handler function = handlers.get(type);
-		assert function != null;
-		function.handle(client, object);
-	}	
-	
-	/**
-	 * Obtain the tool name (EPMC).
-	 * 
-	 * @return tool name
-	 */
-	public String getToolName() {
-		String resourceName = Options.get().getResourceFileName();
-		Locale locale = Options.get().getLocale();
+    /**
+     * Close connection for the given client.
+     * This will send a close message to the client with the according error
+     * message (if given), will tell the feedback object to log off the client
+     * and will remove the client from the list of clients logged in.
+     * 
+     * @param client
+     * @param exception
+     */
+    private void closeConnection(Object client, EPMCException exception) {
+        assert client != null;
+        JsonObjectBuilder object = Json.createObjectBuilder();
+        object.add(MESSAGE_TYPE, MESSAGE_TYPE_CLOSE);
+        if (exception != null) {
+            object.add(CLOSE_REASON, buildUserErrorMessage(exception));
+        }
+        send(client, object.build());
+        logOffClient(client);
+    }
+
+    /**
+     * Handle a message which is already parsed to a JSON value.
+     * None of the parameters may be {@code null}.
+     * 
+     * @param client client sending the message
+     * @param message message to be handled
+     */
+    private void handle(Object client, JsonValue value) {
+        assert client != null;
+        assert value != null;
+        JsonObject object = null;
+        object = UtilJSON.toObject(value);
+        String type = null;
+        if (object.get(MESSAGE_TYPE) != null) {
+            type = UtilJSON.toOneOf(object, MESSAGE_TYPE, handlers.keySet());
+        } else {
+            type = MESSAGE_TYPE_AUTHENTICATE;
+        }
+        Handler function = handlers.get(type);
+        assert function != null;
+        function.handle(client, object);
+    }	
+
+    /**
+     * Obtain the tool name (EPMC).
+     * 
+     * @return tool name
+     */
+    public String getToolName() {
+        String resourceName = Options.get().getResourceFileName();
+        Locale locale = Options.get().getLocale();
         ResourceBundle poMsg = ResourceBundle.getBundle(resourceName, locale);
         return poMsg.getString(Options.TOOL_NAME);
-	}
-	
-	public String buildUserErrorMessage(EPMCException exception) {
-		assert exception != null;
-		String message = exception.getProblem().getMessage(Options.get().getLocale());
-		MessageFormat formatter = new MessageFormat(message);
-		formatter.applyPattern(message);
-		return formatter.format(exception.getArguments());
-	}
+    }
 
-	public void send(Object client, JsonValue reply) {
-		assert client != null;
-		assert reply != null;
-		feedback.send(client, reply.toString());
-	}
-	
-	public Map<Object, ClientInfo> getClients() {
-		return clientsExternal;
-	}
+    public String buildUserErrorMessage(EPMCException exception) {
+        assert exception != null;
+        String message = exception.getProblem().getMessage(Options.get().getLocale());
+        MessageFormat formatter = new MessageFormat(message);
+        formatter.applyPattern(message);
+        return formatter.format(exception.getArguments());
+    }
 
-	public boolean isStdio() {
-		return stdio;
-	}
-	
-	public BigInteger getOurJaniVersion() {
-		return OUR_JANI_VERSION;
-	}
-	
-	public Database getPermanentStorage() {
-		return permanentStorage;
-	}
+    public void send(Object client, JsonValue reply) {
+        assert client != null;
+        assert reply != null;
+        feedback.send(client, reply.toString());
+    }
 
-	public void registerClient(Object client, int loginID, Set<String> clientExtensions) {
-		assert client != null;
-		Set<String> usableExtensions = new LinkedHashSet<>();
-		usableExtensions.addAll(clientExtensions);
-		usableExtensions.retainAll(this.extensions.keySet());
-		ClientInfo clientDescription = new ClientInfo.Builder()
-				.setClient(client)
-				.setID(loginID)
-				.setOptions(Options.get())
-				.setExtensions(usableExtensions)
-				.build();
-		clients.put(client, clientDescription);
-	}
-	
-	public JsonValue getOurServerVersion() {
-		return OUR_SERVER_VERSION;
-	}
+    public Map<Object, ClientInfo> getClients() {
+        return clientsExternal;
+    }
 
-	public void removeClient(Object client) {
-		assert client != null;
-		ClientInfo info = clients.get(client);
-		if (info != null) {
-			info.terminate();
-		}
-		clients.remove(client);
-	}
+    public boolean isStdio() {
+        return stdio;
+    }
 
-	BackendFeedback getFeedback() {
-		return feedback;
-	}
+    public BigInteger getOurJaniVersion() {
+        return OUR_JANI_VERSION;
+    }
 
-	public boolean clientLoggedIn(Object client) {
-		assert client != null;
-		return clients.containsKey(client);
-	}
+    public Database getPermanentStorage() {
+        return permanentStorage;
+    }
 
-	public ClientInfo getClientData(Object client) {
-		return clients.get(client);
-	}
+    public void registerClient(Object client, int loginID, Set<String> clientExtensions) {
+        assert client != null;
+        Set<String> usableExtensions = new LinkedHashSet<>();
+        usableExtensions.addAll(clientExtensions);
+        usableExtensions.retainAll(this.extensions.keySet());
+        ClientInfo clientDescription = new ClientInfo.Builder()
+                .setClient(client)
+                .setID(loginID)
+                .setOptions(Options.get())
+                .setExtensions(usableExtensions)
+                .build();
+        clients.put(client, clientDescription);
+    }
 
-	public void logOffClient(Object client) {
-		assert client != null;
-		removeClient(client);
-		feedback.logOff(client);
-	}
-	
-	public Map<String, InteractionExtension> getExtensions() {
-		return extensions;
-	}
+    public JsonValue getOurServerVersion() {
+        return OUR_SERVER_VERSION;
+    }
+
+    public void removeClient(Object client) {
+        assert client != null;
+        ClientInfo info = clients.get(client);
+        if (info != null) {
+            info.terminate();
+        }
+        clients.remove(client);
+    }
+
+    BackendFeedback getFeedback() {
+        return feedback;
+    }
+
+    public boolean clientLoggedIn(Object client) {
+        assert client != null;
+        return clients.containsKey(client);
+    }
+
+    public ClientInfo getClientData(Object client) {
+        return clients.get(client);
+    }
+
+    public void logOffClient(Object client) {
+        assert client != null;
+        removeClient(client);
+        feedback.logOff(client);
+    }
+
+    public Map<String, InteractionExtension> getExtensions() {
+        return extensions;
+    }
 }

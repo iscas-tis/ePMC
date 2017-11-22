@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -30,18 +30,14 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import epmc.error.EPMCException;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.value.TypeInterval;
 import epmc.value.Value;
 import epmc.value.ValueInterval;
 import static org.junit.Assert.assertTrue;
-
-// TODO just started with setting up tests, will have to add a few more
-
-// TODO fix for continuous time
 
 public final class PCTLSolverExplicitTest {
     private final static int[] NUMBERS_PHIL_LSS = new int[]{3,4};
@@ -54,7 +50,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void diceTest() throws EPMCException {
+    public void diceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -78,7 +74,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void twoDiceTest() throws EPMCException {
+    public void twoDiceTest() {
         Options options = prepareOptions();
         double tolerance = 1E-11;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -133,7 +129,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void cellTest() throws EPMCException {
+    public void cellTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -158,9 +154,9 @@ public final class PCTLSolverExplicitTest {
         assertEquals("0.9885090286432617", result, tolerance);
         close(options);
     }
-    
+
     @Test
-    public void ijTest() throws EPMCException {
+    public void ijTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -173,9 +169,9 @@ public final class PCTLSolverExplicitTest {
         for (int numProcs = ModelNamesPRISM.IJ_MIN_NUM_PROCS; numProcs <= ModelNamesPRISM.IJ_MAX_NUM_PROCS; numProcs++) {
             String ijInstance = String.format(ModelNamesPRISM.IJ_MODEL, numProcs);
             result = computeResult(options, ijInstance, "Pmin=? [ F ( q1+q2+q3=2 ) ]");
-            assertEquals(newValue(result.getType(), "[0,1]"), result, tolerance);
+            assertEquals(newValue(TypeInterval.get(), "[0,1]"), result, tolerance);
         }
-        
+
         for (int numProcs = ModelNamesPRISM.IJ_MIN_NUM_PROCS; numProcs <= ModelNamesPRISM.IJ_MAX_NUM_PROCS; numProcs++) {
             String ijInstance = String.format(ModelNamesPRISM.IJ_MODEL, numProcs);
             result = computeResult(options, ijInstance, "filter(forall, \"init\"=>P>=1 [ F \"stable\" ])");
@@ -184,35 +180,35 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=0 \"stable\" {\"init\"}{min} ]");
         assertEquals("0", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=1 \"stable\" {\"init\"}{min} ]");
         assertEquals("0", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=2 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.5", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=3 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.75", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=4 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.875", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 3), "Pmin=? [ F<=5 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.9375", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 7), "Pmin=? [ F<=15 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.30029296875", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 7), "Pmin=? [ F<=16 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.35394287109375", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.IJ_MODEL, 7), "Pmin=? [ F<=20 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.5360813140869141", result, tolerance);
         close(options);
     }
-    
+
     @Test
-    public void mutualTest() throws EPMCException {
+    public void mutualTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -226,9 +222,9 @@ public final class PCTLSolverExplicitTest {
         }
         close(options);
     }
-    
+
     @Test
-    public void dining_crypt3Test() throws EPMCException {
+    public void dining_crypt3Test() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -247,7 +243,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void philLss4GloballyTest() throws EPMCException {
+    public void philLss4GloballyTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -257,14 +253,14 @@ public final class PCTLSolverExplicitTest {
         options.set(OptionsModelChecker.CONST, constants);
         options.set(TestHelper.PRISM_FLATTEN, false);
 
-//        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
+        //        result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (\"entered\") ]");
         result = computeResult(options, String.format(ModelNamesPRISM.PHIL_LSS_MODEL, 4), "Pmin=?[ F (  ((p1>7) & (p1<13)) | ((p2>7) & (p2<13)) | ((p3>7) & (p3<13)) | ((p4>7) & (p4<13))  ) ]");
         assertEquals(0, result, tolerance);
         close(options);
     }
 
     @Test
-    public void clusterBoundedUntilTest() throws EPMCException {
+    public void clusterBoundedUntilTest() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-10;
@@ -278,11 +274,11 @@ public final class PCTLSolverExplicitTest {
         assertEquals("0.007682184285169857", result, tolerance);
         close(options);
     }
-    
+
     @Ignore
     // TODO where is the "RP" label specified?
     @Test
-    public void clusterGTest() throws EPMCException {
+    public void clusterGTest() {
         Options options = prepareOptions();
         Map<String,Object> constants = new HashMap<>();
         Value result;
@@ -297,9 +293,9 @@ public final class PCTLSolverExplicitTest {
         assertEquals(0, result, 1E-8);
         close(options);
     }
-    
+
     @Test
-    public void er12_1Test() throws EPMCException {
+    public void er12_1Test() {
         Options options = prepareOptions();
         Value result;
         double tolerance = 1E-13;
@@ -308,15 +304,15 @@ public final class PCTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
 
         result = computeResult(options, ER12_1, "P=?[G<=10 num_affected<=4]");
-        assertTrue(ValueInterval.isInterval(result));
-        ValueInterval resultInterval = ValueInterval.asInterval(result);
+        assertTrue(ValueInterval.is(result));
+        ValueInterval resultInterval = ValueInterval.as(result);
         assertEquals("0.8533520129860975", resultInterval.getIntervalLower(), 1E-8);
         assertEquals("0.8940213623509145", resultInterval.getIntervalUpper(), 1E-8);
         close(options);
     }
 
     @Test
-    public void hermanQualitativeTest() throws EPMCException {
+    public void hermanQualitativeTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -335,17 +331,17 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 11), "filter(forall, \"init\" => P>=1 [ F \"stable\" ])");
         assertEquals(true, result);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 13), "filter(forall, \"init\" => P>=1 [ F \"stable\" ])");
         assertEquals(true, result);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 15), "filter(forall, \"init\" => P>=1 [ F \"stable\" ])");
         assertEquals(true, result);
     }
-    
+
     // TODO get tests to provide correct results again
     @Test
-    public void hermanQuantitativeTest() throws EPMCException {
+    public void hermanQuantitativeTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -368,10 +364,10 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "P=? [ F<=5 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.9990234375", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "P=? [ F<=6 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.999755859375", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "P=? [ F<=7 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.99993896484375", result, tolerance * 10);
 
@@ -383,7 +379,7 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 3), "P=? [ F<=10 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.9999990463256836", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 5), "P=? [ F<=0 \"stable\" {\"init\"}{min} ]");
         assertEquals("0", result, tolerance * 10);
 
@@ -401,10 +397,10 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 5), "P=? [ F<=5 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.859375", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 5), "P=? [ F<=6 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.907958984375", result, tolerance * 10);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 5), "P=? [ F<=7 \"stable\" {\"init\"}{min} ]");
         assertEquals("0.93975830078125", result, tolerance * 10);
 
@@ -418,10 +414,10 @@ public final class PCTLSolverExplicitTest {
         assertEquals("0.9831094741821289", result, tolerance * 10);
         close(options);
     }
-    
-    
+
+
     @Test
-    public void beauquierTest() throws EPMCException {
+    public void beauquierTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -437,32 +433,32 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=0 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=1 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.5", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=2 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.75", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=3 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.875", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=4 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.9375", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 3), "Pmin=? [ F<=5 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.96875", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 7), "Pmin=? [ F<=15 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0", result, tolerance);
-        
+
         result = computeResult(options, String.format(ModelNamesPRISM.BEAUQUIER_MODEL, 7), "Pmin=? [ F<=50 num_tokens=1 {\"init\"}{min} ]");
         assertEquals("0.7303882837295532", result, tolerance);     
         close(options);
     }
-    
+
     @Test
-    public void leaderSynchronousTest() throws EPMCException {
+    public void leaderSynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -474,7 +470,7 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options,  String.format(ModelNamesPRISM.LEADER_SYNC_MODEL, 3, 2), "P=? [ F \"elected\" ]");
         assertEquals("1", result, tolerance * 10);
-        
+
         result = computeResult(options,  String.format(ModelNamesPRISM.LEADER_SYNC_MODEL, 3, 2), "P=? [ F<=(0*(N+1)) \"elected\" ]");
         assertEquals("0", result, tolerance * 10);
 
@@ -489,7 +485,7 @@ public final class PCTLSolverExplicitTest {
 
         result = computeResult(options,  String.format(ModelNamesPRISM.LEADER_SYNC_MODEL, 4, 5), "P=? [ F \"elected\" ]");
         assertEquals("1", result, tolerance * 10);
-        
+
         result = computeResult(options,  String.format(ModelNamesPRISM.LEADER_SYNC_MODEL, 4, 5), "P=? [ F<=(0*(N+1)) \"elected\" ]");
         assertEquals("0", result, tolerance * 10);
 
@@ -504,9 +500,9 @@ public final class PCTLSolverExplicitTest {
         // TODO check why closing options causes an error
         close(options);
     }
-    
+
     @Test
-    public void leaderAsynchronousTest() throws EPMCException {
+    public void leaderAsynchronousTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -515,7 +511,7 @@ public final class PCTLSolverExplicitTest {
         options.set(TestHelper.PRISM_FLATTEN, false);
         Map<String,Object> constants = new HashMap<>();
         options.set(OptionsModelChecker.CONST, constants);
-/*
+        /*
         result = computeResult(options,  String.format(LEADER_ASYNC_MODEL, 3), "filter(forall, leaders<=1)");
         assertEquals(true, result);
 
@@ -529,8 +525,8 @@ public final class PCTLSolverExplicitTest {
         constants.put("K", "35");
         result = computeResult(options,  String.format(LEADER_ASYNC_MODEL, 3), "Pmax=? [ F<=K \"elected\" ]");
         assertEquals("0.8203125", result, tolerance * 10);
-        
-        */
+
+         */
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options,  String.format(ModelNamesPRISM.LEADER_ASYNC_MODEL, 6), "filter(forall, leaders<=1)");
         assertEquals(true, result);
@@ -554,7 +550,7 @@ public final class PCTLSolverExplicitTest {
     }
 
     @Test
-    public void rabinTest() throws EPMCException {
+    public void rabinTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -571,11 +567,11 @@ public final class PCTLSolverExplicitTest {
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"}{min} ]");
         assertEquals("0", result, tolerance * 10);
 
-        
+
         String paramProp = "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=%d}{min} ]";
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 0));
         assertEquals("0.237457275390625", result, tolerance * 10);
-        
+
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 3), String.format(paramProp, 1));
         assertEquals("0.237457275390625", result, tolerance * 10);
 
@@ -595,10 +591,10 @@ public final class PCTLSolverExplicitTest {
         assertEquals("0", result, tolerance * 10);
         close(options);
     }
-    
+
     @Ignore
     @Test
-    public void rabin4Test() throws EPMCException {
+    public void rabin4Test() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         Value result;
@@ -620,7 +616,7 @@ public final class PCTLSolverExplicitTest {
         constants.put("k", "0");
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 4), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
         assertEquals("0.18001461029052734", result, tolerance * 10);
-        
+
         constants.put("k", "1");
         result = computeResult(options,  String.format(ModelNamesPRISM.RABIN_MODEL, 4), "Pmin=? [ !\"one_critical\" U (p1=2) {draw1=1&!\"one_critical\"&maxb<=k}{min} ]");
         assertEquals("0.18001461029052734", result, tolerance * 10);
@@ -646,9 +642,9 @@ public final class PCTLSolverExplicitTest {
         assertEquals("0", result, tolerance * 10);
         close(options);
     }
-    
+
     @Test
-    public void cyclinTest() throws EPMCException {
+    public void cyclinTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
@@ -660,17 +656,17 @@ public final class PCTLSolverExplicitTest {
         constants.put("N", "2");
         constants.put("k", "3");
         constants.put("t", "10");
-        
+
         // TODO
-        
-//        result = computeResult(options,  CYCLIN_MODEL, "P=? [ true U[t,t] cyclin_bound=k ]");
-  //      assertEquals("0.007764446365536075", result, tolerance * 10);
+
+        //        result = computeResult(options,  CYCLIN_MODEL, "P=? [ true U[t,t] cyclin_bound=k ]");
+        //      assertEquals("0.007764446365536075", result, tolerance * 10);
         close(options);
 
     }
 
     @Test
-    public void hermanOpenIntervalTest() throws EPMCException {
+    public void hermanOpenIntervalTest() {
         Value result;
         Options options = prepareOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);        
@@ -686,10 +682,10 @@ public final class PCTLSolverExplicitTest {
         result = computeResult(options, String.format(ModelNamesPRISM.HERMAN_MODEL, 7), "filter(state, P=? [ G<7 !\"stable\" ], (x1=0)&(x2=0)&(x3=0)&(x4=0)&(x5=0)&(x6=0)&(x7=0))");
         assertEquals("0.28856343032384757", result, tolerance);
     }
-    
+
     @Ignore
     @Test
-    public void philLssTest() throws EPMCException {
+    public void philLssTest() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);

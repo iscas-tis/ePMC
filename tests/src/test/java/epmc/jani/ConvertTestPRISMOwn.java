@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani;
 
@@ -26,10 +26,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.ModelNamesOwn;
-import epmc.error.EPMCException;
 
 public final class ConvertTestPRISMOwn {
-	/** Location of plugin directory in file system. */
+    /** Location of plugin directory in file system. */
     final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
     /**
@@ -41,12 +40,12 @@ public final class ConvertTestPRISMOwn {
     }
 
     @Test
-    public void zeroconfSimpleTest() throws EPMCException {
-    	ConvertTestStatistics statistics = new ConvertTestConfiguration()
-    			.setModelName(ModelNamesOwn.ZEROCONF_SIMPLE)
-    			.putConstant("n", "10")
-    			.setExploreAll()
-    			.run();
-    	System.out.println(statistics);
+    public void zeroconfSimpleTest() {
+        ConvertTestStatistics statistics = new ConvertTestConfiguration()
+                .setModelName(ModelNamesOwn.ZEROCONF_SIMPLE)
+                .putConstant("n", "10")
+                .setExploreAll()
+                .run();
+        System.out.println(statistics);
     }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
@@ -28,7 +28,7 @@ public interface ExpressionIdentifier extends ExpressionPropositional {
     static boolean isIdentifier(Object expression) {
         return expression instanceof ExpressionIdentifier;
     }
-    
+
     static ExpressionIdentifier asIdentifier(Expression expression) {
         if (isIdentifier(expression)) {
             return (ExpressionIdentifier) expression;
@@ -36,7 +36,7 @@ public interface ExpressionIdentifier extends ExpressionPropositional {
             return null;
         }
     }
-    
+
     @Override
     default boolean isPropositional() {
         return true;

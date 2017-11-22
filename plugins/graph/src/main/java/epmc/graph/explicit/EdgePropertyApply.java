@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -40,7 +39,6 @@ public final class EdgePropertyApply implements EdgeProperty {
     private final GraphExplicit graph;
     /** Operator computing the values obtained by {@link #get(int)}. */
     private final OperatorEvaluator evaluator;
-    private final Operator operator;
     /** Node properties {@link #get(int)} of which {@link #operator} is applied. */
     private final EdgeProperty[] operands;
     /** Values used to perform apply. */
@@ -66,20 +64,19 @@ public final class EdgePropertyApply implements EdgeProperty {
             assert edgeProperty.getGraph() == graph;
         }
         this.graph = graph;
-//        Operator operator = ContextValue.get().getOperator(identifier);
+        //        Operator operator = ContextValue.get().getOperator(identifier);
         Type[] types = new Type[operands.length];
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {
             types[operandNr] = operands[operandNr].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
-        this.operator = identifier;
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         this.evaluator = evaluator;
         this.operands = operands;
         this.callOperands = new Value[operands.length];
-        Type type = evaluator.resultType(operator, types);
+        Type type = evaluator.resultType();
         this.value = type.newValue();
     }
-    
+
     /**
      * {@inheritDoc}
      * For this property type, the result of this function is computed as
@@ -89,7 +86,7 @@ public final class EdgePropertyApply implements EdgeProperty {
      * resulting value.
      */
     @Override
-    public Value get(int node, int successor) throws EPMCException {
+    public Value get(int node, int successor) {
         assert successor >= 0;
         assert successor < graph.getNumSuccessors(node);
         for (int operandNr = 0; operandNr < operands.length; operandNr++) {

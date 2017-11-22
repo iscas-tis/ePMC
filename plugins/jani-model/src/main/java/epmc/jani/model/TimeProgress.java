@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
@@ -27,64 +27,63 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.util.UtilJSON;
 
 public final class TimeProgress implements JANINode {
-	private final static String EXP = "exp";
-	private final static String COMMENT = "comment";
-	private ModelJANI model;
-	private Map<String, JANIIdentifier> identifiers;
-	private Expression exp;
-	private String comment;
+    private final static String EXP = "exp";
+    private final static String COMMENT = "comment";
+    private ModelJANI model;
+    private Map<String, JANIIdentifier> identifiers;
+    private Expression exp;
+    private String comment;
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
-	
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	public void setIdentifiers(Map<String, JANIIdentifier> identifiers) {
-		this.identifiers = identifiers;
-	}
-	
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		assert value != null;
-		JsonObject object = UtilJSON.toObject(value);
-		exp = ExpressionParser.parseExpression(model, object.get(EXP), identifiers);
-		comment = UtilJSON.getStringOrNull(object, COMMENT);
-		return this;
-	}
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
 
-	@Override
-	public JsonValue generate() throws EPMCException {
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(EXP, ExpressionParser.generateExpression(model, exp));
-		UtilJSON.addOptional(builder, COMMENT, comment);
-		return builder.build();
-	}
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
 
-	public void setExp(Expression exp) {
-		this.exp = exp;
-	}
-	
-	public Expression getExp() {
-		return exp;
-	}
-	
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-	
-	public String getComment() {
-		return comment;
-	}
-	
+    public void setIdentifiers(Map<String, JANIIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
+
+    @Override
+    public JANINode parse(JsonValue value) {
+        assert value != null;
+        JsonObject object = UtilJSON.toObject(value);
+        exp = ExpressionParser.parseExpression(model, object.get(EXP), identifiers);
+        comment = UtilJSON.getStringOrNull(object, COMMENT);
+        return this;
+    }
+
+    @Override
+    public JsonValue generate() {
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(EXP, ExpressionParser.generateExpression(model, exp));
+        UtilJSON.addOptional(builder, COMMENT, comment);
+        return builder.build();
+    }
+
+    public void setExp(Expression exp) {
+        this.exp = exp;
+    }
+
+    public Expression getExp() {
+        return exp;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
 }

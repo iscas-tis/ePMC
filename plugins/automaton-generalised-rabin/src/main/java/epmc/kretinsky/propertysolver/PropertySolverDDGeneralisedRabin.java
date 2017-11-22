@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.propertysolver;
 
@@ -70,7 +70,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     @Override
     public boolean canHandle(Expression property, StateSet forStates)
-            throws EPMCException {
+    {
         assert property != null;
         assert forStates != null;
         if (!modelChecker.isEngineDD()) {
@@ -91,7 +91,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+    {
         assert property != null;
         assert forStates != null;
         assert property.isQuantifier();
@@ -103,7 +103,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
             min = false;
         }
         this.negate = min;
-        
+
         AutomatonGeneralisedRabin automatonRabin = new AutomatonKretinskyProduct();
         if (negate) {
             quantified = quantified.not();
@@ -172,7 +172,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         nodeSpace.dispose();
         oneNodes.dispose();
         reachProbs = reachProbs.multiplyWith(product.getInitial().toMT());
-            reachProbs = reachProbs.abstractSumWith(((ProductGraphDDExplicit) product).getAutomatonPresCube().clone());
+        reachProbs = reachProbs.abstractSumWith(((ProductGraphDDExplicit) product).getAutomatonPresCube().clone());
         product.close();
         if (negate) {
             reachProbs = contextDD.newConstant(1).subtractWith(reachProbs);
@@ -190,7 +190,7 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
     private void computeSymbStabAcc(AutomatonGeneralisedRabin automaton, TObjectIntMap<DD> tObjectIntMap,
             DD nonStates, List<DD> stable, List<List<DD>> accepting)
-                    throws EPMCException {
+    {
         assert tObjectIntMap != null;
         assert nonStates != null;
         assert stable != null;
@@ -225,13 +225,13 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
             }
         }
     }
-    
+
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
-            throws EPMCException {
-//        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
+    {
+        //        target = ComponentsDD.reachMaxOne(graphDD, target, nodeSpace);
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNotWith(target.clone());
         DD zeroNodes = nodeSpace.clone().andNotWith(someNodes).andNotWith(target.clone());
-        
+
         DD init = graphDD.getInitial();
         if (init.andNot(target).isFalseWith()
                 || init.andNot(zeroNodes).isFalseWith()) {
@@ -262,9 +262,9 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         result = result.addWith(target.andNot(graphDD.getNodeSpace()).toMTWith());
         return result;
     }
-    
+
     private boolean decideComponentGeneralisedRabinMCLeaf(DD component, List<DD> stable,
-            List<List<DD>> accepting) throws EPMCException {
+            List<List<DD>> accepting) {
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD stableDD = stable.get();
             if (!component.and(stableDD).eqWith(component.clone()).isTrueWith()) {
@@ -284,10 +284,10 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
 
         return false;
     }
-    
+
     private boolean decideComponentGeneralisedRabinMDPLeaf(
             ProductGraphDDExplicit product, DD leafSCC,
-            List<DD> stable, List<List<DD>> accepting) throws EPMCException {
+            List<DD> stable, List<List<DD>> accepting) {
         boolean decision = false;
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD leafSCCAndStable = leafSCC.and(stable.get());
@@ -295,10 +295,10 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
                     .eq(contextDD.newConstant(Player.STOCHASTIC));
             DD stableDD = stayIn(product, leafSCCAndStable, prodNodesNot);
             prodNodesNot.dispose();
-//            leafSCCAndStable.dispose();
+            //            leafSCCAndStable.dispose();
             for (DD acc : accepting.get()) {
                 if (!stableDD.and(acc).isFalseWith()) {
-//                    stableDD.dispose();
+                    //                    stableDD.dispose();
                     decision = true;
                     break;
                 }
@@ -306,9 +306,9 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
         }
         return decision;
     }
-    
+
     private DD stayIn(GraphDD graph, DD target, DD forall)
-            throws EPMCException {
+    {
         assert graph != null;
         assert target != null;
         assert forall != null;
@@ -321,20 +321,20 @@ public class PropertySolverDDGeneralisedRabin implements PropertySolver {
             DD targetNodesNext = target.permute(graph.getSwapPresNext());
             DD targetExist = target.clone().andWith(forall.not());
             DD targetForall = target.and(forall);
-            
+
             DD targetExistOne = targetNodesNext.abstractAndExist(transitions, nextAndActions);
             targetExistOne = targetExistOne.andWith(targetExist);
-            
+
             DD targetForallOne = targetNodesNext.not().abstractAndExistWith
                     (transitions.clone(), nextAndActions.clone());
             targetNodesNext.dispose();
             targetForallOne = targetForallOne.notWith().andWith(targetForall);
-            
+
             target = target.clone().andWith(targetForallOne.orWith(targetExistOne));
         }
         prevTarget.dispose();
         nextAndActions.dispose();
-        
+
         return target;
     }
 }

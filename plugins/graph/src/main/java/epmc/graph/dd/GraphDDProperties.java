@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.dd;
 
@@ -28,7 +28,9 @@ import java.util.Set;
 
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.EPMCException;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueObject;
@@ -47,11 +49,11 @@ public final class GraphDDProperties implements Closeable {
         assert graph != null;
         this.graph = graph;
     }
-    
+
     public final Set<Object> getGraphProperties() {
         return graphPropertiesExternal.keySet();
     }
-    
+
     public final Value getGraphProperty(Object property) {
         assert property != null;
         return graphProperties.get(property);
@@ -65,15 +67,15 @@ public final class GraphDDProperties implements Closeable {
         graphProperties.put(propertyName, type.newValue());
     }
 
-    public final void setGraphProperty(Object property, Value value)
-            throws EPMCException {
+    public final void setGraphProperty(Object property, Value value) {
         assert property != null;
         assert value != null;
-        assert graphProperties.containsKey(property);        
-        graphProperties.get(property).set(value);
+        assert graphProperties.containsKey(property);
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), graphProperties.get(property).getType());
+        set.apply(graphProperties.get(property), value);
     }
 
-    
+
     public final void registerNodeProperty(Object propertyName, DD property) {
         assert propertyName != null;
         assert property != null;
@@ -82,7 +84,7 @@ public final class GraphDDProperties implements Closeable {
         }
         nodeProperties.put(propertyName, property.clone());
     }
-    
+
     public final DD getNodeProperty(Object property) {
         assert property != null;
         return nodeProperties.get(property);
@@ -91,7 +93,7 @@ public final class GraphDDProperties implements Closeable {
     public final Set<Object> getNodeProperties() {
         return nodePropertiesExternal.keySet();
     }
-    
+
     public final void registerEdgeProperty(Object propertyName,
             DD property) {
         assert propertyName != null;
@@ -101,7 +103,7 @@ public final class GraphDDProperties implements Closeable {
         }
         edgeProperties.put(propertyName, property.clone());
     }
-    
+
 
     public final DD getEdgeProperty(Object property) {
         assert property != null;
@@ -125,17 +127,17 @@ public final class GraphDDProperties implements Closeable {
             edgeProperty.dispose();
         }
     }
-    
+
     public GraphDD getGraph() {
         return graph;
     }
-    
-    public ContextDD getContextDD() throws EPMCException {
+
+    public ContextDD getContextDD() {
         return graph.getContextDD();
     }
 
     public void setGraphProperty(Object property, Object value) {
-        ValueObject.asObject(getGraphProperty(property)).set(value);
+        ValueObject.as(getGraphProperty(property)).set(value);
     }
 
     public void removeGraphProperty(Object property) {
@@ -153,6 +155,6 @@ public final class GraphDDProperties implements Closeable {
     }
 
     public void setGraphPropertyObject(Object property, Object value) {
-        ValueObject.asObject(graphProperties.get(property)).set(value);
+        ValueObject.as(graphProperties.get(property)).set(value);
     }    
 }

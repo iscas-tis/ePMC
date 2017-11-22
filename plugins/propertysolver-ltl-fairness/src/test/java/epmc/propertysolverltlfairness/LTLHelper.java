@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolverltlfairness;
 
 import java.util.List;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
@@ -37,11 +36,10 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import epmc.value.ValueBoolean;
 
 public class LTLHelper {
     public static RawProperties readProperties(Options options, String propFn)
-            throws EPMCException {
+    {
         if (propFn != null) {
             RawProperties props = new RawProperties();
             Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
@@ -65,7 +63,7 @@ public class LTLHelper {
         System.out.println(" }");
     }
     // must have P[max,min][>= k,=?,<=] [LTL-prop form]
-    public static boolean canHandle(Expression property) throws EPMCException {
+    public static boolean canHandle(Expression property) {
         // TODO Auto-generated method stub
         assert(!(property instanceof ExpressionQuantifier));  //if quantifiers are stripped out
         return isFairLTL(property,false,false);
@@ -77,7 +75,7 @@ public class LTLHelper {
      * return true means it is in fainess-LTL
      */
     private static boolean isFairLTL(Expression prop, boolean isStable,
-            boolean isAbsolute) throws EPMCException {
+            boolean isAbsolute) {
         // TODO Auto-generated method stub
         if (prop instanceof ExpressionIdentifier || prop instanceof ExpressionLiteral) {
             return (isStable && isAbsolute);       //if it is s op value,like s = 2
@@ -108,23 +106,23 @@ public class LTLHelper {
         }//if quantifier false
         return false;
     }
-    
-    private static boolean isFalse(Expression expression) throws EPMCException {
+
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
-    
-    private static boolean isTrue(Expression expression) throws EPMCException {
+
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
-    
+
 }

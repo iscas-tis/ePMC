@@ -16,14 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver.lumping;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
@@ -31,14 +30,14 @@ import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
 
 public final class UtilLump {
-    public static GraphSolverObjectiveExplicitLump partitionByAPsObjective(GraphExplicit graph, Collection<Expression> atomics) throws EPMCException {
+    public static GraphSolverObjectiveExplicitLump partitionByAPsObjective(GraphExplicit graph, Collection<Expression> atomics) {
         GraphSolverObjectiveExplicitLump result = new GraphSolverObjectiveExplicitLump();
         result.setGraph(graph);
         result.setAtomics(atomics);
         result.prepare();
         return result;
     }
-    
+
     public static void fillGaps(int[] partition) {
         BitSet used = new BitSetUnboundedLongArray();
         for (int state = 0; state < partition.length; state++) {

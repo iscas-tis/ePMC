@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -56,12 +56,28 @@ import java.util.WeakHashMap;
 import epmc.error.EPMCException;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.util.RecursiveStopWatch;
 import epmc.util.Util;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
@@ -72,49 +88,35 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
-import epmc.value.operator.OperatorAdd;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorDivide;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorGe;
-import epmc.value.operator.OperatorGt;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorLe;
-import epmc.value.operator.OperatorLt;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorMultiply;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorOr;
 
 // TODO add support for JINC as soon as/if ever notified by mail
 // TODO documentation
 // TODO remove entries from Value table if no longer used
 
 public final class ContextDD implements Closeable {
-	private static ContextDD contextDD;
-	
-	public static ContextDD get() throws EPMCException {
-		if (contextDD == null) {
-			contextDD = new ContextDD();
-		}
-		return contextDD;
-	}
+    private static ContextDD contextDD;
 
-	/** String contain a single space. */
+    public static ContextDD get() {
+        if (contextDD == null) {
+            contextDD = new ContextDD();
+        }
+        return contextDD;
+    }
+
+    /** String contain a single space. */
     private final static String SPACE = " ";
     private final class LongTriple {
         private final long long1;
         private final long long2;
         private final long long3;
-        
+
         LongTriple(long long1, long long2, long long3) {
             this.long1 = long1;
             this.long2 = long2;
             this.long3 = long3;
         }
-        
-        
+
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -124,7 +126,7 @@ public final class ContextDD implements Closeable {
             return hash;
         }
 
-        
+
         @Override
         public boolean equals(Object obj) {
             assert obj != null;
@@ -144,7 +146,7 @@ public final class ContextDD implements Closeable {
             return true;
         }
     }
-    
+
     static final String WRONG_USAGE_NO_DEBUG = "wrong usage of DD package."
             + "Please rerun with \"--" + OptionsDD.DD_DEBUG + " true\" enabled"
             + " to get more information (preferrably on a small"
@@ -159,7 +161,7 @@ public final class ContextDD implements Closeable {
     private final Set<LibraryDD> lowLevels
     = new TCustomHashSet<>(new IdentityHashingStrategy<>());
     private final Set<LibraryDD> lowLevelsExt = Collections.unmodifiableSet(lowLevels);
-            
+
     /** whether this context has not yet been shut down */
     private boolean alive = true;
 
@@ -178,7 +180,7 @@ public final class ContextDD implements Closeable {
     private final RecursiveStopWatch convertTime = new RecursiveStopWatch();
     private final Log log;
 
-    public ContextDD() throws EPMCException {
+    public ContextDD() {
         totalTime.start();
         this.alive = true;
         Options options = Options.get();
@@ -189,7 +191,7 @@ public final class ContextDD implements Closeable {
         this.lowLevelMulti = UtilOptions.getInstance(OptionsDD.DD_MULTI_ENGINE);
         this.lowLevelMulti.setContextDD(this);
         this.log = options.get(OptionsMessages.LOG);
-        
+
         this.lowLevelBinary = UtilOptions.getInstance(OptionsDD.DD_BINARY_ENGINE);
         assert this.lowLevelBinary != null;
         this.lowLevelBinary.setContextDD(this);
@@ -204,19 +206,19 @@ public final class ContextDD implements Closeable {
         this.genericApply = new GenericOperations(this);
         totalTime.stop();
     }
-    
+
     public void setAllowReorder(boolean allowReorder) {
         totalTime.start();
         this.allowReorder = allowReorder;
         totalTime.stop();
     }
-    
+
     public void reorder() {
         assert invalidateWalkers();
         totalTime.start();
         totalTime.stop();
     }
-    
+
     public int numVariables() {
         totalTime.start();
         int numVariables = llVariables.get(lowLevelBinary).size();
@@ -225,7 +227,7 @@ public final class ContextDD implements Closeable {
     }
 
     public VariableDD newVariable(String name, Type type, int copies)
-            throws EPMCException {
+    {
         assert name != null;
         assert type != null;
         assert copies > 0;
@@ -237,13 +239,13 @@ public final class ContextDD implements Closeable {
     }
 
     public VariableDD newVariable(String name, Type type,
-            List<List<DD>> ddActionBits) throws EPMCException {
+            List<List<DD>> ddActionBits) {
         int copies = ddActionBits.size();
         return newVariable(name, type, copies, ddActionBits);
     }
-    
+
     public VariableDD newVariable(String name, Type type, int copies, List<List<DD>> ddVariables)
-            throws EPMCException {
+    {
         assert name != null;
         assert type != null;
         assert copies > 0;
@@ -259,9 +261,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return variable;
     }
-    
+
     public VariableDD newBoolean(String name, int copies)
-            throws EPMCException {
+    {
         assert name != null;
         assert copies > 0;
         totalTime.start();
@@ -270,8 +272,8 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
-    public VariableDD newInteger(String name, int copies, int lower, int upper) throws EPMCException {
+
+    public VariableDD newInteger(String name, int copies, int lower, int upper) {
         assert name != null;
         assert copies > 0;
         assert lower <= upper;
@@ -281,7 +283,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public void setVariableName(int number, String name) {
         assert alive;
         assert number >= 0;
@@ -294,7 +296,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
     }
 
-    public DD applyWith(Operator operator, DD... operands) throws EPMCException {
+    public DD applyWith(Operator operator, DD... operands) {
         assert operator != null;
         assert assertValidDDArray(operands);
         DD result = apply(operator, operands);
@@ -304,7 +306,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public DD apply(Operator identifier, DD... ops) throws EPMCException {
+    public DD apply(Operator identifier, DD... ops) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -325,7 +327,7 @@ public final class ContextDD implements Closeable {
             assert op.getLowLevel() == lowLevel : "invalid argument no " + opAssNr;
             opAssNr++;
         }
-        
+
         long result;
         long[] opsLong = new long[ops.length];
         for (int opNr = 0; opNr < ops.length; opNr++) {
@@ -333,11 +335,11 @@ public final class ContextDD implements Closeable {
         }
         Type types[] = new Type[ops.length];
         for (int i = 0; i < ops.length; i++) {
-        	types[i] = ops[i].getType();
+            types[i] = ops[i].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         if (ops.length == 0) {
-            Type resultType = evaluator.resultType(identifier, types);
+            Type resultType = evaluator.resultType();
             Value resultValue = resultType.newValue();
             evaluator.apply(resultValue, new Value[0]);
             result = lowLevel.newConstant(resultValue);
@@ -393,24 +395,24 @@ public final class ContextDD implements Closeable {
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
-        Type type = evaluator.resultType(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
+        Type type = evaluator.resultType();
         return type;
     }
 
-    
-    public DD apply(Operator identifier, List<DD> ops) throws EPMCException {
+
+    public DD apply(Operator identifier, List<DD> ops) {
         totalTime.start();
         DD result = apply(identifier, ops.toArray(new DD[0]));
         totalTime.stop();
         return result;
     }
-    
+
     private long genericApply(OperatorEvaluator operator, Operator identifier, Type type, LibraryDD lowLevel, long... ops)
-            throws EPMCException {
+    {
         return this.genericApply.apply(operator, identifier, type, lowLevel, ops);
     }
-        
+
     private boolean assertValidDDArray(DD... dds) {
         assert dds != null;
         int index = 0;
@@ -420,7 +422,7 @@ public final class ContextDD implements Closeable {
         }
         return true;
     }
-    
+
     private boolean assertValidDDIterable(Iterable<DD> dds) {
         assert dds != null;
         int index = 0;
@@ -432,20 +434,20 @@ public final class ContextDD implements Closeable {
     }
 
     private boolean assertOperatorCompatible(Operator identifier, Type... types)
-    		throws EPMCException {
+    {
         return true;
     }
 
     private boolean assertOperatorCompatible(Operator identifier, DD... ops)
-            throws EPMCException {
+    {
         assert assertValidDDArray(ops);
         Type[] types = new Type[ops.length];
         for (int index = 0; index < ops.length; index++) {
             types[index] = ops[index].getType();
         }
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, types);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, types);
         assert evaluator != null : identifier + " " + Arrays.toString(types);
-        Type resultType = evaluator.resultType(identifier, types);
+        Type resultType = evaluator.resultType();
         assert resultType != null : identifier + SPACE + Arrays.toString(types);
         return true;
     }
@@ -458,12 +460,12 @@ public final class ContextDD implements Closeable {
             return false;
         }
         if (operator.equals(OperatorGe.GE)
-        		|| operator.equals(OperatorGt.GT)
-        		|| operator.equals(OperatorLe.LE)
-        		|| operator.equals(OperatorLt.LT)) {
+                || operator.equals(OperatorGt.GT)
+                || operator.equals(OperatorLe.LE)
+                || operator.equals(OperatorLt.LT)) {
             return true;        	
         } else if (operator.equals(OperatorEq.EQ)
-        		|| operator.equals(OperatorNe.NE)) {
+                || operator.equals(OperatorNe.NE)) {
             return ops[0].getLowLevel() == lowLevelMulti;
         } else {
             return false;
@@ -478,20 +480,20 @@ public final class ContextDD implements Closeable {
                 && ops[1].getLowLevel() == lowLevelMulti;
     }
 
-    private DD newConstant(Value value, LibraryDD lowLevel) throws EPMCException {
+    private DD newConstant(Value value, LibraryDD lowLevel) {
         assert alive();
         assert value != null;
         assert invalidateWalkersIfReorder();
         return toDD(lowLevel.newConstant(value), lowLevel);
     }
-    
-    
-    public DD newConstant(Value value) throws EPMCException {
+
+
+    public DD newConstant(Value value) {
         assert alive();
         assert value != null;
         totalTime.start();
         DD result;
-        if (ValueBoolean.isBoolean(value)) {
+        if (ValueBoolean.is(value)) {
             result = newConstant(value, lowLevelBinary);
         } else {
             result = newConstant(value, lowLevelMulti);
@@ -500,8 +502,8 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
-    public DD newConstant(int value) throws EPMCException {
+
+    public DD newConstant(int value) {
         assert alive();
         totalTime.start();
         DD result = newConstant(UtilValue.<ValueInteger,TypeInteger>newValue(TypeInteger.get(), value));
@@ -509,8 +511,8 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
-    public final DD newConstant(boolean value) throws EPMCException {
+
+    public final DD newConstant(boolean value) {
         assert alive();
         totalTime.start();
         DD result = newConstant(TypeBoolean.get().newValue(value));
@@ -518,7 +520,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public DD newConstant(Enum<?> constant) throws EPMCException {
+    public DD newConstant(Enum<?> constant) {
         assert alive();
         assert constant != null;
         totalTime.start();
@@ -527,7 +529,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public DD variable(int variableNr) {
         assert alive();
         totalTime.start();
@@ -535,7 +537,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public DD variable(int variableNr, LibraryDD lowLevel) {
         assert alive();
         assert variableNr >= 0 : "variable = " + variableNr;
@@ -548,7 +550,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public DD newVariable() throws EPMCException {
+    public DD newVariable() {
         assert alive();
         totalTime.start();
         long varIdMulti = lowLevelMulti.newVariable();
@@ -598,7 +600,7 @@ public final class ContextDD implements Closeable {
                 dd.dispose();
             }
         }
-        
+
         lowLevelMulti.close();
         lowLevelBinary.close();
         alive = false;
@@ -609,7 +611,7 @@ public final class ContextDD implements Closeable {
         log.send(MessagesDD.DD_TOTAL_TIME, totalTime.getTimeSeconds());
     }
 
-    
+
     public boolean isLeaf(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -619,7 +621,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
+
     public Value getValue(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -630,7 +632,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
+
     public int variable(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -640,7 +642,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    
+
     public TIntSet support(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -653,7 +655,7 @@ public final class ContextDD implements Closeable {
         return set;
     }
 
-    
+
     public Set<VariableDD> highLevelSupport(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -671,7 +673,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     private void support(Walker walker, TIntSet set, TLongSet seen) {
         assert walker != null;
         assert set != null;
@@ -708,7 +710,7 @@ public final class ContextDD implements Closeable {
             walker.back();
         }
     }
-    
+
     private void toStringNodesRecurse(Walker walker, TLongSet seen, StringBuilder builder, TLongLongMap nodeMap) {
         if (PRINT_INVERTER_ARCS) {
             walker.regular();
@@ -737,7 +739,7 @@ public final class ContextDD implements Closeable {
         }
     }
 
-    
+
     public String toString(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -755,7 +757,7 @@ public final class ContextDD implements Closeable {
         toStringNodesRecurse(walker, seen, builder, nodeMap);
         builder.append("\n");
         seen.clear();
-        
+
         walker = dd.walker(!PRINT_INVERTER_ARCS);
         walker.regular();
         if (complement) {
@@ -861,7 +863,7 @@ public final class ContextDD implements Closeable {
         long luid = dd.uniqueId();
         dd.back();
         builder.append("  node" + nodeMap.get(uid) + " -> node" + nodeMap.get(luid)
-                + " [style=dashed,arrowhead=" + arrow + "];\n");
+        + " [style=dashed,arrowhead=" + arrow + "];\n");
         dd.high();
         arrow = dd.isComplement() ? "dot" : "none";
         dd.regular();
@@ -869,12 +871,12 @@ public final class ContextDD implements Closeable {
         toStringEdgesRecurse(dd, seen, builder, nodeMap);
         dd.back();
         builder.append("  node" + nodeMap.get(uid) + " -> node" + nodeMap.get(huid)
-                + " [style=solid,arrowhead=" + arrow + "];\n");
+        + " [style=solid,arrowhead=" + arrow + "];\n");
     }
 
-    
+
     public DD permute(DD dd, Permutation permutation)
-            throws EPMCException {
+    {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidPermutation(permutation);
@@ -894,11 +896,11 @@ public final class ContextDD implements Closeable {
         return true;
     }
 
-    
+
     public boolean alive() {
         return alive;
     }
-    
+
     public TLongObjectMap<BigInteger> countSatMap(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
@@ -913,7 +915,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return cache;
     }
-    
+
     public BigInteger countSat(DD dd, DD variablesCube) {
         assert alive();
         assert assertValidDD(dd);
@@ -985,7 +987,7 @@ public final class ContextDD implements Closeable {
         return true;
     }
 
-    
+
     public boolean assertCube(DD dd) {
         return assertCube(dd.walker());
     }
@@ -995,7 +997,7 @@ public final class ContextDD implements Closeable {
         BigInteger result;
         if (cube.isLeaf()) {
             assert dd.isLeaf();
-            if (ValueBoolean.asBoolean(dd.value()).getBoolean()) {
+            if (ValueBoolean.as(dd.value()).getBoolean()) {
                 result = BigInteger.ONE;
             } else {
                 result = BigInteger.ZERO;
@@ -1023,7 +1025,7 @@ public final class ContextDD implements Closeable {
     }
 
     private DD importDD(DD dd, int[] variablesMap, LibraryDD lowLevel)
-            throws EPMCException {
+    {
         assert alive();
         assert assertValidDD(dd);
         Walker walker = dd.walker();
@@ -1034,13 +1036,13 @@ public final class ContextDD implements Closeable {
                 entry.dispose();
             }
         }
-        
+
         return result;
     }
 
     private DD importDD(Walker walker, int[] variablesMap,
             TLongObjectMap<DD> nodeMap, LibraryDD lowLevel)
-                    throws EPMCException {
+    {
         DD result;
         if (nodeMap.containsKey(walker.uniqueId())) {
             result = nodeMap.get(walker.uniqueId());
@@ -1067,7 +1069,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    private DD importDD(DD dd, LibraryDD lowLevel) throws EPMCException {
+    private DD importDD(DD dd, LibraryDD lowLevel) {
         convertTime.start();
         boolean reorderStatus = allowReorder;
         setAllowReorder(false);
@@ -1076,7 +1078,7 @@ public final class ContextDD implements Closeable {
         convertTime.stop();
         return result;
     }
-    
+
     public BigInteger countNodes(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -1113,12 +1115,12 @@ public final class ContextDD implements Closeable {
         nodes.get(lowLevel).add(result);
         return result;
     }
-    
-    public DD findSat(DD dd, DD cube) throws EPMCException {
+
+    public DD findSat(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert cube.assertCube();
         totalTime.start();
         DD result;
@@ -1184,8 +1186,8 @@ public final class ContextDD implements Closeable {
             walker.back();
         }
     }
-    
-    public DD abstractExist(DD dd, DD cube) throws EPMCException {
+
+    public DD abstractExist(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -1209,14 +1211,14 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD abstractForall(DD dd, DD cube) throws EPMCException {
+
+    public DD abstractForall(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert cube.assertCube();
         totalTime.start();
         DD convertCube;
@@ -1234,8 +1236,8 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD abstractSum(DD dd, DD cube) throws EPMCException {
+
+    public DD abstractSum(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -1259,8 +1261,8 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD abstractProduct(DD dd, DD cube) throws EPMCException {
+
+    public DD abstractProduct(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -1285,7 +1287,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public DD abstractMax(DD dd, DD cube) throws EPMCException {
+    public DD abstractMax(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -1309,8 +1311,8 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD abstractMin(DD dd, DD cube) throws EPMCException {
+
+    public DD abstractMin(DD dd, DD cube) {
         assert checkDD();
         assert alive();
         assert invalidateWalkersIfReorder();
@@ -1334,12 +1336,12 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD toMT(DD dd, Value forTrue, Value forFalse) throws EPMCException {
+
+    public DD toMT(DD dd, Value forTrue, Value forFalse) {
         assert checkDD();
         assert alive();
         assert assertValidDD(dd);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert forTrue != null;
         assert forFalse != null;
         totalTime.start();
@@ -1352,21 +1354,21 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
-    public DD toMT(DD dd, int forTrue, int forFalse) throws EPMCException {
+
+    public DD toMT(DD dd, int forTrue, int forFalse) {
         assert checkDD();
         Value forTrueValue = UtilValue.newValue(TypeInteger.get(), forTrue);
         Value forFalseValue = UtilValue.newValue(TypeInteger.get(), forFalse);
         assert checkDD();
         return toMT(dd, forTrueValue, forFalseValue);
     }
-    
-    public DD toInt(DD dd) throws EPMCException {
+
+    public DD toInt(DD dd) {
         assert checkDD();
         return toMT(dd, 1, 0);
     }
-    
-    public Permutation newPermutation(int[] first, int[] second) throws EPMCException {
+
+    public Permutation newPermutation(int[] first, int[] second) {
         assert alive();
         assert first != null;
         assert second != null;
@@ -1392,8 +1394,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return newPermutation(permuteArray);
     }
-    
-    public Permutation newPermutationListInteger(List<Integer> first, List<Integer> second) throws EPMCException {
+
+    public Permutation newPermutationListInteger(List<Integer> first, List<Integer> second) {
         assert alive();
         assert first != null;
         assert second != null;
@@ -1414,8 +1416,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Permutation newPermutationListDD(List<DD> first, List<DD> second) throws EPMCException {
+
+    public Permutation newPermutationListDD(List<DD> first, List<DD> second) {
         assert alive();
         assert first != null;
         assert second != null;
@@ -1439,8 +1441,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Permutation newPermutationCube(DD cube1, DD cube2) throws EPMCException {
+
+    public Permutation newPermutationCube(DD cube1, DD cube2) {
         assert alive();
         assert cube1 != null;
         assert cube2 != null;
@@ -1452,7 +1454,7 @@ public final class ContextDD implements Closeable {
         assert cubeSize1 == cubeSize2;
         int[] firstInteger = new int[cubeSize1];
         int[] secondInteger = new int[cubeSize2];
-        
+
         int entryNr = 0;
         while(!w1.isLeaf()) {
             firstInteger[entryNr] = w1.variable();
@@ -1461,13 +1463,13 @@ public final class ContextDD implements Closeable {
             w2.high();
             entryNr++;
         }
-        
+
         Permutation result = newPermutation(firstInteger, secondInteger);
         totalTime.stop();
         return result;
     }
 
-    public DD permute(DD dd, int[] permutationIntArr) throws EPMCException {
+    public DD permute(DD dd, int[] permutationIntArr) {
         assert alive();
         totalTime.start();
         Permutation permutation = newPermutation(permutationIntArr);
@@ -1484,8 +1486,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD listToCube(Iterable<DD> vars) throws EPMCException {
+
+    public DD listToCube(Iterable<DD> vars) {
         assert alive();
         assert assertValidDDIterable(vars);
         totalTime.start();
@@ -1499,7 +1501,7 @@ public final class ContextDD implements Closeable {
         return cube;
     }
 
-    public List<DD> cubeToList(DD cube) throws EPMCException {
+    public List<DD> cubeToList(DD cube) {
         assert alive();
         assert assertCube(cube);
         totalTime.start();
@@ -1513,7 +1515,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public List<DD> cubeToListClone(DD cube) throws EPMCException {
+    public List<DD> cubeToListClone(DD cube) {
         assert alive();
         assert assertCube(cube);
         totalTime.start();
@@ -1522,11 +1524,11 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public void printSupport(DD dd) throws EPMCException {
+    public void printSupport(DD dd) {
         System.out.println(supportString(dd));
     }
-    
-    public String supportString(DD dd) throws EPMCException {
+
+    public String supportString(DD dd) {
         StringBuilder result = new StringBuilder();
         assert alive();
         assert assertValidDD(dd);
@@ -1541,8 +1543,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result.toString();
     }
-    
-    public DD abstractExist(DD dd, Iterable<DD> variables) throws EPMCException {
+
+    public DD abstractExist(DD dd, Iterable<DD> variables) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDDIterable(variables);
@@ -1558,17 +1560,22 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public TIntSet findSatSet(DD dd, DD cube) throws EPMCException {
+
+    public TIntSet findSatSet(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
-        assert TypeBoolean.isBoolean(dd.getType());
+        assert TypeBoolean.is(dd.getType());
         assert assertCube(cube);
         totalTime.start();
         TIntSet result = new TIntHashSet();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {
-            if (ValueAlgebra.asAlgebra(dd.value()).isZero()) {
+            if (isZero != null) {
+                isZero.apply(cmp, dd.value());
+            }
+            if (ValueAlgebra.is(dd.value()) && cmp.getBoolean()) {
                 totalTime.stop();
                 assert false;
                 return null;
@@ -1594,8 +1601,8 @@ public final class ContextDD implements Closeable {
             return result;
         }
     }
-    
-    public DD intSetToDD(TIntSet set, DD cube) throws EPMCException {
+
+    public DD intSetToDD(TIntSet set, DD cube) {
         assert alive();
         assert assertValidIntSet(set, cube);
         totalTime.start();
@@ -1631,15 +1638,15 @@ public final class ContextDD implements Closeable {
                 var + " " + llVariables.get(lowLevelBinary).size();
             assert support.contains(var);
         }
-        
+
         return true;
     }
-    
-    public DD divide(DD dd, int intValue) throws EPMCException {
+
+    public DD divide(DD dd, int intValue) {
         assert alive();
         assert assertValidDD(dd);
         assert assertOperatorCompatible(OperatorDivide.DIVIDE, dd.getType(),
-        		TypeInteger.get());
+                TypeInteger.get());
         totalTime.start();
         DD divBy = newConstant(intValue);
         DD result = apply(OperatorDivide.DIVIDE, dd, divBy);
@@ -1647,9 +1654,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public Value applyOverSat(Operator identifier, DD dd, DD support, DD sat)
-            throws EPMCException {
+    {
         assert alive();
         assert identifier != null;
         assert assertValidDD(dd);
@@ -1659,8 +1666,8 @@ public final class ContextDD implements Closeable {
         assert applyOverSatSupportOK(dd, support, sat);
         totalTime.start();
         Type ddType = dd.getType();
-        OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, ddType, ddType);
-        Type type = evaluator.resultType(identifier, ddType, ddType);
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, ddType, ddType);
+        Type type = evaluator.resultType();
         Map<LongTriple,Value> known = new THashMap<>();
         Value value = applyOverSat(identifier, dd.walker(), support.walker(), known, type, sat.walker());
         totalTime.stop();
@@ -1668,7 +1675,7 @@ public final class ContextDD implements Closeable {
     }
 
     private boolean applyOverSatSupportOK(DD dd, DD support, DD sat)
-            throws EPMCException {
+    {
         TIntSet commonSupport = new TIntHashSet();
         commonSupport.addAll(dd.support());
         commonSupport.addAll(sat.support());
@@ -1680,9 +1687,9 @@ public final class ContextDD implements Closeable {
         }
         return true;
     }
-    
+
     public Value applyOverSat(Operator identifier, DD dd, DD sat)
-            throws EPMCException {
+    {
         assert identifier != null;
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1698,8 +1705,8 @@ public final class ContextDD implements Closeable {
 
     private Value applyOverSat(Operator identifier, Walker dd, Walker support,
             Map<LongTriple,Value> known,
-            Type type, Walker sat) throws EPMCException {
-    	OperatorEvaluator evaluator = ContextValue.get().getOperatorEvaluator(identifier, type, type);
+            Type type, Walker sat) {
+        OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, type, type);
         LongTriple triple = new LongTriple(dd.uniqueId(), sat.uniqueId(), support.uniqueId());
         if (known.containsKey(triple)) {
             return known.get(triple);
@@ -1708,8 +1715,9 @@ public final class ContextDD implements Closeable {
             known.put(triple, null);
             return null;
         } else if (support.isLeaf()) {
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, dd.value().getType(), type);
             Value result = type.newValue();
-            result.set(dd.value());
+            set.apply(result, dd.value());
             known.put(triple, result);
             return result;
         } else {
@@ -1757,8 +1765,8 @@ public final class ContextDD implements Closeable {
             return result;
         }
     }
-    
-    public Value maxOverSat(DD dd, DD sat) throws EPMCException  {
+
+    public Value maxOverSat(DD dd, DD sat)  {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1768,8 +1776,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Value minOverSat(DD dd, DD sat) throws EPMCException  {
+
+    public Value minOverSat(DD dd, DD sat)  {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1779,8 +1787,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Value andOverSat(DD dd, DD sat) throws EPMCException {
+
+    public Value andOverSat(DD dd, DD sat) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1790,8 +1798,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Value orOverSat(DD dd, DD sat) throws EPMCException {
+
+    public Value orOverSat(DD dd, DD sat) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1801,8 +1809,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public void collectValues(Set<Value> values, DD dd, DD sat) throws EPMCException {
+
+    public void collectValues(Set<Value> values, DD dd, DD sat) {
         assert values != null;
         assert alive();
         assert assertValidDD(dd);
@@ -1819,7 +1827,7 @@ public final class ContextDD implements Closeable {
 
     private void collectValues(Walker dd, Walker support,
             Map<LongTriple,Value> known,
-            Walker sat) throws EPMCException {
+            Walker sat) {
         LongTriple pair = new LongTriple(dd.uniqueId(), sat.uniqueId(), support.uniqueId());
         if (known.containsKey(pair)) {
             return;
@@ -1864,8 +1872,8 @@ public final class ContextDD implements Closeable {
             known.put(pair, null);
         }
     }    
-    
-    public DD supportDD(DD dd) throws EPMCException {
+
+    public DD supportDD(DD dd) {
         assert alive();
         assert assertValidDD(dd);
         totalTime.start();
@@ -1873,8 +1881,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD intSetToCube(TIntSet support) throws EPMCException {
+
+    public DD intSetToCube(TIntSet support) {
         assert alive();
         assert assertValidSupport(support);
         totalTime.start();
@@ -1899,8 +1907,8 @@ public final class ContextDD implements Closeable {
         }
         return true;
     }
-    
-    public Permutation newPermutation(int[] array) throws EPMCException {
+
+    public Permutation newPermutation(int[] array) {
         assert alive();
         assert checkPermutation(array);
         totalTime.start();
@@ -1922,7 +1930,7 @@ public final class ContextDD implements Closeable {
         assert contained.size() == llVariables.get(lowLevelMulti).size();
         return true;
     }
-    
+
     public Walker walker(DD dd, boolean autoComplement) {
         assert alive();
         assert assertValidDD(dd);
@@ -1932,7 +1940,7 @@ public final class ContextDD implements Closeable {
         assert registerWalker(walker);
         return walker;
     }
-    
+
     public SupportWalker supportWalker(DD dd, DD support, boolean stopAtFalse, boolean stopAtZero) {
         assert assertValidDD(dd);
         assert assertValidDD(support);
@@ -1942,7 +1950,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return supportWalker;
     }
-    
+
     public SupportWalker supportWalker(DD dd, DD support) {
         assert assertValidDD(dd);
         assert assertValidDD(support);
@@ -1952,7 +1960,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return supportWalker;
     }
-    
+
     public SupportWalker supportWalker(DD dd, DD support,
             Collection<Value> stopWhere) {
         assert assertValidDD(dd);
@@ -1970,9 +1978,9 @@ public final class ContextDD implements Closeable {
         walkers.put(walker, null);
         return true;
     }
-    
+
     public DD abstractAndExist(DD dd, DD other, DD cube)
-            throws EPMCException {
+    {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(other);
@@ -2004,7 +2012,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     void removeDD(DD dd) {
         assert checkDD();
         assert dd != null;
@@ -2017,11 +2025,11 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         totalTime.stop();
     }
-    
+
     public boolean isDebugDD() {
         return debugDD;
     }
-    
+
     public List<DD> clone(Iterable<DD> iterable) {
         assert alive();
         assert assertValidDDIterable(iterable);
@@ -2033,7 +2041,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public List<DD> clone(DD... iterable) {
         assert alive();
         assert assertValidDDArray(iterable);
@@ -2045,7 +2053,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public void dispose(Iterable<DD> iterable) {
         assert alive();
         assert assertValidDDIterable(iterable);
@@ -2055,7 +2063,7 @@ public final class ContextDD implements Closeable {
         }
         totalTime.stop();
     }
-    
+
     public void dispose(DD[] dds) {
         assert alive();
         assert assertValidDDArray(dds);
@@ -2065,7 +2073,7 @@ public final class ContextDD implements Closeable {
         }
         totalTime.stop();
     }
-    
+
     public DD cloneDD(DD dd) {
         assert checkDD();
         assert alive();
@@ -2078,7 +2086,7 @@ public final class ContextDD implements Closeable {
         assert checkDD();
         return result;
     }
-    
+
     // TODO check usage of this function
     public void addGroup(int startVariable, int numVariables, boolean fixedOrder) {
         assert alive();
@@ -2089,8 +2097,8 @@ public final class ContextDD implements Closeable {
         lowLevelBinary.addGroup(startVariable, numVariables, fixedOrder);
         totalTime.stop();
     }
-    
-    public DD eq(List<DD> set1, List<DD> set2) throws EPMCException {
+
+    public DD eq(List<DD> set1, List<DD> set2) {
         assert alive();
         assert set1 != null;
         assert set2 != null;
@@ -2118,9 +2126,9 @@ public final class ContextDD implements Closeable {
         assert alive();
         return lowLevelsExt;
     }
-    
+
     public List<DD> twoCplIte(DD ifDD, List<DD> op1, List<DD> op2)
-            throws EPMCException {
+    {
         assert alive();
         assert assertValidDD(ifDD);
         assert ifDD.isBoolean();
@@ -2144,9 +2152,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public List<DD> twoCplMultiply(List<DD> op1p, List<DD> op2p)
-            throws EPMCException {
+    {
         assert alive();
         assert twoCplOK(op1p);
         assert twoCplOK(op2p);
@@ -2193,9 +2201,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public List<DD> twoCplShiftLeft(List<DD> op, int numShift)
-            throws EPMCException {
+    {
         assert alive();
         assert twoCplOK(op);
         assert numShift >= 0;
@@ -2208,9 +2216,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public List<DD> twoCplAdd(List<DD> op1, List<DD> op2)
-            throws EPMCException {
+    {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2219,9 +2227,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }    
-    
+
     private List<DD> twoCplAdd(List<DD> op1w, List<DD> op2w, int size)
-            throws EPMCException {
+    {
         assert alive();
         assert twoCplOK(op1w);
         assert twoCplOK(op2w);
@@ -2257,8 +2265,8 @@ public final class ContextDD implements Closeable {
         dispose(op2);
         return result;
     }
-    
-    public List<DD> twoCplAddInverse(List<DD> op) throws EPMCException {
+
+    public List<DD> twoCplAddInverse(List<DD> op) {
         assert alive();
         assert twoCplOK(op);
         totalTime.start();
@@ -2272,9 +2280,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return twoComplOp;
     }
-    
+
     public List<DD> twoCplSubtract(List<DD> op1, List<DD> op2)
-            throws EPMCException {
+    {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2285,8 +2293,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplEq(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplEq(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2305,8 +2313,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplLt(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplLt(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2319,8 +2327,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplLe(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplLe(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2329,8 +2337,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplGt(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplGt(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2339,8 +2347,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplGe(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplGe(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2349,8 +2357,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public List<DD> twoCplMin(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public List<DD> twoCplMin(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2361,8 +2369,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public List<DD> twoCplMax(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public List<DD> twoCplMax(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2373,8 +2381,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public DD twoCplNe(List<DD> op1, List<DD> op2) throws EPMCException {
+
+    public DD twoCplNe(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2383,8 +2391,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public List<DD> twoCplFromInt(int number) throws EPMCException {
+
+    public List<DD> twoCplFromInt(int number) {
         assert alive();
         assert number > Integer.MIN_VALUE;
         assert number < Integer.MAX_VALUE;
@@ -2395,9 +2403,9 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public List<DD> twoCplFromInt(int number, int numBits)
-            throws EPMCException {
+    {
         assert alive();
         assert number > Integer.MIN_VALUE;
         assert number < Integer.MAX_VALUE;
@@ -2418,15 +2426,15 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     public boolean isBoolean(DD dd) {
         assert assertValidDD(dd);
         totalTime.start();
-        boolean result = TypeBoolean.isBoolean(getType(dd));
+        boolean result = TypeBoolean.is(getType(dd));
         totalTime.stop();
         return result;
     }
-    
+
     Type getType(DD dd) {
         assert alive();
         assert assertValidDD(dd);
@@ -2439,7 +2447,7 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
+
     private boolean twoCplOK(List<DD> list) {
         assert list != null;
         for (DD dd : list) {
@@ -2455,7 +2463,7 @@ public final class ContextDD implements Closeable {
         }
         return true;
     }
-    
+
     private boolean invalidateWalkers() {
         for (Walker walker : walkers.keySet()) {
             walker.invalidate();
@@ -2469,12 +2477,12 @@ public final class ContextDD implements Closeable {
         assert dd.alive();
         return true;
     }
-    
+
     Map<LibraryDD, List<DD>> getLowLevelVariables() {
         return llVariables;
     }
 
-    
+
     public Value getSomeLeafValue(DD dd) {
         assert assertValidDD(dd);
         totalTime.start();
@@ -2486,8 +2494,8 @@ public final class ContextDD implements Closeable {
         totalTime.stop();
         return result;
     }
-    
-    public Value getSomeLeafValue(DD dd, DD sat) throws EPMCException {
+
+    public Value getSomeLeafValue(DD dd, DD sat) {
         assert assertValidDD(dd);
         assert assertValidDD(sat);
         assert sat.isBoolean();
@@ -2503,7 +2511,7 @@ public final class ContextDD implements Closeable {
 
     private Value getSomeLeafValue(Walker dd, Walker sat,
             Walker support,
-            Set<LongTriple> seen) throws EPMCException {
+            Set<LongTriple> seen) {
         LongTriple triple = new LongTriple(dd.uniqueId(), sat.uniqueId(), support.uniqueId());
         if (seen.contains(triple)) {
             return null;
@@ -2555,15 +2563,15 @@ public final class ContextDD implements Closeable {
             return null;
         }
     }
-    
-    public DD or(DD[] dds) throws EPMCException {
+
+    public DD or(DD[] dds) {
         if (dds.length == 0) {
             return newConstant(false);
         } else {
             return dds[0].or(dds);
         }
     }
-    
+
     public boolean assertSupport(DD dd, DD[] support) {
         assert alive();
         assert support != null;
@@ -2579,8 +2587,8 @@ public final class ContextDD implements Closeable {
         }
         return true;
     }
-    
-    public DD abstractImpliesForall(DD dd, DD other, DD cube) throws EPMCException {
+
+    public DD abstractImpliesForall(DD dd, DD other, DD cube) {
         DD notDD = dd.not();
         DD result = abstractAndExist(notDD, other, cube).notWith();
         notDD.dispose();

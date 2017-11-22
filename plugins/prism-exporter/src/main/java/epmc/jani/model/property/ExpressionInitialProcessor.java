@@ -16,33 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public class ExpressionInitialProcessor implements JANI2PRISMProcessorStrict {
 
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof ExpressionInitial; 
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionInitial; 
+        return this;
+    }
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		return "\"init\"";
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-	}
+    @Override
+    public String toPRISM() {
+        return "\"init\"";
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		return false;
-	}	
+    @Override
+    public void validateTransientVariables() {
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        return false;
+    }	
 }

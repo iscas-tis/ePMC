@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.multiobjective.graphsolver;
 
@@ -33,12 +33,12 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     private Scheduler scheduler;
     private ValueArrayAlgebra transitionRewards;
     private ValueArrayAlgebra values;
-	private ValueArrayAlgebra result;
+    private ValueArrayAlgebra result;
 
     void setMin(boolean min) {
         this.min = min;
     }
-    
+
     public boolean isMin() {
         return min;
     }
@@ -46,7 +46,7 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     public void setStopStateRewards(ValueArrayAlgebra stopStateRewards) {
         this.stopStateRewards = stopStateRewards;
     }
-    
+
     public ValueArrayAlgebra getStopStateRewards() {
         return stopStateRewards;
     }
@@ -54,7 +54,7 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     public void setScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
     }
-    
+
     public Scheduler getScheduler() {
         return scheduler;
     }
@@ -62,7 +62,7 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     public void setTransitionRewards(ValueArrayAlgebra transitionRewards) {
         this.transitionRewards = transitionRewards;
     }
-    
+
     public ValueArrayAlgebra getTransitionRewards() {
         return transitionRewards;
     }
@@ -70,7 +70,7 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     public void setValues(ValueArrayAlgebra values) {
         this.values = values;
     }
-    
+
     public ValueArrayAlgebra getValues() {
         return values;
     }
@@ -84,15 +84,15 @@ public final class GraphSolverObjectiveExplicitMultiObjectiveScheduled implement
     public GraphExplicit getGraph() {
         return graph;
     }
-    
-    
+
+
     @Override
-	public void setResult(ValueArray result) {
-        this.result = ValueArrayAlgebra.asArrayAlgebra(result);
+    public void setResult(ValueArray result) {
+        this.result = ValueArrayAlgebra.as(result);
     }
-    
+
     @Override
-	public ValueArrayAlgebra getResult() {
+    public ValueArrayAlgebra getResult() {
         return result;
     }
 }

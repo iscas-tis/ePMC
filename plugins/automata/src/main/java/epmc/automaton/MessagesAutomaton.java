@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.automaton;
 
@@ -36,7 +36,7 @@ public final class MessagesAutomaton {
     public final static Message EXPLORING = newMessage().setIdentifier("exploring").build();
     /** Finished exploring the state space of an automaton product. */
     public final static Message EXPLORING_DONE = newMessage().setIdentifier("exploring-done").build();
-    
+
     /** B&uuml;chi automaton for original expression is being computed. */
     public final static Message COMPUTING_ORIG_BUECHI = newMessage().setIdentifier("computing-orig-buechi").build();
     /** B&uuml;chi automaton for negated expression is being computed. */
@@ -60,7 +60,7 @@ public final class MessagesAutomaton {
     private static Message.Builder newMessage() {
         return new Message.Builder().setBundle(MESSAGES_AUTOMATON);
     }
-    
+
     /**
      * Private constructor to prevent instantiation of this class.
      */

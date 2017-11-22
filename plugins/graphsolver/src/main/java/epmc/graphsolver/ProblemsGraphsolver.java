@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -34,6 +34,6 @@ public final class ProblemsGraphsolver {
         return UtilError.newProblem(PROBLEMS_GRAPHSOLVER, name);
     }
 
-	private ProblemsGraphsolver() {
-	}
+    private ProblemsGraphsolver() {
+    }
 }

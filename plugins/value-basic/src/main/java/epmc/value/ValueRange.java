@@ -16,33 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.value;
 
-import epmc.error.EPMCException;
 import epmc.value.Value;
 
 public interface ValueRange extends Value {
-	static boolean isRange(Value value) {
-		return value instanceof ValueRange;
-	}
-	
-	static ValueRange asRange(Value value) {
-		if (isRange(value)) {
-			return (ValueRange) value;
-		} else {
-			return null;
-		}
-	}
+    static boolean is(Value value) {
+        return value instanceof ValueRange;
+    }
 
-	static boolean checkRange(Value value) throws EPMCException {
-		ValueRange valueRange = asRange(value);
-		if (valueRange == null) {
-			return true;
-		}
-		return valueRange.checkRange();
-	}
-	
-    boolean checkRange() throws EPMCException;
+    static ValueRange as(Value value) {
+        if (is(value)) {
+            return (ValueRange) value;
+        } else {
+            return null;
+        }
+    }
+
+    static boolean checkRange(Value value) {
+        ValueRange valueRange = as(value);
+        if (valueRange == null) {
+            return true;
+        }
+        return valueRange.checkRange();
+    }
+
+    boolean checkRange();
 }

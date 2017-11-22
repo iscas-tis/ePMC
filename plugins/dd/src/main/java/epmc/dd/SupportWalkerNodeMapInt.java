@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
@@ -40,19 +40,19 @@ public final class SupportWalkerNodeMapInt {
 
     public void set(Value value) {
         assert value != null;
-        assert ValueInteger.isInteger(value);
+        assert ValueInteger.is(value);
         int index = walker.getIndex();
-        values[index] = ValueInteger.asInteger(value).getInt();
+        values[index] = ValueInteger.as(value).getInt();
         valueSet.set(index);
     }
-    
+
     public void get(Value value) {
         assert value != null;
-        assert ValueInteger.isInteger(value);
+        assert ValueInteger.is(value);
         assert valueSet.get(walker.getIndex());
-        ValueAlgebra.asAlgebra(value).set(values[walker.getIndex()]);
+        ValueAlgebra.as(value).set(values[walker.getIndex()]);
     }
-    
+
     public int getInt() {
         return values[walker.getIndex()];
     }
@@ -62,16 +62,16 @@ public final class SupportWalkerNodeMapInt {
         valueSet.set(index);
         values[index] = value;
     }
-    
+
     public boolean getBoolean() {
         assert false;
         return false;
     }
-    
+
     public void set(boolean value) {
         assert false;
     }
-    
+
     public boolean isSet() {
         return valueSet.get(walker.getIndex());
     }

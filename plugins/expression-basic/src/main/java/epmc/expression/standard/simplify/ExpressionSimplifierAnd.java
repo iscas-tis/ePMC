@@ -16,25 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorNot;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorNot;
 
 public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     public final static String IDENTIFIER = "and";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (!isAnd(expression)) {
             return null;
@@ -80,7 +78,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         }
         return null;
     }
-    
+
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -89,7 +87,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
-    
+
     private static boolean isAnd(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -98,22 +96,22 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         return expressionOperator.getOperator()
                 .equals(OperatorAnd.AND);
     }
-    
-    private static boolean isFalse(Expression expression) throws EPMCException {
+
+    private static boolean isFalse(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isFalse(expressionLiteral.getValue());
+        return !Boolean.valueOf(expressionLiteral.getValue());
     }
-    
-    private static boolean isTrue(Expression expression) throws EPMCException {
+
+    private static boolean isTrue(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionLiteral)) {
             return false;
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-        return ValueBoolean.isTrue(expressionLiteral.getValue());
+        return Boolean.valueOf(expressionLiteral.getValue());
     }
 }

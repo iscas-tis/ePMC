@@ -16,54 +16,53 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model;
 
 import java.util.Map.Entry;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 
-	private Metadata metadata = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof Metadata; 
+    private Metadata metadata = null;
 
-		metadata = (Metadata) obj;
-		return this;
-	}
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof Metadata; 
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert metadata != null;
-		
-		StringBuilder prism = new StringBuilder();
-		
-		for (Entry<String, String> entry : metadata.getValues().entrySet()) {
-			prism.append("// ")
-				 .append(entry.getKey())
-				 .append(": ")
-				 .append(entry.getValue())
-				 .append("\n");
-		}
-				
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert metadata != null;
-	}
+        metadata = (Metadata) obj;
+        return this;
+    }
 
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert metadata != null;
-		
-		return false;
-	}	
+    @Override
+    public String toPRISM() {
+        assert metadata != null;
+
+        StringBuilder prism = new StringBuilder();
+
+        for (Entry<String, String> entry : metadata.getValues().entrySet()) {
+            prism.append("// ")
+            .append(entry.getKey())
+            .append(": ")
+            .append(entry.getValue())
+            .append("\n");
+        }
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert metadata != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert metadata != null;
+
+        return false;
+    }	
 }

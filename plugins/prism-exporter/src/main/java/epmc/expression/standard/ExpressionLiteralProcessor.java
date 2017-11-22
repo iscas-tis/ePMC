@@ -16,56 +16,55 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard;
 
-import epmc.error.EPMCException;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 
 public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
 
-	private ExpressionLiteral literal = null;
-	private String prefix = null;
-	
-	@Override
-	public JANI2PRISMProcessorStrict setPrefix(String prefix) {
-		this.prefix = prefix;
-		return this;
-	}
-	
-	@Override
-	public JANI2PRISMProcessorStrict setElement(Object obj) throws EPMCException {
-		assert obj != null;
-		assert obj instanceof ExpressionLiteral; 
-		
-		literal = (ExpressionLiteral) obj;
-		return this;
-	}
+    private ExpressionLiteral literal = null;
+    private String prefix = null;
 
-	@Override
-	public String toPRISM() throws EPMCException {
-		assert literal != null;
-		StringBuilder prism = new StringBuilder();
-		
-		if (prefix != null) {
-			prism.append(prefix);
-		}
-		
-		prism.append(literal.getValue().toString());
-		
-		return prism.toString();
-	}
-	
-	@Override
-	public void validateTransientVariables() throws EPMCException {
-		assert literal != null;
-	}
-	
-	@Override
-	public boolean usesTransientVariables() throws EPMCException {
-		assert literal != null;
-		
-		return false;
-	}	
+    @Override
+    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    @Override
+    public JANI2PRISMProcessorStrict setElement(Object obj) {
+        assert obj != null;
+        assert obj instanceof ExpressionLiteral; 
+
+        literal = (ExpressionLiteral) obj;
+        return this;
+    }
+
+    @Override
+    public String toPRISM() {
+        assert literal != null;
+        StringBuilder prism = new StringBuilder();
+
+        if (prefix != null) {
+            prism.append(prefix);
+        }
+
+        prism.append(literal.getValue().toString());
+
+        return prism.toString();
+    }
+
+    @Override
+    public void validateTransientVariables() {
+        assert literal != null;
+    }
+
+    @Override
+    public boolean usesTransientVariables() {
+        assert literal != null;
+
+        return false;
+    }	
 }

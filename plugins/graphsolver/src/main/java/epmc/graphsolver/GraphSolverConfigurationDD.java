@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graphsolver;
 
@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 import epmc.dd.DD;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
 import epmc.graph.Semantics;
@@ -59,20 +58,20 @@ public final class GraphSolverConfigurationDD {
     }
 
     // TODO subsume objective, min, and time to one new parameter type
-    
+
     public void setObjective(GraphSolverObjectiveDD objective) {
         this.objective = objective;
     }
 
-    public void solve() throws EPMCException {
+    public void solve() {
         GraphSolverObjectiveExplicit explicitObjective = preprocessDD();
         configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         configuration.setObjective(explicitObjective);
         configuration.solve();
         postprocessDD(explicitObjective);
     }
-    
-    private GraphSolverObjectiveExplicit preprocessDD() throws EPMCException {
+
+    private GraphSolverObjectiveExplicit preprocessDD() {
         if (lumpBeforeGraphSolving) {
             lumpDD();
         }
@@ -85,8 +84,8 @@ public final class GraphSolverConfigurationDD {
         objectiveUnboundedReachability.setTarget(target);
         return objectiveUnboundedReachability;
     }
-    
-    private void postprocessDD(GraphSolverObjectiveExplicit explicitObjective) throws EPMCException {
+
+    private void postprocessDD(GraphSolverObjectiveExplicit explicitObjective) {
         this.resultDD = graphBuilderDD.valuesToDD(explicitObjective.getResult());
         graphBuilderDD.close();
         this.resultDD = this.resultDD.multiplyWith(graphDD.getNodeSpace().toMT());
@@ -97,7 +96,7 @@ public final class GraphSolverConfigurationDD {
         graphBuilderDD.close();
     }
 
-    private void lumpDD() throws EPMCException {
+    private void lumpDD() {
         for (DD sink : sinksDD) {
             graphDD.registerNodeProperty(sink, sink);
         }
@@ -131,7 +130,7 @@ public final class GraphSolverConfigurationDD {
         }
         sinksDD = quotientSinks;
     }
-    
+
     public GraphSolverObjectiveDD getObjective() {
         return objective;
     }

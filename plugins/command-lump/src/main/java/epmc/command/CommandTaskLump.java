@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
@@ -79,30 +78,25 @@ public class CommandTaskLump implements CommandTask {
 
     @Override
     public void executeInServer() {
-        try {
-			lump();
-		} catch (EPMCException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        lump();
     }
-    
-    public void lump() throws EPMCException {
+
+    public void lump() {
         Engine engine = modelChecker.getEngine();
         if (engine instanceof EngineExplicit) {
             lumpExplicit();
         } else if (engine instanceof EngineDD) {
             lumpDD();
         } else {
-        	assert false;
-        	// TODO user exception
+            assert false;
+            // TODO user exception
         }
     }
-    
-    private void lumpExplicit() throws EPMCException {
+
+    private void lumpExplicit() {
         long time = System.nanoTime();
         Model model = modelChecker.getModel();
-    	Options options = Options.get();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesCommandLump.EXPLORING);
         Set<Object> graphProperties = new LinkedHashSet<>();
@@ -113,61 +107,61 @@ public class CommandTaskLump implements CommandTask {
             Expression expression = model.getPropertyList().getParsedProperty(property);
             ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             expression = expressionQuantifier.getQuantified();
-        	ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
             if (isUntil(expression)) {
-            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
-            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand2()));
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand2()));
             } else if (isFinally(expression)) {
-            	stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
             }
         }
         nodeProperties.addAll(stateLabels);
         nodeProperties.add(CommonProperties.STATE);
         Set<Object> edgeProperties = new LinkedHashSet<>();
         edgeProperties.add(CommonProperties.WEIGHT);
-        
-        
+
+
         GraphExplicit modelGraph = (GraphExplicit) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
         time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         log.send(MessagesCommandLump.EXPLORING_DONE, time);
-        
+
         Map<String,Class<? extends LumperExplicit>> lumpersExplicit = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT_CLASS);
         Collection<String> lumperExplicitt = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_EXPLICIT);
         ArrayList<String> lumperExplicit = new ArrayList<>(lumperExplicitt);
 
         for (RawProperty property : model.getPropertyList().getRawProperties()) {
-        	for (String lumperId : lumperExplicit) {
-        		Class<? extends LumperExplicit> lumperClass = lumpersExplicit.get(lumperId);
-        		if (lumperClass == null) {
-        			continue;
-        		}
-        		LumperExplicit lumper = Util.getInstance(lumperClass);
-        		lumper.setOriginal(partitionByProperty(modelGraph, model.getPropertyList().getParsedProperty(property)));
-        		if (lumper.canLump()) {
-        			lumper.lump();
-        			GraphExplicit quotient = lumper.getQuotient().getGraph();
-        			OutputType outputType = options.get(OptionsCommandLump.LUMP_OUTPUT_TYPE);
-        			Object result;
-        			if (outputType == OutputType.QUOTIENT) {
-        				result = quotient;
-        			} else if (outputType == OutputType.STATISTICS) {
-        				result = new Statistics(quotient);
-        			} else {
-        				result = null;
-        				assert false;
-        			}
-        			ModelCheckerResult modelCheckerResult = new ModelCheckerResult(property, result);
-        			log.send(modelCheckerResult);
-        			break;
-        		}
+            for (String lumperId : lumperExplicit) {
+                Class<? extends LumperExplicit> lumperClass = lumpersExplicit.get(lumperId);
+                if (lumperClass == null) {
+                    continue;
+                }
+                LumperExplicit lumper = Util.getInstance(lumperClass);
+                lumper.setOriginal(partitionByProperty(modelGraph, model.getPropertyList().getParsedProperty(property)));
+                if (lumper.canLump()) {
+                    lumper.lump();
+                    GraphExplicit quotient = lumper.getQuotient().getGraph();
+                    OutputType outputType = options.get(OptionsCommandLump.LUMP_OUTPUT_TYPE);
+                    Object result;
+                    if (outputType == OutputType.QUOTIENT) {
+                        result = quotient;
+                    } else if (outputType == OutputType.STATISTICS) {
+                        result = new Statistics(quotient);
+                    } else {
+                        result = null;
+                        assert false;
+                    }
+                    ModelCheckerResult modelCheckerResult = new ModelCheckerResult(property, result);
+                    log.send(modelCheckerResult);
+                    break;
+                }
             }
         }
     }
-    
+
     private static GraphSolverObjectiveExplicitLump partitionByProperty(
-            GraphExplicit graph, Expression expression) throws EPMCException {
+            GraphExplicit graph, Expression expression) {
         if (expression instanceof ExpressionQuantifier) {
-        	ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+            ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             expression = expressionQuantifier.getQuantified();
         }
         Set<Expression> atomics = collectLTLPropositional(expression);
@@ -178,14 +172,14 @@ public class CommandTaskLump implements CommandTask {
         if (isPropositional(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
-        	ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionTemporal.getOperands()) {
                 result.addAll(collectLTLPropositional(inner));
             }
             return result;
         } else if (expression instanceof ExpressionOperator) {
-        	ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLPropositional(inner));
@@ -196,11 +190,11 @@ public class CommandTaskLump implements CommandTask {
         }
     }
 
-    private void lumpDD() throws EPMCException {
+    private void lumpDD() {
         Set<Object> graphProperties = new LinkedHashSet<>();
         graphProperties.add(CommonProperties.SEMANTICS);
         graphProperties.add(CommonProperties.EXPRESSION_TO_DD);
-        
+
         Set<Object> nodeProperties = new LinkedHashSet<>();
         Set<Object> edgeProperties = new LinkedHashSet<>();
         Set<Expression> stateLabels = new HashSet<>();
@@ -214,14 +208,14 @@ public class CommandTaskLump implements CommandTask {
         nodeProperties.add(CommonProperties.STATE);
         edgeProperties.add(CommonProperties.WEIGHT);
         edgeProperties.addAll(collectRewards(model));
-    	Options options = Options.get();
+        Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
 
         GraphDD modelGraph = (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
-//        GraphBuilderDD build = new GraphBuilderDD(modelGraph, new ArrayList<>());
-//        GraphExplicit graph = build.buildGraph();
-//        build.close();
-//        String graphString = GraphExporter.toString(graph);
+        //        GraphBuilderDD build = new GraphBuilderDD(modelGraph, new ArrayList<>());
+        //        GraphExplicit graph = build.buildGraph();
+        //        build.close();
+        //        String graphString = GraphExporter.toString(graph);
         if (model.getPropertyList().getRawProperties().size() > 1) {
             for (RawProperty property : model.getPropertyList().getRawProperties()) {
                 LumperDD lumper = getLumperForModelAndProp(modelGraph, 
@@ -234,9 +228,9 @@ public class CommandTaskLump implements CommandTask {
             }
         }
     }
-    
+
     public static Set<RewardSpecification> collectRewards(Model model)
-            throws EPMCException {
+    {
         assert model != null;
         Properties properties = model.getPropertyList();
         Set<RewardSpecification> result = new LinkedHashSet<>();
@@ -247,8 +241,8 @@ public class CommandTaskLump implements CommandTask {
         return Collections.unmodifiableSet(result);
     }
 
-    private LumperDD getLumperForModelAndProp(GraphDD modelGraph, Collection<Expression> propertyList) throws EPMCException {
-    	Options options = Options.get();
+    private LumperDD getLumperForModelAndProp(GraphDD modelGraph, Collection<Expression> propertyList) {
+        Options options = Options.get();
         Collection<String> lumperDD = options.get(OptionsGraphsolver.GRAPHSOLVER_LUMPER_DD);
         assert lumperDD != null;
         lumperDD = new ArrayList<>(lumperDD);
@@ -280,7 +274,7 @@ public class CommandTaskLump implements CommandTask {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
     }
-    
+
     private static boolean isUntil(Expression expression) {
         if (!(expression instanceof ExpressionTemporal)) {
             return false;
@@ -288,9 +282,9 @@ public class CommandTaskLump implements CommandTask {
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
-    
+
     static Set<RewardSpecification> collectRewards(Model model, Expression property)
-            throws EPMCException {
+    {
         assert model != null;
         assert property != null;
         Set<RewardSpecification> result = new LinkedHashSet<>();
@@ -299,7 +293,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static void collectRewardsRec(Model model, Expression property,
-            Set<RewardSpecification> result) throws EPMCException {
+            Set<RewardSpecification> result) {
         assert model != null;
         assert property != null;
         assert result != null;

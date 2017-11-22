@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.propertysolver;
 
@@ -35,6 +35,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.Operator;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -64,10 +65,10 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         }
         this.nonDet = modelChecker.getModel().isNonDet();
     }
-    
+
     @Override
     public StateMap solve(Expression property, StateSet forStates)
-            throws EPMCException {
+    {
         assert property != null;
         assert forStates != null;
         assert property.isQuantifier();
@@ -78,7 +79,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
             min = false;
         }
         this.negate = min;
-        
+
         AutomatonGeneralisedRabin observer = new AutomatonKretinskyProduct();// modelChecker.newObserverGeneralisedRabin(quantified, relExp);
         if (negate) {
             quantified = quantified.not();
@@ -118,7 +119,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         BitSet undecided = new BitSet();
         BitSet initNs = graph.getInitialNodes();
         BitSet init = (java.util.BitSet) initNs.clone();
-        
+
         ComponentsExplicit components = modelChecker.newComponentsExplicit();
         EndComponents endComponents = components.maximalEndComponents(graph);
         int numComponents = 0;
@@ -140,7 +141,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
                     break;
                 }
             }
-            
+
             boolean decision;
             if (nonDet) {
                 decision = decideComponentGeneralisedRabinMDPLeaf(graph, leafSCC);
@@ -172,7 +173,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
 
     @Override
-    public boolean canHandle(Expression property, StateSet states) throws EPMCException {
+    public boolean canHandle(Expression property, StateSet states) {
         assert property != null;
         assert states != null;
         if (!modelChecker.isEngineExplicit()) {
@@ -191,7 +192,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         return true;
     }
 
-    static boolean decideComponentGeneralisedRabinMCLeaf(GraphExplicit graph, BitSet leafSCC) throws EPMCException {
+    static boolean decideComponentGeneralisedRabinMCLeaf(GraphExplicit graph, BitSet leafSCC) {
         AutomatonGeneralisedRabin rabin = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
         int numPairs = rabin.getNumPairs();
@@ -224,9 +225,9 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         }
         return stable.cardinality() > 0;
     }
-    
+
     static boolean decideComponentGeneralisedRabinMDPLeaf(GraphExplicit graph,
-            BitSet leafSCC) throws EPMCException {
+            BitSet leafSCC) {
         AutomatonGeneralisedRabin rabin = graph.getGraphProperty(CommonProperties.AUTOMATON).getObject();
         boolean accepting = false;
         NodeProperty automatonLabel = graph.getNodeProperty(CommonProperties.AUTOMATON_LABEL);
@@ -267,8 +268,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         return accepting;
     }
 
-    private Value prepareAndIterate(GraphExplicit graph, BitSet acc)
-            throws EPMCException {
+    private Value prepareAndIterate(GraphExplicit graph, BitSet acc) {
         log.send(MessagesEPMC.PREPARING_MDP_FOR_ITERATION);
         BitSet test = (BitSet) graph.getInitialNodes().clone();
         test.andNot(acc);
@@ -297,9 +297,9 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
         if (embed) {
             GraphExplicitModifier.embed(iterGraph);
         }
-        
+
         BitSet target = new BitSet(iterGraph.computeNumStates());
-        
+
         NodeProperty isState = graph.getNodeProperty(CommonProperties.STATE);
         for (int node = acc.nextSetBit(0); node >= 0; node = acc.nextSetBit(node+1)) {
             graph.queryNode(node);
@@ -333,7 +333,7 @@ public final class PropertySolverExplicitGeneralisedRabin implements PropertySol
     }
 
     private StateMap prodToOrigResult(Value iterResult,
-            GraphExplicit prodGraph) throws EPMCException {
+            GraphExplicit prodGraph) {
         assert iterResult != null;
         assert prodGraph != null;
         Type typeWeight = contextValue.getTypeWeight();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.model.property;
 
@@ -28,7 +28,6 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -42,93 +41,93 @@ import epmc.jani.model.expression.JANIExpression;
  * @author Ernst Moritz Hahn
  */
 public final class JANIPropertyTimelock implements JANIExpression {
-	/** Identifier of this JANI expression type. */
-	public final static String IDENTIFIER = "timelock";
-	private final static String OP = "op";
-	private final static String TIMELOCK = "timelock";
-	
-	private ModelJANI model;
-	private boolean initialized;
+    /** Identifier of this JANI expression type. */
+    public final static String IDENTIFIER = "timelock";
+    private final static String OP = "op";
+    private final static String TIMELOCK = "timelock";
 
-	private void resetFields() {
-		initialized = false;
-	}
-	
-	public JANIPropertyTimelock() {
-		resetFields();
-	}
+    private ModelJANI model;
+    private boolean initialized;
 
-	@Override
-	public JANINode parse(JsonValue value) throws EPMCException {
-		return parseAsJANIExpression(value);
-	}
-	
-	@Override 
-	public JANIExpression parseAsJANIExpression(JsonValue value) throws EPMCException {
-		assert model != null;
-		assert value != null;
-		resetFields();
-		if (!(value instanceof JsonObject)) {
-			return null;
-		}
-		JsonObject object = (JsonObject) value;
-		if (!object.containsKey(OP)) {
-			return null;
-		}
-		if (!(object.get(OP) instanceof JsonString)) {
-			return null;
-		}
-		if (!object.getString(OP).equals(TIMELOCK)) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    private void resetFields() {
+        initialized = false;
+    }
 
-	@Override
-	public JsonValue generate() throws EPMCException {
-		assert initialized;
-		assert model != null;
-		JsonObjectBuilder builder = Json.createObjectBuilder();
-		builder.add(OP, TIMELOCK);
-		return builder.build();
-	}
+    public JANIPropertyTimelock() {
+        resetFields();
+    }
 
-	@Override
-	public JANIExpression matchExpression(ModelJANI model, Expression expression) throws EPMCException {
-		assert expression != null;
-		assert model != null;
-		resetFields();
-		if (!(expression instanceof ExpressionTimelock)) {
-			return null;
-		}
-		initialized = true;
-		return this;
-	}
+    @Override
+    public JANINode parse(JsonValue value) {
+        return parseAsJANIExpression(value);
+    }
 
-	@Override
-	public Expression getExpression() throws EPMCException {
-		assert initialized;
-		assert model != null;
-		return new ExpressionTimelock(null);
-	}
+    @Override 
+    public JANIExpression parseAsJANIExpression(JsonValue value) {
+        assert model != null;
+        assert value != null;
+        resetFields();
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(OP)) {
+            return null;
+        }
+        if (!(object.get(OP) instanceof JsonString)) {
+            return null;
+        }
+        if (!object.getString(OP).equals(TIMELOCK)) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-	}	
+    @Override
+    public JsonValue generate() {
+        assert initialized;
+        assert model != null;
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(OP, TIMELOCK);
+        return builder.build();
+    }
 
-	@Override
-	public void setModel(ModelJANI model) {
-		this.model = model;
-	}
+    @Override
+    public JANIExpression matchExpression(ModelJANI model, Expression expression) {
+        assert expression != null;
+        assert model != null;
+        resetFields();
+        if (!(expression instanceof ExpressionTimelock)) {
+            return null;
+        }
+        initialized = true;
+        return this;
+    }
 
-	@Override
-	public ModelJANI getModel() {
-		return model;
-	}
-	
-	@Override
-	public String toString() {
-		return UtilModelParser.toString(this);
-	}
+    @Override
+    public Expression getExpression() {
+        assert initialized;
+        assert model != null;
+        return new ExpressionTimelock(null);
+    }
+
+    @Override
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }	
+
+    @Override
+    public void setModel(ModelJANI model) {
+        this.model = model;
+    }
+
+    @Override
+    public ModelJANI getModel() {
+        return model;
+    }
+
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

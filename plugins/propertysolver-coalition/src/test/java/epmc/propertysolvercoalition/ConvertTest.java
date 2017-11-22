@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolvercoalition;
 
@@ -25,9 +25,9 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import epmc.coalition.options.OptionsCoalition;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.SMGPlayer;
 import epmc.graph.CommonProperties;
 import epmc.jani.ConvertTestConfiguration;
@@ -40,8 +40,6 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
-import epmc.value.TypeInteger;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 
 import static epmc.modelchecker.TestHelper.*;
@@ -53,72 +51,72 @@ import java.util.Map;
 import java.util.Set;
 
 public final class ConvertTest {
-	private final static String USER_DIR = TestHelper.USER_DIR;
-	private final static String TARGET_CLASSES = "/target/classes/";
+    private final static String USER_DIR = TestHelper.USER_DIR;
+    private final static String TARGET_CLASSES = "/target/classes/";
     private final static String PLUGIN_DIR = System.getProperty(USER_DIR) + TARGET_CLASSES;
-	private final static String PLAYER = "PLAYER";
+    private final static String PLAYER = "PLAYER";
 
     @BeforeClass
     public static void initialise() {
         prepare();
     }
 
-    private final static Options prepareCoalitionOptions() throws EPMCException {
+    private final static Options prepareCoalitionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
         return options;
     }
-    
-    @Test
-	public void twoInvestorsTest() throws EPMCException {
-    	ConvertTestStatistics statistics = new ConvertTestConfiguration()
-    			.setModelName(TWO_INVESTORS)
-//    			.setExploreAll()
-    			.run();
-  //  	System.out.println(statistics);
-//    	System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
-    	Set<Object> nodeProperties = new HashSet<>();
-    	nodeProperties.add(CommonProperties.STATE);
-		nodeProperties.add(newPlayer(1));
-		nodeProperties.add(newPlayer(2));
-		nodeProperties.add(newPlayer(3));
-//    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
-//    	System.out.println(graph);
-	}
 
     @Test
- 	public void robotsTest() throws EPMCException {
-     	ConvertTestStatistics statistics = new ConvertTestConfiguration()
-     			.setModelName("/Users/emhahn/svn/papers-iscas/working/sven/parity/experiments/robots.prism")
-     			.putConstant("size", 8)
-     			.setPrismFlatten(true)
-     			.setExploreJANI(true)
-     			.run();
-     	System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
-//     	System.out.println(computeResult(statistics.getJaniModel(), "<<1>> P>=1 [ (F (\"z1\")) & (F (\"z2\")) ]"));
-//     	System.out.println(computeResult(statistics.getJaniModel(), "<<1>> P>=1 [ F true ]"));
- 	}
-
-    
-	@Test
-    public void smallTest() throws EPMCException {
-    	ConvertTestStatistics statistics = new ConvertTestConfiguration()
-    			.setModelName(ROBOTS)
-//    			.setExploreAll()
-    			.putConstant("size", 5)
-    			.run();
-    	System.out.println(statistics);
-    	Set<Object> nodeProperties = new HashSet<>();
-    	nodeProperties.add(CommonProperties.STATE);
-		nodeProperties.add(newPlayer(1));
-		nodeProperties.add(newPlayer(2));
-//    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
-  //  	System.out.println(graph);
+    public void twoInvestorsTest() {
+        ConvertTestStatistics statistics = new ConvertTestConfiguration()
+                .setModelName(TWO_INVESTORS)
+                //    			.setExploreAll()
+                .run();
+        //  	System.out.println(statistics);
+        //    	System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
+        Set<Object> nodeProperties = new HashSet<>();
+        nodeProperties.add(CommonProperties.STATE);
+        nodeProperties.add(newPlayer(1));
+        nodeProperties.add(newPlayer(2));
+        nodeProperties.add(newPlayer(3));
+        //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
+        //    	System.out.println(graph);
     }
-    
+
     @Test
-    public void robotReachabilityTest() throws EPMCException {
+    public void robotsTest() {
+        ConvertTestStatistics statistics = new ConvertTestConfiguration()
+                .setModelName("/Users/emhahn/svn/papers-iscas/working/sven/parity/experiments/robots.prism")
+                .putConstant("size", 8)
+                .setPrismFlatten(true)
+                .setExploreJANI(true)
+                .run();
+        System.out.println(UtilModelParser.prettyString(statistics.getJaniModel()));
+        //     	System.out.println(computeResult(statistics.getJaniModel(), "<<1>> P>=1 [ (F (\"z1\")) & (F (\"z2\")) ]"));
+        //     	System.out.println(computeResult(statistics.getJaniModel(), "<<1>> P>=1 [ F true ]"));
+    }
+
+
+    @Test
+    public void smallTest() {
+        ConvertTestStatistics statistics = new ConvertTestConfiguration()
+                .setModelName(ROBOTS)
+                //    			.setExploreAll()
+                .putConstant("size", 5)
+                .run();
+        System.out.println(statistics);
+        Set<Object> nodeProperties = new HashSet<>();
+        nodeProperties.add(CommonProperties.STATE);
+        nodeProperties.add(newPlayer(1));
+        nodeProperties.add(newPlayer(2));
+        //    	GraphExplicit graph = exploreToGraph(statistics.getJaniModel(), nodeProperties);
+        //  	System.out.println(graph);
+    }
+
+    @Test
+    public void robotReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -131,12 +129,12 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (F (\"z1\"))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "8");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (F (\"z1\"))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (F (\"z1\"))  ]");
@@ -175,14 +173,14 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotSmallRepeatedReachabilityTest() throws EPMCException {
+    public void robotSmallRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
-//        options.set(Options.ENGINE, OptionsSet.Engine.DD);
-//      options.set(OptionsModelChecker.ENGINE, EngineDD.class);
+        //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
+        //      options.set(OptionsModelChecker.ENGINE, EngineDD.class);
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
-//        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
+        //        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
         Map<String,String> constants = new HashMap<>();
         Value result;
 
@@ -190,7 +188,7 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (G(F (\"z1\")))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (G(F (\"z1\")))  ]");
@@ -201,15 +199,15 @@ public final class ConvertTest {
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) ]");
         assertEquals(true, result);
     }
-    
+
     @Test
-    public void robotRepeatedReachabilityTest() throws EPMCException {
+    public void robotRepeatedReachabilityTest() {
         Options options = prepareCoalitionOptions();
-//        options.set(Options.ENGINE, OptionsSet.Engine.DD);
-      options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        //        options.set(Options.ENGINE, OptionsSet.Engine.DD);
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
-//        options.set(Options.ENGINE, OptionsSet.Engine.EXPLICIT);
+        //        options.set(Options.ENGINE, OptionsSet.Engine.EXPLICIT);
         Map<String,String> constants = new HashMap<>();
         Value result;
 
@@ -217,7 +215,7 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (G(F (\"z1\")))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ (G(F (\"z1\")))  ]");
@@ -254,9 +252,9 @@ public final class ConvertTest {
         assertEquals(true, result);
         close(options);
     }
-    
+
     @Test
-    public void robotOrderedReachabilityTest() throws EPMCException {
+    public void robotOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
@@ -268,7 +266,7 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ F (\"z1\" & (F(\"z2\")))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ F (\"z1\" & (F(\"z2\")))  ]");
@@ -295,15 +293,15 @@ public final class ConvertTest {
         assertEquals(true, result);
         close(options);
     }
-    
+
     @Ignore
     @Test
-    public void robotRepeatedOrderedReachabilityTest() throws EPMCException {
+    public void robotRepeatedOrderedReachabilityTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineDD.class);
-//        options.set(OptionsDD.DD_BINARY_ENGINE, "buddy");
+        //        options.set(OptionsDD.DD_BINARY_ENGINE, "buddy");
         Map<String,String> constants = new HashMap<>();
         Value result;
 
@@ -311,7 +309,7 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ G(F (\"z1\" & (F(\"z2\"))))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ G(F (\"z1\" & (F(\"z2\"))))  ]");
@@ -336,7 +334,7 @@ public final class ConvertTest {
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ G(F (\"z1\" & (F(\"z2\" & (F(\"z4\" & (F(\"z3\"))))))))  ]");
         assertEquals(true, result);
-        
+
         constants.put("size", "10");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1>> P>=1 [ G(F (\"z1\" & (F(\"z2\" & (F(\"z4\" & (F(\"z3\"))))))))  ]");
@@ -344,31 +342,31 @@ public final class ConvertTest {
         close(options);
     }
 
-    
+
     @Test
-    public void robotSmallReachAvoidTest() throws EPMCException {
+    public void robotSmallReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
         options.set(OptionsCoalition.COALITION_SOLVER_NON_STOCHASTIC, "jurdzinski");
-//        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
+        //        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
 
-//        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
-//        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
+        //        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
+        //        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
         Map<String,String> constants = new HashMap<>();
 
         Value result;
 
-//        constants.put("size", "2");
-  //      options.set(OptionsEPMC.CONST, constants);
-    //    result = computeResult(options, ROBOTS_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
-      //  assertEquals(false, result);
+        //        constants.put("size", "2");
+        //      options.set(OptionsEPMC.CONST, constants);
+        //    result = computeResult(options, ROBOTS_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
+        //  assertEquals(false, result);
 
         //if (true) {
-        	//return;
-       // }
+        //return;
+        // }
 
         constants.put("size", "3");
         options.set(OptionsModelChecker.CONST, constants);
@@ -376,9 +374,9 @@ public final class ConvertTest {
         assertEquals(false, result);
 
         if (true) {
-        	return;
+            return;
         }
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS_SMALL, "<<1>> P>=1 [ (!\"z1\") U (\"z2\") ]");
@@ -396,42 +394,42 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotSmallModifiedReachAvoidTest() throws EPMCException {
+    public void robotSmallModifiedReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-//        options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
-//        options.set(OptionsCoalition.COALITION_SOLVER_NON_STOCHASTIC, "jurdzinski");
-//        options.set(OptionsCoalition.COALITION_JURDZINSKY_LIFT_ORDER, "lifo");
-//        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
+        //        options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
+        //        options.set(OptionsCoalition.COALITION_SOLVER_NON_STOCHASTIC, "jurdzinski");
+        //        options.set(OptionsCoalition.COALITION_JURDZINSKY_LIFT_ORDER, "lifo");
+        //        options.set(OptionsCoalition.COALITION_JURDZINSKY_CHOOSE_LIFT_NODES, OptionsCoalition.JurdzinskyChooseLiftNodes.ALL);
 
-//        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
-//        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
+        //        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
+        //        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
         Map<String,String> constants = new HashMap<>();
 
         Value result;
 
-//        constants.put("size", "3");
-  //      options.set(OptionsEPMC.CONST, constants);
-//        result = computeResult(options, ROBOTS_MODIFIED_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
-      //  assertEquals(false, result);
+        //        constants.put("size", "3");
+        //      options.set(OptionsEPMC.CONST, constants);
+        //        result = computeResult(options, ROBOTS_MODIFIED_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
+        //  assertEquals(false, result);
 
         //if (true) {
-        	//return;
-       // }
+        //return;
+        // }
 
         constants.put("size", "6");
         options.set(OptionsModelChecker.CONST, constants);
-//        result = computeResult(options, ROBOTS_MODIFIED_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
+        //        result = computeResult(options, ROBOTS_MODIFIED_SMALL, "<<1>> P>=1 [ true U (\"z2\") ]");
         result = computeResult(options, ROBOTS_MODIFIED_MEDIUM, "<<1>> P>=1 [ (G(F(\"z1\"))) & (G(F(\"z2\"))) & (G(F(\"z4\"))) & (G(F(\"z3\"))) ]");
 
-//        assertEquals(false, result);
+        //        assertEquals(false, result);
 
         if (true) {
-        	return;
+            return;
         }
-        
+
         constants.put("size", "9");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS_SMALL, "<<1>> P>=1 [ (!\"z1\") U (\"z2\") ]");
@@ -449,15 +447,15 @@ public final class ConvertTest {
     }
 
     @Test
-    public void robotReachAvoidTest() throws EPMCException {
+    public void robotReachAvoidTest() {
         Options options = prepareCoalitionOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-//        options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
+        //        options.set(OptionsCoalition.COALITION_SOLVER, "gadget");
 
-//        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
-//        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
+        //        options.set(Options.DD_BINARY_ENGINE, OptionsSet.DdBinaryEngine.BUDDY);
+        //        options.set(Options.MDP_ENCODING_MODE, OptionsSet.MDPEncoding.STATE_DISTRIBUTION);
         Map<String,String> constants = new HashMap<>();
 
         Value result;
@@ -483,7 +481,7 @@ public final class ConvertTest {
         assertEquals(true, result);
 
         if (true) return;
-        
+
         constants.put("size", "8");
         options.set(OptionsModelChecker.CONST, constants);
         result = computeResult(options, ROBOTS, "<<1,2>> P>=1 [ (!\"z1\") U (\"z2\")  ]");
@@ -545,21 +543,22 @@ public final class ConvertTest {
         assertEquals(true, result);
         close(options);
     }
-    
+
     private static SMGPlayer newPlayer(int i) {
-    	return new SMGPlayer() {
-			
-			@Override
-			public Expression getExpression() {
-				return new ExpressionLiteral.Builder()
-						.setValueProvider(() -> UtilValue.newValue(TypeInteger.get(), i))
-						.build();
-			}
-			
-			@Override
-			public String toString() {
-				return PLAYER + i;
-			}
-		};
-	}
+        return new SMGPlayer() {
+
+            @Override
+            public Expression getExpression() {
+                return new ExpressionLiteral.Builder()
+                        .setValue(Integer.toString(i))
+                        .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                        .build();
+            }
+
+            @Override
+            public String toString() {
+                return PLAYER + i;
+            }
+        };
+    }
 }

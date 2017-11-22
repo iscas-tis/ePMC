@@ -16,11 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
-
-import epmc.error.EPMCException;
 
 /**
  * Task which should be performed by EPMC.
@@ -58,9 +56,8 @@ public interface CommandTask {
     /**
      * Run part of the task to be executed on the client.
      * 
-     * @throws EPMCException thrown in case of problems
      */
-    default void executeOnClient() throws EPMCException {
+    default void executeOnClient() {
     }
 
     /**

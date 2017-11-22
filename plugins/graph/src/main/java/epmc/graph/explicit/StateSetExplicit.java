@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
 import java.io.Closeable;
 
-import epmc.error.EPMCException;
 import epmc.graph.LowLevel;
 import epmc.graph.StateSet;
 import epmc.util.BitSet;
@@ -54,16 +53,16 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     public StateSetExplicit clone() {
         return this;
     }
-    
+
     @Override
     public void close() {
     }
-    
+
     @Override
     public int size() {
         return size;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
@@ -79,9 +78,8 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
         }
         return true;
     }
-    
-    @Override
-    public boolean isSubsetOf(StateSet states) throws EPMCException {
+
+    public boolean isSubsetOf(StateSet states) {
         assert states != null;
         assert states instanceof StateSetExplicit;
         StateSetExplicit other = (StateSetExplicit) states;
@@ -92,7 +90,7 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
         }
         return true;
     }
-    
+
     public int getExplicitIthState(int i) {
         assert i >= 0;
         assert i < numberToState.length;
@@ -118,9 +116,9 @@ public final class StateSetExplicit implements Closeable, Cloneable, StateSet {
     public BitSet getStatesExplicit() {
         return statesExplicit;
     }
-    
+
     @Override
     public String toString() {
-    	return statesExplicit.toString();
+        return statesExplicit.toString();
     }
 }

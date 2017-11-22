@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -43,20 +43,20 @@ public final class SystemAsyncParallel implements SystemDefinition {
         children.add(left);
         children.add(right);
     }
-    
+
     public SystemDefinition getLeft() {
         return children.get(0);
     }
-    
+
     public SystemDefinition getRight() {
         return children.get(1);
     }
-    
+
     @Override
     public String toString() {
         return "(" + children.get(0) + "|||" + children.get(1) + ")";
     }
-    
+
     @Override
     public Set<Expression> getAlphabet() {
         Set<Expression> result = new HashSet<>();

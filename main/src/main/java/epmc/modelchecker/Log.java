@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.modelchecker;
 
@@ -26,7 +26,7 @@ import epmc.messages.Message;
 // TODO complete documentation
 
 public interface Log {
-    
+
     void send(Message key, Object... params);
 
     public void send(EPMCException exception);
@@ -34,6 +34,6 @@ public interface Log {
     public void send(ModelCheckerResult result);
 
     public void setSilent(boolean silent);
-    
+
     public boolean isSilent();
 }

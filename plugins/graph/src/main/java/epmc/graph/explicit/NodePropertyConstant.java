@@ -16,11 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
+import epmc.operator.OperatorSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -35,7 +37,8 @@ public final class NodePropertyConstant implements NodeProperty {
     private GraphExplicit graph;
     /** Value returned by {@link #get()} . */
     private final Value value;
-    
+    private final OperatorEvaluator set;
+
     /**
      * Create new constant node property.
      * None of parameters may be {@code null}.
@@ -48,6 +51,7 @@ public final class NodePropertyConstant implements NodeProperty {
         assert value != null;
         this.graph = graph;
         this.value = UtilValue.clone(value);
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, value.getType(), value.getType());
     }
 
     /**
@@ -66,10 +70,9 @@ public final class NodePropertyConstant implements NodeProperty {
      * of the graph.
      */
     @Override
-    public void set(int node, Value value) throws EPMCException {
+    public void set(int node, Value value) {
         assert value != null;
-        assert this.value.getType().canImport(value.getType());
-        this.value.set(value);
+        set.apply(this.value, value);
     }
 
     @Override

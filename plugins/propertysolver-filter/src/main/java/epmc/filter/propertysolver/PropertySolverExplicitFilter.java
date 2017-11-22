@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.filter.propertysolver;
 
@@ -26,11 +26,13 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
+import epmc.expression.standard.ProblemsExpression;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expressionevaluator.ExpressionToType;
 import epmc.filter.error.ProblemsFilter;
 import epmc.filter.messages.MessagesFilter;
 import epmc.graph.CommonProperties;
@@ -44,6 +46,15 @@ import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorOr;
+import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -51,17 +62,17 @@ import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayConstant;
 import epmc.value.TypeBoolean;
+import epmc.value.TypeInteger;
+import epmc.value.TypeInterval;
 import epmc.value.TypeNumber;
+import epmc.value.TypeReal;
+import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorMax;
-import epmc.value.operator.OperatorMin;
-import epmc.value.operator.OperatorOr;
 
 // TODO complete documentation
 
@@ -71,39 +82,39 @@ import epmc.value.operator.OperatorOr;
  * @author Ernst Moritz Hahn
  */
 public final class PropertySolverExplicitFilter implements PropertySolver {
-	/** Identifier of this property solver class. */
+    /** Identifier of this property solver class. */
     public final static String IDENTIFIER = "filter-explicit";
     /** Model checker used in the property solver class. */
     private ModelChecker modelChecker;
     /** Property to be handled by this solver. */
-	private Expression property;
-	private ExpressionFilter propertyFilter;
-	private StateSet forStates;
-    
-    @Override
-	public String getIdentifier() {
-	    return IDENTIFIER;
-	}
+    private Expression property;
+    private ExpressionFilter propertyFilter;
+    private StateSet forStates;
 
-	@Override
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
+
+    @Override
     public void setModelChecker(ModelChecker modelChecker) {
-		assert modelChecker != null;
+        assert modelChecker != null;
         this.modelChecker = modelChecker;
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		this.propertyFilter = ExpressionFilter.asFilter(property);
-	}
-
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
-    
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setProperty(Expression property) {
+        this.property = property;
+        this.propertyFilter = ExpressionFilter.asFilter(property);
+    }
+
+    @Override
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         assert forStates != null;
         // TODO should first check states to compute values for, then only compute values for these
         StateSetExplicit allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
@@ -111,20 +122,25 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         StateMapExplicit states = (StateMapExplicit) modelChecker.check(propertyFilter.getStates(), allStates);
         Value statesEntry = states.getType().newValue();
         Value propEntry = prop.getType().newValue();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = null;
+        if (propertyFilter.isPrint()) {
+            isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, propEntry.getType());
+        }
         int statesSize = states.size();
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
                 prop.getExplicitIthValue(propEntry, i);
                 break;
             }
         }
         allStates.close();
-        Value resultValue = propertyFilter.initialAccumulatorValue(modelChecker.getLowLevel(), propEntry);
+        Value resultValue = initialAccumulatorValue(propertyFilter.getFilterType(), modelChecker.getLowLevel(), propEntry);
         int numStatesInFilter = 0;
         for (int i = 0; i < statesSize; i++) {
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
                 numStatesInFilter++;
             }
         }
@@ -135,15 +151,17 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             getLog().send(MessagesFilter.PRINTING_ALL_FILTER_RESULTS);
         }
         int stateNr = 0;
-        Type typeProperty = propertyFilter.getType(modelChecker.getLowLevel());
+        Type typeProperty = getType(propertyFilter.getFilterType(), propertyFilter.getPositional(), prop.getType(), states.getType());
+        OperatorEvaluator accumulator = getAccumulator(propertyFilter.getFilterType(), resultValue, propEntry);
         for (int i = 0; i < allStates.size(); i++) {
             int state = allStates.getExplicitIthState(i);
             prop.getExplicitIthValue(propEntry, i);
             states.getExplicitIthValue(statesEntry, i);
-            if (ValueBoolean.asBoolean(statesEntry).getBoolean()) {
-            	accumulate(propertyFilter.getFilterType(), resultValue, propEntry);
+            if (ValueBoolean.as(statesEntry).getBoolean()) {
+                accumulator.apply(resultValue, resultValue, propEntry);
                 if (propertyFilter.isPrint()) {
-                    if (!ValueAlgebra.asAlgebra(propEntry).isZero()) {
+                    isZero.apply(cmp, propEntry);
+                    if (!cmp.getBoolean()) {
                         getLog().send(MessagesFilter.PRINT_FILTER, stateNr, state, propEntry);
                     }
                 } else if (propertyFilter.isPrintAll()) {
@@ -155,17 +173,19 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         ensure(!propertyFilter.isState() || numStatesInFilter <= 1,
                 ProblemsFilter.FILTER_STATE_MORE_THAN_ONE, property);
         if (propertyFilter.isAvg()) {
-            Value num = UtilValue.newValue(TypeNumber.asNumber(resultValue.getType()), numStatesInFilter);
-            ValueAlgebra.asAlgebra(resultValue).divide(resultValue, num);
+            Value num = UtilValue.newValue(TypeNumber.as(resultValue.getType()), numStatesInFilter);
+            OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, resultValue.getType(), num.getType());
+            divide.apply(ValueAlgebra.as(resultValue), resultValue, num);
         }
-        
+
         ValueArray resultValues = null;
+        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
         if (propertyFilter.isSameResultForAllStates()) {
-        	resultValues = UtilValue.newArray(new TypeArrayConstant(typeProperty), forStates.size());
+            resultValues = UtilValue.newArray(new TypeArrayConstant(resultValue.getType()), forStates.size());
             resultValues.set(resultValue, 0);
         } else if (propertyFilter.isArgMin() || propertyFilter.isArgMax()) {
             resultValues = UtilValue.newArray(typeProperty.getTypeArray(), forStates.size());
-            ValueBoolean compare = ValueBoolean.asBoolean(typeProperty.newValue());
+            ValueBoolean compare = ValueBoolean.as(typeProperty.newValue());
             int allStatesNr = 0;
             int allState;
             StateSetExplicit forStatesExplicit = (StateSetExplicit) forStates;
@@ -177,7 +197,8 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                     allState = allStates.getExplicitIthState(allStatesNr);
                 }
                 prop.getExplicitIthValue(propEntry, allStatesNr);
-                compare.set(propEntry.isEq(resultValue));
+                eq.apply(cmp, propEntry, resultValue);
+                compare.set(cmp.getBoolean());
                 resultValues.set(compare, forStatesNr);
             }
         }
@@ -187,12 +208,12 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         } else {
             result = UtilGraph.newStateMap((StateSetExplicit) forStates.clone(), resultValues);
         }
-        
+
         return result;
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
@@ -204,84 +225,142 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         modelChecker.ensureCanHandle(propertyFilter.getProp(), allStates);
         modelChecker.ensureCanHandle(propertyFilter.getStates(), allStates);
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        return Collections.unmodifiableSet(required);
     }
 
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getStates(), allStates));
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getStates(), allStates));
-    	return Collections.unmodifiableSet(required);
+        return Collections.unmodifiableSet(required);
     }
 
-    private static void accumulate(FilterType type, Value resultValue, Value value) throws EPMCException {
-    	OperatorEvaluator and = ContextValue.get().getOperatorEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
-    	OperatorEvaluator or = ContextValue.get().getOperatorEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
-        OperatorEvaluator min = ContextValue.get().getOperatorEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
-        OperatorEvaluator max = ContextValue.get().getOperatorEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+    private static OperatorEvaluator getAccumulator(FilterType type, Value resultValue, Value value) {
         switch (type) {
-        case ARGMAX: case MAX:
-        	max.apply(resultValue, resultValue, value);
-            break;
-        case ARGMIN: case MIN:
-        	min.apply(resultValue, resultValue, value);
-            break;
-        case AVG:
-            ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
-            break;
-        case COUNT:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, ValueBoolean.asBoolean(value).getBoolean()
-                    ? TypeAlgebra.asAlgebra(resultValue.getType()).getOne()
-                            : TypeAlgebra.asAlgebra(resultValue.getType()).getZero());
-            break;
-        case EXISTS:
-        	or.apply(resultValue, resultValue, value);
-            break;
-        case FIRST:
-            break;
-        case FORALL:
-        	and.apply(resultValue, resultValue, value);
-            break;
-        case PRINT:
-            break;
-        case PRINTALL:
-            break;
-        case RANGE: {
-            Value resLo = ValueInterval.asInterval(resultValue).getIntervalLower();
-            Value resUp = ValueInterval.asInterval(resultValue).getIntervalUpper();
-            min.apply(resLo, resLo, value);
-            max.apply(resUp, resUp, value);
+        case ARGMAX: case MAX: {
+            OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+            return max;
         }
-        break;
+        case ARGMIN: case MIN: {
+            OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+            return min;
+        }
+        case AVG: {
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+            return add;
+        }
+        case COUNT: {
+            return new OperatorEvaluator() {
+                private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+                
+                @Override
+                public Type resultType() {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                    add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
+                            ? TypeAlgebra.as(resultValue.getType()).getOne()
+                                    : TypeAlgebra.as(resultValue.getType()).getZero());
+                }
+            };
+        }
+        case EXISTS: {
+            OperatorEvaluator or = ContextValue.get().getEvaluator(OperatorOr.OR, TypeBoolean.get(), TypeBoolean.get());
+            return or;
+        }
+        case FIRST:
+        case PRINT:
+        case PRINTALL:
         case STATE:
-            break;
-        case SUM:
-        	ValueAlgebra.asAlgebra(resultValue).add(resultValue, value);
-            break;
+            return new OperatorEvaluator() {
+                
+                @Override
+                public Type resultType() {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                }
+            };
+        case FORALL: {
+            OperatorEvaluator and = ContextValue.get().getEvaluator(OperatorAnd.AND, TypeBoolean.get(), TypeBoolean.get());
+            return and;
+        }
+        case RANGE: {
+            return new OperatorEvaluator() {
+                private final OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, resultValue.getType(), value.getType());
+                private final OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, resultValue.getType(), value.getType());
+                
+                @Override
+                public Type resultType() {
+                    return resultValue.getType();
+                }
+                
+                @Override
+                public void apply(Value result, Value... operands) {
+                    Value resLo = ValueInterval.as(resultValue).getIntervalLower();
+                    Value resUp = ValueInterval.as(resultValue).getIntervalUpper();
+                    min.apply(resLo, resLo, value);
+                    max.apply(resUp, resUp, value);
+                }
+            };
+        }
+        case SUM: {
+            OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+            return add;
+        }
         default:
             throw new RuntimeException();
+        }
+    }
+
+    private static Value initialAccumulatorValue(FilterType type, ExpressionToType expressionToType, Value value) {
+        assert expressionToType != null;
+        assert value != null;
+        switch (type) {
+        case COUNT:
+            return UtilValue.clone(TypeInteger.get().getZero());
+        case EXISTS:
+            return UtilValue.clone(TypeBoolean.get().getFalse());
+        case FORALL:
+            return UtilValue.clone(TypeBoolean.get().getTrue());
+        case RANGE:
+            ValueInterval result = TypeInterval.get().newValue();
+            OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+            set.apply(result.getIntervalLower(), value);
+            set.apply(result.getIntervalUpper(), value);
+            return result;
+        case AVG:
+            return UtilValue.clone(TypeWeight.get().getZero());
+        case SUM:
+            return UtilValue.clone(TypeWeight.get().getZero());
+        default:
+            return UtilValue.clone(UtilValue.clone(value));
         }
     }
     
@@ -291,6 +370,61 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
      * @return log used
      */
     private Log getLog() {
-    	return Options.get().get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
+    }
+    
+    private Type getType(FilterType type,
+            Positional positional,
+            Type propType, Type statesType) {
+        Type result = null;
+        if (TypeInteger.isIntegerWithBounds(propType)) {
+            propType = TypeInteger.get();
+        }
+        ensure(statesType == null || TypeBoolean.is(statesType),
+                ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+        switch (type) {
+        case AVG:
+            ensure(propType == null || TypeWeight.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeWeight.get();
+            break;
+        case SUM:
+            ensure(propType == null || TypeWeight.is(propType)
+            || TypeInteger.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeWeight.get();
+            break;
+        case RANGE:
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInterval.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeInterval.get();
+            break;
+        case MAX: case MIN:
+            ensure(propType == null || TypeReal.is(propType)
+            || TypeInteger.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeReal.get();
+            break;
+        case COUNT:
+            ensure(propType == null || TypeBoolean.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "");
+            result = TypeInteger.get();
+            break;
+        case FIRST: case STATE: case PRINT: case PRINTALL:
+            result = propType;
+            break;
+        case FORALL: case EXISTS:
+            ensure(propType == null || TypeBoolean.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeBoolean.get();
+            break;
+        case ARGMAX: case ARGMIN:
+            ensure(propType == null || TypeReal.is(propType),
+            ProblemsExpression.EXPR_INCONSISTENT, positional, "", this);
+            result = TypeBoolean.get();
+            break;
+        }
+        return result;
     }
 }

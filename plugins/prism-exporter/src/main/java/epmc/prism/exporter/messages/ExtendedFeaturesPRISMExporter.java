@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.exporter.messages;
 
@@ -38,7 +38,7 @@ public final class ExtendedFeaturesPRISMExporter {
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_LTS = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-lts").build().toString();
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SMG_COALITION = newMessage().setIdentifier("prism-exporter-extended-feature-smg-coalition").build().toString();
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_PLAYER_DEFINITION = newMessage().setIdentifier("prism-exporter-extended-feature-player-definition").build().toString();
-   
+
     /**
      * Creates a new message with given identifier with this resource bundle.
      * The parameter may not be {@code null}.
@@ -53,6 +53,6 @@ public final class ExtendedFeaturesPRISMExporter {
     /**
      * Private constructor to prevent instantiation of this class.
      */
-	private ExtendedFeaturesPRISMExporter() {
-	}
+    private ExtendedFeaturesPRISMExporter() {
+    }
 }

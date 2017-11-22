@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.valuejson;
 
@@ -29,14 +29,14 @@ import epmc.value.ValueDouble;
 public class ValueJSONDouble implements ValueJSON {
     final static String ARBITRARY = "arbitrary";
 
-	@Override
-	public JsonValue convert(Value value) {
-		assert value != null;
-		if (!(ValueDouble.isDouble(value))) {
-			return null;
-		}
-        return Json.createObjectBuilder().add(ARBITRARY, ValueDouble.asDouble(value).getDouble())
+    @Override
+    public JsonValue convert(Value value) {
+        assert value != null;
+        if (!(ValueDouble.is(value))) {
+            return null;
+        }
+        return Json.createObjectBuilder().add(ARBITRARY, ValueDouble.as(value).getDouble())
                 .build().get(ARBITRARY);
-	}
+    }
 
 }

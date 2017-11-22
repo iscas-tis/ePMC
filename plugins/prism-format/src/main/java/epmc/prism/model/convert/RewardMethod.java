@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model.convert;
 
@@ -26,10 +26,10 @@ package epmc.prism.model.convert;
  * @author Ernst Moritz Hahn
  */
 public enum RewardMethod {
-	/** Integrate reward assignments into existing automata. */
-	INTEGRATE,
-	/** Create new automaton to integrate rewards into model. */
-	EXTERNAL,
-	/** Do not convert rewards. */
-	NONE
+    /** Integrate reward assignments into existing automata. */
+    INTEGRATE,
+    /** Create new automaton to integrate rewards into model. */
+    EXTERNAL,
+    /** Do not convert rewards. */
+    NONE
 }

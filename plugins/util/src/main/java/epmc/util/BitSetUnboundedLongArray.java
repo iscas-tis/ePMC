@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -34,7 +34,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         numEntries = numEntries == 0 ? 1 : numEntries;
         content = new long[numEntries];
     }
-    
+
     public BitSetUnboundedLongArray(long[] content) {
         assert content != null;
         this.content = content.clone();
@@ -43,7 +43,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
     public BitSetUnboundedLongArray() {
         this(WORD_SIZE);
     }
-        
+
     @Override
     public void set(int bitIndex, boolean value) {
         assert bitIndex >= 0 : bitIndex;
@@ -116,7 +116,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             return UtilBitSet.equals(this, obj);
         }
     }
-    
+
     @Override
     public int hashCode() {
         int end;
@@ -132,7 +132,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         }
         return hash;
     }
-    
+
     @Override
     public void clear(int bitIndex) {
         assert bitIndex >= 0 : bitIndex;
@@ -140,7 +140,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         ensureSize(offset);
         content[offset] &= ~bit(bitIndex);
     }
-    
+
     @Override
     public void set(int bitIndex) {
         assert bitIndex >= 0 : bitIndex;
@@ -148,12 +148,12 @@ public final class BitSetUnboundedLongArray implements BitSet {
         ensureSize(offset);
         content[offset] |= bit(bitIndex);
     }
-    
+
     @Override
     public void clear() {
         Arrays.fill(content, 0L);
     }
-    
+
     @Override
     public void or(BitSet other) {
         assert other != null;
@@ -176,7 +176,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             BitSet.super.or(other);
         }
     }
-    
+
     @Override
     public void andNot(BitSet other) {
         assert other != null;
@@ -190,7 +190,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             BitSet.super.andNot(other);
         }
     }
-        
+
     @Override
     public void and(BitSet other) {
         assert other != null;
@@ -207,7 +207,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             BitSet.super.and(other);
         }
     }
-    
+
     @Override
     public boolean isEmpty() {
         for (int i = 0; i < content.length; i++) {
@@ -217,7 +217,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         }
         return true;
     }
-    
+
     @Override
     public int cardinality() {
         int result = 0;
@@ -226,7 +226,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         }
         return result;
     }
-    
+
     /**
      * See
      * "Algorithms and data structures with applications to 
@@ -243,7 +243,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         value += value >>> 16;
         return ((int)(value) + (int)(value >>> 32)) & 0xff;
     }
-    
+
     @Override
     public void flip(int bitIndex) {
         assert bitIndex >= 0 : bitIndex;
@@ -251,7 +251,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
         ensureSize(offset);
         content[offset] ^= bit(bitIndex);
     }
-    
+
     @Override
     public boolean intersects(BitSet set) {
         assert set != null;
@@ -268,7 +268,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             return BitSet.super.intersects(set);
         }
     }
-    
+
     @Override
     public void xor(BitSet other) {
         assert other != null;
@@ -291,7 +291,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             BitSet.super.or(other);
         }
     }
-    
+
     @Override
     public int nextSetBit(int index) {
         assert index >= 0;
@@ -393,7 +393,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             content[toOffset] |= toOffsetMask;
         }
     }
-    
+
     @Override
     public void flip(int fromIndex, int toIndex) {
         assert fromIndex >= 0;
@@ -416,7 +416,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             content[toOffset] ^= toOffsetMask;
         }
     }
-    
+
     @Override
     public void set(int fromIndex, int toIndex, boolean value) {
         if (value) {
@@ -425,12 +425,12 @@ public final class BitSetUnboundedLongArray implements BitSet {
             clear(fromIndex, toIndex);
         }
     }
-    
+
     private long bit(int index) {
         assert index >= 0;
         return 1L << index;
     }
-    
+
     private int offset(int index) {
         assert index >= 0;
         return index >> LOG2LONGSIZE;        
@@ -467,7 +467,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             content[i] = other1.content[i] & other2.content[i];
         }
     }
-    
+
     @Override
     public void andNot(BitSet operand1, BitSet operand2) {
         assert operand1 != null;
@@ -499,7 +499,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             content[i] = other1.content[i] & ~other2.content[i];
         }
     }
-    
+
     @Override
     public void or(BitSet operand1, BitSet operand2) {
         assert operand1 != null;
@@ -569,7 +569,7 @@ public final class BitSetUnboundedLongArray implements BitSet {
             content[offset] = other1.content[offset] ^ other2.content[offset];
         }
     }
-    
+
     @Override
     public String toString() {
         return UtilBitSet.toString(this);

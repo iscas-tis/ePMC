@@ -16,22 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-import epmc.error.EPMCException;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorIsZero;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import gnu.trove.iterator.TIntIterator;
 import gnu.trove.iterator.TObjectIntIterator;
@@ -44,10 +46,10 @@ public final class SupportWalker {
         private final static String LANGLE = "(";
         private final static String COMMA = ",";
         private final static String RANGLE = ")";
-        
+
         private long long1;
         private long long2;
-        
+
         LongPair(long long1, long long2) {
             this.long1 = long1;
             this.long2 = long2;
@@ -57,7 +59,7 @@ public final class SupportWalker {
             this.long1 = long1;
             this.long2 = long2;
         }
-        
+
         @Override
         public int hashCode() {
             int hash = 0;
@@ -81,15 +83,15 @@ public final class SupportWalker {
             }
             return true;
         }
-        
+
         @Override
         public String toString() {
             return LANGLE + long1 + COMMA + long2 + RANGLE;
         }
     }
-    
+
     private final static String GRAPH_START = "digraph {\n";
-    
+
     private final static int LEAF_REACHED = Integer.MAX_VALUE;
     private final static int HIGH_ADD = 0;
     private final static int LOW_ADD = 1;
@@ -105,7 +107,9 @@ public final class SupportWalker {
     private int trueIndex = Integer.MIN_VALUE;
     private int falseIndex = Integer.MIN_VALUE;
     private int zeroIndex = Integer.MIN_VALUE;
-    
+    private final OperatorEvaluator eq;
+    private final ValueBoolean cmp;
+
     // TODO extend stop-at
 
     // copy constructor
@@ -125,8 +129,10 @@ public final class SupportWalker {
         this.trueIndex = trueIndex;
         this.falseIndex = falseIndex;
         this.zeroIndex = zeroIndex;
+        eq = ContextValue.get().getEvaluator(OperatorEq.EQ, leafValues[0].getType(), leafValues[0].getType());
+        cmp = TypeBoolean.get().newValue();
     }
-    
+
     SupportWalker(DD node, DD support, Value[] stopWhere) {
         assert node != null;
         assert support != null;
@@ -138,25 +144,26 @@ public final class SupportWalker {
         this.stopWhere = new Value[stopWhere.length];
         for (int index = 0; index < stopWhere.length; index++) {
             this.stopWhere[index] = UtilValue.clone(stopWhere[index]);
-            this.stopWhere[index].setImmutable();
         }
         this.variables = computeVariables(support);
         goBackStack = new int[variables.length];
+        eq = ContextValue.get().getEvaluator(OperatorEq.EQ, node.getType(), node.getType());
+        cmp = TypeBoolean.get().newValue();
         buildDiagram(node, support);
     }
-    
+
     SupportWalker(DD node, DD support, Collection<Value> stopWhere) {
         this(node, support, stopWhere.toArray(new Value[0]));
     }
-    
+
     SupportWalker(DD node, DD support) {
         this(node, support, true, true);
     }
-    
+
     SupportWalker(DD node, DD support, boolean stopAtFalse, boolean stopAtZero) {
         this(node, support, toStopWhere(stopAtFalse, stopAtZero, node));
     }
-    
+
     private static Value[] toStopWhere(boolean stopAtFalse,
             boolean stopAtZero, DD node) {
         assert node != null;
@@ -218,31 +225,37 @@ public final class SupportWalker {
         while (iter.hasNext()) {
             iter.advance();
             Value value = UtilValue.clone(iter.key());
-            value.setImmutable();
             valueEnumerator.put(value, valueNumber);
             leafValues[valueNumber] = value;
             valueNumber++;
         }
         BitSet seen = UtilBitSet.newBitSetUnbounded();
         buildDiagram(nodeWalker, supportWalker, nodeEnumerator, valueEnumerator, seen);
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, leafValues[0].getType());
         for (int i = 0; i < diagram.length / 2; i++) {
             if (diagram[i * NUM_OUT] >= 0) {
                 continue;
             }
             Value value = leafValues[-diagram[i * NUM_OUT] - 1];
+            if (isZero != null) {
+                isZero.apply(cmp, value);
+            } else {
+                cmp.set(false);
+            }
             if (ValueBoolean.isTrue(value)) {
                 assert trueIndex == Integer.MIN_VALUE;
                 trueIndex = i;
             } else if (ValueBoolean.isFalse(value)) {
                 assert falseIndex == Integer.MIN_VALUE;
                 falseIndex = i;
-            } else if (ValueAlgebra.asAlgebra(value).isZero()) {
+            } else if (cmp.getBoolean()) {
                 assert zeroIndex == Integer.MIN_VALUE;
                 zeroIndex = i;
             }
         }
     }
-    
+
     private void buildDiagram(Walker node, Walker support,
             TObjectIntMap<LongPair> nodeEnumerator,
             TObjectIntMap<Value> valueEnumerator, BitSet seen) {
@@ -294,15 +307,13 @@ public final class SupportWalker {
         if (node.isLeaf()) {
             Value nodeValue = node.value();
             for (Value stop : stopWhere) {
-                try {
-                	// TODO check following, probably very inefficient
-                    if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null
-                    		&& stop.isEq(nodeValue)) {
+                // TODO check following, probably very inefficient
+                if (UtilValue.upper(stop.getType(), nodeValue.getType()) != null) {
+                    eq.apply(cmp, stop, nodeValue);
+                    if (cmp.getBoolean()) {
                         stopAt = true;
                         break;
                     }
-                } catch (EPMCException e) {
-                	throw new RuntimeException(e);
                 }
             }
         }
@@ -347,7 +358,7 @@ public final class SupportWalker {
             support.back();
         }
     }
-    
+
     public int low(int index) {
         assert diagram[index * NUM_OUT] >= 0;
         return diagram[index * NUM_OUT + LOW_ADD];
@@ -364,14 +375,14 @@ public final class SupportWalker {
         variable++;
         index = diagram[index * NUM_OUT + LOW_ADD];
     }
-    
+
     public void high() {
         assert diagram[index * NUM_OUT] >= 0;
         goBackStack[variable] = index;
         variable++;
         index = diagram[index * NUM_OUT + HIGH_ADD];
     }
-    
+
     public void back() {
         assert index > 0;
         variable--;
@@ -381,18 +392,18 @@ public final class SupportWalker {
     public int variable(int number) {
         return variables[number];
     }
-    
+
     public int variable() {
         assert index >= 0;
         assert index * NUM_OUT < diagram.length;
         return isLeaf(index) ? LEAF_REACHED : variable(variable);
     }
-    
+
 
     public boolean isLeaf(int index) {
         return diagram[index * NUM_OUT] < 0;
     }
-    
+
     public boolean isLeaf() {
         return isLeaf(index);
     }
@@ -401,30 +412,29 @@ public final class SupportWalker {
         assert isLeaf(index);
         return leafValues[-diagram[index * NUM_OUT] - 1];
     }
-    
+
     public Value value() {
         return value(index);
     }
-    
+
     public boolean isFalse() {
         assert(index == falseIndex) == (isLeaf() && ValueBoolean.isFalse(value()));
         return index == falseIndex;
     }
-    
+
     public boolean isTrue() {
         assert(index == trueIndex) == (isLeaf() && ValueBoolean.isTrue(value()));
         return index == trueIndex;
     }
-    
+
     public boolean isZero() {
-        assert(index == zeroIndex) == (isLeaf() && ValueAlgebra.asAlgebra(value()).isZero());
         return index == zeroIndex;
     }
 
     public long uniqueId() {
         return index;
     }
-    
+
     public SupportWalkerNodeMap newNodeMap(Type type) {
         assert type != null;
         return new SupportWalkerNodeMap(this, type);
@@ -433,20 +443,20 @@ public final class SupportWalker {
     public SupportWalkerNodeMapInt newNodeMapInt() {
         return new SupportWalkerNodeMapInt(this);
     }
-    
+
     int getIndex() {
         return index;
     }
-    
+
     int getNumNodes() {
         return diagram.length;
     }
-    
+
     ContextDD getContext() {
         return contextDD;
     }
-    
-    
+
+
     public SupportWalker permute(Permutation permutation) {
         assert permutation != null;
         assert permutation.getContextDD() == contextDD;
@@ -458,24 +468,24 @@ public final class SupportWalker {
                 leafValues, variable, stopWhere, contextDD,
                 trueIndex, falseIndex, zeroIndex);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append(GRAPH_START);
-        
+
         int[] map = new int[diagram.length / NUM_OUT];
         Arrays.fill(map, -1);
         computeVarMap(0, 0, map);
-        
+
         for (int node = 0; node < diagram.length / NUM_OUT; node++) {
             int variable = map[node];
             String label = variable == LEAF_REACHED
                     ? value(node) + ": " + value(node).getType()
-                    : String.valueOf(variable);
-            String shape = variable == LEAF_REACHED ? "box" : "circle";
-            builder.append("  node" + node + " [label=\"" + label);
-            builder.append("\", shape=\"" + shape + "\"];\n");
+                            : String.valueOf(variable);
+                    String shape = variable == LEAF_REACHED ? "box" : "circle";
+                    builder.append("  node" + node + " [label=\"" + label);
+                    builder.append("\", shape=\"" + shape + "\"];\n");
         }
         builder.append("\n");
         BitSet seen = UtilBitSet.newBitSetUnbounded();
@@ -496,7 +506,7 @@ public final class SupportWalker {
         computeVarMap(low(node), varNumber + 1, map);
         computeVarMap(high(node), varNumber + 1, map);
     }
-    
+
     private void transitionsToString(StringBuilder builder, BitSet seen, int node) {
         if (seen.get(node)) {
             return;

@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.value.operator.OperatorImplies;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorImplies;
 
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     public final static String IDENTIFIER = "implies";
@@ -38,7 +38,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return UtilExpressionStandard.opOr(UtilExpressionStandard.opNot(expressionOperator.getOperand1()), expressionOperator.getOperand2());
     }
-    
+
     private static boolean isImplies(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;

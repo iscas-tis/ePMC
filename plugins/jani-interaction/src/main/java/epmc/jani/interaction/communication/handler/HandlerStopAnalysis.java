@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.communication.handler;
 
@@ -35,37 +35,37 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class HandlerStopAnalysis implements Handler {
-	public final static String TYPE = "analysis-stop";
-	private final static String ID = "id";
+    public final static String TYPE = "analysis-stop";
+    private final static String ID = "id";
 
-	private final Backend backend;
+    private final Backend backend;
 
-	public HandlerStopAnalysis(Backend backend) {
-		assert backend != null;
-		this.backend = backend;
-	}
-	
-	@Override
-	public String getType() {
-		return TYPE;
-	}
+    public HandlerStopAnalysis(Backend backend) {
+        assert backend != null;
+        this.backend = backend;
+    }
 
-	@Override
-	public void handle(Object client, JsonObject object) {
-		assert client != null;
-		assert object != null;
-		ClientInfo clientDescription = backend.getClientData(client);
-		if (clientDescription == null) {
-			return;
-		}
-		BigInteger id = null;
-		try {
-			id = UtilJSON.getBigInteger(object, ID);
-		} catch (EPMCException e) {
-			return;
-		}
-		clientDescription.stopAnalysis(id);
-		
-		// TODO
-	}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    @Override
+    public void handle(Object client, JsonObject object) {
+        assert client != null;
+        assert object != null;
+        ClientInfo clientDescription = backend.getClientData(client);
+        if (clientDescription == null) {
+            return;
+        }
+        BigInteger id = null;
+        try {
+            id = UtilJSON.getBigInteger(object, ID);
+        } catch (EPMCException e) {
+            return;
+        }
+        clientDescription.stopAnalysis(id);
+
+        // TODO
+    }
 }

@@ -16,13 +16,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.constraintsolver.options;
 
 public enum OptionsConstraintsolver {
-	OPTIONS_CONSTRAINTSOLVER,
-	CONSTRAINTSOLVER_CATEGORY,
-	CONSTRAINTSOLVER_SOLVER,
-	CONSTRAINTSOLVER_SOLVER_CLASS
+    OPTIONS_CONSTRAINTSOLVER,
+    CONSTRAINTSOLVER_CATEGORY,
+    CONSTRAINTSOLVER_SOLVER,
+    CONSTRAINTSOLVER_SOLVER_CLASS
 }

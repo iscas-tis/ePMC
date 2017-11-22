@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.util;
 
@@ -62,7 +62,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
         private KeySetIterator() {
             this.inner = keys.iterator();
         }
-        
+
         @Override
         public boolean hasNext() {
             return inner.hasNext();
@@ -80,7 +80,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             inner.remove();
         }        
     }
-    
+
     private final class KeySet implements Set<K>, Serializable {
         private static final long serialVersionUID = 1L;
 
@@ -174,7 +174,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             map.clear();
             keys.clear();
         }
-        
+
         @Override
         public String toString() {
             StringBuilder builder = new StringBuilder();
@@ -191,7 +191,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             return builder.toString();
         }
     }
-    
+
     private final class ValueIterator implements Iterator<V> {
         private K last;
         private final Iterator<K> inner;
@@ -199,7 +199,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
         private ValueIterator() {
             this.inner = keys.iterator();
         }
-        
+
         @Override
         public boolean hasNext() {
             return inner.hasNext();
@@ -216,7 +216,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             map.remove(last);
             inner.remove();
         }
-        
+
     }
 
     private final class Values implements Collection<V>, Serializable {
@@ -330,17 +330,17 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             map.clear();
             keySet.clear();
         }
-        
+
     }
-    
+
     private final class OEntry implements Entry<K,V> {
         K key;
         boolean removed;
-        
+
         public OEntry(K key) {
             this.key = key;
         }
-        
+
         @Override
         public K getKey() {
             return key;
@@ -355,17 +355,17 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
         public V setValue(V value) {
             return map.put(key, value);
         }
-        
+
     }
-    
+
     private final class EntrySetIterator implements Iterator<Entry<K, V>> {
         private K last;
         private final Iterator<K> inner;
-        
+
         private EntrySetIterator() {
             inner = keys.iterator();
         }
-        
+
         @Override
         public boolean hasNext() {
             return inner.hasNext();
@@ -382,9 +382,9 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             map.remove(last);
             inner.remove();
         }
-        
+
     }
-    
+
     private final class EntrySet implements Set<Entry<K, V>>, Serializable {
         private static final long serialVersionUID = 1L;
 
@@ -483,7 +483,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
             map.clear();
             keys.clear();
         }
-        
+
     }
 
     /** serival version uid - not sure whether there is a better choice */
@@ -550,7 +550,7 @@ public final class OrderedMap<K, V> implements Map<K, V>, Serializable {
         this(new HashMap<>(), reversed);
     }
 
-    
+
     @Override
     public int size() {
         return map.size();

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph;
 
@@ -26,15 +26,15 @@ import epmc.graph.Semantics;
  * Semantics type for interval Markov decision processes (IMDPs).
  */
 public enum SemanticsIMDP implements SemanticsDiscreteTime, SemanticsNonDet, SemanticsStochastic {
-	/** Singleton element. */
-	IMDP;
+    /** Singleton element. */
+    IMDP;
 
     /**
      * Checks whether this is an interval Markov decision process (IMDP).
      * 
      * @return whether this is an interval Markov decision process (IMDP)
      */
-	public static boolean isIMDP(Semantics semantics) {
-		return semantics instanceof SemanticsIMDP;
-	}
+    public static boolean isIMDP(Semantics semantics) {
+        return semantics instanceof SemanticsIMDP;
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.evaluatorexplicit;
 
@@ -24,25 +24,23 @@ import java.util.Map;
 
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAddInverse;
 import epmc.value.ContextValue;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.Value;
-import epmc.value.operator.OperatorAddInverse;
-import epmc.value.operator.OperatorMultiplyInverse;
 
 public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements EvaluatorExplicitInteger {
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-		private ExpressionToType expressionToType;
+        private ExpressionToType expressionToType;
 
         @Override
         public String getIdentifier() {
@@ -54,7 +52,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.variables = variables;
             return this;
         }
-        
+
         private Expression[] getVariables() {
             return variables;
         }
@@ -64,7 +62,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.expression = expression;
             return this;
         }
-        
+
         private Expression getExpression() {
             return expression;
         }
@@ -74,31 +72,30 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
             this.cache = cache;
             return this;
         }
-        
+
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
             return cache;
         }
 
         @Override
-        public boolean canHandle() throws EPMCException {
+        public boolean canHandle() {
             assert expression != null;
-            if (!(expression instanceof ExpressionOperator)) {
+            if (!ExpressionOperator.isOperator(expression)) {
                 return false;
             }
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
             Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {
                     return false;
                 }
             }
-            if (!opName.equals(OperatorAddInverse.ADD_INVERSE)
-                    && !opName.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
+            if (!opName.equals(OperatorAddInverse.ADD_INVERSE)) {
                 return false;
             }
             for (Expression child : expressionOperator.getOperands()) {
-                if (child.getType(expressionToType) == null
-                        || !TypeInteger.isInteger(child.getType(expressionToType))) {
+                EvaluatorExplicit op = UtilEvaluatorExplicit.newEvaluator(null, child, variables, cache, expressionToType);
+                if (!TypeInteger.is(op.getType())) {
                     return false;
                 }
             }
@@ -113,20 +110,20 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         }
 
         @Override
-        public EvaluatorExplicit build() throws EPMCException {
+        public EvaluatorExplicit build() {
             return new EvaluatorExplicitOperatorUnaryIntegerToInteger(this);
         }
 
-		@Override
-		public EvaluatorExplicit.Builder setExpressionToType(
-				ExpressionToType expressionToType) {
-			this.expressionToType = expressionToType;
-			return this;
-		}
-		
-		public ExpressionToType getExpressionToType() {
-			return expressionToType;
-		}
+        @Override
+        public EvaluatorExplicit.Builder setExpressionToType(
+                ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        public ExpressionToType getExpressionToType() {
+            return expressionToType;
+        }
     }
 
     @FunctionalInterface
@@ -135,7 +132,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     }
 
     public final static String IDENTIFIER = "operator-unary-integer-to-integer";
-    
+
     private final Expression[] variables;
     private final ExpressionOperator expression;
     private final EvaluatorExplicitInteger[] operands;
@@ -144,8 +141,8 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
     private final OperatorEvaluator evaluator;
-    
-    private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) throws EPMCException {
+
+    private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
@@ -163,28 +160,26 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         }
         Operator operator = expression.getOperator();
         if (operator.equals(OperatorAddInverse.ADD_INVERSE)) {
-            unaryIntegerToInteger = a -> -a;        	
-        } else if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE)) {
-            unaryIntegerToInteger = a -> 1/a;
+            unaryIntegerToInteger = a -> -a;
         } else {
             unaryIntegerToInteger = null;
         }
-        evaluator = ContextValue.get().getOperatorEvaluator(expression.getOperator(), types);
-        result = evaluator.resultType(expression.getOperator(), types).newValue();
+        evaluator = ContextValue.get().getEvaluator(expression.getOperator(), types);
+        result = evaluator.resultType().newValue();
     }
 
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
+
     @Override
     public Expression getExpression() {
         return expression;
     }
 
     @Override
-    public Value evaluate(Value... values) throws EPMCException {
+    public Value evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -195,14 +190,14 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         evaluator.apply(result, operandValues);
         return result;
     }
-    
+
     @Override
     public Value getResultValue() {
         return result;
     }
 
     @Override
-    public int evaluateInteger(Value... values) throws EPMCException {
+    public int evaluateInteger(Value... values) {
         return unaryIntegerToInteger.call(operands[0].evaluateInteger(values));
     }
 }

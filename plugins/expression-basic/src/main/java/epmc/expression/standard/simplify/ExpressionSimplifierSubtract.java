@@ -16,26 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.expression.standard.simplify;
 
-import epmc.value.TypeAlgebra;
-import epmc.value.ValueAlgebra;
-import epmc.value.operator.OperatorSubtract;
-import epmc.error.EPMCException;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
+import epmc.value.TypeBoolean;
+import epmc.value.Value;
+import epmc.value.ValueBoolean;
 import epmc.expression.Expression;
-import epmc.expression.ExpressionToType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.UtilExpressionStandard;
-
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorIsZero;
+import epmc.operator.OperatorSubtract;
 
 public final class ExpressionSimplifierSubtract implements ExpressionSimplifier {
     public final static String IDENTIFIER = "subtract";
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) throws EPMCException {
+    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         if (!isSubtract(expression)) {
             return null;
@@ -49,12 +53,13 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
             return new ExpressionLiteral.Builder()
-                    .setValue(TypeAlgebra.asAlgebra(expressionOperator.getType(expressionToType)).getZero())
+                    .setValue("0")
+                    .setType(ExpressionTypeInteger.TYPE_INTEGER)
                     .build();
         }
         return null;
     }
-    
+
     private static boolean isSubtract(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
@@ -64,9 +69,14 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
                 .equals(OperatorSubtract.SUBTRACT);
     }
 
-    private boolean isZero(Expression expression) throws EPMCException {
+    private boolean isZero(Expression expression) {
         assert expression != null;
-        return expression instanceof ExpressionLiteral
-                && ValueAlgebra.asAlgebra(((ExpressionLiteral) expression).getValue()).isZero();
+        ValueBoolean cmp = TypeBoolean.get().newValue();
+        if (ExpressionLiteral.isLiteral(expression)) {
+            Value value = UtilEvaluatorExplicit.evaluate(expression);
+            OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, value.getType());
+            isZero.apply(cmp, value);
+        }
+        return ExpressionLiteral.isLiteral(expression) && cmp.getBoolean();
     }
 }

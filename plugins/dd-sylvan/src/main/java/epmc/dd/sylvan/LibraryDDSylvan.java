@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.dd.sylvan;
 
@@ -28,29 +28,28 @@ import epmc.dd.ContextDD;
 import epmc.dd.LibraryDD;
 import epmc.dd.PermutationLibraryDD;
 import epmc.dd.ProblemsDD;
-import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAnd;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorId;
+import epmc.operator.OperatorIff;
+import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorNot;
+import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.util.JNATools;
-import epmc.value.Operator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.operator.OperatorAnd;
-import epmc.value.operator.OperatorEq;
-import epmc.value.operator.OperatorId;
-import epmc.value.operator.OperatorIff;
-import epmc.value.operator.OperatorImplies;
-import epmc.value.operator.OperatorIte;
-import epmc.value.operator.OperatorNe;
-import epmc.value.operator.OperatorNot;
-import epmc.value.operator.OperatorOr;
 
 public final class LibraryDDSylvan implements LibraryDD {
     public final static String IDENTIFIER = "sylvan";
-    
+
     private final static class LowLevelPermutationSylvan
-        implements PermutationLibraryDD {
+    implements PermutationLibraryDD {
 
         private long permMap;
 
@@ -67,7 +66,7 @@ public final class LibraryDDSylvan implements LibraryDD {
         long getMap() {
             return permMap;
         }
-        
+
     }
 
     /**
@@ -89,11 +88,11 @@ public final class LibraryDDSylvan implements LibraryDD {
         static native long sylvan_ref(long n);
         /** decrease reference counter of Sylvan DD node */
         static native void sylvan_deref(long n);
-        
+
         static native long Sylvan_ite(long f, long g, long h);
-        
+
         static native long Sylvan_and(long f,long g);
-        
+
         static native long Sylvan_or(long f,long g);
 
         static native long Sylvan_equiv(long f,long g);
@@ -101,15 +100,15 @@ public final class LibraryDDSylvan implements LibraryDD {
         static native long Sylvan_nor(long f,long g);
 
         static native long Sylvan_xor(long f,long g);
-        
+
         static native long Sylvan_imp(long f, long g);
 
         static native long Sylvan_false();
 
         static native long Sylvan_true();
-        
+
         static native long sylvan_low(long f);
-        
+
         static native long sylvan_high(long f);
 
         /** obtain variable BDD node (with boolean branches) */
@@ -117,33 +116,33 @@ public final class LibraryDDSylvan implements LibraryDD {
         static native int sylvan_var(long f);
 
         static native long Sylvan_not(long f);
-        
+
         static native long Sylvan_exists(long f, long cube);
         static native long Sylvan_forall(long f, long cube);
         static native long Sylvan_and_exists(long f, long g, long cube);
-        
+
         /** functions used for permutations */
         static native long Sylvan_compose(long f, long map);
         static native long Sylvan_map_empty();
         static native long sylvan_map_add(long map, long key, long value);
-        
+
         static native void sylvan_printdot(long f);
-        
+
         private final static boolean loaded =
                 JNATools.registerLibrary(Sylvan.class, "sylvan");
     }
-    
+
     private static final long COMPLEMENT = 0x8000000000000000L;
     private long falseNode;
     private long trueNode;
     private Value valueTrue;
     private Value valueFalse;
     private long nextVariable = 0;
-        
+
     private ContextDD contextDD;
-    
+
     @Override
-    public void setContextDD(ContextDD contextDD) throws EPMCException {
+    public void setContextDD(ContextDD contextDD) {
         assert contextDD != null;
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
         this.contextDD = contextDD;
@@ -167,19 +166,19 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long apply(Operator operation, Type type, long... operands) throws EPMCException {
+    public long apply(Operator operation, Type type, long... operands) {
         assert operation != null;
         assert type != null;
-        assert TypeBoolean.isBoolean(type);
+        assert TypeBoolean.is(type);
         long result;
         if (operation.equals(OperatorId.ID)) {
-        	result = operands[0];        	
+            result = operands[0];        	
         } else if (operation.equals(OperatorNot.NOT)) {
             result = Sylvan.Sylvan_not(operands[0]);        	
         } else if (operation.equals(OperatorAnd.AND)) {
             result = Sylvan.Sylvan_and(operands[0], operands[1]);
         } else if (operation.equals(OperatorEq.EQ)
-        		|| operation.equals(OperatorIff.IFF)) {
+                || operation.equals(OperatorIff.IFF)) {
             result = Sylvan.Sylvan_equiv(operands[0], operands[1]);
         } else if (operation.equals(OperatorImplies.IMPLIES)) {
             result = Sylvan.Sylvan_imp(operands[0], operands[1]);
@@ -198,11 +197,11 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long newConstant(Value value) throws EPMCException {
+    public long newConstant(Value value) {
         assert value != null;
-        assert ValueBoolean.isBoolean(value) : value.getType() + " " + value;
+        assert ValueBoolean.is(value) : value.getType() + " " + value;
         long result;
-        if (ValueBoolean.asBoolean(value).getBoolean()) {
+        if (ValueBoolean.as(value).getBoolean()) {
             result = trueNode;
         } else {
             result = falseNode;
@@ -212,7 +211,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long newVariable() throws EPMCException {
+    public long newVariable() {
         long result = Sylvan.sylvan_ithvar(nextVariable);
         nextVariable++;
         Sylvan.sylvan_ref(result);
@@ -236,7 +235,7 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public void reorder() throws EPMCException {
+    public void reorder() {
         // TODO Auto-generated method stub
     }
 
@@ -247,7 +246,7 @@ public final class LibraryDDSylvan implements LibraryDD {
 
     @Override
     public long permute(long dd, PermutationLibraryDD permutation)
-            throws EPMCException {
+    {
         assert permutation != null;
         assert permutation instanceof LowLevelPermutationSylvan;
         return Sylvan.sylvan_ref(Sylvan.Sylvan_compose(dd, ((LowLevelPermutationSylvan) permutation).getMap()));
@@ -295,53 +294,53 @@ public final class LibraryDDSylvan implements LibraryDD {
     }
 
     @Override
-    public long abstractExist(long dd, long cube) throws EPMCException {
+    public long abstractExist(long dd, long cube) {
         long result = Sylvan.Sylvan_exists(dd, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public long abstractForall(long dd, long cube) throws EPMCException {
+    public long abstractForall(long dd, long cube) {
         long result = Sylvan.Sylvan_forall(dd, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public long abstractSum(Type type, long dd, long cube) throws EPMCException {
+    public long abstractSum(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractProduct(Type type, long dd, long cube) throws EPMCException {
+    public long abstractProduct(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMax(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMax(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
-    public long abstractMin(Type type, long dd, long cube) throws EPMCException {
+    public long abstractMin(Type type, long dd, long cube) {
         assert false;
         return -1;
     }
 
     @Override
     public long abstractAndExist(long dd1, long dd2, long cube)
-            throws EPMCException {
+    {
         long result = Sylvan.Sylvan_and_exists(dd1, dd2, cube);
         Sylvan.sylvan_ref(result);
         return result;
     }
 
     @Override
-    public PermutationLibraryDD newPermutation(int[] permutation) throws EPMCException {
+    public PermutationLibraryDD newPermutation(int[] permutation) {
         return new LowLevelPermutationSylvan(permutation);
     }
 
@@ -395,20 +394,20 @@ public final class LibraryDDSylvan implements LibraryDD {
     public String getIdentifier() {
         return IDENTIFIER;
     }
-    
-	@Override
-	public boolean canApply(Operator operation, Type resultType, long... operands) {
-		if (!TypeBoolean.isBoolean(resultType)) {
-			return false;
-		}
-		return operation.equals(OperatorId.ID)
-				|| operation.equals(OperatorNot.NOT)
-				|| operation.equals(OperatorAnd.AND)
-				|| operation.equals(OperatorEq.EQ)
-				|| operation.equals(OperatorIff.IFF)
-				|| operation.equals(OperatorImplies.IMPLIES)
-				|| operation.equals(OperatorNe.NE)
-				|| operation.equals(OperatorOr.OR)
-				|| operation.equals(OperatorIte.ITE);
-	}
+
+    @Override
+    public boolean canApply(Operator operation, Type resultType, long... operands) {
+        if (!TypeBoolean.is(resultType)) {
+            return false;
+        }
+        return operation.equals(OperatorId.ID)
+                || operation.equals(OperatorNot.NOT)
+                || operation.equals(OperatorAnd.AND)
+                || operation.equals(OperatorEq.EQ)
+                || operation.equals(OperatorIff.IFF)
+                || operation.equals(OperatorImplies.IMPLIES)
+                || operation.equals(OperatorNe.NE)
+                || operation.equals(OperatorOr.OR)
+                || operation.equals(OperatorIte.ITE);
+    }
 }

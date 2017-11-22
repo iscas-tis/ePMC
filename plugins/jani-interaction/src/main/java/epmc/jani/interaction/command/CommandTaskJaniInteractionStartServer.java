@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.interaction.command;
 
@@ -25,7 +25,6 @@ import static epmc.error.UtilError.*;
 import java.io.IOException;
 import java.net.BindException;
 
-import epmc.error.EPMCException;
 import epmc.jani.interaction.communication.GUI;
 import epmc.jani.interaction.communication.Server;
 import epmc.jani.interaction.communication.StandardStream;
@@ -45,60 +44,60 @@ import epmc.options.Options;
  * @author Ernst Moritz Hahn
  */
 public final class CommandTaskJaniInteractionStartServer implements CommandTask {
-	/** Integer value to denote no timeout. */
-	private final static int NO_TIMEOUT = 0;
-	/** Unique identifier of JANI interaction server start command. */
-	public final static String IDENTIFIER = "jani-interaction-start-server";
+    /** Integer value to denote no timeout. */
+    private final static int NO_TIMEOUT = 0;
+    /** Unique identifier of JANI interaction server start command. */
+    public final static String IDENTIFIER = "jani-interaction-start-server";
 
-	@Override
-	public String getIdentifier() {
-		return IDENTIFIER;
-	}
-	
-	@Override
-	public void setModelChecker(ModelChecker modelChecker) {
-		assert modelChecker != null;
-	}
-	
-	@Override
-	public void executeOnClient() throws EPMCException {
-		JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
-		switch (type) {
-		case STDIO:
-			StandardStream standard = new StandardStream();
-			standard.start();
-			break;
-		case WEBSOCKETS:
-			Server server = new Server();
-			try {
-				server.start(NO_TIMEOUT);
-			} catch (BindException e) {
-				fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_BIND_FAILED,
-						Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
-			} catch (IOException e) {
-				fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_IO_PROBLEM,
-						Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
-			}
-			getLog().send(MessagesJANIInteraction.JANI_INTERACTION_SERVER_STARTED,
-					Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
-			if (Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_START_GUI)) {
-				GUI.startGUI(Options.get());
-			}
-			try {
-				System.in.read();
-			} catch (IOException e) {
-			}
-	        server.stop();
-			getLog().send(MessagesJANIInteraction.JANI_INTERACTION_SERVER_STOPPED);
-			break;
-		default:
-			assert false;
-			break;		
-		}
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
+    }
 
-	private Log getLog() {
-		return Options.get().get(OptionsMessages.LOG);
-	}
+    @Override
+    public void setModelChecker(ModelChecker modelChecker) {
+        assert modelChecker != null;
+    }
+
+    @Override
+    public void executeOnClient() {
+        JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
+        switch (type) {
+        case STDIO:
+            StandardStream standard = new StandardStream();
+            standard.start();
+            break;
+        case WEBSOCKETS:
+            Server server = new Server();
+            try {
+                server.start(NO_TIMEOUT);
+            } catch (BindException e) {
+                fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_BIND_FAILED,
+                        Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+            } catch (IOException e) {
+                fail(ProblemsJANIInteraction.JANI_INTERACTION_SERVER_IO_PROBLEM,
+                        Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+            }
+            getLog().send(MessagesJANIInteraction.JANI_INTERACTION_SERVER_STARTED,
+                    Options.get().getInteger(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_SERVER_PORT));
+            if (Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_START_GUI)) {
+                GUI.startGUI(Options.get());
+            }
+            try {
+                System.in.read();
+            } catch (IOException e) {
+            }
+            server.stop();
+            getLog().send(MessagesJANIInteraction.JANI_INTERACTION_SERVER_STOPPED);
+            break;
+        default:
+            assert false;
+            break;		
+        }
+        // TODO Auto-generated method stub
+    }
+
+    private Log getLog() {
+        return Options.get().get(OptionsMessages.LOG);
+    }
 }

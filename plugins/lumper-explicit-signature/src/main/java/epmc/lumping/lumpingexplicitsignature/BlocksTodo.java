@@ -16,16 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.lumping.lumpingexplicitsignature;
 
 interface BlocksTodo {
     final static int DONE = -1;
-    
+
     void add(int block);
-    
+
     int popNext();
-    
+
     void done(int block);
 }

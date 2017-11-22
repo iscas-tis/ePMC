@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.kretinsky.automaton;
 
@@ -56,7 +56,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
     private final BitSet usedPriorities = new BitSet();
     private final TLongLongMap cache = new TLongLongHashMap(100, 0.5f, -1, -1);
     private ExpressionsUnique expressionsUnique;
-    
+
     @Override
     public int getNumStates() {
         return observerMaps.getNumStates();
@@ -75,7 +75,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         return observerMaps.numberToState(number);
     }
 
-    AutomatonSlave(AutomatonMojmir observerExpression, boolean closeInner) throws EPMCException {
+    AutomatonSlave(AutomatonMojmir observerExpression, boolean closeInner) {
         assert observerExpression != null;
         assert observerExpression.isSimpleG();
         this.closeInner = closeInner;
@@ -88,20 +88,20 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         this.initState = makeUnique(new AutomatonSlaveState(this, initContent));
         this.expressionsUnique = observerExpression.getExpressionsUnique();
     }
-    
-    AutomatonSlave(Expression expression, ExpressionsUnique expressionsUnique, boolean implicit) throws EPMCException {
+
+    AutomatonSlave(Expression expression, ExpressionsUnique expressionsUnique, boolean implicit) {
         this(new AutomatonMojmir(expression, expressionsUnique, false, true), true);
     }
 
     private void computeSuccessor(AutomatonSlaveState current, int succNr)
-            throws EPMCException {
+    {
         if (current.getContent().length == 0) {
             AutomatonSlaveState succState = makeUnique(new AutomatonSlaveState(this, current.getContent()));
             this.succState = succState.getNumber();
             this.succLabel = makeUnique(new AutomatonSlaveLabel(succState, succNr)).getNumber();
             return;
         }
-        
+
         int[] currentContent = current.getContent();
         int maxSuccState = 0;
         for (int i = 0; i < currentContent.length; i++) {
@@ -140,17 +140,17 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
             succContent[i] = oldToNewPriority.get(succContent[i]);
         }
         succContent[0] = Math.min(succContent[0], newPriority);
-        
+
         AutomatonSlaveState succState = makeUnique(new AutomatonSlaveState(this, succContent));
         this.succState = succState.getNumber();
         this.succLabel = makeUnique(new AutomatonSlaveLabel(succState, succNr)).getNumber();
     }
 
-    private int getIthExpressionStateSuccessor(int i, int value) throws EPMCException {
+    private int getIthExpressionStateSuccessor(int i, int value) {
         observerMojmir.queryState(value, i);
         return observerMojmir.getSuccessorState();
     }
-    
+
     @Override
     public int getInitState() {
         return initState.getNumber();
@@ -158,14 +158,14 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
 
     @Override
     public void queryState(Value[] modelState, int automatonState)
-            throws EPMCException {
+    {
         int succNr = expressionsUnique.valueToNumber(modelState);
         queryState(succNr, automatonState);
     }
 
     @Override
     public void queryState(int modelState, int observerState)
-            throws EPMCException {
+    {
         long cacheKey = (((long) modelState) << 32) | (observerState);
         long cacheVal = cache.get(cacheKey);
         if (cacheVal == -1) {
@@ -177,7 +177,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
             this.succLabel = (int) (cacheVal & 0xFFFF);
         }
     }
-    
+
     @Override
     public int getSuccessorState() {
         return succState;
@@ -208,28 +208,28 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
             observerMojmir.close();
         }
     }
-    
+
     Value[][] getConsistentValues() {
         return consistentValues;
     }
-    
+
     @Override
     public AutomatonLabelUtil numberToLabel(int number) {
         return observerMaps.numberToLabel(number);
     }
-    
+
     public AutomatonMojmir getMojmir() {
         return observerMojmir;
     }
-    
+
     @Override
     public String toString() {
         AutomatonExporter exporter = new AutomatonExporterImpl();
         exporter.setAutomaton(this);
         return exporter.toString();
     }
-    
-    public static void main(String[] args) throws EPMCException {
+
+    public static void main(String[] args) {
         Options options = UtilOptionsEPMC.newOptions();
         UtilPlugin.preparePlugins(options);
         ContextExpression contextExpression = UtilExpression.newContextExpression(options);

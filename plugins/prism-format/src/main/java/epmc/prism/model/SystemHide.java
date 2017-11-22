@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.model;
 
@@ -36,7 +36,7 @@ public final class SystemHide implements SystemDefinition {
     private final Positional positional;
     private final List<SystemDefinition> children = new ArrayList<>();
     private final Set<Expression> hidden;
-    
+
     public SystemHide(SystemDefinition inner, Set<Expression> hidden, Positional positional) {
         this.positional = positional;
         assert inner != null;
@@ -52,15 +52,15 @@ public final class SystemHide implements SystemDefinition {
         }
         this.hidden.addAll(hidden);
     }
-    
+
     public SystemDefinition getInner() {
         return children.get(0);
     }
-    
+
     public Set<Expression> getHidden() {
         return Collections.unmodifiableSet(hidden);
     }
-    
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

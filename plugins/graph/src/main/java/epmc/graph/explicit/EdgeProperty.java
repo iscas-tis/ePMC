@@ -16,15 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.graph.explicit;
 
-import epmc.error.EPMCException;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueObject;
+import epmc.value.ValueSetString;
 
 /**
  * Edge property of a graph.
@@ -33,14 +33,14 @@ import epmc.value.ValueObject;
  */
 public interface EdgeProperty  {
     /* methods to be implemented by implementing classes */
-    
+
     /**
      * Get the graph to which the edge property belongs.
      * 
      * @return graph to which the edge property belongs
      */
     GraphExplicit getGraph();
-    
+
     /**
      * Get value for an edge of the node queried last.
      * The value obtained is the value for the edge with the given number of the
@@ -59,10 +59,9 @@ public interface EdgeProperty  {
      * 
      * @param successor number of successor edge
      * @return value for edge with the given number of the node queried last
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    Value get(int node, int successor) throws EPMCException;
-    
+    Value get(int node, int successor);
+
     /**
      * Set value for edge of node queried last.
      * The value is set for the edge with the given number of the node from the
@@ -82,10 +81,9 @@ public interface EdgeProperty  {
      * 
      * @param successor number of successor edge to set
      * @param value value to set for the edge
-     * @throws EPMCException thrown in case of problems setting the value
      */
-    void set(int node,  int successor, Value value) throws EPMCException;
-    
+    void set(int node,  int successor, Value value);
+
     /**
      * Obtain type of the values returned by {@link #get(int)}.
      * 
@@ -95,7 +93,7 @@ public interface EdgeProperty  {
 
 
     /* default methods */
-    
+
     /**
      * Return value of this node as object.
      * In addition to the requirements of {@link #get(int)}, the edge property
@@ -105,31 +103,28 @@ public interface EdgeProperty  {
      * 
      * @param edge number to get value of
      * @return value of given edge of node as object
-     * @throws EPMCException thrown in case of problems obtaining the value
      */
-    default <T> T getObject(int node, int successor) throws EPMCException {
+    default <T> T getObject(int node, int successor) {
         assert successor >= 0;
         Value value = get(node, successor);
-        assert ValueObject.isObject(value);
-        return ValueObject.asObject(value).getObject();
+        assert ValueObject.is(value);
+        return ValueObject.as(value).getObject();
     }
 
     /**
      * Set string value for edge of node queried last.
      * The requirements and effects are as for {@link #set(Value, int)}, except
      * that the value parameter is a {@link String} and not a {@link Value}.
-     * The value will be set using the {@link Value#set(String)}.
      * Note that the default implementation of this method is not tuned for
      * efficiency as it creates a new object in each call, and thus should only
      * be used if speed is not crucial.
      * 
      * @param value string value to set for the edge
      * @param successor number of successor edge to set value of
-     * @throws EPMCException thrown in case of problems during setting
      */
-    default void set(int node, int successor, String value) throws EPMCException {
+    default void set(int node, int successor, String value) {
         Value tmpValue = getType().newValue();
-        tmpValue.set(value);
+        ValueSetString.as(tmpValue).set(value);
         set(node, successor, tmpValue);
     }
 }

@@ -16,11 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.jani.explorer;
 
-import epmc.error.EPMCException;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.value.TypeBoolean;
 import epmc.value.ValueBoolean;
@@ -31,31 +30,31 @@ import epmc.value.ValueBoolean;
  * @author Ernst Moritz Hahn
  */
 final class PropertyNodeDeadlock implements ExplorerNodeProperty {
-	/** Explorer to which this property belongs. */
-	private final ExplorerJANI explorer;
-	/** Used to return the value of the property. */
-	private final ValueBoolean value;
+    /** Explorer to which this property belongs. */
+    private final ExplorerJANI explorer;
+    /** Used to return the value of the property. */
+    private final ValueBoolean value;
 
-	PropertyNodeDeadlock(ExplorerJANI explorer) throws EPMCException {
-		assert explorer != null;
-		this.explorer = explorer;
-		TypeBoolean type = TypeBoolean.get();
-		value = type.newValue();
-	}
-	
-	@Override
-	public ValueBoolean get() throws EPMCException {
-		value.set(explorer.isDeadlock());
-		return value;
-	}
-	
-	@Override
-	public boolean getBoolean() throws EPMCException {
-		return explorer.isDeadlock();
-	}
-	
-	@Override
-	public TypeBoolean getType() {
-		return TypeBoolean.get();
-	}
+    PropertyNodeDeadlock(ExplorerJANI explorer) {
+        assert explorer != null;
+        this.explorer = explorer;
+        TypeBoolean type = TypeBoolean.get();
+        value = type.newValue();
+    }
+
+    @Override
+    public ValueBoolean get() {
+        value.set(explorer.isDeadlock());
+        return value;
+    }
+
+    @Override
+    public boolean getBoolean() {
+        return explorer.isDeadlock();
+    }
+
+    @Override
+    public TypeBoolean getType() {
+        return TypeBoolean.get();
+    }
 }

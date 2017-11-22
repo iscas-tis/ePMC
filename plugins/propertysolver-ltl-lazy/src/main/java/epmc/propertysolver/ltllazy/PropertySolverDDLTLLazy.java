@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.propertysolver.ltllazy;
 
@@ -47,7 +47,6 @@ import epmc.dd.ContextDD;
 import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -72,12 +71,12 @@ import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
+import epmc.operator.Operator;
 import epmc.options.Options;
 import epmc.propertysolver.ltllazy.automata.AutomatonDDBreakpoint;
 import epmc.propertysolver.ltllazy.automata.AutomatonDDSubset;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.Operator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
@@ -101,11 +100,11 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     private boolean negate;
     private Options options;
     private Semantics type;
-	private boolean skipTransient;
-	private Expression property;
-	private ExpressionQuantifier propertyQuantifier;
-	private StateSet forStates;
-    
+    private boolean skipTransient;
+    private Expression property;
+    private ExpressionQuantifier propertyQuantifier;
+    private StateSet forStates;
+
     @Override
     public void setModelChecker(ModelChecker modelChecker) {
         assert modelChecker != null;
@@ -115,7 +114,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private StateMap solve(Expression property, StateSet forStates, boolean min)
-            throws EPMCException {
+    {
         this.negate = min;
         ValueBoolean negate = TypeBoolean.get()
                 .newValue(this.negate);
@@ -125,9 +124,9 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         StateSetDD forStatesDD = (StateSetDD) forStates;
         return new StateMapDD(forStatesDD.clone(), result);
     }
-    
+
     private DD checkTemporalLTLNonIncremental(Buechi buechi, StateSetDD forStates)
-            throws EPMCException {
+    {
         DD result = null;
         if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_USE_SUBSET)) {
             result = computeNonIncremental(DecisionMethod.SUBSET, buechi, forStates);
@@ -143,7 +142,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private DD checkProperty(Buechi buechi, StateSetDD forStates, boolean negate)
-            throws EPMCException {
+    {
         DD innerResult;
         if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_INCREMENTAL)) {
             innerResult = checkTemporalLTLIncremental(buechi, forStates);
@@ -156,11 +155,11 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         if (negate) {
             innerResult = getContextDD().newConstant(1).subtractWith(innerResult);
         }
-        
+
         return innerResult;
     }
 
-    private DD checkTemporalLTLIncremental(Buechi buechi, StateSetDD forStates) throws EPMCException {
+    private DD checkTemporalLTLIncremental(Buechi buechi, StateSetDD forStates) {
         log.send(MessagesLTLLazy.LTL_LAZY_INITIALISING_AUTOMATON_AND_PRODUCT_MODEL);
         DD states = modelGraph.getNodeProperty(CommonProperties.STATE);
         AutomatonDDSubset automaton = new AutomatonDDSubset(expressionToDD, buechi, states);
@@ -177,7 +176,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         log.send(MessagesLTLLazy.LTL_LAZY_COMPUTING_END_COMPONENTS_INCREMENTALLY_DONE);
         DD acc = decideComponents(product, sccs, nodeSpace);
         sccs.close();
-        
+
         DD reachProbs = computeReachProbs(product, acc, nodeSpace);
         nodeSpace.dispose();
         acc.dispose();
@@ -185,12 +184,12 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         reachProbs = reachProbs.abstractSumWith(automaton.getPresCube().clone());
         product.close();
         automaton.close();
-        
+
         return reachProbs;
     }
 
     private DD decideComponents(ProductGraphDDDD product, ComponentsDD components, DD nodeSpace)
-            throws EPMCException {
+    {
         AutomatonDDSubset subset = (AutomatonDDSubset) product.getAutomaton();
         Buechi buechi = subset.getBuechi();
         DD acceptingNodes = getContextDD().newConstant(false);
@@ -254,7 +253,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private boolean isBSCC(DD component, ProductGraphDDDD product)
-            throws EPMCException {
+    {
         if (!nonDet) {
             return true;
         }
@@ -262,7 +261,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         return next.andNotWith(component.clone()).isFalseWith();
     }
 
-    private DD post(GraphDD graph, DD nodes, DD trans) throws EPMCException {
+    private DD post(GraphDD graph, DD nodes, DD trans) {
         Permutation nextToPres = graph.getSwapPresNext();
         DD presAndActions = graph.getPresCube().and(graph.getActionCube());
         DD result = trans.abstractAndExist(nodes, presAndActions);
@@ -272,7 +271,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private ComponentDecision decideComponentSubset(AutomatonDDSubset automaton, DD component)
-            throws EPMCException {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_SUBSET);
         boolean under = true;
         DD underRestricted = component.and(automaton.getUnder());
@@ -310,10 +309,10 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         DD modelState;
         DD automatonState;
     }
-    
+
     private ComponentDecision decideComponentBreakpoint(Buechi buechi,
             ProductGraphDDDD subsetProduct, DD component, boolean bscc)
-                    throws EPMCException {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT);
         AutomatonDDSubset subset = (AutomatonDDSubset) subsetProduct.getAutomaton();
         StatePair state = chooseState(component, subset);
@@ -361,7 +360,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             }
         }
         components.close();
-        
+
         if (undecidedSeen) {
             log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT_DONE_UNDECIDED);
             automaton.close();
@@ -377,7 +376,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
     private boolean checkReachOne(DD component, ProductGraphDDDD subsetProduct,
             DD leafSCC, GraphDD product, DD productSpace)
-                    throws EPMCException {
+    {
         // states reaching this leaf component with probability 1
         DD reaching = ComponentsDD.reachMaxOne(product, leafSCC, productSpace);
         // variables only of Rabin and not of other
@@ -393,9 +392,9 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         // checking if component contains any states reach with prob 1
         return !component.clone().andWith(reaching).isFalseWith();
     }
-    
+
     private ComponentDecision decideComponentBreakpointMCLeaf(
-            AutomatonDDBreakpoint automaton, DD leafSCC) throws EPMCException {
+            AutomatonDDBreakpoint automaton, DD leafSCC) {
         if (!leafSCC.and(automaton.getAccepting()).isFalse()) {
             return ComponentDecision.ACCEPT;
         } else if (leafSCC.and(automaton.getRejecting()).isFalse()) {
@@ -407,7 +406,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentBreakpointMDPLeaf(
             AutomatonDDBreakpoint automaton, ProductGraphDD product, DD leafSCC)
-                    throws EPMCException {
+    {
         if (!leafSCC.and(automaton.getAccepting()).isFalseWith()) {
             return ComponentDecision.ACCEPT;
         }
@@ -425,7 +424,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
     private ComponentDecision decideComponentRabin(Buechi buechi,
             ProductGraphDDDD subsetProduct, DD component, boolean bscc)
-            throws EPMCException {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_RABIN);
         AutomatonDDSubset subset = (AutomatonDDSubset) subsetProduct.getAutomaton();
         StatePair state = chooseState(component, subset);
@@ -434,7 +433,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         BitSet automatonState = ddToSubsetState(automatonStateDD, subset);
         automatonStateDD.dispose();
         AutomatonRabin automaton = UtilAutomaton.newAutomatonRabinSafra(buechi, automatonState);
-        
+
         ProductGraphDDExplicit product = new ProductGraphDDExplicit(modelGraph, modelState, automaton, expressionToDD);
         modelState.dispose();
         DD nodeSpace = product.getNodeSpace();
@@ -493,7 +492,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     private ComponentDecision decideComponentBreakpointSingletons(GraphDD graph,
             Buechi buechi,
             ProductGraphDDDD subsetProduct, DD component, boolean bscc)
-                    throws EPMCException {
+    {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_BREAKPOINT_SINGLETONS);
         DD toCheck = component.clone();
         AutomatonDDSubset automatonDDSubset = (AutomatonDDSubset) subsetProduct.getAutomaton();
@@ -505,7 +504,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             DD modelState = stateDD.modelState;
             DD automatonStateDD = stateDD.automatonState;
             BitSet states =  ddToSubsetState(automatonStateDD, subset);
-//          for (int state = 0; state < buechi.getNumStates(); state++) {
+            //          for (int state = 0; state < buechi.getNumStates(); state++) {
             for (int state = buechi.getNumStates() - 1; state >= 0; state--) {
                 if (!states.get(state)) {
                     continue;
@@ -529,7 +528,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
                         decision = decideComponentBreakpointMCLeaf(automaton, leafSCC);
                     } else {
                         decision = decideComponentBreakpointMDPLeaf(automaton, product,
-                            leafSCC);
+                                leafSCC);
                     }
                     if (decision == ComponentDecision.ACCEPT) {
                         if (bscc) {
@@ -582,7 +581,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private BitSet ddToSubsetState(DD automatonStateDD, AutomatonDDSubset subset)
-            throws EPMCException {
+    {
         BitSet states = UtilBitSet.newBitSetUnbounded();
         int number = 0;
         for (DD dd : subset.getPresVars()) {
@@ -593,7 +592,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private DD rabinSubsetToDD(ProductGraphDDExplicit product, List<VariableDD> variables)
-            throws EPMCException {
+    {
         AutomatonRabin automaton = (AutomatonRabin) product.getAutomaton();
         int numBuechiStates = automaton.getBuechi().getGraph().getNumNodes();
         HashMap<BitSet,DD> map = new HashMap<>();
@@ -607,8 +606,8 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             }
             map.put(state, which.or(map.get(state)));
         }
-        
-/*        
+
+        /*        
         for (Entry<DD, AutomatonState> entry : product.getAutomatonStates().entrySet()) {
             DD which = entry.getKey();
             BitSet state = ((AutomatonStateBuechi) entry.getValue()).getStates();
@@ -617,7 +616,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             }
             map.put(state, which.or(map.get(state)));
         }
-*/
+         */
         DD result = getContextDD().newConstant(true);
         for (Entry<BitSet,DD> entry : map.entrySet()) {
             DD symState = getContextDD().newConstant(true);
@@ -634,7 +633,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private DD bitSetToDD(BitSet bitSet, List<VariableDD> variables)
-            throws EPMCException {
+    {
         int bitNr = 0;
         DD result = getContextDD().newConstant(true);
         for (VariableDD variable : variables) {
@@ -649,11 +648,11 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         }
         return result;
     }
-    
+
     private ComponentDecision decideComponentRabinMCLeaf(
             DD component,
             List<DD> stable, List<DD> accepting)
-                    throws EPMCException {
+    {
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD stableDD = stable.get(labelNr);
             DD acceptingDD = accepting.get(labelNr);
@@ -665,10 +664,10 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
         return ComponentDecision.REJECT;
     }
-    
+
     private ComponentDecision decideComponentRabinMDPLeaf(
             ProductGraphDDExplicit product, DD leafSCC,
-            List<DD> stable, List<DD> accepting) throws EPMCException {
+            List<DD> stable, List<DD> accepting) {
         ComponentDecision decision = ComponentDecision.REJECT;
         for (int labelNr = 0; labelNr < stable.size(); labelNr++) {
             DD leafSCCAndStable = leafSCC.and(stable.get(labelNr));
@@ -676,7 +675,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
                     .eq(getContextDD().newConstant(Player.STOCHASTIC));
             DD stableDD = stayIn(product, leafSCCAndStable, prodNodesNot);
             prodNodesNot.dispose();
-//            leafSCCAndStable.dispose();
+            //            leafSCCAndStable.dispose();
             if (!stableDD.andWith(accepting.get(labelNr).clone()).isFalseWith()) {
                 decision = ComponentDecision.ACCEPT;
                 break;
@@ -686,7 +685,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     private StatePair chooseState(DD set, AutomatonDD automaton)
-            throws EPMCException {
+    {
         DD stateSupport = automaton.getPresCube().and(modelGraph.getPresCube());
         DD modelStates = modelGraph.getNodeProperty(CommonProperties.STATE);
         DD stateDD = set.and(modelStates).findSatWith(stateSupport);
@@ -695,13 +694,13 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         result.modelState = stateDD.abstractExist(automaton.getPresCube());
         result.automatonState = stateDD.abstractExist(modelGraph.getPresCube());
         stateDD.dispose();
-        
+
         return result;
     }
 
 
     private DD computeNonIncremental(DecisionMethod method, Buechi buechi,
-            StateSetDD forStates) throws EPMCException {
+            StateSetDD forStates) {
         ProductGraphDD product = null;
         AutomatonRabin automatonRabin = null;
         AutomatonDD automatonDD = null;
@@ -781,7 +780,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
                 }
                 break;            
             }
-            
+
             if (result == ComponentDecision.ACCEPT) {
                 if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_REMOVE_DECIDED)) {
                     DD componentOld = component;
@@ -823,7 +822,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             break;
         default:
             break;
-        
+
         }
         product.close();
         if (automatonDD != null) {
@@ -834,7 +833,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
     private void computeSymbStabAcc(AutomatonRabin automaton, TObjectIntMap<DD> tObjectIntMap,
             DD nonStates, int numLabels, List<DD> stable, List<DD> accepting)
-                    throws EPMCException {
+    {
         assert tObjectIntMap != null;
         assert nonStates != null;
         assert stable != null;
@@ -842,7 +841,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         assert numLabels >= 0;
         assert stable.size() == 0;
         assert accepting.size() == 0;
-        
+
         for (int labelNr = 0; labelNr < numLabels; labelNr++) {
             stable.add(nonStates.clone());
             accepting.add(getContextDD().newConstant(false));
@@ -863,9 +862,9 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             }
         }        
     }
-    
+
     private DD stayIn(GraphDD graph, DD target, DD forall)
-            throws EPMCException {
+    {
         assert graph != null;
         assert target != null;
         assert forall != null;
@@ -878,25 +877,25 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             DD targetNodesNext = target.permute(graph.getSwapPresNext());
             DD targetExist = target.clone().andWith(forall.not());
             DD targetForall = target.and(forall);
-            
+
             DD targetExistOne = targetNodesNext.abstractAndExist(transitions, nextAndActions);
             targetExistOne = targetExistOne.andWith(targetExist);
-            
+
             DD targetForallOne = targetNodesNext.not().abstractAndExistWith
                     (transitions.clone(), nextAndActions.clone());
             targetNodesNext.dispose();
             targetForallOne = targetForallOne.notWith().andWith(targetForall);
-            
+
             target = target.clone().andWith(targetForallOne.orWith(targetExistOne));
         }
         prevTarget.dispose();
         nextAndActions.dispose();
-        
+
         return target;
     }
-    
+
     private DD computeReachProbs(GraphDD graphDD, DD target, DD nodeSpace)
-            throws EPMCException {
+    {
         GraphSolverConfigurationDD configuration = UtilGraphSolver.newGraphSolverConfigurationDD();
         List<DD> sinks = new ArrayList<>();
         DD someNodes = ComponentsDD.reachMaxSome(graphDD, target, nodeSpace).andNotWith(target.clone());
@@ -920,23 +919,23 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         return configuration.getOutputValuesDD();
     }
 
-	@Override
-	public void setProperty(Expression property) {
-		this.property = property;
-		if (property instanceof ExpressionQuantifier) {
-			this.propertyQuantifier = (ExpressionQuantifier) property;
-		}
-	}
-
-	@Override
-	public void setForStates(StateSet forStates) {
-		this.forStates = forStates;
-	}
+    @Override
+    public void setProperty(Expression property) {
+        this.property = property;
+        if (property instanceof ExpressionQuantifier) {
+            this.propertyQuantifier = (ExpressionQuantifier) property;
+        }
+    }
 
     @Override
-    public StateMap solve() throws EPMCException {
+    public void setForStates(StateSet forStates) {
+        this.forStates = forStates;
+    }
+
+    @Override
+    public StateMap solve() {
         if (modelChecker.getEngine() instanceof EngineDD) {
-        	this.modelGraph = modelChecker.getLowLevel();
+            this.modelGraph = modelChecker.getLowLevel();
             this.expressionToDD = modelGraph.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
         this.type = modelChecker.getModel().getSemantics();
@@ -965,7 +964,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
     }
 
     @Override
-    public boolean canHandle() throws EPMCException {
+    public boolean canHandle() {
         assert property != null;
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
@@ -976,8 +975,8 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         if (propertyQuantifier.getQuantified() instanceof ExpressionReward) {
             return false;
         }
-        if (!TypeReal.isReal(TypeWeight.get())) {
-        	return false;
+        if (!TypeReal.is(TypeWeight.get())) {
+            return false;
         }
         Set<Expression> inners = UtilLTL.collectLTLInner(propertyQuantifier.getQuantified());
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
@@ -985,40 +984,40 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
             modelChecker.ensureCanHandle(inner, allStates);
         }
         if (allStates != null) {
-        	allStates.close();
+            allStates.close();
         }
         return true;
     }
 
     @Override
-    public Set<Object> getRequiredGraphProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.SEMANTICS);
-    	required.add(CommonProperties.EXPRESSION_TO_DD);
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredGraphProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.SEMANTICS);
+        required.add(CommonProperties.EXPRESSION_TO_DD);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
-    public Set<Object> getRequiredNodeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.STATE);
-    	required.add(CommonProperties.PLAYER);
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredNodeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.STATE);
+        required.add(CommonProperties.PLAYER);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
-    public Set<Object> getRequiredEdgeProperties() throws EPMCException {
-    	Set<Object> required = new LinkedHashSet<>();
-    	required.add(CommonProperties.WEIGHT);
-    	return Collections.unmodifiableSet(required);
+    public Set<Object> getRequiredEdgeProperties() {
+        Set<Object> required = new LinkedHashSet<>();
+        required.add(CommonProperties.WEIGHT);
+        return Collections.unmodifiableSet(required);
     }
-    
+
     @Override
     public String getIdentifier() {
         return IDENTIFIER;
     }    
-    
-    public ContextDD getContextDD() throws EPMCException {
-    	return ContextDD.get();
-	}
+
+    public ContextDD getContextDD() {
+        return ContextDD.get();
+    }
 }

@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.command;
 
@@ -62,16 +62,16 @@ public class CommandTaskExplore implements CommandTask {
     @Override
     public void executeInServer() {
         try {
-			explore();
-		} catch (EPMCException e) {
-	        Log log = getLog();
-			log.send(e);
-		}
+            explore();
+        } catch (EPMCException e) {
+            Log log = getLog();
+            log.send(e);
+        }
     }
-    
-    public void explore() throws EPMCException {
-    	Model model = modelChecker.getModel();
-    	Engine engine = modelChecker.getEngine();
+
+    public void explore() {
+        Model model = modelChecker.getModel();
+        Engine engine = modelChecker.getEngine();
         Log log = getLog();
         if (engine instanceof EngineExplicit) {
             long time = System.nanoTime();
@@ -91,7 +91,7 @@ public class CommandTaskExplore implements CommandTask {
             ModelCheckerResult result = new ModelCheckerResult(null, exploreStatistics);
             log.send(result);
         } else if (engine instanceof EngineDD) {
-        	Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
+            Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
             Set<Object> nodeProperties = prepareNodeProperties(model);
             Set<Object> edgeProperties = prepareEdgeProperties(model);
             GraphDD modelGraphDD = (GraphDD) model.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
@@ -112,7 +112,7 @@ public class CommandTaskExplore implements CommandTask {
         }
     }
 
-    public GraphExplicit exploreToGraph() throws EPMCException {
+    public GraphExplicit exploreToGraph() {
         Log log = getLog();
         log.send(MessagesCommandExplore.EXPLORING);
         Set<Object> graphProperties = new LinkedHashSet<>();
@@ -128,13 +128,13 @@ public class CommandTaskExplore implements CommandTask {
 
     private GraphExplicit buildModelGraphExplicit(Set<Object> graphProperties,
             Set<Object> nodeProperties,
-            Set<Object> edgeProperties) throws EPMCException {
-    	Model model = modelChecker.getModel();
-    	return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
-     }
-    
+            Set<Object> edgeProperties) {
+        Model model = modelChecker.getModel();
+        return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
+    }
+
     private Set<Object> prepareNodeProperties(Model model)
-            throws EPMCException {
+    {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.STATE);
@@ -146,7 +146,7 @@ public class CommandTaskExplore implements CommandTask {
     }
 
     private Set<Object> prepareEdgeProperties(Model model)
-            throws EPMCException {
+    {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.WEIGHT);
@@ -154,6 +154,6 @@ public class CommandTaskExplore implements CommandTask {
     }
 
     private Log getLog() {
-    	return Options.get().get(OptionsMessages.LOG);
+        return Options.get().get(OptionsMessages.LOG);
     }
 }

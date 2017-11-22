@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc;
 
@@ -34,16 +34,21 @@ public final class ModelNamesOwn {
 
     public final static String MULTI_OBJECTIVE_SIMPLE = PREFIX + "multiObjectiveSimple.prism";
     public final static String MULTI_OBJECTIVE_SIMPLE_REWARDS = PREFIX + "multiObjectiveSimpleRewards.prism";
-    
+
     public final static String ROBOT_ONE_DIR = PREFIX + "robotOneDir.prism";
     public final static String ROBOT_REDUCED = PREFIX + "robotReduced.prism";
-    
+
     public final static String MA_SINGLEMODULE = PREFIX + "ma-singlemodule.prism";
     public final static String MA_SINGLEMODULE_TWORATE = PREFIX + "ma-singlemodule-tworate.prism";
     public final static String MA_TWOMODULES = PREFIX + "ma-twomodules.prism";
     public final static String MA_DISABLING_RATE = PREFIX + "ma-disabling-rate.prism";
     public final static String POW_TYPE = PREFIX + "pow-type.prism";
     public final static String NAVIGATION_1 = PREFIX + "navigation_1.prism";
+    public static final String INCONSISTENT_OPERATOR = PREFIX + "inconsistent-operator.prism";
+    public static final String INCONSISTENT_OPERATOR_INIT = PREFIX + "inconsistent-operator-init.prism";
+    public static final String WRONG_ASSIGNMENT_INIT = PREFIX + "wrong-assignment-init.prism";
+    public static final String CLUSTER_DTMC_3_SALOMON = PREFIX + "clusterDTMC3Salomon.prism";
+    public static final String PETERSON = PREFIX + "petersonWP-nostorage-rid.prism";
     
     /**
      * Private constructor to prevent instantiation of this class.

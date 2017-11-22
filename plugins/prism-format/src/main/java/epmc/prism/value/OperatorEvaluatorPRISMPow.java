@@ -16,12 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-*****************************************************************************/
+ *****************************************************************************/
 
 package epmc.prism.value;
 
-import epmc.error.EPMCException;
-import epmc.value.Operator;
+import epmc.operator.Operator;
+import epmc.prism.operator.OperatorPRISMPow;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
@@ -31,63 +31,85 @@ import epmc.value.Value;
 import epmc.value.ValueDouble;
 import epmc.value.ValueInteger;
 import epmc.value.ValueReal;
+import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
-public enum OperatorEvaluatorPRISMPow implements OperatorEvaluator {
-	INSTANCE;
+public final class OperatorEvaluatorPRISMPow implements OperatorEvaluator {
+    public final static class Builder implements OperatorEvaluatorSimpleBuilder {
+        private boolean built;
+        private Operator operator;
+        private Type[] types;
 
-	@Override
-	public Operator getOperator() {
-		return OperatorPRISMPow.PRISM_POW;
-	}
-	
-	@Override
-	public boolean canApply(Type... types) {
-		assert types != null;
-		for (Type type : types) {
-			assert type != null;
-		}
-		if (types.length != 2) {
-			return false;
-		}
-		if (!TypeInteger.isInteger(types[0]) && !TypeDouble.isDouble(types[0])) {
-			return false;
-		}
-		if (!TypeInteger.isInteger(types[1]) && !TypeDouble.isDouble(types[1])) {
-			return false;
-		}
-		return true;
-	}
-
-    @Override
-    public Type resultType(Operator operator, Type... types) {
-        assert types != null;
-        assert types.length == 2 : types.length;
-        boolean allInteger = true;
-        for (Type type : types) {
-        	allInteger &= TypeInteger.isInteger(type);
+        @Override
+        public void setOperator(Operator operator) {
+            assert !built;
+            this.operator = operator;
         }
-        if (allInteger) {
-        	return TypeInteger.get();
-        } else {
-        	return TypeReal.get();
+
+        @Override
+        public void setTypes(Type[] types) {
+            assert !built;
+            this.types = types;
+        }
+
+        @Override
+        public OperatorEvaluator build() {
+            assert !built;
+            assert operator != null;
+            assert types != null;
+            built = true;
+            for (Type type : types) {
+                assert type != null;
+            }
+            if (operator != OperatorPRISMPow.PRISM_POW) {
+                return null;
+            }
+            if (types.length != 2) {
+                return null;
+            }
+            if (!TypeInteger.is(types[0]) && !TypeDouble.is(types[0])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[1]) && !TypeDouble.is(types[1])) {
+                return null;
+            }
+            return new OperatorEvaluatorPRISMPow(this);
         }
     }
-    
+
+    private final Type resultType;
+
+    private OperatorEvaluatorPRISMPow(Builder builder) {
+        boolean allInteger = true;
+        for (Type type : builder.types) {
+            allInteger &= TypeInteger.is(type);
+        }
+        if (allInteger) {
+            resultType = TypeInteger.get();
+        } else {
+            resultType = TypeReal.get();
+        }
+
+    }
+
     @Override
-    public void apply(Value result, Value... operands) throws EPMCException {
-    	if (ValueInteger.isInteger(result)) {
-    		ValueInteger.asInteger(result).pow(ValueInteger.asInteger(operands[0]), ValueInteger.asInteger(operands[1]));
-        	int value1 = ValueInteger.asInteger(operands[0]).getInt();
-        	int value2 = ValueInteger.asInteger(operands[1]).getInt();
-        	ValueInteger.asInteger(result).set((int) Math.pow(value1, value2));
-    	} else if (ValueReal.isReal(result)) {
-        	double value1 = ValueDouble.isDouble(operands[0]) ? ValueDouble.asDouble(operands[0]).getDouble()
-        			: ValueInteger.asInteger(operands[0]).getInt();
-        	double value2 = ValueDouble.isDouble(operands[1]) ? ValueDouble.asDouble(operands[1]).getDouble()
-        			: ValueInteger.asInteger(operands[1]).getInt();
-        	ValueDouble.asDouble(result).set(Math.pow(value1, value2));
-    	} else {
-    		assert false : result.getType();
-    	}
+    public Type resultType() {
+        return resultType;
+    }
+
+    @Override
+    public void apply(Value result, Value... operands) {
+        if (ValueInteger.is(result)) {
+            int value1 = ValueInteger.as(operands[0]).getInt();
+            int value2 = ValueInteger.as(operands[1]).getInt();
+            ValueInteger.as(result).set((int) Math.pow(value1, value2));
+        } else if (ValueReal.is(result)) {
+            double value1 = ValueDouble.is(operands[0]) ? ValueDouble.as(operands[0]).getDouble()
+                    : ValueInteger.as(operands[0]).getInt();
+            double value2 = ValueDouble.is(operands[1]) ? ValueDouble.as(operands[1]).getDouble()
+                    : ValueInteger.as(operands[1]).getInt();
+            ValueDouble.as(result).set(Math.pow(value1, value2));
+        } else {
+            assert false : result.getType();
+        }
     }
 }
