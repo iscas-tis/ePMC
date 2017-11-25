@@ -36,7 +36,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionCoalition;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -51,7 +50,6 @@ import epmc.expression.standard.RewardSpecificationImpl;
 import epmc.expression.standard.SMGPlayer;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMC;
@@ -108,16 +106,6 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class ModelPRISM implements ModelJANIConverter {
-    private final static class ExpressionToTypeEmpty implements ExpressionToType {
-        private ExpressionToTypeEmpty() {
-        }
-        @Override
-        public Type getType(Expression expression) {
-            assert expression != null;
-            return null;
-        }
-    }
-
     public final static class Builder {
         private Semantics semantics;
         private List<Module> modules;
@@ -581,6 +569,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                     allModuleNames, moduleNamesSeen);
         }
     }
+
 
     private void checkExpressionConsistency() {
         Map<Expression,Type> types = new HashMap<>();
@@ -1272,7 +1261,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         } else if (isTrue(expression)) {
             return rewards.get(0);
         } else {
-            Value rewardValue = evaluateValue(expression);
+            Value rewardValue = UtilEvaluatorExplicit.evaluate(expression);
             if (ValueInteger.is(rewardValue)) {
                 int rewardIndex = ValueInteger.as(rewardValue).getInt() - 1;
                 return rewards.get(rewardIndex);
@@ -1321,12 +1310,6 @@ public final class ModelPRISM implements ModelJANIConverter {
                 .setOperator(OperatorEq.EQ)
                 .setOperands(a, b)
                 .build();
-    }
-
-    private Value evaluateValue(Expression expression) {
-        assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, new ExpressionToTypeEmpty(), new Expression[0]);
-        return evaluator.evaluate();
     }
 
     private static boolean isTrue(Expression expression) {
