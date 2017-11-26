@@ -39,7 +39,6 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.jani.model.type.JANIType;
 import epmc.prism.error.ProblemsPRISM;
-import epmc.value.Type;
 
 /**
  * Represents a single guarded commands module of a model.
@@ -291,29 +290,6 @@ public final class ModuleCommands implements Module {
         }
         Expression newInvariants = UtilExpressionStandard.replace(invariants, map);
         return new ModuleCommands(this.name, newVariables, newInitValues, newCommands, newInvariants, getPositional());
-    }
-
-    @Override
-    public void checkExpressionConsistency(
-            Map<Expression, JANIType> globalVariables,
-            Map<Expression, Type> types)
-    {
-        for (Entry<Expression,JANIType> entry : variables.entrySet()) {
-            // TODO
-            //            entry.getValue().checkExpressionConsistency(types);
-            Expression init = initValues.get(entry.getKey());
-            // TODO
-            /*
-            if (init != null) {
-                Type initType = init.getType();
-                ensure(initType == null || entry.getValue().toType().canImport(initType),
-                        ProblemsPRISM.VAR_INIT_INCONSISTENT, entry.getKey(), init);
-            }
-             */
-        }
-        for (Command command : commands) {
-            command.checkExpressionConsistency(globalVariables, variables, types);
-        }
     }
 
     ModuleCommands replaceVariables(Map<Expression,JANIType> variables) {

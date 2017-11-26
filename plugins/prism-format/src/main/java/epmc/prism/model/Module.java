@@ -26,7 +26,6 @@ import java.util.Set;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.jani.model.type.JANIType;
-import epmc.value.Type;
 
 public interface Module {
     Positional getPositional();
@@ -49,12 +48,6 @@ public interface Module {
     default String getName() {
         assert false;
         return null;
-    }
-
-    default void checkExpressionConsistency(
-            Map<Expression, JANIType> globalVariables,
-            Map<Expression, Type> types) {
-        assert false;
     }
 
     default Module replaceFormulas(Map<Expression, Expression> specifiedConsts) {

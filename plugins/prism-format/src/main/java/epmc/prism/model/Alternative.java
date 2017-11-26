@@ -29,8 +29,6 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.jani.model.type.JANIType;
-import epmc.value.Type;
 
 /**
  * A single stochastically chosen alternative of a {@link Command}.
@@ -105,31 +103,6 @@ public final class Alternative {
         }
         return new Alternative(newWeight, newEffects, positional);
     }
-
-    void checkExpressionConsistency(
-            Map<Expression, JANIType> globalVariables,
-            Map<Expression, JANIType> variables,
-            Map<Expression, Type> types)
-    {
-        // TODO
-        /*
-        Type weightType = weight.getType();
-
-        ensure(weightType == null || !TypeBoolean.isBoolean(weightType),
-                ProblemsPRISM.WEIGHT_BOOLEAN, weight);
-         */
-        for (Entry<Expression,Expression> entry : effect.entrySet()) {
-            Expression left = entry.getKey();
-            Type definedType = types.get(left);
-            // TODO
-            /*
-            Type actualType = entry.getValue().getType();
-            ensure(actualType != null, ProblemsPRISM.UNKNOWN_IN_EXPR, entry.getValue());
-            ensure(definedType.canImport(actualType), ProblemsPRISM.INCOMPATIBLE_ASSIGNMENT,
-                    entry.getKey(), entry.getValue());
-             */
-        }
-    }    
 
     public Positional getPositional() {
         return positional;
