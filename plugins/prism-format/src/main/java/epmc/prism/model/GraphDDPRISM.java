@@ -39,10 +39,14 @@ import epmc.dd.DD;
 import epmc.dd.Permutation;
 import epmc.dd.VariableDD;
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.SMGPlayer;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.Semantics;
@@ -66,6 +70,7 @@ import epmc.value.TypeObject;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.ValueInteger;
 
 final class GraphDDPRISM implements GraphDD {
     public enum TransitionEncoding {
@@ -104,12 +109,12 @@ final class GraphDDPRISM implements GraphDD {
     private DD states;
     private int rateIndex = 0;          // rate index for MA
     private final String RATE = "rate"; // rate action for MA
+    private TObjectIntMap<String> playerNameToNumber;
 
     /* constructors */
 
     GraphDDPRISM(ModelPRISM model, Set<Object> nodeProperties,
-            Set<Object> edgeProperties)
-    {
+            Set<Object> edgeProperties) {
         this.properties = new GraphDDProperties(this);
         assert assertConstructorArguments(model, nodeProperties, edgeProperties);
         ensure(Options.get().getBoolean(OptionsPRISM.PRISM_FLATTEN), ProblemsPRISM.FLATTEN_NEEDED_DD);
@@ -118,6 +123,7 @@ final class GraphDDPRISM implements GraphDD {
         } else {
             transEnc = TransitionEncoding.MC;
         }
+        playerNameToNumber = computeNameToNumber(model.getPlayers());
 
         this.log = Options.get().get(OptionsMessages.LOG);
         log.send(MessagesPRISM.BUILDING_DD_MODEL);
@@ -185,12 +191,14 @@ final class GraphDDPRISM implements GraphDD {
             }
             properties.registerNodeProperty(CommonProperties.PLAYER, player);
         }
+        /*
         for (Object p : nodeProperties) {
             if (p instanceof SMGPlayer) {
                 SMGPlayer player = (SMGPlayer) p;
                 int number = model.getPRISMGamesPlayer(player);
             }
         }
+        */
 
         processGraphProperties();
         processNodeProperties(nodeProperties);
@@ -269,7 +277,7 @@ final class GraphDDPRISM implements GraphDD {
                 properties.registerNodeProperty(prop, stateReward);
             } else if (prop instanceof SMGPlayer) {
                 SMGPlayer player = (SMGPlayer) prop;
-                int number = model.getPRISMGamesPlayer(player);
+                int number = getPRISMGamesPlayer(player);
                 properties.registerNodeProperty(prop, players.get(number));
             } else if (prop instanceof Expression) {
                 Expression expression = (Expression) prop;
@@ -967,5 +975,42 @@ final class GraphDDPRISM implements GraphDD {
     @Override
     public GraphDDProperties getProperties() {
         return properties;
+    }
+    
+    int getPRISMGamesPlayer(SMGPlayer player) {
+        assert player != null;
+        Expression expression = player.getExpression();
+        assert expression != null;
+        assert expression instanceof ExpressionIdentifier
+        || expression instanceof ExpressionLiteral;
+        if (expression instanceof ExpressionLiteral) {
+            ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+            assert expressionLiteral.getType().equals(ExpressionTypeInteger.TYPE_INTEGER);
+            Value value = UtilEvaluatorExplicit.evaluate(expressionLiteral);
+            int intValue = ValueInteger.as(value).getInt() - 1;
+            assert intValue >= 0 : intValue;
+            assert intValue < playerNameToNumber.size();
+            return intValue;
+        } else {
+            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
+            String name = expressionIdentifier.getName();
+            assert playerNameToNumber.containsKey(name);
+            return playerNameToNumber.get(name);
+        }
+    }
+    
+    private static TObjectIntMap<String> computeNameToNumber(
+            List<PlayerDefinition> players) {
+        if (players == null) {
+            return null;
+        }
+
+        TObjectIntMap<String> result = new TObjectIntHashMap<>();
+        int playerNumber = 0;
+        for (PlayerDefinition player : players) {
+            result.put(player.getName(), playerNumber);
+            playerNumber++;
+        }
+        return result;
     }
 }
