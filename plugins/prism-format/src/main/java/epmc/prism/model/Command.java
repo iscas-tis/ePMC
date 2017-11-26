@@ -30,8 +30,6 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.jani.model.type.JANIType;
-import epmc.value.Type;
 
 //Notice: objects of this class are immutable by purpose.
 //Do not modify the class to make them mutable.
@@ -121,22 +119,6 @@ public final class Command {
             newAlternatives.add(alternative.replaceFormulas(formulas));
         }
         return new Command(this.label, newGuard, newAlternatives, positional);
-    }
-
-    public void checkExpressionConsistency(
-            Map<Expression, JANIType> globalVariables,
-            Map<Expression, JANIType> variables,
-            Map<Expression, Type> types)
-    {    
-        // TODO
-        /*
-        Type guardRing = guard.getType();
-        ensure(guardRing == null || TypeBoolean.isBoolean(guardRing),
-                ProblemsPRISM.GUARD_NOT_BOOLEAN, guard);
-         */
-        for (Alternative alternative : alternatives) {
-            alternative.checkExpressionConsistency(globalVariables, variables, types);
-        }
     }
 
     void setPlayer(int player) {
