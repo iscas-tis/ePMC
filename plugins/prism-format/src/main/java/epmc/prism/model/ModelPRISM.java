@@ -47,7 +47,6 @@ import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.RewardSpecificationImpl;
-import epmc.expression.standard.SMGPlayer;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.LowLevel;
@@ -86,7 +85,6 @@ import epmc.prism.model.convert.PRISM2JANIConverter;
 import epmc.prism.options.OptionsPRISM;
 import epmc.time.JANITypeClock;
 import epmc.value.Type;
-import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
 import gnu.trove.map.TObjectIntMap;
@@ -236,7 +234,6 @@ public final class ModelPRISM implements ModelJANIConverter {
     private Map<Expression,Expression> specifiedConsts;
     private List<RewardStructure> rewards;
     private final List<PlayerDefinition> players = new ArrayList<>();
-    private TObjectIntMap<String> playerNameToNumber;
     private Expression rateIdentifier;
     private Expression rateLabel;
 
@@ -255,7 +252,6 @@ public final class ModelPRISM implements ModelJANIConverter {
             this.players.addAll(players);
         }
         Formulas formulas = builder.getFormulas();
-        playerNameToNumber = computeNameToNumber(players);
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts != null) {
             for (Entry<String, Object> entry : optionsConsts.entrySet()) {
@@ -395,21 +391,6 @@ public final class ModelPRISM implements ModelJANIConverter {
             newRewardStructure.add(rew.replace(map));
         }
         this.rewards = newRewardStructure;
-    }
-
-    private static TObjectIntMap<String> computeNameToNumber(
-            List<PlayerDefinition> players) {
-        if (players == null) {
-            return null;
-        }
-
-        TObjectIntMap<String> result = new TObjectIntHashMap<>();
-        int playerNumber = 0;
-        for (PlayerDefinition player : players) {
-            result.put(player.getName(), playerNumber);
-            playerNumber++;
-        }
-        return result;
     }
 
     private void setPlayers(List<Module> modules,
@@ -732,16 +713,6 @@ public final class ModelPRISM implements ModelJANIConverter {
         for (Module module : this.modules) {
             allVariables.putAll(module.getVariables());
         }
-        Map<Expression,Type> allTypes = new HashMap<>();
-        //        for (Entry<Expression,JANIType> entry : allVariables.entrySet()) {
-        //             allTypes.put(entry.getKey(), entry.getValue().toType());
-        //        }
-        allTypes.put(new ExpressionIdentifierStandard.Builder()
-                .setName(DEADLOCK)
-                .build(), TypeBoolean.get());
-        allTypes.put(new ExpressionIdentifierStandard.Builder()
-                .setName(INIT)
-                .build(), TypeBoolean.get());
         if (engine instanceof EngineExplorer) {
             ModelJANI jani = toJANI(false);
             return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
@@ -1093,28 +1064,6 @@ public final class ModelPRISM implements ModelJANIConverter {
         return system;
     }
 
-    int getPRISMGamesPlayer(SMGPlayer player) {
-        assert player != null;
-        Expression expression = player.getExpression();
-        assert expression != null;
-        assert expression instanceof ExpressionIdentifier
-        || expression instanceof ExpressionLiteral;
-        if (expression instanceof ExpressionLiteral) {
-            ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
-            assert expressionLiteral.getType().equals(ExpressionTypeInteger.TYPE_INTEGER);
-            Value value = UtilEvaluatorExplicit.evaluate(expressionLiteral);
-            int intValue = ValueInteger.as(value).getInt() - 1;
-            assert intValue >= 0 : intValue;
-            assert intValue < playerNameToNumber.size();
-            return intValue;
-        } else {
-            ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
-            String name = expressionIdentifier.getName();
-            assert playerNameToNumber.containsKey(name);
-            return playerNameToNumber.get(name);
-        }
-    }
-
     private void checkPropertiesCompatible() {
         Log log = Options.get().get(OptionsMessages.LOG);
         for (RawProperty raw : getPropertyList().getRawProperties()) {
@@ -1171,8 +1120,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return rewards;
     }
 
-    public RewardStructure getReward(RewardSpecification rewardSpecification)
-    {
+    public RewardStructure getReward(RewardSpecification rewardSpecification) {
         assert rewardSpecification != null;
         List<RewardStructure> rewards = getRewards();
         Expression expression = rewardSpecification.getExpression();
