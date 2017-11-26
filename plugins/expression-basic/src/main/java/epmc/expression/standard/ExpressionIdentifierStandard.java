@@ -27,12 +27,12 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 
 public final class ExpressionIdentifierStandard implements ExpressionIdentifier {
-    public static boolean isIdentifierStandard(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionIdentifierStandard;
     }
 
-    public static ExpressionIdentifierStandard asIdentifierStandard(Expression expression) {
-        if (isIdentifierStandard(expression)) {
+    public static ExpressionIdentifierStandard as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionIdentifierStandard) expression;
         } else {
             return null;

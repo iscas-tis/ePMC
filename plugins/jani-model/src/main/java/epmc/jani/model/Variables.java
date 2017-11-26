@@ -213,7 +213,7 @@ public final class Variables implements JANINode, Iterable<Variable>, Map<String
     @Override
     public Type getType(Expression expression) {
         assert expression != null;
-        ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.asIdentifierStandard(expression);
+        ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.as(expression);
         if (identifier == null) {
             return null;
         }

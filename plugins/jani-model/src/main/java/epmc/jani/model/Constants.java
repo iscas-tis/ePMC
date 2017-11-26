@@ -96,7 +96,7 @@ public final class Constants implements JANINode, Iterable<Constant>, Expression
     @Override
     public Type getType(Expression expression) {
         assert expression != null;
-        ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.asIdentifierStandard(expression);
+        ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.as(expression);
         if (identifier == null) {
             return null;
         }
