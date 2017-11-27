@@ -73,7 +73,13 @@ public final class OperatorEvaluatorIsZeroInterval implements OperatorEvaluator 
         }
     }
 
+    private final OperatorEvaluator isZero;
+    private final ValueBoolean cmp;
+    
     private OperatorEvaluatorIsZeroInterval(Builder builder) {
+        isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO,
+                TypeInterval.as(builder.types[0]).getEntryType());
+        cmp = TypeBoolean.get().newValue();
     }
 
     @Override
@@ -89,8 +95,6 @@ public final class OperatorEvaluatorIsZeroInterval implements OperatorEvaluator 
             assert operand != null;
         }
         ValueInterval operand = ValueInterval.as(operands[0]);
-        OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, operand.getType().getEntryType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
         isZero.apply(cmp, operand.getIntervalLower());
         if (!cmp.getBoolean()) {
             ValueBoolean.as(result).set(false);

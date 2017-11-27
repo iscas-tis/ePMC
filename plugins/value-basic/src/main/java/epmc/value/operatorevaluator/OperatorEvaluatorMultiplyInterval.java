@@ -79,7 +79,12 @@ public final class OperatorEvaluatorMultiplyInterval implements OperatorEvaluato
         }
     }
 
+    private final OperatorEvaluator multiply;
+    
     private OperatorEvaluatorMultiplyInterval(Builder builder) {
+        multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY,
+                TypeInterval.as(builder.types[0]).getEntryType(),
+                TypeInterval.as(builder.types[1]).getEntryType());
     }
 
     @Override
@@ -100,8 +105,7 @@ public final class OperatorEvaluatorMultiplyInterval implements OperatorEvaluato
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, op1Lower.getType(), op2Lower.getType());
-        add.apply(resultLower, op1Lower, op2Lower);
-        add.apply(resultUpper, op1Upper, op2Upper);
+        multiply.apply(resultLower, op1Lower, op2Lower);
+        multiply.apply(resultUpper, op1Upper, op2Upper);
     }
 }

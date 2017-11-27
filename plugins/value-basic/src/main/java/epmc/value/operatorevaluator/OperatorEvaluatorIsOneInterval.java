@@ -72,8 +72,13 @@ public final class OperatorEvaluatorIsOneInterval implements OperatorEvaluator {
             return new OperatorEvaluatorIsOneInterval(this);
         }
     }
+    
+    private final OperatorEvaluator isOne;
+    private final ValueBoolean cmp;
 
     private OperatorEvaluatorIsOneInterval(Builder builder) {
+        isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, TypeInterval.as(builder.types[0]).getEntryType());
+        cmp = TypeBoolean.get().newValue();
     }
 
     @Override
@@ -89,8 +94,6 @@ public final class OperatorEvaluatorIsOneInterval implements OperatorEvaluator {
             assert operand != null;
         }
         ValueInterval operand = ValueInterval.as(operands[0]);
-        OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, operand.getType().getEntryType());
-        ValueBoolean cmp = TypeBoolean.get().newValue();
         isOne.apply(cmp, operand.getIntervalLower());
         if (!cmp.getBoolean()) {
             ValueBoolean.as(result).set(false);

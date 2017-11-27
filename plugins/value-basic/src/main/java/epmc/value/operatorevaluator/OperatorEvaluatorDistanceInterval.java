@@ -82,7 +82,18 @@ public final class OperatorEvaluatorDistanceInterval implements OperatorEvaluato
         }
     }
 
+    private final OperatorEvaluator subtract;
+    private final OperatorEvaluator abs;
+    private final OperatorEvaluator max;
+    private final Value resLower;
+    private final Value resUpper;
+    
     private OperatorEvaluatorDistanceInterval(Builder builder) {
+        subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
+        abs = ContextValue.get().getEvaluator(OperatorAbs.ABS, TypeReal.get());
+        max = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
+        resLower = TypeReal.get().newValue();
+        resUpper = TypeReal.get().newValue();
     }
 
     @Override
@@ -102,15 +113,10 @@ public final class OperatorEvaluatorDistanceInterval implements OperatorEvaluato
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeReal.get(), TypeReal.get());
-        OperatorEvaluator abs = ContextValue.get().getEvaluator(OperatorAbs.ABS, TypeReal.get());
-        Value resLower = TypeReal.get().newValue();
-        Value resUpper = TypeReal.get().newValue();
         subtract.apply(resLower, op1Lower, op2Lower);
         abs.apply(resLower, resLower);
         subtract.apply(resUpper, op1Upper, op2Upper);
         abs.apply(resUpper, resUpper);
-        OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, TypeReal.get(), TypeReal.get());
         max.apply(result, resLower, resUpper);
     }
 }

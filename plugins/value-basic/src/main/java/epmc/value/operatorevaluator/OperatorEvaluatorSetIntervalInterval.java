@@ -50,9 +50,11 @@ public final class OperatorEvaluatorSetIntervalInterval implements OperatorEvalu
         }
     }
 
+    private final OperatorEvaluator set;
     private final Type resultType;
 
     private OperatorEvaluatorSetIntervalInterval(Builder builder) {
+        set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         resultType = builder.types[1];
     }
     
@@ -67,7 +69,6 @@ public final class OperatorEvaluatorSetIntervalInterval implements OperatorEvalu
         assert operands != null;
         ValueInterval resultInterval = ValueInterval.as(result);
         ValueInterval operandInterval = ValueInterval.as(operands[0]);
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         set.apply(resultInterval.getIntervalLower(), operandInterval.getIntervalLower());
         set.apply(resultInterval.getIntervalUpper(), operandInterval.getIntervalUpper());
     }

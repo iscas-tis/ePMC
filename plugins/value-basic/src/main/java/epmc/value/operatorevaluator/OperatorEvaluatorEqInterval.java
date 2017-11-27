@@ -80,7 +80,14 @@ public final class OperatorEvaluatorEqInterval implements OperatorEvaluator {
         }
     }
 
+    private final ValueBoolean cmp;
+    private final OperatorEvaluator eq;
+    
     private OperatorEvaluatorEqInterval(Builder builder) {
+        cmp = TypeBoolean.get().newValue();
+        eq = ContextValue.get().getEvaluator(OperatorEq.EQ,
+                TypeInterval.as(builder.types[0]).getEntryType(),
+                TypeInterval.as(builder.types[1]).getEntryType());
     }
 
     @Override
@@ -99,8 +106,6 @@ public final class OperatorEvaluatorEqInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        ValueBoolean cmp = TypeBoolean.get().newValue();
-        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, op1Lower.getType(), op2Lower.getType());
         eq.apply(cmp, op1Lower, op2Lower);
         if (!cmp.getBoolean()) {
             ValueBoolean.as(result).set(false);
