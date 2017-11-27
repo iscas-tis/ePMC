@@ -170,7 +170,7 @@ public final class DestinationEvaluator {
                 .setVariables(variables)
                 .build();
         zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
-        ge = ContextValue.get().getEvaluator(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
+        ge = ContextValue.get().getEvaluatorOrNull(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());
         setProbability = ContextValue.get().getEvaluator(OperatorSet.SET, probability.getResultValue().getType(), TypeWeightTransition.get());
     }
 
