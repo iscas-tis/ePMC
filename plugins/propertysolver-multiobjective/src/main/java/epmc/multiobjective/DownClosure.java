@@ -69,10 +69,9 @@ final class DownClosure {
         elements.add(entry);
     }
 
-    ValueArrayAlgebra findSeparating(ValueArrayAlgebra outside, boolean numerical)
-    {
+    ValueArrayAlgebra findSeparating(ValueArrayAlgebra outside, boolean numerical) {
         assert outside != null;
-        assert outside.size() == dimension;            
+        assert outside.size() == dimension;
         if (elements.size() == 0) {
             return findSeparatingEmptyEntries(outside, numerical);
         } else {
@@ -265,7 +264,7 @@ final class DownClosure {
         ValueAlgebra entry = newValueWeight();
         ValueAlgebra sum = newValueWeight();
         OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         entry.set(0);
         for (int i = 0; i < array.size(); i++) {
             array.get(entry, i);

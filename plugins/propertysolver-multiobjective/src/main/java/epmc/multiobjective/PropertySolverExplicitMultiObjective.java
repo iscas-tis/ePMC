@@ -310,7 +310,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                     decision = 0;
                 }
                 assert decisions[state] == -2 || decisions[state] == decision
-                        : state + " " + decisions[state] + " " + decision;
+                        : state + " " + decisions[state] + " " + decision
+                        + " " + sched.getClass();
                 decisions[state] = decision;
             }
             for (int state = 0; state < numStates; state++) {
