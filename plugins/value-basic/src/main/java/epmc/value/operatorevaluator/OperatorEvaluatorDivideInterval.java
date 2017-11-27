@@ -75,8 +75,13 @@ public final class OperatorEvaluatorDivideInterval implements OperatorEvaluator 
             return new OperatorEvaluatorDivideInterval(this);
         }
     }
-
+    
+    private final OperatorEvaluator divide;
+    
     private OperatorEvaluatorDivideInterval(Builder builder) {
+        divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE,
+                TypeInterval.as(builder.types[0]).getEntryType(),
+                TypeInterval.as(builder.types[1]).getEntryType());
     }
 
     @Override
@@ -97,7 +102,6 @@ public final class OperatorEvaluatorDivideInterval implements OperatorEvaluator 
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, op1Lower.getType(), op2Lower.getType());
         divide.apply(resultLower, op1Lower, op2Lower);
         divide.apply(resultUpper, op1Upper, op2Upper);
     }

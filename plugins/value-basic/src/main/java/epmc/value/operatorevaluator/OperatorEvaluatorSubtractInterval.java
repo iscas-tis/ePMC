@@ -79,7 +79,12 @@ public final class OperatorEvaluatorSubtractInterval implements OperatorEvaluato
         }
     }
 
+    private final OperatorEvaluator subtract;
+    
     private OperatorEvaluatorSubtractInterval(Builder builder) {
+        subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT,
+                TypeInterval.as(builder.types[0]).getEntryType(),
+                TypeInterval.as(builder.types[1]).getEntryType());
     }
 
     @Override
@@ -100,7 +105,6 @@ public final class OperatorEvaluatorSubtractInterval implements OperatorEvaluato
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, op1Lower.getType(), op2Lower.getType());
         subtract.apply(resultLower, op1Lower, op2Lower);
         subtract.apply(resultUpper, op1Upper, op2Upper);
     }

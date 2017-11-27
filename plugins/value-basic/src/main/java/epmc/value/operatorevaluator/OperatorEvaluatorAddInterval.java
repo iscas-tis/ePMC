@@ -79,7 +79,12 @@ public final class OperatorEvaluatorAddInterval implements OperatorEvaluator {
         }
     }
 
+    private final OperatorEvaluator add;
+    
     private OperatorEvaluatorAddInterval(Builder builder) {
+        add = ContextValue.get().getEvaluator(OperatorAdd.ADD,
+                TypeInterval.as(builder.types[0]).getEntryType(),
+                TypeInterval.as(builder.types[1]).getEntryType());
     }
 
     @Override
@@ -100,7 +105,6 @@ public final class OperatorEvaluatorAddInterval implements OperatorEvaluator {
         Value op1Upper = ValueInterval.getUpper(operands[0]);
         Value op2Lower = ValueInterval.getLower(operands[1]);
         Value op2Upper = ValueInterval.getUpper(operands[1]);
-        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, op1Lower.getType(), op2Lower.getType());
         add.apply(resultLower, op1Lower, op2Lower);
         add.apply(resultUpper, op1Upper, op2Upper);
     }
