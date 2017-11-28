@@ -719,7 +719,7 @@ public final class Options implements Serializable, Cloneable {
         return result;
     }
 
-    public List<String>  getStringList(Enum<?> identifier) {
+    public List<String> getStringList(Enum<?> identifier) {
         assert identifier != null;
         String identifierString = enumToIdentifier(identifier);
         return getStringList(identifierString);
