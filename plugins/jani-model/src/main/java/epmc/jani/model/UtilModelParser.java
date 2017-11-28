@@ -36,9 +36,6 @@ import epmc.operator.OperatorGe;
 import epmc.operator.OperatorLe;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
-import epmc.value.TypeBoolean;
-import epmc.value.TypeBounded;
-import epmc.value.Value;
 
 /**
  * Auxiliary methods to parse JANI models and properties.
