@@ -172,21 +172,23 @@ public final class ModelChecker implements Closeable {
     public void check() {
         long time = System.nanoTime();
         getLog().send(MessagesModelChecker.MODEL_CHECKING);
-        for (RawProperty property : model.getPropertyList().getRawProperties()) {
-            String propString;
-            propString = property.getDefinition();
-            if (propString == null) {
-                propString = property.getName();
+        if (model.getPropertyList() != null) {
+            for (RawProperty property : model.getPropertyList().getRawProperties()) {
+                String propString;
+                propString = property.getDefinition();
+                if (propString == null) {
+                    propString = property.getName();
+                }
+                getLog().send(MessagesModelChecker.ANALYSING_PROPERTY, propString);
+                Expression expression = model.getPropertyList().getParsedProperty(property);
+                ModelCheckerResult propRes = null;
+                try {
+                    propRes = checkProperty(property, expression);
+                } catch (EPMCException e) {
+                    propRes = new ModelCheckerResult(property, e);
+                }
+                getLog().send(propRes);
             }
-            getLog().send(MessagesModelChecker.ANALYSING_PROPERTY, propString);
-            Expression expression = model.getPropertyList().getParsedProperty(property);
-            ModelCheckerResult propRes = null;
-            try {
-                propRes = checkProperty(property, expression);
-            } catch (EPMCException e) {
-                propRes = new ModelCheckerResult(property, e);
-            }
-            getLog().send(propRes);
         }
         time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         getLog().send(MessagesModelChecker.MODEL_CHECKING_DONE, time);

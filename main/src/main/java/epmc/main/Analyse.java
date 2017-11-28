@@ -130,8 +130,7 @@ public final class Analyse {
      * @param rawModel model to parse, or {@code null}
      * @return parsed model
      */
-    private static Model parseModel(RawModel rawModel)
-    {
+    private static Model parseModel(RawModel rawModel) {
         Model model;
         if (rawModel == null || rawModel.getModelInputStreams().length == 0) {
             model = new ModelDummy();
@@ -141,7 +140,7 @@ public final class Analyse {
             model.read(inputs);
         }
         Properties properties = model.getPropertyList();
-        if (rawModel.getPropertyInputStreams() != null) {
+        if (rawModel.getPropertyInputStreams() != null && properties != null) {
             properties.parseProperties(rawModel.getPropertyInputStreams());
         }
 
