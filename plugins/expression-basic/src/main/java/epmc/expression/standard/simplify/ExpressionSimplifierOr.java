@@ -20,10 +20,11 @@
 
 package epmc.expression.standard.simplify;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorNot;
@@ -39,42 +40,54 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         if (!isOr(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
         if (isFalse(expressionOperator.getOperand1())) {
-            return expressionOperator.getOperand2();
+            return expressionOperator.getOperand2().replacePositional(expression.getPositional());
         }
         if (isFalse(expressionOperator.getOperand2())) {
-            return expressionOperator.getOperand1();
+            return expressionOperator.getOperand1().replacePositional(expression.getPositional());
         }
         if (isTrue(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getTrue();
+            return getTrue(expression.getPositional());
         }
         if (isTrue(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getTrue();
+            return getTrue(expression.getPositional());
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
-            return expressionOperator.getOperand1();
+            return expressionOperator.getOperand1().replacePositional(expression.getPositional());
         }
         if (isNot(expressionOperator.getOperand1())
                 && ((ExpressionOperator) expressionOperator.getOperand1()).getOperand1()
                 .equals(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getTrue();
+            return getTrue(expression.getPositional());
         }
         if (isNot(expressionOperator.getOperand2())
                 && ((ExpressionOperator) expressionOperator.getOperand2()).getOperand2()
                 .equals(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getTrue();
+            return getTrue(expression.getPositional());
         }
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());
         if (left != null && right != null) {
-            return UtilExpressionStandard.opOr(left, right);
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorOr.OR)
+                    .setOperands(left, right)
+                    .setPositional(expression.getPositional())
+                    .build();
         }
         if (left != null) {
-            return UtilExpressionStandard.opOr(left, expressionOperator.getOperand2());
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorOr.OR)
+                    .setOperands(left, expressionOperator.getOperand2())
+                    .setPositional(expression.getPositional())
+                    .build();
         }
         if (right != null) {
-            return UtilExpressionStandard.opOr(expressionOperator.getOperand1(), right);
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorOr.OR)
+                    .setOperands(expressionOperator.getOperand1(), right)
+                    .setPositional(expression.getPositional())
+                    .build();
         }
         return null;
     }
@@ -111,5 +124,14 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
             return false;
         }
         return ValueBoolean.isTrue(UtilEvaluatorExplicit.evaluate(expression));
+    }
+    
+    
+    private final Expression getTrue(Positional positional) {
+        return new ExpressionLiteral.Builder()
+                .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+                .setValue("true")
+                .setPositional(positional)
+                .build();
     }
 }

@@ -22,16 +22,38 @@ import epmc.operator.OperatorOr;
 
 public final class UtilPrismExpressionParser {
     public final static class InfoExpression {
+        private long initialLine;
+        private long initialColumn;
         private long line;
         private long column;
         private int exprStart;
         private int exprEnd;
         private String string;
 
+        private long lineInFile() {
+            return line + initialLine - 1;
+        }
+        
+        private long columnInFile() {
+            if (line == 1) {
+                return column + initialColumn - 1;
+            } else {
+                return column;
+            }
+        }
+        
         InfoExpression(String string) {
             this.string = string;
         }
 
+        public void setInitialLine(long initialLine) {
+            this.initialLine = initialLine;
+        }
+        
+        public void setInitialColumn(long initialColumn) {
+            this.initialColumn = initialColumn;
+        }
+        
         public void setLine(long line) {
             this.line = line;
         }
@@ -53,11 +75,12 @@ public final class UtilPrismExpressionParser {
             if (string != null) {
                 content = string.substring(exprStart, exprEnd);
             }
-            return new Positional.Builder()
-                    .setLine(line)
-                    .setColumn(column)
+            Positional result = new Positional.Builder()
+                    .setLine(lineInFile())
+                    .setColumn(columnInFile())
                     .setContent(content)
                     .build();
+            return result;
         }
     }
 
@@ -113,20 +136,22 @@ public final class UtilPrismExpressionParser {
         return newOperator(OperatorImplies.IMPLIES, a, b, info);
     }
 
-    static ExpressionReward newRewardSteadyState(Expression structure) {
+    static ExpressionReward newRewardSteadyState(Expression structure, InfoExpression info) {
         return new ExpressionReward.Builder()
                 .setReward(structure)
                 .setRewardType(RewardType.STEADYSTATE)
+                .setPositional(info.toPositional())
                 .build();
     }
 
     static TimeBound newTimeBound(Expression left, Expression right,
-            boolean leftOpen, boolean rightOpen) {
+            boolean leftOpen, boolean rightOpen, InfoExpression info) {
         return new TimeBound.Builder()
                 .setLeft(left)
                 .setRight(right)
                 .setLeftOpen(leftOpen)
                 .setRightOpen(rightOpen)
+                .setPositional(info.toPositional())
                 .build();
     }
 
@@ -150,11 +175,12 @@ public final class UtilPrismExpressionParser {
     }
 
     static ExpressionReward newRewardInstantaneous
-    (Expression structure, Expression time) {
+    (Expression structure, Expression time, InfoExpression info) {
         return new ExpressionReward.Builder()
                 .setRewardType(RewardType.INSTANTANEOUS)
                 .setReward(structure)
                 .setTime(time)
+                .setPositional(info.toPositional())
                 .build();
     }
 
@@ -170,21 +196,24 @@ public final class UtilPrismExpressionParser {
     }
 
     static ExpressionReward newRewardCumulative
-    (Expression structure, Expression time) {
+    (Expression structure, Expression time, InfoExpression info) {
         return new ExpressionReward.Builder()
                 .setRewardType(RewardType.CUMULATIVE)
                 .setReward(structure)
                 .setTime(time)
+                .setPositional(info.toPositional())
                 .build();
     }
 
     static ExpressionReward newRewardDiscounted
-    (Expression structure, Expression timebound, Expression discount) {
+    (Expression structure, Expression timebound, Expression discount,
+            InfoExpression info) {
         return new ExpressionReward.Builder()
                 .setRewardType(RewardType.DISCOUNTED)
                 .setReward(structure)
                 .setTime(timebound)
                 .setDiscount(discount)
+                .setPositional(info.toPositional())
                 .build();
     }
 

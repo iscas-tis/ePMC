@@ -20,6 +20,7 @@
 
 package epmc.expression.standard;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 
 // TODO complete documentation
@@ -35,6 +36,7 @@ public final class TimeBound {
         private Expression right;
         private Boolean leftOpen;
         private Boolean rightOpen;
+        private Positional positional;
 
         public Builder setLeft(Expression left) {
             this.left = left;
@@ -67,11 +69,20 @@ public final class TimeBound {
             this.rightOpen = rightOpen;
             return this;
         }
-
+        
         private Boolean isRightOpen() {
             return rightOpen;
         }
 
+        public Builder setPositional(Positional positional) {
+            this.positional = positional;
+            return this;
+        }
+        
+        private Positional getPositional() {
+            return positional;
+        }
+        
         public TimeBound build() {
             return new TimeBound(this);
         }
@@ -85,6 +96,8 @@ public final class TimeBound {
     private final boolean leftOpen;
     /** whether time-interval is right-open */
     private final boolean rightOpen;
+    /** positional information about time bound */
+    private final Positional positional;
 
     private TimeBound(Builder builder) {
         assert builder != null;
@@ -110,6 +123,7 @@ public final class TimeBound {
         this.right = right;
         this.leftOpen = leftOpen;
         this.rightOpen = rightOpen;
+        this.positional = builder.getPositional();
     }
 
     private boolean isPosInf(Expression expression) {
@@ -276,5 +290,9 @@ public final class TimeBound {
         hash = (leftOpen ? 1 : 0) + (hash << 6) + (hash << 16) - hash;
         hash = (rightOpen ? 1 : 0) + (hash << 6) + (hash << 16) - hash;
         return hash;
+    }
+    
+    public Positional getPositional() {
+        return positional;
     }
 }

@@ -66,11 +66,6 @@ public final class UtilExpressionStandard {
         return newOperator(OperatorAdd.ADD, op1, op2Expr);
     }
 
-    public static Expression opAddInverse(Expression operand) {
-        assert operand != null;
-        return newOperator(OperatorAddInverse.ADD_INVERSE, operand);
-    }
-
     public static Expression opDivide(Expression op1, Expression op2) {
         assert op1 != null;
         assert op2 != null;
