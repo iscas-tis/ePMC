@@ -26,16 +26,12 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.prism.expression.PrismExpressionParser;
 import epmc.prism.options.OptionsPRISM;
 import epmc.options.Options;
-import epmc.value.TypeInteger;
-import epmc.value.ValueInteger;
-import epmc.value.UtilValue;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBounded;
 import epmc.time.JANITypeClock;
-import epmc.prism.expression.UtilPrismExpressionParser;
 import epmc.expression.standard.ExpressionTypeInteger;
 
 import java.io.StringReader;
@@ -126,11 +122,6 @@ final class PrismParser {
 		//	throw new EPMCRuntimeException(ProblemsPRISM.PRISM_PARSER_INTERNAL_ERROR, thr);
 		//}
 	}
-
-    private ValueInteger newValueInteger(String string)  {
-      assert string != null;
-      return UtilValue.newValue(TypeInteger.get(), string);
-   }
 
     private static Positional newPositional(long line, long column) {
         assert line >= 0;
