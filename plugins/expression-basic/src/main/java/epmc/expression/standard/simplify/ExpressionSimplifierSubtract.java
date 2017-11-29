@@ -29,9 +29,9 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionTypeInteger;
-import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorIsZero;
 import epmc.operator.OperatorSubtract;
 
@@ -46,22 +46,31 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         if (isZero(expressionOperator.getOperand1())) {
-            return UtilExpressionStandard.opAddInverse(expressionOperator.getOperand2());
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorAddInverse.ADD_INVERSE)
+                    .setOperands(expressionOperator.getOperand2())
+                    .setPositional(expression.getPositional())
+                    .build();
         }
         if (isZero(expressionOperator.getOperand2())) {
-            return expressionOperator.getOperand1();
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorAddInverse.ADD_INVERSE)
+                    .setOperands(expressionOperator.getOperand1())
+                    .setPositional(expression.getPositional())
+                    .build();
         }
         if (expressionOperator.getOperand1().equals(expressionOperator.getOperand2())) {
             return new ExpressionLiteral.Builder()
                     .setValue("0")
                     .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                    .setPositional(expression.getPositional())
                     .build();
         }
         return null;
     }
 
     private static boolean isSubtract(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.isOperator(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;

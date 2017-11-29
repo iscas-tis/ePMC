@@ -20,10 +20,11 @@
 
 package epmc.expression.standard.simplify;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorAnd;
 import epmc.operator.OperatorNot;
@@ -37,50 +38,62 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         if (!isAnd(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
         if (isFalse(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getFalse();
+            return getFalse(expressionOperator.getPositional());
         }
         if (isFalse(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getFalse();
+            return getFalse(expressionOperator.getPositional());
         }
         if (isTrue(expressionOperator.getOperand1())) {
-            return expressionOperator.getOperand2();
+            return expressionOperator.getOperand2().replacePositional(expressionOperator.getPositional());
         }
         if (isTrue(expressionOperator.getOperand2())) {
-            return expressionOperator.getOperand1();
+            return expressionOperator.getOperand1().replacePositional(expressionOperator.getPositional());
         }
         if (expressionOperator.getOperand1()
                 .equals(expressionOperator.getOperand2())) {
-            return expressionOperator.getOperand1();
+            return expressionOperator.getOperand1().replacePositional(expressionOperator.getPositional());
         }
         if (isNot(expressionOperator.getOperand1())
-                && ((ExpressionOperator) expressionOperator.getOperand1())
+                && (ExpressionOperator.asOperator(expressionOperator.getOperand1()))
                 .getOperand1()
                 .equals(expressionOperator.getOperand2())) {
-            return ExpressionLiteral.getFalse();
+            return getFalse(expressionOperator.getPositional());
         }
         if (isNot(expressionOperator.getOperand2())
-                && ((ExpressionOperator) expressionOperator.getOperand2()).getOperand1()
+                && (ExpressionOperator.asOperator(expressionOperator.getOperand2()).getOperand1())
                 .equals(expressionOperator.getOperand1())) {
-            return ExpressionLiteral.getFalse();
+            return getFalse(expressionOperator.getPositional());
         }
         Expression left = simplify(expressionToType, expressionOperator.getOperand1());
         Expression right = simplify(expressionToType, expressionOperator.getOperand2());
         if (left != null && right != null) {
-            return UtilExpressionStandard.opAnd(left, right);
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorAnd.AND)
+                    .setOperands(left, right)
+                    .setPositional(expressionOperator.getPositional())
+                    .build();
         }
         if (left != null) {
-            return UtilExpressionStandard.opAnd(left, expressionOperator.getOperand2());
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorAnd.AND)
+                    .setOperands(left, expressionOperator.getOperand2())
+                    .setPositional(expressionOperator.getPositional())
+                    .build();
         }
         if (right != null) {
-            return UtilExpressionStandard.opAnd(expressionOperator.getOperand1(), right);
+            return new ExpressionOperator.Builder()
+                    .setOperator(OperatorAnd.AND)
+                    .setOperands(expressionOperator.getOperand1(), right)
+                    .setPositional(expressionOperator.getPositional())
+                    .build();
         }
         return null;
     }
 
     private static boolean isNot(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.isOperator(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
@@ -89,20 +102,20 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     }
 
     private static boolean isAnd(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.isOperator(expression)) {
             return false;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
         return expressionOperator.getOperator()
                 .equals(OperatorAnd.AND);
     }
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.isLiteral(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
         return !Boolean.valueOf(expressionLiteral.getValue());
     }
 
@@ -113,5 +126,13 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         }
         ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
         return Boolean.valueOf(expressionLiteral.getValue());
+    }
+    
+    private final Expression getFalse(Positional positional) {
+        return new ExpressionLiteral.Builder()
+                .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+                .setValue("false")
+                .setPositional(positional)
+                .build();
     }
 }

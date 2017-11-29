@@ -54,6 +54,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
                 return new ExpressionLiteral.Builder()
                         .setValue(Integer.toString(valueInteger.getInt()))
                         .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                        .setPositional(expression.getPositional())
                         .build();
             }
             if (ValueBoolean.is(value)) {
@@ -61,6 +62,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
                 return new ExpressionLiteral.Builder()
                         .setValue(Boolean.toString(valueBoolean.getBoolean()))
                         .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+                        .setPositional(expression.getPositional())
                         .build();                
             }
             if (ValueDouble.is(value)) {
@@ -68,6 +70,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
                 return new ExpressionLiteral.Builder()
                         .setValue(Double.toString(valueDouble.getDouble()))
                         .setType(ExpressionTypeReal.TYPE_REAL)
+                        .setPositional(expression.getPositional())
                         .build();
             }
             if (ValueReal.is(value)) {
@@ -77,7 +80,8 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
                 return new ExpressionLiteral.Builder()
                         .setValue(valueReal.toString())
                         .setType(ExpressionTypeReal.TYPE_REAL)
-                        .build();                
+                        .setPositional(expression.getPositional())
+                        .build();
             }
         }
         List<Expression> newChildren = new ArrayList<>();

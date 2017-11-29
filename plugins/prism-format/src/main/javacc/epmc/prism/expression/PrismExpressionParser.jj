@@ -157,6 +157,10 @@ public final class PrismExpressionParser {
 
 	private void beginExpression(InfoExpression info) {
 	  assert info != null;
+	  info.setInitialLine(initialLine);
+	  info.setInitialColumn(initialColumn);
+	  info.setLine(getToken(1).beginLine);
+	  info.setColumn(getToken(1).beginColumn);
 	  info.setStart(getToken(1).offset);
 	}
 
@@ -768,10 +772,13 @@ private Expression parseFunction2(boolean parseExp, Operator type)  :
 private Expression parseFunction1(boolean parseExp, Operator type)  :
 {
 	Expression e;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+  { beginExpression(info); }
 	e = parseExp(parseExp)
-	{ return newOperator(type, e);}
+	{ endExpression(info); }
+	{ return newOperator(type, e, info);}
 }
 
 private Operator functionMultipleParams()  :
@@ -1146,6 +1153,9 @@ private Expression parseSteadyQuant(boolean parseExp)  :
 		<RBRACKET>
 	)
 	{
+	    endExpression(info);
+	}
+	{
 		prop = new ExpressionSteadyState.Builder()
 			.setStates(prop)
 			.build();
@@ -1200,9 +1210,10 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 	( { beginExpression(info); }
 		<F> 
 		prop = parseExpTemporal(parseExp)
-		{ endExpression(info);
-		  return newRewardReachability(rewardStructure, prop, info); }
-	| 
+		{ endExpression(info); }
+		{ return newRewardReachability(rewardStructure, prop, info); }
+	|
+	{ beginExpression(info); }
 		<C> 
 		{
 		  timebound = ExpressionLiteral.getPosInf();
@@ -1216,21 +1227,26 @@ private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)
 			<COMMA> <DISCOUNT> <EQ>
 			discount = parseExpTemporal(parseExp)
 		)?
+		{ endExpression(info); }
 		{
 			if (discount == null) {
-				return newRewardCumulative(rewardStructure, timebound);
+				return newRewardCumulative(rewardStructure, timebound, info);
 			} else {
-				return newRewardDiscounted(rewardStructure, timebound, discount);
+				return newRewardDiscounted(rewardStructure, timebound, discount, info);
 			}
 		}
-	| 
+	|
+	{ beginExpression(info); }
 		<I> 
 		<EQ>
 		prop = parseExpTemporal(parseExp)
-		{ return newRewardInstantaneous(rewardStructure, prop); }
-	| 
-		<S> 
-		{ return newRewardSteadyState(rewardStructure); }
+		{ endExpression(info); }		
+		{ return newRewardInstantaneous(rewardStructure, prop, info); }
+	|
+	{ beginExpression(info); }
+		<S>
+		{ endExpression(info); }		
+		{ return newRewardSteadyState(rewardStructure, info); }
 	)
 }
 
@@ -1266,8 +1282,10 @@ private Expression parseRewQuant(boolean parseExp)  :
 	Expression rewardStructure = getTrue();
 	OldSchoolFilter filter = null;
 	Token oper;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+	{ beginExpression(info); }
 	{ oper = getToken(1); } 
 	{ 
 		if (parseExp) {
@@ -1325,6 +1343,7 @@ private Expression parseRewQuant(boolean parseExp)  :
 		filter = OldSchoolFilter() 
 	)?
 	<RBRACKET>
+	{ endExpression(info); }
 	{
 		Expression result = new ExpressionQuantifier.Builder()
 			.setDirType(dirType)
@@ -1332,6 +1351,7 @@ private Expression parseRewQuant(boolean parseExp)  :
 			.setQuantified(prop)
 			.setCompare(cmp)
 			.setCondition(cond)
+			.setPositional(info.toPositional())
 			.build();
 		if (filter != null) {
 			result = new ExpressionFilter.Builder()
@@ -1485,8 +1505,10 @@ private Expression parseMultiObjective(boolean parseExp)  :
 {
 	Expression formula;
 	List<Expression> list = new ArrayList<Expression>();
+	InfoExpression info = new InfoExpression(string);
 }
 {
+	{ beginExpression(info); }
 	{ 
 		if (parseExp) {
 			Token errorToken = getToken(1);
@@ -1512,8 +1534,10 @@ private Expression parseMultiObjective(boolean parseExp)  :
 		{ list.add(formula); }
 	)*
 	<RPAR>
+	{ endExpression(info); }
 	{ return new ExpressionMultiObjective.Builder()
 		.setOperands(list)
+		.setPositional(info.toPositional())
 		.build(); }
 }
 
@@ -1533,29 +1557,39 @@ TimeBound TimeBound()  :
 	TimeBound timeBound = newTimeBound();
 	boolean leftOpen = true;
 	boolean rightOpen = true;
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	(
+	{ beginExpression(info); }
 		<LT> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, true); }
+	{ endExpression(info); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, true, info); }
 	|
+	{ beginExpression(info); }
 		<LEQ> 
 //		right = parseExpForTimeBound(true)
 		right = parseExp(true)
-		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, false); }
+	{ endExpression(info); }
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, false, info); }
 	|
+	{ beginExpression(info); }
 		<GT> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), true, true); }
+	{ endExpression(info); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), true, true, info); }
 	|
+	{ beginExpression(info); }
 		<GEQ> 
 //		left = parseExpForTimeBound(true)
 		left = parseExp(true)
-		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), false, true); }
+	{ endExpression(info); }
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), false, true, info); }
 	|
+	{ beginExpression(info); }
 //		LOOKAHEAD((<LBRACKET>|<RBRACKET>) parseExp(true) <COMMA> parseExp(true) (<LBRACKET>|<RBRACKET>) <LPAR>)
 		(
 			<LBRACKET>
@@ -1574,7 +1608,8 @@ TimeBound TimeBound()  :
 			<LBRACKET>
 			{ rightOpen = true; }
 		)
-		{ timeBound = newTimeBound(left, right, leftOpen, rightOpen); }
+	{ endExpression(info); }
+		{ timeBound = newTimeBound(left, right, leftOpen, rightOpen, info); }
 
 //		LOOKAHEAD(<LBRACKET> parseExpAsProp(true) <COMMA> parseExpAsProp(true) <RBRACKET>)
 //		<LBRACKET> 

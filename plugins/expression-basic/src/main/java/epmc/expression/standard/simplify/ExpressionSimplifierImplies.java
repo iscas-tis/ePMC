@@ -25,6 +25,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorImplies;
+import epmc.operator.OperatorOr;
 
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     public final static String IDENTIFIER = "implies";
@@ -35,12 +36,18 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         if (!isImplies(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
-        return UtilExpressionStandard.opOr(UtilExpressionStandard.opNot(expressionOperator.getOperand1()), expressionOperator.getOperand2());
+        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        return new ExpressionOperator.Builder()
+                .setOperator(OperatorOr.OR)
+                .setOperands(
+                        UtilExpressionStandard.opNot(expressionOperator.getOperand1()),
+                        expressionOperator.getOperand2())
+                .setPositional(expression.getPositional())
+                .build();
     }
 
     private static boolean isImplies(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.isOperator(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
