@@ -93,8 +93,7 @@ public final class UtilError {
      * @param problem problem description to use
      * @param arguments
      */
-    public static void fail(Problem problem, Object... arguments)
-    {
+    public static void fail(Problem problem, Object... arguments) {
         throw new EPMCException.Builder()
         .setProblem(problem)
         .setArguments(arguments)
