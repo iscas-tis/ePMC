@@ -124,7 +124,7 @@ public final class JANIProperties implements JANINode, Properties {
     }
 
     @Override
-    public void parseProperties(InputStream... inputs) {
+    public void parseProperties(Object part, InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
             assert input != null;

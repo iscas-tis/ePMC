@@ -1147,13 +1147,14 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     @Override
-    public void read(InputStream... inputs) {
+    public void read(Object part, InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
             assert input != null;
         }
         ensure(inputs.length == 1, ProblemsPRISM.PRISM_ONE_MODEL_FILE, inputs.length);
         PrismParser parser = new PrismParser(inputs[0]);    
+        parser.setPart(part);
         parser.setModel(this);
         parser.parseModel();
     }

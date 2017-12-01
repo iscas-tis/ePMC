@@ -53,13 +53,13 @@ public final class PropertiesDummy implements Properties {
     private final Map<String,Expression> labels = new LinkedHashMap<>();
 
     @Override
-    public void parseProperties(InputStream... inputs) {
+    public void parseProperties(Object object, InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
             assert input != null;
         }
         for (InputStream input : inputs) {
-            parseProperties(input);
+            parseProperties(object, input);
         }
     }
 
@@ -69,12 +69,12 @@ public final class PropertiesDummy implements Properties {
      * 
      * @param input input string to parse from
      */
-    private void parseProperties(InputStream input) {
+    private void parseProperties(Object identifier, InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
-        property.readProperties(properties, input);
-        parseProperties(properties);
+        property.readProperties(identifier, properties, input);
+        parseProperties(identifier, properties);
     }
 
     /**
@@ -83,7 +83,7 @@ public final class PropertiesDummy implements Properties {
      * 
      * @param rawProperties raw properties to parse
      */
-    private void parseProperties(RawProperties rawProperties) {
+    private void parseProperties(Object identifier, RawProperties rawProperties) {
         assert rawProperties != null;
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
@@ -95,7 +95,7 @@ public final class PropertiesDummy implements Properties {
             if (definition == null) {
                 continue;
             }
-            Expression parsed = UtilModelChecker.parseExpression(definition);
+            Expression parsed = UtilModelChecker.parseExpression(identifier, definition);
             properties.put(prop, parsed);
         }
         for (Entry<String,String> entry : rawProperties.getConstants().entrySet()) {
@@ -106,14 +106,14 @@ public final class PropertiesDummy implements Properties {
             }
             Expression expr = null;
             if (definition != null && definition instanceof String) {
-                expr = UtilModelChecker.parseExpression(((String) definition));
+                expr = UtilModelChecker.parseExpression(identifier, ((String) definition));
             } else if (definition != null && definition instanceof Expression) {
                 expr = (Expression) definition;
             } else if (definition != null) {
                 assert false : definition;
             }
             constants.put(name, expr);
-            Type type = UtilModelChecker.parseType(rawProperties.getConstantType(name));
+            Type type = UtilModelChecker.parseType(identifier, rawProperties.getConstantType(name));
             assert type != null;
             constantTypes.put(name, type);
         }
@@ -122,7 +122,7 @@ public final class PropertiesDummy implements Properties {
             String definition = entry.getValue();
             Expression expr = null;
             if (definition != null) {
-                expr = UtilModelChecker.parseExpression(definition);
+                expr = UtilModelChecker.parseExpression(identifier, definition);
             }
             labels.put(name, expr);
         }

@@ -68,4 +68,16 @@ public final class RawModelByteArray implements RawModel {
         }
         return inputs;
     }
+
+    @Override
+    public Object getModelInputIdentifier() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Object getPropertyInputIdentifier() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

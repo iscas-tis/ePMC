@@ -244,7 +244,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
     }
 
     @Override
-    public void read(InputStream... inputs) {
+    public void read(Object identifier, InputStream... inputs) {
         assert inputs != null;
         for (InputStream input : inputs) {
             assert input != null;

@@ -68,22 +68,22 @@ public final class PropertiesImpl implements Properties {
     }
 
     @Override
-    public void parseProperties(InputStream... inputs) {
+    public void parseProperties(Object part, InputStream... inputs) {
         for (InputStream input : inputs) {
-            parseProperties(input);
+            parseProperties(part, input);
         }
     }
 
-    private void parseProperties(InputStream input) {
+    private void parseProperties(Object part, InputStream input) {
         assert input != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         RawProperties properties = new RawProperties();
-        property.readProperties(properties, input);
-        parseProperties(properties);
+        property.readProperties(part, properties, input);
+        parseProperties(part, properties);
         expand();
     }
 
-    public void parseProperties(RawProperties rawProperties) {
+    private void parseProperties(Object part, RawProperties rawProperties) {
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         if (optionsConsts == null) {
@@ -113,7 +113,7 @@ public final class PropertiesImpl implements Properties {
                 assert false : definition;
             }
             constants.put(name, expr);
-            Type type = UtilModelChecker.parseType(rawProperties.getConstantType(name));
+            Type type = UtilModelChecker.parseType(part, rawProperties.getConstantType(name));
             assert type != null;
             constantTypes.put(name, type);
         }
@@ -135,8 +135,7 @@ public final class PropertiesImpl implements Properties {
         expand();
     }
 
-    public void addConst(String name, Type type, Expression entry)
-    {
+    public void addConst(String name, Type type, Expression entry) {
         assert name != null;
         assert type != null;
         // entry might be null for undefined constants

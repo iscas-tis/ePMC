@@ -52,9 +52,14 @@ final class PrismParser {
 	private final Set<String> rewardsNames = new HashSet<String>();
 	private Token expressionToken;
 	private ModelPRISM model;
+	private Object part;
 
 	public void setModel(ModelPRISM model) {
 		this.model = model;
+	}
+
+	public void setPart(Object part) {
+	  this.part = part;
 	}
 
 	public ModelPRISM parseModel()  {
@@ -123,12 +128,13 @@ final class PrismParser {
 		//}
 	}
 
-    private static Positional newPositional(long line, long column) {
+    private Positional newPositional(long line, long column) {
         assert line >= 0;
         assert column >= 0;
         return new Positional.Builder()
                 .setLine(line)
                 .setColumn(column)
+                .setPart(part)
                 .build();
     }
 }
@@ -1192,7 +1198,7 @@ private Expression parseExpSemicolon()  :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1224,7 +1230,7 @@ private Expression parseExpParenth()  :
 	)+
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1256,7 +1262,7 @@ private Expression parseExpBrack()  :
 	)+
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1302,7 +1308,7 @@ private Expression parseExpColon(Token old)  :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(exp.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
 	}
 }
 
@@ -1322,7 +1328,7 @@ private Expression parseExpInvariant()  :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1343,7 +1349,7 @@ private Expression parseExpInit()  :
 	)*
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1357,7 +1363,7 @@ private Expression parseExpSepinterval()  :
 	content = <SEPINTERVAL_ARG>
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 
@@ -1371,7 +1377,7 @@ private Expression parseExpArrow()  :
 	content = <ARROW_ARG>
 	{
 		PrismExpressionParser ep = new PrismExpressionParser(new StringReader(content.toString()));
-		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString());
+		return ep.parseExpression(part, expressionToken.beginLine, expressionToken.beginColumn, content.toString());
 	}
 }
 

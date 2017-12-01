@@ -38,8 +38,7 @@ import epmc.options.Options;
 import epmc.options.UtilOptions;
 
 public class LTLHelper {
-    public static RawProperties readProperties(Options options, String propFn)
-    {
+    public static RawProperties readProperties(Options options, String propFn) {
         if (propFn != null) {
             RawProperties props = new RawProperties();
             Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);

@@ -64,7 +64,7 @@ public final class PropertyPRISM implements Property {
     }
 
     @Override
-    public Expression parseExpression(InputStream stream) {
+    public Expression parseExpression(Object part, InputStream stream) {
         assert stream != null;
         String string = null;
         try (BufferedReader buffer = new BufferedReader(new InputStreamReader(stream))) {
@@ -74,7 +74,7 @@ public final class PropertyPRISM implements Property {
         }
         stream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
         PrismExpressionParser parser = new PrismExpressionParser(stream);
-        return parser.parseExpressionAsProperty(1, 1, string);
+        return parser.parseExpressionAsProperty(part, 1, 1, string);
     }
 
     @Override
@@ -108,7 +108,7 @@ public final class PropertyPRISM implements Property {
     }
 
     @Override
-    public void readProperties(RawProperties properties, InputStream stream) {
+    public void readProperties(Object identifier, RawProperties properties, InputStream stream) {
         assert stream != null;
         properties.clear();
         final StringBuilder comment = new StringBuilder();
@@ -225,7 +225,7 @@ public final class PropertyPRISM implements Property {
     }
 
     @Override
-    public Type parseType(String type) {
+    public Type parseType(Object identifier, String type) {
         assert type != null;
         switch (type) {
         case INT:

@@ -54,10 +54,11 @@ public interface Model {
      * errors, the model type has been chosen incorrectly, or if the model is
      * too large to be parsed. None of the parameters may be
      * <code>null</code>.
+     * @param object 
      * 
      * @param inputs input files of this model
      */
-    void read(InputStream... inputs);
+    void read(Object object, InputStream... inputs);
 
     /**
      * Get the semantics type of the model.
