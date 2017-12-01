@@ -22,9 +22,6 @@ package epmc.error;
 
 import java.util.Arrays;
 
-// TODO remove unused methods and fields once sure that they are no longer needed
-// TODO complete documentation
-
 /**
  * Exception class to be used by EPMC and its plugins.
  * This class should in general be used in methods which need to throw
@@ -42,63 +39,119 @@ public final class EPMCException extends RuntimeException {
      * @author Ernst Moritz Hahn
      */
     public final static class Builder {
+        /** Whether exception has already been built. */
         private boolean built;
+        /** Type of problem reported by exception. */
         private Problem problem;
-        private String message;
+        /** Cause (for exception chaining) of exception. */
         private Throwable cause;
+        /** Positional information relating to the exception. */
         private Positional positional;
+        /** Further information specifying the problem. */
         private Object[] arguments;
 
+        /**
+         * Set the type of problem causing the exception.
+         * The method must be used to set the problem to a non-{@code null}
+         * value before calling {@link #build()}.
+         * 
+         * @param problem problem causing the exception
+         * @return builder itself, for call chaining
+         */
         public Builder setProblem(Problem problem) {
             assert !built;
             this.problem = problem;
             return this;
         }
 
+        /**
+         * Get problem set as causing the exception.
+         * 
+         * @return problem causing the exception
+         */
         private Problem getProblem() {
             return problem;
         }
 
-        public Builder setMessage(String message) {
-            assert !built;
-            this.message = message;
-            return this;
-        }
-
-        private String getMessage() {
-            return message;
-        }
-
+        /**
+         * Set the cause of this exception.
+         * The will allow for exception chaining.
+         * 
+         * @param cause cause of this exception
+         * @return builder itself, for call chaining
+         */
         public Builder setCause(Throwable cause) {
             assert !built;
             this.cause = cause;
             return this;
         }
 
+        /**
+         * Get cause to be used for this exception.
+         * 
+         * @return cause to be used for this exception
+         */
         private Throwable getCause() {
             return cause;
         }
 
+        /**
+         * Set positional information to be used for exception.
+         * 
+         * @param positional positional information to be used for exception
+         * @return builder itself, for call chaining
+         */
         public Builder setPositional(Positional positional) {
             assert !built;
             this.positional = positional;
             return this;
         }
 
+        /**
+         * Get positional information to be used for exception.
+         * 
+         * @return positional information to be used for exception
+         */
         private Positional getPositional() {
             return positional;
         }
 
+        /**
+         * Set additional information to be used for exception.
+         * If setting a non-{@code null} value, the array set mut not
+         * contain any {@code null} values.
+         * 
+         * @param arguments additional information to be used for exception
+         * @return builder itself, for call chaining
+         */
         public Builder setArguments(Object... arguments) {
             assert !built;
             this.arguments = arguments;
             return this;
         }
 
+        /**
+         * Get additional information to be used for exception.
+         * 
+         * @return additional information to be used for exception
+         */
         private Object[] getArguments() {
             return arguments;
         }
 
+        /**
+         * Build exception.
+         * After calling this method, no further calls to any method of
+         * the builder are allowed.
+         * Before calling this method, 
+         * {@link #setProblem(Problem)} must have been used to set the
+         * problem to a non-{@code null} value.
+         * Furthermore, if {@link #setArguments(Object...)}
+         * has been used to set problem arguments to a non-{@code null}
+         * value, the array set must not contain any {@code null} values.
+         * 
+         * @return EPMC exception built
+         */
         public EPMCException build() {
             assert !built;
             built = true;
@@ -132,12 +185,8 @@ public final class EPMCException extends RuntimeException {
         super(buildMessage(builder), builder.getCause());
         assert builder != null;
         Problem problem = builder.getProblem();
-        String message = builder.getMessage();
         Object[] arguments = builder.getArguments();
         assert problem != null;
-        if (message == null) {
-            message = buildMessage(problem, builder.getPositional(), arguments);
-        }
         if (arguments == null) {
             arguments = new Object[0];
         }
@@ -219,10 +268,7 @@ public final class EPMCException extends RuntimeException {
      * The message will then be obtained using
      * {@link EPMCException#getMessage()}.
      * The function is should only be used for this purpose.
-     * Other user-readable messages shall be constructed by other methods.
-     * If {@link Builder#getMessage()} returns a non-{@code null} value, this
-     * value will be used.
-     * Otherwise, the message will be constructed using
+     * The user-readable message will be constructed using
      * {@link #buildMessage(Problem, Positional, Object[])}
      * using the parameters of the builder.
      * 
@@ -231,15 +277,10 @@ public final class EPMCException extends RuntimeException {
      */
     private static String buildMessage(Builder builder) {
         assert builder != null;
-        String message = builder.getMessage();
-        if (message == null) {
-            Problem problem = builder.getProblem();
-            Positional positional = builder.getPositional();
-            Object[] arguments = builder.getArguments();
-            return buildMessage(problem, positional, arguments);
-        } else {
-            return message;
-        }
+        Problem problem = builder.getProblem();
+        Positional positional = builder.getPositional();
+        Object[] arguments = builder.getArguments();
+        return buildMessage(problem, positional, arguments);
     }
 
     /**
