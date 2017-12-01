@@ -24,9 +24,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import epmc.error.UtilError;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expression.standard.ProblemsExpression;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
@@ -147,7 +149,7 @@ public final class UtilEvaluatorExplicit {
                 return r;
             }
         }
-        assert false : expression + SPACE + expression.getClass() + SPACE + Arrays.toString(variables);
+        UtilError.fail(ProblemsExpression.EXPRESSION_COULD_NOT_EVALUATE, expression.getPositional(), expression);
         return null;
     }
 }
