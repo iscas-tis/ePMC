@@ -45,7 +45,7 @@ public final class ModelDummy implements Model {
     }
 
     @Override
-    public void read(InputStream... inputs) {
+    public void read(Object object, InputStream... inputs) {
         assert inputs != null;
         assert inputs.length == 0;
     }

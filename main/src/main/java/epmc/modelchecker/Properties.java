@@ -28,7 +28,7 @@ import epmc.expression.Expression;
 // TODO documentation
 
 public interface Properties {
-    void parseProperties(InputStream... inputs);
+    void parseProperties(Object object, InputStream... inputs);
 
     List<RawProperty> getRawProperties();
 

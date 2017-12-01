@@ -137,11 +137,11 @@ public final class Analyse {
         } else {
             InputStream[] inputs = rawModel.getModelInputStreams();
             model = UtilOptions.getInstance(OptionsModelChecker.MODEL_INPUT_TYPE);
-            model.read(inputs);
+            model.read(rawModel.getModelInputIdentifier(), inputs);
         }
         Properties properties = model.getPropertyList();
         if (rawModel.getPropertyInputStreams() != null && properties != null) {
-            properties.parseProperties(rawModel.getPropertyInputStreams());
+            properties.parseProperties(rawModel.getPropertyInputIdentifier(), rawModel.getPropertyInputStreams());
         }
 
         return model;

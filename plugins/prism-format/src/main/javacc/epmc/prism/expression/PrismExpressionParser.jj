@@ -90,6 +90,7 @@ public final class PrismExpressionParser {
 		}
 	};
 
+	private Object part;
 	private int initialLine;
 	private int initialColumn;
 	private String string;
@@ -104,7 +105,8 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpression(int line, int column, String string)  {
+	public Expression parseExpression(Object part, int line, int column, String string)  {
+		this.part = part;
 		this.initialLine = line;
 		this.initialColumn = column;
 		this.string = string;
@@ -130,7 +132,8 @@ public final class PrismExpressionParser {
 		}
 	}
 
-	public Expression parseExpressionAsProperty(int line, int column, String string)  {
+	public Expression parseExpressionAsProperty(Object part, int line, int column, String string)  {
+	  	this.part = part;
 		this.initialLine = line;
 		this.initialColumn = column;
 		this.string = string;
@@ -157,6 +160,7 @@ public final class PrismExpressionParser {
 
 	private void beginExpression(InfoExpression info) {
 	  assert info != null;
+	  info.setPart(part);
 	  info.setInitialLine(initialLine);
 	  info.setInitialColumn(initialColumn);
 	  info.setLine(getToken(1).beginLine);

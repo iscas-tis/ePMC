@@ -41,6 +41,9 @@ import epmc.value.Type;
  * @author Ernst Moritz Hahn
  */
 public final class UtilModelChecker {
+    public static Expression parseExpression(String string) {
+        return parseExpression(null, string);
+    }
     /**
      * Parse expression from string.
      * The string will be parsed using the {@link Property} from
@@ -50,11 +53,11 @@ public final class UtilModelChecker {
      * 
      * @return parsed expression
      */
-    public static Expression parseExpression(String string) {
+    public static Expression parseExpression(Object identifier, String string) {
         assert string != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
         InputStream stream = new ByteArrayInputStream(string.getBytes());
-        return property.parseExpression(stream);
+        return property.parseExpression(identifier, stream);
     }
 
     /**
@@ -66,10 +69,10 @@ public final class UtilModelChecker {
      * 
      * @return parsed expression
      */
-    public static Type parseType(String string) {
+    public static Type parseType(Object identifier, String string) {
         assert string != null;
         Property property = UtilOptions.getInstance(OptionsModelChecker.PROPERTY_INPUT_TYPE);
-        return property.parseType(string);
+        return property.parseType(identifier, string);
     }
 
     /**

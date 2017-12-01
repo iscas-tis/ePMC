@@ -48,7 +48,7 @@ public interface Property {
      * @param expression expression to be parsed.
      * @return parsed expression
      */
-    Expression parseExpression(InputStream expression);
+    Expression parseExpression(Object identifier, InputStream expression);
 
     /**
      * Parse a type in the syntax of this property type.
@@ -59,7 +59,7 @@ public interface Property {
      * @param expression expression to be parsed.
      * @return parsed expression
      */
-    Type parseType(String type);
+    Type parseType(Object identifier, String type);
 
     /**
      * Reads a complete list of properties in the format of this property type.
@@ -67,7 +67,7 @@ public interface Property {
      * @param properties where to store properties
      * @param stream stream from which to read the properties
      */
-    void readProperties(RawProperties properties, InputStream stream);
+    void readProperties(Object identifier, RawProperties properties, InputStream stream);
 
     /**
      * Writes a complete list of properties in the format of this property type.

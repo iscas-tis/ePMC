@@ -115,8 +115,7 @@ public final class Formulas {
         constantTypes.put(constant, type);
     }
 
-    void addConstant(String variable, Object value, JANIType type)
-    {
+    void addConstant(String variable, Object value, JANIType type) {
         assert variable != null;
         assert value != null;
         assert type != null;
@@ -405,7 +404,7 @@ public final class Formulas {
     private Expression parse(Reader reader, String string) {
         assert reader != null;
         PrismExpressionParser parser = new PrismExpressionParser(reader);
-        return parser.parseExpressionAsProperty(1, 1, string);
+        return parser.parseExpressionAsProperty(null, 1, 1, string);
     }
 
     private Expression parse(String string) {

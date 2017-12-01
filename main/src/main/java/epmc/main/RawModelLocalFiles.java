@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 import epmc.modelchecker.RawModel;
 import epmc.modelchecker.error.ProblemsModelChecker;
@@ -105,5 +106,27 @@ public final class RawModelLocalFiles implements RawModel {
             }
         }
         return result;
+    }
+
+    @Override
+    public Object getModelInputIdentifier() {
+        if (modelFilenames == null) {
+            return this;
+        }
+        if (modelFilenames.length == 1) {
+            return modelFilenames[0];
+        }
+        return Arrays.toString(modelFilenames);
+    }
+
+    @Override
+    public Object getPropertyInputIdentifier() {
+        if (propertyFilenames == null) {
+            return this;
+        }
+        if (propertyFilenames.length == 1) {
+            return propertyFilenames[0];
+        }
+        return Arrays.toString(propertyFilenames);
     }
 }

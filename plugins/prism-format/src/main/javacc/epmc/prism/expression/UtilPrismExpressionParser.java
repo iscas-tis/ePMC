@@ -22,6 +22,7 @@ import epmc.operator.OperatorOr;
 
 public final class UtilPrismExpressionParser {
     public final static class InfoExpression {
+        private Object part;
         private long initialLine;
         private long initialColumn;
         private long line;
@@ -46,6 +47,10 @@ public final class UtilPrismExpressionParser {
             this.string = string;
         }
 
+        public void setPart(Object part) {
+            this.part = part;
+        }
+        
         public void setInitialLine(long initialLine) {
             this.initialLine = initialLine;
         }
@@ -76,6 +81,7 @@ public final class UtilPrismExpressionParser {
                 content = string.substring(exprStart, exprEnd);
             }
             Positional result = new Positional.Builder()
+                    .setPart(part)
                     .setLine(lineInFile())
                     .setColumn(columnInFile())
                     .setContent(content)

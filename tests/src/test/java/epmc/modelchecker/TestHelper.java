@@ -129,7 +129,10 @@ public final class TestHelper {
         }
     }
 
-    public static Model loadModel(Options options,
+    private static Model loadModel(
+            Object modelIdentifier,
+            Object propertyIdentifier,
+            Options options,
             List<InputStream> inputs, InputStream propertyStream) {
         assert options != null;
         assert inputs != null;
@@ -141,16 +144,11 @@ public final class TestHelper {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         assert classloader != null;
         InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
-        model.read(inputsArray);
+        model.read(modelIdentifier, inputsArray);
         if (propertyStream != null) {
             model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
         }
         return model;
-    }
-
-    public static Model loadModel(Options options,
-            InputStream input, InputStream propertyStream) {
-        return loadModel(options, Collections.singletonList(input), propertyStream);
     }
 
     public static Model loadModel(Options options,
@@ -184,7 +182,13 @@ public final class TestHelper {
             }
             assert propertyStream != null : propertiesFile;
         }
-        return loadModel(options, inputs, propertyStream);
+        Object modelIdentifier;
+        if (modelFiles.size() == 1) {
+            modelIdentifier = modelFiles.get(0);
+        } else {
+            modelIdentifier = modelFiles;
+        }
+        return loadModel(modelIdentifier, propertiesFile, options, inputs, propertyStream);
     }
 
     public static Model loadModel(Options options,
@@ -199,7 +203,13 @@ public final class TestHelper {
             InputStream input = new ByteArrayInputStream(modelPart.getBytes());
             inputs.add(input);
         }
-        return loadModel(options, inputs, null);
+        Object modelIdentifier;
+        if (modelParts.length == 1) {
+            modelIdentifier = modelParts[0];
+        } else {
+            modelIdentifier = Arrays.toString(modelParts);
+        }
+        return loadModel(modelIdentifier, null, options, inputs, null);
     }
 
     public static Model loadModelMulti(Options options, String... modelFiles) {
@@ -232,7 +242,7 @@ public final class TestHelper {
         rawProp.setDefinition(property);
         rawProp.setDescription(null);
         ByteArrayInputStream input = new ByteArrayInputStream(property.getBytes());
-        properties.parseProperties(new InputStream[]{input});
+        properties.parseProperties(property, new InputStream[]{input});
         assert properties.getRawProperties().size() >= 1;
     }
 
@@ -567,7 +577,7 @@ public final class TestHelper {
 
     public static void readProperties(Property property, RawProperties properties, String fileName) {
         try (InputStream input = new FileInputStream(fileName)) {
-            property.readProperties(properties, input);
+            property.readProperties(fileName, properties, input);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

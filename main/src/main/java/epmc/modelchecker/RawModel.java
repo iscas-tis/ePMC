@@ -54,4 +54,8 @@ public interface RawModel extends Serializable {
     InputStream[] getModelInputStreams();
 
     InputStream[] getPropertyInputStreams();
+    
+    Object getModelInputIdentifier();
+    
+    Object getPropertyInputIdentifier();
 }
