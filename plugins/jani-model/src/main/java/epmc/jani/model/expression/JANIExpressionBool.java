@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.json.JsonValue;
 import javax.json.JsonValue.ValueType;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionTypeBoolean;
@@ -48,7 +49,9 @@ public final class JANIExpressionBool implements JANIExpression {
     private boolean initialized;
     /** Boolean value of expression. */
     private boolean value;
-
+    /** Positional information. */
+    private Positional positional;
+    
     private void resetFields() {
         initialized = false;
     }
@@ -83,6 +86,7 @@ public final class JANIExpressionBool implements JANIExpression {
         }
         this.value = value.getValueType() == ValueType.TRUE;
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -106,6 +110,7 @@ public final class JANIExpressionBool implements JANIExpression {
         }
         value = Boolean.valueOf(expressionLiteral.getValue());
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -114,6 +119,7 @@ public final class JANIExpressionBool implements JANIExpression {
         return new ExpressionLiteral.Builder()
                 .setValue(value ? "true" : "false")
                 .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+                .setPositional(positional)
                 .build();
     }
 
@@ -121,6 +127,16 @@ public final class JANIExpressionBool implements JANIExpression {
     public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
     }
 
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+
+    @Override
+    public Positional getPositional() {
+        return positional;
+    }
+    
     @Override
     public String toString() {
         return UtilModelParser.toString(this);

@@ -74,10 +74,15 @@ public final class UtilJSON {
 
     /** String with arbitrary content. */
     private final static String ARBITRARY = "arbitrary";
+    /** Textual representation of boolean value &quot;true&quot;. */
     private final static String TRUE = "true";
+    /** Textual representation of boolean value &quot;false&quot;. */
     private final static String FALSE = "false";
+    /** Regular expression string for valid identifiers. */
     private final static String IDENTIFIER_PATTERN = "[_a-zA-Z][_a-zA-Z0-9]*";
+    /** JSON representation of boolean value &quot;true&quot;. */
     private final static JsonValue TRUE_VALUE;
+    /** JSON representation of boolean value &quot;false&quot;. */
     private final static JsonValue FALSE_VALUE;
     static {
         JsonObjectBuilder trueValue = Json.createObjectBuilder();
@@ -340,7 +345,7 @@ public final class UtilJSON {
         return map.get(object.getString(key));
     }
 
-    public static <V> V toOneOfOrNull(JsonObject object, String key, Map<String,V> map) {
+    public static <V> V toOneOfOrNullFailInvalidType(JsonObject object, String key, Map<String,V> map) {
         assert object != null;
         assert key != null;
         assert map != null;
@@ -647,7 +652,7 @@ public final class UtilJSON {
         return object.getInt(name);
     }
 
-    public static Integer getIntegerOrNull(JsonObject object, String name) {
+    public static Integer getIntegerOrNullFailInvalidType(JsonObject object, String name) {
         assert object != null;
         assert name != null;
         if (!object.containsKey(name)) {
@@ -660,6 +665,24 @@ public final class UtilJSON {
             fail(ProblemsJSON.JSON_NOT_VALUE_INTEGER_JAVA, e);
         }
         return object.getInt(name);
+    }
+
+    public static Long getLongOrNull(JsonObject object, String name) {
+        assert object != null;
+        assert name != null;
+        if (!object.containsKey(name)) {
+            return null;
+        }
+        JsonValue value = object.get(name);
+        if (value.getValueType() != ValueType.NUMBER) {
+            return null;
+        }
+        JsonNumber valueNumber = (JsonNumber) value;
+        try {
+            return valueNumber.longValueExact();
+        } catch (ArithmeticException e) {
+            return null;
+        }
     }
 
     public static BigInteger getBigInteger(JsonObject object, String name) {
@@ -844,15 +867,15 @@ public final class UtilJSON {
         }
     }
 
-    /**
-     * Private constructor to prevent instantiation of this class.
-     */
-    private UtilJSON() {
-    }
-
     public static boolean isNull(JsonObject object, String entry) {
         assert object != null;
         assert entry != null;
         return object.get(entry).getValueType() == ValueType.NULL;
+    }
+    
+    /**
+     * Private constructor to prevent instantiation of this class.
+     */
+    private UtilJSON() {
     }
 }

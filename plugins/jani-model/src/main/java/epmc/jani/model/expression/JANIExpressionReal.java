@@ -25,12 +25,14 @@ import java.util.Map;
 import javax.json.JsonNumber;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionTypeReal;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
 
 public final class JANIExpressionReal implements JANIExpression {
@@ -42,6 +44,9 @@ public final class JANIExpressionReal implements JANIExpression {
 
     private String number;
 
+    /** Positional information. */
+    private Positional positional;
+    
     @Override
     public void setModel(ModelJANI model) {
         this.model = model;
@@ -71,6 +76,7 @@ public final class JANIExpressionReal implements JANIExpression {
         }
         this.number = number.toString();
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -95,6 +101,7 @@ public final class JANIExpressionReal implements JANIExpression {
         }
         number = expressionLiteral.getValue();
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -105,10 +112,21 @@ public final class JANIExpressionReal implements JANIExpression {
         return new ExpressionLiteral.Builder()
                 .setValue(number)
                 .setType(ExpressionTypeReal.TYPE_REAL)
+                .setPositional(positional)
                 .build();
     }
 
     @Override
     public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

@@ -28,6 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.model.JANIIdentifier;
@@ -57,11 +58,14 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
     private boolean initialized;
     private JANIOperator operator;
     private JANIExpression operand;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
         operator = null;
         operand = null;
+        positional = null;
     }
 
     public JANIExpressionOperatorUnary() {
@@ -109,6 +113,7 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -120,6 +125,7 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add(OP, operator.getJANI());
         builder.add(EXP, operand.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -143,6 +149,7 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -155,6 +162,7 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(operand.getExpression())
+                .setPositional(positional)
                 .build();
     }
 
@@ -186,5 +194,15 @@ public final class JANIExpressionOperatorUnary implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

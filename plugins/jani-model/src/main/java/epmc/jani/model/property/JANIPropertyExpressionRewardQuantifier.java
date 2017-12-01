@@ -34,6 +34,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -98,6 +99,8 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
     private JANIExpression stepInstant;
     private JANIExpression timeInstant;
     private List<JANIPropertyRewardInstant> rewardInstants;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
@@ -109,6 +112,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
         stepInstant = null;
         timeInstant = null;
         rewardInstants = null;
+        positional = null;
     }
 
     public JANIPropertyExpressionRewardQuantifier() {
@@ -142,7 +146,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
         if (!object.containsKey(EXP)) {
             return null;
         }
-        dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
+        dirType = UtilJSON.toOneOfOrNullFailInvalidType(object, OP, STRING_TO_DIR_TYPE);
         if (dirType == null) {
             return null;
         }
@@ -200,6 +204,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
             rewardInstants = null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -234,6 +239,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
             }
             builder.add(REWARD_INSTANTS, rewBuilder);
         }
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -314,6 +320,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
         //exp stands for the reward expression, TODO: check if it is correct
         exp = parser.matchExpression(model, ((ExpressionReward) quantified).getReward().getExpression());
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -355,6 +362,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
                 .setDirType(dirType)
                 .setCmpType(CmpType.IS)
                 .setQuantified(quantified)
+                .setPositional(positional)
                 .build();
     }
 
@@ -427,5 +435,15 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
                 .setReward(structure)
                 .setTime(time)
                 .build();
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

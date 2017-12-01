@@ -28,6 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.model.JANIIdentifier;
@@ -58,12 +59,15 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
     private JANIOperator operator;
     private JANIExpression left;
     private JANIExpression right;
-
+    /** Positional information. */
+    private Positional positional;
+    
     private void resetFields() {
         initialized = false;
         operator = null;
         left = null;
         right = null;
+        positional = null;
     }
 
     public JANIExpressionOperatorBinary() {
@@ -115,6 +119,7 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -127,6 +132,7 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
         builder.add(OP, operator.getJANI());
         builder.add(LEFT, left.generate());
         builder.add(RIGHT, right.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -155,6 +161,7 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -167,6 +174,7 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
         Expression result = new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(left.getExpression(), right.getExpression())
+                .setPositional(positional)
                 .build();
         return result;
     }
@@ -186,6 +194,16 @@ public final class JANIExpressionOperatorBinary implements JANIExpression {
         return model;
     }
 
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+
+    @Override
+    public Positional getPositional() {
+        return positional;
+    }
+    
     @Override
     public void setForProperty(boolean forProperty) {
         this.forProperty = forProperty;
