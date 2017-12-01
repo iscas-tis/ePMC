@@ -28,7 +28,7 @@ public final class ProblemsExpression {
 
     public final static Problem EXPR_INCONSISTENT = newProblem("expr-inconsistent");
     public final static Problem EXPRESSION_INCONSISTENT_OPERATOR = newProblem("expression-inconsistent-operator");
-    public final static Problem EXPRESSION_INCONSISTENT_IDENTIFIER_STANDARD = newProblem("expression-inconsistent-identifier-standard");
+    public final static Problem EXPRESSION_COULD_NOT_EVALUATE = newProblem("expression-could-not-evaluate");
 
     private static Problem newProblem(String name) {
         assert name != null;

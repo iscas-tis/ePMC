@@ -21,7 +21,6 @@ public class NiceErrorMessagesTest {
         prepare();
     }
 
-    // TODO make this test pass again
     @Test
     public void constantForgottenTest() {
         Options options = prepareOptions();
@@ -30,7 +29,7 @@ public class NiceErrorMessagesTest {
             computeResult(options, ModelNamesPRISM.CELL_MODEL, "P=?[ true U<=1 (n=50) {n<N}{max} ]");
         } catch (EPMCException e) {
             thrown = true;
-            assertEquals(ProblemsExpression.EXPRESSION_INCONSISTENT_IDENTIFIER_STANDARD, e.getProblem());
+            assertEquals(ProblemsExpression.EXPRESSION_COULD_NOT_EVALUATE, e.getProblem());
             assertEquals(1, e.getArguments().length);
             assertEquals("N", e.getArguments()[0]);
         }
