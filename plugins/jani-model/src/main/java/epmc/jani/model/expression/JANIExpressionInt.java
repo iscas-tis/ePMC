@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.json.JsonNumber;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionTypeInteger;
@@ -43,6 +44,8 @@ public final class JANIExpressionInt implements JANIExpression {
     public final static String IDENTIFIER = "int";
 
     private boolean initialized = false;
+    /** Positional information. */
+    private Positional positional;
 
     /** Model to which this JANI node belongs. */
     private ModelJANI model;
@@ -79,6 +82,7 @@ public final class JANIExpressionInt implements JANIExpression {
         }
         this.number = number.intValue();
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -103,6 +107,7 @@ public final class JANIExpressionInt implements JANIExpression {
         }
         number = Integer.parseInt(expressionLiteral.getValue());
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -113,6 +118,7 @@ public final class JANIExpressionInt implements JANIExpression {
         return new ExpressionLiteral.Builder()
                 .setValue(Integer.toString(number))
                 .setType(ExpressionTypeInteger.TYPE_INTEGER)
+                .setPositional(positional)
                 .build();
     }
 
@@ -123,5 +129,15 @@ public final class JANIExpressionInt implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

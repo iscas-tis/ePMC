@@ -30,6 +30,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -73,6 +74,8 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
     private String opValue;
     private DirType dirType;
     private JANIExpression exp;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
@@ -112,7 +115,7 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
         if (!object.containsKey(EXP)) {
             return null;
         }
-        dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
+        dirType = UtilJSON.toOneOfOrNullFailInvalidType(object, OP, STRING_TO_DIR_TYPE);
         if (dirType == null) {
             return null;
         }
@@ -123,6 +126,7 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -134,6 +138,7 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add(OP, opValue);
         builder.add(EXP, exp.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -168,6 +173,7 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
             break;
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -180,6 +186,7 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
                 .setCmpType(CmpType.IS)
                 .setDirType(dirType)
                 .setQuantified(exp.getExpression())
+                .setPositional(positional)
                 .build();
     }
 
@@ -206,5 +213,15 @@ public final class JANIPropertyExpressionProbabilityQuantifier implements JANIEx
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

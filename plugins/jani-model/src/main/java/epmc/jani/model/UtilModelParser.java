@@ -20,11 +20,14 @@
 
 package epmc.jani.model;
 
+import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.error.EPMCException;
+import epmc.error.Positional;
+import epmc.error.Positional.Builder;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
@@ -43,6 +46,13 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class UtilModelParser {
+    private final static String TRUE = "true";
+    private final static String X_POSITIONAL = "x-positional";
+    private final static String POSITIONAL_PART = "part";
+    private final static String POSITIONAL_LINE = "line";
+    private final static String POSITIONAL_COLUMN = "column";
+    private final static String POSITIONAL_CONTENT = "content";
+    
     @FunctionalInterface
     public interface NodeProvider <T extends JANINode> {
         T provide();
@@ -237,20 +247,75 @@ public final class UtilModelParser {
             }
         }
         result = (result == null) ? new ExpressionLiteral.Builder()
-                .setValue("true")
+                .setValue(TRUE)
                 .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
                 .build() : result;
                 return result;
     }
 
+    public static String prettyString(JANINode node) {
+        assert node != null;
+        return UtilJSON.prettyString(node.generate());
+    }
+    
+    public static void addPositional(JsonObjectBuilder builder, Positional positional) {
+        assert builder != null;
+        if (positional == null) {
+            return;
+        }
+        JsonObjectBuilder positionalBuilder = Json.createObjectBuilder();
+        positionalBuilder.add(POSITIONAL_PART, positional.getPart());
+        if (positional.getLine() > 0) {
+            positionalBuilder.add(POSITIONAL_LINE, positional.getLine());
+        }
+        if (positional.getColumn() > 0) {
+            positionalBuilder.add(POSITIONAL_COLUMN, positional.getColumn());
+        }
+        if (positional.getContent() != null) {
+            positionalBuilder.add(POSITIONAL_CONTENT, positional.getContent());
+        }
+        builder.add(X_POSITIONAL, positionalBuilder);
+    }
+
+    public static Positional getPositional(JsonValue value) {
+        if (value == null) {
+            return null;
+        }
+        if (!(value instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject object = (JsonObject) value;
+        if (!object.containsKey(X_POSITIONAL)) {
+            return null;
+        }
+        JsonValue positionalValue = object.get(X_POSITIONAL);
+        if (!(positionalValue instanceof JsonObject)) {
+            return null;
+        }
+        JsonObject positionalObject = (JsonObject) positionalValue;
+        Builder builder = new Positional.Builder();
+        Long part = UtilJSON.getLongOrNull(positionalObject, POSITIONAL_PART);
+        if (part != null) {
+            builder.setPart(part);
+        }
+        Long line = UtilJSON.getLongOrNull(positionalObject, POSITIONAL_LINE);
+        if (line != null) {
+            builder.setLine(line);
+        }
+        Long column = UtilJSON.getLongOrNull(positionalObject, POSITIONAL_COLUMN);
+        if (column != null) {
+            builder.setColumn(column);
+        }
+        String content = UtilJSON.getStringOrNull(positionalObject, POSITIONAL_CONTENT);
+        if (content != null) {
+            builder.setContent(content);
+        }
+        return builder.build();
+    }
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */
     private UtilModelParser() {
-    }
-
-    public static String prettyString(JANINode node) {
-        assert node != null;
-        return UtilJSON.prettyString(node.generate());
     }
 }

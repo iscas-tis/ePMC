@@ -30,6 +30,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.FilterType;
@@ -90,12 +91,15 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
     private FilterType fun;
     private JANIExpression values;
     private JANIExpression states;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
         fun = null;
         values = null;
         states = null;
+        positional = null;
     }
 
     public JANIPropertyExpressionFilter() {
@@ -140,6 +144,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -151,6 +156,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
         builder.add(FUN, FILTER_TYPE_TO_STRING.get(fun));
         builder.add(VALUES, values.generate());
         builder.add(STATES, states.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -175,6 +181,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
         }
         fun = expressionFilter.getFilterType();		
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -187,6 +194,7 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
                 .setFilterType(fun)
                 .setProp(values.getExpression())
                 .setStates(states.getExpression())
+                .setPositional(positional)
                 .build();
     }
 
@@ -213,5 +221,15 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

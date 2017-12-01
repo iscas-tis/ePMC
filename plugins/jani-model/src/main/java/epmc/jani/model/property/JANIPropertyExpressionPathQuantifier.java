@@ -30,6 +30,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
 import epmc.jani.model.JANIIdentifier;
@@ -68,11 +69,14 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
     private boolean initialized = false;
     private DirType dirType;
     private JANIExpression exp;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
         dirType = null;
         exp = null;
+        positional = null;
     }
 
     public JANIPropertyExpressionPathQuantifier() {
@@ -106,7 +110,7 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
         if (!object.containsKey(EXP)) {
             return null;
         }
-        dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
+        dirType = UtilJSON.toOneOfOrNullFailInvalidType(object, OP, STRING_TO_DIR_TYPE);
         if (dirType == null) {
             return null;
         }
@@ -116,6 +120,7 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -127,6 +132,7 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add(OP, dirType.toString());
         builder.add(EXP, exp.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -138,6 +144,7 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
         resetFields();
         //		TODO: fill when support for A and E operators is added to the core
         initialized = (exp != null);
+        positional = expression.getPositional();
         return null;
     }
 
@@ -173,5 +180,15 @@ public final class JANIPropertyExpressionPathQuantifier implements JANIExpressio
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

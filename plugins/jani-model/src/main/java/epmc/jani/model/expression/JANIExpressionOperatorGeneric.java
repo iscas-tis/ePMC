@@ -31,6 +31,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.model.JANIIdentifier;
@@ -64,10 +65,14 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
     private JANIOperator operator;
     private JANIExpression[] operands;
 
+    /** Positional information. */
+    private Positional positional;
+
     private void resetFields() {
         initialized = false;
         operator = null;
         operands = null;
+        positional = null;
     }
 
     public JANIExpressionOperatorGeneric() {
@@ -81,7 +86,6 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
 
     @Override 
     public JANIExpression parseAsJANIExpression(JsonValue value) {
-        assert model != null;
         assert model != null;
         assert value != null;
         resetFields();
@@ -113,6 +117,7 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
             }
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -129,6 +134,7 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
             array.add(operands[i].generate());
         }
         builder.add(ARGS, array);
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -157,6 +163,7 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
             }
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -173,6 +180,7 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
         return new ExpressionOperator.Builder()
                 .setOperator(operator)
                 .setOperands(operands)
+                .setPositional(positional)
                 .build();
     }
 
@@ -204,5 +212,15 @@ public final class JANIExpressionOperatorGeneric implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

@@ -103,7 +103,7 @@ public final class AssignmentSimple implements Assignment {
         }
         ref = UtilJSON.toOneOf(object, REF, validVariables);
         this.value = ExpressionParser.getExpression(model, object, VALUE, validIdentifiers);
-        index = UtilJSON.getIntegerOrNull(object, INDEX);
+        index = UtilJSON.getIntegerOrNullFailInvalidType(object, INDEX);
         comment = UtilJSON.getStringOrNull(object, COMMENT);
         return this;
     }

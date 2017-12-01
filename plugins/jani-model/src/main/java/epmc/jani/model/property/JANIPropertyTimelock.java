@@ -28,6 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -48,9 +49,13 @@ public final class JANIPropertyTimelock implements JANIExpression {
 
     private ModelJANI model;
     private boolean initialized;
+    /** Positional information. */
+    private Positional positional;
+
 
     private void resetFields() {
         initialized = false;
+        positional = null;
     }
 
     public JANIPropertyTimelock() {
@@ -81,6 +86,7 @@ public final class JANIPropertyTimelock implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -90,6 +96,7 @@ public final class JANIPropertyTimelock implements JANIExpression {
         assert model != null;
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add(OP, TIMELOCK);
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -102,6 +109,7 @@ public final class JANIPropertyTimelock implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -109,7 +117,7 @@ public final class JANIPropertyTimelock implements JANIExpression {
     public Expression getExpression() {
         assert initialized;
         assert model != null;
-        return new ExpressionTimelock(null);
+        return new ExpressionTimelock(positional);
     }
 
     @Override
@@ -129,5 +137,15 @@ public final class JANIPropertyTimelock implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

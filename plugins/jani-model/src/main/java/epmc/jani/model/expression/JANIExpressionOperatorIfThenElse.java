@@ -28,6 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.model.JANIIdentifier;
@@ -58,12 +59,15 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
     private JANIExpression ifExpr;
     private JANIExpression thenExpr;
     private JANIExpression elseExpr;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
         ifExpr = null;
         thenExpr = null;
         elseExpr = null;
+        positional = null;
     }
 
     public JANIExpressionOperatorIfThenElse() {
@@ -109,6 +113,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -122,6 +127,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
         builder.add(IF, ifExpr.generate());
         builder.add(THEN, thenExpr.generate());
         builder.add(ELSE, elseExpr.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -153,6 +159,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
             return null;
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -166,6 +173,7 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
                 .setOperands(ifExpr.getExpression(),
                         thenExpr.getExpression(),
                         elseExpr.getExpression())
+                .setPositional(positional)
                 .build();
     }
 
@@ -192,5 +200,15 @@ public final class JANIExpressionOperatorIfThenElse implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

@@ -24,6 +24,7 @@ import java.util.Map;
 
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
@@ -54,4 +55,8 @@ public interface JANIExpression extends JANINode {
     JANIExpression parseAsJANIExpression(JsonValue value);
 
     void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers);
+    
+    void setPositional(Positional positional);
+    
+    Positional getPositional();
 }

@@ -30,6 +30,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
@@ -73,12 +74,16 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
     private String opValue;
     private DirType dirType;
     private JANIExpression exp;
+    /** Positional information. */
+    private Positional positional;
+
 
     private void resetFields() {
         initialized = false;
         opValue = null;
         dirType = null;
         exp = null;
+        positional = null;
     }
 
     public JANIPropertyExpressionSteadyStateQuantifier() {
@@ -112,7 +117,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
         if (!object.containsKey(EXP)) {
             return null;
         }
-        dirType = UtilJSON.toOneOfOrNull(object, OP, STRING_TO_DIR_TYPE);
+        dirType = UtilJSON.toOneOfOrNullFailInvalidType(object, OP, STRING_TO_DIR_TYPE);
         if (dirType == null) {
             return null;
         }
@@ -123,6 +128,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
             return null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -134,6 +140,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
         JsonObjectBuilder builder = Json.createObjectBuilder();
         builder.add(OP, opValue);
         builder.add(EXP, exp.generate());
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -177,6 +184,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
             exp = parser.matchExpression(model, expressionSteadyState.getOperand1());
             initialized = true;
         }
+        positional = expression.getPositional();
         return this;
     }
 
@@ -191,6 +199,7 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
                 .setQuantified(new ExpressionSteadyState.Builder()
                         .setStates(exp.getExpression())
                         .build())
+                .setPositional(positional)
                 .build();
     }
 
@@ -217,5 +226,15 @@ public final class JANIPropertyExpressionSteadyStateQuantifier implements JANIEx
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

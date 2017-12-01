@@ -21,6 +21,7 @@ public class NiceErrorMessagesTest {
         prepare();
     }
 
+    // TODO make this test pass again
     @Test
     public void constantForgottenTest() {
         Options options = prepareOptions();
@@ -63,6 +64,7 @@ public class NiceErrorMessagesTest {
             assertEquals(2, e.getArguments().length);
             assertEquals(OperatorAdd.ADD.toString(), e.getArguments()[0].toString());
             assertEquals("[bool, int]", e.getArguments()[1]);
+            System.out.println(e.getPositional());
         }
         assertTrue(thrown);
 

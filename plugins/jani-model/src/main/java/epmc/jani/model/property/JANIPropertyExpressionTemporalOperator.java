@@ -34,6 +34,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionReward;
@@ -92,6 +93,8 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
     private JANIPropertyInterval stepBounds;
     private JANIPropertyInterval timeBounds;
     private List<JANIPropertyRewardBound> rewardBounds;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
@@ -101,6 +104,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         stepBounds = null;
         timeBounds = null;
         rewardBounds = null;
+        positional = null;
     }
 
     public JANIPropertyExpressionTemporalOperator() {
@@ -180,6 +184,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             rewardBounds = null;
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -205,6 +210,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             }
             builder.add(REWARD_BOUNDS, rewBuilder);
         }
+        UtilModelParser.addPositional(builder, positional);
         return builder.build();
     }
 
@@ -298,6 +304,7 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             }
         }
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -322,11 +329,13 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         }
         switch (STRING_TO_TEMPORAL_TYPE.get(opValue)) {
         case UNTIL :
-            composed = newTemporal(TemporalType.UNTIL, left, right, tb);
+            composed = newTemporal(TemporalType.UNTIL, left, right, tb)
+            .replacePositional(positional);
             break;
         case RELEASE:
             //phi W psi = psi R (phi \/ psi)
-            composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(left, right), tb);
+            composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(left, right), tb)
+            .replacePositional(positional);
         default: //it should never happen
             composed = null;
             break;
@@ -367,5 +376,15 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         assert bound != null;
         return new ExpressionTemporal
                 (op1, op2, type, bound, null);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }

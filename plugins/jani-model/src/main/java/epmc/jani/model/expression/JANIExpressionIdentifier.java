@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.json.JsonString;
 import javax.json.JsonValue;
 
+import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -47,10 +48,13 @@ public final class JANIExpressionIdentifier implements JANIExpression {
 
     private boolean initialized;
     private ExpressionIdentifierStandard identifier;
+    /** Positional information. */
+    private Positional positional;
 
     private void resetFields() {
         initialized = false;
         identifier = null;
+        positional = null;
     }
 
     public JANIExpressionIdentifier() {
@@ -90,6 +94,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
                     .build();
         }
         initialized = true;
+        positional = UtilModelParser.getPositional(value);
         return this;
     }
 
@@ -112,6 +117,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
         }
         this.identifier = (ExpressionIdentifierStandard) expression;
         initialized = true;
+        positional = expression.getPositional();
         return this;
     }
 
@@ -120,7 +126,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
         assert initialized;
         assert model != null;
         assert validIdentifiers != null;
-        return identifier;
+        return identifier.replacePositional(positional);
     }
 
     @Override
@@ -131,5 +137,15 @@ public final class JANIExpressionIdentifier implements JANIExpression {
     @Override
     public String toString() {
         return UtilModelParser.toString(this);
+    }
+    
+    @Override
+    public void setPositional(Positional positional) {
+        this.positional = positional;
+    }
+    
+    @Override
+    public Positional getPositional() {
+        return positional;
     }
 }
