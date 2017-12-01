@@ -264,7 +264,7 @@ public final class UtilModelParser {
             return;
         }
         JsonObjectBuilder positionalBuilder = Json.createObjectBuilder();
-        positionalBuilder.add(POSITIONAL_PART, positional.getPart());
+        positionalBuilder.add(POSITIONAL_PART, positional.getPart().toString());
         if (positional.getLine() > 0) {
             positionalBuilder.add(POSITIONAL_LINE, positional.getLine());
         }
@@ -294,7 +294,7 @@ public final class UtilModelParser {
         }
         JsonObject positionalObject = (JsonObject) positionalValue;
         Builder builder = new Positional.Builder();
-        Long part = UtilJSON.getLongOrNull(positionalObject, POSITIONAL_PART);
+        String part = UtilJSON.getStringOrNull(positionalObject, POSITIONAL_PART);
         if (part != null) {
             builder.setPart(part);
         }

@@ -75,13 +75,13 @@ public final class EPMC {
             if (positional != null) {
                 if (positional.getContent() != null) {
                     System.err.print(positional.getContent());
-                    if (positional.getPart() > 0
+                    if (positional.getPart() != null
                             || positional.getLine() > 0
                             || positional.getColumn() > 0) {
                         System.err.print(", ");
                     }
                 }
-                if (positional.getPart() > 0) {
+                if (positional.getPart() != null) {
                     System.err.print("part: " + positional.getPart());
                     if (positional.getLine() > 0 || positional.getColumn() > 0) {
                         System.err.print(", ");
@@ -97,7 +97,7 @@ public final class EPMC {
                     System.err.print("column: " + positional.getColumn());
                 }
                 if (positional.getContent() != null
-                        || positional.getPart() > 0
+                        || positional.getPart() != null
                         || positional.getLine() > 0
                         || positional.getColumn() > 0) {
                     System.err.print(": ");

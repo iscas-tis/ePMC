@@ -48,17 +48,17 @@ public final class Positional implements Serializable {
      * @author Ernst Moritz Hahn
      */
     public static final class Builder {
-        private long part;
+        private Object part;
         private long line;
         private long column;
         private String content;
 
-        public Builder setPart(long part) {
+        public Builder setPart(Object part) {
             this.part = part;
             return this;
         }
 
-        private long getPart() {
+        private Object getPart() {
             return part;
         }
 
@@ -94,12 +94,13 @@ public final class Positional implements Serializable {
         }
     }
 
+    private final static String NULL = "null";
     /** Serial version UID - 1L, as I don't know any better. */
     private static final long serialVersionUID = 1L;
     // TODO change to String? Otherwise, might not be clear whether referring
     // to model or to some property
     /** Part of input to which this positional refers. */
-    private final long part;
+    private final Object part;
     /** Line number to which this positional refers to. */
     private final long line;
     /** Line number to which this positional refers to. */
@@ -109,7 +110,6 @@ public final class Positional implements Serializable {
 
     private Positional(Builder builder) {
         assert builder != null;
-        assert builder.getPart() >= 0;
         assert builder.getLine() >= 0;
         assert builder.getColumn() >= 0;
         this.part = builder.getPart();
@@ -126,8 +126,8 @@ public final class Positional implements Serializable {
 
     @Override
     public String toString() {
-        return String.format("positional(%s, %d, %d, %d)",
-                content, part, line, column);
+        return String.format("positional(%s, %s, %d, %d)",
+                content, part != null ? part.toString() : NULL, line, column);
     }
 
     @Override
@@ -137,7 +137,10 @@ public final class Positional implements Serializable {
             return false;
         }
         Positional other = (Positional) obj;
-        if (this.part != other.part) {
+        if ((this.part == null) != (other.part != null)) {
+            return false;
+        }
+        if ((part != null) && !this.part.equals(other.part)) {
             return false;
         }
         if (this.line != other.line) {
@@ -152,7 +155,7 @@ public final class Positional implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash = Long.hashCode(part) + (hash << 6) + (hash << 16) - hash;
+        hash = (part != null ? part.hashCode() : 3751) + (hash << 6) + (hash << 16) - hash;
         hash = Long.hashCode(line) + (hash << 6) + (hash << 16) - hash;
         hash = Long.hashCode(column) + (hash << 6) + (hash << 16) - hash;
         return hash;
@@ -168,12 +171,11 @@ public final class Positional implements Serializable {
     }
 
     /**
-     * Obtain the number of the part of the model the position refers to.
-     * Numbers start with 0.
+     * Obtain the part of the model the position refers to.
      * 
-     * @return number of the part of the model the position refers to
+     * @return part of the model the position refers to
      */
-    public long getPart() {
+    public Object getPart() {
         return part;
     }
 
