@@ -148,6 +148,7 @@ public final class TestHelper {
         if (propertyStream != null) {
             model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
         }
+        processAfterModelLoading(options);
         return model;
     }
 
@@ -532,8 +533,7 @@ public final class TestHelper {
         return (Value) result;
     }
 
-    public static void processAfterCommandExecution()
-    {
+    public static void processAfterCommandExecution() {
         for (Class<? extends AfterCommandExecution> clazz : UtilPlugin.getPluginInterfaceClasses(Options.get(), AfterCommandExecution.class)) {
             AfterCommandExecution afterCommandExecution = null;
             afterCommandExecution = Util.getInstance(clazz);
