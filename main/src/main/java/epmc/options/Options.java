@@ -668,7 +668,21 @@ public final class Options implements Serializable, Cloneable {
         set(identifierName, value);
     }
 
+    public boolean wasSet(String identifier) {
+        assert identifier != null;
+        Option option = options.get(identifier);
+        if (option == null) {
+            return false;
+        }
+        return option.wasSet();
+    }
 
+    public boolean wasSet(Enum<?> identifier) {
+        assert identifier != null;
+        String identifierName = enumToIdentifier(identifier);
+        return wasSet(identifierName);
+    }
+    
     /**
      * Unset the option with the given identifier.
      * For this, the {@link Option#unset()} method of the option obtained will
