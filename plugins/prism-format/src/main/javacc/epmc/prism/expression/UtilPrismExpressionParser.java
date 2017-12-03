@@ -21,6 +21,8 @@ import epmc.operator.OperatorNot;
 import epmc.operator.OperatorOr;
 
 public final class UtilPrismExpressionParser {
+    private final static String TRUE = "true";
+    
     public final static class InfoExpression {
         private Object part;
         private long initialLine;
@@ -252,9 +254,9 @@ public final class UtilPrismExpressionParser {
     static ExpressionLiteral getTrue() {
         return new ExpressionLiteral.Builder()
                 .setPositional(new Positional.Builder()
-                        .setContent("true")
+                        .setContent(TRUE)
                         .build())
-                .setValue("true")
+                .setValue(TRUE)
                 .setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
                 .build();
     }
