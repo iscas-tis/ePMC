@@ -169,7 +169,7 @@ public final class EPMC {
      * The options parameter must not be {@code null}.
      * 
      * @param options options to use
-     * @param log2 
+     * @param log
      */
     private static void execute(Options options, LogCommandLine log) {
         assert options != null;

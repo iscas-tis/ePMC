@@ -619,12 +619,19 @@ public final class Option implements Serializable, Cloneable {
         }
     }
 
-    // TODO describe
-    public void setDirect(Object value) {
-        this.unparsedValue = null;
-        this.value = value;
+    /**
+     * Returns {@code true} iff option was set.
+     * This includes only the cases in which the option was set directly
+     * with an according method such as {@link #set(Object)}
+     * or {@link #setUnparsed(String)} but not the cases in which the option
+     * only has a default value but was never set to a value directly.
+     * 
+     * @return {@code true} iff option was set
+     */
+    public boolean wasSet() {
+        return value != null || unparsedValue != null;
     }
-
+    
     /**
      * Parse an option from a {@link String} by the options {@link OptionType}.
      * The parameter must not be {@code null}. Whether the function may called
