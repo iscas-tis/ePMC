@@ -102,6 +102,7 @@ public final class UtilEvaluatorExplicit {
         assert expression != null;
         assert expressionToType != null;
         EvaluatorExplicit evaluator = newEvaluator(expression, expressionToType, new Expression[0]);
+        evaluator.setValues(new Value[0]);
         evaluator.evaluate();
         return evaluator.getResultValue();
     }

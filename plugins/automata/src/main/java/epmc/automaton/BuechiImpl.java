@@ -151,7 +151,8 @@ public class BuechiImpl implements Buechi {
     @Override
     public void query(Value[] get) {
         for (int i = 0; i < evaluators.length; i++) {
-            evaluators[i].evaluate(get);
+            evaluators[i].setValues(get);
+            evaluators[i].evaluate();
         }
     }
 

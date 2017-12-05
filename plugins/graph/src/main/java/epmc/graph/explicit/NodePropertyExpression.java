@@ -66,7 +66,8 @@ public final class NodePropertyExpression implements NodeProperty {
         for (int i = 0; i < variableNodeProperties.length; i++) {
             values[i] = variableNodeProperties[i].get(node);
         }
-        evaluator.evaluate(values);
+        evaluator.setValues(values);
+        evaluator.evaluate();
         return evaluator.getResultValue();
     }
 

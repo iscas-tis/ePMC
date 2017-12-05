@@ -44,7 +44,8 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
 
     @Override
     public Value get() {
-        evaluator.evaluate(values);
+        evaluator.setValues(values);
+        evaluator.evaluate();
         return evaluator.getResultValue();
     }
 

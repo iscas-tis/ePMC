@@ -202,7 +202,8 @@ public final class EdgeEvaluator {
      * @return {@code true} iff guard is fulfilled
      */
     boolean evaluateGuard() {
-        return guardEval.evaluateBoolean(variableValues);
+        guardEval.setValues(variableValues);
+        return guardEval.evaluateBoolean();
     }
 
     boolean hasRate() {
@@ -210,7 +211,8 @@ public final class EdgeEvaluator {
     }
 
     Value evaluateRate() {
-        rateEval.evaluate(variableValues);
+        rateEval.setValues(variableValues);
+        rateEval.evaluate();
         setRate.apply(rate, rateEval.getResultValue());
         return rate;
     }
