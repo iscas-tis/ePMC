@@ -20,7 +20,7 @@
 
 package epmc.coalition;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -67,7 +67,7 @@ public final class UtilCoalition {
      */
     public static Set<Expression> collectLTLInner(Expression expression) {
         assert expression != null;
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -76,8 +76,8 @@ public final class UtilCoalition {
                 result.addAll(collectLTLInner(inner));
             }
             return result;
-        } else if (ExpressionOperator.isOperator(expression)) {
-            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        } else if (ExpressionOperator.is(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLInner(inner));
@@ -167,7 +167,7 @@ public final class UtilCoalition {
     }
 
     private static boolean isQuantLe(Expression expression) {
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         if (expressionQuantifier == null) {
             return false;
         }
@@ -197,15 +197,15 @@ public final class UtilCoalition {
 
     public static ExpressionQuantifier getQuantifier(Expression expression) {
         assert expression != null;
-        ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+        ExpressionCoalition expressionCoalition = ExpressionCoalition.as(expression);
         if (expressionCoalition != null) {
             return getQuantifier(expressionCoalition.getInner());
         }
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         if (expressionQuantifier != null) {
             return expressionQuantifier;
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         if (expressionOperator != null) {
             return getQuantifier(expressionOperator);
         }
@@ -215,9 +215,9 @@ public final class UtilCoalition {
     public static ExpressionQuantifier getQuantifier(ExpressionOperator expression) {
         assert expression != null;
         assert expression.getOperands().size() == 2;
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression.getOperand1());
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression.getOperand1());
         if (expressionQuantifier == null) {
-            expressionQuantifier = ExpressionQuantifier.asQuantifier(expression.getOperand2());
+            expressionQuantifier = ExpressionQuantifier.as(expression.getOperand2());
         }
         assert expressionQuantifier != null;
         return expressionQuantifier;
@@ -225,15 +225,15 @@ public final class UtilCoalition {
 
     public static ExpressionLiteral getLiteral(Expression expression) {
         assert expression != null;
-        ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+        ExpressionCoalition expressionCoalition = ExpressionCoalition.as(expression);
         if (expressionCoalition != null) {
             return getLiteral(expressionCoalition.getInner());
         }
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         if (expressionQuantifier != null) {
-            return ExpressionLiteral.asLiteral(expressionQuantifier.getCompare());
+            return ExpressionLiteral.as(expressionQuantifier.getCompare());
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         if (expressionOperator != null) {
             return getLiteral(expressionOperator);
         }
@@ -243,9 +243,9 @@ public final class UtilCoalition {
     public static ExpressionLiteral getLiteral(ExpressionOperator expression) {
         assert expression != null;
         assert expression.getOperands().size() == 2;
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression.getOperand1());
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression.getOperand1());
         if (expressionLiteral == null) {
-            expressionLiteral = ExpressionLiteral.asLiteral(expression.getOperand2());
+            expressionLiteral = ExpressionLiteral.as(expression.getOperand2());
         }
         assert expressionLiteral != null;
         return expressionLiteral;
@@ -253,15 +253,15 @@ public final class UtilCoalition {
 
     public static CmpType getCompareType(Expression expression) {
         assert expression != null;
-        ExpressionCoalition expressionCoalition = ExpressionCoalition.asCoalition(expression);
+        ExpressionCoalition expressionCoalition = ExpressionCoalition.as(expression);
         if (expressionCoalition != null) {
             return getCompareType(expressionCoalition.getInner());
         }
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         if (expressionQuantifier != null) {
             return expressionQuantifier.getCompareType();
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         if (expressionOperator != null) {
             return getCompareType(expressionOperator);
         }
@@ -270,7 +270,7 @@ public final class UtilCoalition {
 
     public static CmpType getCompareType(ExpressionOperator expression) {
         assert expression != null;
-        boolean invert = ExpressionQuantifier.isQuantifier(expression.getOperand2());
+        boolean invert = ExpressionQuantifier.is(expression.getOperand2());
         Operator operator = expression.getOperator();
         if (operator.equals(OperatorEq.EQ)) {
             return CmpType.EQ;

@@ -25,7 +25,7 @@ import epmc.expression.Expression;
 public interface ExpressionPropositional extends Expression {
     boolean isPropositional();
 
-    static boolean isPropositional(Expression expression) {
+    static boolean is(Expression expression) {
         assert expression != null;
         if (!(expression instanceof ExpressionPropositional)) {
             return false;

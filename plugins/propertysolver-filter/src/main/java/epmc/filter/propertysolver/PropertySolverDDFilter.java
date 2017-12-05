@@ -76,7 +76,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     @Override
     public void setProperty(Expression property) {
         this.property = property;
-        this.propertyFilter = ExpressionFilter.asFilter(property);
+        this.propertyFilter = ExpressionFilter.as(property);
     }
 
     @Override
@@ -105,7 +105,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
         }
-        if (!ExpressionFilter.isFilter(property)) {
+        if (!ExpressionFilter.is(property)) {
             return false;
         }
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
@@ -131,7 +131,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
         required.add(CommonProperties.STATE);
         required.add(CommonProperties.PLAYER);
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
-        ExpressionFilter propertyFilter = ExpressionFilter.asFilter(property);
+        ExpressionFilter propertyFilter = ExpressionFilter.as(property);
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredNodeProperties(propertyFilter.getStates(), allStates));
         return Collections.unmodifiableSet(required);
@@ -141,7 +141,7 @@ public final class PropertySolverDDFilter implements PropertySolver {
     public Set<Object> getRequiredEdgeProperties() {
         Set<Object> required = new LinkedHashSet<>();
         StateSet allStates = UtilGraph.computeAllStatesDD(modelChecker.getLowLevel());
-        ExpressionFilter propertyFilter = ExpressionFilter.asFilter(property);
+        ExpressionFilter propertyFilter = ExpressionFilter.as(property);
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getProp(), allStates));
         required.addAll(modelChecker.getRequiredEdgeProperties(propertyFilter.getStates(), allStates));
         return Collections.unmodifiableSet(required);

@@ -20,7 +20,7 @@
 
 package epmc.multiobjective;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -32,7 +32,7 @@ import epmc.expression.standard.ExpressionTemporal;
 
 public final class UtilLTL {
     public static Set<Expression> collectLTLInner(Expression expression) {
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;

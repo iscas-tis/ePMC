@@ -126,7 +126,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
 
     public StateMap doSolve(Expression property, StateSet states, boolean min) {
         if (isNot(property)) {
-            ExpressionOperator propertyOperator = ExpressionOperator.asOperator(property);
+            ExpressionOperator propertyOperator = ExpressionOperator.as(property);
             property = propertyOperator.getOperand1();
             negate = true;
             min = !min;

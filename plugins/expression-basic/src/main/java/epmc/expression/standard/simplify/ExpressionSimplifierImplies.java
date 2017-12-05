@@ -36,7 +36,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         if (!isImplies(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         return new ExpressionOperator.Builder()
                 .setOperator(OperatorOr.OR)
                 .setOperands(
@@ -47,7 +47,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     }
 
     private static boolean isImplies(Expression expression) {
-        if (!ExpressionOperator.isOperator(expression)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;

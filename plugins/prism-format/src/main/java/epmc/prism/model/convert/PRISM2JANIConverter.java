@@ -507,10 +507,10 @@ public final class PRISM2JANIConverter {
     private List<Expression> wrapWithFilter(Expression expression) {
         assert expression != null;
         List<Expression> list = new LinkedList<>();
-        if (ExpressionFilter.isFilter(expression)) {
+        if (ExpressionFilter.is(expression)) {
             list.add(expression);
         } else {
-            if (ExpressionQuantifier.isQuantifier(expression)
+            if (ExpressionQuantifier.is(expression)
                     && ((ExpressionQuantifier) expression).getCompareType().isIs()) {
                 list.add(new ExpressionFilter.Builder()
                         .setFilterType(FilterType.MIN)
@@ -617,7 +617,7 @@ public final class PRISM2JANIConverter {
      */
     private Expression useQuantitativePropertiesOnly(Expression expression) {
         assert expression != null;
-        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         if ((expressionQuantifier != null)
                 && !expressionQuantifier.getCompareType().isIs()) {
             CmpType cmpType = expressionQuantifier.getCompareType();
@@ -867,8 +867,8 @@ public final class PRISM2JANIConverter {
      */
     Expression prism2jani(Expression expression) {
         assert expression != null;
-        if (ExpressionOperator.isOperator(expression)) {
-            return prism2jani(ExpressionOperator.asOperator(expression));
+        if (ExpressionOperator.is(expression)) {
+            return prism2jani(ExpressionOperator.as(expression));
         } else {
             List<Expression> newChildren = new ArrayList<>();
             for (Expression child : expression.getChildren()) {

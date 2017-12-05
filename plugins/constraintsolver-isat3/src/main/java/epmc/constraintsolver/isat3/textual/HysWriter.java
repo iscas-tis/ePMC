@@ -207,7 +207,7 @@ final class HysWriter {
         if (expression instanceof ExpressionIdentifierStandard) {
             ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             return expressionIdentifier.getName();
-        } else if (ExpressionLiteral.isLiteral(expression)) {
+        } else if (ExpressionLiteral.is(expression)) {
             return getValue(expression);
         } else if (expression instanceof ExpressionOperator) {
             return translateExpressionOperator((ExpressionOperator) expression);
@@ -249,8 +249,8 @@ final class HysWriter {
 
     private static String getValue(Expression expression) {
         assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        assert ExpressionLiteral.is(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return expressionLiteral.getValue();
     }
 }

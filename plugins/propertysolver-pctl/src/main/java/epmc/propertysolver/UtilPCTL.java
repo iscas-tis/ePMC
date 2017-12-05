@@ -20,7 +20,7 @@
 
 package epmc.propertysolver;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -49,7 +49,7 @@ public final class UtilPCTL {
         }
         ExpressionTemporal asQuantifier = (ExpressionTemporal) pathProp;
         for (Expression operand : asQuantifier.getOperands()) {
-            if (!isPropositional(operand)) {
+            if (!is(operand)) {
                 return false;
             }
         }

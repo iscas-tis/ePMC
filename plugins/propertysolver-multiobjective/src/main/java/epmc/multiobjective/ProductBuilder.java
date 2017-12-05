@@ -124,7 +124,7 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (ExpressionReward.isReward(quantified)) {
+            if (ExpressionReward.is(quantified)) {
                 // TODO
             } else {
                 Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
@@ -200,7 +200,7 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (ExpressionReward.isReward(quantified)) {
+            if (ExpressionReward.is(quantified)) {
                 RewardSpecification rewardStructure = ((ExpressionReward) quantified).getReward();
                 stateRewards[propNr] = prodWrapper.getNodeProperty(rewardStructure);
                 transRewards[propNr] = prodWrapper.getEdgeProperty(rewardStructure);

@@ -415,7 +415,7 @@ public final class ExplorerJANI implements Explorer {
             return stateProp;
         }
         if ((property instanceof Expression)
-                && ExpressionIdentifier.isIdentifier(property)
+                && ExpressionIdentifier.is(property)
                 && property.toString().equals(INITIAL_IDENTIFIER)) {
             return initNodesProp;
         }

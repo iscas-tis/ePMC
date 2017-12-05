@@ -70,7 +70,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
     }
 
     private static boolean isSubtract(Expression expression) {
-        if (!ExpressionOperator.isOperator(expression)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
@@ -81,11 +81,11 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
     private boolean isZero(Expression expression) {
         assert expression != null;
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
             Value value = UtilEvaluatorExplicit.evaluate(expression);
             OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, value.getType());
             isZero.apply(cmp, value);
         }
-        return ExpressionLiteral.isLiteral(expression) && cmp.getBoolean();
+        return ExpressionLiteral.is(expression) && cmp.getBoolean();
     }
 }

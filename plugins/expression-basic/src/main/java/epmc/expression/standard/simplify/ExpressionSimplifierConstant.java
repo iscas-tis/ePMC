@@ -44,7 +44,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
     public Expression simplify(ExpressionToType expressionToType, Expression expression) {
         assert expression != null;
         /* literal expressions should be handled by other simplifier */
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
             return null;
         }
         if (UtilExpressionStandard.collectIdentifiers(expression).size() == 0) {

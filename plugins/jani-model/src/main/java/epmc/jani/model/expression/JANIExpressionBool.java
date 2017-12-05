@@ -101,10 +101,10 @@ public final class JANIExpressionBool implements JANIExpression {
     public JANIExpression matchExpression(ModelJANI model, Expression expression) {
         assert expression != null;
         resetFields();
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return null;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         if (!expressionLiteral.getType().equals(ExpressionTypeBoolean.TYPE_BOOLEAN)) {
             return null;
         }

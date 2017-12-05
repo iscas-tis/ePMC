@@ -63,10 +63,10 @@ public final class EvaluatorExplicitLiteralReal implements EvaluatorExplicit {
         public boolean canHandle() {
             assert expression != null;
             assert variables != null;
-            if (!(ExpressionLiteral.isLiteral(expression))) {
+            if (!(ExpressionLiteral.is(expression))) {
                 return false;
             }
-            ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+            ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
             if (!expressionLiteral.getType().equals(ExpressionTypeReal.TYPE_REAL)) {
                 return false;
             }
@@ -97,7 +97,7 @@ public final class EvaluatorExplicitLiteralReal implements EvaluatorExplicit {
         expression = builder.getExpression();
         variables = builder.getVariables();
         value = TypeReal.get().newValue();
-        value.set(ExpressionLiteral.asLiteral(expression).getValue());
+        value.set(ExpressionLiteral.as(expression).getValue());
     }
 
     @Override

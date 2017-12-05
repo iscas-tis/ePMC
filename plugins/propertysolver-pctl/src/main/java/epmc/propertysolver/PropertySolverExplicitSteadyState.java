@@ -58,7 +58,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
         Expression quantified = propertyQuantifier.getQuantified();
-        if (!ExpressionSteadyState.isSteadyState(quantified)) {
+        if (!ExpressionSteadyState.is(quantified)) {
             return false;
         }
         return true;
@@ -69,7 +69,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
         Set<Object> required = new LinkedHashSet<>();
         required.add(CommonProperties.SEMANTICS);
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        ExpressionSteadyState steadyState = ExpressionSteadyState.asSteadyState(propertyQuantifier.getQuantified());
+        ExpressionSteadyState steadyState = ExpressionSteadyState.as(propertyQuantifier.getQuantified());
         required.addAll(modelChecker.getRequiredNodeProperties(steadyState.getOperand1(), null));
         return required;
     }
@@ -80,7 +80,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
         required.add(CommonProperties.STATE);
         required.add(CommonProperties.PLAYER);
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        ExpressionSteadyState steadyState = ExpressionSteadyState.asSteadyState(propertyQuantifier.getQuantified());
+        ExpressionSteadyState steadyState = ExpressionSteadyState.as(propertyQuantifier.getQuantified());
         required.addAll(modelChecker.getRequiredNodeProperties(steadyState.getOperand1(), null));
         return required;
     }
@@ -90,7 +90,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
         Set<Object> required = new LinkedHashSet<>();
         required.add(CommonProperties.WEIGHT);
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        ExpressionSteadyState steadyState = ExpressionSteadyState.asSteadyState(propertyQuantifier.getQuantified());
+        ExpressionSteadyState steadyState = ExpressionSteadyState.as(propertyQuantifier.getQuantified());
         required.addAll(modelChecker.getRequiredEdgeProperties(steadyState.getOperand1(), null));
 
         return required;
@@ -99,7 +99,7 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
     @Override
     public StateMap solve() {
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
-        ExpressionSteadyState steadyState = ExpressionSteadyState.asSteadyState(propertyQuantifier.getQuantified());
+        ExpressionSteadyState steadyState = ExpressionSteadyState.as(propertyQuantifier.getQuantified());
 
         // TODO Auto-generated method stub
         return null;

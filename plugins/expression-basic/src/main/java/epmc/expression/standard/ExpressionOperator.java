@@ -76,12 +76,12 @@ public final class ExpressionOperator implements ExpressionPropositional {
         }
     }
 
-    public static boolean isOperator(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionOperator;
     }
 
-    public static ExpressionOperator asOperator(Expression expression) {
-        if (isOperator(expression)) {
+    public static ExpressionOperator as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionOperator) expression;
         } else {
             return null;
@@ -141,7 +141,7 @@ public final class ExpressionOperator implements ExpressionPropositional {
     @Override
     public boolean isPropositional() {
         for (Expression operand : getOperands()) {
-            if (!ExpressionPropositional.isPropositional(operand)) {
+            if (!ExpressionPropositional.is(operand)) {
                 return false;
             }
         }

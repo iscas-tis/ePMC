@@ -409,7 +409,7 @@ public final class JANIPropertyExpressionRewardQuantifier implements JANIExpress
 
     private static boolean isPosInf(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
         Value expValue = UtilEvaluatorExplicit.evaluate(expression);

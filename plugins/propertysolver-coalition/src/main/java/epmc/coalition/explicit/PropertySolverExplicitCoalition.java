@@ -106,7 +106,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
     @Override
     public void setProperty(Expression property) {
         this.property = property;
-        this.propertyCoalition = ExpressionCoalition.asCoalition(property);
+        this.propertyCoalition = ExpressionCoalition.as(property);
     }
 
     @Override
@@ -126,7 +126,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
             return false;
         }
-        if (!ExpressionCoalition.isCoalition(property)) {
+        if (!ExpressionCoalition.is(property)) {
             return false;
         }
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
