@@ -154,7 +154,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -168,7 +168,6 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             elseOp.evaluate(values);
             setElse.apply(result, elseOp.getResultValue());
         }
-        return result;
     }
 
     @Override

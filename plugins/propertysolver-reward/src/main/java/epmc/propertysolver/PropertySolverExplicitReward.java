@@ -406,7 +406,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
-        return evaluator.evaluate();
+        evaluator.evaluate();
+        return evaluator.getResultValue();
     }
     
     private boolean isPosInf(Value value) {

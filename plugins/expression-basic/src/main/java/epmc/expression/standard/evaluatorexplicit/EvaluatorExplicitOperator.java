@@ -167,7 +167,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -176,7 +176,6 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
             operand.evaluate(values);
         }
         evaluator.apply(result, operandValues);
-        return result;
     }
 
     @Override
@@ -186,6 +185,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
 
     @Override
     public boolean evaluateBoolean(Value... values) {
-        return ValueBoolean.as(evaluate(values)).getBoolean();
+        evaluate(values);
+        return ValueBoolean.as(result).getBoolean();
     }
 }

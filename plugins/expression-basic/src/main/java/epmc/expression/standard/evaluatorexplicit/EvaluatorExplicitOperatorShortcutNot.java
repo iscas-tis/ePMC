@@ -148,13 +148,12 @@ public final class EvaluatorExplicitOperatorShortcutNot implements EvaluatorExpl
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
         result.set(!operands[0].evaluateBoolean(values));
-        return result;
     }
 
     @Override

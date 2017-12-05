@@ -102,7 +102,8 @@ public final class UtilEvaluatorExplicit {
         assert expression != null;
         assert expressionToType != null;
         EvaluatorExplicit evaluator = newEvaluator(expression, expressionToType, new Expression[0]);
-        return evaluator.evaluate();
+        evaluator.evaluate();
+        return evaluator.getResultValue();
     }
 
     public static Value evaluate(Expression expression) {

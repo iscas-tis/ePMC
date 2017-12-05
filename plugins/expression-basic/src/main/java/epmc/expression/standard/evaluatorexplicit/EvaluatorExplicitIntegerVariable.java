@@ -124,13 +124,12 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
         ValueAlgebra.as(result).set(ValueInteger.as(values[index]).getInt());
-        return result;
     }
 
     @Override

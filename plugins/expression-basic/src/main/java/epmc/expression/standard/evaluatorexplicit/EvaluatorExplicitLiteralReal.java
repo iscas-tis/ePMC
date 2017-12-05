@@ -111,10 +111,9 @@ public final class EvaluatorExplicitLiteralReal implements EvaluatorExplicit {
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert expression != null;
         assert variables != null;
-        return value;
     }
 
     @Override
