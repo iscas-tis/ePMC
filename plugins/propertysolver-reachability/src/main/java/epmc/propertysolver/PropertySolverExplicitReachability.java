@@ -151,7 +151,8 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
 
             // check whether current state satisfies a out of F a 
             // under the satisfaction values of inners
-            boolean sat = evaluator.evaluateBoolean(evalValues);
+            evaluator.setValues(evalValues);
+            boolean sat = evaluator.evaluateBoolean();
 
             if (sat)  oneStates.set(node);
 

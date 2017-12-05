@@ -117,6 +117,8 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
     private final EvaluatorExplicitBoolean operandLeft;
     private final EvaluatorExplicitBoolean operandRight;
     private final ValueBoolean result;
+    private boolean needsEvaluation = true;
+    private Value[] values;
 
     private EvaluatorExplicitOperatorShortcutAnd(Builder builder) {
         assert builder != null;
@@ -143,28 +145,36 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+        this.values = values;
+        operandLeft.setValues(values);
+        needsEvaluation = true;
+    }
+    
+    @Override
+    public void evaluate() {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
-        if (!operandLeft.evaluateBoolean(values)) {
+        if (!operandLeft.evaluateBoolean()) {
             result.set(false);
         } else {
-            result.set(operandRight.evaluateBoolean(values));
+            operandRight.setValues(values);
+            result.set(operandRight.evaluateBoolean());
         }
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values)
-    {
+    public boolean evaluateBoolean() {
         for (Value variable : values) {
             assert variable != null;
         }
-        if (!operandLeft.evaluateBoolean(values)) {
+        if (!operandLeft.evaluateBoolean()) {
             return false;
         } else {
-            return operandRight.evaluateBoolean(values);
+            operandRight.setValues(values);
+            return operandRight.evaluateBoolean();
         }
     }
 

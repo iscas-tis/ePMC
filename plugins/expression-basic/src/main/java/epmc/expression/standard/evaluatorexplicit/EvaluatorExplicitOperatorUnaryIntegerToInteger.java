@@ -141,6 +141,8 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
     private final OperatorEvaluator evaluator;
+    private boolean needsEvaluation = true;
+    private Value[] values;
 
     private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) {
         assert builder != null;
@@ -179,13 +181,22 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+        this.values = values;
+        for (EvaluatorExplicit operand : operands) {
+            operand.setValues(values);
+        }
+        needsEvaluation = true;
+    }
+    
+    @Override
+    public void evaluate() {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
         for (EvaluatorExplicit operand : operands) {
-            operand.evaluate(values);
+            operand.evaluate();
         }
         evaluator.apply(result, operandValues);
     }
@@ -196,7 +207,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     }
 
     @Override
-    public int evaluateInteger(Value... values) {
-        return unaryIntegerToInteger.call(operands[0].evaluateInteger(values));
+    public int evaluateInteger() {
+        return unaryIntegerToInteger.call(operands[0].evaluateInteger());
     }
 }

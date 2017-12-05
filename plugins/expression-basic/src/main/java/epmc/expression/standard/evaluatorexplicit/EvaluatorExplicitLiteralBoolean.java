@@ -113,7 +113,11 @@ public final class EvaluatorExplicitLiteralBoolean implements EvaluatorExplicitB
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+    }
+    
+    @Override
+    public void evaluate() {
         assert expression != null;
         assert variables != null;
     }
@@ -124,7 +128,7 @@ public final class EvaluatorExplicitLiteralBoolean implements EvaluatorExplicitB
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) {
+    public boolean evaluateBoolean() {
         return valueBoolean;
     }
 }

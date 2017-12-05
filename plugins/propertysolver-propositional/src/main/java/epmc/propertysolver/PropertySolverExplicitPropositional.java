@@ -96,7 +96,8 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
             for (int idNr = 0; idNr < nodeProperties.length; idNr++) {
                 values[idNr] = nodeProperties[idNr].get(state);
             }
-            evaluator.evaluate(values);
+            evaluator.setValues(values);
+            evaluator.evaluate();
             Value entry = evaluator.getResultValue();
             resultValues.set(entry, stateNr);
         }

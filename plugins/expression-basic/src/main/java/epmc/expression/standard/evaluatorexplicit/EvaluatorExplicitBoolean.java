@@ -21,7 +21,6 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
-import epmc.value.Value;
 
 public interface EvaluatorExplicitBoolean extends EvaluatorExplicit {
     public interface Builder extends EvaluatorExplicit.Builder {
@@ -29,5 +28,5 @@ public interface EvaluatorExplicitBoolean extends EvaluatorExplicit {
         EvaluatorExplicitBoolean build();
     }
 
-    boolean evaluateBoolean(Value... values);
+    boolean evaluateBoolean();
 }

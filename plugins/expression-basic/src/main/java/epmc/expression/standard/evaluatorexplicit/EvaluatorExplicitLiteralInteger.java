@@ -113,13 +113,17 @@ public final class EvaluatorExplicitLiteralInteger implements EvaluatorExplicitI
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+    }
+    
+    @Override
+    public void evaluate() {
         assert expression != null;
         assert variables != null;
     }
 
     @Override
-    public int evaluateInteger(Value... values) {
+    public int evaluateInteger() {
         return valueInteger;
     }
 

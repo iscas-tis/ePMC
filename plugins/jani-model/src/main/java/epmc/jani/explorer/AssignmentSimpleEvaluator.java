@@ -144,7 +144,8 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         assert node != null;
         assert successor != null;
         Value[] variableValues = node.getValues();
-        expression.evaluate(variableValues);
+        expression.setValues(variableValues);
+        expression.evaluate();
         set.apply(value, expression.getResultValue());
         successor.setVariable(variable, value);
     }

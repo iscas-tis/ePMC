@@ -21,6 +21,7 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import epmc.value.ValueBoolean;
+
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
@@ -94,6 +95,8 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     private final int index;
     private final Value result;
     private final OperatorEvaluator set;
+    private boolean needsEvaluation = true;
+    private Value[] values;
 
     private EvaluatorExplicitVariable(Builder builder) {
         assert builder != null;
@@ -125,7 +128,13 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+        this.values = values;
+        needsEvaluation = true;
+    }
+    
+    @Override
+    public void evaluate() {
         assert values != null;
         for (Value value : values) {
             assert value != null;
@@ -134,7 +143,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) {
+    public boolean evaluateBoolean() {
         assert values != null;
         for (Value value : values) {
             assert value != null;

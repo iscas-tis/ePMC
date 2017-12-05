@@ -85,7 +85,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         @Override
         public boolean canHandle() {
             assert expression != null;
-            if (!(expression instanceof ExpressionOperator)) {
+            if (!ExpressionOperator.is(expression)) {
                 return false;
             }
             for (Expression variable : variables) {
@@ -123,6 +123,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;
     private final Value result;
+    private boolean needsEvaluation = true;
+    private Value[] values;
 
     private EvaluatorExplicitOperator(Builder builder) {
         assert builder != null;
@@ -167,13 +169,22 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+        this.values = values;
+        for (EvaluatorExplicit operand : operands) {
+            operand.setValues(values);
+        }
+        needsEvaluation = true;
+    }
+    
+    @Override
+    public void evaluate() {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
         for (EvaluatorExplicit operand : operands) {
-            operand.evaluate(values);
+            operand.evaluate();
         }
         evaluator.apply(result, operandValues);
     }
@@ -184,8 +195,8 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) {
-        evaluate(values);
+    public boolean evaluateBoolean() {
+        evaluate();
         return ValueBoolean.as(result).getBoolean();
     }
 }

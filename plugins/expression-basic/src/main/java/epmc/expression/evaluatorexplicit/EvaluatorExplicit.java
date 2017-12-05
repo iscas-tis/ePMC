@@ -60,7 +60,9 @@ public interface EvaluatorExplicit {
      */
     Expression getExpression();
 
-    void evaluate(Value... values);
+    void setValues(Value... values);
+    
+    void evaluate();
 
     Value getResultValue();
     

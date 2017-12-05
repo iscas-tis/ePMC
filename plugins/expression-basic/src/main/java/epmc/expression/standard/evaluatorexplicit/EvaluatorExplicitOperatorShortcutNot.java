@@ -117,6 +117,8 @@ public final class EvaluatorExplicitOperatorShortcutNot implements EvaluatorExpl
     private final EvaluatorExplicitBoolean[] operands;
     private final Value[] operandValues;
     private final ValueBoolean result;
+    private boolean needsEvaluation = true;
+    private Value[] values;
 
     private EvaluatorExplicitOperatorShortcutNot(Builder builder) {
         assert builder != null;
@@ -148,21 +150,28 @@ public final class EvaluatorExplicitOperatorShortcutNot implements EvaluatorExpl
     }
 
     @Override
-    public void evaluate(Value... values) {
+    public void setValues(Value... values) {
+        this.values = values;
+        operands[0].setValues(values);
+        needsEvaluation = true;
+    }
+    
+    @Override
+    public void evaluate() {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
-        result.set(!operands[0].evaluateBoolean(values));
+        result.set(!operands[0].evaluateBoolean());
     }
 
     @Override
-    public boolean evaluateBoolean(Value... values) {
+    public boolean evaluateBoolean() {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
         }
-        return !operands[0].evaluateBoolean(values);
+        return !operands[0].evaluateBoolean();
     }
 
     @Override

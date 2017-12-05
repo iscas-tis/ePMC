@@ -609,6 +609,8 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         locationEvaluators[location].apply(node, node);
         for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
             evaluator.setVariableValues(nodeValues);
+        }
+        for (EdgeEvaluator evaluator : locationEdgeEvaluators) {
             if (evaluator.evaluateGuard()) {
                 int action = evaluator.getAction();
                 label.set(numSuccessors, action);

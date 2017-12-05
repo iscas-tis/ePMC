@@ -421,7 +421,8 @@ public final class VariableValuesEnumerator {
                 variableValues[index].setValueNumber(varValueNr);
                 index++;
             }
-            if (evaluator.evaluateBoolean(variableValues)) {
+            evaluator.setValues(variableValues);
+            if (evaluator.evaluateBoolean()) {
                 Map<Variable,Value> entry = new HashMap<>();
                 index = 0;
                 for (Variable variable : variables.values()) {
@@ -491,6 +492,7 @@ public final class VariableValuesEnumerator {
     private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
+        evaluator.setValues(new Value[0]);
         evaluator.evaluate();
         return evaluator.getResultValue();
     }
