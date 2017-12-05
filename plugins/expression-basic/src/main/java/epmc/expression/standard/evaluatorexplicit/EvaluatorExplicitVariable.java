@@ -125,13 +125,12 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value value : values) {
             assert value != null;
         }
         set.apply(result, values[index]);
-        return result;
     }
 
     @Override

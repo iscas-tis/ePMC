@@ -195,7 +195,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     }
 
     @Override
-    public Value evaluate(Value... values) {
+    public void evaluate(Value... values) {
         assert values != null;
         for (Value variable : values) {
             assert variable != null;
@@ -205,7 +205,6 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
         }
 
         evaluator.apply(result, operandValues);
-        return result;
     }
 
     @Override

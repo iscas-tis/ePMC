@@ -175,7 +175,8 @@ public final class DestinationEvaluator {
     }
 
     ValueAlgebra evaluateProbability(NodeJANI node) {
-        ValueAlgebra result = ValueAlgebra.as(probability.evaluate(node.getValues()));
+        probability.evaluate(node.getValues());
+        ValueAlgebra result = ValueAlgebra.as(probability.getResultValue());
         /* make sure that we return values of correct type to avoid problems 
          * with operator evaluators. */
         setProbability.apply(probabilityV, result);

@@ -491,7 +491,8 @@ public final class VariableValuesEnumerator {
     private Value evaluateValue(Expression expression) {
         assert expression != null;
         EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, expressionToType, new Expression[0]);
-        return evaluator.evaluate();
+        evaluator.evaluate();
+        return evaluator.getResultValue();
     }
 
     private static boolean isFalse(Expression expression) {
