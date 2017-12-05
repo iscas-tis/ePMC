@@ -155,7 +155,7 @@ public final class UtilConstraintSolver {
     public LinearExpression expressionToLinear(ConstraintSolver solver,
             Expression expression) {
         // TODO finish
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
 
         }
         return null;

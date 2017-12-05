@@ -171,7 +171,7 @@ public final class ExplorerExtensionSMG implements ExplorerExtension {
         assert expression != null;
         assert expression instanceof ExpressionIdentifier
         || expression instanceof ExpressionLiteral;
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
             ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
             Value value = UtilEvaluatorExplicit.evaluate(expressionLiteral);
             assert ValueInteger.is(value);

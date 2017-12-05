@@ -128,10 +128,10 @@ public final class TimeBound {
 
     private boolean isPosInf(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         if (!expressionLiteral.getType().equals(ExpressionTypeReal.TYPE_REAL)) {
             return false;
         }
@@ -237,10 +237,10 @@ public final class TimeBound {
         if (isLeftOpen()) {
             return true;
         }
-        if (!ExpressionLiteral.isLiteral(getLeft())) {
+        if (!ExpressionLiteral.is(getLeft())) {
             return true;
         }
-        ExpressionLiteral leftLit = ExpressionLiteral.asLiteral(getLeft());
+        ExpressionLiteral leftLit = ExpressionLiteral.as(getLeft());
         if (Double.valueOf(leftLit.getValue()) != 0.0) {
             return false;
         }
@@ -254,7 +254,7 @@ public final class TimeBound {
      * @return check whether time bound is right bounded
      */
     public boolean isRightBounded() {
-        if (!ExpressionLiteral.isLiteral(getRight())) {
+        if (!ExpressionLiteral.is(getRight())) {
             return true;
         }
         return !isPosInf(right);

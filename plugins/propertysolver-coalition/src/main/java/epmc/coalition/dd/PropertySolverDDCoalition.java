@@ -117,7 +117,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         if (!SemanticsSMG.isSMG(modelChecker.getModel().getSemantics())) {
             return false;
         }
-        if (!ExpressionCoalition.isCoalition(property)) {
+        if (!ExpressionCoalition.is(property)) {
             return false;
         }
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
@@ -172,7 +172,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         StateSetDD forStates = (StateSetDD) states;
         getLog().send(MessagesCoalition.COALITION_MODEL_NODES, getLowLevel().getNumNodes());
         ExpressionQuantifier quantifier = UtilCoalition.getQuantifier(propertyCoalition);
-        ExpressionCoalition propertyCoalition = ExpressionCoalition.asCoalition(property);
+        ExpressionCoalition propertyCoalition = ExpressionCoalition.as(property);
         this.playerList = propertyCoalition.getPlayers();
         Expression path = quantifier.getQuantified();
         if (UtilCoalition.isDirTypeMin(quantifier)) {

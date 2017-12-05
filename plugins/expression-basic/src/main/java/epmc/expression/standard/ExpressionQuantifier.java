@@ -97,12 +97,12 @@ public final class ExpressionQuantifier implements Expression {
         }
     }
 
-    public static boolean isQuantifier(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionQuantifier;
     }
 
-    public static ExpressionQuantifier asQuantifier(Expression expression) {
-        if (isQuantifier(expression)) {
+    public static ExpressionQuantifier as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionQuantifier) expression;
         } else {
             return null;

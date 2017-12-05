@@ -120,7 +120,7 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
     private static boolean isTrue(Expression expression) {
         assert expression != null;
 
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
         return Boolean.valueOf(getValue(expression));
@@ -139,6 +139,6 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         assert expression != null;
         assert expression instanceof ExpressionLiteral;
 
-        return ExpressionLiteral.asLiteral(expression).getValue();
+        return ExpressionLiteral.as(expression).getValue();
     }
 }

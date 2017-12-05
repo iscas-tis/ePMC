@@ -25,12 +25,12 @@ import epmc.expression.Expression;
 // TODO move to expression-basic as soon as possible
 
 public interface ExpressionIdentifier extends ExpressionPropositional {
-    static boolean isIdentifier(Object expression) {
+    static boolean is(Object expression) {
         return expression instanceof ExpressionIdentifier;
     }
 
-    static ExpressionIdentifier asIdentifier(Expression expression) {
-        if (isIdentifier(expression)) {
+    static ExpressionIdentifier as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionIdentifier) expression;
         } else {
             return null;

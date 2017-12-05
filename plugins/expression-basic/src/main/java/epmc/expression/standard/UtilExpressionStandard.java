@@ -30,7 +30,6 @@ import java.util.Set;
 import epmc.expression.Expression;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAdd;
-import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorAnd;
 import epmc.operator.OperatorDivide;
 import epmc.operator.OperatorEq;

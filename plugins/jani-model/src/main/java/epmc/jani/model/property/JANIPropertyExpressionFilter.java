@@ -166,11 +166,11 @@ public final class JANIPropertyExpressionFilter implements JANIExpression {
         assert validIdentifiers != null;
         assert expression != null;
         resetFields();
-        if (!ExpressionFilter.isFilter(expression)) {
+        if (!ExpressionFilter.is(expression)) {
             return null;
         }
         ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
-        ExpressionFilter expressionFilter = ExpressionFilter.asFilter(expression);
+        ExpressionFilter expressionFilter = ExpressionFilter.as(expression);
         states = parser.matchExpression(model, expressionFilter.getStates());
         if (states == null) {
             return null;

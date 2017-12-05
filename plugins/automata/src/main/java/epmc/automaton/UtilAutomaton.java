@@ -20,7 +20,7 @@
 
 package epmc.automaton;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -201,7 +201,7 @@ public final class UtilAutomaton {
     }
 
     static Set<Expression> collectLTLInner(Expression expression) {
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -327,9 +327,9 @@ public final class UtilAutomaton {
         if (result != null) {
             return result;
         }
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
             assert isTrue(expression) || isFalse(expression);
-            ExpressionLiteral literal = ExpressionLiteral.asLiteral(expression);
+            ExpressionLiteral literal = ExpressionLiteral.as(expression);
             result = literal.getValue().toString();
         } else if (expression instanceof ExpressionOperator) {
             ExpressionOperator op = (ExpressionOperator) expression;
@@ -351,7 +351,7 @@ public final class UtilAutomaton {
                 result = "ap" + numAPs[0];
                 numAPs[0]++;
             }
-        } else if (ExpressionIdentifier.isIdentifier(expression)) {
+        } else if (ExpressionIdentifier.is(expression)) {
             result = "ap" + numAPs[0];
             numAPs[0]++;            
         } else if (expression instanceof ExpressionTemporal) {
@@ -376,26 +376,26 @@ public final class UtilAutomaton {
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return !Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static String getValue(Expression expression) {
         assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        assert ExpressionLiteral.is(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return expressionLiteral.getValue();
     }
 

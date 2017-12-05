@@ -35,12 +35,12 @@ import epmc.expression.Expression;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionFilter implements Expression {
-    public static boolean isFilter(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionFilter;
     }
 
-    public static ExpressionFilter asFilter(Expression expression) {
-        if (isFilter(expression)) {
+    public static ExpressionFilter as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionFilter) expression;
         } else {
             return null;
@@ -219,7 +219,7 @@ public final class ExpressionFilter implements Expression {
         if (this.getClass() != obj.getClass()) {
             return false;
         }
-        ExpressionFilter other = ExpressionFilter.asFilter((Expression) obj);
+        ExpressionFilter other = ExpressionFilter.as((Expression) obj);
         List<Expression> thisChildren = this.getChildren();
         List<Expression> otherChildren = other.getChildren();
         if (thisChildren.size() != otherChildren.size()) {

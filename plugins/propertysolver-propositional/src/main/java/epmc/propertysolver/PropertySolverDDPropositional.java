@@ -20,7 +20,7 @@
 
 package epmc.propertysolver;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -75,7 +75,7 @@ public final class PropertySolverDDPropositional implements PropertySolver {
             this.expressionToDD = graphDD.getGraphPropertyObject(CommonProperties.EXPRESSION_TO_DD);
         }
 
-        if (ExpressionLiteral.isLiteral(property)) {
+        if (ExpressionLiteral.is(property)) {
             value = ContextDD.get().newConstant(UtilEvaluatorExplicit.evaluate(property));
         } else {
             value = expressionToDD.translate(property);
@@ -109,7 +109,7 @@ public final class PropertySolverDDPropositional implements PropertySolver {
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
         }
-        if (!isPropositional(property)) {
+        if (!is(property)) {
             return false;
         }
         return true;

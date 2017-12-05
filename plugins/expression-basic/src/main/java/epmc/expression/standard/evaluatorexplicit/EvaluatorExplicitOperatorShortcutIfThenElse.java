@@ -82,7 +82,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             if (!(expression instanceof ExpressionOperator)) {
                 return false;
             }
-            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             if (!expressionOperator.getOperator().equals(OperatorIte.ITE)) {
                 return false;
             }

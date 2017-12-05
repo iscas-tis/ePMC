@@ -30,12 +30,12 @@ import epmc.expression.Expression;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionSteadyState implements Expression {
-    public static boolean isSteadyState(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionSteadyState;
     }
 
-    public static ExpressionSteadyState asSteadyState(Expression expression) {
-        if (!isSteadyState(expression)) {
+    public static ExpressionSteadyState as(Expression expression) {
+        if (!is(expression)) {
             return null;
         }
         return (ExpressionSteadyState) expression;

@@ -20,7 +20,7 @@
 
 package epmc.command;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -169,7 +169,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static Set<Expression> collectLTLPropositional(Expression expression) {
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -297,8 +297,8 @@ public class CommandTaskLump implements CommandTask {
         assert model != null;
         assert property != null;
         assert result != null;
-        if (ExpressionReward.isReward(property)) {
-            ExpressionReward propertyReward = ExpressionReward.asReward(property);
+        if (ExpressionReward.is(property)) {
+            ExpressionReward propertyReward = ExpressionReward.as(property);
             RewardSpecification structure = propertyReward.getReward();
             result.add(structure);
         } else {

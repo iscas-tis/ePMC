@@ -30,12 +30,12 @@ import epmc.expression.Expression;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionReward implements Expression {
-    public static boolean isReward(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionReward;
     }
 
-    public static ExpressionReward asReward(Expression expression) {
-        if (isReward(expression)) {
+    public static ExpressionReward as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionReward) expression;
         } else {
             return null;

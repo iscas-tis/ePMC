@@ -40,7 +40,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         if (!isOr(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         if (isFalse(expressionOperator.getOperand1())) {
             return expressionOperator.getOperand2().replacePositional(expression.getPositional());
         }
@@ -112,7 +112,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
         return ValueBoolean.isFalse(UtilEvaluatorExplicit.evaluate(expression));
@@ -120,7 +120,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
         return ValueBoolean.isTrue(UtilEvaluatorExplicit.evaluate(expression));

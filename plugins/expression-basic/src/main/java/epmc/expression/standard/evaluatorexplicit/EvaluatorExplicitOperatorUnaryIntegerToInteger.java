@@ -80,10 +80,10 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         @Override
         public boolean canHandle() {
             assert expression != null;
-            if (!ExpressionOperator.isOperator(expression)) {
+            if (!ExpressionOperator.is(expression)) {
                 return false;
             }
-            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Operator opName = expressionOperator.getOperator();
             for (Expression variable : variables) {
                 if (expression.equals(variable)) {

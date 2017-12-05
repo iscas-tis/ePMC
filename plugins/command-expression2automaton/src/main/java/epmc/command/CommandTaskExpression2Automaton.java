@@ -20,7 +20,7 @@
 
 package epmc.command;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -69,15 +69,15 @@ public class CommandTaskExpression2Automaton implements CommandTask {
         Log log = getLog();
         for (RawProperty property : properties.getRawProperties()) {
             Expression expression = properties.getParsedProperty(property);
-            if (ExpressionQuantifier.isQuantifier(expression)) {
-                ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.asQuantifier(expression);
+            if (ExpressionQuantifier.is(expression)) {
+                ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
                 expression = expressionQuantifier.getQuantified();
             }
 
             Set<Expression> identifiers = UtilExpressionStandard.collectIdentifiers(expression);
             boolean fail = false;
             for (Expression rel : identifiers) {
-                if (ExpressionIdentifier.isIdentifier(rel)) {
+                if (ExpressionIdentifier.is(rel)) {
                     /*
                     try {
 						if (rel.getType() == null) {
@@ -130,7 +130,7 @@ public class CommandTaskExpression2Automaton implements CommandTask {
 
     private static Set<Expression> collectLTLInner(Expression expression) {
         assert expression != null;
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -139,8 +139,8 @@ public class CommandTaskExpression2Automaton implements CommandTask {
                 result.addAll(collectLTLInner(inner));
             }
             return result;
-        } else if (ExpressionOperator.isOperator(expression)) {
-            ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        } else if (ExpressionOperator.is(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLInner(inner));

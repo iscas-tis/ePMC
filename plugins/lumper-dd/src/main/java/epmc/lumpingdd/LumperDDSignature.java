@@ -601,8 +601,8 @@ public class LumperDDSignature implements LumperDD {
         children.offer(expr);
         Expression child;
         while ((child = children.poll()) != null) {
-            if (ExpressionReward.isReward(child)) {
-                result.add(ExpressionReward.asReward(child).getReward());
+            if (ExpressionReward.is(child)) {
+                result.add(ExpressionReward.as(child).getReward());
             } else {
                 children.addAll(child.getChildren());
             }
@@ -963,7 +963,7 @@ public class LumperDDSignature implements LumperDD {
 
     private Set<Expression> computeAllStateLabels(Expression expression) {
         assert expression != null;
-        if (ExpressionPropositional.isPropositional(expression)) {
+        if (ExpressionPropositional.is(expression)) {
             return Collections.singleton(expression);
         } else {
             Set<Expression> result = new LinkedHashSet<>();

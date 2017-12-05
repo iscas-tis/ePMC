@@ -202,7 +202,7 @@ public final class PropertiesImpl implements Properties {
         }
 
         Expression goDeeper = null;
-        if (ExpressionIdentifier.isIdentifier(value)) {
+        if (ExpressionIdentifier.is(value)) {
             ExpressionIdentifier valueId = (ExpressionIdentifier) value;
             if (goDeeper == null) {
                 goDeeper = constants.get(valueId.toString());

@@ -33,12 +33,12 @@ import epmc.expression.Expression;
  * @author Ernst Moritz Hahn
  */
 public final class ExpressionLiteral implements ExpressionPropositional {
-    public static boolean isLiteral(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionLiteral;
     }
 
-    public static ExpressionLiteral asLiteral(Expression expression) {
-        if (isLiteral(expression)) {
+    public static ExpressionLiteral as(Expression expression) {
+        if (is(expression)) {
             return (ExpressionLiteral) expression;
         } else {
             return null;

@@ -105,7 +105,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
     @Override
     public void setProperty(Expression property) {
         this.property = property;
-        this.propertyFilter = ExpressionFilter.asFilter(property);
+        this.propertyFilter = ExpressionFilter.as(property);
     }
 
     @Override
@@ -218,7 +218,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
         }
-        if (!ExpressionFilter.isFilter(property)) {
+        if (!ExpressionFilter.is(property)) {
             return false;
         }
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());

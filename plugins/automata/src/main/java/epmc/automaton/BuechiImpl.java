@@ -251,17 +251,17 @@ public class BuechiImpl implements Buechi {
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return Boolean.valueOf(getValue(expressionLiteral));
     }
 
     private static String getValue(Expression expression) {
         assert expression != null;
-        assert ExpressionLiteral.isLiteral(expression);
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        assert ExpressionLiteral.is(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return expressionLiteral.getValue();
     }
 
@@ -277,7 +277,7 @@ public class BuechiImpl implements Buechi {
         if (result != null) {
             return result;
         }
-        if (ExpressionLiteral.isLiteral(expression)) {
+        if (ExpressionLiteral.is(expression)) {
             // must be true or false
             result = expression.toString();
         } else if (expression instanceof ExpressionOperator) {
@@ -310,7 +310,7 @@ public class BuechiImpl implements Buechi {
             } else {
                 assert false : expression;
             }
-        } else if (ExpressionIdentifier.isIdentifier(expression)) {
+        } else if (ExpressionIdentifier.is(expression)) {
             assert false;
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal temp = (ExpressionTemporal) expression;
@@ -400,10 +400,10 @@ public class BuechiImpl implements Buechi {
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return !Boolean.valueOf(getValue(expressionLiteral));
     }
 

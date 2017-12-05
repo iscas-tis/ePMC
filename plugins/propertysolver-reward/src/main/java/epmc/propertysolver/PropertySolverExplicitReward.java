@@ -195,7 +195,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         }
         ValueArrayAlgebra cumulRewards = buildCumulativeRewards(sinks, reachSink, reachNotOneSink, stateReward, transReward);
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
-        ExpressionReward quantifiedReward = ExpressionReward.asReward(property);
+        ExpressionReward quantifiedReward = ExpressionReward.as(property);
         RewardType rewardType = quantifiedReward.getRewardType();
         if (rewardType.isCumulative() && !isPosInf(time)) {
             GraphSolverObjectiveExplicitBoundedCumulative objective = new GraphSolverObjectiveExplicitBoundedCumulative();

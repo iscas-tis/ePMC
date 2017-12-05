@@ -20,7 +20,7 @@
 
 package epmc.propertysolver;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,7 +110,7 @@ public final class PropertySolverExplicitPropositional implements PropertySolver
         if (!(modelChecker.getEngine() instanceof EngineExplicit)) {
             return false;
         }
-        if (!isPropositional(property)) {
+        if (!is(property)) {
             return false;
         }
         return true;

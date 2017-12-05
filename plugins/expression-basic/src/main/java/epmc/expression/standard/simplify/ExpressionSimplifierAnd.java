@@ -38,7 +38,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
         if (!isAnd(expression)) {
             return null;
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         if (isFalse(expressionOperator.getOperand1())) {
             return getFalse(expressionOperator.getPositional());
         }
@@ -56,13 +56,13 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return expressionOperator.getOperand1().replacePositional(expressionOperator.getPositional());
         }
         if (isNot(expressionOperator.getOperand1())
-                && (ExpressionOperator.asOperator(expressionOperator.getOperand1()))
+                && (ExpressionOperator.as(expressionOperator.getOperand1()))
                 .getOperand1()
                 .equals(expressionOperator.getOperand2())) {
             return getFalse(expressionOperator.getPositional());
         }
         if (isNot(expressionOperator.getOperand2())
-                && (ExpressionOperator.asOperator(expressionOperator.getOperand2()).getOperand1())
+                && (ExpressionOperator.as(expressionOperator.getOperand2()).getOperand1())
                 .equals(expressionOperator.getOperand1())) {
             return getFalse(expressionOperator.getPositional());
         }
@@ -93,7 +93,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     }
 
     private static boolean isNot(Expression expression) {
-        if (!ExpressionOperator.isOperator(expression)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
@@ -102,20 +102,20 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     }
 
     private static boolean isAnd(Expression expression) {
-        if (!ExpressionOperator.isOperator(expression)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
-        ExpressionOperator expressionOperator = ExpressionOperator.asOperator(expression);
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         return expressionOperator.getOperator()
                 .equals(OperatorAnd.AND);
     }
 
     private static boolean isFalse(Expression expression) {
         assert expression != null;
-        if (!ExpressionLiteral.isLiteral(expression)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.asLiteral(expression);
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return !Boolean.valueOf(expressionLiteral.getValue());
     }
 

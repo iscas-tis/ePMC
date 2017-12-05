@@ -71,12 +71,12 @@ public final class ExpressionCoalition implements Expression {
         }
     }
 
-    public static boolean isCoalition(Expression expression) {
+    public static boolean is(Expression expression) {
         return expression instanceof ExpressionCoalition;
     }
 
-    public static ExpressionCoalition asCoalition(Expression expression) {
-        if (!isCoalition(expression)) {
+    public static ExpressionCoalition as(Expression expression) {
+        if (!is(expression)) {
             return null;
         } else {
             return (ExpressionCoalition) expression;
@@ -94,7 +94,7 @@ public final class ExpressionCoalition implements Expression {
         for (Expression player : builder.getPlayers()) {
             assert player != null;
             assert player instanceof ExpressionIdentifier
-            || ExpressionLiteral.isLiteral(player);
+            || ExpressionLiteral.is(player);
         }
         this.positional = builder.getPositional();
         this.quantifier = builder.getQuantifier();

@@ -44,7 +44,7 @@ import epmc.modelchecker.TestHelper;
 import epmc.options.Options;
 import epmc.util.Util;
 
-import static epmc.expression.standard.ExpressionPropositional.isPropositional;
+import static epmc.expression.standard.ExpressionPropositional.is;
 import static epmc.graph.TestHelperGraph.*;
 
 public final class TestHelperLump {
@@ -76,8 +76,8 @@ public final class TestHelperLump {
     }
 
     public static Set<Expression> collectAPs(Expression expression) {
-        if (ExpressionFilter.isFilter(expression)) {
-            ExpressionFilter expressionFilter = ExpressionFilter.asFilter(expression);
+        if (ExpressionFilter.is(expression)) {
+            ExpressionFilter expressionFilter = ExpressionFilter.as(expression);
             expression = expressionFilter.getProp();
         }
         if (expression instanceof ExpressionQuantifier) {
@@ -89,7 +89,7 @@ public final class TestHelperLump {
     }
 
     public static Set<Expression> collectLTLPropositional(Expression expression) {
-        if (isPropositional(expression)) {
+        if (is(expression)) {
             return Collections.singleton(expression);
         } else if (expression instanceof ExpressionTemporal) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;

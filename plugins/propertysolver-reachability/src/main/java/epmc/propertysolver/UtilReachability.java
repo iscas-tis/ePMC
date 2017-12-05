@@ -63,7 +63,7 @@ public final class UtilReachability {
         ExpressionTemporal asQuantifier = (ExpressionTemporal) pathProp;
         if(asQuantifier.getTemporalType() != TemporalType.FINALLY) return false;
         // check whether operand is a propositional formula
-        if(!ExpressionPropositional.isPropositional(asQuantifier.getOperand1())) return false;
+        if(!ExpressionPropositional.is(asQuantifier.getOperand1())) return false;
 
         return true;
     }
