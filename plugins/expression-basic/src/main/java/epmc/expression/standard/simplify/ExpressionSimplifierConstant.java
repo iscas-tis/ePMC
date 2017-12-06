@@ -141,7 +141,6 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
         }
         List<Expression> newChildren = new ArrayList<>();
         boolean simplified = false;
-//        System.out.println("C " + expression);
         for (Expression child : expression.getChildren()) {
             Expression childSimplified = simplifier.simplify(child);
             if (childSimplified == null) {
