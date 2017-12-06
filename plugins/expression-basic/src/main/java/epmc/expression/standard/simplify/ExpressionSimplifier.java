@@ -20,7 +20,11 @@
 
 package epmc.expression.standard.simplify;
 
+import java.util.Map;
+
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 
 /**
@@ -29,6 +33,12 @@ import epmc.expressionevaluator.ExpressionToType;
  * @author Ernst Moritz Hahn
  */
 public interface ExpressionSimplifier {
+    interface Builder {
+        Builder setExpressionToType(ExpressionToType expressionToType);
+        Builder setEvaluatorCache(Map<EvaluatorCacheEntry,EvaluatorExplicit> cache);
+        ExpressionSimplifier build();
+    }
+    
     /**
      * Simplifies the given expression.
      * If possible, the simplifier will return an expression which is equivalent
@@ -37,9 +47,8 @@ public interface ExpressionSimplifier {
      * return {@code null}.
      * The expression parameter must not be {@code null}.
      * 
-     * @param expressionToType expression types
      * @param expression expression to simplify
      * @return simplified expression, or {@code null}
      */
-    Expression simplify(ExpressionToType expressionToType, Expression expression);
+    Expression simplify(Expression expression);
 }

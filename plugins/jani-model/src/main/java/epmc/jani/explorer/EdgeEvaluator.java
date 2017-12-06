@@ -28,7 +28,8 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Action;
 import epmc.jani.model.Destination;
@@ -58,6 +59,8 @@ public final class EdgeEvaluator {
         private Map<Expression, Expression> autVarToLocal;
         private Map<Action, Integer> actionNumbers;
         private ExpressionToType expressionToType;
+        private Map<EvaluatorCacheEntry,EvaluatorExplicit> evaluatorCache;
+        private ContextExpressionSimplifier simplifier;
 
         public Builder setActionNumbers(Map<Action,Integer> actionNumbers) {
             this.actionNumbers = actionNumbers;
@@ -131,6 +134,24 @@ public final class EdgeEvaluator {
             return expressionToType;
         }
 
+        public Builder setEvaluatorCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> evaluatorCache) {
+            this.evaluatorCache = evaluatorCache;
+            return this;
+        }
+        
+        private Map<EvaluatorCacheEntry, EvaluatorExplicit> getEvaluatorCache() {
+            return evaluatorCache;
+        }
+
+        public Builder setSimplifier(ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
+        
+        private ContextExpressionSimplifier getSimplifier() {
+            return simplifier;
+        }
+        
         public EdgeEvaluator build() {
             return new EdgeEvaluator(this);
         }
@@ -142,12 +163,10 @@ public final class EdgeEvaluator {
     private final EvaluatorExplicitBoolean guardEval;
     /** Array of destination evaluators of destinations of edge. */
     private final DestinationEvaluator[] destinationEvaluators;
-    private Value[] variableValues;
     /** Evaluator for the rate of the edge. */
     private EvaluatorExplicit rateEval;
     private OperatorEvaluator setRate;
     private ValueAlgebra rate;
-
 
     private EdgeEvaluator(Builder builder) {
         assert builder != null;
@@ -167,14 +186,14 @@ public final class EdgeEvaluator {
         Expression guardExpr = edge.getGuardExpressionOrTrue();
         guardExpr = edge.getModel().replaceConstants(guardExpr);
         guardExpr = UtilExpressionStandard.replace(guardExpr, autVarToLocal);
-        guardExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), guardExpr);
-        guardEval = UtilEvaluatorExplicit.newEvaluatorBoolean(guardExpr, builder.getExpressionToType(), variables);
+        guardExpr = builder.getSimplifier().simplify(guardExpr);
+        guardEval = UtilEvaluatorExplicit.newEvaluatorBoolean(guardExpr, builder.getExpressionToType(), variables, builder.getEvaluatorCache());
         destinationEvaluators = new DestinationEvaluator[destinations.size()];
         Expression rateExpr = edge.getRateExpression();
         if (rateExpr != null) {
             rateExpr = edge.getModel().replaceConstants(rateExpr);
             rateExpr = UtilExpressionStandard.replace(rateExpr, autVarToLocal);
-            rateExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), rateExpr);
+            rateExpr = builder.getSimplifier().simplify(rateExpr);
             rateEval = UtilEvaluatorExplicit.newEvaluator(rateExpr, builder.getExpressionToType(), variables);
             setRate = ContextValue.get().getEvaluator(OperatorSet.SET, rateEval.getResultValue().getType(), TypeWeightTransition.get());
             rate = TypeWeightTransition.get().newValue();
@@ -189,6 +208,7 @@ public final class EdgeEvaluator {
                     .setAutVarToLocal(autVarToLocal)
                     .setTypeLocation(builder.getTypeLocation())
                     .setExpressionToType(builder.getExpressionToType())
+                    .setSimplifier(builder.simplifier)
                     .build();
             destNr++;
         }
@@ -202,7 +222,6 @@ public final class EdgeEvaluator {
      * @return {@code true} iff guard is fulfilled
      */
     boolean evaluateGuard() {
-        guardEval.setValues(variableValues);
         return guardEval.evaluateBoolean();
     }
 
@@ -211,7 +230,6 @@ public final class EdgeEvaluator {
     }
 
     Value evaluateRate() {
-        rateEval.setValues(variableValues);
         rateEval.evaluate();
         setRate.apply(rate, rateEval.getResultValue());
         return rate;
@@ -250,6 +268,9 @@ public final class EdgeEvaluator {
     }
 
     public void setVariableValues(Value[] variableValues) {
-        this.variableValues = variableValues;
+        guardEval.setValues(variableValues);
+        if (rateEval != null) {
+            rateEval.setValues(variableValues);
+        }
     }
 }

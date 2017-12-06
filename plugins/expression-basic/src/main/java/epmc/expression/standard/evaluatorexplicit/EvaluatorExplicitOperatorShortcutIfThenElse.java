@@ -165,9 +165,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     @Override
     public void evaluate() {
         assert values != null;
-        for (Value variable : values) {
-            assert variable != null;
-        }
+        assert UtilEvaluatorExplicit.assertValues(values);
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
             operands[1].setValues(values);
             EvaluatorExplicit thenOp = operands[1];
@@ -188,9 +186,7 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
 
     @Override
     public boolean evaluateBoolean() {
-        for (Value variable : values) {
-            assert variable != null;
-        }
+        assert UtilEvaluatorExplicit.assertValues(values);
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
             operands[1].setValues(values);
             return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean();

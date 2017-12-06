@@ -191,10 +191,7 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     
     @Override
     public void evaluate() {
-        assert values != null;
-        for (Value variable : values) {
-            assert variable != null;
-        }
+        assert UtilEvaluatorExplicit.assertValues(values);
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate();
         }

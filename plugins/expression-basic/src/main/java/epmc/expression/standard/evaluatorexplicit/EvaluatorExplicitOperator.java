@@ -170,6 +170,9 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
 
     @Override
     public void setValues(Value... values) {
+        if (needsEvaluation && this.values == values) {
+            return;
+        }
         this.values = values;
         for (EvaluatorExplicit operand : operands) {
             operand.setValues(values);
@@ -180,13 +183,15 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     @Override
     public void evaluate() {
         assert values != null;
-        for (Value variable : values) {
-            assert variable != null;
+        if (!needsEvaluation) {
+            return;
         }
+        assert UtilEvaluatorExplicit.assertValues(values);
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate();
         }
         evaluator.apply(result, operandValues);
+        needsEvaluation = false;
     }
 
     @Override
