@@ -27,7 +27,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
-import epmc.expression.standard.simplify.ExpressionSimplifierAnd.Builder;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorOr;
@@ -36,6 +35,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -52,6 +52,13 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         }
 
         @Override
+        public Builder setSimplifier(
+                ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
+
+        @Override
         public ExpressionSimplifier build() {
             return new ExpressionSimplifierImplies(this);
         }
@@ -59,11 +66,13 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
 
     public final static String IDENTIFIER = "implies";
     private final ExpressionToType expressionToType;
+    private ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierImplies(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
         this.expressionToType = builder.expressionToType;
+        this.simplifier = builder.simplifier;
     }
 
     @Override
@@ -73,13 +82,13 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
             return null;
         }
         ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
-        return new ExpressionOperator.Builder()
+        return simplifier.simplify(new ExpressionOperator.Builder()
                 .setOperator(OperatorOr.OR)
                 .setOperands(
                         UtilExpressionStandard.opNot(expressionOperator.getOperand1()),
                         expressionOperator.getOperand2())
                 .setPositional(expression.getPositional())
-                .build();
+                .build());
     }
 
     private static boolean isImplies(Expression expression) {

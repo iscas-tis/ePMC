@@ -30,7 +30,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
-import epmc.expression.standard.simplify.ExpressionSimplifierAnd.Builder;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorNot;
 import epmc.operator.OperatorOr;
@@ -40,6 +39,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -55,6 +55,13 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         }
 
         @Override
+        public Builder setSimplifier(
+                ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
+
+        @Override
         public ExpressionSimplifier build() {
             return new ExpressionSimplifierOr(this);
         }
@@ -62,11 +69,13 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
 
     public final static String IDENTIFIER = "or";
     private final ExpressionToType expressionToType;
+    private ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierOr(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
         this.expressionToType = builder.expressionToType;
+        this.simplifier = builder.simplifier;
     }
 
     @Override
@@ -101,8 +110,8 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
                 .equals(expressionOperator.getOperand1())) {
             return getTrue(expression.getPositional());
         }
-        Expression left = simplify(expressionOperator.getOperand1());
-        Expression right = simplify(expressionOperator.getOperand2());
+        Expression left = simplifier.simplify(expressionOperator.getOperand1());
+        Expression right = simplifier.simplify(expressionOperator.getOperand2());
         if (left != null && right != null) {
             return new ExpressionOperator.Builder()
                     .setOperator(OperatorOr.OR)

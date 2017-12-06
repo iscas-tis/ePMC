@@ -45,6 +45,7 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -63,15 +64,24 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         public ExpressionSimplifier build() {
             return new ExpressionSimplifierSubtract(this);
         }
+
+        @Override
+        public Builder setSimplifier(
+                ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
     }
 
     public final static String IDENTIFIER = "subtract";
     private final ExpressionToType expressionToType;
+    private final ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierSubtract(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
         this.expressionToType = builder.expressionToType;
+        this.simplifier = builder.simplifier;
     }
 
     @Override
