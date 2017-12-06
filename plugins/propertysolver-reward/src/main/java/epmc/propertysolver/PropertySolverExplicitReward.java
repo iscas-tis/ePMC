@@ -172,8 +172,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
     }
 
     public StateMapExplicit solve(Expression property, StateSetExplicit states, boolean min,
-            NodeProperty stateReward, EdgeProperty transReward)
-    {
+            NodeProperty stateReward, EdgeProperty transReward) {
         assert property != null;
         assert states != null;
         assert stateReward != null;
@@ -182,7 +181,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         BitSet reachSink = computeReachSink(property);
         BitSet reachNotOneSink = computeReachNotOneSink(property, reachSink, min);
         ExpressionReward propertyReward = (ExpressionReward) property;
-        ValueAlgebra time = ValueAlgebra.as(evaluateValue(propertyReward.getTime()));
+        ValueAlgebra time = ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(propertyReward.getTime()));
         NodeProperty statesProp = graph.getNodeProperty(CommonProperties.STATE);
         ValueArrayAlgebra values = UtilValue.newArray(TypeWeight.get().getTypeArray(), graph.getNumNodes());
 
@@ -220,7 +219,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             objective.setStateRewards(cumulRewards);
             objective.setGraph(graph);
             objective.setMin(min);
-            objective.setDiscount(ValueReal.as(evaluateValue(propertyReward.getDiscount())));
+            objective.setDiscount(ValueReal.as(UtilEvaluatorExplicit.evaluate(propertyReward.getDiscount())));
             objective.setTime(time);
             configuration.setObjective(objective);
             configuration.solve();
@@ -403,13 +402,6 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         return TypeWeightTransition.get().newValue();
     }
 
-    private Value evaluateValue(Expression expression) {
-        assert expression != null;
-        EvaluatorExplicit evaluator = UtilEvaluatorExplicit.newEvaluator(expression, graph, new Expression[0]);
-        evaluator.evaluate();
-        return evaluator.getResultValue();
-    }
-    
     private boolean isPosInf(Value value) {
         if (!ValueReal.is(value)) {
             return false;
