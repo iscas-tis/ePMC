@@ -37,6 +37,7 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -44,11 +45,18 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
             return this;
         }
 
-
         @Override
         public Builder setEvaluatorCache(
                 Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
             this.cache = cache;
+            return this;
+        }
+
+
+        @Override
+        public Builder setSimplifier(
+                ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
             return this;
         }
 
@@ -60,11 +68,13 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
     
     public final static String IDENTIFIER = "and";
     private final ExpressionToType expressionToType;
+    private final ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierAnd(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
         this.expressionToType = builder.expressionToType;
+        this.simplifier = builder.simplifier;
     }
 
     @Override
@@ -101,8 +111,8 @@ public final class ExpressionSimplifierAnd implements ExpressionSimplifier {
                 .equals(expressionOperator.getOperand1())) {
             return getFalse(expressionOperator.getPositional());
         }
-        Expression left = simplify(expressionOperator.getOperand1());
-        Expression right = simplify(expressionOperator.getOperand2());
+        Expression left = simplifier.simplify(expressionOperator.getOperand1());
+        Expression right = simplifier.simplify(expressionOperator.getOperand2());
         if (left != null && right != null) {
             return new ExpressionOperator.Builder()
                     .setOperator(OperatorAnd.AND)

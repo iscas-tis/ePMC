@@ -45,6 +45,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
         private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -60,6 +61,13 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
         }
 
         @Override
+        public Builder setSimplifier(
+                ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
+
+        @Override
         public ExpressionSimplifier build() {
             return new ExpressionSimplifierConstant(this);
         }
@@ -71,12 +79,14 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
     private final Map<Expression,Expression> alreadyKnown = new HashMap<>();
     private final Expression[] variables = new Expression[0];
     private final Value[] values = new Value[0];
+    private final ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierConstant(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
         this.expressionToType = builder.expressionToType;
         this.evaluatorCache = builder.cache;
+        this.simplifier = builder.simplifier;
     }
 
     @Override
@@ -131,8 +141,9 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
         }
         List<Expression> newChildren = new ArrayList<>();
         boolean simplified = false;
+//        System.out.println("C " + expression);
         for (Expression child : expression.getChildren()) {
-            Expression childSimplified = simplify(child);
+            Expression childSimplified = simplifier.simplify(child);
             if (childSimplified == null) {
                 childSimplified = child;
             } else {

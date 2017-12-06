@@ -36,6 +36,7 @@ public interface ExpressionSimplifier {
     interface Builder {
         Builder setExpressionToType(ExpressionToType expressionToType);
         Builder setEvaluatorCache(Map<EvaluatorCacheEntry,EvaluatorExplicit> cache);
+        Builder setSimplifier(ContextExpressionSimplifier simplifier);
         ExpressionSimplifier build();
     }
     
