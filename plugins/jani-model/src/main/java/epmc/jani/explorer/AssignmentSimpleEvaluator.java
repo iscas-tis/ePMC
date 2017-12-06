@@ -26,6 +26,7 @@ import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
@@ -47,6 +48,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         private Map<Expression, Expression> autVarToLocal;
         private Expression[] variables;
         private ExpressionToType expressionToType;
+        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setAssignment(Assignment assignment) {
@@ -109,7 +111,16 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         private ExpressionToType getExpressionToType() {
             return expressionToType;
         }
+        
+        public Builder setSimplifier(ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
 
+        private ContextExpressionSimplifier getSimplifier() {
+            return simplifier;
+        }
+        
         @Override
         public AssignmentSimpleEvaluator build() {
             assert canHandle();
@@ -134,7 +145,8 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         assignment = UtilExpressionStandard.replace(assignment, autVarToLocal);
         value = entry.getRef().getType().toType().newValue();
 //                assignment.getType(builder.getExpressionToType()).newValue();
-        assignment = UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
+        assignment = builder.getSimplifier().simplify(assignment);
+//                UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
         expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
         set = ContextValue.get().getEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
     }

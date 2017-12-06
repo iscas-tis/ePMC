@@ -51,7 +51,7 @@ public final class UtilEvaluatorExplicit {
         public int hashCode() {
             int hash = 0;
             if (returnType != null) {
-                hash = returnType.hashCode() + (hash << 6) + (hash << 16) - hash;                
+                hash = returnType.hashCode() + (hash << 6) + (hash << 16) - hash;
             }
             hash = expression.hashCode() + (hash << 6) + (hash << 16) - hash;
             hash = Arrays.hashCode(variables) + (hash << 6) + (hash << 16) - hash;
@@ -81,11 +81,13 @@ public final class UtilEvaluatorExplicit {
         }
     }
 
-    /** String containing a single space. */
-    private final static String SPACE = " ";
+    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression[] variables, Map<EvaluatorCacheEntry,EvaluatorExplicit> cache) {
+        return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, variables, cache, expressionToType);
+    }
 
     public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) {
-        return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, expressionToType, variables);
+        Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
+        return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, variables, cache, expressionToType);
     }
 
     public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) {
@@ -153,5 +155,13 @@ public final class UtilEvaluatorExplicit {
         }
         UtilError.fail(ProblemsExpression.EXPRESSION_COULD_NOT_EVALUATE, expression.getPositional(), expression);
         return null;
+    }
+    
+    public static boolean assertValues(Value[] values) {
+        assert values != null;
+        for (Value value : values) {
+            assert value != null;
+        }
+        return true;
     }
 }

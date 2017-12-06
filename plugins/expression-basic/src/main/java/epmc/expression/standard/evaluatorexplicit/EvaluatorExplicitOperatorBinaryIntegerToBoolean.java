@@ -150,6 +150,8 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     private boolean needsEvaluation = true;
     private Value[] values;
 
+    private boolean resultBoolean;
+
     private EvaluatorExplicitOperatorBinaryIntegerToBoolean(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
@@ -198,6 +200,9 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
 
     @Override
     public void setValues(Value... values) {
+        if (needsEvaluation && this.values == values) {
+            return;
+        }
         this.values = values;
         for (EvaluatorExplicit operand : operands) {
             operand.setValues(values);
@@ -208,21 +213,27 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToBoolean implements Ev
     @Override
     public void evaluate() {
         assert values != null;
-        for (Value variable : values) {
-            assert variable != null;
+        if (!needsEvaluation) {
+            return;
         }
+        assert UtilEvaluatorExplicit.assertValues(values);
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate();
         }
-
         evaluator.apply(result, operandValues);
+        needsEvaluation = false;
     }
 
     @Override
     public boolean evaluateBoolean() {
         assert values != null;
-        return binaryIntegerToBoolean.call(operands[0].evaluateInteger(),
+        if (!needsEvaluation) {
+            return resultBoolean;
+        }
+        resultBoolean = binaryIntegerToBoolean.call(operands[0].evaluateInteger(),
                 operands[1].evaluateInteger());
+        needsEvaluation = false;
+        return resultBoolean;
     }
 
     @Override

@@ -22,13 +22,15 @@ package epmc.jani.explorer;
 
 import static epmc.error.UtilError.ensure;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Destination;
 import epmc.jani.model.Variable;
@@ -37,9 +39,7 @@ import epmc.operator.OperatorGe;
 import epmc.operator.OperatorSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
-import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeWeight;
 import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
@@ -59,6 +59,7 @@ public final class DestinationEvaluator {
         private Map<Expression, Expression> autVarToLocal;
         private TypeLocation typeLocation;
         private ExpressionToType expressionToType;
+        private ContextExpressionSimplifier simplifier;
 
         public Builder setDestination(Destination destination) {
             this.destination = destination;
@@ -118,11 +119,20 @@ public final class DestinationEvaluator {
             this.expressionToType = expressionToType;
             return this;
         }
-
+        
         public ExpressionToType getExpressionToType() {
             return expressionToType;
         }
 
+        public Builder setSimplifier(ContextExpressionSimplifier simplifier) {
+            this.simplifier = simplifier;
+            return this;
+        }
+
+        public ContextExpressionSimplifier getSimplifier() {
+            return simplifier;
+        }
+        
         public DestinationEvaluator build() {
             return new DestinationEvaluator(this);
         }
@@ -155,19 +165,18 @@ public final class DestinationEvaluator {
         Expression probExpr = destination.getProbabilityExpressionOrOne();
         probExpr = destination.getModel().replaceConstants(probExpr);
         probExpr = UtilExpressionStandard.replace(probExpr, autVarToLocal);
-        Type typeWeight = TypeWeight.get();
-        probExpr = UtilExpressionSimplify.simplify(builder.getExpressionToType(), probExpr, typeWeight);
+        probExpr = builder.getSimplifier().simplify(probExpr);
         probability = UtilEvaluatorExplicit.newEvaluator(probExpr, builder.getExpressionToType(), variables);
         TypeLocation typeLocation = builder.getTypeLocation();
 
         location = typeLocation.getNumber(destination.getLocation());
-
         assignments = new AssignmentsEvaluator.Builder()
                 .setAssignments(destination.getAssignmentsOrEmpty())
                 .setAutVarToLocal(autVarToLocal)
                 .setExpressionToType(builder.getExpressionToType())
                 .setVariableMap(variableMap)
                 .setVariables(variables)
+                .setSimplifier(builder.simplifier)
                 .build();
         zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);
         ge = ContextValue.get().getEvaluatorOrNull(OperatorGe.GE, TypeWeightTransition.get(), TypeWeightTransition.get());

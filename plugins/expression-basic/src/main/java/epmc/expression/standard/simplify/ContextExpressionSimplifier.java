@@ -20,10 +20,13 @@
 
 package epmc.expression.standard.simplify;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
@@ -31,25 +34,32 @@ import epmc.util.Util;
 public final class ContextExpressionSimplifier {
     private final ExpressionSimplifier[] simplifiers;
 
-    public ContextExpressionSimplifier() {
+    public ContextExpressionSimplifier(ExpressionToType expressionToType,
+            Map<EvaluatorCacheEntry,EvaluatorExplicit> evaluatorCache) {
         Options options = Options.get();
-        Map<String,Class<? extends ExpressionSimplifier>> simplifiers =
+        Map<String,Class<? extends ExpressionSimplifier.Builder>> simplifiers =
                 options.get(OptionsExpressionBasic.EXPRESSION_SIMPLIFIER_CLASS);
         this.simplifiers = new ExpressionSimplifier[simplifiers.size()];
         int simplifierNr = 0;
-        for (Class<? extends ExpressionSimplifier> clazz : simplifiers.values()) {
-            this.simplifiers[simplifierNr] = Util.getInstance(clazz);
+        if (evaluatorCache == null) {
+            evaluatorCache = new HashMap<>();
+        }
+        for (Class<? extends ExpressionSimplifier.Builder> clazz : simplifiers.values()) {
+            this.simplifiers[simplifierNr] = Util.getInstance(clazz)
+                    .setExpressionToType(expressionToType)
+                    .setEvaluatorCache(evaluatorCache)
+                    .build();
             simplifierNr++;
         }
     }
 
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
+    public Expression simplify(Expression expression) {
         Expression result = expression;
         boolean changed = true;
         while (changed) {
             changed = false;
             for (ExpressionSimplifier simplifier : simplifiers) {
-                Expression simplified = simplifier.simplify(expressionToType, result);
+                Expression simplified = simplifier.simplify(result);
                 if (simplified != null) {
                     result = simplified;
                     changed = true;

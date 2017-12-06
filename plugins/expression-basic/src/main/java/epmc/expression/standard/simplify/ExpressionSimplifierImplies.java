@@ -20,18 +20,54 @@
 
 package epmc.expression.standard.simplify;
 
+import java.util.Map;
+
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expression.standard.simplify.ExpressionSimplifierAnd.Builder;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorOr;
 
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
+    public final static class Builder implements ExpressionSimplifier.Builder {
+        private ExpressionToType expressionToType;
+        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+
+        @Override
+        public Builder setExpressionToType(ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+
+        @Override
+        public Builder setEvaluatorCache(
+                Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+            this.cache = cache;
+            return this;
+        }
+
+        @Override
+        public ExpressionSimplifier build() {
+            return new ExpressionSimplifierImplies(this);
+        }
+    }
+
     public final static String IDENTIFIER = "implies";
+    private final ExpressionToType expressionToType;
+
+    private ExpressionSimplifierImplies(Builder builder) {
+        assert builder != null;
+        assert builder.expressionToType != null;
+        this.expressionToType = builder.expressionToType;
+    }
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
+    public Expression simplify(Expression expression) {
         assert expression != null;
         if (!isImplies(expression)) {
             return null;

@@ -124,12 +124,12 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
         evaluatorsDD.put(EvaluatorDDOperatorVectorSub.IDENTIFIER, EvaluatorDDOperatorVectorSub.class);
         options.set(OptionsExpressionBasic.EXPRESSION_EVALUTOR_DD_CLASS, evaluatorsDD);
 
-        Map<String,Class<? extends ExpressionSimplifier>> simplifiers = new OrderedMap<>(true);
-        simplifiers.put(ExpressionSimplifierAnd.IDENTIFIER, ExpressionSimplifierAnd.class);
-        simplifiers.put(ExpressionSimplifierConstant.IDENTIFIER, ExpressionSimplifierConstant.class);
-        simplifiers.put(ExpressionSimplifierOr.IDENTIFIER, ExpressionSimplifierOr.class);
-        simplifiers.put(ExpressionSimplifierImplies.IDENTIFIER, ExpressionSimplifierImplies.class);
-        simplifiers.put(ExpressionSimplifierSubtract.IDENTIFIER, ExpressionSimplifierSubtract.class);
+        Map<String,Class<? extends ExpressionSimplifier.Builder>> simplifiers = new OrderedMap<>(true);
+        simplifiers.put(ExpressionSimplifierAnd.IDENTIFIER, ExpressionSimplifierAnd.Builder.class);
+        simplifiers.put(ExpressionSimplifierConstant.IDENTIFIER, ExpressionSimplifierConstant.Builder.class);
+        simplifiers.put(ExpressionSimplifierOr.IDENTIFIER, ExpressionSimplifierOr.Builder.class);
+        simplifiers.put(ExpressionSimplifierImplies.IDENTIFIER, ExpressionSimplifierImplies.Builder.class);
+        simplifiers.put(ExpressionSimplifierSubtract.IDENTIFIER, ExpressionSimplifierSubtract.Builder.class);
         options.set(OptionsExpressionBasic.EXPRESSION_SIMPLIFIER_CLASS, simplifiers);
     }
 

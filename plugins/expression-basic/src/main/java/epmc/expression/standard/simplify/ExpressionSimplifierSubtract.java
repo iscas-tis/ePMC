@@ -25,21 +25,57 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
+
+import java.util.Map;
+
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expression.standard.simplify.ExpressionSimplifierAnd.Builder;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorIsZero;
 import epmc.operator.OperatorSubtract;
 
 public final class ExpressionSimplifierSubtract implements ExpressionSimplifier {
+    public final static class Builder implements ExpressionSimplifier.Builder {
+        private ExpressionToType expressionToType;
+        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+
+        @Override
+        public Builder setExpressionToType(ExpressionToType expressionToType) {
+            this.expressionToType = expressionToType;
+            return this;
+        }
+
+        @Override
+        public Builder setEvaluatorCache(
+                Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+            this.cache = cache;
+            return this;
+        }
+
+        @Override
+        public ExpressionSimplifier build() {
+            return new ExpressionSimplifierSubtract(this);
+        }
+    }
+
     public final static String IDENTIFIER = "subtract";
+    private final ExpressionToType expressionToType;
+
+    private ExpressionSimplifierSubtract(Builder builder) {
+        assert builder != null;
+        assert builder.expressionToType != null;
+        this.expressionToType = builder.expressionToType;
+    }
 
     @Override
-    public Expression simplify(ExpressionToType expressionToType, Expression expression) {
+    public Expression simplify(Expression expression) {
         assert expression != null;
         if (!isSubtract(expression)) {
             return null;
