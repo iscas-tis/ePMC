@@ -148,6 +148,9 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
 
     @Override
     public void setValues(Value... values) {
+        if (needsEvaluation && this.values == values) {
+            return;
+        }
         this.values = values;
         operandLeft.setValues(values);
         operandRight.setValues(values);
@@ -160,11 +163,10 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
         if (!needsEvaluation) {
             return;
         }
+        needsEvaluation = false;
         if (!operandLeft.evaluateBoolean()) {
-            needsEvaluation = false;
             result.set(false);
         } else {
-            needsEvaluation = false;
             result.set(operandRight.evaluateBoolean());
         }
     }

@@ -30,6 +30,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import epmc.graph.TestHelperGraph;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -704,4 +705,18 @@ public final class PCTLSolverExplicitTest {
             }
         }
     }
+    
+    @Test
+    public void paulGainer() {
+        Options options = prepareOptions();
+        double tolerance = 1E-10;
+        options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(TestHelper.PRISM_FLATTEN, false);
+        Map<String,String> constants = new HashMap<>();
+        constants.put("ML", "0.3");
+        options.set(OptionsModelChecker.CONST, constants);
+        TestHelperGraph.exploreModel(options, ModelNamesOwn.PAUL_GAINER_MEDIUM);
+        close(options);
+    }    
 }

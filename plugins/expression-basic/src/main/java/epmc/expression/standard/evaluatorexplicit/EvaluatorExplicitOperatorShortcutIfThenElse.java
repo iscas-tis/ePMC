@@ -123,6 +123,8 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     private boolean needsEvaluation = true;
     private Value[] values;
 
+    private boolean booleanValue;
+
     private EvaluatorExplicitOperatorShortcutIfThenElse(Builder builder) {
         assert builder != null;
         assert builder.getExpression() != null;
@@ -157,8 +159,13 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
 
     @Override
     public void setValues(Value... values) {
+        if (needsEvaluation && this.values == values) {
+            return;
+        }
         this.values = values;
         operands[0].setValues(values);
+        operands[1].setValues(values);
+        operands[2].setValues(values);
         needsEvaluation = true;
     }
     
@@ -166,17 +173,19 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     public void evaluate() {
         assert values != null;
         assert UtilEvaluatorExplicit.assertValues(values);
+        if (!needsEvaluation) {
+            return;
+        }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
-            operands[1].setValues(values);
             EvaluatorExplicit thenOp = operands[1];
             thenOp.evaluate();
             setThen.apply(result, thenOp.getResultValue());
         } else {
-            operands[2].setValues(values);
             EvaluatorExplicit elseOp = operands[2];
             elseOp.evaluate();
             setElse.apply(result, elseOp.getResultValue());
         }
+        needsEvaluation = false;
     }
 
     @Override
@@ -187,12 +196,15 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     @Override
     public boolean evaluateBoolean() {
         assert UtilEvaluatorExplicit.assertValues(values);
+        if (!needsEvaluation) {
+            return booleanValue;
+        }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
-            operands[1].setValues(values);
-            return ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean();
+            booleanValue = ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean();
+            return booleanValue;
         } else {
-            operands[2].setValues(values);
-            return ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean();
+            booleanValue = ((EvaluatorExplicitBoolean) operands[2]).evaluateBoolean();
+            return booleanValue;
         }
     }
 }

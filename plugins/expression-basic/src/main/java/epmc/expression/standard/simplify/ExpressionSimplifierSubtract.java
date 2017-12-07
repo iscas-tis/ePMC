@@ -35,7 +35,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
-import epmc.expression.standard.simplify.ExpressionSimplifierAnd.Builder;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorIsZero;
@@ -44,8 +43,6 @@ import epmc.operator.OperatorSubtract;
 public final class ExpressionSimplifierSubtract implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
-        private ContextExpressionSimplifier simplifier;
 
         @Override
         public Builder setExpressionToType(ExpressionToType expressionToType) {
@@ -56,7 +53,6 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         @Override
         public Builder setEvaluatorCache(
                 Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
-            this.cache = cache;
             return this;
         }
 
@@ -68,20 +64,15 @@ public final class ExpressionSimplifierSubtract implements ExpressionSimplifier 
         @Override
         public Builder setSimplifier(
                 ContextExpressionSimplifier simplifier) {
-            this.simplifier = simplifier;
             return this;
         }
     }
 
     public final static String IDENTIFIER = "subtract";
-    private final ExpressionToType expressionToType;
-    private final ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierSubtract(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
-        this.expressionToType = builder.expressionToType;
-        this.simplifier = builder.simplifier;
     }
 
     @Override

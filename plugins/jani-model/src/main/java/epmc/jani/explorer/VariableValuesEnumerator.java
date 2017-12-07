@@ -46,7 +46,7 @@ import epmc.expression.standard.evaluatordd.EvaluatorDD;
 import epmc.expression.standard.evaluatordd.UtilEvaluatorDD;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.simplify.UtilExpressionSimplify;
+import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Variable;
 import epmc.jani.model.Variables;
@@ -89,6 +89,7 @@ public final class VariableValuesEnumerator {
     private Variables variables;
     private Expression expression;
     private ExpressionToType expressionToType;
+    private ContextExpressionSimplifier simplifier;
 
     public void setVariables(Variables variables) {
         this.variables = variables;
@@ -100,6 +101,7 @@ public final class VariableValuesEnumerator {
 
     public void setExpressionToType(ExpressionToType expressionToType) {
         this.expressionToType = expressionToType;
+        this.simplifier = new ContextExpressionSimplifier(expressionToType, null);
     }
 
     public List<Map<Variable,Value>> enumerate() {
@@ -310,8 +312,8 @@ public final class VariableValuesEnumerator {
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         Expression left = expressionOperator.getOperand1();
         Expression right = expressionOperator.getOperand2();
-        left = UtilExpressionSimplify.simplify(expressionToType, left);
-        right = UtilExpressionSimplify.simplify(expressionToType, right);
+        left = simplifier.simplify(left);
+        right = simplifier.simplify(right);
         if (!(left instanceof ExpressionIdentifier && right instanceof ExpressionLiteral)
                 && (!(left instanceof ExpressionLiteral && right instanceof ExpressionIdentifier))) {
             return false;
@@ -346,19 +348,23 @@ public final class VariableValuesEnumerator {
         for (Variable variable : variables.values()) {
             variableTypes.add(TypeEnumerable.as(variable.getType().toType()));
         }
-        List<Map<Variable,Value>> result = new ArrayList<>();
+        List<Map<Variable,Value>> result = new ArrayList<>(numValues);
+        int variablesSize = variables.size();
+        int[] numTypesValues = new int[variablesSize];
+        for (index = 0; index < variables.size(); index++) {
+            numTypesValues[index] = variableTypes.get(index).getNumValues();
+        }
         for (int valueNr = 0; valueNr < numValues; valueNr++) {
             int remaining = valueNr;
             index = 0;
-            for (int varNr = 0; varNr < variables.size(); varNr++) {
-                TypeEnumerable type = variableTypes.get(varNr);
-                int numTypeValues = type.getNumValues();
+            for (int varNr = 0; varNr < variablesSize; varNr++) {
+                int numTypeValues = numTypesValues[varNr];
                 int varValueNr = remaining % numTypeValues;
                 remaining /= numTypeValues;
                 variableValues[index].setValueNumber(varValueNr);
                 index++;
             }
-            Map<Variable,Value> entry = new HashMap<>();
+            Map<Variable,Value> entry = new HashMap<>(variables.size() * 2);
             index = 0;
             for (Variable variable : variables.values()) {
                 entry.put(variable, UtilValue.clone(evaluatorCache, variableValues[index]));
@@ -508,19 +514,19 @@ public final class VariableValuesEnumerator {
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private boolean isEq(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         return expressionOperator.getOperator().equals(OperatorEq.EQ);
     }
 }

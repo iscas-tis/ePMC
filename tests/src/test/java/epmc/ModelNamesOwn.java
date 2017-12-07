@@ -50,6 +50,9 @@ public final class ModelNamesOwn {
     public static final String CLUSTER_DTMC_3_SALOMON = PREFIX + "clusterDTMC3Salomon.prism";
     public static final String PETERSON = PREFIX + "petersonWP-nostorage-rid.prism";
     
+    public final static String PAUL_GAINER_SMALL = PREFIX + "model-mirollo-strogatz-6-10-0.1-1-0-False.prism";
+    public final static String PAUL_GAINER_MEDIUM = PREFIX + "model-mirollo-strogatz-7-10-0.1-1-0-False.prism";
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */
