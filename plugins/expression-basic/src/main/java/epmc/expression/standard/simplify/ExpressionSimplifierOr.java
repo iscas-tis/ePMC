@@ -38,7 +38,6 @@ import epmc.value.ValueBoolean;
 public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
         private ContextExpressionSimplifier simplifier;
 
         @Override
@@ -50,7 +49,6 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         @Override
         public Builder setEvaluatorCache(
                 Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
-            this.cache = cache;
             return this;
         }
 
@@ -68,13 +66,11 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
     }
 
     public final static String IDENTIFIER = "or";
-    private final ExpressionToType expressionToType;
     private ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierOr(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
-        this.expressionToType = builder.expressionToType;
         this.simplifier = builder.simplifier;
     }
 

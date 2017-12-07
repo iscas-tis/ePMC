@@ -27,7 +27,6 @@ import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
-import epmc.expression.standard.simplify.UtilExpressionSimplify;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
 import epmc.jani.model.AssignmentSimple;

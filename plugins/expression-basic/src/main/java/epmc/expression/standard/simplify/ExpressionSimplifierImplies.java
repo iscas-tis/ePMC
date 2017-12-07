@@ -34,7 +34,6 @@ import epmc.operator.OperatorOr;
 public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
         private ContextExpressionSimplifier simplifier;
 
         @Override
@@ -47,7 +46,6 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
         @Override
         public Builder setEvaluatorCache(
                 Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
-            this.cache = cache;
             return this;
         }
 
@@ -65,13 +63,11 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
     }
 
     public final static String IDENTIFIER = "implies";
-    private final ExpressionToType expressionToType;
     private ContextExpressionSimplifier simplifier;
 
     private ExpressionSimplifierImplies(Builder builder) {
         assert builder != null;
         assert builder.expressionToType != null;
-        this.expressionToType = builder.expressionToType;
         this.simplifier = builder.simplifier;
     }
 
