@@ -237,10 +237,10 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
                 && !SemanticsContinuousTime.isContinuousTime(semantics)) {
             return false;
         }
-        if (!(property instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(property)) {
             return false;
         }
-        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        ExpressionQuantifier propertyQuantifier = ExpressionQuantifier.as(property);
         if (!isNext(propertyQuantifier.getQuantified())) {
             return false;
         }

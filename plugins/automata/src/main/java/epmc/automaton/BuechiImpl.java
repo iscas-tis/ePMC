@@ -365,11 +365,7 @@ public class BuechiImpl implements Buechi {
     }
 
     private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
+        return ExpressionTemporal.is(expression);
     }
 
     private static boolean isGlobally(Expression expression) {

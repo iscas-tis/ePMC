@@ -40,6 +40,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
@@ -145,10 +146,8 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
     /*
      * flatten operation 
      * */
-    public Set<Set<Expr>> flatten(Expression prop, Set<Expression> labels) 
-    {
-        if (prop instanceof ExpressionIdentifier
-                || prop instanceof ExpressionLiteral) {   
+    public Set<Set<Expr>> flatten(Expression prop, Set<Expression> labels)  {
+        if (ExpressionIdentifier.is(prop) || ExpressionLiteral.is(prop)) { 
             //this should not happen
             Expr expr = new Expr(Mod.UNDEF, expressionToDD.translate(prop));
             Set<Expr> inSet = Collections.singleton(expr);
@@ -161,8 +160,8 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             return Collections.singleton(inSet);
         }
 
-        if (prop instanceof ExpressionOperator) { //AND ,OR will be flattened
-            ExpressionOperator expressionOperator = (ExpressionOperator) prop;
+        if (ExpressionOperator.is(prop)) { //AND, OR will be flattened
+            ExpressionOperator expressionOperator = ExpressionOperator.as(prop);
             List<? extends Expression> ops = expressionOperator.getOperands();
             Set<Set<Expr>> set = null;
             Operator operator = expressionOperator.getOperator();
@@ -197,30 +196,37 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             } else {
                 assert(false);
             }
-        }
-        assert prop instanceof ExpressionTemporal;
-        ExpressionTemporal expr = (ExpressionTemporal) prop;
-        Set<Set<Expr>> set = new HashSet<>();
-        switch(expr.getTemporalType()) {
-        case FINALLY: //F a = 1 U a
-            Set<Set<Expr>> op1 = flatten(expr.getOperand1(),labels);
-            if (expr.getOperand1() instanceof ExpressionTemporal) return op1;
-            for(Set<Expr> inset : op1) {
+        } else if (ExpressionTemporalFinally.is(prop)) {
+            ExpressionTemporalFinally expr = ExpressionTemporalFinally.as(prop);
+            Set<Set<Expr>> set = new HashSet<>();
+            Set<Set<Expr>> op1 = flatten(expr.getOperand(),labels);
+            if (ExpressionTemporal.is(expr.getOperand())
+                    || ExpressionTemporalFinally.is(expr.getOperand())) {
+                return op1;
+            }
+            for (Set<Expr> inset : op1) {
                 Set<Expr> tmp = new HashSet<>();
                 DD item = contextDD.newConstant(true);
-                for(Expr p : inset) {
+                for (Expr p : inset) {
                     if(p.op == Mod.UNDEF) {
-                        item = item.andWith(p.expr.clone());
-                    }else {
-                        tmp.add(p);
+                            item = item.andWith(p.expr.clone());
+                        } else {
+                            tmp.add(p);
+                        }
                     }
-                }
-                if(! item.isTrue()) {
-                    tmp.add(new Expr(Mod.F, item));
-                }else item.dispose();
-                set.add(tmp);
+                    if (!item.isTrue()) {
+                        tmp.add(new Expr(Mod.F, item));
+                    } else {
+                        item.dispose();
+                    }
+                    set.add(tmp);
             }
             return set;
+        }
+        assert prop instanceof ExpressionTemporal;
+        ExpressionTemporal expr = ExpressionTemporal.as(prop);
+        Set<Set<Expr>> set = new HashSet<>();
+        switch (expr.getTemporalType()) {
         case GLOBALLY: // G a = 0 R a,cartesian product
             Set<Set<Expr>> opset = flatten(expr.getOperand1(),labels);
             if (expr.getOperand1() instanceof ExpressionTemporal) {

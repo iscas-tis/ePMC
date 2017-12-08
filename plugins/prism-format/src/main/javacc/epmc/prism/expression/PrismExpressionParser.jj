@@ -1768,7 +1768,7 @@ private Expression parseTemporalUnary(boolean parseExp)  :
 				p = newTemporalNext(p, timeBound);
 				break;
 			case FINALLY:
-				p = newTemporal(TemporalType.FINALLY, p, timeBound);
+				p = newTemporalFinally(p, timeBound);
 				break;
 			case GLOBALLY:
 				p = newTemporal(TemporalType.GLOBALLY, p, timeBound);
