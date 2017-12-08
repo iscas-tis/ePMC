@@ -103,9 +103,9 @@ public final class ExpressionTemporalNext implements Expression {
         assert children != null;
         assert children.size() == 3;
         TimeBound newTimeBound = new TimeBound.Builder()
-                .setLeftOpen(!timeBound.isLeftBounded())
+                .setLeftOpen(timeBound.isLeftOpen())
                 .setLeft(children.get(1))
-                .setRightOpen(!timeBound.isRightBounded())
+                .setRightOpen(timeBound.isRightOpen())
                 .setRight(children.get(2))
                 .build();
         return new ExpressionTemporalNext.Builder()

@@ -28,11 +28,12 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 
 public final class UtilPCTL {
     public static Set<Expression> collectPCTLInner(Expression expression) {
-        if (expression instanceof ExpressionTemporal) {
+        if (ExpressionTemporal.is(expression)) {
             ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionTemporal.getOperands()) {
@@ -44,6 +45,9 @@ public final class UtilPCTL {
             return collectPCTLInner(expressionTemporal.getOperand());
         } else if (ExpressionTemporalFinally.is(expression)) {
             ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
+            return collectPCTLInner(expressionTemporal.getOperand());
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
             return collectPCTLInner(expressionTemporal.getOperand());
         } else {
             return Collections.singleton(expression);			
@@ -65,6 +69,9 @@ public final class UtilPCTL {
         } else if (ExpressionTemporalFinally.is(pathProp)) {
             ExpressionTemporalFinally expFinally = ExpressionTemporalFinally.as(pathProp);
             return ExpressionPropositional.is(expFinally.getOperand());
+        } else if (ExpressionTemporalGlobally.is(pathProp)) {
+            ExpressionTemporalGlobally expGlobally = ExpressionTemporalGlobally.as(pathProp);
+            return ExpressionPropositional.is(expGlobally.getOperand());
         } else {
             return false;
         }
@@ -77,12 +84,14 @@ public final class UtilPCTL {
         if (ExpressionTemporalFinally.is(pathProp)) {
             return true;
         }
+        if (ExpressionTemporalGlobally.is(pathProp)) {
+            return true;
+        }
         if (!ExpressionTemporal.is(pathProp)) {
             return false;
         }
         ExpressionTemporal asTemporal = (ExpressionTemporal) pathProp;
         switch (asTemporal.getTemporalType()) {
-        case GLOBALLY:
         case RELEASE:
         case UNTIL:
             break;

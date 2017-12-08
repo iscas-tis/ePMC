@@ -37,6 +37,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
@@ -459,11 +460,7 @@ public final class UtilAutomaton {
     }
 
     private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
+        return ExpressionTemporalGlobally.is(expression);
     }
 
     /**

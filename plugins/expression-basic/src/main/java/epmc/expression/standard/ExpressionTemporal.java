@@ -149,11 +149,6 @@ public final class ExpressionTemporal implements Expression {
         this.positional = builder.getPositional();
         this.children.addAll(builder.getChildren());
         switch (builder.getType()) {
-        case GLOBALLY:
-            assert builder.getChildren().size() == 3;
-            assert builder.getLeftOpen().size() == 1;
-            assert builder.getRightOpen().size() == 1;
-            break;
         case RELEASE:
             assert builder.getChildren().size() == 4;
             assert builder.getLeftOpen().size() == 1;
@@ -191,11 +186,6 @@ public final class ExpressionTemporal implements Expression {
         this.positional = positional;
         this.children.addAll(children);
         switch (type) {
-        case GLOBALLY:
-            assert children.size() == 3;
-            assert leftOpen.size() == 1;
-            assert rightOpen.size() == 1;
-            break;
         case RELEASE:
             assert children.size() == 4;
             assert leftOpen.size() == 1;
@@ -317,8 +307,6 @@ public final class ExpressionTemporal implements Expression {
 
     public int getNumOps() {
         switch (type) {
-        case GLOBALLY:
-            return 1;
         case RELEASE:
             return 2;
         case UNTIL:
@@ -355,15 +343,6 @@ public final class ExpressionTemporal implements Expression {
         Iterator<Expression> opIter;
         StringBuilder builder = new StringBuilder();
         switch (type) {
-        case GLOBALLY: {
-            builder.append(type);
-            // TODO
-            //            builder.append(getTimeBound(null));
-            builder.append("(");
-            builder.append(getChildren().get(0));
-            builder.append(")");
-            break;
-        }
         case UNTIL: case RELEASE:
             if (type == TemporalType.UNTIL && getNumOps() == 2 && isTrue(getOperand1())) {
                 builder.append("F");
