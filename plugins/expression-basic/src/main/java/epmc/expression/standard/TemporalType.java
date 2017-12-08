@@ -23,7 +23,6 @@ package epmc.expression.standard;
 public enum TemporalType {
     UNTIL("U"),
     RELEASE("R"),
-    GLOBALLY("G"),
     ;
 
     private final String string;

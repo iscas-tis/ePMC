@@ -39,8 +39,8 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
@@ -200,7 +200,7 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
             ExpressionTemporalFinally expr = ExpressionTemporalFinally.as(prop);
             Set<Set<Expr>> set = new HashSet<>();
             Set<Set<Expr>> op1 = flatten(expr.getOperand(),labels);
-            if (ExpressionTemporal.is(expr.getOperand())
+            if (ExpressionTemporalGlobally.is(expr.getOperand())
                     || ExpressionTemporalFinally.is(expr.getOperand())) {
                 return op1;
             }
@@ -222,14 +222,12 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                     set.add(tmp);
             }
             return set;
-        }
-        assert prop instanceof ExpressionTemporal;
-        ExpressionTemporal expr = ExpressionTemporal.as(prop);
-        Set<Set<Expr>> set = new HashSet<>();
-        switch (expr.getTemporalType()) {
-        case GLOBALLY: // G a = 0 R a,cartesian product
-            Set<Set<Expr>> opset = flatten(expr.getOperand1(),labels);
-            if (expr.getOperand1() instanceof ExpressionTemporal) {
+        } else if (ExpressionTemporalGlobally.is(prop)) {
+            ExpressionTemporalGlobally expr = ExpressionTemporalGlobally.as(prop);
+            Set<Set<Expr>> set = new HashSet<>();
+            Set<Set<Expr>> opset = flatten(expr.getOperand(),labels);
+            if (ExpressionTemporalFinally.is(expr.getOperand())
+                    || ExpressionTemporalGlobally.is(expr.getOperand())) {
                 return opset;
             }
             Set<Set<Expr>> tmp1 = permute(opset);
@@ -238,9 +236,9 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                 Set<Expr> tmp2 = new HashSet<>();
                 DD item = contextDD.newConstant(false);
                 for(Expr p : inset) {
-                    if(p.op == Mod.UNDEF) {
+                    if (p.op == Mod.UNDEF) {
                         item = item.orWith(p.expr.clone());
-                    }else { 
+                    } else { 
                         tmp2.add(p);
                     }
                 }
@@ -250,11 +248,9 @@ public final class PropertySolverDDLTLFairness implements PropertySolver {
                 set.add(tmp2);
             }
             return permute(set);
-        default:
-            break;
         }
-        assert(false);
-        return set;
+        assert false;
+        return null;
     }
 
     /*

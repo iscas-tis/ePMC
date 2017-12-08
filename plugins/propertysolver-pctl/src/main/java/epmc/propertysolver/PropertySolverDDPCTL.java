@@ -38,6 +38,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
@@ -127,9 +128,9 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
+            ExpressionTemporalGlobally pathTemporal = ExpressionTemporalGlobally.as(property);
             Expression left = ExpressionLiteral.getTrue();
-            Expression right = not(pathTemporal.getOperand1());
+            Expression right = not(pathTemporal.getOperand());
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             min = !min;
             negate = true;
@@ -501,11 +502,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isGlobally(Expression expression) {
-        if (!ExpressionTemporal.is(expression)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
+        return ExpressionTemporalGlobally.is(expression);
     }
 
     private static boolean isRelease(Expression expression) {

@@ -36,8 +36,8 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -197,7 +197,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
             Set<Set<Expression>> result = new HashSet<>();
             ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(prop);
             Set<Set<Expression>> setOp1 = flatten(expressionTemporal.getOperand()); // flatten op1 
-            if (ExpressionTemporal.is(expressionTemporal.getOperand())
+            if (ExpressionTemporalGlobally.is(expressionTemporal.getOperand())
                     || ExpressionTemporalFinally.is(expressionTemporal.getOperand())) {
                 return setOp1;
             }
@@ -206,7 +206,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
                 Set<Expression> tmp = new HashSet<>();
                 Expression conjs = null;
                 for (Expression p : set) {
-                    if (ExpressionTemporal.is(p) ||
+                    if (ExpressionTemporalGlobally.is(p) ||
                             ExpressionTemporalFinally.is(p)) { // F l, G l
                         tmp.add(p);
                     } else {
@@ -219,25 +219,20 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
                 result.add(tmp);
             }
             return result;
-        }
-        // Temporal operators
-        assert prop instanceof ExpressionTemporal;
-        Set<Set<Expression>> result = new HashSet<>();
-        Set<Set<Expression>> setOp1 = null;
-
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal)prop;
-        switch (expressionTemporal.getTemporalType()) {
-        case GLOBALLY: // G a = 0 R a
-            setOp1 = flatten(expressionTemporal.getOperand1());
-            if (ExpressionTemporal.is(expressionTemporal.getOperand1())
-                    || ExpressionTemporalFinally.is(expressionTemporal.getOperand1()))
+        } else if (ExpressionTemporalGlobally.is(prop)) {
+            Set<Set<Expression>> result = new HashSet<>();
+            Set<Set<Expression>> setOp1 = null;
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(prop);
+            setOp1 = flatten(expressionTemporal.getOperand());
+            if (ExpressionTemporalGlobally.is(expressionTemporal.getOperand())
+                    || ExpressionTemporalFinally.is(expressionTemporal.getOperand()))
                 return setOp1;
             Set<Set<Expression>> cnfSet = UtilLTL.permute(setOp1); // to CNF form
             for (Set<Expression> set : cnfSet) {
                 Set<Expression> tmp = new HashSet<>();
                 Expression disjs = null;
                 for (Expression p : set) {
-                    if (ExpressionTemporal.is(p)
+                    if (ExpressionTemporalGlobally.is(p)
                             || ExpressionTemporalFinally.is(p)) { // G l, F l
                         tmp.add(p);
                     } else {
@@ -251,11 +246,9 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
                 result.add(tmp);
             }
             return UtilLTL.permute(result);
-        default:
-            break;
         }
-        assert (false);
-        return result;
+        assert false;
+        return null;
     }
 
 
@@ -304,11 +297,13 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
         for (Expression formula : set) {
             if (ExpressionTemporalFinally.is(formula)) {
                 finalFormulas.add(ExpressionTemporalFinally.as(formula).getOperand());
-            } else {
-                ExpressionTemporal formulaTemporal = (ExpressionTemporal) formula;
+            } else if (ExpressionTemporalGlobally.is(formula)){
+                ExpressionTemporalGlobally formulaTemporal = ExpressionTemporalGlobally.as(formula);
                 globalFormula = globalFormula == null? 
-                        formulaTemporal.getOperand1() :
-                            UtilExpressionStandard.opAnd(globalFormula, formulaTemporal.getOperand1());                
+                        formulaTemporal.getOperand() :
+                            UtilExpressionStandard.opAnd(globalFormula, formulaTemporal.getOperand());                
+            } else {
+                assert false;
             }
         }
 
@@ -335,7 +330,7 @@ public final class PropertySolverExplicitLTLFairness implements PropertySolver {
     private boolean checkNode(GraphExplicit graph, int node, Set<Expression> labels,
             Expression lit) {
         // lit may be combination of labels
-        assert lit != null && !(ExpressionTemporal.is(lit)
+        assert lit != null && !(ExpressionTemporalGlobally.is(lit)
                 || ExpressionTemporalFinally.is(lit));
         if (labels.contains(lit)) {
             return graph.getNodeProperty(lit).getBoolean(node);

@@ -40,6 +40,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.TemporalType;
@@ -227,11 +228,6 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
 
             ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
             switch (expressionTemporal.getTemporalType()) {
-            case GLOBALLY:
-                opValue = W;
-                left = parser.matchExpression(model, expressionTemporal.getOperand1());
-                right = parser.matchExpression(model, ExpressionLiteral.getFalse());
-                break;
             case RELEASE:
                 opValue = W;
                 //op1 R op2 = op2 W (op2 /\ op1)
@@ -285,6 +281,12 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             opValue = U;
             left = parser.matchExpression(model, ExpressionLiteral.getTrue());
             right = parser.matchExpression(model, expressionTemporal.getOperand());
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
+            ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
+            opValue = W;
+            left = parser.matchExpression(model, expressionTemporal.getOperand());
+            right = parser.matchExpression(model, ExpressionLiteral.getFalse());
         } else if (expression instanceof ExpressionReward) {
             RewardSpecification rs = ((ExpressionReward) expression).getReward();
             if (rs != null) {

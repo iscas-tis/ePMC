@@ -31,6 +31,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -144,9 +145,9 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
+            ExpressionTemporalGlobally pathTemporal = ExpressionTemporalGlobally.as(property);
             Expression left = ExpressionLiteral.getTrue();
-            Expression right = not(pathTemporal.getOperand1());
+            Expression right = not(pathTemporal.getOperand());
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             min = !min;
             negate = true;
@@ -355,19 +356,15 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         if (isNot(quantified)
                 && isFinally((ExpressionOperator.as(quantified)).getOperand1())) {
             ExpressionOperator quantifiedOperator = (ExpressionOperator) quantified;
-            ExpressionTemporal quantifiedOp1 =
-                    (ExpressionTemporal) quantifiedOperator.getOperand1();
-            quantified = new ExpressionTemporal.Builder()
-                    .setType(TemporalType.GLOBALLY)
-                    .setPositional(quantified.getPositional())
-                    .setChildren(new ExpressionOperator.Builder()
+            ExpressionTemporalFinally quantifiedOp1 =
+                    ExpressionTemporalFinally.as(quantifiedOperator.getOperand1());
+            quantified = new ExpressionTemporalGlobally.Builder()
+                    .setOperand(new ExpressionOperator.Builder()
                             .setOperator(OperatorNot.NOT)
-                            .setOperands(quantifiedOp1.getOperand1())
-                            .build(),
-                            quantifiedOp1.getChildren().get(1),
-                            quantifiedOp1.getChildren().get(2))
-                    .setLeftOpen(false)
-                    .setRightOpen(false)
+                            .setOperands(quantifiedOp1.getOperand())
+                            .build())
+                    .setTimeBound(quantifiedOp1.getTimeBound())
+                    .setPositional(quantified.getPositional())
                     .build();
             property = new ExpressionQuantifier.Builder()
                     .setCmpType(propertyQuantifier.getCompareType())
@@ -440,11 +437,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     }
 
     private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
+        return ExpressionTemporalGlobally.is(expression);
     }
 
     private static boolean isRelease(Expression expression) {

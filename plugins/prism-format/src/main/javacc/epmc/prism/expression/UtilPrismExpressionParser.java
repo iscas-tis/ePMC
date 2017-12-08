@@ -9,6 +9,7 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.RewardType;
@@ -199,6 +200,16 @@ public final class UtilPrismExpressionParser {
         assert operand != null;
         assert timeBound != null;
         return new ExpressionTemporalFinally.Builder()
+                .setOperand(operand)
+                .setTimeBound(timeBound)
+                .build();
+    }
+
+    static ExpressionTemporalGlobally newTemporalGlobally(Expression operand,
+            TimeBound timeBound) {
+        assert operand != null;
+        assert timeBound != null;
+        return new ExpressionTemporalGlobally.Builder()
                 .setOperand(operand)
                 .setTimeBound(timeBound)
                 .build();

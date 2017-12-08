@@ -43,6 +43,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -369,11 +370,7 @@ public class BuechiImpl implements Buechi {
     }
 
     private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.GLOBALLY;
+        return ExpressionTemporalGlobally.is(expression);
     }
 
     private static boolean isRelease(Expression expression) {
