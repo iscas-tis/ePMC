@@ -30,6 +30,8 @@ public final class MessagesPRISM {
     public final static Message EXPLORING = newMessage().setIdentifier("exploring").build();
     public final static Message EXPLORING_DONE = newMessage().setIdentifier("exploring-done").build();
     public final static Message PURE_PROB_WITH_DIR = newMessage().setIdentifier("pure-prob-with-dir").build();
+    public final static Message START_PARSING = newMessage().setIdentifier("start-parsing").build();
+    public final static Message DONE_PARSING = newMessage().setIdentifier("done-parsing").build();
 
     private static Message.Builder newMessage() {
         return new Message.Builder().setBundle(MESSAGES_PRISM);
