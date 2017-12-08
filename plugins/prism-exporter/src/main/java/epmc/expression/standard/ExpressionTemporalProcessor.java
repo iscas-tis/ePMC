@@ -44,7 +44,6 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
 
         TemporalType type = temporal.getTemporalType();
         switch (type) {
-        case FINALLY: 
         case GLOBALLY: {
             prism.append(type.toString())
             .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())

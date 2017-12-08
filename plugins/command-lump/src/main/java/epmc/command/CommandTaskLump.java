@@ -32,6 +32,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
@@ -268,11 +269,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
+        return ExpressionFilter.is(expression);
     }
 
     private static boolean isUntil(Expression expression) {

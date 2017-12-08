@@ -357,8 +357,7 @@ public final class ModelChecker implements Closeable {
         return engine;
     }
 
-    public void ensureCanHandle(Expression property, StateSet states)
-    {
+    public void ensureCanHandle(Expression property, StateSet states) {
         for (Class<? extends PropertySolver> solverClass : solvers) {
             PropertySolver solver = Util.getInstance(solverClass);
             solver.setModelChecker(this);
@@ -368,7 +367,9 @@ public final class ModelChecker implements Closeable {
                 return;
             }
         }
-        fail(ProblemsModelChecker.NO_SOLVER_AVAILABLE, property);
+        fail(ProblemsModelChecker.NO_SOLVER_AVAILABLE, 
+                property.getPositional() != null ? property.getPositional()
+                        .getContent() : property);
     }
 
     /**

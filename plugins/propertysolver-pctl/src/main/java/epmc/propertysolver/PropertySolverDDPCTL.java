@@ -37,6 +37,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
@@ -120,9 +121,9 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
+            ExpressionTemporalFinally pathTemporal = ExpressionTemporalFinally.as(property);
             Expression left = ExpressionLiteral.getTrue();
-            Expression right = pathTemporal.getOperand1();
+            Expression right = pathTemporal.getOperand();
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
@@ -418,7 +419,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         if (!(modelChecker.getEngine() instanceof EngineDD)) {
             return false;
         }
-        if (!(property instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(property)) {
             return false;
         }
         ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
@@ -483,10 +484,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isNot(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
@@ -496,15 +497,11 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
+        return ExpressionTemporalFinally.is(expression);
     }
 
     private static boolean isGlobally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
+        if (!ExpressionTemporal.is(expression)) {
             return false;
         }
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -512,7 +509,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
+        if (!ExpressionTemporal.is(expression)) {
             return false;
         }
         ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
@@ -520,10 +517,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isUntil(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
+        if (!ExpressionTemporal.is(expression)) {
             return false;
         }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
 

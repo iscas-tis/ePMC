@@ -198,7 +198,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
         assert iterGraph != null;
         GraphSolverObjectiveExplicitBoundedReachability objectiveBoundedReachability = (GraphSolverObjectiveExplicitBoundedReachability) objective;
         ValueInteger time = ValueInteger.as(objectiveBoundedReachability.getTime());
-        assert time.getInt() >= 0;
+        assert time.getInt() >= 0 : time.getInt();
         boolean min = objectiveBoundedReachability.isMin();
         if (isSparseMarkovNative(iterGraph)) {
             dtmcBoundedNative(time.getInt(), asSparseMarkov(iterGraph), inputValues);            

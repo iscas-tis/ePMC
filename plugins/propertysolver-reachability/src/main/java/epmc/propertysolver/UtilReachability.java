@@ -26,8 +26,7 @@ import java.util.Set;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionPropositional;
-import epmc.expression.standard.ExpressionTemporal;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.UtilGraphSolver;
@@ -41,12 +40,10 @@ public final class UtilReachability {
     /** collect the atomic propositions in the given formula which will be later used in
 	    building the graph of the model. */
     public static Set<Expression> collectReachabilityInner(Expression expression) {
-        if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectReachabilityInner(inner));
-            }
+            result.addAll(collectReachabilityInner(expressionTemporal.getOperand()));
             return result;
         } else {
             return Collections.singleton(expression);			
@@ -56,14 +53,14 @@ public final class UtilReachability {
     /** Since we only consider the reachability here,
 	the formula we consider is in form F a */
     public static boolean isReachability(Expression pathProp) {
-        if (!(pathProp instanceof ExpressionTemporal)) {
+        if (!ExpressionTemporalFinally.is(pathProp)) {
             return false;
         }
-
-        ExpressionTemporal asQuantifier = (ExpressionTemporal) pathProp;
-        if(asQuantifier.getTemporalType() != TemporalType.FINALLY) return false;
+        ExpressionTemporalFinally asQuantifier = ExpressionTemporalFinally.as(pathProp);
         // check whether operand is a propositional formula
-        if(!ExpressionPropositional.is(asQuantifier.getOperand1())) return false;
+        if (!ExpressionPropositional.is(asQuantifier.getOperand())) {
+            return false;
+        }
 
         return true;
     }

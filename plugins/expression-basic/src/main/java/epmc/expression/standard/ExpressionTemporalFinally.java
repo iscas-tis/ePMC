@@ -27,7 +27,7 @@ import java.util.List;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 
-public final class ExpressionTemporalNext implements Expression {
+public final class ExpressionTemporalFinally implements Expression {
     public final static class Builder {
         private Positional positional;
         private Expression operand;
@@ -60,18 +60,18 @@ public final class ExpressionTemporalNext implements Expression {
             return timeBound;
         }
         
-        public ExpressionTemporalNext build() {
-            return new ExpressionTemporalNext(this);
+        public ExpressionTemporalFinally build() {
+            return new ExpressionTemporalFinally(this);
         }
     }
     
     public static boolean is(Object expression) {
-        return expression instanceof ExpressionTemporalNext;
+        return expression instanceof ExpressionTemporalFinally;
     }
 
-    public static ExpressionTemporalNext as(Expression expression) {
+    public static ExpressionTemporalFinally as(Expression expression) {
         if (is(expression)) {
-            return (ExpressionTemporalNext) expression;
+            return (ExpressionTemporalFinally) expression;
         } else {
             return null;
         }
@@ -81,7 +81,7 @@ public final class ExpressionTemporalNext implements Expression {
     private final TimeBound timeBound;
     private final Expression operand;
 
-    private ExpressionTemporalNext(Builder builder) {
+    private ExpressionTemporalFinally(Builder builder) {
         assert builder != null;
         assert builder.getOperand() != null;
         assert builder.getTimeBound() != null;
@@ -108,7 +108,7 @@ public final class ExpressionTemporalNext implements Expression {
                 .setRightOpen(!timeBound.isRightBounded())
                 .setRight(children.get(2))
                 .build();
-        return new ExpressionTemporalNext.Builder()
+        return new ExpressionTemporalFinally.Builder()
                 .setOperand(children.get(0))
                 .setTimeBound(newTimeBound)
                 .setPositional(positional)
@@ -132,7 +132,7 @@ public final class ExpressionTemporalNext implements Expression {
     @Override
     public final String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("X ");
+        builder.append("F ");
         builder.append("(");
         builder.append(getChildren().get(0));
         builder.append(")");
@@ -145,10 +145,10 @@ public final class ExpressionTemporalNext implements Expression {
     @Override
     public boolean equals(Object obj) {
         assert obj != null;
-        if (!(obj instanceof ExpressionTemporalNext)) {
+        if (!(obj instanceof ExpressionTemporalFinally)) {
             return false;
         }
-        ExpressionTemporalNext other = (ExpressionTemporalNext) obj;
+        ExpressionTemporalFinally other = (ExpressionTemporalFinally) obj;
         if (!this.operand.equals(other.operand)) {
             return false;
         }
@@ -172,7 +172,7 @@ public final class ExpressionTemporalNext implements Expression {
 
     @Override
     public Expression replacePositional(Positional positional) {
-        return new ExpressionTemporalNext.Builder()
+        return new ExpressionTemporalFinally.Builder()
                 .setOperand(operand)
                 .setTimeBound(timeBound)
                 .setPositional(positional)

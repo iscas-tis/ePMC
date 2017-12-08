@@ -20,50 +20,68 @@
 
 package epmc.propertysolver;
 
-import static epmc.expression.standard.ExpressionPropositional.is;
-
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalNext;
 
 public final class UtilPCTL {
     public static Set<Expression> collectPCTLInner(Expression expression) {
         if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+            ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionTemporal.getOperands()) {
                 result.addAll(collectPCTLInner(inner));
             }
             return result;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            return collectPCTLInner(expressionTemporal.getOperand());
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
+            return collectPCTLInner(expressionTemporal.getOperand());
         } else {
             return Collections.singleton(expression);			
         }
     }
 
     public static boolean isPCTLPath(Expression pathProp) {
-        if (!(pathProp instanceof ExpressionTemporal)) {
+        if (ExpressionTemporal.is(pathProp)) {
+            ExpressionTemporal temporal = ExpressionTemporal.as(pathProp);
+            for (Expression operand : temporal.getOperands()) {
+                if (!ExpressionPropositional.is(operand)) {
+                    return false;
+                }
+            }
+            return true;
+        } else if (ExpressionTemporalNext.is(pathProp)) {
+            ExpressionTemporalNext next = ExpressionTemporalNext.as(pathProp);
+            return ExpressionPropositional.is(next.getOperand());
+        } else if (ExpressionTemporalFinally.is(pathProp)) {
+            ExpressionTemporalFinally expFinally = ExpressionTemporalFinally.as(pathProp);
+            return ExpressionPropositional.is(expFinally.getOperand());
+        } else {
             return false;
         }
-        ExpressionTemporal asQuantifier = (ExpressionTemporal) pathProp;
-        for (Expression operand : asQuantifier.getOperands()) {
-            if (!is(operand)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public static boolean isPCTLPathUntil(Expression pathProp) {
         if (!isPCTLPath(pathProp)) {
             return false;
         }
+        if (ExpressionTemporalFinally.is(pathProp)) {
+            return true;
+        }
+        if (!ExpressionTemporal.is(pathProp)) {
+            return false;
+        }
         ExpressionTemporal asTemporal = (ExpressionTemporal) pathProp;
         switch (asTemporal.getTemporalType()) {
-        case FINALLY:
         case GLOBALLY:
         case RELEASE:
         case UNTIL:

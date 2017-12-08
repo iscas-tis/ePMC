@@ -30,6 +30,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -137,9 +138,9 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
+            ExpressionTemporalFinally pathTemporal = ExpressionTemporalFinally.as(property);
             Expression left = ExpressionLiteral.getTrue();
-            Expression right = pathTemporal.getOperand1();
+            Expression right = pathTemporal.getOperand();
             property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
             negate = false;
         } else if (isGlobally(property)) {
@@ -329,11 +330,11 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
                 && !SemanticsContinuousTime.isContinuousTime(semantics)) {
             return false;
         }
-        if (!(property instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(property)) {
             return false;
         }
         handleSimplePCTLExtensions();
-        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        ExpressionQuantifier propertyQuantifier = ExpressionQuantifier.as(property);
         if (!UtilPCTL.isPCTLPathUntil(propertyQuantifier.getQuantified())) {
             return false;
         }
@@ -349,10 +350,10 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     }
 
     private void handleSimplePCTLExtensions() {
-        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        ExpressionQuantifier propertyQuantifier = ExpressionQuantifier.as(property);
         Expression quantified = propertyQuantifier.getQuantified();
         if (isNot(quantified)
-                && isFinally(((ExpressionOperator) quantified).getOperand1())) {
+                && isFinally((ExpressionOperator.as(quantified)).getOperand1())) {
             ExpressionOperator quantifiedOperator = (ExpressionOperator) quantified;
             ExpressionTemporal quantifiedOp1 =
                     (ExpressionTemporal) quantifiedOperator.getOperand1();
@@ -435,11 +436,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     }
 
     private static boolean isFinally(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.FINALLY;
+        return ExpressionTemporalFinally.is(expression);
     }
 
     private static boolean isGlobally(Expression expression) {

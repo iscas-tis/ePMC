@@ -24,7 +24,6 @@ public enum TemporalType {
     UNTIL("U"),
     RELEASE("R"),
     GLOBALLY("G"),
-    FINALLY("F")
     ;
 
     private final String string;
