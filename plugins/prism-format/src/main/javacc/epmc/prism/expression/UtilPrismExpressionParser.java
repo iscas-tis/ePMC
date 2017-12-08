@@ -8,6 +8,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.RewardType;
 import epmc.expression.standard.TemporalType;
@@ -180,6 +181,16 @@ public final class UtilPrismExpressionParser {
         }
         return new ExpressionTemporal
                 (operands, type, timeBounds, null);
+    }
+
+    static ExpressionTemporalNext newTemporalNext(Expression operand,
+            TimeBound timeBound) {
+        assert operand != null;
+        assert timeBound != null;
+        return new ExpressionTemporalNext.Builder()
+                .setOperand(operand)
+                .setTimeBound(timeBound)
+                .build();
     }
 
     static ExpressionReward newRewardInstantaneous

@@ -29,8 +29,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
@@ -134,8 +133,8 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
             negate = false;
         }
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
-        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
-        Expression inner = propertyTemporal.getOperand1();
+        ExpressionTemporalNext propertyTemporal = ExpressionTemporalNext.as(property);
+        Expression inner = propertyTemporal.getOperand();
         StateMapExplicit innerResult = (StateMapExplicit) modelChecker.check(inner, allStates);
         UtilGraph.registerResult(graph, inner, innerResult);
         allStates.close();
@@ -143,7 +142,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return solve(propertyTemporal, min, innerResult);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min, StateMapExplicit inner) {
+    private StateMap solve(ExpressionTemporalNext pathTemporal, boolean min, StateMapExplicit inner) {
         assert pathTemporal != null;
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = UtilValue.newValue(typeWeight, 1);
@@ -163,7 +162,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
-    private void solveNext(ExpressionTemporal pathTemporal, StateMapExplicit inner, boolean min) {
+    private void solveNext(ExpressionTemporalNext pathTemporal, StateMapExplicit inner, boolean min) {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
@@ -304,10 +303,6 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
     }
 
     private static boolean isNext(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.NEXT;
+        return ExpressionTemporalNext.is(expression);
     }
 }

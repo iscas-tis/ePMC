@@ -1765,7 +1765,7 @@ private Expression parseTemporalUnary(boolean parseExp)  :
 		{
 			switch (type) {
 			case NEXT:
-				p = newTemporal(TemporalType.NEXT, p, timeBound);
+				p = newTemporalNext(p, timeBound);
 				break;
 			case FINALLY:
 				p = newTemporal(TemporalType.FINALLY, p, timeBound);

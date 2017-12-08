@@ -113,6 +113,18 @@ public final class ExpressionTemporal implements Expression {
         }
     }
 
+    public static boolean is(Object expression) {
+        return expression instanceof ExpressionTemporal;
+    }
+
+    public static ExpressionTemporal as(Expression expression) {
+        if (is(expression)) {
+            return (ExpressionTemporal) expression;
+        } else {
+            return null;
+        }
+    }
+
     private final Positional positional;
     private final List<Expression> children = new ArrayList<>();
     private final TemporalType type;
@@ -137,7 +149,7 @@ public final class ExpressionTemporal implements Expression {
         this.positional = builder.getPositional();
         this.children.addAll(builder.getChildren());
         switch (builder.getType()) {
-        case NEXT: case FINALLY: case GLOBALLY:
+        case FINALLY: case GLOBALLY:
             assert builder.getChildren().size() == 3;
             assert builder.getLeftOpen().size() == 1;
             assert builder.getRightOpen().size() == 1;
@@ -179,7 +191,7 @@ public final class ExpressionTemporal implements Expression {
         this.positional = positional;
         this.children.addAll(children);
         switch (type) {
-        case NEXT: case FINALLY: case GLOBALLY:
+        case FINALLY: case GLOBALLY:
             assert children.size() == 3;
             assert leftOpen.size() == 1;
             assert rightOpen.size() == 1;
@@ -305,7 +317,7 @@ public final class ExpressionTemporal implements Expression {
 
     public int getNumOps() {
         switch (type) {
-        case NEXT: case FINALLY: case GLOBALLY:
+        case FINALLY: case GLOBALLY:
             return 1;
         case RELEASE:
             return 2;
@@ -343,7 +355,7 @@ public final class ExpressionTemporal implements Expression {
         Iterator<Expression> opIter;
         StringBuilder builder = new StringBuilder();
         switch (type) {
-        case NEXT: case FINALLY: case GLOBALLY: {
+        case FINALLY: case GLOBALLY: {
             builder.append(type);
             // TODO
             //            builder.append(getTimeBound(null));

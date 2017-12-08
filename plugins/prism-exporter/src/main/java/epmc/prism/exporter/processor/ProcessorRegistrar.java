@@ -44,6 +44,8 @@ import epmc.expression.standard.ExpressionRewardProcessor;
 import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.ExpressionSteadyStateProcessor;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalNextProcessor;
 import epmc.expression.standard.ExpressionTemporalProcessor;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.TimeBoundProcessor;
@@ -313,6 +315,7 @@ public class ProcessorRegistrar {
         processors.put(ExpressionFilter.class, ExpressionFilterProcessor.class);
         processors.put(ExpressionQuantifier.class, ExpressionQuantifierProcessor.class);
         processors.put(ExpressionTemporal.class, ExpressionTemporalProcessor.class);
+        processors.put(ExpressionTemporalNext.class, ExpressionTemporalNextProcessor.class);
         processors.put(ExpressionReward.class, ExpressionRewardProcessor.class);
         processors.put(ExpressionSteadyState.class, ExpressionSteadyStateProcessor.class);
         processors.put(ExpressionInitial.class, ExpressionInitialProcessor.class);

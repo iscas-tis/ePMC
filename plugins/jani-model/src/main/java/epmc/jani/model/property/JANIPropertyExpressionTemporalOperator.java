@@ -39,6 +39,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
@@ -220,70 +221,69 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         assert model != null;
         assert validIdentifiers != null;
         resetFields();
-        if (!(expression instanceof ExpressionTemporal)) {
-            return null;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        if (ExpressionTemporal.is(expression)) {
+            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
 
-        ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
-        switch (expressionTemporal.getTemporalType()) {
-        case FINALLY:
+            ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
+            switch (expressionTemporal.getTemporalType()) {
+            case FINALLY:
+                opValue = U;
+                left = parser.matchExpression(model, ExpressionLiteral.getTrue());
+                right = parser.matchExpression(model, expressionTemporal.getOperand1());
+                break;
+            case GLOBALLY:
+                opValue = W;
+                left = parser.matchExpression(model, expressionTemporal.getOperand1());
+                right = parser.matchExpression(model, ExpressionLiteral.getFalse());
+                break;
+            case RELEASE:
+                opValue = W;
+                //op1 R op2 = op2 W (op2 /\ op1)
+                left = parser.matchExpression(model, expressionTemporal.getOperand2());
+                right = parser.matchExpression(model, UtilExpressionStandard.opAdd(expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
+                break;
+            case UNTIL:
+                opValue = U;
+                left = parser.matchExpression(model, expressionTemporal.getOperand1());
+                right = parser.matchExpression(model, expressionTemporal.getOperand2());
+                break;
+            }
+            TimeBound tb = expressionTemporal.getTimeBound();
+            if (tb != null && !tb.isUnbounded()) {
+                JANIPropertyInterval interval = new JANIPropertyInterval();
+                interval.setForProperty(forProperty);
+                interval.setModel(model);
+                interval.setIdentifiers(validIdentifiers);
+                if (tb.isLeftBounded()) { 
+                    interval.setLower(tb.getLeft());
+                }
+                interval.setLowerExclusive(tb.isLeftOpen());
+                if (tb.isRightBounded()) { 
+                    interval.setUpper(tb.getRight());
+                }
+                interval.setUpperExclusive(tb.isRightOpen());
+                if (SemanticsContinuousTime.isContinuousTime(model.getSemantics())) {
+                    timeBounds = interval;
+                }
+                if (SemanticsDiscreteTime.isDiscreteTime(model.getSemantics())) {
+                    stepBounds = interval;
+                }
+                if (SemanticsTimed.isTimed(model.getSemantics())) {
+                    timeBounds = interval;
+                }
+            }
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
             opValue = U;
             left = parser.matchExpression(model, ExpressionLiteral.getTrue());
-            right = parser.matchExpression(model, expressionTemporal.getOperand1());
-            break;
-        case GLOBALLY:
-            opValue = W;
-            left = parser.matchExpression(model, expressionTemporal.getOperand1());
-            right = parser.matchExpression(model, ExpressionLiteral.getFalse());
-            break;
-        case NEXT:
-            opValue = U;
-            left = parser.matchExpression(model, ExpressionLiteral.getTrue());
-            right = parser.matchExpression(model, expressionTemporal.getOperand1());
+            right = parser.matchExpression(model, expressionTemporal.getOperand());
             stepBounds = new JANIPropertyInterval();
             stepBounds.setLower(ExpressionLiteral.getOne());
             stepBounds.setLowerExclusive(false);
             stepBounds.setUpper(ExpressionLiteral.getOne());
             stepBounds.setUpperExclusive(false);
-            break;
-        case RELEASE:
-            opValue = W;
-            //op1 R op2 = op2 W (op2 /\ op1)
-            left = parser.matchExpression(model, expressionTemporal.getOperand2());
-            right = parser.matchExpression(model, UtilExpressionStandard.opAdd(expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
-            break;
-        case UNTIL:
-            opValue = U;
-            left = parser.matchExpression(model, expressionTemporal.getOperand1());
-            right = parser.matchExpression(model, expressionTemporal.getOperand2());
-            break;
-        }
-        TimeBound tb = expressionTemporal.getTimeBound();
-        if (tb != null && !tb.isUnbounded()) {
-            JANIPropertyInterval interval = new JANIPropertyInterval();
-            interval.setForProperty(forProperty);
-            interval.setModel(model);
-            interval.setIdentifiers(validIdentifiers);
-            if (tb.isLeftBounded()) { 
-                interval.setLower(tb.getLeft());
-            }
-            interval.setLowerExclusive(tb.isLeftOpen());
-            if (tb.isRightBounded()) { 
-                interval.setUpper(tb.getRight());
-            }
-            interval.setUpperExclusive(tb.isRightOpen());
-            if (SemanticsContinuousTime.isContinuousTime(model.getSemantics())) {
-                timeBounds = interval;
-            }
-            if (SemanticsDiscreteTime.isDiscreteTime(model.getSemantics())) {
-                stepBounds = interval;
-            }
-            if (SemanticsTimed.isTimed(model.getSemantics())) {
-                timeBounds = interval;
-            }
-        }
-        if (expression instanceof ExpressionReward) {
+        } else if (expression instanceof ExpressionReward) {
             RewardSpecification rs = ((ExpressionReward) expression).getReward();
             if (rs != null) {
                 rewardBounds = new ArrayList<>();
@@ -302,6 +302,8 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
                 rb.setExp(rs.getExpression());
                 rewardBounds.add(rb);
             }
+        } else {
+            return null;
         }
         initialized = true;
         positional = expression.getPositional();
