@@ -36,6 +36,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -308,17 +309,12 @@ public final class UtilAutomaton {
         return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
     }
 
-    private static ExpressionTemporal newNext(Expression operand, Positional positional) {
-        return newTemporal(TemporalType.NEXT, operand,
-                new TimeBound.Builder().build(), positional);
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression operand, TimeBound bound, Positional positional) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (operand, type, bound, positional);
+    private static ExpressionTemporalNext newNext(Expression operand, Positional positional) {
+        return new ExpressionTemporalNext.Builder()
+                .setOperand(operand)
+                .setTimeBound(new TimeBound.Builder().build())
+                .setPositional(positional)
+                .build();
     }
 
     private static String expr2string(Expression expression, Map<Expression, String> expr2str,
@@ -454,11 +450,7 @@ public final class UtilAutomaton {
     }
 
     private static boolean isNext(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.NEXT;
+        return ExpressionTemporalNext.is(expression);
     }
 
     private static boolean isFinally(Expression expression) {

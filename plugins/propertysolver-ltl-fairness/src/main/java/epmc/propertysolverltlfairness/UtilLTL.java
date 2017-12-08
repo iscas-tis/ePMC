@@ -28,6 +28,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.operator.Operator;
@@ -277,15 +278,14 @@ public final class UtilLTL {
     }
 
     private static boolean isValidLTL(Expression expression, boolean flag) {
-        if(expression instanceof ExpressionPropositional) return true;
+        if (expression instanceof ExpressionPropositional) {
+            return true;
+        }
 
-        if(expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal)expression;
+        if (ExpressionTemporal.is(expression)) {
+            ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
             switch(expressionTemporal.getTemporalType()) {
             case UNTIL:
-            case NEXT:
-                return isValidLTL(expressionTemporal.getOperand1(), true)
-                        && isValidLTL(expressionTemporal.getOperand2(), true);
             case FINALLY:
             case GLOBALLY:
                 if(flag) return false;
@@ -293,8 +293,10 @@ public final class UtilLTL {
             case RELEASE:
                 return false;				
             }
-
-        }else {
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            return isValidLTL(expressionTemporal.getOperand(), true);
+        } else {
             ExpressionOperator expressionOp = (ExpressionOperator)expression;
             if(isNot(expressionOp)) return false;
             for(Expression op : expression.getChildren()) {
@@ -308,14 +310,11 @@ public final class UtilLTL {
      * check whether there exist only U and X modalities 
      */
     public static boolean isUXLTL(Expression expression) {
+        if (expression instanceof ExpressionPropositional) return true;
 
-        if(expression instanceof ExpressionPropositional) return true;
-
-        if(expression instanceof ExpressionTemporal) {
+        if (ExpressionTemporal.is(expression)) {
             ExpressionTemporal expressionTemporal = (ExpressionTemporal)expression;
             switch(expressionTemporal.getTemporalType()) {
-            case NEXT:
-                return isUXLTL(expressionTemporal.getOperand1());
             case UNTIL:
                 return isUXLTL(expressionTemporal.getOperand1())
                         && isUXLTL(expressionTemporal.getOperand2());
@@ -324,9 +323,12 @@ public final class UtilLTL {
             case GLOBALLY:
                 return false;
             }
-        }else {
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            return isUXLTL(expressionTemporal.getOperand());
+        } else {
             for(Expression op : expression.getChildren()) {
-                if(! isUXLTL(op)) return false;
+                if (!isUXLTL(op)) return false;
             }
         }
 

@@ -21,7 +21,6 @@
 package epmc.expression.standard;
 
 public enum TemporalType {
-    NEXT("X"),
     UNTIL("U"),
     RELEASE("R"),
     GLOBALLY("G"),

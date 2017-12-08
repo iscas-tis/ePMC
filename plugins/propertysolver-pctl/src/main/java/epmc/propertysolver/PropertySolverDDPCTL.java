@@ -37,6 +37,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
@@ -491,11 +492,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isNext(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.NEXT;
+        return ExpressionTemporalNext.is(expression);
     }
 
     private static boolean isFinally(Expression expression) {
