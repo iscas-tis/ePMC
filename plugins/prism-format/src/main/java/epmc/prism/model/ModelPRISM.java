@@ -1072,8 +1072,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void checkExpressionCompatible(Expression value, Log log)
-    {
+    private void checkExpressionCompatible(Expression value, Log log) {
         if (value instanceof ExpressionIdentifier) {
             ensure(isValidStateQuery(value.toString()),
                     ProblemsPRISM.IDENTIFIER_UNDECLARED, value);
@@ -1152,11 +1151,13 @@ public final class ModelPRISM implements ModelJANIConverter {
         for (InputStream input : inputs) {
             assert input != null;
         }
+        getLog().send(MessagesPRISM.START_PARSING);
         ensure(inputs.length == 1, ProblemsPRISM.PRISM_ONE_MODEL_FILE, inputs.length);
         PrismParser parser = new PrismParser(inputs[0]);    
         parser.setPart(part);
         parser.setModel(this);
         parser.parseModel();
+        getLog().send(MessagesPRISM.DONE_PARSING);
     }
 
     @Override
@@ -1209,5 +1210,14 @@ public final class ModelPRISM implements ModelJANIConverter {
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
                 .build();
+    }
+    
+    /**
+     * Get log used for analysis.
+     * 
+     * @return log used for analysis
+     */
+    private Log getLog() {
+        return Options.get().get(OptionsMessages.LOG);
     }
 }

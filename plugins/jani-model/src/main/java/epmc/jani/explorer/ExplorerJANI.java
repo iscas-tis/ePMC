@@ -48,6 +48,8 @@ import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.model.Variable;
 import epmc.jani.model.property.ExpressionDeadlock;
 import epmc.jani.model.property.ExpressionInitial;
+import epmc.messages.OptionsMessages;
+import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.Util;
 import epmc.value.EvaluatorCache;
@@ -127,6 +129,7 @@ public final class ExplorerJANI implements Explorer {
         assert graphProperties != null;
         assert nodeProperties != null;
         assert edgeProperties != null;
+        getLog().send(MessagesJANIExplorer.START_BUILDING_EXPLORER);
         this.model = model;
         semantics = new TypeObject.Builder()
                 .setClazz(Semantics.class)
@@ -145,6 +148,7 @@ public final class ExplorerJANI implements Explorer {
         deadlockNodesProp = new PropertyNodeDeadlock(this);
         stateProp = new PropertyNodeState(this);
         this.state = true;
+        getLog().send(MessagesJANIExplorer.DONE_BUILDING_EXPLORER);
     }
 
     private void prepareGraphProperties() {
@@ -277,6 +281,7 @@ public final class ExplorerJANI implements Explorer {
      * @return initial nodes of the model
      */
     private Collection<NodeJANI> computeInitialNodes() {
+        getLog().send(MessagesJANIExplorer.START_BUILDING_INITIAL_STATES_EXPLORER);
         Expression initialExpression = model.getInitialStatesExpressionOrTrue();
         initialExpression = model.replaceConstants(initialExpression);
         VariableValuesEnumerator enumerator = new VariableValuesEnumerator();
@@ -301,6 +306,7 @@ public final class ExplorerJANI implements Explorer {
                 result.add(nodeWithGlobals);
             }
         }
+        getLog().send(MessagesJANIExplorer.DONE_BUILDING_INITIAL_STATES_EXPLORER);
         return result;
     }
 
@@ -510,6 +516,15 @@ public final class ExplorerJANI implements Explorer {
         }
         // TODO Auto-generated method stub
         return Explorer.super.getType(expression);
+    }
+
+    /**
+     * Get log used for analysis.
+     * 
+     * @return log used for analysis
+     */
+    private Log getLog() {
+        return Options.get().get(OptionsMessages.LOG);
     }
 
     @Override
