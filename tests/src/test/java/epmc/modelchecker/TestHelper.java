@@ -146,7 +146,7 @@ public final class TestHelper {
         InputStream[] inputsArray = inputs.toArray(new InputStream[inputs.size()]);
         model.read(modelIdentifier, inputsArray);
         if (propertyStream != null) {
-            model.getPropertyList().parseProperties(new InputStream[]{propertyStream});
+            model.getPropertyList().parseProperties(propertyIdentifier, new InputStream[]{propertyStream});
         }
         processAfterModelLoading(options);
         return model;
