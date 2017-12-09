@@ -23,16 +23,15 @@ package epmc.propertysolver;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
@@ -127,39 +126,54 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     private StateMap doSolve(Expression property, StateSet states, boolean min) {
         boolean negate;
         if (isNot(property)) {
-            ExpressionOperator propertyOperator = (ExpressionOperator) property;
+            ExpressionOperator propertyOperator = ExpressionOperator.as(property);
             property = propertyOperator.getOperand1();
             negate = true;
             min = !min;
         } else if (isRelease(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = pathTemporal.getOperand1();
-            Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(), property.getPositional());
+            ExpressionTemporalRelease pathTemporal = ExpressionTemporalRelease.as(property);
+            Expression left = pathTemporal.getOperandLeft();
+            Expression right = pathTemporal.getOperandRight();
+            property = new ExpressionTemporalUntil.Builder()
+                    .setOperandLeft(not(left))
+                    .setOperandRight(not(right))
+                    .setTimeBound(pathTemporal.getTimeBound())
+                    .setPositional(property.getPositional())
+                    .build();
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
             ExpressionTemporalFinally pathTemporal = ExpressionTemporalFinally.as(property);
             Expression left = ExpressionLiteral.getTrue();
             Expression right = pathTemporal.getOperand();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
+            property = new ExpressionTemporalUntil.Builder()
+                    .setOperandLeft(left)
+                    .setOperandRight(right)
+                    .setTimeBound(pathTemporal.getTimeBound())
+                    .setPositional(property.getPositional())
+                    .build();
             negate = false;
         } else if (isGlobally(property)) {
             ExpressionTemporalGlobally pathTemporal = ExpressionTemporalGlobally.as(property);
             Expression left = ExpressionLiteral.getTrue();
             Expression right = not(pathTemporal.getOperand());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
+            property = new ExpressionTemporalUntil.Builder()
+                    .setOperandLeft(left)
+                    .setOperandRight(right)
+                    .setTimeBound(pathTemporal.getTimeBound())
+                    .setPositional(property.getPositional())
+                    .build();
             min = !min;
             negate = true;
         } else {
             negate = false;
         }
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
-        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
-        Expression op1 = propertyTemporal.getOperand1();
+        ExpressionTemporalUntil propertyTemporal = ExpressionTemporalUntil.as(property);
+        Expression op1 = propertyTemporal.getOperandLeft();
         StateMapExplicit innerResult1 = (StateMapExplicit) modelChecker.check(op1, allStates);
         UtilGraph.registerResult(graph, op1, innerResult1);
-        Expression op2 = propertyTemporal.getOperand2();
+        Expression op2 = propertyTemporal.getOperandRight();
         StateMapExplicit innerResult2 = (StateMapExplicit) modelChecker.check(op2, allStates);
         UtilGraph.registerResult(graph, op1, innerResult2);
         allStates.close();
@@ -167,7 +181,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         return solve(propertyTemporal, min, negate, innerResult1, innerResult2);
     }
 
-    private StateMap solve(ExpressionTemporal pathTemporal, boolean min, boolean negate, StateMapExplicit innerLeft, StateMapExplicit innerRight) {
+    private StateMap solve(ExpressionTemporalUntil pathTemporal, boolean min, boolean negate, StateMapExplicit innerLeft, StateMapExplicit innerRight) {
         assert pathTemporal != null;
         Semantics semanticsType = ValueObject.as(graph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         TimeBound timeBound = pathTemporal.getTimeBound();
@@ -441,19 +455,6 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
     }
 
     private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound, Positional positional) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, positional);
+        return ExpressionTemporalRelease.is(expression);
     }
 }

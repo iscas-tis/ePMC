@@ -24,15 +24,15 @@ import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
-public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
-    private ExpressionTemporal temporal = null;
+public class ExpressionTemporalUntilProcessor implements JANI2PRISMProcessorStrict {
+    private ExpressionTemporalUntil temporal = null;
 
     @Override
     public JANI2PRISMProcessorStrict setElement(Object obj) {
         assert obj != null;
-        assert obj instanceof ExpressionTemporal; 
+        assert obj instanceof ExpressionTemporalUntil; 
 
-        temporal = (ExpressionTemporal) obj;
+        temporal = (ExpressionTemporalUntil) obj;
         return this;
     }
 
@@ -41,44 +41,23 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         assert temporal != null;
 
         StringBuilder prism = new StringBuilder();
-
-        TemporalType type = temporal.getTemporalType();
-        switch (type) {
-        case UNTIL: 
-        case RELEASE:
-            if (type == TemporalType.UNTIL && temporal.getNumOps() == 2 && isTrue(temporal.getOperand1())) {
-                prism.append("F(")
-                .append(ProcessorRegistrar.getProcessor(temporal.getOperand2())
-                        .toPRISM())
-                .append(")");
-            } else if (type == TemporalType.RELEASE && temporal.getNumOps() == 2 && isFalse(temporal.getOperand2())) {
-                prism.append("G(")
-                .append(ProcessorRegistrar.getProcessor(temporal.getOperand1())
-                        .toPRISM())
-                .append(")");
-            } else {
-                boolean remaining = false;
-                int timeBoundIndex = 0;
-                for (Expression child : temporal.getOperands()) {
-                    if (remaining) {
-                        prism.append(type)
-                        .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound(timeBoundIndex))
-                                .toPRISM());
-                        timeBoundIndex++;
-                    } else {
-                        remaining = true;
-                    }
-                    prism.append("(")
-                    .append(ProcessorRegistrar.getProcessor(child)
-                            .toPRISM())
-                    .append(")");
-                }
-            }
-            break;
-        default:
-            assert (false);
+        if (isTrue(temporal.getOperandLeft())) {
+            prism.append("F(")
+            .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                    .toPRISM())
+            .append(")");
+        } else {
+            prism.append("(")
+            .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
+                    .toPRISM()) 
+            .append(") U")
+            .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+                    .toPRISM())
+            .append(" (")
+            .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                    .toPRISM())
+            .append(")");
         }
-
         return prism.toString();
     }
 
@@ -113,15 +92,6 @@ public class ExpressionTemporalProcessor implements JANI2PRISMProcessorStrict {
         }
         return Boolean.valueOf(getValue(expression));
     }
-
-    private static boolean isFalse(Expression expression) {
-        assert expression != null;
-
-        if (!(expression instanceof ExpressionLiteral)) {
-            return false;
-        }
-        return !Boolean.valueOf(getValue(expression));
-    }  
 
     private static String getValue(Expression expression) {
         assert expression != null;

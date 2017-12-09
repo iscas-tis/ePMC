@@ -25,7 +25,7 @@ import java.util.Set;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
@@ -138,10 +138,10 @@ public final class PropertySolverExplicitReachability implements PropertySolver 
         BitSet oneStates = UtilBitSet.newBitSetUnbounded();        
         // collect all states which satisfied the propositional formula property
 
-        ExpressionTemporal propertyTemporal = (ExpressionTemporal)property;
+        ExpressionTemporalFinally propertyTemporal = ExpressionTemporalFinally.as(property);
         // evaluator for propositional formula a out of F a
         EvaluatorExplicitBoolean evaluator = UtilEvaluatorExplicit.newEvaluatorBoolean(
-                propertyTemporal.getOperand1(), graph, expressions);
+                propertyTemporal.getOperand(), graph, expressions);
 
         for (int node = 0; node < graph.getNumNodes(); node ++) {
             // collect the truth value of all atomic propositions in this state

@@ -30,7 +30,10 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.GraphExplicit;
@@ -91,14 +94,34 @@ public final class TestHelperLump {
     public static Set<Expression> collectLTLPropositional(Expression expression) {
         if (is(expression)) {
             return Collections.singleton(expression);
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectLTLPropositional(inner));
-            }
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionOperator) {
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionOperator.is(expression)) {
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {

@@ -29,18 +29,17 @@ import java.util.Set;
 import epmc.algorithms.dd.ComponentsDD;
 import epmc.dd.ContextDD;
 import epmc.dd.DD;
-import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -115,23 +114,38 @@ public final class PropertySolverDDPCTL implements PropertySolver {
             negate = true;
             min = !min;
         } else if (isRelease(property)) {
-            ExpressionTemporal pathTemporal = (ExpressionTemporal) property;
-            Expression left = pathTemporal.getOperand1();
-            Expression right = pathTemporal.getOperand2();
-            property = newTemporal(TemporalType.UNTIL, not(left), not(right), pathTemporal.getTimeBound(), property.getPositional());
+            ExpressionTemporalRelease pathTemporal = ExpressionTemporalRelease.as(property);
+            Expression left = pathTemporal.getOperandLeft();
+            Expression right = pathTemporal.getOperandRight();
+            property = new ExpressionTemporalUntil.Builder()
+                    .setOperandLeft(not(left))
+                    .setOperandRight(not(right))
+                    .setTimeBound(pathTemporal.getTimeBound())
+                    .setPositional(property.getPositional())
+                    .build();
             min = !min;
             negate = true;
         } else if (isFinally(property)) {
             ExpressionTemporalFinally pathTemporal = ExpressionTemporalFinally.as(property);
             Expression left = ExpressionLiteral.getTrue();
             Expression right = pathTemporal.getOperand();
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
+            property = new ExpressionTemporalUntil.Builder()
+            .setOperandLeft(left)
+            .setOperandRight(right)
+            .setTimeBound(pathTemporal.getTimeBound())
+            .setPositional(property.getPositional())
+            .build();
             negate = false;
         } else if (isGlobally(property)) {
             ExpressionTemporalGlobally pathTemporal = ExpressionTemporalGlobally.as(property);
             Expression left = ExpressionLiteral.getTrue();
             Expression right = not(pathTemporal.getOperand());
-            property = newTemporal(TemporalType.UNTIL, left, right, pathTemporal.getTimeBound(), property.getPositional());
+            property = new ExpressionTemporalUntil.Builder()
+            .setOperandLeft(left)
+            .setOperandRight(right)
+            .setTimeBound(pathTemporal.getTimeBound())
+            .setPositional(property.getPositional())
+            .build();
             min = !min;
             negate = true;
         } else {
@@ -153,10 +167,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
     private DD solveUntil(StateSet forStates) {
         DD nodeSpace = modelGraph.getNodeSpace();
-        ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
+        ExpressionTemporalUntil innerTemporal = ExpressionTemporalUntil.as(inner);
         TimeBound timeBound = innerTemporal.getTimeBound();
-        Expression leftExpr = innerTemporal.getOperand1();
-        Expression rightExpr = innerTemporal.getOperand2();
+        Expression leftExpr = innerTemporal.getOperandLeft();
+        Expression rightExpr = innerTemporal.getOperandRight();
         DD leftDD = expressionToDD.translate(leftExpr);
         DD rightDD = expressionToDD.translate(rightExpr);
         DD targetDD = rightDD.and(nodeSpace);
@@ -193,7 +207,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
     private DD checkUntilQuantitative(DD targetDD, DD failDD) {
         DD nodeSpace = modelGraph.getNodeSpace();
-        ExpressionTemporal innerTemporal = (ExpressionTemporal) inner;
+        ExpressionTemporalUntil innerTemporal = ExpressionTemporalUntil.as(inner);
         TimeBound timeBound = innerTemporal.getTimeBound();
         List<DD> sinks = new ArrayList<>();
         failDD = failDD.orWith(nodeSpace.not());
@@ -277,8 +291,8 @@ public final class PropertySolverDDPCTL implements PropertySolver {
 
         targetDD.dispose();
         failDD.dispose();
-        Expression leftExpr = innerTemporal.getOperand1();
-        Expression rightExpr = innerTemporal.getOperand2();
+        Expression leftExpr = innerTemporal.getOperandLeft();
+        Expression rightExpr = innerTemporal.getOperandRight();
 
         DD leftDD = expressionToDD.translate(leftExpr);
         DD leftNotDD = leftDD.not();
@@ -506,27 +520,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
     }
 
     private static boolean isRelease(Expression expression) {
-        if (!ExpressionTemporal.is(expression)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
+        return ExpressionTemporalRelease.is(expression);
     }
 
     private static boolean isUntil(Expression expression) {
-        if (!ExpressionTemporal.is(expression)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
-        return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
-    }
-
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound, Positional positional) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, positional);
+        return ExpressionTemporalUntil.is(expression);
     }
 }

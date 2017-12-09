@@ -26,21 +26,15 @@ import java.util.Set;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionPropositional;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 
 public final class UtilPCTL {
     public static Set<Expression> collectPCTLInner(Expression expression) {
-        if (ExpressionTemporal.is(expression)) {
-            ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
-            Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectPCTLInner(inner));
-            }
-            return result;
-        } else if (ExpressionTemporalNext.is(expression)) {
+        if (ExpressionTemporalNext.is(expression)) {
             ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
             return collectPCTLInner(expressionTemporal.getOperand());
         } else if (ExpressionTemporalFinally.is(expression)) {
@@ -49,21 +43,25 @@ public final class UtilPCTL {
         } else if (ExpressionTemporalGlobally.is(expression)) {
             ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
             return collectPCTLInner(expressionTemporal.getOperand());
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectPCTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectPCTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectPCTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectPCTLInner(expressionTemporal.getOperandRight()));
+            return result;
         } else {
             return Collections.singleton(expression);			
         }
     }
 
     public static boolean isPCTLPath(Expression pathProp) {
-        if (ExpressionTemporal.is(pathProp)) {
-            ExpressionTemporal temporal = ExpressionTemporal.as(pathProp);
-            for (Expression operand : temporal.getOperands()) {
-                if (!ExpressionPropositional.is(operand)) {
-                    return false;
-                }
-            }
-            return true;
-        } else if (ExpressionTemporalNext.is(pathProp)) {
+        if (ExpressionTemporalNext.is(pathProp)) {
             ExpressionTemporalNext next = ExpressionTemporalNext.as(pathProp);
             return ExpressionPropositional.is(next.getOperand());
         } else if (ExpressionTemporalFinally.is(pathProp)) {
@@ -72,6 +70,14 @@ public final class UtilPCTL {
         } else if (ExpressionTemporalGlobally.is(pathProp)) {
             ExpressionTemporalGlobally expGlobally = ExpressionTemporalGlobally.as(pathProp);
             return ExpressionPropositional.is(expGlobally.getOperand());
+        } else if (ExpressionTemporalRelease.is(pathProp)) {
+            ExpressionTemporalRelease expRelease = ExpressionTemporalRelease.as(pathProp);
+            return ExpressionPropositional.is(expRelease.getOperandLeft())
+                    && ExpressionPropositional.is(expRelease.getOperandRight());
+        } else if (ExpressionTemporalUntil.is(pathProp)) {
+            ExpressionTemporalUntil expRelease = ExpressionTemporalUntil.as(pathProp);
+            return ExpressionPropositional.is(expRelease.getOperandLeft())
+                    && ExpressionPropositional.is(expRelease.getOperandRight());
         } else {
             return false;
         }
@@ -87,19 +93,13 @@ public final class UtilPCTL {
         if (ExpressionTemporalGlobally.is(pathProp)) {
             return true;
         }
-        if (!ExpressionTemporal.is(pathProp)) {
-            return false;
+        if (ExpressionTemporalRelease.is(pathProp)) {
+            return true;
         }
-        ExpressionTemporal asTemporal = (ExpressionTemporal) pathProp;
-        switch (asTemporal.getTemporalType()) {
-        case RELEASE:
-        case UNTIL:
-            break;
-        default:
-            return false;
-
+        if (ExpressionTemporalUntil.is(pathProp)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private UtilPCTL() {
