@@ -52,7 +52,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJavaDouble impleme
         double diff(double value1, double value2);
     }
 
-    public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java-double";
+    public static final String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java-double";
 
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;

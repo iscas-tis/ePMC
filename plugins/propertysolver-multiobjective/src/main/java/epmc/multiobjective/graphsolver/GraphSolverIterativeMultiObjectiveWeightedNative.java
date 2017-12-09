@@ -47,7 +47,7 @@ import epmc.value.ValueArray;
 import epmc.value.ValueContentDoubleArray;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedNative implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-native";
+    public static final String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-native";
 
     private static final class IterationNative {
         native static int double_mdp_multiobjectiveweighted_jacobi(int relative,

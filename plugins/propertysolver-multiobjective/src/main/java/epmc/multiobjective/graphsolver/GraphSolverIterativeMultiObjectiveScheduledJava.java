@@ -58,7 +58,7 @@ import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 
 public final class GraphSolverIterativeMultiObjectiveScheduledJava implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java";
+    public static final String IDENTIFIER = "graph-solver-iterative-multiobjective-scheduled-java";
 
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
