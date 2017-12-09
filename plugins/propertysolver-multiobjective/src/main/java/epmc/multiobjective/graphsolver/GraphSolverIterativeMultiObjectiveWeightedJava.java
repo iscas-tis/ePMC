@@ -60,7 +60,7 @@ import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
 
 public final class GraphSolverIterativeMultiObjectiveWeightedJava implements GraphSolverExplicit {
-    public static String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
+    public static final String IDENTIFIER = "graph-solver-iterative-multiobjective-weighted-java";
 
     private GraphExplicit origGraph;
     private GraphExplicit iterGraph;
